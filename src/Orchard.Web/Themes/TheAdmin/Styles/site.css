@@ -566,6 +566,11 @@ input[type="checkbox"]:focus, input[type="radio"]:focus {
     outline:1px dotted #666d51;
 }
 
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
 legend span {
     font-weight:normal;
 }
@@ -683,7 +688,7 @@ button, .button, a.button {
     cursor: pointer;
     display: inline-block;
     font: 12px Arial,Helvetica,sans-serif;
-    padding: 4px 14px 4px 14px;
+    padding: 5px 14px 5px 14px;
     
     /*position: relative;*/
     text-align: center;
@@ -864,6 +869,14 @@ table.items thead, table.items th {
     text-align:left;
     white-space:nowrap;
 }
+table.items th.actions {
+    width:300px;
+    text-align:right;
+}
+table.items th.checkbox {
+    width:50px;
+}
+
 /* todo: (heskew) hook back up */
 table.items tr.hover {
     background-color:#f0f3d6;
@@ -932,6 +945,10 @@ table.items td .add
 .contentItems .properties {
     float:left;
 }
+.contentItems .properties .contentType {
+    display: inline;
+    color: #333;
+}
 .contentItems h3 {
     padding-top:0;
 }
@@ -965,14 +982,14 @@ table.items td .add
 /* Pager
 ***************************************************************/
 
-.pager-footer { width: 500px; }
+.pager-footer { }
 .page-size-options {
     float: left;
     padding-right: 40px;
     margin-left: auto;
 }
 html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
-.pager { list-style: none; padding: 0; margin: 2px 0 0 0;}
+.pager { list-style: none; padding: 0; margin: 2px 0 0 0; overflow: hidden; }
 .pager li {
     float: left;
     padding: 0 0 0 0;

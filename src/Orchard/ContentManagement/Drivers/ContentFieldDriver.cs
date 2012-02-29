@@ -16,15 +16,42 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
-            return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                DriverResult result = Display(part, field, context.DisplayType, context.New);
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
+                return result;
+            });
         }
 
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                DriverResult result =  Editor(part, field, context.New);
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
+                return result;
+            });
         }
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                DriverResult result = Editor(part, field, context.Updater, context.New);
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
+                return result;
+            });
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
@@ -41,6 +68,10 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
             Process(context.ContentItem, (part, field) => Exported(part, field, context));
+        }
+
+        void IContentFieldDriver.Describe(DescribeMembersContext context) {
+            Describe(context);
         }
 
         void Process(ContentItem item, Action<ContentPart, TField> effort) {
@@ -71,7 +102,7 @@ namespace Orchard.ContentManagement.Drivers {
             return contentFieldInfo;
         }
 
-        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { return; }
+        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { }
 
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
@@ -81,6 +112,8 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
+
+        protected virtual void Describe(DescribeMembersContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
@@ -99,19 +132,26 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx, differentiator)).Differentiator(differentiator);
         }
 
-        private static object AddAlternates(dynamic shape, string differentiator) {
+        private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator) {
             // automatically add shape alternates for shapes added by fields
             // for fields on dynamic parts the part name is the same as the content type name
 
             ShapeMetadata metadata = shape.Metadata;
-            ContentPart part = shape.ContentPart;
+
+            // if no ContentItem property has been set, assign it
+            if (shape.ContentItem == null) {
+                shape.ContentItem = ctx.ContentItem;
+            }
+
             var shapeType = metadata.Type;
             var fieldName = differentiator ?? String.Empty;
-            var partName = part != null ? part.PartDefinition.Name : String.Empty;
-            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
+            string partName = shape.ContentPart.PartDefinition.Name;
+            string contentType = shape.ContentItem.ContentType;
+
+            // whether the content type has been created dynamically or not
             var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser

@@ -2,9 +2,11 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
-Description: The tags module is providing basic tagging for arbitrary content types. 
-FeatureDescription: Tag a content item.
-Dependencies: Settings
-Category: Navigation
+Version: 1.4.0
+OrchardVersion: 1.4.0
+Features:
+    Orchard.Tags:
+        Name: Tags
+        Description: The tags module is providing basic tagging for arbitrary content types. 
+        Dependencies: Settings, Orchard.jQuery
+        Category: Navigation

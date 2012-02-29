@@ -1,24 +1,34 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Comments.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
+        private readonly ICommentService _commentService;
+    
+        public CommentsPartDriver(ICommentService commentService) {
+            _commentService = commentService;
+        }
+
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
             if (part.CommentsShown == false)
                 return null;
 
+            var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
+            Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
+
             return Combined(
                 ContentShape("Parts_Comments",
-                    () => shapeHelper.Parts_Comments(ContentPart: part)),
+                    () => shapeHelper.Parts_Comments()),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count)),
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount)), 
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
-                );
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount))
+            );
         }
 
         protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {

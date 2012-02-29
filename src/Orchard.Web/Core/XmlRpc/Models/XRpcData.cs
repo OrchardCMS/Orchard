@@ -39,4 +39,14 @@ namespace Orchard.Core.XmlRpc.Models {
 
         public override Type Type { get { return typeof(T); } }
     }
+
+    public class XRpcFault {
+        public XRpcFault(int code, string message) {
+            Code = code;
+            Message = message;
+        }
+
+        public string Message { get; set; }
+        public int Code { get; set; }
+    }
 }

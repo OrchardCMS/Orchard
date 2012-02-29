@@ -57,6 +57,8 @@ namespace Orchard.Comments.Drivers {
                 if (contentItem != null) {
                     part.Record.CommentedOn = contentItem.Id;
                 }
+
+                contentItem.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
             }
 
             var commentedOnContainer = context.Attribute(part.PartDefinition.Name, "CommentedOnContainer");

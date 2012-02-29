@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Localization;
 
 namespace Orchard.Environment {
     public interface IOrchardHost {

@@ -34,7 +34,7 @@ namespace Orchard.Email.Services {
                 return;
             }
 
-            using (SmtpClient smtpClient = new SmtpClient()) {
+            using (var smtpClient = new SmtpClient()) {
                 smtpClient.UseDefaultCredentials = !smtpSettings.RequireCredentials;
                 if (!smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(smtpSettings.UserName)) {
                     smtpClient.Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password);

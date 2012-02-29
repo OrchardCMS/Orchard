@@ -1,6 +1,7 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Transactions;
+
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -124,13 +125,18 @@ namespace Orchard.Environment {
             Logger.Information("Start creation of shells");
 
             // is there any tenant right now ?
-            var allSettings = _shellSettingsManager.LoadSettings();
+            var allSettings = _shellSettingsManager.LoadSettings().ToArray();
 
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
                 foreach (var settings in allSettings) {
-                    var context = CreateShellContext(settings);
-                    ActivateShell(context);
+                    try {
+                        var context = CreateShellContext(settings);
+                        ActivateShell(context);
+                    }
+                    catch(Exception e) {
+                        Logger.Error(e, "A tenant could not be started: " + settings.Name);
+                    }
                 }
             }
             // no settings, run the Setup
@@ -223,7 +229,10 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             lock (_syncLock) {
-                _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
+                // if a tenant has been altered, and is not disabled or invalid, reload it
+                if (settings.State.CurrentState != TenantState.State.Disabled && settings.State.CurrentState != TenantState.State.Invalid) {
+                    _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
+                }
             }
         }
 
@@ -261,12 +270,17 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
             lock (_syncLock) {
-                var context = _shellContexts.Where(x => x.Settings.Name == tenant).FirstOrDefault();
+                
+                if (_shellContexts == null) {
+                    return;
+                }
+
+                var context =_shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
                 
                 // some shells might need to be started, e.g. created by command line
                 if(context == null) {
                     StartUpdatedShells();
-                    context = _shellContexts.Where(x => x.Settings.Name == tenant).First();
+                    context = _shellContexts.First(x => x.Settings.Name == tenant);
                 }
 
                 // don't update the settings themselves here

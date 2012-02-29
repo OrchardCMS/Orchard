@@ -5,6 +5,7 @@
 
 Scenario: In the admin (menu) there is a link to create a Page
     Given I have installed Orchard
+		And I have installed "Orchard.jQuery"
     When I go to "admin"
     Then I should see "<a href="/Admin/Contents/Create/Page"[^>]*>Page</a>"
 
@@ -13,7 +14,7 @@ Scenario: I can create and publish a new Page
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is super. |
         And I hit "Publish Now"
         And I go to "super-duper"
@@ -25,7 +26,7 @@ Scenario: If I create a page which gets a conflicting path generated its path is
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is super. |
         And I hit "Publish Now"
         And I go to "super-duper"
@@ -34,7 +35,7 @@ Scenario: If I create a page which gets a conflicting path generated its path is
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is super number two. |
         And I hit "Publish Now"
         And I go to "super-duper-2"
@@ -46,9 +47,9 @@ Scenario: A new page marked to be the home page and publish does take over the h
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is a draft of the new home page. |
-            | Routable.PromoteToHomePage | true |
+            | Autoroute.PromoteToHomePage | true |
         And I hit "Publish Now"
         And I go to "/"
     Then I should see "<h1>Super Duper</h1>"
@@ -60,9 +61,9 @@ Scenario: A new page marked to be the home page but only saved as draft does not
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Drafty |
+            | Title.Title | Drafty |
             | Body.Text | This is a draft of the new home page. |
-            | Routable.PromoteToHomePage | true |
+            | Autoroute.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "/"
     Then I should see "<h1>Welcome to Orchard!</h1>"

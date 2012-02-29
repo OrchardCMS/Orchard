@@ -215,7 +215,8 @@ namespace Orchard.Users.Services {
 
         private void SetPasswordEncrypted(UserPartRecord partRecord, string password) {
             partRecord.Password = Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(password))); 
-            partRecord.PasswordSalt = null; 
+            partRecord.PasswordSalt = null;
+            partRecord.PasswordFormat = MembershipPasswordFormat.Encrypted;
         }
 
         private bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {

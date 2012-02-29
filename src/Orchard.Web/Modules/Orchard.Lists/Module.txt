@@ -2,9 +2,9 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: Introduces a preconfigured container-enabled content type.
 FeatureDescription: A basic container-enabled content type.
-Dependencies: Contents, Containers, Navigation
+Dependencies: Contents, Containers, Navigation, Orchard.Autoroute
 Category: Content

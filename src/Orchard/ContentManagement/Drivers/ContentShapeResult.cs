@@ -35,6 +35,15 @@ namespace Orchard.ContentManagement.Drivers {
 
             dynamic parentShape = context.Shape;
             var newShape = _shapeBuilder(context);
+
+            if (ContentPart != null && newShape.ContentPart == null) {
+                newShape.ContentPart = ContentPart;
+            }
+
+            if (ContentField != null && newShape.ContentField == null) {
+                newShape.ContentField = ContentField;
+            }
+
             ShapeMetadata newShapeMetadata = newShape.Metadata;
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;

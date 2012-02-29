@@ -2,16 +2,27 @@
 <fieldset>
     @Html.LabelFor(widget => widget.Zone, T("Zone"))
     @Html.DropDownListFor(widget => widget.Zone, new SelectList(Model.AvailableZones))
+    <span class="hint">@T("The Zone in the Layout where the Widget will be rendered.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.LayerId, T("Layer"))
     @Html.DropDownListFor(widget => widget.LayerId, new SelectList(Model.AvailableLayers, "Id", "Name"))
+    <span class="hint">@T("The Layer where the Widget when be rendered.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Position, T("Position"))
     @Html.TextBoxFor(widget => widget.Position, new { @class = "text text-small"})
+    <span class="hint">@T("The position of the Widget inside the Zone.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Title, T("Title"))
-    @Html.EditorFor(widget => widget.Title)
+    @Html.TextBoxFor(widget => widget.Title, new { @class = "textMedium" })
+    <span class="hint">@T("The title of the Widget.")</span>
+    @Html.EditorFor(widget => widget.RenderTitle)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RenderTitle)">@T("Check to to render the title on the front-end, uncheck to hide")</label>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(widget => widget.Name, T("Name"))
+    @Html.TextBoxFor(widget => widget.Name, new { @class = "text-box" })
+    <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>

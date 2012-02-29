@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -19,17 +20,18 @@ namespace Orchard.Comments.Handlers {
             OnInitializing<CommentsPart>((ctx, x) => {
                 x.CommentsActive = true;
                 x.CommentsShown = true;
+                x.Comments = new List<CommentPart>();
             });
 
             OnLoading<CommentsPart>((context, comments) => {
                 comments._comments.Loader(list => contentManager
                     .Query<CommentPart, CommentPartRecord>()
-                    .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Approved)
+                    .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Approved)
                     .List().ToList());
 
                 comments._pendingComments.Loader(list => contentManager
                     .Query<CommentPart, CommentPartRecord>()
-                    .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Pending)
+                    .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Pending)
                     .List().ToList());
             });
 

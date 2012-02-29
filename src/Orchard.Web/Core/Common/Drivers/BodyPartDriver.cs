@@ -2,25 +2,29 @@
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
+using Orchard.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.Routable.Models;
 using Orchard.Services;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly RequestContext _requestContext;
 
         private const string TemplateName = "Parts.Common.Body";
 
-        public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
+        public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters, RequestContext requestContext) {
             _htmlFilters = htmlFilters;
             Services = services;
+            _requestContext = requestContext;
         }
 
         public IOrchardServices Services { get; set; }
@@ -34,24 +38,24 @@ namespace Orchard.Core.Common.Drivers {
                 ContentShape("Parts_Common_Body",
                              () => {
                                  var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
-                                 return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+                                 return shapeHelper.Parts_Common_Body(Html: new HtmlString(bodyText));
                              }),
                 ContentShape("Parts_Common_Body_Summary",
                              () => {
                                  var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
-                                 return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
+                                 return shapeHelper.Parts_Common_Body_Summary(Html: new HtmlString(bodyText));
                              })
                 );
         }
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
-            var model = BuildEditorViewModel(part);
+            var model = BuildEditorViewModel(part,_requestContext);
             return ContentShape("Parts_Common_Body_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BodyPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = BuildEditorViewModel(part);
+            var model = BuildEditorViewModel(part, _requestContext);
             updater.TryUpdateModel(model, Prefix, null, null);
 
             return ContentShape("Parts_Common_Body_Edit", 
@@ -69,11 +73,11 @@ namespace Orchard.Core.Common.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
         }
 
-        private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {
+        private static BodyEditorViewModel BuildEditorViewModel(BodyPart part,RequestContext requestContext) {
             return new BodyEditorViewModel {
                 BodyPart = part,
                 EditorFlavor = GetFlavor(part),
-                AddMediaPath = new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
+                AddMediaPath = new PathBuilder(part,requestContext).AddContentType().AddContainerSlug().ToString()
             };
         }
 
@@ -87,10 +91,12 @@ namespace Orchard.Core.Common.Drivers {
         class PathBuilder {
             private readonly IContent _content;
             private string _path;
+            private readonly RequestContext _requestContext;
 
-            public PathBuilder(IContent content) {
+            public PathBuilder(IContent content,RequestContext requestContext) {
                 _content = content;
                 _path = "";
+                _requestContext = requestContext;
             }
 
             public override string ToString() {
@@ -104,23 +110,10 @@ namespace Orchard.Core.Common.Drivers {
 
             public PathBuilder AddContainerSlug() {
                 var common = _content.As<ICommonPart>();
-                if (common == null)
+                if (common == null || common.Container==null)
                     return this;
-
-                var routable = common.Container.As<RoutePart>();
-                if (routable == null)
-                    return this;
-
-                Add(routable.Slug);
-                return this;
-            }
-
-            public PathBuilder AddSlug() {
-                var routable = _content.As<RoutePart>();
-                if (routable == null)
-                    return this;
-
-                Add(routable.Slug);
+                var helper = new UrlHelper(_requestContext);
+                Add(helper.ItemDisplayUrl(common.Container));
                 return this;
             }
 

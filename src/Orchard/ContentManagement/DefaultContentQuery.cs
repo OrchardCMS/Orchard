@@ -9,6 +9,10 @@ using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Utility.Extensions;
+using NHibernate.Transform;
+using NHibernate.SqlCommand;
+using System.Reflection;
+using Orchard.Data.Conventions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
@@ -129,6 +133,9 @@ namespace Orchard.ContentManagement {
             
             criteria.ApplyVersionOptionsRestrictions(_versionOptions);
 
+            criteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
+            criteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
+
             // TODO: put 'removed false' filter in place
             if (skip != 0) {
                 criteria = criteria.SetFirstResult(skip);
@@ -240,8 +247,61 @@ namespace Orchard.ContentManagement {
                 _query.OrderByDescending(keySelector);
                 return this;
             }
-        }
 
+
+            public IContentQuery<T, TR> WithQueryHints(QueryHints hints) {
+                if (hints == QueryHints.Empty) {
+                    return this;
+                }
+
+                var contentItemVersionCriteria = _query.BindItemVersionCriteria();
+                var contentItemCriteria = _query.BindItemCriteria();
+
+                var contentItemMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemRecord));
+                var contentItemVersionMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemVersionRecord));
+
+                // break apart and group hints by their first segment
+                var hintDictionary = hints.Records
+                    .Select(hint => new { Hint = hint, Segments = hint.Split('.') })
+                    .GroupBy(item => item.Segments.FirstOrDefault())
+                    .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
+
+                // locate hints that match properties in the ContentItemVersionRecord
+                foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                    contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+                }
+
+                // locate hints that match properties in the ContentItemRecord
+                foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                    contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+                }
+
+                if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
+                    contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
+
+                return this;
+            }
+
+            private static ICriteria ExtendCriteria(ICriteria criteria, string segment) {
+                return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
+            }
+
+            public IContentQuery<T, TR> WithQueryHintsFor(string contentType) {
+                var contentItem = _query.ContentManager.New(contentType);
+                var contentPartRecords = new List<string>();
+                foreach (var part in contentItem.Parts) {
+                    var partType = part.GetType().BaseType;
+                    if (partType.IsGenericType && partType.GetGenericTypeDefinition() == typeof(ContentPart<>)) {
+                        var recordType = partType.GetGenericArguments().Single();
+                        contentPartRecords.Add(recordType.Name);
+                    }
+                }
+
+                return WithQueryHints(new QueryHints().ExpandRecords(contentPartRecords));
+            }
+        }
     }
 
     internal static class CriteriaExtensions {

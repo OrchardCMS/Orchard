@@ -7,8 +7,10 @@
     <fieldset>
         <label for="DisplayName">@T("Display Name")</label>
         @Html.TextBoxFor(m => m.DisplayName, new {@class = "textMedium", autofocus = "autofocus"})
+        <span class="hint">@T("Name of the type as it will be displayed in screens.")</span>
         <label for="Name">@T("Content Type Id")</label>
         @Html.TextBoxFor(m => m.Name, new {@class = "text"})
+        <span class="hint">@T("Technical name of the type.")</span>
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Create")</button>
@@ -18,24 +20,41 @@
 <script type="text/javascript">
 //<![CDATA[
     $(function(){
-        //pull slug input from tab order
-        $("#@Html.FieldIdFor(m=>m.Name)").attr("tabindex",-1);
-        $("#@Html.FieldIdFor(m=>m.DisplayName)").blur(function(){
-            var name = $("#@Html.FieldIdFor(m=>m.Name)");
-            if (name.val()) { return true; }
-            var displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)").val();
-            jQuery.post(
-                "@Url.Action("ContentTypeName","Admin",new RouteValueDictionary{{"Area","Orchard.ContentTypes"}})",
-                {
-                    displayName: $("#@Html.FieldIdFor(m=>m.DisplayName)").val(),
+        var $name = $("#@Html.FieldIdFor(m=>m.Name)");
+        var $displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)");
+        var jsonUrl = "@Url.Action("ContentTypeName", "Admin", new RouteValueDictionary { {"Area","Orchard.ContentTypes"} } )";
+        var version = 0;
+
+        var nameAltered;
+        $name.keypress(function() {
+            nameAltered = true;
+        });
+        
+        var compute = function() {
+            // stop processing automatically if altered by the user
+            if(nameAltered) {
+                return true;
+            }
+
+            $.post(jsonUrl, {
+                    displayName: $displayName.val(),
+                    version: ++version,
                     __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
                 },
                 function(data) {
-                    name.val(data);
+                    if(version == data.version) {
+                        $name.val(data.result);
+                    }
                 },
                 "json"
             );
-        })
+        };
+        
+        //pull technical name input from tab order
+        $name.attr("tabindex", -1);
+        
+        $displayName.keyup(compute);
+        $displayName.blur(compute);
     })
 //]]>
 </script>

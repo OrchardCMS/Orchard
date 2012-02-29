@@ -2,9 +2,9 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: The containers module introduces container and containable behaviors for content items.
 FeatureDescription: Container and containable parts to enable parent-child relationships between content items.
-Dependencies: Contents, Routable
+Dependencies: Contents
 Category: Content

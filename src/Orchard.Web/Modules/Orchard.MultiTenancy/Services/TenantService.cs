@@ -1,13 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.MultiTenancy.Services {
     public class TenantService : ITenantService {
         private readonly IShellSettingsManager _shellSettingsManager;
+        private readonly IExtensionManager _extensionManager;
 
-        public TenantService(IShellSettingsManager shellSettingsManager) {
+        public TenantService(
+            IShellSettingsManager shellSettingsManager,
+            IExtensionManager extensionManager) {
             _shellSettingsManager = shellSettingsManager;
+            _extensionManager = extensionManager;
         }
 
         public IEnumerable<ShellSettings> GetTenants() {
@@ -23,6 +29,30 @@ namespace Orchard.MultiTenancy.Services {
             if ( tenant != null ) {
                 _shellSettingsManager.SaveSettings(settings);
             }
+        }
+
+        /// <summary>
+        /// Loads only installed themes
+        /// </summary>
+        public IEnumerable<ExtensionDescriptor> GetInstalledThemes() {
+            return GetThemes(_extensionManager.AvailableExtensions());
+        }
+
+        private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
+            var themes = new List<ExtensionDescriptor>();
+            foreach (var descriptor in extensions) {
+
+                if (!DefaultExtensionTypes.IsTheme(descriptor.ExtensionType)) {
+                    continue;
+                }
+
+                ExtensionDescriptor theme = descriptor;
+
+                if (theme.Tags == null || !theme.Tags.Contains("hidden")) {
+                    themes.Add(theme);
+                }
+            }
+            return themes;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
@@ -9,6 +8,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Localization;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Services {
     public class ContentDefinitionService : IContentDefinitionService {
@@ -72,7 +72,7 @@ namespace Orchard.ContentTypes.Services {
                 name = GenerateContentTypeNameFromDisplayName(displayName);
             }
             else {
-                if(!IsLetter(name[0])) {
+                if(!name[0].IsLetter()) {
                     throw new ArgumentException("Content type name must start with a letter", "name");
                 }
             }
@@ -145,8 +145,30 @@ namespace Orchard.ContentTypes.Services {
             });
         }
 
-        public void RemoveType(string name) {
-            throw new NotImplementedException();
+        public void RemoveType(string name, bool deleteContent) {
+
+            // first remove all attached parts
+            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(name);
+            var partDefinitions = typeDefinition.Parts.ToArray();
+            foreach (var partDefinition in partDefinitions) {
+                RemovePartFromType(partDefinition.PartDefinition.Name, name);
+
+                // delete the part if it's its own part
+                if(partDefinition.PartDefinition.Name == name) {
+                    RemovePart(name);
+                }
+            }
+
+            _contentDefinitionManager.DeleteTypeDefinition(name);
+
+            // delete all content items (but keep versions)
+            if (deleteContent) {
+                var contentItems = Services.ContentManager.Query(name).List();
+                foreach (var contentItem in contentItems) {
+                    Services.ContentManager.Remove(contentItem);
+                }
+            }
+
         }
 
         public void AddPartToType(string partName, string typeName) {
@@ -211,7 +233,13 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void RemovePart(string name) {
-            throw new NotImplementedException();
+            var partDefinition = _contentDefinitionManager.GetPartDefinition(name);
+            var fieldDefinitions = partDefinition.Fields.ToArray();
+            foreach(var fieldDefinition in fieldDefinitions) {
+                RemoveFieldFromPart(fieldDefinition.Name, name);
+            }
+            
+            _contentDefinitionManager.DeletePartDefinition(name);
         }
 
         public IEnumerable<ContentFieldInfo> GetFields() {
@@ -219,49 +247,60 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
-            fieldName = SafeName(fieldName);
+            AddFieldToPart(fieldName, fieldName, fieldTypeName, partName);
+        }
+
+        public void AddFieldToPart(string fieldName, string displayName, string fieldTypeName, string partName) {
+            fieldName = fieldName.ToSafeName();
             if (string.IsNullOrEmpty(fieldName)) {
                 throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
             }
             _contentDefinitionManager.AlterPartDefinition(partName,
-                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName).WithDisplayName(displayName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {
             _contentDefinitionManager.AlterPartDefinition(partName, typeBuilder => typeBuilder.RemoveField(fieldName));
         }
 
-        private static string SafeName(string name) {
-            if (string.IsNullOrWhiteSpace(name))
-                return String.Empty;
+        public string GenerateContentTypeNameFromDisplayName(string displayName) {
+            displayName = displayName.ToSafeName();
 
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""<>]+");
+            while (_contentDefinitionManager.GetTypeDefinition(displayName) != null)
+                displayName = VersionName(displayName);
 
-            name = dissallowed.Replace(name, String.Empty);
-            name = name.Trim();
+            return displayName;
+        }
 
-            // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
-            if(name.Length > 0) {
-                if (!IsLetter(name[0])) {
-                    name = name.Substring(1);
+        public string GenerateFieldNameFromDisplayName(string partName, string displayName) {
+            IEnumerable<ContentPartFieldDefinition> fieldDefinitions;
+
+            var part = _contentDefinitionManager.GetPartDefinition(partName);
+            displayName = displayName.ToSafeName();
+
+            if(part == null) {
+                var type = _contentDefinitionManager.GetTypeDefinition(partName);
+
+                if(type == null) {
+                    throw new ArgumentException("The part doesn't exist: " + partName);
                 }
+
+                var typePart = type.Parts.FirstOrDefault(x => x.PartDefinition.Name == partName);
+                
+                // id passed in might be that of a type w/ no implicit field
+                if(typePart == null) {
+                    return displayName;
+                }
+                else {
+                    fieldDefinitions = typePart.PartDefinition.Fields.ToArray();    
+                }
+                
+            }
+            else {
+                fieldDefinitions = part.Fields.ToArray();
             }
 
-            if (name.Length > 128)
-                name = name.Substring(0, 128);
-
-            return name;
-        }
-
-        public static bool IsLetter(char c) {
-            return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
-        }
-
-        //gratuitously stolen from the RoutableService
-        public string GenerateContentTypeNameFromDisplayName(string displayName) {
-            displayName = SafeName(displayName);
-
-            while ( _contentDefinitionManager.GetTypeDefinition(displayName) != null )
+            while (fieldDefinitions.Any(x => String.Equals(displayName.Trim(), x.Name.Trim(), StringComparison.OrdinalIgnoreCase)))
                 displayName = VersionName(displayName);
 
             return displayName;

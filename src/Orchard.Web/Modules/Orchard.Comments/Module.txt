@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: The comments system implemented by this module can be applied to arbitrary Orchard content types, such as blogs and pages. It includes comment validation and spam protection through the Akismet service.
 Features:
     Orchard.Comments:
@@ -11,8 +11,3 @@ Features:
         Description: Standard content item comments.
         Dependencies: Settings
         Category: Social
-    Orchard.Comments.Rules:
-        Name: Comments Rules
-        Description: Rules for the Comments modules
-        Category: Rules
-        Dependencies: Orchard.Comments, Orchard.Rules

@@ -4,7 +4,7 @@
 @{ Layout.Title = T("Edit Role").ToString(); }
 
 @using(Html.BeginFormAntiForgeryPost()) {
-    Html.ValidationSummary();
+    @Html.ValidationSummary();
     <fieldset>
         <legend>@T("Information")</legend>
         <label for="pageTitle">@T("Role Name:")</label>
@@ -36,19 +36,20 @@
                 </thead>
                 @foreach (var permission in Model.RoleCategoryPermissions[category]) {
                 <tr>
-                    <td>@permission.Description</td>
+                    <td>@T(permission.Description)</td>
                     <td style="width:60px;">
                         @if (Model.CurrentPermissions.Contains(permission.Name)) {
-                            <input type="checkbox" value="true" name="@T("Checkbox.{0}", permission.Name)" checked="checked"/>
-                         } else {
-                            <input type="checkbox" value="true" name="@T("Checkbox.{0}", permission.Name)"/>
+                            <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="checked"/>
+                         } 
+                         else {
+                            <input type="checkbox" value="true" name="Checkbox.@permission.Name"/>
                         }
                     </td>    
                     <td style="width:60px;">
                     @if (Model.EffectivePermissions.Contains(permission.Name)) {
-                            <input type="checkbox" disabled="disabled" name="@T("Effective.{0}", permission.Name)" checked="checked"/>
+                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="checked"/>
                      } else {
-                            <input type="checkbox" disabled="disabled" name="@T("Effective.{0}", permission.Name)"/>
+                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name"/>
                         }
                     </td>                
                 </tr>
@@ -60,7 +61,7 @@
     <fieldset>
         <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
         @if (Model.Name != "Administrator") {
-        <button type="submit" name="submit.Delete" value="@T("Delete")">@T("Delete")</button>
+        <button type="submit" name="submit.Delete" value="@T("Delete")" itemprop="RemoveUrl" itemprop="RemoveUrl">@T("Delete")</button>
         }
     </fieldset>
 }

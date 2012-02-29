@@ -27,12 +27,12 @@ namespace Orchard.Core.Settings.Commands {
             "If 'Force' is true, set the site base url even if it is already set. " +
             "The default behavior is to not override the setting.")]
         [OrchardSwitches("BaseUrl,Force")]
-        public string SetBaseUrl() {
+        public void SetBaseUrl() {
             // Don't do anything if set and not forcing
             if (!string.IsNullOrEmpty(_siteService.GetSiteSettings().BaseUrl)) {
                 if (!Force) {
                     Context.Output.WriteLine(T("'BaseUrl' site setting is already set. Use the 'Force' flag to override."));
-                    return null;
+                    return;
                 }
             }
 
@@ -40,7 +40,7 @@ namespace Orchard.Core.Settings.Commands {
             if (string.IsNullOrEmpty(BaseUrl)) {
                 if (_httpContextAccessor.Current() == null) {
                     Context.Output.WriteLine(T("No HTTP request available to determine the base url of the site"));
-                    return null;
+                    return;
                 }
                 var request = _httpContextAccessor.Current().Request;
                 BaseUrl = request.ToApplicationRootUrlString();
@@ -49,7 +49,6 @@ namespace Orchard.Core.Settings.Commands {
             // Update base url
             _siteService.GetSiteSettings().As<SiteSettingsPart>().BaseUrl = BaseUrl;
             Context.Output.WriteLine(T("'BaseUrl' site setting set to '{0}'", BaseUrl));
-            return null;
         }
     }
 }

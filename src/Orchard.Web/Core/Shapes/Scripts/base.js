@@ -137,7 +137,7 @@
             var _this = $(this);
             var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
             var _controlleesAreHidden = _controllees.is(":hidden");
-            if (_this.is(":checked")) {
+            if (_this.is(":checked") || _this.is(":selected")) {
                 if (_controlleesAreHidden) {
                     _controllees.hide(); // <- unhook this when the following comment applies
                     $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
@@ -157,13 +157,18 @@
                 return;
             }
             controller.data("isControlling", 1);
-            if (!controller.is(":checked")) {
+            if (!controller.is(":checked") && !controller.is(":selected")) {
                 $("[data-controllerid=" + controller.attr("id") + "]").hide();
             }
             if (controller.is(":checkbox")) {
                 controller.click($(this).toggleWhatYouControl);
             } else if (controller.is(":radio")) {
                 $("[name=" + controller.attr("name") + "]").click(function () { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
+            }
+            else if (controller.is("option")) {
+                controller.parent().change(function () {
+                    controller.toggleWhatYouControl();
+                });
             }
         });
     });
@@ -208,7 +213,16 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
-            _this.click(function () { form.submit(); return false; });
+            _this.click(function () {
+                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                    if (!confirm(confirmRemoveMessage)) {
+                        return false;
+                    }
+                }
+
+                form.submit();
+                return false;
+            });
         });
     });
 })(jQuery);

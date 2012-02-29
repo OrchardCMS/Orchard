@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using System.Xml.Linq;
 using Autofac;
 using NHibernate;
@@ -29,6 +30,7 @@ namespace Orchard.ContentManagement {
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private const string Published = "Published";
         private const string Draft = "Draft";
 
@@ -40,13 +42,15 @@ namespace Orchard.ContentManagement {
             IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
-            Lazy<ISessionLocator> sessionLocator) {
+            Lazy<ISessionLocator> sessionLocator,
+            Lazy<IEnumerable<IContentHandler>> handlers) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
+            _handlers = handlers;
             _contentDisplay = contentDisplay;
             _sessionLocator = sessionLocator;
             Logger = NullLogger.Instance;
@@ -54,15 +58,8 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        private IEnumerable<IContentHandler> _handlers;
         public IEnumerable<IContentHandler> Handlers {
-            get {
-                if (_handlers == null) {
-                    _handlers = _context.Resolve<IEnumerable<IContentHandler>>();
-                }
-                    
-                return _handlers;
-            }
+              get { return _handlers.Value; }
         }
 
         public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {
@@ -111,6 +108,10 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Get(int id, VersionOptions options) {
+            return Get(id, options, QueryHints.Empty);
+        }
+
+        public virtual ContentItem Get(int id, VersionOptions options, QueryHints hints) {
             var session = _contentManagerSession();
             ContentItem contentItem;
 
@@ -123,18 +124,58 @@ namespace Orchard.ContentManagement {
                     return contentItem;
                 }
 
-                // locate explicit version record
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
             }
+            else if (session.RecallContentRecordId(id, out contentItem)) {
+                // try to reload a previously loaded published content item
+
+                if (options.IsPublished) {
+                    return contentItem;
+                }
+
+                versionRecord = contentItem.VersionRecord;
+            }
             else {
-                var record = _contentItemRepository.Get(id);
-                if (record != null)
-                    versionRecord = GetVersionRecord(options, record);
+                // do a query to load the records in case Get is called directly
+                var contentItemVersionRecords = GetManyImplementation(hints,
+                    (contentItemCriteria, contentItemVersionCriteria) => {
+                        contentItemCriteria.Add(Restrictions.Eq("Id", id));
+                        if (options.IsPublished) {
+                            contentItemVersionCriteria.Add(Restrictions.Eq("Published", true));
+                        }
+                        else if (options.IsLatest) {
+                            contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                        }
+                        else if (options.IsDraft && !options.IsDraftRequired) {
+                            contentItemVersionCriteria.Add(
+                                Restrictions.And(Restrictions.Eq("Published", false),
+                                                Restrictions.Eq("Latest", true)));
+                        }
+                        else if (options.IsDraft || options.IsDraftRequired) {
+                            contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                        }
+
+                        contentItemVersionCriteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
+                        contentItemVersionCriteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
+                        contentItemVersionCriteria.SetMaxResults(1);
+                    });
+
+                versionRecord = contentItemVersionRecords.FirstOrDefault();
             }
 
-            // no record means content item doesn't exist
+            // no record means content item is not in db
             if (versionRecord == null) {
-                return null;
+                // check in memory
+                var record = _contentItemRepository.Get(id);
+                if (record == null) {
+                    return null;
+                }
+
+                versionRecord = GetVersionRecord(options, record);
+
+                if (versionRecord == null) {
+                    return null;
+                }
             }
 
             // return item if obtained earlier in session
@@ -151,7 +192,7 @@ namespace Orchard.ContentManagement {
 
             // store in session prior to loading to avoid some problems with simple circular dependencies
             session.Store(contentItem);
-
+            
             // create a context with a new instance to load            
             var context = new LoadContentContext(contentItem);
 
@@ -161,10 +202,10 @@ namespace Orchard.ContentManagement {
 
             // when draft is required and latest is published a new version is appended 
             if (options.IsDraftRequired && versionRecord.Published) {
-                return BuildNewVersion(context.ContentItem);
+                contentItem = BuildNewVersion(context.ContentItem);
             }
 
-            return context.ContentItem;
+            return contentItem;
         }
 
         private ContentItemVersionRecord GetVersionRecord(VersionOptions options, ContentItemRecord itemRecord) {
@@ -199,7 +240,7 @@ namespace Orchard.ContentManagement {
             return _contentItemVersionRepository
                 .Fetch(x => x.ContentItemRecord.Id == id)
                 .OrderBy(x => x.Number)
-                .Select(x => Get(x.ContentItemRecord.Id, VersionOptions.VersionRecord(x.Id)));
+                .Select(x => Get(x.Id, VersionOptions.VersionRecord(x.Id)));
         }
 
         public IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent {
@@ -252,26 +293,28 @@ namespace Orchard.ContentManagement {
             var contentItemMetadata = session.SessionFactory.GetClassMetadata(typeof (ContentItemRecord));
             var contentItemVersionMetadata = session.SessionFactory.GetClassMetadata(typeof (ContentItemVersionRecord));
 
-            // break apart and group hints by their first segment
-            var hintDictionary = hints.Records
-                .Select(hint=>new {Hint=hint, Segments=hint.Split('.')})
-                .GroupBy(item=>item.Segments.FirstOrDefault())
-                .ToDictionary(grouping=>grouping.Key, StringComparer.InvariantCultureIgnoreCase);
+            if (hints != QueryHints.Empty) {
+                // break apart and group hints by their first segment
+                var hintDictionary = hints.Records
+                    .Select(hint => new { Hint = hint, Segments = hint.Split('.') })
+                    .GroupBy(item => item.Segments.FirstOrDefault())
+                    .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
 
-            // locate hints that match properties in the ContentItemVersionRecord
-            foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key=>hintDictionary[key])) {
-                contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
-                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+                // locate hints that match properties in the ContentItemVersionRecord
+                foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                    contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+                }
+
+                // locate hints that match properties in the ContentItemRecord
+                foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                    contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+                }
+
+                if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
+                    contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
             }
-
-            // locate hints that match properties in the ContentItemRecord
-            foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key=>hintDictionary[key])) {
-                contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
-                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
-            }
-
-            if (hintDictionary.SelectMany(x=>x.Value).Any(x=>x.Segments.Count() > 1))
-                contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
 
             return contentItemVersionCriteria.List<ContentItemVersionRecord>();
         }
@@ -483,12 +526,30 @@ namespace Orchard.ContentManagement {
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
-            return _contentDisplay.Value.UpdateEditor(content, updater, groupId);
+            var context = new UpdateContentContext(content.ContentItem);
+
+            Handlers.Invoke(handler => handler.Updating(context), Logger);
+
+            var result = _contentDisplay.Value.UpdateEditor(content, updater, groupId);
+
+            Handlers.Invoke(handler => handler.Updated(context), Logger);
+
+            return result;
+        }
+
+        public void Clear() {
+            var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
+            session.Clear();
+            _contentManagerSession().Clear();
         }
 
         public IContentQuery<ContentItem> Query() {
             var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
             return query.ForPart<ContentItem>();
+        }
+
+        public IHqlQuery HqlQuery() {
+            return new DefaultHqlQuery(this, _sessionLocator.Value.For(typeof(ContentItemVersionRecord)));
         }
 
         // Insert or Update imported data into the content manager.
@@ -504,7 +565,7 @@ namespace Orchard.ContentManagement {
 
             var item = importContentSession.Get(identity);
             if (item == null) {
-                item = New(element.Name.LocalName);
+                item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
                     Create(item, VersionOptions.Draft);
                 }
@@ -512,17 +573,28 @@ namespace Orchard.ContentManagement {
                     Create(item);
                 }
             }
-            else {
-                item = Get(item.Id, VersionOptions.DraftRequired);
-            }
+
             importContentSession.Store(identity, item);
 
             var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
             }
+
             foreach (var contentHandler in Handlers) {
                 contentHandler.Imported(context);
+            }
+
+            var savedItem = Get(item.Id, VersionOptions.DraftRequired);
+
+            // the item has been pre-created in the first pass of the import, create it in db
+            if(savedItem == null) {
+                if (status != null && status.Value == "Draft") {
+                    Create(item, VersionOptions.Draft);
+                }
+                else {
+                    Create(item);
+                }
             }
 
             if (status == null || status.Value == Published) {
@@ -531,7 +603,7 @@ namespace Orchard.ContentManagement {
         }
 
         public XElement Export(ContentItem contentItem) {
-            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+            var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
             foreach (var contentHandler in Handlers) {
                 contentHandler.Exporting(context);

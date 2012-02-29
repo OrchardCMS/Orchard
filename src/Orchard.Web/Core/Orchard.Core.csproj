@@ -65,6 +65,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
     <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
@@ -76,8 +77,13 @@
     <Compile Include="Common\Models\IdentityPartRecord.cs" />
     <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\ResourceManifest.cs" />
+    <Compile Include="Common\Routes.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
+    <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
+    <Compile Include="Common\Settings\TextFieldSettings.cs" />
+    <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -85,10 +91,11 @@
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
-    <Compile Include="Containers\ContainersPathConstraint.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
     <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
+    <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
+    <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
@@ -97,12 +104,11 @@
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
     <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
     <Compile Include="Containers\Models\OrderByDirection.cs" />
-    <Compile Include="Containers\Routes.cs" />
-    <Compile Include="Containers\Services\ContainersPathConstraintUpdater.cs" />
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Handlers\RulesHandler.cs" />
     <Compile Include="Contents\Rules\ContentEvents.cs" />
     <Compile Include="Contents\Rules\ContentForms.cs" />
@@ -122,6 +128,7 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
@@ -130,9 +137,6 @@
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
-    <Compile Include="Routable\Events\ISlugEventHandler.cs" />
-    <Compile Include="Routable\ResourceManifest.cs" />
-    <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
@@ -141,12 +145,6 @@
     <Compile Include="Navigation\Migrations.cs" />
     <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
     <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
-    <Compile Include="Routable\Controllers\ItemController.cs" />
-    <Compile Include="Routable\Migrations.cs" />
-    <Compile Include="Routable\Drivers\RoutePartDriver.cs" />
-    <Compile Include="Routable\Handlers\RoutePartHandler.cs" />
-    <Compile Include="Routable\IRoutablePathConstraint.cs" />
-    <Compile Include="Routable\Models\RoutePart.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
@@ -179,8 +177,6 @@
     <Compile Include="Feeds\Models\FeedResponse.cs" />
     <Compile Include="Feeds\Rss\RssFeedBuilder.cs" />
     <Compile Include="Feeds\Rss\RssResult.cs" />
-    <Compile Include="HomePage\Controllers\HomeController.cs" />
-    <Compile Include="HomePage\Routes.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
@@ -198,14 +194,6 @@
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routable\Models\RoutePartRecord.cs" />
-    <Compile Include="Routable\Routes.cs" />
-    <Compile Include="Routable\Services\IRoutableService.cs" />
-    <Compile Include="Routable\Services\RoutablePathConstraint.cs" />
-    <Compile Include="Routable\Services\RoutablePathConstraintUpdator.cs" />
-    <Compile Include="Routable\Services\RoutableService.cs" />
-    <Compile Include="Routable\ViewModels\RoutableEditorViewModel.cs" />
-    <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
@@ -257,6 +245,8 @@
     <Compile Include="XmlRpc\Models\XRpcMethodCall.cs" />
     <Compile Include="XmlRpc\Models\XRpcMethodResponse.cs" />
     <Compile Include="XmlRpc\Models\XRpcStruct.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcReader.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcWriter.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReader.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcWriter.cs" />
     <Compile Include="XmlRpc\XmlRpcContext.cs" />
@@ -293,9 +283,6 @@
     <Content Include="Reports\Styles\menu.reports-admin.css" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
-    <Content Include="Routable\Module.txt" />
-    <Content Include="Routable\Scripts\jquery.slugify.js" />
-    <Content Include="Routable\Views\EditorTemplates\Parts.Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Styles\images\menu.settings.png" />
@@ -303,7 +290,6 @@
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Contents\Views\Content.Edit.cshtml" />
-    <Content Include="Routable\Placement.info" />
     <Content Include="Settings\Placement.info" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
@@ -351,7 +337,6 @@
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
-    <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
@@ -362,10 +347,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Containers\Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Web.config" />
-    <Content Include="Routable\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
@@ -383,19 +368,13 @@
     </Content>
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Navigation\Placement.info" />
-    <Content Include="Routable\Views\Parts.RoutableTitle.cshtml" />
-    <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Contents\Views\Content.Summary.cshtml" />
-    <Content Include="Shapes\Views\Pager.cshtml" />
     <Content Include="Contents\Views\Content.SaveButton.cshtml" />
     <Content Include="Contents\Views\Content.PublishButton.cshtml" />
     <Content Include="Shapes\Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Shapes\Styles\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Routable\Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Settings\Styles\Web.config">
@@ -409,8 +388,6 @@
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
-    <Content Include="Routable\Views\Parts.RoutableTitle_Summary.cshtml" />
-    <Content Include="Routable\Views\Parts.RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />
@@ -480,6 +457,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Title\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\ErrorPage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\Parts.Container.Contained.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldSettingsEventsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Textarea.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\ShapeResult\DisplayPartial.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

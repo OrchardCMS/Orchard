@@ -1,0 +1,12 @@
+﻿@*
+    ErrorPage(string Message, Exception Exception)
+*@
+
+<div>
+  <h1 id="page-title">@Html.TitleForPage(T("Oops. Something went wrong ... sorry"))</h1>
+  <div>
+      <p>@T("An unhandled exception has occurred and the request was terminated. Please refresh the page. If the error persists, go back").Text</p>
+      <p>@Model.Message</p>
+      <p>@Model.Exception</p>
+  </div>  
+</div>

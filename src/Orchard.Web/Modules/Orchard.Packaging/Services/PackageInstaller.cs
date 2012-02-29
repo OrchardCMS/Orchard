@@ -1,12 +1,15 @@
 using System;
 using System.IO;
 using NuGet;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
+using Orchard.UI;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
 
@@ -33,9 +36,11 @@ namespace Orchard.Packaging.Services {
             _folderUpdater = folderUpdater;
 
             T = NullLocalizer.Instance;
+            Logger = Logging.NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public Logging.ILogger Logger { get; set;  }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
             // instantiates the appropriate package repository
@@ -78,7 +83,28 @@ namespace Orchard.Packaging.Services {
                 }
             }
 
-            return ExecuteInstall(package, packageRepository, location, applicationPath);
+            var packageInfo = ExecuteInstall(package, packageRepository, location, applicationPath);
+
+            // check the new package is compatible with current Orchard version
+            var descriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
+
+            if(descriptor != null) {
+                if(new FlatPositionComparer().Compare(descriptor.OrchardVersion, typeof(ContentItem).Assembly.GetName().Version.ToString()) >= 0) {
+                    if (previousInstalled) {
+                        // restore the previous version
+                        RestoreExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
+                    }
+                    else {
+                        // just uninstall the new package
+                        Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
+                    }
+
+                    Logger.Error(String.Format("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
+                    throw new OrchardException(T("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
+                }    
+            }
+
+            return packageInfo;
         }
 
         /// <summary>
@@ -216,6 +242,35 @@ namespace Orchard.Packaging.Services {
                 parentPath = null;
                 return false;
             }
+        }
+
+        private bool RestoreExtensionFolder(string extensionFolder, string extensionId) {
+            var source = new DirectoryInfo(_virtualPathProvider.MapPath(_virtualPathProvider.Combine("~", extensionFolder, extensionId)));
+
+            if (source.Exists) {
+                var tempPath = _virtualPathProvider.Combine("~", extensionFolder, "_Backup", extensionId);
+                string localTempPath = null;
+                for (int i = 0; i < 1000; i++) {
+                    localTempPath = _virtualPathProvider.MapPath(tempPath) + (i == 0 ? "" : "." + i.ToString());
+                    if (!Directory.Exists(localTempPath)) {
+                        Directory.CreateDirectory(localTempPath);
+                        break;
+                    }
+                    localTempPath = null;
+                }
+
+                if (localTempPath == null) {
+                    throw new OrchardException(T("Backup folder {0} has too many backups subfolder (limit is 1,000)", tempPath));
+                }
+
+                var backupFolder = new DirectoryInfo(localTempPath);
+                _folderUpdater.Restore(backupFolder, source);
+                _notifier.Information(T("Successfully restored local package to local folder \"{0}\"", source));
+
+                return true;
+            }
+
+            return false;
         }
 
         private bool BackupExtensionFolder(string extensionFolder, string extensionId) {

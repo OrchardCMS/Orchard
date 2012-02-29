@@ -21,16 +21,18 @@ namespace Orchard.DesignerTools.Services {
         private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
+        private bool _processing;
+
         private int _shapeId;
 
         public ShapeTracingFactory(
-            WorkContext workContext, 
+            IWorkContextAccessor workContextAccessor, 
             IShapeTableManager shapeTableManager, 
             IThemeManager themeManager, 
             IWebSiteFolder webSiteFolder,
             IAuthorizer authorizer
             ) {
-            _workContext = workContext;
+            _workContext = workContextAccessor.GetContext();
             _shapeTableManager = shapeTableManager;
             _themeManager = themeManager;
             _webSiteFolder = webSiteFolder;
@@ -57,6 +59,13 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
+            // prevent reentrance as some methods could create new shapes, and trigger this event
+            if(_processing) {
+                return;
+            }
+
+            _processing = true;
+
             if (context.ShapeType != "Layout"
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
@@ -66,16 +75,19 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "DateTimeRelative") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
-                var currentTheme = _themeManager.GetRequestTheme(_workContext.HttpContext.Request.RequestContext);
+                var currentTheme = _workContext.CurrentTheme;
                 var shapeTable = _shapeTableManager.GetShapeTable(currentTheme.Id);
 
                 if (!shapeTable.Descriptors.ContainsKey(shapeMetadata.Type)) {
+                    _processing = false;
                     return;
                 }
 
                 shapeMetadata.Wrappers.Add("ShapeTracingWrapper");
                 shapeMetadata.OnDisplaying(OnDisplaying);
             }
+
+            _processing = false;
         }
         public void Displaying(ShapeDisplayingContext context) {}
 

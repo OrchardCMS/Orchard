@@ -29,6 +29,7 @@ namespace Orchard.Tests.Utility {
 
             public AutoMockSource(MockBehavior behavior) {
                 _behavior = behavior;
+                Ignore<IStartable>();
             }
             
             public bool IsAdapterForIndividualComponents {

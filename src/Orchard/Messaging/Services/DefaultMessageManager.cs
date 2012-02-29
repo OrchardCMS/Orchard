@@ -22,40 +22,44 @@ namespace Orchard.Messaging.Services {
         }
 
         public void Send(ContentItemRecord recipient, string type, string service, Dictionary<string, string> properties = null) {
+            Send(new [] { recipient }, type, service, properties);    
+        }
+
+        public void Send(IEnumerable<ContentItemRecord> recipients, string type, string service, Dictionary<string, string> properties = null) {
             if ( !HasChannels() )
+                return;
+
+            Logger.Information("Sending message {0}", type);
+            try {
+                var context = new MessageContext {
+                    Recipients = recipients,
+                    Type = type,
+                    Service = service
+                };
+
+                PrepareAndSend(type, properties, context);
+            }
+            catch ( Exception e ) {
+                Logger.Error(e, "An error occured while sending the message {0}", type);
+            }
+        }
+
+        public void Send(IEnumerable<string> recipientAddresses, string type, string service, Dictionary<string, string> properties = null) {
+            if (!HasChannels())
                 return;
 
             Logger.Information("Sending message {0}", type);
             try {
 
                 var context = new MessageContext {
-                    Recipient = recipient,
                     Type = type,
-                    Service = service
+                    Service = service,
+                    Addresses = recipientAddresses
                 };
 
-                try {
-
-                    if (properties != null) {
-                        foreach (var key in properties.Keys)
-                            context.Properties.Add(key, properties[key]);
-                    }
-
-                    _messageEventHandler.Sending(context);
-
-                    foreach (var channel in _channels) {
-                        channel.SendMessage(context);
-                    }
-
-                    _messageEventHandler.Sent(context);
-                }
-                finally {
-                    context.MailMessage.Dispose();
-                }
-
-                Logger.Information("Message {0} sent", type);
+                PrepareAndSend(type, properties, context);
             }
-            catch ( Exception e ) {
+            catch (Exception e) {
                 Logger.Error(e, "An error occured while sending the message {0}", type);
             }
         }
@@ -66,6 +70,28 @@ namespace Orchard.Messaging.Services {
 
         public IEnumerable<string> GetAvailableChannelServices() {
             return _channels.SelectMany(c => c.GetAvailableServices());
+        }
+
+        private void PrepareAndSend(string type, Dictionary<string, string> properties, MessageContext context) {
+            try {
+                if (properties != null) {
+                    foreach (var key in properties.Keys)
+                        context.Properties.Add(key, properties[key]);
+                }
+
+                _messageEventHandler.Sending(context);
+
+                foreach (var channel in _channels) {
+                    channel.SendMessage(context);
+                }
+
+                _messageEventHandler.Sent(context);
+            }
+            finally {
+                context.MailMessage.Dispose();
+            }
+
+            Logger.Information("Message {0} sent", type);
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Orchard.Indexing {
     public interface ISearchBuilder {
-        ISearchBuilder Parse(string defaultField, string query, bool escape = true, bool mandatory = false);
-        ISearchBuilder Parse(string[] defaultFields, string query, bool escape = true, bool mandatory = false);
+        ISearchBuilder Parse(string defaultField, string query, bool escape = true);
+        ISearchBuilder Parse(string[] defaultFields, string query, bool escape = true);
 
         ISearchBuilder WithField(string field, bool value);
         ISearchBuilder WithField(string field, DateTime value);

@@ -10,6 +10,8 @@ namespace Orchard.Widgets.Handlers {
     public class WidgetPartHandler : ContentHandler {
         public WidgetPartHandler(IRepository<WidgetPartRecord> widgetsRepository) {
             Filters.Add(StorageFilter.For(widgetsRepository));
+
+            OnInitializing<WidgetPart>((context, part) => part.RenderTitle = true); 
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {

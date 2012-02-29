@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Orchard.Localization;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
@@ -21,14 +22,6 @@ namespace Orchard.Users.Handlers {
 
         public void Sending(MessageContext context) {
             if (context.MessagePrepared)
-                return;
-
-            var contentItem = _contentManager.Get(context.Recipient.Id);
-            if ( contentItem == null )
-                return;
-
-            var recipient = contentItem.As<UserPart>();
-            if ( recipient == null )
                 return;
 
             switch (context.Type) {
@@ -59,6 +52,7 @@ namespace Orchard.Users.Handlers {
                     break;
 
                 case MessageTypes.LostPassword:
+                    var recipient = GetRecipient(context);
                     context.MailMessage.Subject = T("Lost password").Text;
                     context.MailMessage.Body =
                         T("Dear {0}, please <a href=\"{1}\">click here</a> to change your password.", recipient.UserName,
@@ -67,6 +61,15 @@ namespace Orchard.Users.Handlers {
                     context.MessagePrepared = true;
                     break;
             }
+        }
+
+        private UserPart GetRecipient(MessageContext context) {
+            // we expect a single account to be created
+            var contentItem = _contentManager.Get(context.Recipients.Single().Id);
+            if (contentItem == null) {
+                return null;
+            }
+            return contentItem.As<UserPart>();
         }
 
         private static void FormatEmailBody(MessageContext context) {

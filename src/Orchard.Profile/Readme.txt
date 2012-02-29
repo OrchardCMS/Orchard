@@ -1,6 +1,8 @@
 ﻿
 == creating profiling image ==
 
+Create a SQL Server database named Orchard, on the . instance. This can be changed in profiling-setup-commands.txt
+
 From the base of the checkout, execute
 >./build.cmd profiling
 

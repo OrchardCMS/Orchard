@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions; 
 using System.Diagnostics.CodeAnalysis;
+using System.Web;
+using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using System.Security.Principal;
 using System.Web.Mvc;
@@ -16,6 +18,7 @@ using Orchard.Users.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using System.Collections.Generic;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -44,6 +47,7 @@ namespace Orchard.Users.Controllers {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
+        [AlwaysAccessible]
         public ActionResult AccessDenied() {
             var returnUrl = Request.QueryString["ReturnUrl"];
             var currentUser = _authenticationService.GetAuthenticatedUser();
@@ -65,6 +69,7 @@ namespace Orchard.Users.Controllers {
             return View();
         }
 
+        [AlwaysAccessible]
         public ActionResult LogOn() {
             if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
@@ -74,6 +79,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [AlwaysAccessible]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl) {
@@ -107,6 +113,7 @@ namespace Orchard.Users.Controllers {
             }
         }
 
+        [AlwaysAccessible]
         public ActionResult Register() {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
@@ -121,6 +128,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [AlwaysAccessible]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
@@ -137,7 +145,12 @@ namespace Orchard.Users.Controllers {
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+                        var siteUrl = _orchardServices.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+                        if(String.IsNullOrWhiteSpace(siteUrl)) {
+                            siteUrl = HttpContext.Request.ToRootUrlString();
+                        }
+
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce}), siteUrl));
 
                         foreach (var userEventHandler in _userEventHandlers) {
                             userEventHandler.SentChallengeEmail(user);
@@ -161,6 +174,7 @@ namespace Orchard.Users.Controllers {
             return new ShapeResult(this, shape); 
         }
 
+        [AlwaysAccessible]
         public ActionResult RequestLostPassword() {
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
@@ -172,6 +186,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [AlwaysAccessible]
         public ActionResult RequestLostPassword(string username) {
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
@@ -184,7 +199,12 @@ namespace Orchard.Users.Controllers {
                 return View();
             }
 
-            _userService.SendLostPasswordEmail(username, nonce => Url.AbsoluteAction(() => Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+            var siteUrl = _orchardServices.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+            if (String.IsNullOrWhiteSpace(siteUrl)) {
+                siteUrl = HttpContext.Request.ToRootUrlString();
+            }
+
+            _userService.SendLostPasswordEmail(username, nonce => Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
 
             _orchardServices.Notifier.Information(T("Check your e-mail for the confirmation link."));
 
@@ -192,6 +212,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [Authorize]
+        [AlwaysAccessible]
         public ActionResult ChangePassword() {
             ViewData["PasswordLength"] = MinPasswordLength;
 
@@ -200,6 +221,7 @@ namespace Orchard.Users.Controllers {
 
         [Authorize]
         [HttpPost]
+        [AlwaysAccessible]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {

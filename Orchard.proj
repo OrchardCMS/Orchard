@@ -132,6 +132,12 @@
   </Target>
 
   <Target Name ="Spec">
+    <!-- TeamCity support -->
+    <ItemGroup>
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
@@ -389,7 +395,10 @@
     <CallTarget Targets="CompileMsBuildTasks"/>
 
     <ItemGroup>
-      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"/>
+      <Validate-ProjectFiles 
+        Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"
+        Exclude="$(ModulesSrcFolder)\**\*.Specs.csproj"
+        />
     </ItemGroup>
 
     <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>

@@ -57,7 +57,8 @@ namespace Orchard.Search.Controllers {
                                                   searchFields,
                                                   searchHit => searchHit);
             } catch(Exception exception) {
-                this.Error(exception, T("Invalid search query: {0}", exception.Message), Logger, Services.Notifier);
+                Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
+                Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
             }
 
             var list = Shape.List();

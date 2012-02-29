@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Timers;
 using Orchard.Data;
-using Orchard.Environment;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
-    public class SweepGenerator : IOrchardShellEvents {
+
+    public interface ISweepGenerator : ISingletonDependency {
+        void Activate();
+        void Terminate();
+    }
+
+    public class SweepGenerator : ISweepGenerator, IDisposable {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
 
@@ -24,13 +29,13 @@ namespace Orchard.Tasks {
             set { _timer.Interval = value.TotalMilliseconds; }
         }
 
-        public void Activated() {
+        public void Activate() {
             lock (_timer) {
                 _timer.Start();
             }
         }
 
-        public void Terminating() {
+        public void Terminate() {
             lock (_timer) {
                 _timer.Stop();
             }
@@ -56,10 +61,17 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                var transactionManager = scope.Resolve<ITransactionManager>();
+                transactionManager.Demand();
+
                 // resolve the manager and invoke it
                 var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();
             }
+        }
+
+        public void Dispose() {
+            _timer.Dispose();
         }
     }
 }

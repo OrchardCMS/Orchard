@@ -11,7 +11,6 @@ namespace Orchard.Core.Contents.Handlers {
         void TriggerEvent(string category, string type, Func<Dictionary<string, object>> tokensContext);
     }
 
-    [OrchardFeature("Contents.Rules")]
     public class RulePartHandler : ContentHandler {
         public RulePartHandler(IRulesManager rulesManager) {
 

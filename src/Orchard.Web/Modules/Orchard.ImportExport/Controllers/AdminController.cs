@@ -36,19 +36,17 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
-                    throw new ArgumentException(T("Please choose a recipe file to import.").Text);
-                }
-                _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
+            if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
+                ModelState.AddModelError("RecipeFile", T("Please choose a recipe file to import.").Text);
+                Services.Notifier.Error(T("Please choose a recipe file to import."));
+            }
 
+            if (ModelState.IsValid) {
+                _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
                 Services.Notifier.Information(T("Your recipe has been imported."));
-                return RedirectToAction("Import");
             }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Import failed: {0}", exception.Message));
-                return View();
-            }
+
+            return RedirectToAction("Import");
         }
 
         public ActionResult Export() {
@@ -66,21 +64,15 @@ namespace Orchard.ImportExport.Controllers {
 
             var viewModel = new ExportViewModel { ContentTypes = new List<ContentTypeEntry>() };
 
-            try {
-                UpdateModel(viewModel);
-                var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
-                var exportOptions = new ExportOptions { ExportMetadata = viewModel.Metadata, ExportSiteSettings = viewModel.SiteSettings };
-                if (viewModel.Data) {
-                    exportOptions.ExportData = true;
-                    exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
-                }
-                var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-                return File(exportFilePath, "text/xml", "export.xml");
+            UpdateModel(viewModel);
+            var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
+            var exportOptions = new ExportOptions { ExportMetadata = viewModel.Metadata, ExportSiteSettings = viewModel.SiteSettings };
+            if (viewModel.Data) {
+                exportOptions.ExportData = true;
+                exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
             }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Export failed: {0}", exception.Message));
-                return View(viewModel);
-            }
+            var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
+            return File(exportFilePath, "text/xml", "export.xml");
         }
     }
 }

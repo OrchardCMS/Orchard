@@ -33,3 +33,24 @@
         @Html.AntiForgeryTokenOrchard()
     </fieldset>
 }
+
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $('#MediaItemPath').change(function () {
+            var $in = $(this);
+            var allowedExtensions = ' @Model.AllowedExtensions ';
+            var filename = $in.val();
+            var ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+            var allowed = allowedExtensions == '  ' || allowedExtensions.indexOf(ext) != -1;
+
+            if(!allowed) {
+                $('#messages>div').append($('<div class="message message-Error">@T("Can't upload file. Supported file types are {0}.", Model.AllowedExtensions).Text</div>'));
+                return false;
+            }
+        });
+    })
+//]]>
+</script>
+}

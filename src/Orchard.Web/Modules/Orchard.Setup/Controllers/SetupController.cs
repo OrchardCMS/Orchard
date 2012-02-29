@@ -124,8 +124,9 @@ namespace Orchard.Setup.Controllers {
 
                 // redirect to the welcome page.
                 return Redirect("~/");
-            } catch (Exception exception) {
-                this.Error(exception, T("Setup failed:"), Logger, _notifier);
+            } catch (Exception ex) {
+                Logger.Error(ex, "Setup failed");
+                _notifier.Error(T("Setup failed: {0}", ex.Message));
 
                 model.Recipes = recipes;
                 foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {

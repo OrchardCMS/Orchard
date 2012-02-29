@@ -38,7 +38,7 @@ namespace Orchard.Blogs.Handlers {
                     continue;
 
                 var commonPart = post.As<CommonPart>();
-                var key = new DateTime(commonPart.PublishedUtc.Value.Year, commonPart.PublishedUtc.Value.Month, 1);
+                var key = new DateTime(commonPart.CreatedUtc.Value.Year, commonPart.CreatedUtc.Value.Month, 1);
 
                 if (inMemoryBlogArchives.ContainsKey(key))
                     inMemoryBlogArchives[key]++;

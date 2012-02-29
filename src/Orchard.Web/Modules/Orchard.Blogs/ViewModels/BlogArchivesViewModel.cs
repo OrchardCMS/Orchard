@@ -3,7 +3,7 @@ using Orchard.Blogs.Models;
 
 namespace Orchard.Blogs.ViewModels {
     public class BlogArchivesViewModel {
-        public string Slug { get; set; }
+        public int BlogId { get; set; }
         public IEnumerable<BlogPart> Blogs { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public EditPartFieldViewModel(int index, ContentPartFieldDefinition field) {
             Index = index;
             Name = field.Name;
+            DisplayName = field.DisplayName;
             FieldDefinition = new EditFieldViewModel(field.FieldDefinition);
             Settings = field.Settings;
             _Definition = field;
@@ -22,6 +23,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public EditPartViewModel Part { get; set; }
 
         public string Name { get; set; }
+        public string DisplayName { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public EditFieldViewModel FieldDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }

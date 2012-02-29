@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
         private static readonly Regex humps = new Regex("(?:^[a-zA-Z][^A-Z]*|[A-Z][^A-Z]*)");
+        private static readonly Regex safe = new Regex(@"[^_\-a-zA-Z]+");
+
         public static string CamelFriendly(this string camel) {
-            if (string.IsNullOrWhiteSpace(camel))
+            if (String.IsNullOrWhiteSpace(camel))
                 return "";
 
-            var matches = humps.Matches(camel).OfType<Match>().Select(m => m.Value);
+            var matches = humps.Matches(camel).OfType<Match>().Select(m => m.Value).ToArray();
             return matches.Any()
                 ? matches.Aggregate((a, b) => a + " " + b).TrimStart(' ')
                 : camel;
@@ -20,18 +24,24 @@ namespace Orchard.Utility.Extensions {
             return text.Ellipsize(characterCount, "&#160;&#8230;");
         }
 
-        public static string Ellipsize(this string text, int characterCount, string ellipsis) {
-            if (string.IsNullOrWhiteSpace(text))
+        public static string Ellipsize(this string text, int characterCount, string ellipsis, bool wordBoundary = false) {
+            if (String.IsNullOrWhiteSpace(text))
                 return "";
             
             if (characterCount < 0 || text.Length <= characterCount)
                 return text;
 
-            return Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") + ellipsis;
+            var trimmed = Regex.Replace(text.Substring(0, characterCount), @"\s+\S*$", "") ;
+
+            if(wordBoundary) {
+                trimmed = Regex.Replace(trimmed + ".", @"\W*\w*$", "");
+            }
+
+            return trimmed + ellipsis;
         }
 
         public static string HtmlClassify(this string text) {
-            if (string.IsNullOrWhiteSpace(text))
+            if (String.IsNullOrWhiteSpace(text))
                 return "";
 
             var friendlier = text.CamelFriendly();
@@ -39,20 +49,20 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static LocalizedString OrDefault(this string text, LocalizedString defaultValue) {
-            return string.IsNullOrEmpty(text)
+            return String.IsNullOrEmpty(text)
                 ? defaultValue
                 : new LocalizedString(text);
         }
 
         public static string RemoveTags(this string html) {
-            return string.IsNullOrEmpty(html)
+            return String.IsNullOrEmpty(html)
                 ? ""
                 : Regex.Replace(html, "<[^<>]*>", "", RegexOptions.Singleline);
         }
 
         // not accounting for only \r (e.g. Apple OS 9 carriage return only new lines)
         public static string ReplaceNewLinesWith(this string text, string replacement) {
-            return string.IsNullOrWhiteSpace(text)
+            return String.IsNullOrWhiteSpace(text)
                 ? ""
                 : Regex.Replace(text, @"(\r?\n)", replacement, RegexOptions.Singleline);
         }
@@ -81,6 +91,53 @@ namespace Orchard.Utility.Extensions {
             // rough blacklist regex == m/^[^/?#[]@"^{}|\s`<>]+$/ (leaving off % to keep the regex simple)
 
             return Regex.IsMatch(segment, @"^[^/?#[\]@""^{}|`<>\s]+$");
+        }
+
+        /// <summary>
+        /// Generates a valid technical name.
+        /// </summary>
+        /// <remarks>
+        /// Uses a white list set of chars.
+        /// </remarks>
+        public static string ToSafeName(this string name) {
+            if (String.IsNullOrWhiteSpace(name))
+                return String.Empty;
+
+            name = RemoveDiacritics(name);
+            name = safe.Replace(name, String.Empty);
+            name = name.Trim();
+
+            // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
+            while (name.Length > 0 && !IsLetter(name[0])) {
+                name = name.Substring(1);
+            }
+
+            if (name.Length > 128)
+                name = name.Substring(0, 128);
+
+            return name;
+        }
+
+        /// <summary>
+        /// Whether the char is a letter between A and Z or not
+        /// </summary>
+        public static bool IsLetter(this char c) {
+            return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
+        }
+
+
+        public static string RemoveDiacritics(string name) {
+            string stFormD = name.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char t in stFormD) {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
+                if (uc != UnicodeCategory.NonSpacingMark) {
+                    sb.Append(t);
+                }
+            }
+
+            return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
     }
 }

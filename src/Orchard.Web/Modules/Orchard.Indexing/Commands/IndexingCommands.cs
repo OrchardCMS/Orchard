@@ -33,26 +33,25 @@ namespace Orchard.Indexing.Commands {
 
         [CommandName("index update")]
         [CommandHelp("index update\r\n\t" + "Updates the search index")]
-        public string Update() {
+        public void Update() {
             _indexingService.UpdateIndex(SearchIndexName);
-
-            return T("Index is now being updated...").Text;
+            Context.Output.WriteLine(T("Index is now being updated..."));
         }
 
         [CommandName("index rebuild")]
         [CommandHelp("index rebuild \r\n\t" + "Rebuilds the search index")]
-        public string Rebuild() {
+        public void Rebuild() {
             _indexingService.RebuildIndex(SearchIndexName);
-
-            return T("Index is now being rebuilt...").Text;
+            Context.Output.WriteLine(T("Index is now being rebuilt..."));
         }
 
         [CommandName("index search")]
         [CommandHelp("index search /Query:<query>\r\n\t" + "Searches the specified <query> terms in the search index")]
         [OrchardSwitches("Query")]
-        public string Search() {
+        public void Search() {
             if ( !_indexManager.HasIndexProvider() ) {
-                throw new OrchardException(T("No index available"));
+                Context.Output.WriteLine(T("No index available"));
+                return;
             }
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName);
             var results = searchBuilder.Parse( new [] {"body", "title"}, Query).Search();
@@ -64,8 +63,8 @@ namespace Orchard.Indexing.Commands {
             Context.Output.WriteLine("├──────────────────────────────────────────────────────────────┼────────┤");
             foreach ( var searchHit in results ) {
                 var contentItem = _contentManager.Get(searchHit.ContentItemId);
-                var routable = contentItem.As<IRoutableAspect>();
-                var title = routable == null ? "- no title -" : routable.Title;
+                var metadata = _contentManager.GetItemMetadata(contentItem);
+                var title = String.IsNullOrWhiteSpace(metadata.DisplayText) ? "- no title -" : metadata.DisplayText;
                 title = title.Substring(0, Math.Min(60, title.Length));
                 var score = Math.Round(searchHit.Score, 2).ToString();
                 Context.Output.WriteLine("│ {0} │ {1,6} │", title + new string(' ', 60 - title.Length), score);
@@ -73,48 +72,51 @@ namespace Orchard.Indexing.Commands {
             Context.Output.WriteLine("└──────────────────────────────────────────────────────────────┴────────┘");
 
             Context.Output.WriteLine();
-            return T("End of search results").Text;
+            Context.Output.WriteLine(T("End of search results"));
         }
 
         [CommandName("index stats")]
         [CommandHelp("index stats\r\n\t" + "Displays some statistics about the search index")]
         [OrchardSwitches("IndexName")]
-        public string Stats() {
+        public void Stats() {
             if ( !_indexManager.HasIndexProvider() ) {
-                throw new OrchardException(T("No index available"));
+                Context.Output.WriteLine(T("No index available"));
+                return;
             }
 
-            return T("Number of indexed documents: {0}", _indexManager.GetSearchIndexProvider().NumDocs(SearchIndexName)).Text;
+            Context.Output.WriteLine(T("Number of indexed documents: {0}", _indexManager.GetSearchIndexProvider().NumDocs(SearchIndexName)));
         }
 
         [CommandName("index refresh")]
         [CommandHelp("index refresh /ContentItem:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
         [OrchardSwitches("ContentItem")]
-        public string Refresh() {
+        public void Refresh() {
             int contentItemId;
             if ( !int.TryParse(ContentItem, out contentItemId) ) {
-                throw new OrchardException(T("Invalid content item id. Not an integer."));
+                Context.Output.WriteLine(T("Invalid content item id. Not an integer."));
+                return;
             }
 
             var contentItem = _contentManager.Get(contentItemId);
             _indexingTaskManager.CreateUpdateIndexTask(contentItem);
 
-            return T("Content Item marked for reindexing").Text;
+            Context.Output.WriteLine(T("Content Item marked for reindexing"));
         }
 
         [CommandName("index delete")]
         [CommandHelp("index delete /ContentItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> from the index")]
         [OrchardSwitches("ContentItem")]
-        public string Delete() {
+        public void Delete() {
             int contentItemId;
             if(!int.TryParse(ContentItem, out contentItemId)) {
-                throw new OrchardException(T("Invalid content item id. Not an integer."));
+                Context.Output.WriteLine(T("Invalid content item id. Not an integer."));
+                return;
             }
             
             var contentItem = _contentManager.Get(contentItemId);
             _indexingTaskManager.CreateDeleteIndexTask(contentItem);
 
-            return T("Content Item marked for deletion").Text;
+            Context.Output.WriteLine(T("Content Item marked for deletion"));
         }
 
     }

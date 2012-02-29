@@ -11,6 +11,7 @@ namespace Orchard.ContentManagement.Drivers {
         void Imported(ImportContentContext context);
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
+        void Describe(DescribeMembersContext context);
         IEnumerable<ContentFieldInfo> GetFieldInfo();
         void GetContentItemMetadata(GetContentItemMetadataContext context);
     }

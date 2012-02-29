@@ -77,6 +77,8 @@ namespace Orchard.Tests.Stubs {
                 }
 
                 public string BaseUrl { get; set;}
+
+                public string SiteTimeZone { get; set; }
             }
 
             public class StubUser : IUser {

@@ -31,10 +31,12 @@ namespace Orchard.Environment.Extensions.Folders {
 
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
+        private readonly ICriticalErrorProvider _criticalErrorProvider;
 
-        public ExtensionHarvester(ICacheManager cacheManager, IWebSiteFolder webSiteFolder) {
+        public ExtensionHarvester(ICacheManager cacheManager, IWebSiteFolder webSiteFolder, ICriticalErrorProvider criticalErrorProvider) {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
+            _criticalErrorProvider = criticalErrorProvider;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -53,7 +55,7 @@ namespace Orchard.Environment.Extensions.Folders {
 
             return _cacheManager.Get(key, ctx => {
                 ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
-                return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional);
+                return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional).ToReadOnlyCollection();
             });
         }
 
@@ -74,6 +76,9 @@ namespace Orchard.Environment.Extensions.Folders {
                         Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
                                      extensionId,
                                      descriptor.Path);
+                        _criticalErrorProvider.RegisterErrorMessage(T("The extension '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                                     extensionId,
+                                     descriptor.Path));
                         continue;
                     }
 
@@ -88,6 +93,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 catch (Exception ex) {
                     // Ignore invalid module manifests
                     Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
+                    _criticalErrorProvider.RegisterErrorMessage(T("The extension '{0}' manifest could not be loaded. It was ignored.", extensionId));
                 }
             }
             Logger.Information("Done looking for extensions in '{0}': {1}", path, string.Join(", ", localList.Select(d => d.Id)));
@@ -240,7 +246,7 @@ namespace Orchard.Environment.Extensions.Folders {
 
                             string[] featureDeclaration = line.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                             string featureDescriptorId = featureDeclaration[0].Trim();
-                            if (featureDescriptorId == extensionDescriptor.Id) {
+                            if (String.Equals(featureDescriptorId, extensionDescriptor.Id, StringComparison.OrdinalIgnoreCase)) {
                                 featureDescriptor = defaultFeature;
                                 featureDescriptor.Name = extensionDescriptor.Name;
                             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
@@ -17,17 +18,50 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null ? null : Display(part, context.DisplayType, context.New);
+            
+            if(part == null) {
+                return null;
+            }
+
+            DriverResult result = Display(part, context.DisplayType, context.New);
+            
+            if(result != null ) {
+                result.ContentPart = part;
+            }
+
+            return result;
         }
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null ? null : Editor(part, context.New);
+            
+            if (part == null) {
+                return null;
+            }
+
+            DriverResult result = Editor(part, context.New);
+            
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
+            return result;
         }
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null ? null : Editor(part, context.Updater, context.New);
+            
+            if (part == null) {
+                return null;
+            }
+
+            DriverResult result = Editor(part, context.Updater, context.New);
+
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
+            return result;
         }
 
         void IContentPartDriver.Importing(ImportContentContext context) {
@@ -54,16 +88,16 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
-        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { return; }
+        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) {}
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
-        protected virtual void Importing(TContent part, ImportContentContext context) { return; }
-        protected virtual void Imported(TContent part, ImportContentContext context) { return; }
-        protected virtual void Exporting(TContent part, ExportContentContext context) { return; }
-        protected virtual void Exported(TContent part, ExportContentContext context) { return; }
+        protected virtual void Importing(TContent part, ImportContentContext context) {}
+        protected virtual void Imported(TContent part, ImportContentContext context) {}
+        protected virtual void Exporting(TContent part, ExportContentContext context) {}
+        protected virtual void Exported(TContent part, ExportContentContext context) {}
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
@@ -79,26 +113,25 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx)));
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx));
         }
 
-        private static object AddAlternates(dynamic shape) {
+        private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx) {
             ShapeMetadata metadata = shape.Metadata;
-            ContentPart part = shape.ContentPart;
-            var id = part != null ? part.ContentItem.Id.ToString() : String.Empty;
+
+            // if no ContentItem property has been set, assign it
+            if (shape.ContentItem == null) {
+                shape.ContentItem = ctx.ContentItem;
+            }
+
             var shapeType = metadata.Type;
-            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
 
             // [ShapeType]__[Id] e.g. Parts/Common.Metadata-42
-            if ( !string.IsNullOrEmpty(id) ) {
-                metadata.Alternates.Add(shapeType + "__" + id);
-            }
-
+            metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.Id.ToString(CultureInfo.InvariantCulture));
+            
             // [ShapeType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost
-            if ( !string.IsNullOrEmpty(contentType) ) {
-                metadata.Alternates.Add(shapeType + "__" + contentType);
-            }
-
+            metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.ContentType);
+            
             return shape;
         }
 

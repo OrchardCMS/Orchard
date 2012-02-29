@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Lucene.Models;
 using Lucene.Net.Index;
@@ -49,16 +50,16 @@ namespace Lucene.Services {
             InitPendingClause();
         }
 
-        public ISearchBuilder Parse(string defaultField, string query, bool escape, bool mandatory) {
-            return Parse(new[] {defaultField}, query, escape, mandatory);
+        public ISearchBuilder Parse(string defaultField, string query, bool escape) {
+            return Parse(new[] { defaultField }, query, escape);
         }
-        
-        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape, bool mandatory) {
-            if ( defaultFields.Length == 0 ) {
+
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape) {
+            if (defaultFields.Length == 0) {
                 throw new ArgumentException("Default field can't be empty");
             }
 
-            if ( String.IsNullOrWhiteSpace(query) ) {
+            if (String.IsNullOrWhiteSpace(query)) {
                 throw new ArgumentException("Query can't be empty");
             }
 
@@ -67,12 +68,11 @@ namespace Lucene.Services {
             }
 
             var analyzer = LuceneIndexProvider.CreateAnalyzer();
-            foreach ( var defaultField in defaultFields ) {
-                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), mandatory ? BooleanClause.Occur.MUST : BooleanClause.Occur.SHOULD);
-                _clauses.Add(clause);
+            foreach (var defaultField in defaultFields) {
+                CreatePendingClause();
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query);
             }
-            
-            _query = null;
+
             return this;
         }
 
@@ -125,10 +125,10 @@ namespace Lucene.Services {
         public ISearchBuilder WithField(string field, string value) {
             CreatePendingClause();
 
-            if ( !String.IsNullOrWhiteSpace(value) ) {
+            if (!String.IsNullOrWhiteSpace(value)) {
                 _query = new TermQuery(new Term(field, QueryParser.Escape(value.ToLower())));
             }
-            
+
             return this;
         }
 
@@ -163,32 +163,35 @@ namespace Lucene.Services {
         }
 
         private void CreatePendingClause() {
-            if(_query == null) {
+            if (_query == null) {
                 return;
             }
 
-            if (_boost != 0) {
+            // comparing floating-point numbers using an epsilon value
+            const double epsilon = 0.001;
+            if (Math.Abs(_boost - 0) > epsilon) {
                 _query.SetBoost(_boost);
             }
 
-            if(!_exactMatch) {
+            if (!_exactMatch) {
                 var termQuery = _query as TermQuery;
-                if(termQuery != null) {
+                if (termQuery != null) {
                     var term = termQuery.GetTerm();
                     // prefixed queries are case sensitive
                     _query = new PrefixQuery(term);
                 }
             }
-            if ( _asFilter ) {
+            if (_asFilter) {
                 _filters.Add(new BooleanClause(_query, _occur));
             }
             else {
                 _clauses.Add(new BooleanClause(_query, _occur));
             }
+
+            _query = null;
         }
 
-        public ISearchBuilder SortBy(string name)
-        {
+        public ISearchBuilder SortBy(string name) {
             _sort = name;
             _comparer = 0;
             return this;
@@ -216,15 +219,13 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder SortByDateTime(string name)
-        {
+        public ISearchBuilder SortByDateTime(string name) {
             _sort = name;
             _comparer = SortField.LONG;
             return this;
         }
 
-        public ISearchBuilder Ascending()
-        {
+        public ISearchBuilder Ascending() {
             _sortDescending = false;
             return this;
         }
@@ -235,17 +236,17 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder Slice(int skip, int count) {
-            if ( skip < 0 ) {
+            if (skip < 0) {
                 throw new ArgumentException("Skip must be greater or equal to zero");
             }
 
-            if ( count <= 0 ) {
+            if (count <= 0) {
                 throw new ArgumentException("Count must be greater than zero");
             }
 
             _skip = skip;
             _count = count;
-            
+
             return this;
         }
 
@@ -264,7 +265,7 @@ namespace Lucene.Services {
                     resultQuery = booleanQuery;
                 }
                 else { // search all documents, without filter or clause
-                    resultQuery = new MatchAllDocsQuery(null); 
+                    resultQuery = new MatchAllDocsQuery(null);
                 }
             }
             else {
@@ -287,7 +288,7 @@ namespace Lucene.Services {
 
         public IEnumerable<ISearchHit> Search() {
             var query = CreateQuery();
-            
+
             IndexSearcher searcher;
 
             try {
@@ -314,7 +315,7 @@ namespace Lucene.Services {
                 Logger.Debug("Searching: {0}", query.ToString());
                 searcher.Search(query, collector);
 
-                var results = collector.TopDocs().scoreDocs
+                var results = collector.TopDocs().ScoreDocs
                     .Skip(_skip)
                     .Select(scoreDoc => new LuceneSearchHit(searcher.Doc(scoreDoc.doc), scoreDoc.score))
                     .ToList();
@@ -332,9 +333,9 @@ namespace Lucene.Services {
         public int Count() {
             var query = CreateQuery();
             IndexSearcher searcher;
-            
+
             try {
-                 searcher = new IndexSearcher(_directory, true);
+                searcher = new IndexSearcher(_directory, true);
             }
             catch {
                 // index might not exist if it has been rebuilt
@@ -344,24 +345,24 @@ namespace Lucene.Services {
 
             try {
                 var hits = searcher.Search(query, Int16.MaxValue);
-                Logger.Information("Search results: {0}", hits.scoreDocs.Length);
-                var length = hits.scoreDocs.Length;
-                return Math.Min(length - _skip, _count) ;
+                Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
+                var length = hits.ScoreDocs.Length;
+                return Math.Min(length - _skip, _count);
             }
             finally {
                 searcher.Close();
             }
-            
+
         }
 
         public ISearchHit Get(int documentId) {
-            var query = new TermQuery(new Term("id", documentId.ToString()));
+            var query = new TermQuery(new Term("id", documentId.ToString(CultureInfo.InvariantCulture)));
 
             var searcher = new IndexSearcher(_directory, true);
             try {
                 var hits = searcher.Search(query, 1);
-                Logger.Information("Search results: {0}", hits.scoreDocs.Length);
-                return hits.scoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.scoreDocs[0].doc), hits.scoreDocs[0].score) : null;
+                Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
+                return hits.ScoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.ScoreDocs[0].doc), hits.ScoreDocs[0].score) : null;
             }
             finally {
                 searcher.Close();

@@ -40,7 +40,7 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().ToList() };
+            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList() };
 
             return View(model);
         }
@@ -50,19 +50,13 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                foreach (string key in Request.Form.Keys) {
-                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
-                        int roleId = Convert.ToInt32(key.Substring("Checkbox.".Length));
-                        _roleService.DeleteRole(roleId);
-                    }
+            foreach (string key in Request.Form.Keys) {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+                    int roleId = Convert.ToInt32(key.Substring("Checkbox.".Length));
+                    _roleService.DeleteRole(roleId);
                 }
-                return RedirectToAction("Index");
-            } catch (Exception exception) {
-                this.Error(exception, T("Deleting Role failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return View();
             }
+            return RedirectToAction("Index");
         }
 
         public ActionResult Create() {
@@ -79,29 +73,31 @@ namespace Orchard.Roles.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleCreateViewModel();
-            try {
-                UpdateModel(viewModel);
+            TryUpdateModel(viewModel);
 
-                //check if the role name already exists
-                if (!_roleService.VerifyRoleUnicity(viewModel.Name)) {
-                    Services.Notifier.Error(T("Creating Role {0} failed: Role with same name already exists", viewModel.Name));
-                    return RedirectToAction("Create");
-                }
-
-                _roleService.CreateRole(viewModel.Name);
-                foreach (string key in Request.Form.Keys) {
-                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
-                        string permissionName = key.Substring("Checkbox.".Length);
-                        _roleService.CreatePermissionForRole(viewModel.Name,
-                                                             permissionName);
-                    }
-                }
-                return RedirectToAction("Index");
-            } catch (Exception exception) {
-                this.Error(exception, T("Creating Role failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return RedirectToAction("Create");
+            if(String.IsNullOrEmpty(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("Role name can't be empty"));
             }
+
+            var role = _roleService.GetRoleByName(viewModel.Name);
+            if (role != null) {
+                ModelState.AddModelError("Name", T("Role with same name already exists"));
+            }
+
+            if (!ModelState.IsValid) {
+                viewModel.FeaturePermissions = _roleService.GetInstalledPermissions();
+                return View(viewModel);
+            }
+
+            _roleService.CreateRole(viewModel.Name);
+            foreach (string key in Request.Form.Keys) {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+                    string permissionName = key.Substring("Checkbox.".Length);
+                    _roleService.CreatePermissionForRole(viewModel.Name,
+                                                            permissionName);
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int id) {
@@ -135,25 +131,33 @@ namespace Orchard.Roles.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleEditViewModel();
-            try {
-                UpdateModel(viewModel);
-                // Save
-                List<string> rolePermissions = new List<string>();
-                foreach (string key in Request.Form.Keys) {
-                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
-                        string permissionName = key.Substring("Checkbox.".Length);
-                        rolePermissions.Add(permissionName);
-                    }
-                }
-                _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
+            TryUpdateModel(viewModel);
 
-                Services.Notifier.Information(T("Your Role has been saved."));
-                return RedirectToAction("Edit", new { id });
-            } catch (Exception exception) {
-                this.Error(exception, T("Editing Role failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return RedirectToAction("Edit", id);
+            if (String.IsNullOrEmpty(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("Role name can't be empty"));
             }
+
+            var role = _roleService.GetRoleByName(viewModel.Name);
+            if (role != null && role.Id != id) {
+                ModelState.AddModelError("Name", T("Role with same name already exists"));
+            }
+
+            if (!ModelState.IsValid) {
+                return Edit(id);
+            }
+
+            // Save
+            List<string> rolePermissions = new List<string>();
+            foreach (string key in Request.Form.Keys) {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+                    string permissionName = key.Substring("Checkbox.".Length);
+                    rolePermissions.Add(permissionName);
+                }
+            }
+            _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
+
+            Services.Notifier.Information(T("Your Role has been saved."));
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -167,17 +171,10 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                _roleService.DeleteRole(id);
+            _roleService.DeleteRole(id);
+            Services.Notifier.Information(T("Role was successfully deleted."));
 
-                Services.Notifier.Information(T("Role was successfully deleted."));
-
-                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
-            } catch (Exception exception) {
-                this.Error(exception, T("Editing Role failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return RedirectToAction("Edit", id);
-            }
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
     }
 }

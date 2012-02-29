@@ -1,4 +1,5 @@
 ﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Contents
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
@@ -9,21 +10,27 @@
     @T(" | ")
 
     if (contentPart.HasDraft()) {
-        @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
+        @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
         @T(" | ")
 
-        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
-        @T(" | ")
+        if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+            @Html.ActionLink(T("Preview").Text, "Preview", "Item", new {area = "Contents", id = ((ContentItem) Model.ContentPart.ContentItem).Id}, new {})
+            @T(" | ")
+        }
     }
 
-    @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnpublishUrl UnsafeUrl" })
-    @T(" | ")
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+        @T(" | ")
+    }
 } else {
     if ( contentPart.HasDraft() ) {    
         @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
         @T(" | ")
     }
 
-    @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
-    @T(" | ")
+    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
+        @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+        @T(" | ")
+    }
 }

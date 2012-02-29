@@ -9,6 +9,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Localization;
+using Orchard.Services;
 
 namespace Orchard.Comments.Feeds {
     [UsedImplicitly]
@@ -29,7 +30,8 @@ namespace Orchard.Comments.Feeds {
                 var commentedOn = _contentManager.Get(feedItem.Item.Record.CommentedOn);
                 var commentedOnInspector = new ItemInspector(
                     commentedOn,
-                    _contentManager.GetItemMetadata(commentedOn));
+                    _contentManager.GetItemMetadata(commentedOn)
+                );
 
                 var title = T("Comment on {0} by {1}", commentedOnInspector.Title, comment.Record.Author);
 

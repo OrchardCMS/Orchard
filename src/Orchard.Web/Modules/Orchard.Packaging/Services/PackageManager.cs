@@ -32,6 +32,9 @@ namespace Orchard.Packaging.Services {
             try {
                 return installer();
             }
+            catch (OrchardException) {
+                throw;
+            }
             catch (Exception exception) {
                 var message = T(
                     "There was an error installing the requested package. " +
@@ -67,22 +70,6 @@ namespace Orchard.Packaging.Services {
 
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
-        }
-
-        public ExtensionDescriptor GetExtensionDescriptor(IPackage package, string extensionType) {
-            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file =>
-                                                            Path.GetFileName(file.Path).Equals(
-                                                                DefaultExtensionTypes.IsModule(extensionType) ? "module.txt" : "theme.txt",
-                                                                StringComparison.OrdinalIgnoreCase));
-
-            if (packageFile != null) {
-                string extensionId = Path.GetFileName(Path.GetDirectoryName(packageFile.Path).TrimEnd('/', '\\'));
-                using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
-                    return ExtensionHarvester.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
-                }
-            }
-
-            return null;
         }
 
         #endregion

@@ -5,6 +5,14 @@ using Orchard.Tags.Models;
 namespace Orchard.Tags.Services {
     public interface ITagService : IDependency {
         IEnumerable<TagRecord> GetTags();
+
+        /// <summary>
+        /// Returns tags whose name start with snippet
+        /// </summary>
+        /// <param name="snippet">The starting snippet</param>
+        /// <param name="maxCount">Maximum number of tags returned</param>
+        /// <returns>Tags found</returns>
+        IEnumerable<TagRecord> GetTagsByNameSnippet(string snippet, int maxCount = 10);
         TagRecord GetTag(int tagId);
         TagRecord GetTagByName(string tagName);
         IEnumerable<IContent> GetTaggedContentItems(int tagId);

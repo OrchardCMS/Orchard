@@ -124,6 +124,16 @@ namespace Orchard.Tags.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
+        public JsonResult FetchSimilarTags(string snippet) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Not authorized to fetch tags")))
+                return Json(null);
+
+            return Json(
+                _tagService.GetTagsByNameSnippet(snippet).Select(tag => tag.TagName).ToList(),
+                JsonRequestBehavior.AllowGet
+            );
+        }
+
         private static TagEntry CreateTagEntry(TagRecord tagRecord) {
             return new TagEntry {
                 Tag = tagRecord,

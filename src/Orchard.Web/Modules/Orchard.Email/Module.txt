@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: The Email Messaging module adds Email sending functionalities.
 Features:
     Orchard.Email:
@@ -11,8 +11,3 @@ Features:
         FeatureDescription: Email Messaging services.
         Category: Messaging
         Dependencies: Orchard.Messaging
-    Orchard.Email.Rules:
-        Name: Email Rules
-        Description: Rules for the Email modules
-        Category: Rules
-        Dependencies: Orchard.Email, Orchard.Rules

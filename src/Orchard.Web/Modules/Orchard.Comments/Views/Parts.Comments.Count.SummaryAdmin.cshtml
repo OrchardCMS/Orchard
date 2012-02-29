@@ -1,4 +1,6 @@
-﻿@using Orchard.Comments.Models;
-@using Orchard.Comments.ViewModels;
-@using Orchard.ContentManagement;
-<span class="commentcount">@Display.CommentSummaryLinks(item: Model.ContentPart.ContentItem, count: Model.CommentCount, pendingCount: Model.PendingCount)@T(" | ")</span>
+﻿<ul class="pageStatus">
+<li>
+    @Display.CommentSummaryLinks(item: Model.ContentPart.ContentItem, count: Model.CommentCount, pendingCount: ((Func<int>)Model.PendingCount)())
+    @T(" | ")&nbsp;
+</li>
+</ul>

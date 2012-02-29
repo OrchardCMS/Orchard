@@ -84,6 +84,7 @@ namespace Orchard.Comments.Services {
                 if (commentedOn != null && commentedOn.Container != null) {
                     comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
                 }
+                commentedOn.As<CommentsPart>().Record.CommentPartRecords.Add(comment.Record);
             });
         }
 

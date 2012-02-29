@@ -24,12 +24,14 @@ namespace Orchard.Recipes.Commands {
         public void HarvestRecipes(string extensionId) {
             ExtensionDescriptor extensionDescriptor = _extensionManager.GetExtension(extensionId);
             if (extensionDescriptor == null) {
-                throw new OrchardException(T("Could not discover recipes because module '{0}' was not found.", extensionId));
+                Context.Output.WriteLine(T("Could not discover recipes because module '{0}' was not found.", extensionId));
+                return;            
             }
 
             IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(extensionId);
             if (recipes.Count() == 0) {
-                throw new OrchardException(T("No recipes found for extension {0}.", extensionId));
+                Context.Output.WriteLine(T("No recipes found for extension {0}.", extensionId));
+                return;
             }
 
             Context.Output.WriteLine(T("List of available recipes"));
@@ -51,27 +53,24 @@ namespace Orchard.Recipes.Commands {
         public void ExecuteRecipe(string extensionId, string recipeName) {
             ExtensionDescriptor extensionDescriptor = _extensionManager.GetExtension(extensionId);
             if (extensionDescriptor == null) {
-                throw new OrchardException(T("Could not discover recipes because module '{0}' was not found.", extensionId));
+                Context.Output.WriteLine(T("Could not discover recipes because module '{0}' was not found.", extensionId));
+                return;
             }
 
             IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(extensionId);
             if (recipes.Count() == 0) {
-                throw new OrchardException(T("No recipes found for extension {0}.", extensionId));
+                Context.Output.WriteLine(T("No recipes found for extension {0}.", extensionId));
+                return;
             }
 
             Recipe recipe = recipes.FirstOrDefault(r => r.Name.Equals(recipeName, StringComparison.OrdinalIgnoreCase));
             if (recipe == null) {
-                throw new OrchardException(T("Invalid recipe name {0}.", recipeName));
+                Context.Output.WriteLine(T("Invalid recipe name {0}.", recipeName));
+                return;
             }
 
-            try {
-                _recipeManager.Execute(recipe);
-
-                Context.Output.WriteLine(T("Recipe scheduled for execution successfully.").Text);
-            }
-            catch {
-                Context.Output.WriteLine(T("Recipe failed to execute.").Text);
-            }
+            _recipeManager.Execute(recipe);
+            Context.Output.WriteLine(T("Recipe scheduled for execution successfully.").Text);
         }
     }
 }

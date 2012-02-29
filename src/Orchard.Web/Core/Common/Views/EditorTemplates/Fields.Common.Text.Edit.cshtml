@@ -1,5 +1,13 @@
-﻿@model Orchard.Core.Common.Fields.TextField
-    <fieldset>
-        <label for="@Html.FieldIdFor(m=>m.Value)">@Model.Name</label>
-        @Html.EditorFor(m=>m.Value)@Html.ValidationMessageFor(m=>m.Value)
-    </fieldset>
+﻿@model Orchard.Core.Common.ViewModels.TextFieldDriverViewModel
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Text)">@Model.Field.DisplayName</label>
+    @if (String.IsNullOrWhiteSpace(Model.Settings.Flavor)) {
+        @Html.TextBoxFor(m => m.Text, new { @class = "text" })        
+        @Html.ValidationMessageFor(m => m.Text)
+    }
+    else {
+        @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor)
+    }
+    <span class="hint">@Model.Settings.Hint</span>
+</fieldset>

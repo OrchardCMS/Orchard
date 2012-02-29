@@ -3,29 +3,22 @@ using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Core.Title.Models;
 
-namespace Orchard.Core.Containers.Extensions
-{
+namespace Orchard.Core.Containers.Extensions {
     public static class ContentQueryExtensions {
         public static IContentQuery<T> OrderBy<T>(this IContentQuery<T> query, string partAndProperty, bool descendingOrder) where T : IContent {
             //todo: (heskew) order by custom part properties
             switch (partAndProperty) {
+                case "ContainablePart.Weight":
+                    query = descendingOrder
+                                ? query.OrderByDescending<ContainablePartRecord, int>(record => record.Weight)
+                                : query.OrderBy<ContainablePartRecord, int>(record => record.Weight);
+                    break;
                 case "TitlePart.Title":
                     query = descendingOrder
                                 ? query.OrderByDescending<TitlePartRecord, string>(record => record.Title)
                                 : query.OrderBy<TitlePartRecord, string>(record => record.Title);
-                    break;
-                case "RoutePart.Title":
-                    query = descendingOrder
-                                ? query.OrderByDescending<RoutePartRecord, string>(record => record.Title)
-                                : query.OrderBy<RoutePartRecord, string>(record => record.Title);
-                    break;
-                case "RoutePart.Slug":
-                    query = descendingOrder
-                                ? query.OrderByDescending<RoutePartRecord, string>(record => record.Slug)
-                                : query.OrderBy<RoutePartRecord, string>(record => record.Slug);
                     break;
                 case "CustomPropertiesPart.CustomOne":
                     query = descendingOrder
@@ -71,14 +64,6 @@ namespace Orchard.Core.Containers.Extensions
             {"TitlePart.Title|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == 1*/))},
             {"TitlePart.Title|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => r.Title.Equals(s, StringComparison.OrdinalIgnoreCase)))},
             {"TitlePart.Title|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => r.Title.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
-            {"RoutePart.Title|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == -1*/))},
-            {"RoutePart.Title|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == 1*/))},
-            {"RoutePart.Title|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => r.Title.Equals(s, StringComparison.OrdinalIgnoreCase)))},
-            {"RoutePart.Title|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => r.Title.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
-            {"RoutePart.Slug|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Slug.CompareTo(s) == -1*/))},
-            {"RoutePart.Slug|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Slug.CompareTo(s) == 1*/))},
-            {"RoutePart.Slug|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => r.Slug.Equals(s.Trim(), StringComparison.OrdinalIgnoreCase)))},
-            {"RoutePart.Slug|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => r.Slug.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
             {"CommonPart.PublishedUtc|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CommonPartRecord>(r => r.PublishedUtc < DateTime.Parse(s)))},
             {"CommonPart.PublishedUtc|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CommonPartRecord>(r => r.PublishedUtc > DateTime.Parse(s)))},
             {"CommonPart.PublishedUtc|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CommonPartRecord>(r => r.PublishedUtc == DateTime.Parse(s)))}, // todo: (heskew) not practical as is. needs some sense of precision....

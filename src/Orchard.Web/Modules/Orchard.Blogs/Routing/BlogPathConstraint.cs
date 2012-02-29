@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,11 +10,7 @@ using Orchard.Logging;
 namespace Orchard.Blogs.Routing {
     [UsedImplicitly]
     public class BlogPathConstraint : IBlogPathConstraint {
-        /// <summary>
-        /// Singleton object, per Orchard Shell instance. We need to protect concurrent access to the dictionary.
-        /// </summary>
-        private readonly object _syncLock = new object();
-        private IDictionary<string, string> _paths = new Dictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> _paths = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public BlogPathConstraint() {
             Logger = NullLogger.Instance;
@@ -22,42 +19,34 @@ namespace Orchard.Blogs.Routing {
         public ILogger Logger { get; set; }
 
         public void SetPaths(IEnumerable<string> paths) {
-            // Make a copy to avoid performing potential lazy computation inside the lock
-            var pathArray = paths.ToArray();
-
-            lock (_syncLock) {
-                _paths = pathArray.Distinct(StringComparer.OrdinalIgnoreCase).ToDictionary(value => value, StringComparer.OrdinalIgnoreCase);
+            _paths.Clear();
+            foreach(var path in paths) {
+                AddPath(path);
             }
 
-            Logger.Debug("Blog paths: {0}", string.Join(", ", pathArray));
+            Logger.Debug("Blog paths: {0}", string.Join(", ", paths.ToArray()));
         }
 
         public string FindPath(string path) {
-            lock (_syncLock) {
-                string actual;
-                // path can be null for homepage
-                path = path ?? "";
+            string actual;
+            // path can be null for homepage
+            path = path ?? String.Empty;
 
-                return _paths.TryGetValue(path, out actual) ? actual : path;
-            }
+            return _paths.TryGetValue(path, out actual) ? actual : path;
         }
 
         public void AddPath(string path) {
-            lock (_syncLock) {
-                // path can be null for homepage
-                path = path ?? "";
+            // path can be null for homepage
+            path = path ?? String.Empty;
 
-                _paths[path] = path;
-            }
+            _paths[path] = path;
         }
 
         public void RemovePath(string path) {
-            lock (_syncLock) {
-                // path can be null for homepage
-                path = path ?? "";
+            // path can be null for homepage
+            path = path ?? String.Empty;
 
-                _paths.Remove(path);
-            }
+            _paths.TryRemove(path, out path);
         }
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
@@ -68,9 +57,7 @@ namespace Orchard.Blogs.Routing {
             if (values.TryGetValue(parameterName, out value)) {
                 var parameterValue = Convert.ToString(value);
 
-                lock (_syncLock) {
-                    return _paths.ContainsKey(parameterValue);
-                }
+                return _paths.ContainsKey(parameterValue);
             }
 
             return false;

@@ -8,6 +8,7 @@ using Orchard.Logging;
 namespace Orchard.Packaging.Services {
     public interface IFolderUpdater : IDependency {
         void Backup(DirectoryInfo existingFolder, DirectoryInfo backupfolder);
+        void Restore(DirectoryInfo backupfolder, DirectoryInfo existingFolder);
     }
 
     [OrchardFeature("PackagingServices")]
@@ -27,6 +28,10 @@ namespace Orchard.Packaging.Services {
 
         public void Backup(DirectoryInfo existingFolder, DirectoryInfo backupfolder) {
             CopyFolder(GetFolderContent(existingFolder), backupfolder);
+        }
+
+        public void Restore(DirectoryInfo backupfolder, DirectoryInfo existingFolder) {
+            CopyFolder(GetFolderContent(backupfolder), existingFolder);
         }
 
         private void CopyFolder(FolderContent source, DirectoryInfo dest) {

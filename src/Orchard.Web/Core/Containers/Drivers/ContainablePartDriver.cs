@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
@@ -44,6 +43,7 @@ namespace Orchard.Core.Containers.Drivers {
                                 commonPart.Record.Container = containerItem == null ? null : containerItem.Record;
                             }
                         }
+                        part.Weight = model.Weight;
                     }
 
                     // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
@@ -59,6 +59,7 @@ namespace Orchard.Core.Containers.Drivers {
                         .ToList();
 
                     model.AvailableContainers = new SelectList(listItems, "Value", "Text", model.ContainerId);
+                    model.Weight = part.Weight;
 
                     return shapeHelper.EditorTemplate(TemplateName: "Containable", Model: model, Prefix: "Containable");
                 });

@@ -2,13 +2,13 @@
 @using Orchard.UI.Resources;
 @{
     RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
-    Script.Include("html5.js").AtHead();
+    Script.Include("html5.js").UseCondition("lt IE 9").AtHead();
 
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 }
 <!DOCTYPE html> 
-<html lang="en" class="static @Html.ClassForPage()"> 
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()"> 
 <head> 
     <meta charset="utf-8" />
     <title>@Html.Title(title, siteName)</title> 

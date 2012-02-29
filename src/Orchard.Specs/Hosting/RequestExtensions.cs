@@ -42,6 +42,8 @@ namespace Orchard.Specs.Hosting {
                 details.RequestHeaders.Add("Cookie", webHost.Cookies);
             }
 
+            details.RequestHeaders.Add("Accept-Charset", "utf-8");
+
             if (postData != null) {
                 var requestBodyText = postData
                     .SelectMany(kv => kv.Value.Select(v => new { k = kv.Key, v }))
@@ -112,7 +114,7 @@ namespace Orchard.Specs.Hosting {
                 : base(details.Page, details.Query, output) {
                 _details = details;
                 _output = output;
-                PostContentType = "application/x-www-form-urlencoded";
+                PostContentType = "application/x-www-form-urlencoded; charset=utf-8";
             }
 
             public string PostContentType { get; set; }
@@ -177,6 +179,7 @@ namespace Orchard.Specs.Hosting {
                 }
                 base.SendKnownResponseHeader(index, value);
             }
+
             public override void SendUnknownResponseHeader(string name, string value) {
                 _details.ResponseHeaders.Add(name, value);
 
@@ -184,7 +187,11 @@ namespace Orchard.Specs.Hosting {
             }
 
             public override void SendResponseFromFile(string filename, long offset, long length) {
-                _output.Write(File.ReadAllText(filename));
+                _output.Write(System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(filename)));
+            }
+
+            public override void SendResponseFromMemory(byte[] data, int length) {
+                _output.Write(System.Text.Encoding.UTF8.GetString(data));
             }
         }
     }

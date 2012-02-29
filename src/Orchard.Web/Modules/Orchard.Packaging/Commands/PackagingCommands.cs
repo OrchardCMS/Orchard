@@ -32,7 +32,8 @@ namespace Orchard.Packaging.Commands {
         public void CreatePackage(string extensionName, string path) {
             var packageData = _packageManager.Harvest(extensionName);
             if (packageData == null) {
-                throw new OrchardException(T("Module or Theme \"{0}\" does not exist in this Orchard installation.", extensionName));
+                Context.Output.WriteLine(T("Module or Theme \"{0}\" does not exist in this Orchard installation.", extensionName));
+                return;
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
@@ -62,14 +63,18 @@ namespace Orchard.Packaging.Commands {
         public void InstallPackage(string packageId, string location) {
             try {
                 _packageManager.Install(packageId, Version, Path.GetFullPath(location), ApplicationPath);
-
-                foreach (var message in _notifier.List()) {
-                    Context.Output.WriteLine(message.Message);
-                }
+            }
+            catch (OrchardException e) {
+                Context.Output.WriteLine(T("Could not install the package: {0}", e.Message));
             }
             catch(Exception e) {
                 // Exceptions area thrown by NuGet as error messages
                 Context.Output.WriteLine(HttpUtility.HtmlDecode(T("Could not install the package: {0}", e.Message).Text));
+                return;
+            }
+
+            foreach (var message in _notifier.List()) {
+                Context.Output.WriteLine(message.Message);
             }
         }
 
@@ -83,13 +88,15 @@ namespace Orchard.Packaging.Commands {
             try {
                 _packageManager.Uninstall(packageId, ApplicationPath);
 
-                foreach ( var message in _notifier.List() ) {
-                    Context.Output.WriteLine(message.Message);
-                }
             }
             catch(Exception e) {
                 // Exceptions area thrown by NuGet as error messages
-                throw new OrchardException(T(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text)));
+                Context.Output.WriteLine(T(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text)));
+                return;
+            }
+
+            foreach (var message in _notifier.List()) {
+                Context.Output.WriteLine(message.Message);            
             }
         }
     }

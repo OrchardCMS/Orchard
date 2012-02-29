@@ -24,7 +24,7 @@
             @foreach (var report in Model.Reports) {
             <tr>
                 <td>
-                    @Html.ActionLink(Html.Encode(report.ActivityName), "Display", new {id = report.ReportId})
+                    @Html.ActionLink(report.ActivityName, "Display", new {id = report.ReportId})
                 </td>
                 <td>
                     @report.Title

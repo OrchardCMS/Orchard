@@ -109,6 +109,9 @@ namespace Orchard.Environment.Extensions {
                 context.AvailableExtensionsProbes[extension.Id] :
                 Enumerable.Empty<ExtensionProbeEntry>();
 
+            // materializes the list
+            extensionProbes = extensionProbes.ToArray();
+
             if (Logger.IsEnabled(LogLevel.Debug)) {
                 Logger.Debug("Loaders for extension \"{0}\": ", extension.Id);
                 foreach (var probe in extensionProbes) {
@@ -131,14 +134,13 @@ namespace Orchard.Environment.Extensions {
                 .Select(e => context.ProcessedExtensions[e.Id])
                 .ToList();
 
-            var activatedExtension = extensionProbes
-                .Where(e => e.Loader.IsCompatibleWithModuleReferences(extension, processedModuleReferences))
-                .FirstOrDefault();
+            var activatedExtension = extensionProbes.FirstOrDefault(
+                e => e.Loader.IsCompatibleWithModuleReferences(extension, processedModuleReferences)
+                );
 
-            var previousDependency = context
-                .PreviousDependencies
-                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Id))
-                .FirstOrDefault();
+            var previousDependency = context.PreviousDependencies.FirstOrDefault(
+                d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Id)
+                );
 
             if (activatedExtension == null) {
                 Logger.Warning("No loader found for extension \"{0}\"!", extension.Id);
@@ -180,7 +182,7 @@ namespace Orchard.Environment.Extensions {
 
             // Check there are no duplicates
             var duplicates = availableExtensions.GroupBy(ed => ed.Id).Where(g => g.Count() >= 2).ToList();
-            if (duplicates.Count() > 0) {
+            if (duplicates.Any()) {
                 var sb = new StringBuilder();
                 sb.Append(T("There are multiple extensions with the same name installed in this instance of Orchard.\r\n"));
                 foreach (var dup in duplicates) {
@@ -232,7 +234,7 @@ namespace Orchard.Environment.Extensions {
                 availableExtensions.OrderByDependenciesAndPriorities(
                     (item, dep) => referencesByModule.ContainsKey(item.Id) &&
                                    referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)),
-                    (item) => 0)
+                    item => 0)
                     .ToList();
 
             return new ExtensionLoadingContext {
@@ -253,7 +255,7 @@ namespace Orchard.Environment.Extensions {
                 .OrderByDescending(g => g.Key);
 
             // Select highest priority group with at least one item
-            var firstNonEmptyGroup = groupByPriority.FirstOrDefault(g => g.Count() >= 1) ?? Enumerable.Empty<ExtensionProbeEntry>();
+            var firstNonEmptyGroup = groupByPriority.FirstOrDefault(g => g.Any()) ?? Enumerable.Empty<ExtensionProbeEntry>();
 
             // No need for further sorting if only 1 item found
             if (firstNonEmptyGroup.Count() <= 1)

@@ -7,41 +7,85 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
-using Orchard.Core.Containers.Settings;
 using Orchard.Core.Containers.ViewModels;
-using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.DisplayManagement;
+using Orchard.Core.Containers.Extensions;
+using System.Web.Routing;
+using Orchard.Settings;
+using Orchard.Core.Feeds;
+using Orchard.UI.Navigation;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainerPartDriver : ContentPartDriver<ContainerPart> {
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IContentManager _contentManager;
+        private readonly ISiteService _siteService;
+        private readonly IFeedManager _feedManager;
 
-        public ContainerPartDriver(IContentDefinitionManager contentDefinitionManager, IOrchardServices orchardServices) {
+        public ContainerPartDriver(
+            IContentDefinitionManager contentDefinitionManager, 
+            IOrchardServices orchardServices, 
+            ISiteService siteService,
+            IFeedManager feedManager) {
             _contentDefinitionManager = contentDefinitionManager;
-            Services = orchardServices;
+            _orchardServices = orchardServices;
+            _contentManager = orchardServices.ContentManager;
+            _siteService = siteService;
+            _feedManager = feedManager;
+
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
         protected override DriverResult Display(ContainerPart part, string displayType, dynamic shapeHelper) {
-            return Combined(
-                ContentShape("Parts_Container_Contained",
-                             () => shapeHelper.Parts_Container_Contained(ContentPart: part)),
-                ContentShape("Parts_Container_Contained_Summary",
-                             () => shapeHelper.Parts_Container_Contained_Summary(ContentPart: part)),
-                ContentShape("Parts_Container_Contained_SummaryAdmin",
-                             () => shapeHelper.Parts_Container_Contained_SummaryAdmin(ContentPart: part))
-                );
+            if (!part.ItemsShown)
+                return null;
+
+        return ContentShape("Parts_Container_Contained",
+                            () => {
+                                var container = part.ContentItem;
+
+                                IContentQuery<ContentItem> query = _contentManager
+                                .Query(VersionOptions.Published)
+                                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
+
+                                var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
+                                query = query.OrderBy(part.OrderByProperty, descendingOrder);
+                                 var metadata = container.ContentManager.GetItemMetadata(container);
+                                 if (metadata!=null)
+                                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+
+                                var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
+                                pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
+                                                ? pager.PageSize
+                                                : part.PageSize;
+
+                                var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
+
+                                var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
+                                var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
+
+                                var listShape = shapeHelper.List();
+                                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                                listShape.Classes.Add("content-items");
+                                listShape.Classes.Add("list-items");
+
+                                return shapeHelper.Parts_Container_Contained(
+                                    List: listShape,
+                                    Pager: pagerShape
+                                );
+                            });
         }
 
         protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper) {
             // if there are no containable items then show a nice little warning
-            if (!_contentDefinitionManager.ListTypeDefinitions()
-                .Where(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart")).Any()) {
-                Services.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
+            if (!_contentDefinitionManager.ListTypeDefinitions().Any(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart"))) {
+                _orchardServices.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
             }
 
             return Editor(part, (IUpdateModel)null, shapeHelper);
@@ -62,12 +106,12 @@ namespace Orchard.Core.Containers.Drivers {
                         }))
                         .ToList();
 
-                    model.AvailableContainables = new SelectList(listItems, "Value", "Text", model.Part.Record.ItemContentType);
+                    model.AvailableContainables = new SelectList(listItems, "Value", "Text", model.Part.ItemContentType);
 
                     if (updater != null) {
                         updater.TryUpdateModel(model, "Container", null, null);
                     }
-
+                   
                     return shapeHelper.EditorTemplate(TemplateName: "Container", Model: model, Prefix: "Container");
                 });
         }
@@ -78,6 +122,11 @@ namespace Orchard.Core.Containers.Drivers {
                 if (_contentDefinitionManager.GetTypeDefinition(itemContentType) != null) {
                     part.Record.ItemContentType = itemContentType;
                 }
+            }
+
+            var itemsShown = context.Attribute(part.PartDefinition.Name, "ItemsShown");
+            if (itemsShown != null) {
+                part.Record.ItemsShown = Convert.ToBoolean(itemsShown);
             }
 
             var paginated = context.Attribute(part.PartDefinition.Name, "Paginated");
@@ -103,26 +152,11 @@ namespace Orchard.Core.Containers.Drivers {
 
         protected override void Exporting(ContainerPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemContentType", part.Record.ItemContentType);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsShown", part.Record.ItemsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Paginated", part.Record.Paginated);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PageSize", part.Record.PageSize);
             context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByProperty", part.Record.OrderByProperty);
             context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByDirection", part.Record.OrderByDirection);
-        }
-    }
-
-    public class ContainerPartHandler : ContentHandler {
-        public ContainerPartHandler(IRepository<ContainerPartRecord> repository) {
-            Filters.Add(StorageFilter.For(repository));
-            OnInitializing<ContainerPart>((context, part) => {
-                part.Record.PageSize = part.Settings.GetModel<ContainerTypePartSettings>().PageSizeDefault
-                                        ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PageSizeDefault;
-                part.Record.Paginated = part.Settings.GetModel<ContainerTypePartSettings>().PaginatedDefault
-                                        ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PaginatedDefault;
-
-                // hard-coded defaults for ordering
-                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.CreatedUtc" : string.Empty;
-                part.Record.OrderByDirection = (int)OrderByDirection.Descending;
-            });
         }
     }
 }

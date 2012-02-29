@@ -23,8 +23,8 @@ namespace Orchard.Specs.Bindings {
             webApp.GivenIHaveACleanSiteWith(
                 virtualDirectory,
                 TableData(
-                new { extension = "Module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Lists, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup" },
-                new { extension = "Core", names = "Common, Containers, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc, Title" },
+                new { extension = "Module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Lists, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Tokens, Orchard.Autoroute" },
+                new { extension = "Core", names = "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title" },
                 new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");
@@ -71,7 +71,17 @@ namespace Orchard.Specs.Bindings {
 
                     var contentTypeDefinition = new ContentTypeDefinition(name, name);
                     cdm.StoreTypeDefinition(contentTypeDefinition);
-                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("RoutePart").WithPart("ContainablePart").Creatable().Draftable());
+                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("TitlePart").WithPart("ContainablePart").Creatable().Draftable());
+
+                    cdm.AlterTypeDefinition(name,
+                        cfg => cfg.WithPart("AutoroutePart",
+                            builder => builder
+                                .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                                .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                                .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-list'}]")
+                                .WithSetting("AutorouteSettings.DefaultPatternIndex", "0")
+                        ));
+
                 }
             });
         }

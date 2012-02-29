@@ -29,21 +29,24 @@ namespace Orchard.Users.Commands {
         [CommandName("user create")]
         [CommandHelp("user create /UserName:<username> /Password:<password> /Email:<email>\r\n\t" + "Creates a new User")]
         [OrchardSwitches("UserName,Password,Email")]
-        public string Create() {
+        public void Create() {
             if (!_userService.VerifyUserUnicity(UserName, Email)) {
-                throw new OrchardException(T("User with that username and/or email already exists."));
+                Context.Output.WriteLine(T("User with that username and/or email already exists."));
+                return;
             }
 
             if (Password == null || Password.Length < MinPasswordLength) {
-                throw new OrchardException(T("You must specify a password of {0} or more characters.", MinPasswordLength));
+                Context.Output.WriteLine(T("You must specify a password of {0} or more characters.", MinPasswordLength));
+                return;
             }
 
             var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true));
             if (user == null) {
-                throw new OrchardException(T("The authentication provider returned an error"));
+                Context.Output.WriteLine(T("Could not create user {0}. The authentication provider returned an error", UserName));
+                return;
             }
 
-            return T("User created successfully").ToString();
+            Context.Output.WriteLine(T("User created successfully"));
         }
 
         int MinPasswordLength {

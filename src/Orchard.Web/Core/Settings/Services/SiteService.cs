@@ -36,13 +36,14 @@ namespace Orchard.Core.Settings.Services {
                         item.Record.SiteSalt = Guid.NewGuid().ToString("N");
                         item.Record.SiteName = "My Orchard Project Application";
                         item.Record.PageTitleSeparator = " - ";
+                        item.Record.SiteTimeZone = TimeZoneInfo.Local.Id;
                     }).ContentItem;
                 }
 
                 return site.Id;
             });
 
-            return _contentManager.Get<ISite>(siteId);
+            return _contentManager.Get<ISite>(siteId, VersionOptions.Published, new QueryHints().ExpandRecords<SiteSettingsPartRecord>());
         }
     }
 }

@@ -1,13 +1,10 @@
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -24,7 +21,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
-        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly ISiteService _siteService;
 
         public BlogAdminController(
@@ -33,7 +29,6 @@ namespace Orchard.Blogs.Controllers {
             IBlogPostService blogPostService,
             IContentManager contentManager,
             ITransactionManager transactionManager,
-            IBlogPathConstraint blogPathConstraint,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = services;
@@ -41,7 +36,6 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService = blogPostService;
             _contentManager = contentManager;
             _transactionManager = transactionManager;
-            _blogPathConstraint = blogPathConstraint;
             _siteService = siteService;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -81,16 +75,15 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog.ContentItem);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
-
             return Redirect(Url.BlogForAdmin(blog));
         }
 
         public ActionResult Edit(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -119,10 +112,11 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
+            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
@@ -134,7 +128,6 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
             Services.Notifier.Information(T("Blog information updated"));
 
             return Redirect(Url.BlogsForAdmin());
@@ -178,13 +171,13 @@ namespace Orchard.Blogs.Controllers {
             if (blogPart == null)
                 return HttpNotFound();
 
-            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
-                .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
+            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
+            var blogPostsShapes = blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")).ToArray();
 
             dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
 
             var list = Shape.List();
-            list.AddRange(blogPosts);
+            list.AddRange(blogPostsShapes);
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list), "5");
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);

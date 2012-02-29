@@ -116,7 +116,8 @@ namespace Orchard.Environment.State {
                     FeatureDescriptor = featureDescriptor,
                     FeatureState = shellState.Features.FirstOrDefault(s => s.Name == featureDescriptor.Id),
                 })
-                .Where(entry => entry.FeatureState != null);
+                .Where(entry => entry.FeatureState != null)
+                .ToArray();
 
             // get loaded feature information 
             var loadedFeatures = _extensionManager.LoadFeatures(orderedFeatureDescriptorsAndStates.Select(entry => entry.FeatureDescriptor)).ToArray();
@@ -131,7 +132,7 @@ namespace Orchard.Environment.State {
                               },
                     entry.FeatureDescriptor,
                     entry.FeatureState,
-                });
+                }).ToList();
 
             // find feature state that is beyond what's currently available from modules
             var additionalState = shellState.Features.Except(loadedEntries.Select(entry => entry.FeatureState));
@@ -152,7 +153,7 @@ namespace Orchard.Environment.State {
                     FeatureDescriptor = featureDescriptor,
                     FeatureState = featureState
                 };
-            }));
+            })).ToArray();
 
             // lower enabled states in reverse order
             foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
@@ -171,8 +172,7 @@ namespace Orchard.Environment.State {
             }
 
             // raise install and enabled states in order
-            foreach (var entry in allEntries.Reverse().Where(entry => IsRising(entry.FeatureState)))
-            {
+            foreach (var entry in allEntries.Where(entry => IsRising(entry.FeatureState))) {
                 if (entry.FeatureState.InstallState == ShellFeatureState.State.Rising) {
                     Logger.Information("Installing feature '{0}'", entry.Feature.Descriptor.Id);
                     _featureEvents.Installing(entry.Feature);

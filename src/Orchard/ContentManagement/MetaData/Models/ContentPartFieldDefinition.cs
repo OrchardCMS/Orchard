@@ -1,5 +1,9 @@
-﻿namespace Orchard.ContentManagement.MetaData.Models {
+﻿using Orchard.Utility.Extensions;
+
+namespace Orchard.ContentManagement.MetaData.Models {
     public class ContentPartFieldDefinition {
+        public const string DisplayNameKey = "DisplayName";
+
         public ContentPartFieldDefinition(string name) {
             Name = name;
             FieldDefinition = new ContentFieldDefinition(null);
@@ -12,6 +16,15 @@
         }
 
         public string Name { get; private set; }
+        
+        public string DisplayName {
+            get {
+                // if none is defined, generate one from the technical name
+                return Settings.ContainsKey(DisplayNameKey) ? Settings[DisplayNameKey] : Name.CamelFriendly();
+            }
+            set { Settings[DisplayNameKey] = value; }
+        }
+
         public ContentFieldDefinition FieldDefinition { get; private set; }
         public SettingsDictionary Settings { get; private set; }
     }

@@ -4,7 +4,7 @@
 @{ Layout.Title = T("Add Role").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) {
-    Html.ValidationSummary();
+    @Html.ValidationSummary();
     <fieldset>
         <legend>@T("Information")</legend>
         <label for="pageTitle">@T("Role Name:")</label>
@@ -29,7 +29,7 @@
                 @foreach (var permission in Model.FeaturePermissions[featureName]) {
                 <tr>
                     <td>@permission.Description</td>
-                    <td style="width:60px;"><input type="checkbox" value="true" name="@T("Checkbox.{0}", permission.Name)"/></td>
+                    <td style="width:60px;"><input type="checkbox" value="true" name="Checkbox.@permission.Name"/></td>
                 </tr>
                 }
             </table>

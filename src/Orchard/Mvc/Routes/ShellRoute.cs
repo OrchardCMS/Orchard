@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
-using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Extensions;
@@ -18,11 +17,11 @@ namespace Orchard.Mvc.Routes {
         private readonly IRunningShellTable _runningShellTable;
         private readonly UrlPrefix _urlPrefix;
 
-        public ShellRoute(RouteBase route, ShellSettings shellSettings, ILifetimeScope shellLifetimeScope, IRunningShellTable runningShellTable) {
+        public ShellRoute(RouteBase route, ShellSettings shellSettings, IWorkContextAccessor workContextAccessor, IRunningShellTable runningShellTable) {
             _route = route;
             _shellSettings = shellSettings;
             _runningShellTable = runningShellTable;
-            _workContextAccessor = shellLifetimeScope.Resolve<IWorkContextAccessor>();
+            _workContextAccessor = workContextAccessor;
             if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
                 _urlPrefix = new UrlPrefix(_shellSettings.RequestUrlPrefix);
 

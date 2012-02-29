@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Web.Routing;
 
@@ -18,6 +19,8 @@ namespace Orchard.ContentManagement {
             get { return _adminRouteValues ?? EditorRouteValues; }
             set { _adminRouteValues = value; }
         }
+        public readonly IDictionary<string, Func<RouteValueDictionary>> RouteValues = new Dictionary<string, Func<RouteValueDictionary>>();
+
         public readonly IList<GroupInfo> DisplayGroupInfo = new List<GroupInfo>();
         public readonly IList<GroupInfo> EditorGroupInfo = new List<GroupInfo>();
     }

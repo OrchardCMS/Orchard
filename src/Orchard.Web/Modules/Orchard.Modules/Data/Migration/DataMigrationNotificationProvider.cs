@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Data.Migration;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Modules.Extensions;
@@ -20,9 +21,9 @@ namespace Orchard.Modules.Data.Migration {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly WorkContext _workContext;
 
-        public DataMigrationNotificationProvider(IDataMigrationManager dataMigrationManager, WorkContext workContext) {
+        public DataMigrationNotificationProvider(IDataMigrationManager dataMigrationManager, IWorkContextAccessor workContextAccessor) {
             _dataMigrationManager = dataMigrationManager;
-            _workContext = workContext;
+            _workContext = workContextAccessor.GetContext();
 
             T = NullLocalizer.Instance;
         }

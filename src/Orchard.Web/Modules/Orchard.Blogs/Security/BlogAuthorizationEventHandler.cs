@@ -25,8 +25,27 @@ namespace Orchard.Blogs.Security {
             if (user == null || content == null)
                 return false;
 
+            if(HasOwnershipOnContainer(user, content)) {
+                return true;
+            }
+
             var common = content.As<ICommonPart>();
             if (common == null || common.Owner == null)
+                return false;
+            
+            return user.Id == common.Owner.Id;
+        }
+
+        private static bool HasOwnershipOnContainer(IUser user, IContent content) {
+            if (user == null || content == null)
+                return false;
+
+            var common = content.As<ICommonPart>();
+            if (common == null || common.Container == null)
+                return false;
+
+            common = common.Container.As<ICommonPart>();
+            if (common == null || common.Container == null)
                 return false;
 
             return user.Id == common.Owner.Id;

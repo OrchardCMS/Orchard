@@ -47,8 +47,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.effects.blind.js" />
     <Content Include="Scripts\jquery.effects.blind.min.js" />
     <Content Include="Scripts\jquery.effects.bounce.js" />
@@ -126,7 +128,7 @@
     <Content Include="Styles\images\ui-icons_454545_256x240.png" />
     <Content Include="Styles\images\ui-icons_888888_256x240.png" />
     <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Styles\jquery-ui-1.8.11.custom.css" />
+    <Content Include="Styles\jquery-ui-1.8.16.custom.css" />
     <Content Include="Styles\ui.datepicker.css" />
     <Content Include="Styles\ui.timepickr.css" />
   </ItemGroup>
@@ -155,6 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\images\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

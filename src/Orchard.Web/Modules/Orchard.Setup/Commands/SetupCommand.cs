@@ -44,8 +44,8 @@ namespace Orchard.Setup.Commands {
         [OrchardSwitches("SiteName,AdminUsername,AdminPassword,DatabaseProvider,DatabaseConnectionString,DatabaseTablePrefix,EnabledFeatures,Recipe")]
         public void Setup() {
             IEnumerable<string> enabledFeatures = null;
-            if (!string.IsNullOrEmpty(this.EnabledFeatures)) {
-                enabledFeatures = this.EnabledFeatures
+            if (!string.IsNullOrEmpty(EnabledFeatures)) {
+                enabledFeatures = EnabledFeatures
                     .Split(',')
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrEmpty(s));

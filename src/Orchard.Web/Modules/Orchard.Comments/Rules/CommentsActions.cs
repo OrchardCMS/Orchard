@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.Comments.Models;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -10,12 +9,12 @@ namespace Orchard.Comments.Rules {
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Orchard.Comments.Rules")]
     public class CommentsActions : IActionProvider {
         private readonly IContentManager _contentManager;
 
         public CommentsActions(IContentManager contentManager) {
             _contentManager = contentManager;
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
@@ -32,7 +31,7 @@ namespace Orchard.Comments.Rules {
         /// </summary>
         private bool Close(dynamic context) {
             var contentId = Convert.ToInt32(context.Properties["ContentId"]);
-            var content = _contentManager.Get(contentId);
+            ContentItem content = _contentManager.Get(contentId);
 
             if (content != null) {
                 var comments = content.As<CommentsPart>();

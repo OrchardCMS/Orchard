@@ -63,16 +63,6 @@
       <HintPath>..\..\lib\autofac\Autofac.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac.Integration.Web, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Autofac.Integration.Web.Mvc, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
@@ -81,10 +71,6 @@
     <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Castle.Services.Logging.Log4netIntegration">
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -103,9 +89,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Infrastructure">
-      <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
@@ -117,7 +100,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -149,10 +131,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.WebPages.Razor">
       <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
@@ -164,11 +142,18 @@
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
     <Compile Include="Caching\IParallelCacheContext.cs" />
+    <Compile Include="ContentManagement\Aspects\IAliasAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ITitleAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
+    <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
+    <Compile Include="ContentManagement\IHqlExpression.cs" />
+    <Compile Include="ContentManagement\IHqlQuery.cs" />
+    <Compile Include="ContentManagement\Handlers\DescribeMembersContext.cs" />
+    <Compile Include="ContentManagement\IHqlCriterion.cs" />
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageEvents.cs" />
@@ -179,9 +164,11 @@
     <Compile Include="ContentManagement\Handlers\TitleAspectHandler.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
+    <Compile Include="Data\Migration\AutomaticDataMigrations.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -199,6 +186,8 @@
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />
+    <Compile Include="Environment\Extensions\DefaultCriticalErrorProvider.cs" />
     <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />
     <Compile Include="Caching\IAsyncTokenProvider.cs" />
     <Compile Include="Environment\Extensions\Folders\CoreModuleFolders.cs" />
@@ -214,12 +203,16 @@
     <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
+    <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="Exceptions\DefaultExceptionPolicy.cs" />
+    <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />
+    <Compile Include="Exceptions\IExceptionPolicy.cs" />
     <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\LockFile\ILockFile.cs" />
@@ -246,6 +239,7 @@
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
+    <Compile Include="OrchardFatalException.cs" />
     <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
     <Compile Include="Recipes\Models\Recipe.cs" />
     <Compile Include="Recipes\Models\RecipeContext.cs" />
@@ -259,13 +253,20 @@
     <Compile Include="Recipes\Services\IRecipeScheduler.cs" />
     <Compile Include="Recipes\Services\IRecipeStepExecutor.cs" />
     <Compile Include="Recipes\Services\IRecipeStepQueue.cs" />
+    <Compile Include="Security\AlwaysAccessibleAttribute.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
+    <Compile Include="Services\Clock.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
+    <Compile Include="Time\FallbackTimeZoneSelector.cs" />
+    <Compile Include="Time\ITimeZoneSelector.cs" />
+    <Compile Include="Time\SiteTimeZoneSelector.cs" />
+    <Compile Include="Time\TimeZoneSelectorResult.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
@@ -526,7 +527,6 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
-    <Compile Include="Utility\Extensions\ControllerExtensions.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
@@ -766,7 +766,6 @@
     <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
-    <Compile Include="Services\IHomePageProvider.cs" />
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="Localization\Text.cs" />
@@ -814,7 +813,6 @@
     <Compile Include="Logging\LoggingModule.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
-    <Compile Include="Mvc\Html\ContainerExtensions.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\LayoutExtensions.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
@@ -872,7 +870,7 @@
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
-    <Compile Include="Services\Clock.cs" />
+    <Compile Include="Services\IClock.cs" />
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />
@@ -907,6 +905,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

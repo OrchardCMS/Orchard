@@ -299,21 +299,21 @@ nav ul
 .zone-header { padding: 30px 0 30px 12px; position: relative; }
 .zone-navigation { padding: 0; }
 .zone-featured {}
-.zone-beforemain {}
-.zone-asidefirst {}
+.zone-before-main {}
+.zone-aside-first {}
 .zone-messages {}
-.zone-beforecontent {}
+.zone-before-content {}
 .zone-content {}
-.zone-aftercontent {}
-.zone-asidesecond {}
-.zone-aftermain {}
-.zone-zone-tripelfirst {}
-.zone-zone-tripelsecond {}
-.zone-zone-tripelthird {}
-.zone-footerquadfirst {}
-.zone-footerquadsecond {}
-.zone-footerquadthird {}
-.zone-footerquadfourth {}
+.zone-after-content {}
+.zone-aside-second {}
+.zone-after-main {}
+.zone-tripel-first {}
+.zone-tripel-second {}
+.zone-tripel-third {}
+.zone-footer-quad-first {}
+.zone-footer-quad-second {}
+.zone-footer-quad-third {}
+.zone-footer-quad-fourth {}
 .zone-footer { color: #999999; }
 
 
@@ -327,7 +327,7 @@ nav ul
 .content-items li { padding: 0; margin: 0; }
 .content-items .content-item { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
 .content-items .content-item header {}
-.content-items .content-item header h1 { font-size: 1.308em; color:#ff0000; }
+.content-items .content-item header h1 { font-size: 1.308em; color:#434343; }
 .content-items .content-item header h1 a { color: #434343; }
 .content-items .content-item header h1 a:hover {}
 
@@ -450,9 +450,9 @@ nav ul
 
 .pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
 .pager li { float: left; padding: 0 12px 0 0; margin: 0; }
-.pager a { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
+.pager a, .pager span { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
 .pager a:hover { background-color: #434343; color: #fff; }
-
+.pager span { background-color:inherit; }
 
 
 /* Misc

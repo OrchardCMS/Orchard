@@ -53,9 +53,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<AccountController>().SingleInstance();
             builder.RegisterType<SiteService>().As<ISiteService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, SettingsDictionary>))
-                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
@@ -70,11 +68,11 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
-            
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
+
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -123,6 +121,9 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _controller = _container.Resolve<AccountController>();
 
             var mockHttpContext = new Mock<HttpContextBase>();
+            mockHttpContext.SetupGet(x => x.Request.Url).Returns(new Uri("http://www.orchardproject.net"));
+            mockHttpContext.SetupGet(x => x.Request).Returns(new HttpRequestStub());
+
             _controller.ControllerContext = new ControllerContext(
                 mockHttpContext.Object,
                 new RouteData(
@@ -353,6 +354,12 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                     var nv = new NameValueCollection();
                     nv["Host"] = "orchardproject.net";
                     return nv;
+                }
+            }
+
+            public override string ApplicationPath {
+                get {
+                    return "/";
                 }
             }
         }

@@ -63,10 +63,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Web.Mvc, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
@@ -131,8 +127,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -169,6 +164,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
+    <Compile Include="ContentManagement\HqlExpressionTests.cs" />
+    <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -187,6 +185,7 @@
     <Compile Include="ContentManagement\Handlers\AlphaPartHandler.cs" />
     <Compile Include="ContentManagement\Models\BetaPart.cs" />
     <Compile Include="ContentManagement\Handlers\BetaPartHandler.cs" />
+    <Compile Include="ContentManagement\Models\LambdaPart.cs" />
     <Compile Include="ContentManagement\Models\DeltaPart.cs" />
     <Compile Include="ContentManagement\Models\EpsilonPart.cs" />
     <Compile Include="ContentManagement\Models\FlavoredPart.cs" />
@@ -198,6 +197,7 @@
     <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Records\LambdaRecord.cs" />
     <Compile Include="ContentManagement\Records\MegaRecord.cs" />
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">
       <SubType>Code</SubType>
@@ -274,6 +274,7 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />

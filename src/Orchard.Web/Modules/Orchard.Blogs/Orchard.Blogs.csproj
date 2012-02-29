@@ -79,10 +79,13 @@
     <Compile Include="Handlers\BlogPartArchiveHandler.cs" />
     <Compile Include="Models\BlogPartArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Routing\IBlogPathConstraint.cs" />
-    <Compile Include="Routing\IsArchiveConstraint.cs" />
     <Compile Include="Routing\BlogPathConstraint.cs" />
     <Compile Include="Routing\BlogPathConstraintUpdator.cs" />
+    <Compile Include="Routing\ArchiveConstraint.cs" />
+    <Compile Include="Routing\IArchiveConstraint.cs" />
+    <Compile Include="Routing\RsdConstraint.cs" />
+    <Compile Include="Routing\IRsdConstraint.cs" />
+    <Compile Include="Routing\IBlogPathConstraint.cs" />
     <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />

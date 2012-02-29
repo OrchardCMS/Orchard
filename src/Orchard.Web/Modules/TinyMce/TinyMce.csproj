@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,7 +68,16 @@
     <Content Include="Scripts\themes\advanced\editor_template_src.js" />
     <Content Include="Scripts\themes\advanced\image.htm" />
     <Content Include="Scripts\themes\advanced\img\colorpicker.jpg" />
+    <Content Include="Scripts\themes\advanced\img\flash.gif" />
     <Content Include="Scripts\themes\advanced\img\icons.gif" />
+    <Content Include="Scripts\themes\advanced\img\iframe.gif" />
+    <Content Include="Scripts\themes\advanced\img\pagebreak.gif" />
+    <Content Include="Scripts\themes\advanced\img\quicktime.gif" />
+    <Content Include="Scripts\themes\advanced\img\realmedia.gif" />
+    <Content Include="Scripts\themes\advanced\img\shockwave.gif" />
+    <Content Include="Scripts\themes\advanced\img\trans.gif" />
+    <Content Include="Scripts\themes\advanced\img\video.gif" />
+    <Content Include="Scripts\themes\advanced\img\windowsmedia.gif" />
     <Content Include="Scripts\themes\advanced\js\about.js" />
     <Content Include="Scripts\themes\advanced\js\anchor.js" />
     <Content Include="Scripts\themes\advanced\js\charmap.js" />
@@ -78,6 +88,7 @@
     <Content Include="Scripts\themes\advanced\langs\en.js" />
     <Content Include="Scripts\themes\advanced\langs\en_dlg.js" />
     <Content Include="Scripts\themes\advanced\link.htm" />
+    <Content Include="Scripts\themes\advanced\shortcuts.htm" />
     <Content Include="Scripts\themes\advanced\skins\default\content.css" />
     <Content Include="Scripts\themes\advanced\skins\default\dialog.css" />
     <Content Include="Scripts\themes\advanced\skins\default\img\buttons.png" />
@@ -87,6 +98,9 @@
     <Content Include="Scripts\themes\advanced\skins\default\img\progress.gif" />
     <Content Include="Scripts\themes\advanced\skins\default\img\tabs.gif" />
     <Content Include="Scripts\themes\advanced\skins\default\ui.css" />
+    <Content Include="Scripts\themes\advanced\skins\highcontrast\content.css" />
+    <Content Include="Scripts\themes\advanced\skins\highcontrast\dialog.css" />
+    <Content Include="Scripts\themes\advanced\skins\highcontrast\ui.css" />
     <Content Include="Scripts\themes\advanced\skins\o2k7\content.css" />
     <Content Include="Scripts\themes\advanced\skins\o2k7\dialog.css" />
     <Content Include="Scripts\themes\advanced\skins\o2k7\img\button_bg.png" />

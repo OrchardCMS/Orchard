@@ -14,6 +14,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
+
+    /// <summary>
+    /// TODO: (PH:Autoroute) This replicates a whole lot of Core.Contents functionality. All we actually need to do is take the BlogId from the query string in the BlogPostPartDriver, and remove
+    /// helper extensions from UrlHelperExtensions.
+    /// </summary>
     [ValidateInput(false), Admin]
     public class BlogPostAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;
@@ -38,7 +43,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = Services.ContentManager.BuildEditor(blogPost);
@@ -71,7 +76,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
             
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);

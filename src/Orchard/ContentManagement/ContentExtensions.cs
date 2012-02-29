@@ -74,10 +74,16 @@ namespace Orchard.ContentManagement {
             where TPart : ContentPart {
             return manager.Query().ForPart<TPart>();
         }
+
         public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager)
             where TPart : ContentPart<TRecord>
             where TRecord : ContentPartRecord {
             return manager.Query().ForPart<TPart>().Join<TRecord>();
+        }
+
+        public static IHqlQuery<TPart> HqlQuery<TPart>(this IContentManager manager)
+            where TPart : ContentPart {
+            return manager.HqlQuery().ForPart<TPart>();
         }
 
         /* Query(VersionOptions options) */
@@ -148,6 +154,10 @@ namespace Orchard.ContentManagement {
         }
         public static T Get<T>(this IContentManager manager, int id, VersionOptions options) where T : class, IContent {
             var contentItem = manager.Get(id, options);
+            return contentItem == null ? null : contentItem.Get<T>();
+        }
+        public static T Get<T>(this IContentManager manager, int id, VersionOptions options, QueryHints hints) where T : class, IContent {
+            var contentItem = manager.Get(id, options, hints);
             return contentItem == null ? null : contentItem.Get<T>();
         }
         public static T GetLatest<T>(this IContentManager manager, int id) where T : class, IContent {

@@ -45,10 +45,12 @@ namespace Orchard.Environment.ShellBuilders {
             if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
-            var modules = BuildBlueprint(features, IsModule, BuildModule);
-            var dependencies = BuildBlueprint(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
-            var controllers = BuildBlueprint(features, IsController, BuildController);
-            var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
+            var excludedTypes = GetExcludedTypes(features);
+
+            var modules = BuildBlueprint(features, IsModule, BuildModule, excludedTypes);
+            var dependencies = BuildBlueprint(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor), excludedTypes);
+            var controllers = BuildBlueprint(features, IsController, BuildController, excludedTypes);
+            var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings), excludedTypes);
 
             var result = new ShellBlueprint {
                 Settings = settings,
@@ -60,6 +62,21 @@ namespace Orchard.Environment.ShellBuilders {
 
             Logger.Debug("Done composing blueprint");
             return result;
+        }
+
+        private static IEnumerable<string> GetExcludedTypes(IEnumerable<Feature> features) {
+            var excludedTypes = new HashSet<string>();
+
+            // Identify replaced types
+            foreach (Feature feature in features) {
+                foreach (Type type in feature.ExportedTypes) {
+                    foreach (OrchardSuppressDependencyAttribute replacedType in type.GetCustomAttributes(typeof(OrchardSuppressDependencyAttribute), false)) {
+                        excludedTypes.Add(replacedType.FullName);
+                    }
+                }
+            }
+
+            return excludedTypes;
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {
@@ -81,17 +98,8 @@ namespace Orchard.Environment.ShellBuilders {
         private static IEnumerable<T> BuildBlueprint<T>(
             IEnumerable<Feature> features,
             Func<Type, bool> predicate,
-            Func<Type, Feature, T> selector) {
-            HashSet<string> excludedTypes = new HashSet<string>();
-
-            // Identify replaced types
-            foreach(Feature feature in features) {
-                foreach (Type type in feature.ExportedTypes) {
-                    foreach (OrchardSuppressDependencyAttribute replacedType in type.GetCustomAttributes(typeof(OrchardSuppressDependencyAttribute), false)) {
-                        excludedTypes.Add(replacedType.FullName);
-                    }
-                }
-            }
+            Func<Type, Feature, T> selector,
+            IEnumerable<string> excludedTypes ) {
 
             // Load types excluding the replaced types
             return features.SelectMany(

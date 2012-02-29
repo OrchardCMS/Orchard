@@ -10,6 +10,7 @@ using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller, IUpdateModel {
@@ -55,16 +56,20 @@ namespace Orchard.ContentTypes.Controllers {
                 ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
             }
 
+            if (String.IsNullOrWhiteSpace(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("The Content Type Id can't be empty.").ToString());
+            }
+
             if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("Name", T("A type with the same Id already exists.").ToString());
             }
 
-            if (!String.IsNullOrWhiteSpace(viewModel.Name) && !ContentDefinitionService.IsLetter(viewModel.Name[0])) {
+            if (!String.IsNullOrWhiteSpace(viewModel.Name) && !viewModel.Name[0].IsLetter()) {
                 ModelState.AddModelError("Name", T("The technical name must start with a letter.").ToString());
             }
 
             if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
-                ModelState.AddModelError("DisplayName", T("A type with the same Name already exists.").ToString());
+                ModelState.AddModelError("DisplayName", T("A type with the same Display Name already exists.").ToString());
             }
 
             if (!ModelState.IsValid) {
@@ -85,8 +90,18 @@ namespace Orchard.ContentTypes.Controllers {
             return RedirectToAction("AddPartsTo", new { id = typeViewModel.Name });
         }
 
-        public ActionResult ContentTypeName(string displayName) {
-            return Json(_contentDefinitionService.GenerateContentTypeNameFromDisplayName(displayName));
+        public ActionResult ContentTypeName(string displayName, int version) {
+            return Json(new {
+                result = _contentDefinitionService.GenerateContentTypeNameFromDisplayName(displayName),
+                version = version
+            });
+        }
+
+        public ActionResult FieldName(string partName, string displayName, int version) {
+            return Json(new {
+                result = _contentDefinitionService.GenerateFieldNameFromDisplayName(partName, displayName),
+                version = version
+            });
         }
 
         public ActionResult Edit(string id) {
@@ -139,7 +154,6 @@ namespace Orchard.ContentTypes.Controllers {
             return RedirectToAction("List");
         }
 
-
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Delete")]
         public ActionResult Delete(string id) {
@@ -151,13 +165,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null)
                 return HttpNotFound();
 
-            _contentDefinitionManager.DeleteTypeDefinition(id);
-
-            // delete all content items (but keep versions)
-            var contentItems = Services.ContentManager.Query(id).List();
-            foreach (var contentItem in contentItems) {
-                Services.ContentManager.Remove(contentItem);
-            }
+            _contentDefinitionService.RemoveType(id, true);
 
             Services.Notifier.Information(T("\"{0}\" has been removed.", typeViewModel.DisplayName));
             
@@ -340,7 +348,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null)
                 return HttpNotFound();
 
-            _contentDefinitionManager.DeletePartDefinition(id);
+            _contentDefinitionService.RemovePart(id);
+            
             Services.Notifier.Information(T("\"{0}\" has been removed.", partViewModel.DisplayName));
 
             return RedirectToAction("ListParts");
@@ -363,21 +372,21 @@ namespace Orchard.ContentTypes.Controllers {
 
             var viewModel = new AddFieldViewModel {
                 Part = partViewModel,
-                Fields = _contentDefinitionService.GetFields()
+                Fields = _contentDefinitionService.GetFields().OrderBy(x => x.FieldTypeName)
             };
 
             return View(viewModel);
         }
 
         [HttpPost, ActionName("AddFieldTo")]
-        public ActionResult AddFieldToPOST(string id) {
+        public ActionResult AddFieldToPOST(AddFieldViewModel viewModel, string id) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
             var typeViewModel = _contentDefinitionService.GetType(id);
             if (partViewModel == null) {
-                //id passed in might be that of a type w/ no implicit field
+                // id passed in might be that of a type w/ no implicit field
                 if (typeViewModel != null) {
                     partViewModel = new EditPartViewModel {Name = typeViewModel.Name};
                     _contentDefinitionService.AddPart(new CreatePartViewModel {Name = partViewModel.Name});
@@ -388,14 +397,45 @@ namespace Orchard.ContentTypes.Controllers {
                 }
             }
 
-            var viewModel = new AddFieldViewModel();
-            if (!TryUpdateModel(viewModel)) {
+            viewModel.DisplayName = viewModel.DisplayName ?? String.Empty;
+            viewModel.DisplayName = viewModel.DisplayName.Trim();
+            viewModel.Name = viewModel.Name ?? String.Empty;
+
+            if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
+            }
+
+            if (String.IsNullOrWhiteSpace(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("The Technical Name can't be empty.").ToString());
+            }
+
+            if (_contentDefinitionService.GetPart(partViewModel.Name).Fields.Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                ModelState.AddModelError("Name", T("A field with the same name already exists.").ToString());
+            }
+
+            if (!String.IsNullOrWhiteSpace(viewModel.Name) && !viewModel.Name[0].IsLetter()) {
+                ModelState.AddModelError("Name", T("The technical name must start with a letter.").ToString());
+            }
+
+            if (!String.Equals(viewModel.Name, viewModel.Name.ToSafeName(), StringComparison.OrdinalIgnoreCase)) {
+                ModelState.AddModelError("Name", T("The technical name contains invalid characters.").ToString());
+            }
+
+            if (_contentDefinitionService.GetPart(partViewModel.Name).Fields.Any(t => String.Equals(t.DisplayName.Trim(), Convert.ToString(viewModel.DisplayName).Trim(), StringComparison.OrdinalIgnoreCase))) {
+                ModelState.AddModelError("DisplayName", T("A field with the same Display Name already exists.").ToString());
+            }
+
+            if (!ModelState.IsValid) {
+                viewModel.Part = partViewModel;
+                viewModel.Fields = _contentDefinitionService.GetFields();
+
                 Services.TransactionManager.Cancel();
-                return AddFieldTo(id);
+
+                return View(viewModel);
             }
 
             try {
-                _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+                _contentDefinitionService.AddFieldToPart(viewModel.Name, viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
             }
             catch (Exception ex) {
                 Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
@@ -403,19 +443,91 @@ namespace Orchard.ContentTypes.Controllers {
                 return AddFieldTo(id);
             }
 
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-                return AddFieldTo(id);
-            }
-
             Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
 
-            if (typeViewModel != null)
-                return RedirectToAction("Edit", new { id });
+            if (typeViewModel != null) {
+                return RedirectToAction("Edit", new {id});
+            }
 
             return RedirectToAction("EditPart", new { id });
         }
 
+        public ActionResult EditField(string id, string name) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null) {
+                return HttpNotFound();
+            }
+
+            var fieldViewModel = partViewModel.Fields.FirstOrDefault(x => x.Name == name);
+
+            if(fieldViewModel == null) {
+                return HttpNotFound();
+            }
+
+            var viewModel = new EditFieldNameViewModel {
+                Name = fieldViewModel.Name,
+                DisplayName = fieldViewModel.DisplayName
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("EditField")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditFieldPOST(string id, EditFieldNameViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            if (viewModel == null)
+                return HttpNotFound();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null) {
+                return HttpNotFound();
+            }
+
+            // prevent null reference exception in validation
+            viewModel.DisplayName = viewModel.DisplayName ?? String.Empty;
+            
+            // remove extra spaces
+            viewModel.DisplayName = viewModel.DisplayName.Trim();
+
+            if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
+            }
+            
+            if (_contentDefinitionService.GetPart(partViewModel.Name).Fields.Any(t => t.Name != viewModel.Name && String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
+                ModelState.AddModelError("DisplayName", T("A field with the same Display Name already exists.").ToString());
+            }
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
+
+            var field = _contentDefinitionManager.GetPartDefinition(id).Fields.FirstOrDefault(x => x.Name == viewModel.Name);
+
+            if(field == null) {
+                return HttpNotFound();
+            }
+
+            field.DisplayName = viewModel.DisplayName;
+            _contentDefinitionManager.StorePartDefinition(partViewModel._Definition);
+
+            Services.Notifier.Information(T("Display name changed to {0}.", viewModel.DisplayName));
+
+            // redirect to the type editor if a type exists with this name
+            var typeViewModel = _contentDefinitionService.GetType(id);
+            if (typeViewModel != null) {
+                return RedirectToAction("Edit", new { id });
+            }
+
+            return RedirectToAction("EditPart", new { id });
+        }
 
         public ActionResult RemoveFieldFrom(string id) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))

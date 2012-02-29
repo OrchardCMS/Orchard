@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -10,7 +11,6 @@ namespace Orchard.Widgets {
                 .Configure(descriptor => {
                     // todo: have "alternates" for chrome
                     descriptor.Wrappers.Add("Widget_Wrapper");
-                    descriptor.Wrappers.Add("Widget_ControlWrapper");
                 })
                 .OnCreated(created => {
                     var widget = created.Shape;
@@ -22,15 +22,26 @@ namespace Orchard.Widgets {
 
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
-                        widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
+                        var widgetPart = contentItem.As<WidgetPart>();
+                        var zoneName = widgetPart.Zone;
 
-                        var zoneName = contentItem.As<WidgetPart>().Zone;
+                        widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
+                        widget.Classes.Add("widget-" + zoneName.HtmlClassify());
 
                         // Widget__[ZoneName] e.g. Widget-SideBar
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);
 
                         // Widget__[ContentType] e.g. Widget-BlogArchive
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
+
+                        // using the technical name to add a CSS class and an alternate
+                        if (!String.IsNullOrWhiteSpace(widgetPart.Name)) {
+                            widget.Classes.Add("widget-" + widgetPart.Name);
+
+                            // Widget__Name_[Name]
+                            displaying.ShapeMetadata.Alternates.Add("Widget__Name_" + widgetPart.Name);
+                        }
+
                     }
                 });
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
@@ -29,6 +30,7 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
+using Orchard.Tasks;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -62,10 +64,11 @@ namespace Orchard.Setup {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
-            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            //builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<SweepGenerator>().As<ISweepGenerator>().SingleInstance();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
@@ -95,7 +98,7 @@ namespace Orchard.Setup {
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>().InstancePerLifetimeScope();
-            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
@@ -188,6 +191,10 @@ namespace Orchard.Setup {
             public string BaseUrl {
                 get { return ""; }
             }
+
+            public string SiteTimeZone {
+                get { return TimeZoneInfo.Local.Id; }
+             }        
         }
     }
 }

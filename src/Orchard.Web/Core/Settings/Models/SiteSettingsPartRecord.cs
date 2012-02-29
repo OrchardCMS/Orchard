@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.Records;
+﻿using System;
+using Orchard.ContentManagement.Records;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
@@ -24,5 +25,7 @@ namespace Orchard.Core.Settings.Models {
         public virtual ResourceDebugMode ResourceDebugMode { get; set; }
 
         public virtual int PageSize { get; set; }
+
+        public virtual string SiteTimeZone { get; set; }
     }
 }

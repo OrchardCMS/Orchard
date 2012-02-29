@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 
@@ -11,7 +10,6 @@ namespace Orchard.Core.Contents.Rules {
         void Describe(dynamic context);
     }
 
-    [OrchardFeature("Contents.Rules")]
     public class ContentForms : IFormProvider {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         protected dynamic Shape { get; set; }
@@ -22,6 +20,7 @@ namespace Orchard.Core.Contents.Rules {
             IContentDefinitionManager contentDefinitionManager) {
             _contentDefinitionManager = contentDefinitionManager;
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         public void Describe(dynamic context) {

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.ContentManagement.Records;
+using System.Linq;
 using Orchard.Core.Common.Models;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
@@ -17,7 +16,6 @@ namespace Orchard.Email.Rules {
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Orchard.Email.Rules")]
     public class MailActions : IActionProvider {
         private readonly IMessageManager _messageManager;
         private readonly IOrchardServices _orchardServices;
@@ -31,6 +29,7 @@ namespace Orchard.Email.Rules {
             _messageManager = messageManager;
             _orchardServices = orchardServices;
             _membershipService = membershipService;
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
@@ -39,56 +38,57 @@ namespace Orchard.Email.Rules {
             Func<dynamic, LocalizedString> display = context => T("Send an e-mail");
 
             describe.For("Messaging", T("Messaging"), T("Messages"))
-                .Element("SendEmail", T("Send e-mail"), T("Sends an e-mail to a specific user."), (Func<dynamic, bool>)Send, display, "ActionEmail");
+                .Element(
+                    "SendEmail", T("Send e-mail"), T("Sends an e-mail to a specific user."), (Func<dynamic, bool>)Send,
+                    display, "ActionEmail");
         }
 
         private bool Send(dynamic context) {
             var recipient = context.Properties["Recipient"];
-            ContentItemRecord recipientRecord = null;
+            var properties = new Dictionary<string, string>(context.Properties);
 
             if (recipient == "owner") {
                 var content = context.Tokens["Content"] as IContent;
                 if (content.Has<CommonPart>()) {
-                    recipientRecord = content.As<CommonPart>().Owner.ContentItem.Record;
+                    var owner = content.As<CommonPart>().Owner.ContentItem;
+                    if (owner != null && owner.Record != null) {
+                        _messageManager.Send(owner.Record, MessageType, "email", properties);
+                    }
+                    _messageManager.Send(
+                        SplitEmail(owner.As<IUser>().Email), MessageType, "email", properties);
                 }
             }
-
-            if (recipient == "author") {
+            else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && String.IsNullOrWhiteSpace(user.Email)) {
-                    recipientRecord = user.ContentItem.Record;
+                    _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }
-
-            if (recipient == "admin") {
+            else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
                 // can be null if user is no super user is defined
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
-                    recipientRecord = user.ContentItem.Record;
+                    _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }
-
-            if (recipientRecord == null) {
-                return true;
+            else if (recipient == "other") {
+                var email = properties["RecipientOther"];
+                _messageManager.Send(SplitEmail(email), MessageType, "email", properties);
             }
-
-            var properties = new Dictionary<string, string>(context.Properties);
-
-            _messageManager.Send(recipientRecord, MessageType, "email", properties);
-
             return true;
+        }
+
+        private static IEnumerable<string> SplitEmail(string commaSeparated) {
+            return commaSeparated.Split(new[] { ',', ';' });
         }
     }
 
     public class MailActionsHandler : IMessageEventHandler {
-        private readonly IContentManager _contentManager;
-
-        public MailActionsHandler(IContentManager contentManager) {
-            _contentManager = contentManager;
+        public MailActionsHandler() {
             T = NullLocalizer.Instance;
         }
 
@@ -98,13 +98,10 @@ namespace Orchard.Email.Rules {
             if (context.MessagePrepared)
                 return;
 
-            var contentItem = _contentManager.Get(context.Recipient.Id);
-            if (contentItem == null)
+            if ((context.Recipients == null || !context.Recipients.Any()) &&
+                (context.Addresses == null || !context.Addresses.Any())) {
                 return;
-
-            var recipient = contentItem.As<IUser>();
-            if (recipient == null)
-                return;
+            }
 
             switch (context.Type) {
                 case MailActions.MessageType:
@@ -117,12 +114,10 @@ namespace Orchard.Email.Rules {
         }
 
         private static void FormatEmailBody(MessageContext context) {
-            context.MailMessage.Body = "<p style=\"font-family:Arial, Helvetica; font-size:10pt;\">" + context.MailMessage.Body;
-            context.MailMessage.Body += "</p>";
+            context.MailMessage.Body = "<p style=\"font-family:Arial, Helvetica; font-size:10pt;\">" + context.MailMessage.Body + "</p>";
         }
 
         public void Sent(MessageContext context) {
         }
     }
-
 }

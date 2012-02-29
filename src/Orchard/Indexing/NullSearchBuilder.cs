@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Orchard.Indexing {
     public class NullSearchBuilder : ISearchBuilder {
-        public ISearchBuilder Parse(string defaultField, string query, bool escape, bool mandatory) {
+        public ISearchBuilder Parse(string defaultField, string query, bool escape) {
             return this; 
         }
 
-        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape, bool mandatory) {
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape) {
             return this;
         }
 

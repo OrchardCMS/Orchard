@@ -144,7 +144,7 @@ namespace Orchard.ContentManagement {
             }
 
             public int GetHashCode(ContentIdentity contentIdentity) {
-                return contentIdentity.ToString().GetHashCode();
+                return contentIdentity._dictionary.OrderBy(kvp => kvp.Key).ToString().GetHashCode();
             }
         }
 

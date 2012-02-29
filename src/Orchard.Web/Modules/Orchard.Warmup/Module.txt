@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: Provides a mecanism to generate a static version of pages for being used during application warm up.
 FeatureDescription: Generates the static version of specific pages periodically.
 Category: Hosting

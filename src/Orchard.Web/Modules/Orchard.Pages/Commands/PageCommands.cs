@@ -3,9 +3,9 @@ using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Security;
 using Orchard.Settings;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Pages.Commands {
     public class PageCommands : DefaultOrchardCommandHandler {
@@ -44,7 +44,7 @@ namespace Orchard.Pages.Commands {
         public bool UseWelcomeText { get; set; }
 
         [CommandName("page create")]
-        [CommandHelp("page create /Slug:<slug> /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
+        [CommandHelp("page create [/Slug:<slug>] /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
         [OrchardSwitches("Slug,Title,Path,Text,Owner,Homepage,Publish,UseWelcomeText")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
@@ -52,11 +52,19 @@ namespace Orchard.Pages.Commands {
             }
             var owner = _membershipService.GetUser(Owner);
             var page = _contentManager.Create("Page", VersionOptions.Draft);
-            page.As<RoutePart>().Title = Title;
-            page.As<RoutePart>().Path = Path;
-            page.As<RoutePart>().Slug = Slug;
-            page.As<RoutePart>().PromoteToHomePage = Homepage;
+            page.As<TitlePart>().Title = Title;
             page.As<ICommonPart>().Owner = owner;
+
+            // (PH:Autoroute) Hackish way to leave Slug and Homepage switches intact without requiring a dependency on Autoroute. This may throw an Exception with
+            // no AutoroutePart. But it means that normal setup recipes will still be able to give you a homepage without issue.
+            if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
+                dynamic dpage = page;
+                if (dpage.AutoroutePart != null) {
+                    dpage.AutoroutePart.UseCustomPattern = true;
+                    dpage.AutoroutePart.CustomPattern = Homepage ? String.Empty : Slug;
+                }
+            }
+
             var text = String.Empty;
             if (UseWelcomeText) {
                 text = T(

@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.DisplayManagement;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 
@@ -9,13 +8,13 @@ namespace Orchard.Comments.Rules {
         void Describe(dynamic context);
     }
 
-    [OrchardFeature("Orchard.Comments.Rules")]
     public class CommentsForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public CommentsForms(IShapeFactory shapeFactory) {
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         public void Describe(dynamic context) {

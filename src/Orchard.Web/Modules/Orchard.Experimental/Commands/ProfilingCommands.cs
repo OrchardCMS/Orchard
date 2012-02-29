@@ -3,12 +3,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Experimental.Commands {
-    
     [OrchardFeature("Profiling")]
     public class ProfilingCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
@@ -20,17 +19,14 @@ namespace Orchard.Experimental.Commands {
         }
 
         [CommandName("add profiling data")]
-        public string AddProfilingData() {
+        public void AddProfilingData() {
             var admin = _membershipService.GetUser("admin");
 
             for (var index = 0; index != 5; ++index) {
-
                 var pageName = "page" + index;
                 var page = _contentManager.Create("Page", VersionOptions.Draft);
                 page.As<ICommonPart>().Owner = admin;
-                page.As<RoutePart>().Slug = pageName;
-                page.As<RoutePart>().Path = pageName;
-                page.As<RoutePart>().Title = pageName;
+                page.As<TitlePart>().Title = pageName;
                 page.As<BodyPart>().Text = pageName;
                 page.As<MenuPart>().OnMainMenu = true;
                 page.As<MenuPart>().MenuPosition = "5." + index;
@@ -40,9 +36,7 @@ namespace Orchard.Experimental.Commands {
                 var blogName = "blog" + index;
                 var blog = _contentManager.New("Blog");
                 blog.As<ICommonPart>().Owner = admin;
-                blog.As<RoutePart>().Slug = blogName;
-                blog.As<RoutePart>().Path = blogName;
-                blog.As<RoutePart>().Title = blogName;
+                blog.As<TitlePart>().Title = blogName;
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = "6." + index;
                 blog.As<MenuPart>().MenuText = blogName;
@@ -61,18 +55,19 @@ namespace Orchard.Experimental.Commands {
                 //}
             }
 
-            return "AddProfilingData completed";
+            Context.Output.WriteLine(T("Finished adding profiling data"));
         }
 
         [CommandName("add users")]
-        public string AddUsers() {
+        public void AddUsers() {
             for (int i = 0; i < 1000; i++) {
                 var user = _membershipService.CreateUser(new CreateUserParams("user" + i, "1234567", "user" + i + "@orchardproject.net", null, null, true));
-                if (user == null)
-                    throw new OrchardException(T("The authentication provider returned an error"));
-
+                if (user == null) {
+                    Context.Output.WriteLine(T("Creating user failed. The authentication provider returned an error. Aborting..."));
+                    return;
+                }
             }
-            return "Success";
+            Context.Output.WriteLine(T("Adding users completed successfully"));
         }
     }
 }

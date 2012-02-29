@@ -33,7 +33,7 @@ namespace Orchard.Wcf {
                 throw new ArgumentNullException("registration");
             }
 
-            return _workContext.Resolve<ILifetimeScope>().Resolve(registration, Enumerable.Empty<Parameter>());
+            return _workContext.Resolve<ILifetimeScope>().ResolveComponent(registration, Enumerable.Empty<Parameter>());
         }
     }
 }

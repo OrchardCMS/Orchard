@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
+using Orchard.Events;
 
 namespace Orchard.Tags.Services {
     [UsedImplicitly]
@@ -41,6 +42,11 @@ namespace Orchard.Tags.Services {
             return _tagRepository.Table.ToList();
         }
 
+        public IEnumerable<TagRecord> GetTagsByNameSnippet(string snippet, int maxCount = 10) {
+            if (String.IsNullOrEmpty(snippet)) return null; // Otherwise would return the whole dataset
+            return _tagRepository.Fetch(tag => tag.TagName.StartsWith(snippet)).Take(maxCount);
+        }
+
         public TagRecord GetTag(int tagId) {
             return _tagRepository.Get(x => x.Id == tagId);
         }
@@ -55,7 +61,6 @@ namespace Orchard.Tags.Services {
                 result = new TagRecord { TagName = tagName };
                 _tagRepository.Create(result);
             }
-
             return result;
         }
 
@@ -172,9 +177,6 @@ namespace Orchard.Tags.Services {
         }
 
         public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {
-            if (contentItem.Id == 0)
-                throw new OrchardException(T("Error adding tag to content item: the content item has not been created yet."));
-
             var tags = tagNamesForContentItem.Select(CreateTag);
             var newTagsForContentItem = new List<TagRecord>(tags);
             var currentTagsForContentItem = contentItem.As<TagsPart>().Record.Tags;
@@ -192,4 +194,5 @@ namespace Orchard.Tags.Services {
             }
         }
     }
+
 }

@@ -13,6 +13,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     public class ShapeTemplateBindingStrategy : IShapeTableProvider {
@@ -70,7 +71,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                     var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
                     var fileNames = _cacheManager.Get(virtualPath, ctx => {
                         ctx.Monitor(_virtualPathMonitor.WhenPathChanges(virtualPath));
-                        return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+                        return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName).ToReadOnlyCollection();
                     });
                     return new { harvesterInfo.harvester, basePath, subPath, virtualPath, fileNames };
                 })).ToList();

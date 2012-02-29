@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +57,10 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ContentTagRecord.cs" />
     <Compile Include="Models\TagsPartRecord.cs" />
+    <Compile Include="Projections\TagsFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Projections\TagsFilterForms.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
@@ -78,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\orchard-tags-autocomplete.js" />
     <Content Include="Styles\images\menu.tags.png" />
     <Content Include="Styles\menu.tags-admin.css" />
     <Content Include="Styles\orchard-tags-admin.css" />
@@ -113,6 +119,10 @@
   <ItemGroup>
     <Content Include="web.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
@@ -63,22 +62,44 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public WorkContext WorkContext { get { return _workContext; } }
 
         public dynamic New { get { return ShapeFactory; } }
-        public IDisplayHelperFactory DisplayHelperFactory { get; set; }
-        public IShapeFactory ShapeFactory { get; set; }
 
-        public IAuthorizer Authorizer { get; set; }
+        private IDisplayHelperFactory _displayHelperFactory;
+        public IDisplayHelperFactory DisplayHelperFactory {
+            get {
+                return _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+            }
+        }
+
+        private IShapeFactory _shapeFactory;
+        public IShapeFactory ShapeFactory {
+            get {
+                return _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+            }
+        }
+
+        private IAuthorizer _authorizer;
+        public IAuthorizer Authorizer { 
+            get {
+                return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+            }
+        }
 
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new WebViewScriptRegister(this, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new WebViewScriptRegister(this, Html.ViewDataContainer, ResourceManager));
             }
+        }
+
+        private IResourceManager _resourceManager;
+        public IResourceManager ResourceManager {
+            get { return _resourceManager ?? (_resourceManager = _workContext.Resolve<IResourceManager>()); }
         }
 
         public ResourceRegister Style {
             get {
                 return _stylesheetRegister ??
-                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>(), "stylesheet"));
+                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, ResourceManager, "stylesheet"));
             }
         }
 
@@ -92,7 +113,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void RegisterLink(LinkEntry link) {
-            Html.Resolve<IResourceManager>().RegisterLink(link);
+            ResourceManager.RegisterLink(link);
         }
 
         public void SetMeta(string name, string content) {
@@ -100,7 +121,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void SetMeta(MetaEntry meta) {
-            Html.Resolve<IResourceManager>().SetMeta(meta);
+            ResourceManager.SetMeta(meta);
         }
 
         public void AppendMeta(string name, string content, string contentSeparator) {
@@ -108,14 +129,13 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
-            Html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
+            ResourceManager.AppendMeta(meta, contentSeparator);
         }
 
         public override void InitHelpers() {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();
-            _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
             
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = _workContext.Layout;
@@ -130,7 +150,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public OrchardTagBuilder Tag(dynamic shape, string tagName) {
-            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
+            return Html.GetWorkContext().Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
         public IHtmlString DisplayChildren(dynamic shape) {

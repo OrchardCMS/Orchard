@@ -23,7 +23,7 @@ namespace Orchard.Mvc {
             if (workContext != null && serviceKey != null) {
                 var key = new KeyedService(serviceKey, typeof (T));
                 object value;
-                if (workContext.Resolve<ILifetimeScope>().TryResolve(key, out value)) {
+                if (workContext.Resolve<ILifetimeScope>().TryResolveService(key, out value)) {
                     instance = (T) value;
                     return true;
                 }

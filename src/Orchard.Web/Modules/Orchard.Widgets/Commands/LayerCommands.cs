@@ -45,6 +45,7 @@ namespace Orchard.Widgets.Commands {
             }
             var owner = _membershipService.GetUser(Owner);
             layer.As<ICommonPart>().Owner = owner;
+            _contentManager.Flush();
 
             Context.Output.WriteLine(T("Layer created successfully.").Text);
         }

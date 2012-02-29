@@ -44,7 +44,12 @@ namespace Orchard.Data {
                 }
 
                 Logger.Debug("Final work for transaction being performed");
-                _scope.Dispose();
+                try {
+                    _scope.Dispose();
+                }
+                catch {
+                    // swallowing the exception
+                }
                 Logger.Debug("Transaction disposed");
             }
         }

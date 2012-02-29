@@ -89,7 +89,7 @@ namespace Orchard.Commands {
                     invokeParameters.Add(args.GetRange(i, args.Count - i).ToArray());
                     break;
                 }
-                invokeParameters.Add(arguments[i]);
+                invokeParameters.Add(Convert.ChangeType(arguments[i], methodParameters[i].ParameterType));
             }
 
             if (methodHasParams && (methodParameters.Length - args.Count == 1)) invokeParameters.Add(new string[] { });

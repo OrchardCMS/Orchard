@@ -21,7 +21,7 @@ namespace Orchard.Environment {
                 value = null;
                 return false;
             }
-            return key == null ? scope.TryResolve(serviceType, out value) : scope.TryResolve(key, serviceType, out value);
+            return key == null ? scope.TryResolve(serviceType, out value) : scope.TryResolveKeyed(key, serviceType, out value);
         }
 
         bool TryResolve(string key, Type serviceType, out object value) {

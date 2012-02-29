@@ -63,6 +63,7 @@ namespace Orchard.Packaging.Controllers {
             });
         }
 
+        [HttpPost]
         public ActionResult Remove(int id) {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
                 return new HttpUnauthorizedResult();
@@ -84,45 +85,39 @@ namespace Orchard.Packaging.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                if (!String.IsNullOrEmpty(url)) {
-                    if (!url.StartsWith("http")) {
-                        ModelState.AddModelError("Url", T("The Url is not valid").Text);
-                    }
+            if (!String.IsNullOrEmpty(url)) {
+                if (!url.StartsWith("http")) {
+                    ModelState.AddModelError("Url", T("The Url is not valid").Text);
                 }
-                else if (String.IsNullOrWhiteSpace(url)) {
-                    ModelState.AddModelError("Url", T("Url is required").Text);
-                }
-
-                string title = null;
-                // try to load the feed
-                try {
-
-                    XNamespace atomns = "http://www.w3.org/2005/Atom";
-                    var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
-                    var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
-                    if (titleNode != null)
-                        title = titleNode.Value;
-
-                    if (String.IsNullOrWhiteSpace(title)) {
-                        ModelState.AddModelError("Url", T("The feed has no title.").Text);
-                    }
-                } catch {
-                    ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
-                }
-
-                if (!ModelState.IsValid)
-                    return View(new PackagingAddSourceViewModel { Url = url });
-
-                _packagingSourceManager.AddSource(title, url);
-                Services.Notifier.Information(T("The feed has been added successfully."));
-
-                return RedirectToAction("Sources");
-            } catch (Exception exception) {
-                this.Error(exception, T("Adding feed failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return View(new PackagingAddSourceViewModel { Url = url });
             }
+            else if (String.IsNullOrWhiteSpace(url)) {
+                ModelState.AddModelError("Url", T("Url is required").Text);
+            }
+
+            string title = null;
+            // try to load the feed
+            try {
+                XNamespace atomns = "http://www.w3.org/2005/Atom";
+                var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
+                var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
+                if (titleNode != null)
+                    title = titleNode.Value;
+
+                if (String.IsNullOrWhiteSpace(title)) {
+                    ModelState.AddModelError("Url", T("The feed has no title.").Text);
+                }
+            } 
+            catch {
+                ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
+            }
+
+            if (!ModelState.IsValid)
+                return View(new PackagingAddSourceViewModel { Url = url });
+
+            _packagingSourceManager.AddSource(title, url);
+            Services.Notifier.Information(T("The feed has been added successfully."));
+
+            return RedirectToAction("Sources");
         }
 
         public ActionResult Modules(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
@@ -209,8 +204,9 @@ namespace Orchard.Packaging.Controllers {
                             extensions = extensions.Take(pager.PageSize);
                         }
                     }
-                } catch (Exception exception) {
-                    this.Error(exception, T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message), Logger, Services.Notifier);
+                } 
+                catch (Exception exception) {
+                    Services.Notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message));
                 }
             }
 

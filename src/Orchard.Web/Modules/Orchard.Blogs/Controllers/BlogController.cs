@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
-using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Mvc;
-using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
+using Orchard.ContentManagement;
+using Orchard.Blogs.Models;
 
 namespace Orchard.Blogs.Controllers {
 
@@ -23,8 +22,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPostService _blogPostService;
         private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IFeedManager _feedManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
         private readonly ISiteService _siteService;
 
         public BlogController(
@@ -34,17 +31,13 @@ namespace Orchard.Blogs.Controllers {
             IBlogPathConstraint blogPathConstraint,
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
-            IWorkContextAccessor workContextAccessor,
-            IEnumerable<IHomePageProvider> homePageProviders,
             ISiteService siteService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _blogPathConstraint = blogPathConstraint;
             _feedManager = feedManager;
-            _workContextAccessor = workContextAccessor;
             _siteService = siteService;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
         }
@@ -65,21 +58,12 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogPath, PagerParameters pagerParameters) {
+        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var correctedPath = _blogPathConstraint.FindPath(blogPath);
-            if (correctedPath == null)
-                return HttpNotFound();
 
-            var blogPart = _blogService.Get(correctedPath);
+            var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
             if (blogPart == null)
                 return HttpNotFound();
-
-            // primary action run for a home paged item shall not pass
-            if (!RouteData.DataTokens.ContainsKey("ParentActionViewContext")
-                && blogPart.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)) {
-                return HttpNotFound();
-            }
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)

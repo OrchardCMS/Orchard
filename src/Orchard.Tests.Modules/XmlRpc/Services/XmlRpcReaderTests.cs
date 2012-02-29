@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Xml.Linq;
 using NUnit.Framework;
-using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 
 namespace Orchard.Tests.Modules.XmlRpc.Services {
     [TestFixture]
     public class XmlRpcReaderTests {
-        private IMapper<XElement, XRpcMethodCall> _methodCallMapper;
-        private IMapper<XElement, XRpcStruct> _structMapper;
-        private IMapper<XElement, XRpcArray> _arrayMapper;
+        private IXmlRpcReader _xmlRpcReader;
 
         [SetUp]
         public void Init() {
-            var mapper = new XmlRpcReader();
-            _methodCallMapper = mapper;
-            _structMapper = mapper;
-            _arrayMapper = mapper;
+            _xmlRpcReader = new XmlRpcReader();
         }
 
         [Test]
@@ -26,7 +20,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
     <methodName>hello world</methodName>
 </methodCall>");
 
-            var methodCall = _methodCallMapper.Map(source);
+            var methodCall = _xmlRpcReader.MapToMethodCall(source);
             Assert.That(methodCall, Is.Not.Null);
             Assert.That(methodCall.MethodName, Is.EqualTo("hello world"));
         }
@@ -48,7 +42,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
     </params>
 </methodCall>");
 
-            var methodCall = _methodCallMapper.Map(source);
+            var methodCall = _xmlRpcReader.MapToMethodCall(source);
             Assert.That(methodCall, Is.Not.Null);
             Assert.That(methodCall.Params, Has.Count.EqualTo(8));
             Assert.That(methodCall.Params[0].Value, Is.EqualTo(-12));
@@ -57,7 +51,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
             Assert.That(methodCall.Params[3].Value, Is.EqualTo(false));
             Assert.That(methodCall.Params[4].Value, Is.EqualTo("hello world"));
             Assert.That(methodCall.Params[5].Value, Is.EqualTo(-12.214));
-            Assert.That(methodCall.Params[6].Value, Is.EqualTo(new DateTime(1998,7,17,14,8,55)));
+            Assert.That(methodCall.Params[6].Value, Is.EqualTo(new DateTime(1998, 7, 17, 14, 8, 55)));
             Assert.That(methodCall.Params[7].Value, Is.EqualTo(Convert.FromBase64String("eW91IGNhbid0IHJlYWQgdGhpcyE=")));
         }
 
@@ -75,7 +69,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
     <member><name>eight</name><value><base64>eW91IGNhbid0IHJlYWQgdGhpcyE=</base64></value></member>
 </struct>");
 
-            var xmlStruct = _structMapper.Map(source);
+            var xmlStruct = _xmlRpcReader.MapToStruct(source);
             Assert.That(xmlStruct["one"], Is.EqualTo(-12));
             Assert.That(xmlStruct["two"], Is.EqualTo(42));
             Assert.That(xmlStruct["three"], Is.EqualTo(true));
@@ -94,7 +88,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
     <member><name>seven</name><value><dateTime.iso8601>FOO</dateTime.iso8601></value></member>
 </struct>");
 
-            var xmlStruct = _structMapper.Map(source);
+            var xmlStruct = _xmlRpcReader.MapToStruct(source);
             Assert.That(xmlStruct["seven"], Is.GreaterThan(DateTime.Now.AddSeconds(-1)));
             Assert.That(xmlStruct["seven"], Is.LessThan(DateTime.Now.AddSeconds(1)));
         }
@@ -112,7 +106,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
    </array>
 ");
 
-            var xmlArray = _arrayMapper.Map(source);
+            var xmlArray = _xmlRpcReader.MapToArray(source);
             Assert.That(xmlArray.Data, Has.Count.EqualTo(4));
             Assert.That(xmlArray[0], Is.EqualTo(12));
             Assert.That(xmlArray[1], Is.EqualTo("Egypt"));

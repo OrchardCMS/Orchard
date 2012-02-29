@@ -1,11 +1,19 @@
 ﻿using System;
+using Orchard.Comments.Models;
+using Orchard.Comments.Services;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.Comments {
     public class Migrations : DataMigrationImpl {
-    
+        private readonly ICommentService _commentService;
+
+        public Migrations(ICommentService commentService) {
+            _commentService = commentService;
+        }
+
         public int Create() {
             SchemaBuilder.CreateTable("CommentPartRecord", table => table
                 .ContentPartRecord()
@@ -18,6 +26,7 @@ namespace Orchard.Comments {
                 .Column<string>("CommentText", column => column.Unlimited())
                 .Column<int>("CommentedOn")
                 .Column<int>("CommentedOnContainer")
+                .Column<int>("CommentsPartRecord_id")
                 );
 
             SchemaBuilder.CreateTable("CommentSettingsPartRecord", table => table
@@ -48,13 +57,32 @@ namespace Orchard.Comments {
 
             ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Comment", cfg => cfg.WithPart("IdentityPart"));
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<int>("CommentsPartRecord_id")
+                );
+
+            // populate the CommentsPartRecord.Comments property
+            foreach(var comment in _commentService.GetComments().List()) {
+                var commentedContent = _commentService.GetCommentedContent(comment.Record.CommentedOn);
+                var commentsPart = commentedContent.As<CommentsPart>();
+                
+                // the comment part might have been removed since the comment was placed
+                if(commentsPart != null) {
+                    commentsPart.Record.CommentPartRecords.Add(comment.Record);
+                }
+            }
+            
+            return 3;
         }
     }
 }

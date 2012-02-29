@@ -20,6 +20,7 @@ using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
@@ -33,6 +34,7 @@ namespace Orchard.Themes.Controllers {
         private readonly IPreviewTheme _previewTheme;
         private readonly IThemeService _themeService;
         private readonly IReportsCoordinator _reportsCoordinator;
+        private readonly ShellSettings _shellSettings;
 
         public AdminController(
             IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
@@ -44,7 +46,8 @@ namespace Orchard.Themes.Controllers {
             ShellDescriptor shellDescriptor,
             IPreviewTheme previewTheme, 
             IThemeService themeService,
-            IReportsCoordinator reportsCoordinator) {
+            IReportsCoordinator reportsCoordinator,
+            ShellSettings shellSettings) {
             Services = services;
 
             _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
@@ -56,7 +59,8 @@ namespace Orchard.Themes.Controllers {
             _previewTheme = previewTheme;
             _themeService = themeService;
             _reportsCoordinator = reportsCoordinator;
-
+            _shellSettings = shellSettings;
+            
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -84,7 +88,10 @@ namespace Orchard.Themes.Controllers {
                             hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
                         }
 
-                        return !hidden &&
+                        // is the theme allowed for this tenant ?
+                        bool allowed = _shellSettings.Themes.Length == 0 || _shellSettings.Themes.Contains(extensionDescriptor.Id);
+
+                        return !hidden && allowed &&
                                 DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) &&
                                 (currentTheme == null ||
                                 !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id));
@@ -200,7 +207,11 @@ namespace Orchard.Themes.Controllers {
                 .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
                 Services.Notifier.Error(T("Theme {0} was not found", themeId));
-            } else {
+            } 
+            else if (_shellSettings.Themes.Any() && !_shellSettings.Themes.Contains(themeId)) {
+                return new HttpUnauthorizedResult();
+            }
+            else {
                 _themeService.EnableThemeFeatures(themeId);
                 _siteThemeService.SetSiteTheme(themeId);
             }
@@ -221,7 +232,8 @@ namespace Orchard.Themes.Controllers {
                 _dataMigrationManager.Update(themeId);
                 Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeId));
             } catch (Exception exception) {
-                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeId, exception.Message), Logger, Services.Notifier);
+                Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
+                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
             return RedirectToAction("Index");

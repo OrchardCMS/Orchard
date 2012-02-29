@@ -38,10 +38,12 @@ namespace Orchard.Search.Drivers {
                     if (updater.TryUpdateModel(model, Prefix, null, null)) {
                         // update part if successful
                         part.SearchedFields = model.Entries.Where(e => e.Selected).Select(e => e.Field).ToArray();
+                        part.FilterCulture = model.FilterCulture;
                     }
                 }
                 else if (_indexManager.HasIndexProvider()) {
                     // viewing editor: build model from part
+                    model.FilterCulture = part.FilterCulture;
                     model.Entries = new List<SearchSettingsEntry>();
                     foreach (var field in _indexManager.GetSearchIndexProvider().GetFields(SearchIndexName)) {
                         model.Entries.Add(new SearchSettingsEntry { Field = field, Selected = searchedFields.Contains(field) });

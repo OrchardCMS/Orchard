@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -6,10 +7,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.Environment;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI;
@@ -33,7 +36,11 @@ namespace Orchard.Core.Shapes {
             _workContext = workContext;
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void Discover(ShapeTableBuilder builder) {
             // the root page shape named 'Layout' is wrapped with 'Document'
@@ -95,13 +102,80 @@ namespace Orchard.Core.Shapes {
                     menu.Classes.Add("localmenu");
                     menu.Metadata.Alternates.Add("LocalMenu__" + menuName);
                 });
-
+            
             builder.Describe("LocalMenuItem")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
                     menuItem.Metadata.Alternates.Add("LocalMenuItem__" + menu.MenuName);
                 });
+
+            #region Pager alternates
+            builder.Describe("Pager")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_Gap")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        pager.Metadata.Alternates.Add("Pager_Gap__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_First")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_First__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_Previous")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_Previous__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_Next")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_Next__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_Last")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_Last__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_CurrentPage")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape.Pager;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_CurrentPage__" + EncodeAlternateElement(pagerId));
+                });
+
+            builder.Describe("Pager_Links")
+                .OnDisplaying(displaying => {
+                    var pager = displaying.Shape;
+                    string pagerId = pager.PagerId;
+                    if (!String.IsNullOrWhiteSpace(pagerId))
+                        displaying.Shape.Metadata.Alternates.Add("Pager_Links__" + EncodeAlternateElement(pagerId));
+                });
+
+            #endregion
 
             // 'List' shapes start with several empty collections
             builder.Describe("List")
@@ -239,13 +313,14 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+        public void Style(dynamic Display, HtmlHelper Html, TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            // do not write to Output directly as Styles are rendered in Zones
+            ResourceManager.WriteResource(Html.ViewContext.Writer, Resource, Url, Condition, TagAttributes);
         }
 
         [Shape]
         public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+            ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
 
         private static void WriteLiteralScripts(TextWriter output, IEnumerable<string> scripts) {
@@ -297,6 +372,208 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
+        public IHtmlString Pager_Links(dynamic Shape, dynamic Display,
+            HtmlHelper Html,
+            int Page,
+            int PageSize,
+            double TotalItemCount,
+            int? Quantity,
+            object FirstText,
+            object PreviousText,
+            object NextText,
+            object LastText,
+            object GapText,
+            string PagerId
+            // parameter omitted to workaround an issue where a NullRef is thrown
+            // when an anonymous object is bound to an object shape parameter
+            /*object RouteValues*/) {
+
+            var currentPage = Page;
+            if (currentPage < 1)
+                currentPage = 1;
+
+            var pageSize = PageSize;
+            if (pageSize < 1)
+                pageSize = _workContext.Value.CurrentSite.PageSize;
+
+            var numberOfPagesToShow = Quantity ?? 0;
+            if (Quantity == null || Quantity < 0)
+                numberOfPagesToShow = 7;
+    
+            var totalPageCount = Math.Ceiling(TotalItemCount / pageSize);
+
+            var firstText = FirstText ?? T("<<");
+            var previousText = PreviousText ?? T("<");
+            var nextText = NextText ?? T(">");
+            var lastText = LastText ?? T(">>");
+            var gapText = GapText ?? T("...");
+
+            // workaround: get it from the shape instead of parameter
+            var RouteValues = (object)Shape.RouteValues;
+
+            var routeData = new RouteValueDictionary(Html.ViewContext.RouteData.Values);
+            var queryString = _workContext.Value.HttpContext.Request.QueryString;
+            if (queryString != null) {
+                foreach (var key in from string key in queryString.Keys where key != null && !routeData.ContainsKey(key) let value = queryString[key] select key) {
+                    routeData[key] = queryString[key];
+                }
+            }
+    
+            if (Shape.RouteData != null) {
+                var shapeRouteData = Shape.RouteData is RouteValueDictionary ? (RouteValueDictionary) RouteValues : new RouteValueDictionary(RouteValues);
+                foreach (var rd in shapeRouteData) {
+                    shapeRouteData[rd.Key] = rd.Value;
+                }
+            }
+
+            //if (routeData.ContainsKey("id"))
+            //    routeData.Remove("id");
+
+            // HACK: MVC 3 is adding a specific value in System.Web.Mvc.Html.ChildActionExtensions.ActionHelper
+            // when a content item is set as home page, it is rendered by using Html.RenderAction, and the routeData is altered
+            // This code removes this extra route value
+            var removedKeys = routeData.Keys.Where(key => routeData[key] is DictionaryValueProvider<object>).ToList();
+            foreach (var key in removedKeys) {
+                routeData.Remove(key);
+            }
+
+            var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
+            var lastPage = Math.Min(totalPageCount, Page + (numberOfPagesToShow / 2));
+
+            var pageKey = String.IsNullOrEmpty(PagerId) ? "page" : PagerId;
+
+            Shape.Classes.Add("pager");
+            Shape.Metadata.Alternates.Clear();
+            Shape.Metadata.Type = "List";
+
+            // first and previous pages
+            if (Page > 1) {
+                if (routeData.ContainsKey(pageKey)) {
+                    routeData.Remove(pageKey); // to keep from having "page=1" in the query string
+                }
+                // first
+                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: routeData, Pager: Shape));
+
+                // previous
+                if (currentPage > 2) { // also to keep from having "page=1" in the query string
+                    routeData[pageKey] = currentPage - 1;
+                }
+                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: routeData, Pager: Shape));
+            }
+
+            // gap at the beginning of the pager
+            if (firstPage > 1 && numberOfPagesToShow > 0) {
+                Shape.Add(Display.Pager_Gap(Value: gapText, Pager: Shape));
+            }
+
+            // page numbers
+            if (numberOfPagesToShow > 0) {
+                for (var p = firstPage; p <= lastPage; p++) {
+                    if (p == currentPage) {
+                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: routeData, Pager: Shape));
+                    }
+                    else {
+                        if (p == 1)
+                            routeData.Remove(pageKey);
+                        else
+                            routeData[pageKey] = p;
+                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: routeData, Pager: Shape));
+                    }
+                }
+            }
+
+            // gap at the end of the pager
+            if (lastPage < totalPageCount && numberOfPagesToShow > 0) {
+                Shape.Add(Display.Pager_Gap(Value: gapText, Pager: Shape));
+            }
+    
+            // next and last pages
+            if (Page < totalPageCount) {
+                // next
+                routeData[pageKey] = Page + 1;
+                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: routeData, Pager: Shape));
+                // last
+                routeData[pageKey] = totalPageCount;
+                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: routeData, Pager: Shape));
+            }
+
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Pager(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "Pager_Links";
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Pager_First(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        
+        [Shape]
+        public IHtmlString Pager_Previous(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        
+        [Shape]
+        public IHtmlString Pager_CurrentPage(HtmlHelper Html, dynamic Display, object Value) {
+            var tagBuilder = new TagBuilder("span");
+            tagBuilder.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
+            
+            return MvcHtmlString.Create(tagBuilder.ToString());
+        }
+        
+        [Shape]
+        public IHtmlString Pager_Next(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        
+        [Shape]
+        public IHtmlString Pager_Last(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        
+        [Shape]
+        public IHtmlString Pager_Link(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Type = "ActionLink";
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString ActionLink(HtmlHelper Html, dynamic Shape, dynamic Display, object Value) {
+            var RouteValues = (object)Shape.RouteValues;
+            RouteValueDictionary rvd;
+            if (RouteValues == null) {
+                rvd = new RouteValueDictionary();
+            }
+            else {
+                rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+            }
+            
+            string value = Html.Encode(Value is string ? (string)Value : Display(Value));
+            return @Html.ActionLink(value, (string)rvd["action"], (string)rvd["controller"], rvd, null);
+        }
+
+        [Shape]
+        public IHtmlString Pager_Gap(HtmlHelper Html, dynamic Display, object Value) {
+            var tagBuilder = new TagBuilder("span");
+            tagBuilder.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
+
+            return MvcHtmlString.Create(tagBuilder.ToString());
+        }
+
+        [Shape]
         public void List(
             dynamic Display,
             TextWriter Output,
@@ -311,7 +588,8 @@ namespace Orchard.Core.Shapes {
             if (Items == null)
                 return;
 
-            var count = Items.Count();
+            var itemDisplayOutputs = Items.Select(item => Display(item)).Where(output => !string.IsNullOrWhiteSpace(output.ToHtmlString())).ToList();
+            var count = itemDisplayOutputs.Count();
             if (count < 1)
                 return;
 
@@ -322,14 +600,14 @@ namespace Orchard.Core.Shapes {
             Output.Write(listTag.ToString(TagRenderMode.StartTag));
 
             var index = 0;
-            foreach (var item in Items) {
+            foreach (var itemDisplayOutput in itemDisplayOutputs) {
                 var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);
                 if (index == 0)
                     itemTag.AddCssClass("first");
                 if (index == count - 1)
                     itemTag.AddCssClass("last");
                 Output.Write(itemTag.ToString(TagRenderMode.StartTag));
-                Output.Write(Display(item));
+                Output.Write(itemDisplayOutput);
                 Output.Write(itemTag.ToString(TagRenderMode.EndTag));
                 ++index;
             }
@@ -386,5 +664,13 @@ namespace Orchard.Core.Shapes {
             public ViewDataDictionary ViewData { get; set; }
         }
 
+        /// <summary>
+        /// Encodes dashed and dots so that they don't conflict in filenames 
+        /// </summary>
+        /// <param name="alternateElement"></param>
+        /// <returns></returns>
+        private string EncodeAlternateElement(string alternateElement) {
+            return alternateElement.Replace("-", "__").Replace(".", "_");
+        }
     }
 }

@@ -64,14 +64,8 @@
                 <div class="@extensionClass">
                     <div class="extensionDetails column">
                     <div class="extensionName @if (item.Installed) {<text>installed</text>}">
-                            @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
-                                <a href="@item.GalleryDetailsUrl">
-                                    <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
-                                </a>
-                            } else {
-                                <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
-                            }
-                        </div>
+                        <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                    </div>
 
                         <div class="related">
                             @Html.ActionLink(T("Install").ToString(), "InstallGallery", "PackagingServices", new RouteValueDictionary { { "packageId", item.PackageId }, { "version", item.Version }, { "sourceId", item.Source.Id }, { "redirectUrl", HttpContext.Current.Request.RawUrl } }, null)@T(" | ")
@@ -79,7 +73,15 @@
                         </div>
 
                         <div class="properties">
-                            <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
+                            @{
+                            var description = item.Description ?? T("(No description").Text;
+                        }
+                            <p>@Html.Raw(Html.Encode(description).Replace("\n", "<br />"))</p>
+                            <p>
+                                @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
+                                    <a href="@item.GalleryDetailsUrl">@T("more...")</a>
+                                }
+                            </p>
                             <ul class="pageStatus group">
                                 <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>

@@ -22,13 +22,14 @@ namespace Orchard.Mvc.DataAnnotations {
             var localizedAttributes = new List<Attribute>();
 
             // overriden messages have their localization in the scope of the class they are applied to
-            var tContainer = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, metadata.ContainerType.FullName));
+            var tContainer = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, (metadata.ContainerType ?? metadata.ModelType).FullName));
 
             foreach (var attribute in attributes) {
                 Func<ValidationAttribute, Localizer, ValidationAttribute> localizedAttribute;
 
                 // default translations use the attribute's scope, e.g., Orchard.Mvc.DataAnnotations.LocalizedRequiredAttribute
-                var tProvider = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, attribute.GetType().FullName));
+                var localAttribute = attribute;
+                var tProvider = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, localAttribute.GetType().FullName));
 
                 var validationAttribute = attribute as ValidationAttribute;
 

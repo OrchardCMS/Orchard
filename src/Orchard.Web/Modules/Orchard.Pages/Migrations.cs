@@ -10,11 +10,16 @@ namespace Orchard.Pages {
                 .WithPart("CommonPart", p => p
                     .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                 .WithPart("PublishLaterPart")
-                .WithPart("RoutePart")
+                .WithPart("TitlePart")
+                .WithPart("AutoroutePart", builder => builder
+                    .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                    .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-page'}]")
+                    .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                 .WithPart("BodyPart")
                 .Creatable());
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {

@@ -154,7 +154,7 @@ namespace Orchard.Modules.Controllers {
                 _dataMigrationManager.Update(id);
                 Services.Notifier.Information(T("The feature {0} was updated successfully", id));
             } catch (Exception exception) {
-                this.Error(exception, T("An error occured while updating the feature {0}: {1}", id, exception.Message), Logger, Services.Notifier);
+                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));
             }
 
             return RedirectToAction("Features");

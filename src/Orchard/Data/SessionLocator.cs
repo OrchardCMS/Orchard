@@ -31,18 +31,13 @@ namespace Orchard.Data {
                 _transactionManager.Demand();
 
                 Logger.Information("Openning database session");
-                _session = sessionFactory.OpenSession(new SessionInterceptor(this));
+                _session = sessionFactory.OpenSession(new SessionInterceptor());
             }
             return _session;
         }
 
         class SessionInterceptor : IInterceptor {
-            private readonly SessionLocator _sessionLocator;
             private ISession _session;
-
-            public SessionInterceptor(SessionLocator sessionLocator) {
-                _sessionLocator = sessionLocator;
-            }
 
             bool IInterceptor.OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
                 return false;

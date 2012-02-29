@@ -9,7 +9,7 @@
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
+  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
                    XmlRpc,Orchard.Blogs.RemotePublishing,
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
@@ -22,11 +22,14 @@
       <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <TagsPart />
         <LocalizationPart />
+        <AutoroutePart />
       </Page>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />
+        <TitlePart/>
+        <AutoroutePart />
       </BlogPost>
     </Types>
     <Parts>
@@ -42,17 +45,17 @@
   <Migration features="*" />
 
   <Command>
-    layer create Default /LayerRule:"true"
-    layer create Authenticated /LayerRule:"authenticated"
-    layer create Anonymous /LayerRule:"not authenticated"
-    layer create Disabled /LayerRule:"false"
-    layer create TheHomepage /LayerRule:"url '~/'"
-    blog create /Slug:"blog" /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+    layer create Default /LayerRule:"true" /Description:"The widgets in this layer are displayed on all pages"
+    layer create Authenticated /LayerRule:"authenticated" /Description:"The widgets in this layer are displayed when the user is authenticated"
+    layer create Anonymous /LayerRule:"not authenticated" /Description:"The widgets in this layer are displayed when the user is anonymous"
+    layer create Disabled /LayerRule:"false" /Description:"The widgets in this layer are never displayed"
+    layer create TheHomepage /LayerRule:"url '~/'" /Description:"The widgets in this layer are displayed on the home page"
     widget create HtmlWidget /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget1" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
-    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
     site setting set baseurl
     theme activate "The Theme Machine"
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
 </Orchard>
