@@ -50,10 +50,6 @@
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac.Integration.Web.Mvc">
-      <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -188,10 +184,18 @@
       <Project>{3158C928-888C-4A84-8BC1-4A8257489538}</Project>
       <Name>Markdown</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Alias\Orchard.Alias.csproj">
+      <Project>{475B6C45-B27C-438B-8966-908B9D6D1077}</Project>
+      <Name>Orchard.Alias</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ArchiveLater\Orchard.ArchiveLater.csproj">
       <Project>{1C981BB3-26F7-494C-9005-CC27A5144233}</Project>
       <Name>Orchard.ArchiveLater</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
+      <Name>Orchard.Autoroute</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
@@ -227,6 +231,10 @@
       <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
       <Name>Orchard.Experimental</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Fields\Orchard.Fields.csproj">
+      <Project>{3787DDE5-E5C8-4841-BDA7-DCB325388064}</Project>
+      <Name>Orchard.Fields</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
@@ -291,6 +299,10 @@
       <Project>{3420C92A-747F-4990-BA08-F2C9531E44AD}</Project>
       <Name>Orchard.Pages</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531E894-D259-45A3-AA61-26DBE720C1CE}</Project>
+      <Name>Orchard.Projections</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.PublishLater\Orchard.PublishLater.csproj">
       <Project>{C889167C-E52C-4A65-A419-224B3D1B957D}</Project>
