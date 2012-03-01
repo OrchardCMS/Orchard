@@ -91,6 +91,7 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
             }
 
+            _contentManager.Flush();
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(12));
         }
 
@@ -180,11 +181,15 @@ namespace Orchard.Tests.Modules.Comments.Services {
                 commentIds[i] = commentedItem.As<CommentPart>().Id;
             }
 
+            _contentManager.Flush();
             Assert.That(_commentService.GetComments().Count(), Is.EqualTo(12));
 
             for (int i = 0; i < 12; i++) {
                 _commentService.DeleteComment(commentIds[i]);
             }
+
+            _contentManager.Flush();
+            Assert.That(_commentService.GetComments().Count(), Is.EqualTo(0));
         }
     }
 
