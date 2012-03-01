@@ -75,6 +75,8 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
     testRunner.Given("I have installed Orchard");
 #line 8
+  testRunner.And("I have installed \"Orchard.Lists\"");
+#line 9
     testRunner.When("I go to \"Admin/Contents/Create/List\"");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -83,13 +85,13 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Title.Title",
                         "MyList"});
-#line 9
+#line 10
         testRunner.And("I fill in", ((string)(null)), table1);
-#line 12
-        testRunner.And("I hit \"Save\"");
 #line 13
-        testRunner.And("I go to \"Admin/Contents/List/List\"");
+        testRunner.And("I hit \"Save\"");
 #line 14
+        testRunner.And("I go to \"Admin/Contents/List/List\"");
+#line 15
     testRunner.Then("I should see \"MyList\"");
 #line hidden
             this.ScenarioCleanup();
@@ -100,13 +102,15 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ICanAddContentItemsToAList()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can add content items to a list", ((string[])(null)));
-#line 16
-this.ScenarioSetup(scenarioInfo);
 #line 17
-    testRunner.Given("I have installed Orchard");
+this.ScenarioSetup(scenarioInfo);
 #line 18
-        testRunner.And("I have a containable content type \"MyType\"");
+    testRunner.Given("I have installed Orchard");
 #line 19
+  testRunner.And("I have installed \"Orchard.Lists\"");
+#line 20
+        testRunner.And("I have a containable content type \"MyType\"");
+#line 21
     testRunner.When("I go to \"Admin/Contents/Create/List\"");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -115,23 +119,23 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Title.Title",
                         "MyList"});
-#line 20
+#line 22
         testRunner.And("I fill in", ((string)(null)), table2);
-#line 23
-        testRunner.And("I hit \"Save\"");
-#line 24
-        testRunner.And("I go to \"Admin/Contents/List/List\"");
 #line 25
-    testRunner.Then("I should see \"MyList\"");
+        testRunner.And("I hit \"Save\"");
 #line 26
-    testRunner.When("I follow \"Contained Items\"");
+        testRunner.And("I go to \"Admin/Contents/List/List\"");
 #line 27
-    testRunner.Then("I should see \"The \'MyList\' List has no content items.\"");
+    testRunner.Then("I should see \"MyList\"");
 #line 28
-    testRunner.When("I follow \"Create New Content\" where href has \"ReturnUrl\"");
+    testRunner.When("I follow \"Contained Items\"");
 #line 29
-    testRunner.Then("I should see \"MyType\"");
+    testRunner.Then("I should see \"The \'MyList\' List has no content items.\"");
 #line 30
+    testRunner.When("I follow \"Create New Content\" where href has \"ReturnUrl\"");
+#line 31
+    testRunner.Then("I should see \"MyType\"");
+#line 32
     testRunner.When("I follow \"MyType\" where href has \"ReturnUrl\"");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -140,15 +144,15 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "Title.Title",
                         "MyContentItem"});
-#line 31
+#line 33
         testRunner.And("I fill in", ((string)(null)), table3);
-#line 34
-        testRunner.And("I hit \"Save\"");
-#line 35
-        testRunner.And("I am redirected");
 #line 36
-    testRunner.Then("I should see \"Manage MyList\"");
+        testRunner.And("I hit \"Save\"");
 #line 37
+        testRunner.And("I am redirected");
+#line 38
+    testRunner.Then("I should see \"Manage MyList\"");
+#line 39
         testRunner.And("I should see \"MyContentItem\"");
 #line hidden
             this.ScenarioCleanup();

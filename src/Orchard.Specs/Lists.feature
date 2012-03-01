@@ -5,6 +5,7 @@
 
 Scenario: I can create a new list
     Given I have installed Orchard
+		And I have installed "Orchard.Lists"
     When I go to "Admin/Contents/Create/List"
         And I fill in
             | name | value |
@@ -15,6 +16,7 @@ Scenario: I can create a new list
 
 Scenario: I can add content items to a list
     Given I have installed Orchard
+		And I have installed "Orchard.Lists"
         And I have a containable content type "MyType"
     When I go to "Admin/Contents/Create/List"
         And I fill in
