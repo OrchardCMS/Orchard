@@ -188,14 +188,14 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "Module",
-                        @"Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Autoroute, Orchard.Tokens, Orchard.Alias"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields"});
             table4.AddRow(new string[] {
                         "Core",
-                        "Common, Containers, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings," +
+                        "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
                             " Shapes, XmlRpc, Title"});
             table4.AddRow(new string[] {
                         "Theme",
-                        "SafeMode, TheThemeMachine"});
+                        "SafeMode, TheAdmin, TheThemeMachine"});
 #line 40
     testRunner.Given("I have a clean site with", ((string)(null)), table4);
 #line 45
