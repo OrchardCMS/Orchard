@@ -187,7 +187,7 @@
     <FilterModuleBinaries
       ModulesBinaries="@(Stage-Themes-Binaries)"
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
-      <Output TaskParameter="ExcludedBinaries" ItemName="FilterModuleBinaries-ExcludedBinariesFromThemes"/>
+      <Output TaskParameter="ExcludedBinaries" ItemName="FilterThemeBinaries-ExcludedBinariesFromThemes"/>
     </FilterModuleBinaries>
 
     <ItemGroup>
@@ -310,7 +310,7 @@
         $(MSBuildProjectDirectory)\**\*.suo;
         $(MSBuildProjectDirectory)\**\*.user;
         $(MSBuildProjectDirectory)\**\*.patch;
-        $(MSBuildProjectDirectory)\**\*.hg;
+        $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         " />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
