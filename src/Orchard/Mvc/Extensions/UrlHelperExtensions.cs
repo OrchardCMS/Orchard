@@ -26,7 +26,7 @@ namespace Orchard.Mvc.Extensions {
 
         public static string MakeAbsolute(this UrlHelper urlHelper, string url, string baseUrl = null) {
             if(String.IsNullOrEmpty(baseUrl)) {
-                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
+                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();
             }
 
             if(String.IsNullOrEmpty(url)) {
