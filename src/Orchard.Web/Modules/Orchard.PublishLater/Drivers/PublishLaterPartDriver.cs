@@ -3,6 +3,7 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Shapes.Localization;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
@@ -17,19 +18,25 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
-        private const string DatePattern = "M/d/yyyy";
-        private const string TimePattern = "h:mm tt";
+        private readonly IDateTimeLocalization _dateTimeLocalization;
 
+        private readonly Lazy<CultureInfo> _cultureInfo;
+ 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
-            IClock clock) {
+            IClock clock,
+            IDateTimeLocalization dateTimeLocalization) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;
+            _dateTimeLocalization = dateTimeLocalization;
             T = NullLocalizer.Instance;
             Services = services;
+
+            // initializing the culture info lazy initializer
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
         }
 
         public Localizer T { get; set; }
@@ -52,10 +59,11 @@ namespace Orchard.PublishLater.Drivers {
 
         protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
             // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
+            var localDate = new Lazy<DateTime>( () => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledPublishUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture) : String.Empty,
-                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture) : String.Empty
+                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortDateFormat.Text) : String.Empty,
+                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortTimeFormat.Text) : String.Empty,
             };
 
             return ContentShape("Parts_PublishLater_Edit",
@@ -65,15 +73,22 @@ namespace Orchard.PublishLater.Drivers {
             var model = new PublishLaterViewModel(part);
 
             updater.TryUpdateModel(model, Prefix, null, null);
+            var httpContext = _httpContextAccessor.Current();
 
-            if (_httpContextAccessor.Current().Request.Form["submit.Save"] == "submit.PublishLater") {
+            if (httpContext.Request.Form["submit.Save"] == "submit.PublishLater") {
                 if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
                     DateTime scheduled;
+                    
                     string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
+                    var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
-                    // use an english culture as it is the one used by jQuery.datepicker by default
-                    if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
-                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
+                    // use current culture
+                    if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out scheduled)) {
+                        
+                        // the date time is entered locally for the configured timezone
+                        var timeZone = Services.WorkContext.CurrentTimeZone;
+
+                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = TimeZoneInfo.ConvertTimeToUtc(scheduled, timeZone);
 
                         if (model.ScheduledPublishUtc < _clock.UtcNow) {
                             updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past"));

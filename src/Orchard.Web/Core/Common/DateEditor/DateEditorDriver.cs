@@ -3,17 +3,24 @@ using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Shapes.Localization;
 using Orchard.Localization;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
-        private const string DatePattern = "M/d/yyyy";
-        private const string TimePattern = "h:mm:ss tt";
+        private readonly IDateTimeLocalization _dateTimeLocalization;
+
+        private readonly Lazy<CultureInfo> _cultureInfo;
 
         public DateEditorDriver(
-            IOrchardServices services) {
+            IOrchardServices services,
+            IDateTimeLocalization dateTimeLocalization) {
+            _dateTimeLocalization = dateTimeLocalization;
             T = NullLocalizer.Instance;
             Services = services;
+
+            // initializing the culture info lazy initializer
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
         }
 
         public Localizer T { get; set; }
@@ -52,8 +59,11 @@ namespace Orchard.Core.Common.DateEditor {
                             theDatesHaveNotBeenModified;
 
                         if (theEditorShouldBeBlank == false) {
-                            model.CreatedDate = part.CreatedUtc.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture);
-                            model.CreatedTime = part.CreatedUtc.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture);
+                            // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
+                            var createdLocal = TimeZoneInfo.ConvertTimeFromUtc(part.CreatedUtc.Value, Services.WorkContext.CurrentTimeZone);
+
+                            model.CreatedDate = createdLocal.ToString(_dateTimeLocalization.ShortDateFormat.Text);
+                            model.CreatedTime = createdLocal.ToString(_dateTimeLocalization.ShortTimeFormat.Text);
                         }
                     }
 
@@ -62,11 +72,15 @@ namespace Orchard.Core.Common.DateEditor {
 
                         if (!string.IsNullOrWhiteSpace(model.CreatedDate) && !string.IsNullOrWhiteSpace(model.CreatedTime)) {
                             DateTime createdUtc;
+                            
                             string parseDateTime = String.Concat(model.CreatedDate, " ", model.CreatedTime);
+                            var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
-                            // use an english culture as it is the one used by jQuery.datepicker by default
-                            if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out createdUtc)) {
-                                part.CreatedUtc = createdUtc.ToUniversalTime();
+                            // use current culture
+                            if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out createdUtc)) {
+
+                                // the date time is entered locally for the configured timezone
+                                part.CreatedUtc = TimeZoneInfo.ConvertTimeToUtc(createdUtc, Services.WorkContext.CurrentTimeZone);
                             }
                             else {
                                 updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));

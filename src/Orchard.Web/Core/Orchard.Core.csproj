@@ -227,6 +227,7 @@
     <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
+    <Compile Include="Shapes\Localization\DateTimeLocalization.cs" />
     <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="Shapes\DateTimeShapes.cs" />

@@ -15,6 +15,10 @@
     @Html.EditorFor(m => DateEditor.CreatedTime)
 </fieldset>
 @using(Script.Foot()) {
+
+    @* generates the localization script *@
+    @Display(New.DatePickerLocalization())
+
 <script type="text/javascript">
 //<![CDATA[
     $(function () {

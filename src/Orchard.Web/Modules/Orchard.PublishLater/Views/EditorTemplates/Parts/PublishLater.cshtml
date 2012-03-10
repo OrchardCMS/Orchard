@@ -4,7 +4,7 @@
     Script.Require("jQueryUI_DatePicker");
     Style.Require("PublishLater_DatePicker");
     Style.Require("jQueryUtils_TimePicker");
-    Style.Require("jQueryUI_DatePicker"); 
+    Style.Require("jQueryUI_DatePicker");
 }
 <fieldset class="publish-later-datetime">
     <legend>@T("Publish")</legend>
@@ -15,9 +15,14 @@
 	<button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
 </fieldset>
 @using(Script.Foot()) {
+
+    @* generates the localization script *@
+    @Display(New.DatePickerLocalization())
+
 <script type="text/javascript">
 //<![CDATA[
     $(function () {
+        
         var clearHint = function ($this) { if ($this.val() == $this.data("hint")) { $this.removeClass("hinted").val("") } };
         var resetHint = function ($this) { setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) };
         @* todo: (heskew) make a plugin *@
@@ -33,7 +38,8 @@
                 $this.closest("form").submit(function() {clearHint(pickerInput); pickerInput = 0;});
             }
         });
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+        
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")').datepicker({ showAnim: ""}).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
         $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
     })
 //]]>
