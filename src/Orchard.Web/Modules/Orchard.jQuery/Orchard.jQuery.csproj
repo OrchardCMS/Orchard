@@ -160,7 +160,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\DatePickerLocalization.cshtml" />
+    <Content Include="Views\DatePickerLocalization.cshtml" />
     <Content Include="web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
