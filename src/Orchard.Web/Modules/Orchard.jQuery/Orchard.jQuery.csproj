@@ -162,11 +162,7 @@
   <ItemGroup>
     <None Include="Views\DatePickerLocalization.cshtml" />
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\images\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
