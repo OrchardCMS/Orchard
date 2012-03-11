@@ -91,11 +91,7 @@ namespace Orchard.Tags.Services {
             var tagRecord = GetTagByName(tagName);
 
             // new tag name already existing => merge
-            if (tagRecord != null) {
-                // If updating ourselves, ignore
-                if (tagRecord.Id == tagId)
-                    return;
-
+            if (tagRecord != null && tagRecord.Id != tagId) {
                 var tagsContentItems = _contentTagRepository.Fetch(x => x.TagRecord.Id == tagId);
 
                 // get contentItems already tagged with the existing one
