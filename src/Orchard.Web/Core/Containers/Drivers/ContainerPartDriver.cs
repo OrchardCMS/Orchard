@@ -77,7 +77,7 @@ namespace Orchard.Core.Containers.Drivers {
 
                                 return shapeHelper.Parts_Container_Contained(
                                     List: listShape,
-                                    Pager: pagerShape
+                                    Pager: part.Paginated ? pagerShape : null
                                 );
                             });
         }
