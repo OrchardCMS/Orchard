@@ -25,7 +25,7 @@ namespace Orchard.Email.Handlers {
             OnLoaded<SmtpSettingsPart>(LazyLoadHandlers);
         }
 
-        public ILogger Logger { get; set; }
+        public new ILogger Logger { get; set; }
 
         void LazyLoadHandlers(LoadContentContext context, SmtpSettingsPart part) {
             part.PasswordField.Getter(() => {
