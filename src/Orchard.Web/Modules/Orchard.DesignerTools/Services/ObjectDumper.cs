@@ -114,8 +114,10 @@ namespace Orchard.DesignerTools.Services {
             }
 
             foreach (var member in members) {
-                if (o is ContentItem && member.Name == "ContentManager"
-                    || o is Delegate) {
+                if (o is ContentItem && member.Name == "ContentManager" 
+                    || o is Delegate
+                    || o is Type
+                    ) {
                     continue;
                 }
                 SafeCall(() => DumpMember(o, member));
