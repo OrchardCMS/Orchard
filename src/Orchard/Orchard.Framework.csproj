@@ -161,7 +161,6 @@
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
-    <Compile Include="ContentManagement\Handlers\TitleAspectHandler.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
