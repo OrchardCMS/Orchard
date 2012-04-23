@@ -1,9 +1,9 @@
 
-src/Orchard.Web/Modules/Orchard.Forms = https://hg01.codeplex.com/orchardforms
-src/Orchard.Web/Modules/Orchard.Rules = https://hg01.codeplex.com/orchardrules
-src/Orchard.Web/Modules/Orchard.Tokens = https://hg01.codeplex.com/orchardtokens
-src/Orchard.Web/Modules/Orchard.TaskLease = https://hg01.codeplex.com/orchardtasklease
-src/orchard.web/modules/Orchard.Fields = https://hg01.codeplex.com/orchardfields
-src/Orchard.Web/Modules/Orchard.Autoroute = https://hg01.codeplex.com/orchardautoroute
-src/orchard.web/Modules/Orchard.Alias = https://hg01.codeplex.com/orchardalias
-src/orchard.web/Modules/Orchard.Projections = https://hg01.codeplex.com/orchardprojections
+src/Orchard.Web/Modules/Orchard.Forms = https://hg.codeplex.com/orchardforms
+src/Orchard.Web/Modules/Orchard.Rules = https://hg.codeplex.com/orchardrules
+src/Orchard.Web/Modules/Orchard.Tokens = https://hg.codeplex.com/orchardtokens
+src/Orchard.Web/Modules/Orchard.TaskLease = https://hg.codeplex.com/orchardtasklease
+src/orchard.web/modules/Orchard.Fields = https://hg.codeplex.com/orchardfields
+src/Orchard.Web/Modules/Orchard.Autoroute = https://hg.codeplex.com/orchardautoroute
+src/orchard.web/Modules/Orchard.Alias = https://hg.codeplex.com/orchardalias
+src/orchard.web/Modules/Orchard.Projections = https://hg.codeplex.com/orchardprojections
