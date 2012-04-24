@@ -283,6 +283,11 @@ namespace Orchard.Users.Controllers {
             }
 
             _membershipService.SetPassword(user, newPassword);
+
+            foreach (var userEventHandler in _userEventHandlers) {
+                userEventHandler.ChangedPassword(user);
+            }
+
             return RedirectToAction("ChangePasswordSuccess");
         }
 
