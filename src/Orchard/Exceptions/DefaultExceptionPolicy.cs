@@ -38,7 +38,7 @@ namespace Orchard.Exceptions {
                 return false;
             }
 
-            Logger.Error(exception.Message);
+            Logger.Error(exception, "An unexpected exception was caught");
 
             do {
                 RaiseNotification(exception);
