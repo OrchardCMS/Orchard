@@ -22,9 +22,9 @@ namespace Orchard.Comments.Drivers {
             return Combined(
 
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount, PendingCount: pendingCount)),
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount, PendingCount: pendingCount))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount(), PendingCount: pendingCount()))
                 );
         }
     }

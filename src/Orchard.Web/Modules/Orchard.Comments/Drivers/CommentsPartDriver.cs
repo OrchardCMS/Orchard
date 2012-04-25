@@ -26,9 +26,9 @@ namespace Orchard.Comments.Drivers {
                 ContentShape("Parts_Comments",
                     () => shapeHelper.Parts_Comments()),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount, PendingCount: pendingCount)), 
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())), 
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount, PendingCount: pendingCount))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount(), PendingCount: pendingCount()))
             );
         }
 
