@@ -22,7 +22,11 @@ namespace Orchard.DesignerTools.Services {
                     return null;
                 }
 
-                var request = _httpContextAccessor.Current().Request;
+                var request = httpContext.Request;
+
+                if (request == null) {
+                    return null;
+                }
 
                 // extract each segment of the url
                 var urlSegments = VirtualPathUtility.ToAppRelative(request.Path.ToLower())
