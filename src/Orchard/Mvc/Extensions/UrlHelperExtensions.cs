@@ -25,7 +25,7 @@ namespace Orchard.Mvc.Extensions {
         }
 
         public static string MakeAbsolute(this UrlHelper urlHelper, string url, string baseUrl = null) {
-            if(url.StartsWith("http", StringComparison.OrdinalIgnoreCase)) {
+            if(url != null && url.StartsWith("http", StringComparison.OrdinalIgnoreCase)) {
                 return url;
             }
             
