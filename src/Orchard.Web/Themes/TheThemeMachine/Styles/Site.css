@@ -180,10 +180,10 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 /* Forms
 ***************************************************************/
 
-form              { margin: 0; padding: 0; }
-legend            { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
-fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
-label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+form              { margin: 0; padding: 0;}
+legend            { font-size: 1.231em; font-weight: normal; border:none;}
+fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
 input[type="text"], input[type="password"] {
@@ -198,7 +198,74 @@ input[type="checkbox"] {
 fieldset ol     { list-style-type:none; padding: 0; margin: 0; }
 fieldset ol li  { margin: 0 0 6px 0; }
 
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
 
+form.inline fieldset {
+    margin:0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
+}
+
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
+legend span {
+    font-weight:normal;
+}
+label span {
+    font-weight:normal;
+}
+label input {
+    vertical-align:text-top;
+}
+.hint {
+    display:block;
+    font-size: 0.846em;
+    color:#999;
+    margin-top: 3px;
+    padding: 3px;
+}
+/* todo: (heskew) try to get .text on stuff like .text-box */
+select, textarea, input.text, input.textMedium, input.text-small, input.text-box {
+    font-family:inherit;
+    padding:3px;
+    border:1px solid #bdbcbc;
+    font-family:inherit;
+    font-size:inherit;
+}
+input.text, input.textMedium, input.text-box {
+    line-height:1.2em;
+}
+/*Are we using the two classes below?*/
+input.text-small {
+    width:4em;
+}
+input.textMedium {
+    width:26em;
+}
+select {
+    padding:1px;	
+}
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus  {
+    border-color:#666d51;
+}
+input.check-box {
+    margin-left:0;
+    vertical-align:-.1em;
+}
+input.large.text, textarea, fieldset {
+    clear:both;
+}
+
+textarea {
+    min-height:8em;
+}
 
 /* Structure
 ***************************************************************/
