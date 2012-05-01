@@ -1,4 +1,5 @@
-﻿using System.Web.Compilation;
+﻿using System.Reflection;
+using System.Web.Compilation;
 
 namespace Orchard.Environment.Extensions.Compilers {
     public class CSharpExtensionBuildProviderShim : BuildProvider, IShim {
@@ -10,7 +11,8 @@ namespace Orchard.Environment.Extensions.Compilers {
             _codeCompilerType = GetDefaultCompilerTypeForLanguage("C#");
 
             // define a precompilation flag so that module can adapt for older version
-            var orchardVersion = typeof (IDependency).Assembly.GetName().Version;
+            var orchardVersion = new AssemblyName(typeof (IDependency).Assembly.FullName).Version;
+
             _codeCompilerType.CompilerParameters.CompilerOptions += string.Format("/define:ORCHARD_{0}_{1}", orchardVersion.Major, orchardVersion.Minor) ;
         }
 
