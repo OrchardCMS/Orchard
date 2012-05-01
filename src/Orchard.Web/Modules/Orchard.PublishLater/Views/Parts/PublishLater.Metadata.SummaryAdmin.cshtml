@@ -6,31 +6,29 @@
     DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;
 }
 <ul class="pageStatus">
-    <li>@* Published or not *@
+    @* Published or not *@
     @if (publishLaterPart.HasPublished()) {
-        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> <text>@T("Published")&nbsp;&#124;&nbsp;</text>
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> </li> <li>@T("Published")&nbsp;&#124;&nbsp;</li>
     }
     else {
-        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/offline.gif")" alt="@T("Offline")" title="@T("The page is currently offline")" /> <text>@T("Not Published")&nbsp;&#124;&nbsp;</text>
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/offline.gif")" alt="@T("Offline")" title="@T("The page is currently offline")" /> <li> </li>@T("Not Published")&nbsp;&#124;&nbsp;</li>
     }
-    </li>
-    <li>
+
     @* Does the page have a draft *@
     @if (publishLaterPart.HasDraft()) {
-        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/draft.gif")" alt="@T("Draft")" title="@T("The page has a draft")" /><text> @T("Draft")&nbsp;&#124;&nbsp;</text>
+        <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/draft.gif")" alt="@T("Draft")" title="@T("The page has a draft")" /></li> <li>@T("Draft")&nbsp;&#124;&nbsp;</li>
     }
     else {
-        <text>@T("No Draft")&nbsp;&#124;&nbsp;</text>
+        <li>@T("No Draft")&nbsp;&#124;&nbsp;</li>
     }
-    </li>
+        
     @if ((((DateTime?)Model.ScheduledPublishUtc).HasValue && ((DateTime?)Model.ScheduledPublishUtc).Value > DateTime.UtcNow) || (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue)) {
-        <li>
-        @if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
-            @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))
+        if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
+            <li>@T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))</li> <li>&nbsp;&#124;&nbsp;</li>
         }
         else {
-            <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /><text>  @T("Scheduled") </text>
-            @Display.DateTime(DateTimeUtc: ((DateTime?)Model.ScheduledPublishUtc).Value, CustomFormat: T("M/d/yyyy h:mm tt"))
-        }&nbsp;&#124;&nbsp;</li>
+            <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /></li> <li>@T("Scheduled") </li>
+            <li>@Display.DateTime(DateTimeUtc: ((DateTime?)Model.ScheduledPublishUtc).Value, CustomFormat: T("M/d/yyyy h:mm tt")) &nbsp;&#124;&nbsp;</li>
+        }
     }
 </ul>
