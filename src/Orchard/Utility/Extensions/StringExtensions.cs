@@ -8,7 +8,7 @@ using Orchard.Localization;
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
         private static readonly Regex humps = new Regex("(?:^[a-zA-Z][^A-Z]*|[A-Z][^A-Z]*)");
-        private static readonly Regex safe = new Regex(@"[^_\-a-zA-Z]+");
+        private static readonly Regex safe = new Regex(@"[^_\-a-zA-Z\d]+");
 
         public static string CamelFriendly(this string camel) {
             if (String.IsNullOrWhiteSpace(camel))
