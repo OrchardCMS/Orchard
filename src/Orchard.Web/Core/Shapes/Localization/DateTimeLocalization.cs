@@ -39,6 +39,10 @@ namespace Orchard.Core.Shapes.Localization {
 
         public Localizer T { get; set; }
 
+        public DateTimeLocalization() {
+            T = NullLocalizer.Instance;
+        }
+
         public LocalizedString MonthNames {
             get { return T("January, February, March, April, May, June, July, August, September, October, November, December"); }
         }
