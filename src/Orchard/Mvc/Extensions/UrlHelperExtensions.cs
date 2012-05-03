@@ -39,11 +39,17 @@ namespace Orchard.Mvc.Extensions {
 
             // remove any application path from the base url
             var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath ?? String.Empty;
-            
+
+            // ~/foo/bar => /foo/bar
+            if (url.StartsWith("~/", StringComparison.OrdinalIgnoreCase)) {
+                url = url.Substring(1);
+            }
+
             // orchardlocal/foo/bar => /orchardlocal/foo/bar
             if(!url.StartsWith("/")) {
                 url = "/" + url;
             }
+            
             // /orchardlocal/foo/bar => foo/bar
             if (url.StartsWith(applicationPath, StringComparison.OrdinalIgnoreCase)) {
                 url = url.Substring(applicationPath.Length);
