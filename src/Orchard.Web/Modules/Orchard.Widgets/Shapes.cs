@@ -38,8 +38,8 @@ namespace Orchard.Widgets {
                         if (!String.IsNullOrWhiteSpace(widgetPart.Name)) {
                             widget.Classes.Add("widget-" + widgetPart.Name);
 
-                            // Widget__Name_[Name]
-                            displaying.ShapeMetadata.Alternates.Add("Widget__Name_" + widgetPart.Name);
+                            // Widget__Name__[Name]
+                            displaying.ShapeMetadata.Alternates.Add("Widget__Name__" + widgetPart.Name);
                         }
 
                     }

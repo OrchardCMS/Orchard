@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Widgets.Models;
 
@@ -11,7 +12,8 @@ namespace Orchard.Widgets.Handlers {
         public WidgetPartHandler(IRepository<WidgetPartRecord> widgetsRepository) {
             Filters.Add(StorageFilter.For(widgetsRepository));
 
-            OnInitializing<WidgetPart>((context, part) => part.RenderTitle = true); 
+            OnInitializing<WidgetPart>((context, part) => part.RenderTitle = true);
+            OnIndexing<TitlePart>((context, part) => context.DocumentIndex.Add("title", part.Title).RemoveTags().Analyze());
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
@@ -19,6 +21,8 @@ namespace Orchard.Widgets.Handlers {
 
             if (widget == null)
                 return;
+
+            context.Metadata.DisplayText = widget.Title;
 
             // create needs to go through the add widget flow (index -> [select layer -> ] add [widget type] to layer)
             context.Metadata.CreateRouteValues = new RouteValueDictionary {

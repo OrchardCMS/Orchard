@@ -25,8 +25,7 @@ namespace Orchard.Mvc.Routes {
 
         public void Publish(IEnumerable<RouteDescriptor> routes) {
             var routesArray = routes
-                .OrderByDescending(r => r.Route is ServiceRoute ? -1 : 1)
-                .ThenByDescending(r => r.Priority)
+                .OrderByDescending(r => r.Priority)
                 .ToArray();
 
             // this is not called often, but is intended to surface problems before

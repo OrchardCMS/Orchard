@@ -83,6 +83,12 @@ namespace Orchard.Data.Providers {
 
             protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType) {
                 base.InitializeParameter(dbParam, name, sqlType);
+
+                if(sqlType.DbType == DbType.Binary) {
+                    _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
+                    return;
+                }
+
                 if ( sqlType.Length <= 4000 ) {
                     return;
                 }
@@ -93,9 +99,6 @@ namespace Orchard.Data.Providers {
                         break;
                     case DbType.AnsiString:
                         _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Text, null);
-                        break;
-                    case DbType.Byte:
-                        _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
                         break;
                 }
             }

@@ -1,23 +1,20 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 using Orchard.Events;
 using Orchard.ContentManagement;
 using System;
-using System.Collections.Generic;
-using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Widgets.Handlers {
 
-    public interface IRoutePatternProvider : IEventHandler {
-        void Routed(IContent content, String path, ICollection<Tuple<string, RouteValueDictionary>> aliases);
+    public interface IRouteEvents : IEventHandler {
+        void Routed(IContent content, String path);
     }
 
     [OrchardFeature("Orchard.Widgets.PageLayerHinting")]
-    public class LayerHintHandler : IRoutePatternProvider {
+    public class LayerHintHandler : IRouteEvents {
         public LayerHintHandler(IOrchardServices services, RequestContext requestContext) {
             T = NullLocalizer.Instance;
             _requestContext = requestContext;
@@ -27,12 +24,12 @@ namespace Orchard.Widgets.Handlers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public void Routed(IContent content, string path, ICollection<Tuple<string, RouteValueDictionary>> aliases) {
+        public void Routed(IContent content, String path) {
             // Only going to help in creating a layer if the content is a page
             // TODO: (PH) Any reason not to enable the hint for *all* routed content?
             // TODO: (PH:Autoroute) Previously this only ran when the item was first published. Now it's running any time item is published. We want to catch
             // that and edit the existing layer rule rather than create a new one.
-            if (!(content.ContentItem.ContentType == "Page"))
+            if (content.ContentItem.ContentType != "Page")
                 return;
 
             var urlHelper = new UrlHelper(_requestContext);

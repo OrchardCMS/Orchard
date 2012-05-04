@@ -51,10 +51,11 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId) {
-            IEnumerable<LayerPart> layers = _widgetsService.GetLayers();
+            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
 
-            if (layers.Count() == 0) {
+            if (!layers.Any()) {
                 Services.Notifier.Error(T("There are no widget layers defined. A layer will need to be added in order to add widgets to any part of the site."));
+                return RedirectToAction("AddLayer");
             }
 
             LayerPart currentLayer = layerId == null

@@ -439,15 +439,18 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual void Create(ContentItem contentItem, VersionOptions options) {
-            // produce root record to determine the model id
-            contentItem.VersionRecord = new ContentItemVersionRecord {
-                ContentItemRecord = new ContentItemRecord {
-                    ContentType = AcquireContentTypeRecord(contentItem.ContentType)
-                },
-                Number = 1,
-                Latest = true,
-                Published = true
-            };
+            if (contentItem.VersionRecord == null) {
+                // produce root record to determine the model id
+                contentItem.VersionRecord = new ContentItemVersionRecord {
+                    ContentItemRecord = new ContentItemRecord {
+                        ContentType = AcquireContentTypeRecord(contentItem.ContentType)
+                    },
+                    Number = 1,
+                    Latest = true,
+                    Published = true
+                };
+            }
+
             // add to the collection manually for the created case
             contentItem.VersionRecord.ContentItemRecord.Versions.Add(contentItem.VersionRecord);
 
@@ -572,6 +575,18 @@ namespace Orchard.ContentManagement {
                 else {
                     Create(item);
                 }
+            }
+
+            // create a version record if import handlers need it
+            if(item.VersionRecord == null) {
+                item.VersionRecord = new ContentItemVersionRecord {
+                    ContentItemRecord = new ContentItemRecord {
+                        ContentType = AcquireContentTypeRecord(item.ContentType)
+                    },
+                    Number = 1,
+                    Latest = true,
+                    Published = true
+                };                
             }
 
             importContentSession.Store(identity, item);

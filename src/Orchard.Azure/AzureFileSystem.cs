@@ -137,7 +137,7 @@ namespace Orchard.Azure {
 
                 if (!Container.DirectoryExists(String.Concat(_root, path)) ) {
                     try {
-                        CreateFolder(String.Concat(_root, path));
+                        CreateFolder(path);
                     }
                     catch ( Exception ex ) {
                         throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}",

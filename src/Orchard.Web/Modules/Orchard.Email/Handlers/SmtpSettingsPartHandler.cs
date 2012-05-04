@@ -6,6 +6,7 @@ using Orchard.Email.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Security;
 
 namespace Orchard.Email.Handlers {
@@ -15,6 +16,8 @@ namespace Orchard.Email.Handlers {
 
         public SmtpSettingsPartHandler(IRepository<SmtpSettingsPartRecord> repository, IEncryptionService encryptionService) {
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
+
             _encryptionService = encryptionService;
             Filters.Add(new ActivatingFilter<SmtpSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
@@ -22,8 +25,19 @@ namespace Orchard.Email.Handlers {
             OnLoaded<SmtpSettingsPart>(LazyLoadHandlers);
         }
 
+        public new ILogger Logger { get; set; }
+
         void LazyLoadHandlers(LoadContentContext context, SmtpSettingsPart part) {
-            part.PasswordField.Getter(() => String.IsNullOrWhiteSpace(part.Record.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Record.Password))));
+            part.PasswordField.Getter(() => {
+                try {
+                    return String.IsNullOrWhiteSpace(part.Record.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Record.Password)));
+                }
+                catch {
+                    Logger.Error("The email password could not be decrypted. It might be corrupted, try to reset it.");
+                    return null;
+                }
+            });
+
             part.PasswordField.Setter(value => part.Record.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value))));
         }
 

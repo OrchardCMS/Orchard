@@ -408,9 +408,6 @@ namespace Orchard.Core.Shapes {
             var lastText = LastText ?? T(">>");
             var gapText = GapText ?? T("...");
 
-            // workaround: get it from the shape instead of parameter
-            var RouteValues = (object)Shape.RouteValues;
-
             var routeData = new RouteValueDictionary(Html.ViewContext.RouteData.Values);
             var queryString = _workContext.Value.HttpContext.Request.QueryString;
             if (queryString != null) {
@@ -418,16 +415,25 @@ namespace Orchard.Core.Shapes {
                     routeData[key] = queryString[key];
                 }
             }
-    
-            if (Shape.RouteData != null) {
-                var shapeRouteData = Shape.RouteData is RouteValueDictionary ? (RouteValueDictionary) RouteValues : new RouteValueDictionary(RouteValues);
-                foreach (var rd in shapeRouteData) {
-                    shapeRouteData[rd.Key] = rd.Value;
+
+            // specific cross-requests route data can be passed to the shape directly (e.g., Orchard.Users)
+            var shapeRoute = (object)Shape.RouteData;
+
+            if (shapeRoute != null) {
+                var shapeRouteData = shapeRoute as RouteValueDictionary;
+                if (shapeRouteData == null) {
+                    var route = shapeRoute as RouteData;
+                    if (route != null) {
+                        shapeRouteData = (route).Values;    
+                    }
+                }
+
+                if (shapeRouteData != null) {
+                    foreach (var rd in shapeRouteData) {
+                        routeData[rd.Key] = rd.Value;
+                    }
                 }
             }
-
-            //if (routeData.ContainsKey("id"))
-            //    routeData.Remove("id");
 
             // HACK: MVC 3 is adding a specific value in System.Web.Mvc.Html.ChildActionExtensions.ActionHelper
             // when a content item is set as home page, it is rendered by using Html.RenderAction, and the routeData is altered

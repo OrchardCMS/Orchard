@@ -35,8 +35,21 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
 
-            // keys can be different in case
-            return x.Keys.All(key => x[key].ToString().Equals(y[key].ToString(), StringComparison.OrdinalIgnoreCase));
+            var bools = x.Join(y, 
+                kv1 => kv1.Key.ToLowerInvariant(), 
+                kv2 => kv2.Key.ToLowerInvariant(), 
+                (kv1, kv2) => StringMatch(kv1.Value, kv2.Value)
+                ).ToArray();
+
+            return bools.All(b => b) && bools.Count() == x.Count;
+        }
+
+        private static bool StringMatch(object value1, object value2) {
+            return string.Equals(
+                Convert.ToString(value1, CultureInfo.InvariantCulture),
+                Convert.ToString(value2, CultureInfo.InvariantCulture),
+                StringComparison.InvariantCultureIgnoreCase
+                );
         }
 
         public static RouteValueDictionary ToRouteValueDictionary(this IEnumerable<KeyValuePair<string, string>> routeValues) {

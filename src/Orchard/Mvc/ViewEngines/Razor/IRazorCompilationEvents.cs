@@ -62,8 +62,14 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
                 // Add module's references
                 filteredDependencyDescriptors.AddRange(moduleDependencyDescriptor.References
-                    .SelectMany(reference => dependencyDescriptors
-                        .Where(dependency => dependency.Name == reference.Name)));
+                    .Select(reference => dependencyDescriptors
+                        .FirstOrDefault(dependency => dependency.Name == reference.Name)
+                        ?? new DependencyDescriptor {
+                            LoaderName = reference.LoaderName,
+                            Name = reference.Name,
+                            VirtualPath = reference.VirtualPath
+                            }
+                        ));
             }
             else {
                 // Fall back for themes

@@ -25,8 +25,12 @@ namespace Orchard.Mvc.Extensions {
         }
 
         public static string MakeAbsolute(this UrlHelper urlHelper, string url, string baseUrl = null) {
+            if(url != null && url.StartsWith("http", StringComparison.OrdinalIgnoreCase)) {
+                return url;
+            }
+            
             if(String.IsNullOrEmpty(baseUrl)) {
-                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
+                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();
             }
 
             if(String.IsNullOrEmpty(url)) {
@@ -34,14 +38,20 @@ namespace Orchard.Mvc.Extensions {
             }
 
             // remove any application path from the base url
-            var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
-            
+            var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath ?? String.Empty;
+
+            // ~/foo/bar => /foo/bar
+            if (url.StartsWith("~/", StringComparison.OrdinalIgnoreCase)) {
+                url = url.Substring(1);
+            }
+
             // orchardlocal/foo/bar => /orchardlocal/foo/bar
             if(!url.StartsWith("/")) {
                 url = "/" + url;
             }
+            
             // /orchardlocal/foo/bar => foo/bar
-            if (url.StartsWith(applicationPath)) {
+            if (url.StartsWith(applicationPath, StringComparison.OrdinalIgnoreCase)) {
                 url = url.Substring(applicationPath.Length);
             }
 

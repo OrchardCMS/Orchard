@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Core.Shapes.Localization;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
@@ -9,13 +10,16 @@ using Orchard.Services;
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
+        private readonly IDateTimeLocalization _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public DateTimeShapes(
             IClock clock,
+            IDateTimeLocalization dateTimeLocalization,
             IWorkContextAccessor workContextAccessor
             ) {
             _clock = clock;
+            _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
@@ -45,7 +49,7 @@ namespace Orchard.Core.Shapes {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
-                return DateTime(DateTimeUtc, T("MMM d yyyy h:mm tt"));
+                return DateTime(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat);
             }
 
             return new MvcHtmlString(ConvertToDisplayTime(DateTimeUtc).ToString(CustomFormat.Text));

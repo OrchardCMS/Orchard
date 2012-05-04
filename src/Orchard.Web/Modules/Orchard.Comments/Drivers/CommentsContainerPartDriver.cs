@@ -17,13 +17,14 @@ namespace Orchard.Comments.Drivers {
 
             var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
             Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
+            Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
             
             return Combined(
 
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount)),
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount(), PendingCount: pendingCount()))
                 );
         }
     }

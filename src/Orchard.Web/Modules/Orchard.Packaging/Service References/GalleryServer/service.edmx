@@ -20,9 +20,6 @@
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
         <Property Name="RequireLicenseAcceptance" Type="Edm.Boolean" Nullable="false" />
         <Property Name="IsLatestVersion" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="Rating" Type="Edm.Double" Nullable="false" />
-        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
-        <Property Name="DownloadCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="VersionRating" Type="Edm.Double" Nullable="false" />
         <Property Name="VersionRatingsCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="VersionDownloadCount" Type="Edm.Int32" Nullable="false" />

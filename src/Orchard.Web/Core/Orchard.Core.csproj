@@ -227,6 +227,7 @@
     <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
+    <Compile Include="Shapes\Localization\DateTimeLocalization.cs" />
     <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="Shapes\DateTimeShapes.cs" />
@@ -472,6 +473,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\DisplayPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Wide.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Large.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Body-Small.Editor.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

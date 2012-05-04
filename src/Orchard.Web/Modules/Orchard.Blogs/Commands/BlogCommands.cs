@@ -45,6 +45,9 @@ namespace Orchard.Blogs.Commands {
         public string Owner { get; set; }
 
         [OrchardSwitch]
+        public string Slug { get; set; }
+
+        [OrchardSwitch]
         public string Title { get; set; }
 
         [OrchardSwitch]
@@ -57,7 +60,7 @@ namespace Orchard.Blogs.Commands {
         public bool Homepage { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
+        [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
         [OrchardSwitches("Title,Owner,Description,MenuText,Homepage")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
@@ -82,15 +85,14 @@ namespace Orchard.Blogs.Commands {
                 blog.As<MenuPart>().MenuText = MenuText;
             }
 
-            if (Homepage) {
+            if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
                 dynamic dblog = blog;
                 if (dblog.AutoroutePart != null) {
                     dblog.AutoroutePart.UseCustomPattern = true;
-                    dblog.AutoroutePart.CustomPattern = "";
+                    dblog.AutoroutePart.CustomPattern = Homepage ? "/" : Slug;
                 }
             }
-
-
+            
             _contentManager.Create(blog);
 
             Context.Output.WriteLine(T("Blog created successfully"));
