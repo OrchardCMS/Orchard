@@ -1,11 +1,7 @@
 ﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
 @{
 	var DateEditor = Model;
-    Script.Require("jQueryUI_DatePicker");
-    Script.Require("jQueryUI_TimePicker");
     Style.Require("Common_DatePicker");
-    Style.Require("jQueryUI_DatePicker");
-    Style.Require("jQueryUI_TimePicker"); 
 }
 <fieldset class="createdutc-datetime">
     @Html.LabelFor(m => DateEditor.CreatedDate, T("Created On"))

@@ -2,6 +2,12 @@
 @using System.Globalization
 
 @{
+    
+    Style.Require("jQueryUI_DatePicker");
+    Style.Require("jQueryUI_TimePicker");
+    Script.Require("jQueryUI_DatePicker");
+    Script.Require("jQueryUI_TimePicker");
+
     var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     
     var dateTimeLocalization = WorkContext.Resolve<IDateTimeLocalization>();
