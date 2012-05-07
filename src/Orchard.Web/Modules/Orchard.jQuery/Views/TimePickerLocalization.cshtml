@@ -1,0 +1,38 @@
+﻿@using Orchard.Core.Shapes.Localization
+@using System.Globalization
+
+@{
+    
+    Style.Require("jQueryUI_TimePicker");
+    Script.Require("jQueryUI_TimePicker");
+
+    var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    
+    var dateTimeLocalization = WorkContext.Resolve<IDateTimeLocalization>();
+    
+    var timeFormat = dateTimeLocalization.ShortTimeFormat.Text
+        .Replace("H", "h");
+
+    var ampm = timeFormat.ToLowerInvariant().Contains("tt") ? "true" : "false";
+}
+
+<script type="text/javascript">
+//<![CDATA[
+    $(function() {
+        $.timepicker.regional[''] = {
+            timeOnlyTitle: '@T("Choose time")',
+            timeText: '@T("Time")',
+            hourText: '@T("Hour")',
+            minuteText: '@T("Minute")',
+            currentText: '@T("Now")', // Display text for current time link
+            closeText: '@T("Done")', // Display text for close link
+            timeFormat: '@timeFormat',
+            amNames: ['@cultureInfo.DateTimeFormat.AMDesignator', 'AM', 'A'],
+            pmNames: ['@cultureInfo.DateTimeFormat.PMDesignator', 'PM', 'P'],
+            ampm: @ampm
+        };
+
+        $.timepicker.setDefaults($.timepicker.regional['']);
+    })
+//]]>
+</script>
