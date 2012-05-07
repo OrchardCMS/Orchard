@@ -13,12 +13,13 @@
     var timeFormat = dateTimeLocalization.ShortTimeFormat.Text
         .Replace("H", "h");
 
-    var ampm = timeFormat.ToLowerInvariant().Contains("tt") ? "true" : "false";
+    var ampm = dateTimeLocalization.ShortTimeFormat.Text.Contains("H") ? "false" : "true";
 }
 
 <script type="text/javascript">
 //<![CDATA[
     $(function() {
+
         $.timepicker.regional[''] = {
             timeOnlyTitle: '@T("Choose time")',
             timeText: '@T("Time")',
