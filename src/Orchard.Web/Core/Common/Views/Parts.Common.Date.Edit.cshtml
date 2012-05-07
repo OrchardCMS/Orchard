@@ -1,11 +1,11 @@
 ﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
 @{
 	var DateEditor = Model;
-    Script.Require("jQueryUtils_TimePicker");
     Script.Require("jQueryUI_DatePicker");
+    Script.Require("jQueryUI_TimePicker");
     Style.Require("Common_DatePicker");
-    Style.Require("jQueryUtils_TimePicker");
-    Style.Require("jQueryUI_DatePicker"); 
+    Style.Require("jQueryUI_DatePicker");
+    Style.Require("jQueryUI_TimePicker"); 
 }
 <fieldset class="createdutc-datetime">
     @Html.LabelFor(m => DateEditor.CreatedDate, T("Created On"))
@@ -38,7 +38,7 @@
             }
         });
         $('#@Html.FieldIdFor(m => DateEditor.CreatedDate)').datepicker({ showAnim: "" });
-        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepickr({ showAnim: "" });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepicker({ stepMinute: 5});
     })
 //]]>
 </script>

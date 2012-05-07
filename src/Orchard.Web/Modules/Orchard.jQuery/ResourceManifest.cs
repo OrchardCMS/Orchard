@@ -48,15 +48,11 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryEffects_Slide").SetUrl("jquery.effects.slide.min.js", "jquery.effects.slide.js").SetVersion("1.8.18").SetDependencies("jQueryEffects_Core");
             manifest.DefineScript("jQueryEffects_Transfer").SetUrl("jquery.effects.transfer.min.js", "jquery.effects.transfer.js").SetVersion("1.8.18").SetDependencies("jQueryEffects_Core");
 
-
-            // Utils
-            manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.js").SetDependencies("jQuery");
-            manifest.DefineScript("jQueryUtils_TimePicker").SetUrl("ui.timepickr.js").SetVersion("0.7.0a").SetDependencies("jQueryUtils", "jQueryUI_Core", "jQueryUI_Widget");
-
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.8.18.custom.css").SetVersion("1.8.18");
             manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
-            manifest.DefineStyle("jQueryUtils_TimePicker").SetUrl("ui.timepickr.css");
 
+            manifest.DefineScript("jQueryUI_TimePicker").SetUrl("jquery.ui.timepicker.min.js", "jquery.ui.timepicker.js").SetVersion("1.0.0").SetDependencies("jQueryUI_Slider");
+            manifest.DefineStyle("jQueryUI_TimePicker").SetUrl("ui.timepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.0.0");
         }
     }
 }

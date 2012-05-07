@@ -1,5 +1,9 @@
 ﻿@using Orchard.Core.Shapes.Localization
+@using System.Globalization
+
 @{
+    var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    
     var dateTimeLocalization = WorkContext.Resolve<IDateTimeLocalization>();
     var monthNames = FormatJsList(dateTimeLocalization.MonthNames.Text);
     var monthNamesShort = FormatJsList(dateTimeLocalization.MonthNamesShort.Text);
@@ -17,6 +21,11 @@
         .Replace("Y", "y")
         .Replace("M", "m")
         ;
+    
+    var timeFormat = dateTimeLocalization.ShortTimeFormat.Text
+        .Replace("H", "h");
+
+    var ampm = timeFormat.ToLowerInvariant().Contains("tt") ? "true" : "false";
 }
 
 @functions {
@@ -46,6 +55,23 @@
             showMonthAfterYear: @(dateTimeLocalization.ShowMonthAfterYear ? "true" : "false"), // True if the year select precedes month, false for month then year
             yearSuffix: '@dateTimeLocalization.YearSuffix' // Additional text to append to the year in the month headers
         };
+
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        $.timepicker.regional[''] = {
+            timeOnlyTitle: '@T("Choose time")',
+            timeText: '@T("Time")',
+            hourText: '@T("Hour")',
+            minuteText: '@T("Minute")',
+            currentText: '@T("Now")', // Display text for current time link
+            closeText: '@T("Done")', // Display text for close link
+            timeFormat: '@timeFormat',
+            amNames: ['@cultureInfo.DateTimeFormat.AMDesignator', 'AM', 'A'],
+            pmNames: ['@cultureInfo.DateTimeFormat.PMDesignator', 'PM', 'P'],
+            ampm: @ampm
+        };
+
+        $.timepicker.setDefaults($.timepicker.regional['']);
     })
 //]]>
 </script>

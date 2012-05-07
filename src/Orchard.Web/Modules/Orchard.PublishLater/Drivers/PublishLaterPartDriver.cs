@@ -62,8 +62,8 @@ namespace Orchard.PublishLater.Drivers {
             var localDate = new Lazy<DateTime>( () => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledPublishUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortDateFormat.Text) : String.Empty,
-                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortTimeFormat.Text) : String.Empty,
+                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value) : String.Empty,
+                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value) : String.Empty,
             };
 
             return ContentShape("Parts_PublishLater_Edit",
@@ -83,7 +83,7 @@ namespace Orchard.PublishLater.Drivers {
                     var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
                     // use current culture
-                    if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out scheduled)) {
+                    if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
                         
                         // the date time is entered locally for the configured timezone
                         var timeZone = Services.WorkContext.CurrentTimeZone;

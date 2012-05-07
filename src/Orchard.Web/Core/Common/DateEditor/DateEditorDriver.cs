@@ -9,7 +9,6 @@ using Orchard.Localization;
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
         private readonly IDateTimeLocalization _dateTimeLocalization;
-
         private readonly Lazy<CultureInfo> _cultureInfo;
 
         public DateEditorDriver(
@@ -62,8 +61,8 @@ namespace Orchard.Core.Common.DateEditor {
                             // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
                             var createdLocal = TimeZoneInfo.ConvertTimeFromUtc(part.CreatedUtc.Value, Services.WorkContext.CurrentTimeZone);
 
-                            model.CreatedDate = createdLocal.ToString(_dateTimeLocalization.ShortDateFormat.Text);
-                            model.CreatedTime = createdLocal.ToString(_dateTimeLocalization.ShortTimeFormat.Text);
+                            model.CreatedDate = createdLocal.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value);
+                            model.CreatedTime = createdLocal.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value);
                         }
                     }
 
@@ -77,7 +76,7 @@ namespace Orchard.Core.Common.DateEditor {
                             var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
                             // use current culture
-                            if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out createdUtc)) {
+                            if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, _cultureInfo.Value, DateTimeStyles.None, out createdUtc)) {
 
                                 // the date time is entered locally for the configured timezone
                                 part.CreatedUtc = TimeZoneInfo.ConvertTimeToUtc(createdUtc, Services.WorkContext.CurrentTimeZone);

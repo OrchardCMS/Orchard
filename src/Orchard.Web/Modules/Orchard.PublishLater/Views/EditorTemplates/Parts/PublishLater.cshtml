@@ -1,10 +1,10 @@
 ﻿@model Orchard.PublishLater.ViewModels.PublishLaterViewModel
 @{
-    Script.Require("jQueryUtils_TimePicker");
     Script.Require("jQueryUI_DatePicker");
+    Script.Require("jQueryUI_TimePicker");
     Style.Require("PublishLater_DatePicker");
-    Style.Require("jQueryUtils_TimePicker");
     Style.Require("jQueryUI_DatePicker");
+    Style.Require("jQueryUI_TimePicker");
 }
 <fieldset class="publish-later-datetime">
     <legend>@T("Publish")</legend>
@@ -40,7 +40,7 @@
         });
         
         $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")').datepicker({ showAnim: ""}).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")').timepicker({ stepMinute: 5}).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
     })
 //]]>
 </script>
