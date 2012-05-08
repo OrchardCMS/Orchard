@@ -7,3 +7,5 @@ src/orchard.web/modules/Orchard.Fields = https://hg.codeplex.com/orchardfields
 src/Orchard.Web/Modules/Orchard.Autoroute = https://hg.codeplex.com/orchardautoroute
 src/orchard.web/Modules/Orchard.Alias = https://hg.codeplex.com/orchardalias
 src/orchard.web/Modules/Orchard.Projections = https://hg.codeplex.com/orchardprojections
+src/Orchard.Web/Modules/Orchard.AntiSpam = https://hg.codeplex.com/orchardantispam
+src/Orchard.Web/Modules/Orchard.CustomForms = https://hg.codeplex.com/orchardcustomforms
