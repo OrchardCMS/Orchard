@@ -51,7 +51,7 @@ namespace Orchard.jQuery {
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.8.18.custom.css").SetVersion("1.8.18");
             manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
 
-            manifest.DefineScript("jQueryUI_TimePicker").SetUrl("jquery.ui.timepicker.min.js", "jquery.ui.timepicker.js").SetVersion("1.0.0").SetDependencies("jQueryUI_Slider");
+            manifest.DefineScript("jQueryUI_TimePicker").SetUrl("jquery.ui.timepicker.min.js", "jquery.ui.timepicker.js").SetVersion("1.0.0").SetDependencies("jQueryUI_Slider", "jQueryUI_DatePicker");
             manifest.DefineStyle("jQueryUI_TimePicker").SetUrl("ui.timepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.0.0");
         }
     }
