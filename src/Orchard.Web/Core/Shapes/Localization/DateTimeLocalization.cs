@@ -20,11 +20,6 @@ namespace Orchard.Core.Shapes.Localization {
         int FirstDay { get; }
 
         /// <summary>
-        /// True if right-to-left language, false if left-to-right
-        /// </summary>
-        bool IsRTL { get; }
-
-        /// <summary>
         /// True if the year select precedes month, false for month then year
         /// </summary>
         bool ShowMonthAfterYear { get; }
@@ -85,19 +80,6 @@ namespace Orchard.Core.Shapes.Localization {
                 }
 
                 return firstDay;
-            }
-        }
-
-        public bool IsRTL {
-            get {
-                var isRTL = false;
-                var t = T("isRTL: false").Text;
-                var parts = t.Split(':');
-                if (parts.Length == 2) {
-                    Boolean.TryParse(parts[1], out isRTL);
-                }
-
-                return isRTL;
             }
         }
 
