@@ -214,6 +214,14 @@ namespace Orchard.Specs.Hosting {
                 sourceModule.Combine("Views").DeepCopy(targetModule.Combine("Views"));
         }
 
+        public void CopyFile(string source, string destination) {
+            var origin = Path.Current.Parent.Combine(source);
+            var target = _tempSite.Combine(destination);
+
+            Directory.CreateDirectory(target.DirectoryName);
+            File.Copy(origin, target);
+        }
+
         private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
             bool isValidExtension = IsAssemblyFile(path);
             if (!isValidExtension)
