@@ -9,3 +9,4 @@ src/orchard.web/Modules/Orchard.Alias = https://hg.codeplex.com/orchardalias
 src/orchard.web/Modules/Orchard.Projections = https://hg.codeplex.com/orchardprojections
 src/Orchard.Web/Modules/Orchard.AntiSpam = https://hg.codeplex.com/orchardantispam
 src/Orchard.Web/Modules/Orchard.CustomForms = https://hg.codeplex.com/orchardcustomforms
+src/Orchard.Web/Modules/Orchard.ViewPermissions = https://hg.codeplex.com/orchardpermissions
