@@ -5,17 +5,15 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Core.Contents.Security
-{
+namespace Orchard.Core.Contents.Security {
     [UsedImplicitly]
-    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler
-    {
+    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
 
         public void Adjust(CheckAccessContext context) {
-            if ( !context.Granted &&
-                context.Content.Is<ICommonPart>() ) {
+            if (!context.Granted &&
+                context.Content.Is<ICommonPart>()) {
 
                 if (OwnerVariationExists(context.Permission) &&
                     HasOwnership(context.User, context.Content)) {
@@ -27,10 +25,10 @@ namespace Orchard.Core.Contents.Security
                 var typeDefinition = context.Content.ContentItem.TypeDefinition;
 
                 // replace permission if a content type specific version exists
-                if ( typeDefinition.Settings.GetModel<ContentTypeSettings>().Creatable ) {
+                if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Creatable) {
                     var permission = GetContentTypeVariation(context.Permission);
 
-                    if ( permission != null) {
+                    if (permission != null) {
                         context.Adjusted = true;
                         context.Permission = DynamicPermissions.CreateDynamicPermission(permission, typeDefinition);
                     }
@@ -60,6 +58,8 @@ namespace Orchard.Core.Contents.Security
                 return Permissions.EditOwnContent;
             if (permission.Name == Permissions.DeleteContent.Name)
                 return Permissions.DeleteOwnContent;
+            if (permission.Name == Permissions.ViewContent.Name)
+                return Permissions.ViewOwnContent;
             return null;
         }
 

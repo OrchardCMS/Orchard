@@ -25,14 +25,14 @@ namespace Orchard.Blogs.Security {
             if (user == null || content == null)
                 return false;
 
-            if(HasOwnershipOnContainer(user, content)) {
+            if (HasOwnershipOnContainer(user, content)) {
                 return true;
             }
 
             var common = content.As<ICommonPart>();
             if (common == null || common.Owner == null)
                 return false;
-            
+
             return user.Id == common.Owner.Id;
         }
 
@@ -62,6 +62,8 @@ namespace Orchard.Blogs.Security {
                 return Permissions.EditOwnBlogPost;
             if (permission.Name == Permissions.DeleteBlogPost.Name)
                 return Permissions.DeleteOwnBlogPost;
+            if (permission.Name == Core.Contents.Permissions.ViewContent.Name)
+                return Core.Contents.Permissions.ViewOwnContent;
             return null;
         }
     }

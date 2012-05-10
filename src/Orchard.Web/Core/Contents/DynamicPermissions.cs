@@ -15,6 +15,8 @@ namespace Orchard.Core.Contents {
         private static readonly Permission EditOwnContent = new Permission { Description = "Edit {0}", Name = "EditOwn_{0}", ImpliedBy = new[] { EditContent, PublishOwnContent, Permissions.EditOwnContent } };
         private static readonly Permission DeleteContent = new Permission { Description = "Delete {0} for others", Name = "Delete_{0}", ImpliedBy = new[] { Permissions.DeleteContent } };
         private static readonly Permission DeleteOwnContent = new Permission { Description = "Delete {0}", Name = "DeleteOwn_{0}", ImpliedBy = new[] { DeleteContent, Permissions.DeleteOwnContent } };
+        private static readonly Permission ViewContent = new Permission { Description = "View {0} by others", Name = "View_{0}", ImpliedBy = new[] { Permissions.EditContent } };
+        private static readonly Permission ViewOwnContent = new Permission { Description = "View own {0}", Name = "ViewOwn_{0}", ImpliedBy = new[] { ViewContent, Permissions.ViewOwnContent } };
 
         public static readonly Dictionary<string, Permission> PermissionTemplates = new Dictionary<string, Permission> {
             {Permissions.PublishContent.Name, PublishContent},
@@ -22,7 +24,9 @@ namespace Orchard.Core.Contents {
             {Permissions.EditContent.Name, EditContent},
             {Permissions.EditOwnContent.Name, EditOwnContent},
             {Permissions.DeleteContent.Name, DeleteContent},
-            {Permissions.DeleteOwnContent.Name, DeleteOwnContent}
+            {Permissions.DeleteOwnContent.Name, DeleteOwnContent},
+            {Permissions.ViewContent.Name, ViewContent},
+            {Permissions.ViewOwnContent.Name, ViewOwnContent}
         };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
@@ -38,8 +42,8 @@ namespace Orchard.Core.Contents {
             var creatableTypes = _contentDefinitionManager.ListTypeDefinitions()
                 .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable);
 
-            foreach(var typeDefinition in creatableTypes) {
-                foreach ( var permissionTemplate in PermissionTemplates.Values ) {
+            foreach (var typeDefinition in creatableTypes) {
+                foreach (var permissionTemplate in PermissionTemplates.Values) {
                     yield return CreateDynamicPermission(permissionTemplate, typeDefinition);
                 }
             }
@@ -53,7 +57,7 @@ namespace Orchard.Core.Contents {
         /// Returns a dynamic permission for a content type, based on a global content permission template
         /// </summary>
         public static Permission ConvertToDynamicPermission(Permission permission) {
-            if (PermissionTemplates.ContainsKey(permission.Name) ) {
+            if (PermissionTemplates.ContainsKey(permission.Name)) {
                 return PermissionTemplates[permission.Name];
             }
 
@@ -68,7 +72,7 @@ namespace Orchard.Core.Contents {
                 Name = String.Format(template.Name, typeDefinition.Name),
                 Description = String.Format(template.Description, typeDefinition.DisplayName),
                 Category = typeDefinition.DisplayName,
-                ImpliedBy = ( template.ImpliedBy ?? new Permission[0] ).Select(t => CreateDynamicPermission(t, typeDefinition))
+                ImpliedBy = (template.ImpliedBy ?? new Permission[0]).Select(t => CreateDynamicPermission(t, typeDefinition))
             };
         }
     }
