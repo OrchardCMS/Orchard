@@ -215,7 +215,7 @@ namespace Orchard.Specs.Hosting {
         }
 
         public void CopyFile(string source, string destination) {
-            var origin = Path.Current.Parent.Combine(source);
+            var origin = Path.Get(Assembly.GetCallingAssembly().Location).Parent.Parent.Combine(source);
             var target = _tempSite.Combine(destination);
 
             Directory.CreateDirectory(target.DirectoryName);
