@@ -3,6 +3,13 @@
 
 @{
     
+    // prevent the shape from being rendered twice in a page
+    if (WorkContext.GetState<object>("DatePickerLocalization") != null) {
+        return;
+    }
+
+    WorkContext.SetState("DatePickerLocalization", new object());
+    
     Style.Require("jQueryUI_DatePicker");
     Script.Require("jQueryUI_DatePicker");
 

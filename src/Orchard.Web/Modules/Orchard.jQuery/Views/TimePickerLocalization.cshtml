@@ -2,7 +2,14 @@
 @using System.Globalization
 
 @{
-    
+
+    // prevent the shape from being rendered twice in a page
+    if (WorkContext.GetState<object>("TimePickerLocalization") != null) {
+        return;
+    }
+
+    WorkContext.SetState("TimePickerLocalization", new object());
+        
     Style.Require("jQueryUI_TimePicker");
     Script.Require("jQueryUI_TimePicker");
 
