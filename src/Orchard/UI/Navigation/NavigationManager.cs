@@ -26,7 +26,7 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Reduce(Merge(sources)).ToArray());
+            return FinishMenu(Reduce(Arrange(Merge(sources))).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -137,6 +137,34 @@ namespace Orchard.UI.Navigation {
                 .OrderBy(positionGroup => positionGroup.Key, orderer)
                 // ordered by item text in the postion group
                 .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
+        }
+
+
+        private static IEnumerable<MenuItem> Arrange(IEnumerable<MenuItem> items) {
+            var index = new Dictionary<string, MenuItem>();
+            var result = new List<MenuItem>();
+
+            foreach (var item in items) {
+                MenuItem parent = null;
+                var position = item.Position;
+
+                while (parent == null && !String.IsNullOrEmpty(position)) {
+                    if (index.TryGetValue(position, out parent)) {
+                        parent.Items = parent.Items.Concat(new [] { item });
+                    }
+
+                    position = position.Substring(0, position.Length - 1);
+                };
+
+                index.Add(item.Position, item);
+
+                // if the current element has no parent, it's a top level item
+                if (parent == null) {
+                    result.Add(item);
+                }
+            }
+
+            return result;
         }
 
         static MenuItem Join(IEnumerable<MenuItem> items) {
