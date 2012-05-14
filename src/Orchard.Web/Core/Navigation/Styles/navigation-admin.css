@@ -1,0 +1,57 @@
+﻿.navigation-menu ol ol {
+	margin: 0;
+	padding: 0;
+	padding-left: 30px; /* gap between each level */
+}
+
+.navigation-menu ol.sortable, .navigation-menu ol.sortable ol {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.navigation-menu ol.sortable {
+}
+
+.navigation-menu li {
+	margin: 0;
+	padding: 0;
+	
+}
+
+.navigation-menu li div  {
+	border: 1px solid #ccc;
+	cursor: move;
+	padding: 3px 10px 3px 30px;
+	margin: 2px;
+	background: #eee;
+	display: inline-block;
+}
+
+.navigation-menu li div:hover  {
+	background: #eee url(images/move.gif) no-repeat 10px 10px;
+}
+
+.navigation-text
+{
+    
+}
+
+.navigation-position
+{
+    display: none;
+}
+
+.navigation-url
+{
+}
+
+.navigation-actions
+{
+}
+
+/* style for the dynamically created placeholder */
+.navigation-menu li.navigation-placeholder
+{ 
+    background: #dadada; 
+}

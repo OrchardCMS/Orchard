@@ -3,40 +3,22 @@
 @using Orchard.Core.Navigation.Models;
 @using Orchard.Core.Navigation.ViewModels;
 
-@{ Layout.Title = T("Navigation").ToString(); }
+@{ 
+    Layout.Title = T("Navigation").ToString();
+    Style.Include("navigation-admin.css");
+
+    Script.Require("jQueryUI_Sortable");
+    Script.Include("jquery.mjs.nestedSortable.js");
+    Script.Include("navigation-admin.js");
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
-<table class="items">
-    <colgroup>
-        <col id="Text" />
-        <col id="Position" />
-        <col id="Url" />
-        <col id="Actions" />
-    </colgroup>
-    <thead>
-        <tr>
-            <td scope="col">@T("Text")</td>
-            <td scope="col">@T("Position")</td>
-            <td scope="col">@T("Url")</td>
-            <td scope="col"></td>
-        </tr>
-    </thead>
-    <tbody>@{ 
-        var menuPartEntryIndex = 0;
-        foreach (var menuPartEntry in Model.MenuItemEntries) {
-            var i = menuPartEntryIndex;
-            <tr>
-                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Text)" value="@menuPartEntry.Text" /></td>
-                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></td>
-                <td>@if (!menuPartEntry.IsMenuItem) {<input type="text" class="text-box disabled" disabled="disabled" value="@menuPartEntry.Url" /> } else {<input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Url)" value="@menuPartEntry.Url" />}</td>
-                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />@Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class="remove", itemprop="RemoveUrl UnsafeUrl" })</td>
-            </tr>
-            ++menuPartEntryIndex;
-        }
-    }
-    </tbody>
-</table>
-<fieldset class="actions"><button type="submit" class="button">@T("Update All")</button></fieldset>
+    
+    <div class="navigation-menu">
+    @RenderMenuItems(Model.MenuItemEntries, 0)
+    </div>
+                                              
+<fieldset class="actions"><button type="submit" class="button">@T("Save All")</button></fieldset>
 }
 
 <h2>@T("Add New Item")</h2>
@@ -66,4 +48,56 @@
         </tr>
     </tbody>
 </table>
+}
+
+
+@helper RenderMenuItems(IList<MenuItemEntry> menuItems, int index) {
+            
+    @:<ol> 
+
+    // store current level to detect lowerb or upper level
+    int currentLevel = Model.MenuItemEntries[index].Position.Split('.').Length - 1;
+    bool first = true;
+    
+    for (int i = index; i < Model.MenuItemEntries.Count; i++) {
+
+        var menuPartEntry = Model.MenuItemEntries[i];
+        var level = menuPartEntry.Position.Split('.').Length - 1; // 0 is for root level
+
+        if (level > currentLevel) {
+            // render sub level, then continue to next element
+            @RenderMenuItems(menuItems, i) 
+    
+            var j = i;
+            while (j < Model.MenuItemEntries.Count && Model.MenuItemEntries[j].Position.Split('.').Length - 1 > currentLevel) { j++; };
+            i = j - 1;
+            continue;
+        }
+
+        if (level == currentLevel) {
+            if(!first) {
+                @:</li>
+            }
+            
+            first = false;
+    
+            @:<li class="navigation-menu-item" data-index="@i">
+        
+                <div>
+                    <span class="navigation-text"><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Text)" value="@menuPartEntry.Text" /></span>
+                    <span class="navigation-position"><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
+                    <span class="navigation-url">@if (!menuPartEntry.IsMenuItem) {<input type="text textMedium" class="text-box disabled" disabled="disabled" value="@menuPartEntry.Url" /> } else {<input type="text" class="text-box textMedium" name="@Html.NameOf(m => m.MenuItemEntries[i].Url)" value="@menuPartEntry.Url" />}</span>
+                    <span class="navigation-actions"><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />@Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class = "remove", itemprop = "RemoveUrl UnsafeUrl" })</span>
+                </div>
+            
+            continue;
+        }
+
+        // done with current level
+        if (level < currentLevel) {
+            @:</li>
+            break;
+        }
+    }
+    @:</ol>
 }

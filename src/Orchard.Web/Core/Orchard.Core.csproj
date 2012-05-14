@@ -277,6 +277,9 @@
     <Content Include="Common\Views\Body.Editor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
+    <Content Include="Navigation\Scripts\jquery.mjs.nestedSortable.js" />
+    <Content Include="Navigation\Scripts\navigation-admin.js" />
+    <Content Include="Navigation\Styles\navigation-admin.css" />
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
     <Content Include="Navigation\Styles\menu.navigation-admin.css" />
     <Content Include="Reports\Module.txt" />
@@ -482,6 +485,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Body-Small.Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
