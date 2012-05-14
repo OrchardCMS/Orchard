@@ -279,6 +279,7 @@
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
     <Content Include="Navigation\Scripts\jquery.mjs.nestedSortable.js" />
     <Content Include="Navigation\Scripts\navigation-admin.js" />
+    <Content Include="Navigation\Styles\images\move.gif" />
     <Content Include="Navigation\Styles\navigation-admin.css" />
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
     <Content Include="Navigation\Styles\menu.navigation-admin.css" />
