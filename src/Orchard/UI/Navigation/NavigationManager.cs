@@ -141,12 +141,22 @@ namespace Orchard.UI.Navigation {
 
 
         private static IEnumerable<MenuItem> Arrange(IEnumerable<MenuItem> items) {
-            var index = new Dictionary<string, MenuItem>();
+            
+            var indexes = new Dictionary<int, Dictionary<string, MenuItem>>();
+
             var result = new List<MenuItem>();
 
             foreach (var item in items) {
                 MenuItem parent = null;
                 var position = item.Position;
+
+                Dictionary<string, MenuItem> index = null;
+                if(indexes.ContainsKey(item.MenuId)) {
+                    index = indexes[item.MenuId];
+                }
+                else {
+                    indexes.Add(item.MenuId, index = new Dictionary<string, MenuItem>());
+                }
 
                 while (parent == null && !String.IsNullOrEmpty(position)) {
                     if (index.TryGetValue(position, out parent)) {

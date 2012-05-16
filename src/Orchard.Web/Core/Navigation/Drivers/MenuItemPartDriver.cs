@@ -15,13 +15,21 @@ namespace Orchard.Core.Navigation.Drivers {
             _workContextAccessor = workContextAccessor;
         }
 
-        protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper) {
+            return ContentShape("Parts_MenuItem_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.MenuItem.Edit", Model: part, Prefix: Prefix));
+        }
+
+        protected override DriverResult Editor(MenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, itemPart))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
                 return null;
 
-            updater.TryUpdateModel(itemPart, Prefix, null, null);
-            return null;
+            if (updater != null) {
+                updater.TryUpdateModel(part, Prefix, null, null);
+            }
+
+            return Editor(part, shapeHelper);
         }
 
         protected override void Importing(MenuItemPart part, ContentManagement.Handlers.ImportContentContext context) {

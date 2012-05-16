@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.Localization;
 
 namespace Orchard.UI.Navigation {
     public class NavigationBuilder {
         private readonly IList<string> _imageSets = new List<string>();
-        IEnumerable<MenuItem> Contained { get; set; }
+        List<MenuItem> Contained { get; set; }
+
+        public NavigationBuilder() {
+            Contained = new List<MenuItem>();
+        }
 
         public NavigationBuilder Add(LocalizedString caption, string position, Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null) {
             var childBuilder = new NavigationItemBuilder();
@@ -15,7 +18,7 @@ namespace Orchard.UI.Navigation {
             childBuilder.Caption(caption);
             childBuilder.Position(position);
             itemBuilder(childBuilder);
-            Contained = (Contained ?? Enumerable.Empty<MenuItem>()).Concat(childBuilder.Build());
+            Contained.AddRange(childBuilder.Build());
 
             if (classes != null) {
                 foreach (var className in classes) 

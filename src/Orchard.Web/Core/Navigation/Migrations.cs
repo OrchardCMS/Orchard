@@ -39,5 +39,22 @@ namespace Orchard.Core.Navigation {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .DisplayedAs("Custom Link")
+                .WithSetting("Description", "Represents a simple custom link with a text and an url.")
+                .WithSetting("Stereotype", "MenuItem") // because we declare a new stereotype, the Shape MenuItem_Edit is needed
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("TitlePart")
+                .WithPart("Identity")
+                );
+
+            return 3;
+        }
     }
 }

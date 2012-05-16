@@ -22,6 +22,10 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder MenuId(int menuId) {
+            _item.MenuId = menuId;
+            return this;
+        }
         public NavigationItemBuilder Url(string url) {
             _item.Url = url;
             return this;
