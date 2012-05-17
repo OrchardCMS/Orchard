@@ -41,7 +41,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
             updater.TryUpdateModel(part, Prefix, null, null);
 
-            if (part.OnMainMenu && string.IsNullOrEmpty(part.MenuText))
+            if (string.IsNullOrEmpty(part.MenuText))
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
 
             return Editor(part, shapeHelper);
@@ -58,16 +58,15 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuPosition = position;
             }
 
-            var onMainMenu = context.Attribute(part.PartDefinition.Name, "OnMainMenu");
-            if (onMainMenu != null) {
-                part.OnMainMenu = Convert.ToBoolean(onMainMenu);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.MenuRecord = context.GetItemFromSession(x).Record);
         }
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
+            var menuIdentity = _orchardServices.ContentManager.GetItemMetadata(_orchardServices.ContentManager.Get(part.MenuRecord.Id)).Identity;
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Menu", menuIdentity);
+
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("OnMainMenu", part.OnMainMenu);
         }
     }
 }

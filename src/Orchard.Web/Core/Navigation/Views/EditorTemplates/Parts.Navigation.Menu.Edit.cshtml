@@ -4,12 +4,9 @@
 @if (!Model.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || Model.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
     
 <fieldset>
-    @Html.EditorFor(m => m.OnMainMenu)
-    <label for="OnMainMenu" class="forcheckbox">@T("Show on main menu")</label>
-    <div data-controllerid="OnMainMenu" class="">
-        <label for="MenuText">@T("Menu text")</label>
-        @Html.TextBoxFor(m => m.MenuText, new { @class = "text-box single-line" })
-    </div>
+    <label for="MenuText">@T("Menu text")</label>
+    @Html.TextBoxFor(m => m.MenuText, new { @class = "text-box single-line" })
+    <span class="hint">@T("The text that should appear in the menu.")</span>
 </fieldset>
 
 }

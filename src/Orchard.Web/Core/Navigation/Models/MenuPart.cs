@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Navigation.Models {
     public class MenuPart : ContentPart<MenuPartRecord> {
 
-        public bool OnMainMenu {
-            get { return Record.OnMainMenu; }
-            set { Record.OnMainMenu = value; }
+        public ContentItemRecord MenuRecord {
+            get { return Record.MenuRecord; }
+            set { Record.MenuRecord = value; }
         }
 
         [StringLength(MenuPartRecord.DefaultMenuTextLength)]

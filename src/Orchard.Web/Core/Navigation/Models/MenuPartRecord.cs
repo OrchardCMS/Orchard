@@ -8,6 +8,6 @@ namespace Orchard.Core.Navigation.Models {
         [StringLength(DefaultMenuTextLength)]
         public virtual string MenuText { get; set; }
         public virtual string MenuPosition { get; set; }
-        public virtual bool OnMainMenu { get; set; }
+        public virtual ContentItemRecord MenuRecord { get; set; }
     }
 }

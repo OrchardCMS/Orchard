@@ -6,6 +6,8 @@ namespace Orchard.Core.Navigation {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
+
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table
                     .ContentPartRecord()
@@ -17,14 +19,39 @@ namespace Orchard.Core.Navigation {
                     .ContentPartRecord()
                     .Column<string>("MenuText")
                     .Column<string>("MenuPosition")
-                    .Column<bool>("OnMainMenu")
+                    .Column<int>("MenuRecord_id")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
-            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
-            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
-            
-            return 1;
+            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .DisplayedAs("Custom Link")
+                .WithSetting("Description", "Represents a simple custom link with a text and an url.")
+                .WithSetting("Stereotype", "MenuItem") // because we declare a new stereotype, the Shape MenuItem_Edit is needed
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
+                .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
+                .WithPart("TitlePart")
+                .WithPart("Identity")
+                );
+
+            SchemaBuilder.CreateTable("MenuWidgetPartRecord", table => table
+                .ContentPartRecord()
+                .Column<int>("StartLevel")
+                .Column<int>("Levels")
+                .Column<bool>("Breadcrumb")
+                .Column<int>("Menu_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("WidgetPart")
+                .WithPart("MenuWidgetPart")
+                .WithSetting("Stereotype", "Widget")
+                );
+
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -54,6 +81,28 @@ namespace Orchard.Core.Navigation {
                 .WithPart("Identity")
                 );
 
+            SchemaBuilder.CreateTable("MenuWidgetPartRecord",table => table
+                .ContentPartRecord()
+                .Column<int>("StartLevel")
+                .Column<int>("Levels")
+                .Column<bool>("Breadcrumb")
+                .Column<int>("Menu_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("WidgetPart")
+                .WithPart("MenuWidgetPart")
+                .WithSetting("Stereotype", "Widget")
+                );
+
+            SchemaBuilder
+                .AlterTable("MenuPartRecord", table => table.DropColumn("OnMainMenu"))
+                .AlterTable("MenuPartRecord", table => table.AddColumn<int>("MenuRecord_id"))
+                ;
+
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.RemovePart("MenuPart"));
+            
             return 3;
         }
     }

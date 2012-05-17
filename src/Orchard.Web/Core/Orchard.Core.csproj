@@ -131,16 +131,22 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
+    <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Models\ContentMenuItemPartRecord.cs" />
+    <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
+    <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
-    <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
+    <Compile Include="Navigation\Services\DefaultMenuProvider.cs" />
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
     <Compile Include="Reports\Controllers\AdminController.cs" />
     <Compile Include="Reports\Routes.cs" />
@@ -505,6 +511,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\EditorTemplates\Parts.MenuItem.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.MenuWidget.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\Parts.MenuWidget.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

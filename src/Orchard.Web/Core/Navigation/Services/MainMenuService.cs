@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 
 namespace Orchard.Core.Navigation.Services {
@@ -14,13 +13,13 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public IEnumerable<MenuPart> Get() {
-            return _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
+            return _contentManager.Query<MenuPart, MenuPartRecord>().List();
         }
 
         public IEnumerable<MenuPart> GetMenu(int menuId) {
             return _contentManager
-                .Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu)
-                .Join<CommonPartRecord>().Where( x => x.Container.Id == menuId)
+                .Query<MenuPart, MenuPartRecord>()
+                .Where( x => x.MenuRecord.Id == menuId)
                 .List();
         }
 

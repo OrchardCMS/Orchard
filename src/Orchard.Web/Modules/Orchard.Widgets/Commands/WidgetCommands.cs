@@ -4,6 +4,8 @@ using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Navigation.Models;
+using Orchard.Core.Title.Models;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Widgets.Models;
@@ -14,16 +16,27 @@ namespace Orchard.Widgets.Commands {
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
+        private readonly IContentManager _contentManager;
         private const string LoremIpsum = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
 
-        public WidgetCommands(IWidgetsService widgetsService, ISiteService siteService, IMembershipService membershipService) {
+        public WidgetCommands(
+            IWidgetsService widgetsService, 
+            ISiteService siteService, 
+            IMembershipService membershipService,
+            IContentManager contentManager) {
             _widgetsService = widgetsService;
             _siteService = siteService;
             _membershipService = membershipService;
+            _contentManager = contentManager;
+
+            RenderTitle = true;
         }
 
         [OrchardSwitch]
         public string Title { get; set; }
+
+        [OrchardSwitch]
+        public bool RenderTitle { get; set; }
 
         [OrchardSwitch]
         public string Zone { get; set; }
@@ -49,9 +62,12 @@ namespace Orchard.Widgets.Commands {
         [OrchardSwitch]
         public bool Publish { get; set; }
 
+        [OrchardSwitch]
+        public string MenuName { get; set; }
+
         [CommandName("widget create")]
-        [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new widget")]
-        [OrchardSwitches("Title,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText")]
+        [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false] [/MenuName:<name>]\r\n\t" + "Creates a new widget")]
+        [OrchardSwitches("Title,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText,MenuName,RenderTitle")]
         public void Create(string type) {
             var widgetTypeNames = _widgetsService.GetWidgetTypeNames();
             if (!widgetTypeNames.Contains(type)) {
@@ -80,6 +96,25 @@ namespace Orchard.Widgets.Commands {
                 }
                 widget.As<BodyPart>().Text = text;
             }
+
+            widget.RenderTitle = RenderTitle;
+
+            if(widget.Has<MenuWidgetPart>() && !String.IsNullOrWhiteSpace(MenuName)) {
+                // flushes before doing a query in case a previous command created the menu
+                _contentManager.Flush();
+
+                var menu = _contentManager.Query<TitlePart, TitlePartRecord>()
+                    .Where(x => x.Title == MenuName)
+                    .ForType("Menu")
+                    .Slice(0, 1)
+                    .FirstOrDefault();
+                
+                if(menu != null) {
+                    widget.RenderTitle = false;
+                    widget.As<MenuWidgetPart>().Menu = menu.ContentItem.Record;
+                }
+            }
+
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }

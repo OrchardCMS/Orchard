@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
     public class NavigationManager : INavigationManager {
-        private readonly IEnumerable<INavigationProvider> _providers;
+        private readonly IEnumerable<INavigationProvider> _navigationProviders;
+        private readonly IEnumerable<IMenuProvider> _menuProviders;
         private readonly IAuthorizationService _authorizationService;
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
 
-        public NavigationManager(IEnumerable<INavigationProvider> providers, IAuthorizationService authorizationService, UrlHelper urlHelper, IOrchardServices orchardServices) {
-            _providers = providers;
+        public NavigationManager(
+            IEnumerable<INavigationProvider> navigationProviders, 
+            IEnumerable<IMenuProvider> menuProviders,
+            IAuthorizationService authorizationService, 
+            UrlHelper urlHelper, 
+            IOrchardServices orchardServices) {
+            _navigationProviders = navigationProviders;
+            _menuProviders = menuProviders;
             _authorizationService = authorizationService;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
@@ -26,6 +34,11 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
+            return FinishMenu(Reduce(Merge(sources)).ToArray());
+        }
+
+        public IEnumerable<MenuItem> BuildMenu(IContent menu) {
+            var sources = GetSources(menu);
             return FinishMenu(Reduce(Arrange(Merge(sources))).ToArray());
         }
 
@@ -62,7 +75,9 @@ namespace Orchard.UI.Navigation {
             return url;
         }
 
-
+        /// <summary>
+        /// Updates the items by checking for permissions
+        /// </summary>
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
             foreach (var item in items) {
@@ -80,14 +95,15 @@ namespace Orchard.UI.Navigation {
                         Classes = item.Classes,
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
-                        Href = item.Href
+                        Href = item.Href,
+                        MenuId = item.MenuId
                     };
                 }
             }
         }
 
         private IEnumerable<IEnumerable<MenuItem>> GetSources(string menuName) {
-            foreach (var provider in _providers) {
+            foreach (var provider in _navigationProviders) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
                     IEnumerable<MenuItem> items = null;
@@ -105,8 +121,25 @@ namespace Orchard.UI.Navigation {
             }
         }
 
+        private IEnumerable<IEnumerable<MenuItem>> GetSources(IContent menu) {
+            foreach (var provider in _menuProviders) {
+                var builder = new NavigationBuilder();
+                IEnumerable<MenuItem> items = null;
+                try {
+                    provider.GetMenu(menu, builder);
+                    items = builder.Build();
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Unexpected error while querying a menu provider. It was ignored. The menu provided by the provider may not be complete.");
+                }
+                if (items != null) {
+                    yield return items;
+                }
+            }
+        }
+
         private IEnumerable<IEnumerable<string>> GetImageSets(string menuName) {
-            foreach (var provider in _providers) {
+            foreach (var provider in _navigationProviders) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
                     IEnumerable<string> imageSets = null;
@@ -139,24 +172,18 @@ namespace Orchard.UI.Navigation {
                 .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
         }
 
-
+        /// <summary>
+        /// Organizes a list of <see cref="MenuItem"/> into a hierarchy based on their positions
+        /// </summary>
         private static IEnumerable<MenuItem> Arrange(IEnumerable<MenuItem> items) {
             
-            var indexes = new Dictionary<int, Dictionary<string, MenuItem>>();
-
             var result = new List<MenuItem>();
+            var index = new Dictionary<string, MenuItem>();
 
             foreach (var item in items) {
                 MenuItem parent = null;
                 var position = item.Position;
-
-                Dictionary<string, MenuItem> index = null;
-                if(indexes.ContainsKey(item.MenuId)) {
-                    index = indexes[item.MenuId];
-                }
-                else {
-                    indexes.Add(item.MenuId, index = new Dictionary<string, MenuItem>());
-                }
+                
 
                 while (parent == null && !String.IsNullOrEmpty(position)) {
                     if (index.TryGetValue(position, out parent)) {
@@ -166,7 +193,11 @@ namespace Orchard.UI.Navigation {
                     position = position.Substring(0, position.Length - 1);
                 };
 
-                index.Add(item.Position, item);
+                if (!index.ContainsKey(item.Position)) {
+                    // prevent invalid positions
+                    index.Add(item.Position, item);    
+                }
+                
 
                 // if the current element has no parent, it's a top level item
                 if (parent == null) {
@@ -193,6 +224,7 @@ namespace Orchard.UI.Navigation {
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
                 Permissions = items.SelectMany(x => x.Permissions).Distinct(),
+                MenuId = items.First().MenuId,
             };
             return joined;
         }

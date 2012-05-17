@@ -267,6 +267,8 @@
     <Compile Include="Time\SiteTimeZoneSelector.cs" />
     <Compile Include="Time\TimeZoneSelectorResult.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
+    <Compile Include="UI\Navigation\IMenuProvider.cs" />
+    <Compile Include="UI\Navigation\NavigationHelper.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />

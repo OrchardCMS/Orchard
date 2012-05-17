@@ -27,6 +27,5 @@
   
   <Command>
     page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /Text:"Welcome To Orchard!"
-    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
 </Orchard>

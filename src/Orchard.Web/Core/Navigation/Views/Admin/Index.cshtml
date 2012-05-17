@@ -1,8 +1,5 @@
 ﻿@model NavigationManagementViewModel
-@using Orchard.ContentManagement;
-@using Orchard.Core.Navigation.Models;
 @using Orchard.Core.Navigation.ViewModels;
-@using Orchard.Core.Title.Models
 @using Orchard.Utility.Extensions;
 
 @{ 
@@ -21,11 +18,11 @@
                 <label for="menuId">@T("Current Menu:")</label>
                 <select id="menuId" name="menuId">
                     @foreach (var menu in Model.Menus) {
-                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, menu.As<TitlePart>().Title)
+                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Html.ItemDisplayText(menu).ToString())
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.Link(T("Edit").Text, Url.ItemEditUrl(Model.CurrentMenu), new { @class = "button", returnUrl = Request.RawUrl })
+                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Request.RawUrl }, new { @class = "button" })
             </fieldset>
         }
     }

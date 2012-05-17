@@ -106,35 +106,6 @@ namespace Orchard.Core.Navigation.Controllers {
             };
         }
 
-        public ActionResult Create() {
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult Create(NavigationManagementViewModel model) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
-                return new HttpUnauthorizedResult();
-
-            var menuPart = Services.ContentManager.New<MenuPart>("MenuItem");
-            menuPart.OnMainMenu = true;
-            menuPart.MenuText = model.NewMenuItem.Text;
-            menuPart.MenuPosition = model.NewMenuItem.Position;
-            if (string.IsNullOrEmpty(menuPart.MenuPosition))
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
-
-            var menuItem = menuPart.As<MenuItemPart>();
-            menuItem.Url = model.NewMenuItem.Url;
-
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-                return View("Index", model);
-            }
-
-            Services.ContentManager.Create(menuPart);
-
-            return RedirectToAction("Index");
-        }
-
         [HttpPost]
         public ActionResult Delete(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
@@ -143,10 +114,7 @@ namespace Orchard.Core.Navigation.Controllers {
             MenuPart menuPart = _menuService.Get(id);
 
             if (menuPart != null) {
-                if (menuPart.Is<MenuItemPart>())
-                    _menuService.Delete(menuPart);
-                else
-                    menuPart.OnMainMenu = false;
+                _menuService.Delete(menuPart);
             }
 
             return RedirectToAction("Index");
@@ -165,7 +133,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 return new HttpUnauthorizedResult();
 
             // create a new temporary menu item
-            MenuPart menuPart = Services.ContentManager.New<MenuPart>(id);
+            var menuPart = Services.ContentManager.New<MenuPart>(id);
 
             if (menuPart == null)
                 return HttpNotFound();
@@ -178,7 +146,7 @@ namespace Orchard.Core.Navigation.Controllers {
             
             try {
                 // filter the content items for this specific menu
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main").Where(x => x.MenuId == menuId));
+                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                 
                 dynamic model = Services.ContentManager.BuildEditor(menuPart);
                 
@@ -197,7 +165,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            MenuPart menuPart = Services.ContentManager.New<MenuPart>(id);
+            var menuPart = Services.ContentManager.New<MenuPart>(id);
 
             if (menuPart == null)
                 return HttpNotFound();
@@ -210,11 +178,8 @@ namespace Orchard.Core.Navigation.Controllers {
             
             var model = Services.ContentManager.UpdateEditor(menuPart, this);
 
-            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main").Where(x => x.MenuId == menuId));
-            menuPart.OnMainMenu = true;
-            
-            // the menu is the container for the menu item
-            menuPart.As<CommonPart>().Container = menu;
+            menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+            menuPart.MenuRecord = menu.Record;
 
             Services.ContentManager.Create(menuPart);
 

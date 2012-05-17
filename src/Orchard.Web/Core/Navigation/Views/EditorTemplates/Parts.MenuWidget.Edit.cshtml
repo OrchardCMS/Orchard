@@ -1,0 +1,31 @@
+﻿@model Orchard.Core.Navigation.ViewModels.MenuWidgetViewModel
+@using Orchard.ContentManagement
+@using Orchard.Core.Navigation.Models;
+
+    <fieldset>
+        @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
+        <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
+		@foreach(ContentItem menu in Model.Menus) {
+            @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString())
+		}
+		</select>
+        <span class="hint">@T("Select which menu you want to display")</span>
+    </fieldset>
+
+    <fieldset>
+        <label for="@Html.FieldIdFor(m => m.StartLevel)">@T("Start Level")</label>
+        @Html.TextBoxFor(m => m.StartLevel, new { @class = "text text-small" })
+        <span class="hint">@T("The level the menu should start at.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label for="@Html.FieldIdFor(m => m.StopLevel)">@T("Levels to display")</label>
+        @Html.TextBoxFor(m => m.StopLevel, new { @class = "text text-small" })
+        <span class="hint">@T("The number of levels to display, \"0\" meaning all levels.")</span>
+    </fieldset>
+
+    <fieldset>
+        @Html.EditorFor(m => m.Breadcrumb) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Breadcrumb)">@T("Display as Breadcrumb")</label>
+        <span class="hint">@T("Check to render the path to the current content item.")</span>
+    </fieldset>
