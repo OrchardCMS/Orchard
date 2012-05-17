@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Records;
 namespace Orchard.Core.Navigation.Models {
     public class MenuPart : ContentPart<MenuPartRecord> {
 
-        public ContentItemRecord MenuRecord {
+        public ContentItemRecord Menu {
             get { return Record.MenuRecord; }
             set { Record.MenuRecord = value; }
         }

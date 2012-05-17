@@ -3,6 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Navigation.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Core.Title.Models;
@@ -12,15 +13,21 @@ namespace Orchard.Experimental.Commands {
     public class ProfilingCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
+        private readonly IMenuService _menuService;
 
-        public ProfilingCommands(IContentManager contentManager, IMembershipService membershipService) {
+        public ProfilingCommands(
+            IContentManager contentManager, 
+            IMembershipService membershipService, 
+            IMenuService menuService) {
             _contentManager = contentManager;
             _membershipService = membershipService;
+            _menuService = menuService;
         }
 
         [CommandName("add profiling data")]
         public void AddProfilingData() {
             var admin = _membershipService.GetUser("admin");
+            var menu = _menuService.Create("Main Menu");
 
             for (var index = 0; index != 5; ++index) {
                 var pageName = "page" + index;
@@ -28,7 +35,7 @@ namespace Orchard.Experimental.Commands {
                 page.As<ICommonPart>().Owner = admin;
                 page.As<TitlePart>().Title = pageName;
                 page.As<BodyPart>().Text = pageName;
-                page.As<MenuPart>().OnMainMenu = true;
+                page.As<MenuPart>().Menu = menu.ContentItem.Record;
                 page.As<MenuPart>().MenuPosition = "5." + index;
                 page.As<MenuPart>().MenuText = pageName;
                 _contentManager.Publish(page);
@@ -37,7 +44,7 @@ namespace Orchard.Experimental.Commands {
                 var blog = _contentManager.New("Blog");
                 blog.As<ICommonPart>().Owner = admin;
                 blog.As<TitlePart>().Title = blogName;
-                blog.As<MenuPart>().OnMainMenu = true;
+                page.As<MenuPart>().Menu = menu.ContentItem.Record;
                 blog.As<MenuPart>().MenuPosition = "6." + index;
                 blog.As<MenuPart>().MenuText = blogName;
                 _contentManager.Create(blog);

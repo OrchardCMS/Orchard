@@ -2,14 +2,17 @@
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Navigation.Services;
 using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Navigation.Commands {
     public class MenuCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
+        private readonly IMenuService _menuService;
 
-        public MenuCommands(IContentManager contentManager) {
+        public MenuCommands(IContentManager contentManager, IMenuService menuService) {
             _contentManager = contentManager;
+            _menuService = menuService;
         }
 
         [OrchardSwitch]
@@ -31,11 +34,7 @@ namespace Orchard.Core.Navigation.Commands {
             // flushes before doing a query in case a previous command created the menu
             _contentManager.Flush();
 
-            var menu = _contentManager.Query<TitlePart, TitlePartRecord>()
-                .Where(x => x.Title == MenuName)
-                .ForType("Menu")
-                .Slice(0, 1)
-                .FirstOrDefault();
+            var menu = _menuService.GetMenu(MenuName);
 
             if(menu == null) {
                 Context.Output.WriteLine(T("Menu not found.").Text);
@@ -45,7 +44,7 @@ namespace Orchard.Core.Navigation.Commands {
             var menuItem = _contentManager.Create("MenuItem");
             menuItem.As<MenuPart>().MenuPosition = MenuPosition;
             menuItem.As<MenuPart>().MenuText = T(MenuText).ToString();
-            menuItem.As<MenuPart>().MenuRecord = menu.ContentItem.Record;
+            menuItem.As<MenuPart>().Menu = menu.ContentItem.Record;
             menuItem.As<MenuItemPart>().Url = Url;
 
             Context.Output.WriteLine(T("Menu item created successfully.").Text);
@@ -60,8 +59,7 @@ namespace Orchard.Core.Navigation.Commands {
                 return;
             }
 
-            var menu = _contentManager.Create("Menu");
-            menu.As<TitlePart>().Title = MenuName;
+            _menuService.Create(MenuName);
 
             Context.Output.WriteLine(T("Menu created successfully.").Text);
         }

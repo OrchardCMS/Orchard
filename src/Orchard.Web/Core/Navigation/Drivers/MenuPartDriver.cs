@@ -58,11 +58,11 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuPosition = position;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.MenuRecord = context.GetItemFromSession(x).Record);
+            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
         }
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
-            var menuIdentity = _orchardServices.ContentManager.GetItemMetadata(_orchardServices.ContentManager.Get(part.MenuRecord.Id)).Identity;
+            var menuIdentity = _orchardServices.ContentManager.GetItemMetadata(_orchardServices.ContentManager.Get(part.Menu.Id)).Identity;
             context.Element(part.PartDefinition.Name).SetAttributeValue("Menu", menuIdentity);
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);

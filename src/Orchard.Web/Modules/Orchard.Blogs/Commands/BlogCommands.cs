@@ -57,11 +57,14 @@ namespace Orchard.Blogs.Commands {
         public string MenuText { get; set; }
 
         [OrchardSwitch]
+        public string MenuName { get; set; }
+
+        [OrchardSwitch]
         public bool Homepage { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage")]
+        [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
+        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage,MenuName")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -80,9 +83,13 @@ namespace Orchard.Blogs.Commands {
                 blog.As<BlogPart>().Description = Description;
             }
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
-                blog.As<MenuPart>().OnMainMenu = true;
-                blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
-                blog.As<MenuPart>().MenuText = MenuText;
+                var menu = _menuService.GetMenu(MenuName);
+
+                if (menu != null) {
+                    blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
+                    blog.As<MenuPart>().MenuText = MenuText;
+                }
+
             }
 
             if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {

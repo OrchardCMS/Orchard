@@ -179,7 +179,7 @@ namespace Orchard.Core.Navigation.Controllers {
             var model = Services.ContentManager.UpdateEditor(menuPart, this);
 
             menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-            menuPart.MenuRecord = menu.Record;
+            menuPart.Menu = menu.Record;
 
             Services.ContentManager.Create(menuPart);
 

@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Navigation.Services;
 using Orchard.Core.Title.Models;
 using Orchard.Security;
 using Orchard.Settings;
@@ -17,17 +18,20 @@ namespace Orchard.Widgets.Commands {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
+        private readonly IMenuService _menuService;
         private const string LoremIpsum = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
 
         public WidgetCommands(
             IWidgetsService widgetsService, 
             ISiteService siteService, 
             IMembershipService membershipService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IMenuService menuService) {
             _widgetsService = widgetsService;
             _siteService = siteService;
             _membershipService = membershipService;
             _contentManager = contentManager;
+            _menuService = menuService;
 
             RenderTitle = true;
         }
@@ -103,11 +107,7 @@ namespace Orchard.Widgets.Commands {
                 // flushes before doing a query in case a previous command created the menu
                 _contentManager.Flush();
 
-                var menu = _contentManager.Query<TitlePart, TitlePartRecord>()
-                    .Where(x => x.Title == MenuName)
-                    .ForType("Menu")
-                    .Slice(0, 1)
-                    .FirstOrDefault();
+                var menu = _menuService.GetMenu(MenuName);
                 
                 if(menu != null) {
                     widget.RenderTitle = false;
