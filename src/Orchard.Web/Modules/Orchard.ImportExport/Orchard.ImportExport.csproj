@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\ImportExportCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\ExportOptions.cs" />
     <Compile Include="Permissions.cs" />
