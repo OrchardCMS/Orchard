@@ -11,6 +11,9 @@ if (!HasText(Model.Text)) {
     if ((!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl)) || requestUrl == modelUrl) { 
 	    Model.Classes.Add("current");
     }
+    if(items.Any()) {
+        Model.Classes.Add("parent");
+    }
     var tag = Tag(Model, "li");
     @tag.StartElement
     <a href="@Model.Href">@Model.Text</a>
