@@ -589,8 +589,6 @@ namespace Orchard.ContentManagement {
                 };                
             }
 
-            importContentSession.Store(identity, item);
-
             var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);

@@ -34,15 +34,10 @@ namespace Orchard.Recipes.RecipeHandlers {
 
                 var identity = elementId.Value;
                 var status = element.Attribute("Status");
-
+                
+                importContentSession.Set(identity, element.Name.LocalName);
+                
                 var item = importContentSession.Get(identity);
-                if (item == null) {
-                    item = _orchardServices.ContentManager.New(element.Name.LocalName);
-                }
-                else {
-                    item = _orchardServices.ContentManager.Get(item.Id, VersionOptions.DraftRequired);
-                }
-                importContentSession.Store(identity, item);
             }
 
             // Second pass to import the content items.
