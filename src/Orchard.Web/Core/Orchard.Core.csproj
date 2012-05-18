@@ -146,6 +146,7 @@
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
     <Compile Include="Reports\Controllers\AdminController.cs" />

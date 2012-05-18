@@ -55,9 +55,8 @@
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
     theme activate "The Theme Machine"
-    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
     menu create /MenuName:"Main Menu"
-    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /MenuName:"Main Menu"
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog." /MenuText:"Home" /MenuName:"Main Menu"
     widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
   </Command>
 </Orchard>

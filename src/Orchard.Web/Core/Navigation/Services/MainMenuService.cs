@@ -19,7 +19,7 @@ namespace Orchard.Core.Navigation.Services {
             return _contentManager.Query<MenuPart, MenuPartRecord>().List();
         }
 
-        public IEnumerable<MenuPart> GetMenu(int menuId) {
+        public IEnumerable<MenuPart> GetMenuParts(int menuId) {
             return _contentManager
                 .Query<MenuPart, MenuPartRecord>()
                 .Where( x => x.MenuRecord.Id == menuId)
@@ -36,6 +36,10 @@ namespace Orchard.Core.Navigation.Services {
                 .ForType("Menu")
                 .Slice(0, 1)
                 .FirstOrDefault();
+        }
+
+        public IContent GetMenu(int menuId) {
+            return _contentManager.Get(menuId, VersionOptions.Published, new QueryHints().ExpandRecords<TitlePartRecord>());    
         }
 
         public MenuPart Get(int menuPartId) {
@@ -56,6 +60,10 @@ namespace Orchard.Core.Navigation.Services {
 
         public void Delete(MenuPart menuPart) {
             _contentManager.Remove(menuPart.ContentItem);
+        }
+
+        public IEnumerable<ContentItem> GetMenus() {
+            return _contentManager.Query().ForType("Menu").Join<TitlePartRecord>().OrderBy(x => x.Title).List();
         }
     }
 }

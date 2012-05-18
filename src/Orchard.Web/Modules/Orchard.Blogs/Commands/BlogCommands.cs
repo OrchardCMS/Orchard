@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Commands;
@@ -13,6 +12,8 @@ using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;
 using Orchard.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.UI.Navigation;
+using Orchard.Utility;
 
 namespace Orchard.Blogs.Commands {
     public class BlogCommands : DefaultOrchardCommandHandler {
@@ -21,18 +22,21 @@ namespace Orchard.Blogs.Commands {
         private readonly IBlogService _blogService;
         private readonly IMenuService _menuService;
         private readonly ISiteService _siteService;
+        private readonly INavigationManager _navigationManager;
 
         public BlogCommands(
             IContentManager contentManager,
             IMembershipService membershipService,
             IBlogService blogService,
             IMenuService menuService,
-            ISiteService siteService) {
+            ISiteService siteService,
+            INavigationManager navigationManager) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _blogService = blogService;
             _menuService = menuService;
             _siteService = siteService;
+            _navigationManager = navigationManager;
         }
 
         [OrchardSwitch]
@@ -82,14 +86,15 @@ namespace Orchard.Blogs.Commands {
             if (!String.IsNullOrEmpty(Description)) {
                 blog.As<BlogPart>().Description = Description;
             }
+            
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
                 var menu = _menuService.GetMenu(MenuName);
 
                 if (menu != null) {
-                    blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
+                    blog.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                     blog.As<MenuPart>().MenuText = MenuText;
+                    blog.As<MenuPart>().Menu = menu.ContentItem.Record;
                 }
-
             }
 
             if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {

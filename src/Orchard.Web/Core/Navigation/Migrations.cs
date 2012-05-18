@@ -7,7 +7,8 @@ namespace Orchard.Core.Navigation {
 
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
-
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
+            
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table
                     .ContentPartRecord()
@@ -101,8 +102,6 @@ namespace Orchard.Core.Navigation {
                 .AlterTable("MenuPartRecord", table => table.AddColumn<int>("MenuRecord_id"))
                 ;
 
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.RemovePart("MenuPart"));
-            
             return 3;
         }
     }

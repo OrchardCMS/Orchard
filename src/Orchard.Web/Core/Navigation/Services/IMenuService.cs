@@ -5,9 +5,11 @@ using Orchard.Core.Navigation.Models;
 namespace Orchard.Core.Navigation.Services {
     public interface IMenuService : IDependency {
         IEnumerable<MenuPart> Get();
-        IEnumerable<MenuPart> GetMenu(int menuId);
+        IEnumerable<MenuPart> GetMenuParts(int menuId);
+        MenuPart Get(int id);
+        IContent GetMenu(int menuId);
         IContent GetMenu(string name);
-        MenuPart Get(int menuPartId);
+        IEnumerable<ContentItem> GetMenus();
         IContent Create(string name);
         void Delete(MenuPart menuPart);
     }

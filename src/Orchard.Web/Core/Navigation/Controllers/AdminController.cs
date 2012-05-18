@@ -66,7 +66,7 @@ namespace Orchard.Core.Navigation.Controllers {
             }
 
             if (model.MenuItemEntries == null || !model.MenuItemEntries.Any()) {
-                model.MenuItemEntries = _menuService.GetMenu(currentMenu.Id).Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.GetMenuParts(currentMenu.Id).Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList();
             }
 
             model.MenuItemDescriptors = _menuManager.GetMenuItemTypes();
@@ -114,7 +114,13 @@ namespace Orchard.Core.Navigation.Controllers {
             MenuPart menuPart = _menuService.Get(id);
 
             if (menuPart != null) {
-                _menuService.Delete(menuPart);
+                // if the menu item is a concrete content item, don't delete it, just unreference the menu
+                if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
+                    menuPart.Menu = null;
+                }
+                else {
+                    _menuService.Delete(menuPart);
+                }
             }
 
             return RedirectToAction("Index");
