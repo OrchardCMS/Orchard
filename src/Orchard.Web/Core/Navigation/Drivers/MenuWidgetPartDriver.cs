@@ -54,7 +54,9 @@ namespace Orchard.Core.Navigation.Drivers {
                 var routeData = _workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData;
 
                 var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
-                                                         ;
+                                             
+                dynamic menuShape = shapeHelper.Menu();
+
                 if (part.Breadcrumb) {
                     menuItems = selectedPath;
                     foreach (var menuItem in menuItems) {
@@ -66,6 +68,8 @@ namespace Orchard.Core.Navigation.Drivers {
                     if (part.Levels > 0) {
                         menuItems = menuItems.Take(part.Levels);
                     }
+
+                    menuShape = shapeHelper.Breadcrumb();
                 }
                 else {
                     IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
@@ -103,8 +107,8 @@ namespace Orchard.Core.Navigation.Drivers {
                         menuItems = topLevelItems;
                     }
                 }
-
-                dynamic menuShape = shapeHelper.Menu().MenuName(menuName);
+                
+                menuShape.MenuName(menuName);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);

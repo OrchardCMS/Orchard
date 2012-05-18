@@ -337,7 +337,45 @@ nav > ul > li > ul > li > ul > li:hover > a { }
 /* deeper levels */
 nav > ul > li > ul > li > ul ul { display:none; }
 
+/* Breadcrumb */
+nav ul.breadcrumb 
+{
+    border:none;
+    display: inline-block;
+    margin: -9px;
+}
 
+    nav ul.breadcrumb li
+    {
+        border:none;
+        background:none;
+        display:block;
+        margin:0 2px -1px 0;
+    }
+
+    nav ul.breadcrumb li:after
+    {
+        content: "/"
+    }
+    
+    nav ul.breadcrumb li.last:after
+    {
+        content: ""
+    }
+
+        nav ul.breadcrumb li a 
+        {
+            padding:0 9px;
+            display:block;
+            color: #5F97AF;
+            font-size: 100%;
+        }
+        
+        nav ul.breadcrumb li a:hover
+        {
+            text-decoration: underline;
+        }
+        
 #layout-header {}
     #branding 
     {   

@@ -12,11 +12,14 @@ if (!HasText(Model.Text)) {
 	    Model.Classes.Add("current");
     }
     if(items.Any()) {
-        Model.Classes.Add("parent");
+        Model.Classes.Add("dropdown");
     }
     var tag = Tag(Model, "li");
     @tag.StartElement
     <a href="@Model.Href">@Model.Text</a>
+    if(Model.Divider != null) {
+         @Display(Model.Divider)
+    }
     if (items.Any()) {
         <ul>
         @DisplayChildren(Model)
