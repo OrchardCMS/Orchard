@@ -52,6 +52,16 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("Stereotype", "Widget")
                 );
 
+            SchemaBuilder.CreateTable("AdminMenuPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("AdminMenuText")
+                    .Column<string>("AdminMenuPosition")
+                    .Column<bool>("OnAdminMenu")
+                );
+
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+
             return 3;
         }
 
