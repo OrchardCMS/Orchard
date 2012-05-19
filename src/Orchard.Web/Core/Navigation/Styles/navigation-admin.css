@@ -1,4 +1,8 @@
-﻿.navigation-menu ol ol {
+﻿#save-message {
+    display: none;
+}
+
+.navigation-menu ol ol {
 	margin: 0;
 	padding: 0;
 	padding-left: 30px; /* gap between each level */
@@ -30,7 +34,7 @@
 }
 
 .navigation-menu li div:hover  {
-	background: #eee url(images/move.gif) no-repeat 8px 8px;
+	background: #eee url(images/move.gif) no-repeat 9px 7px;
 	border: 1px solid #487328;
 }
 

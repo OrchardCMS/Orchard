@@ -11,6 +11,8 @@
     Script.Include("navigation-admin.js");
 }
 
+<div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>
+
 <div id="display-menu-controls">
     @if (Model.Menus.Any()) {
         using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { area = "Navigation" })) {

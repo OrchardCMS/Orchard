@@ -37,6 +37,7 @@
         stop: function (event, ui) {
             // update all positions whenever a menu item was moved
             populate(this, '');
+            $('#save-message').show();
         }
     });
 
