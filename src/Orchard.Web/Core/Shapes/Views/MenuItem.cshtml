@@ -16,10 +16,12 @@ if (!HasText(Model.Text)) {
     }
     var tag = Tag(Model, "li");
     @tag.StartElement
-    <a href="@Model.Href">@Model.Text</a>
-    if(Model.Divider != null) {
-         @Display(Model.Divider)
-    }
+            
+    @* morphing the shape to keep Model untouched*@
+    Model.Metadata.Alternates.Clear(); 
+    Model.Metadata.Type = "MenuItemLink";
+    @Display(Model)
+    
     if (items.Any()) {
         <ul>
         @DisplayChildren(Model)
