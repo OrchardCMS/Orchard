@@ -25,8 +25,8 @@
     // convert .NET format into jQuery format
     // http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
     // http://docs.jquery.com/UI/Datepicker/formatDate
-    
-    var dateFormat = dateTimeLocalization.ShortDateFormat.Text
+
+    var dateFormat = cultureInfo.DateTimeFormat.ShortDatePattern
         .Replace("yyyy", "YY")
         .Replace("yy", "Y")
         .Replace("Y", "y")

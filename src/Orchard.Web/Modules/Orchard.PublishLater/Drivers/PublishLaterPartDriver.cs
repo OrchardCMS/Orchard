@@ -3,7 +3,6 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Shapes.Localization;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
@@ -18,7 +17,6 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
-        private readonly IDateTimeLocalization _dateTimeLocalization;
 
         private readonly Lazy<CultureInfo> _cultureInfo;
  
@@ -26,12 +24,10 @@ namespace Orchard.PublishLater.Drivers {
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
-            IClock clock,
-            IDateTimeLocalization dateTimeLocalization) {
+            IClock clock) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;
-            _dateTimeLocalization = dateTimeLocalization;
             T = NullLocalizer.Instance;
             Services = services;
 
@@ -62,8 +58,8 @@ namespace Orchard.PublishLater.Drivers {
             var localDate = new Lazy<DateTime>( () => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledPublishUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value) : String.Empty,
-                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value) : String.Empty,
+                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString("d", _cultureInfo.Value) : String.Empty,
+                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString("t", _cultureInfo.Value) : String.Empty,
             };
 
             return ContentShape("Parts_PublishLater_Edit",
@@ -80,10 +76,9 @@ namespace Orchard.PublishLater.Drivers {
                     DateTime scheduled;
                     
                     string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
-                    var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
                     // use current culture
-                    if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
+                    if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
                         
                         // the date time is entered locally for the configured timezone
                         var timeZone = Services.WorkContext.CurrentTimeZone;
