@@ -210,6 +210,7 @@
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
     <Compile Include="Exceptions\DefaultExceptionPolicy.cs" />
+    <Compile Include="Exceptions\ExceptionExtensions.cs" />
     <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />
     <Compile Include="Exceptions\IExceptionPolicy.cs" />
     <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
