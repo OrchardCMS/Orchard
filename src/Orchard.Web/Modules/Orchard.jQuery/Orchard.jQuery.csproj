@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\jquery.ui.timepicker.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
@@ -114,7 +115,7 @@
     <Content Include="Scripts\jquery.ui.widget.js" />
     <Content Include="Scripts\jquery.ui.widget.min.js" />
     <Content Include="Scripts\jquery.utils.js" />
-    <Content Include="Scripts\ui.timepickr.js" />
+    <Content Include="Scripts\jquery.ui.timepicker.js" />
     <Content Include="Styles\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Styles\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Styles\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -130,7 +131,7 @@
     <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Styles\jquery-ui-1.8.18.custom.css" />
     <Content Include="Styles\ui.datepicker.css" />
-    <Content Include="Styles\ui.timepickr.css" />
+    <Content Include="Styles\ui.timepicker.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -164,7 +165,9 @@
     <Content Include="web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\TimePickerLocalization.cshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

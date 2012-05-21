@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Commands;
@@ -39,7 +38,7 @@ namespace Orchard.Blogs.Commands {
         public string FeedUrl { get; set; }
 
         [OrchardSwitch]
-        public int Id { get; set; }
+        public int BlogId { get; set; }
 
         [OrchardSwitch]
         public string Owner { get; set; }
@@ -100,7 +99,7 @@ namespace Orchard.Blogs.Commands {
 
         [CommandName("blog import")]
         [CommandHelp("blog import /BlogId:<id> /FeedUrl:<feed url> /Owner:<username>\r\n\t" + "Import all items from <feed url> into the blog specified by <id>")]
-        [OrchardSwitches("FeedUrl,Id,Owner")]
+        [OrchardSwitches("FeedUrl,BlogId,Owner")]
         public void Import() {
             var owner = _membershipService.GetUser(Owner);
 
@@ -120,10 +119,10 @@ namespace Orchard.Blogs.Commands {
                 throw new OrchardException(T("An error occured while loading the feed at {0}.", FeedUrl), ex);
             }
 
-            var blog = _blogService.Get(Id,VersionOptions.Latest);
+            var blog = _blogService.Get(BlogId, VersionOptions.Latest);
 
             if ( blog == null ) {
-                Context.Output.WriteLine(T("Blog not found with specified Id: {0}", Id));
+                Context.Output.WriteLine(T("Blog not found with specified Id: {0}", BlogId));
                 return;
             }
 

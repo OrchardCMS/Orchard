@@ -6,7 +6,6 @@ using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Shapes.Localization;
 using Orchard.Localization;
 using System.Globalization;
 
@@ -14,16 +13,18 @@ namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
         private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
-        private readonly IDateTimeLocalization _dateTimeLocalization;
+        private readonly Lazy<CultureInfo> _cultureInfo;
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
-            IArchiveLaterService archiveLaterService,
-            IDateTimeLocalization dateTimeLocalization) {
+            IArchiveLaterService archiveLaterService) {
             _archiveLaterService = archiveLaterService;
-            _dateTimeLocalization = dateTimeLocalization;
             T = NullLocalizer.Instance;
             Services = services;
+
+            // initializing the culture info lazy initializer
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
+
         }
 
         public Localizer T { get; set; }
@@ -46,8 +47,8 @@ namespace Orchard.ArchiveLater.Drivers {
             var model = new ArchiveLaterViewModel(part) {
                 ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value,
                 ArchiveLater = part.ScheduledArchiveUtc.Value.HasValue,
-                ScheduledArchiveDate = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString(_dateTimeLocalization.ShortDateFormat.Text) : String.Empty,
-                ScheduledArchiveTime = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString(_dateTimeLocalization.ShortTimeFormat.Text) : String.Empty
+                ScheduledArchiveDate = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString("d", _cultureInfo.Value) : String.Empty,
+                ScheduledArchiveTime = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString("t", _cultureInfo.Value) : String.Empty
             };
 
             return ContentShape("Parts_ArchiveLater_Edit",
@@ -61,10 +62,9 @@ namespace Orchard.ArchiveLater.Drivers {
                 if ( model.ArchiveLater ) {
                     DateTime scheduled;
                     var parseDateTime = String.Concat(model.ScheduledArchiveDate, " ", model.ScheduledArchiveTime);
-                    var dateTimeFormat = _dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat;
 
                     // use an english culture as it is the one used by jQuery.datepicker by default
-                    if (DateTime.TryParseExact(parseDateTime, dateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out scheduled)) {
+                    if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
                         // the date time is entered locally for the configured timezone
                         var timeZone = Services.WorkContext.CurrentTimeZone;
 

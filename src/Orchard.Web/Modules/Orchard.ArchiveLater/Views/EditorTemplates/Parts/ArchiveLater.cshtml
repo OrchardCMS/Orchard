@@ -1,11 +1,7 @@
 ﻿@model Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel
 @using System.Web.Mvc.Html;
 @{
-    Style.Require("jQueryUtils_TimePicker");
-    Style.Require("jQueryUI_DatePicker");
     Style.Require("ArchiveLater_DatePicker");
-    Script.Require("jQueryUI_DatePicker");
-    Script.Require("jQueryUtils_TimePicker");
 }
 
 <fieldset class="archive-later-datetime">
@@ -25,6 +21,7 @@
     
     @* generates the localization script *@
     @Display(New.DatePickerLocalization())
+    @Display(New.TimePickerLocalization())
 
 <script type="text/javascript">    
 //<![CDATA[
@@ -42,7 +39,7 @@
             }
         });
         $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater")').attr("checked", "checked") });
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater")').attr("checked", "checked") });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveTime")').timepicker({ stepMinute: 5 }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater")').attr("checked", "checked") });
     })
 //]]>
 </script>

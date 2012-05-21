@@ -7,10 +7,10 @@ html.dyn input.hinted {
     font-style:italic;
 }
 input#ArchiveLater_ScheduledArchiveDate {
-    width:49%;
+    width:10em;
 }
 input#ArchiveLater_ScheduledArchiveTime {
-    width:43%;
+    width:7em;
 }
 
 .edit-item-sidebar fieldset.archive-later-datetime {

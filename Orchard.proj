@@ -312,6 +312,7 @@
         $(MSBuildProjectDirectory)\**\*.user;
         $(MSBuildProjectDirectory)\**\*.patch;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
+        $(LibFolder)\nunit\addins\**\*;
         " />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
