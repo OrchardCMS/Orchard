@@ -60,6 +60,16 @@ namespace Orchard.Core.Navigation {
                     .Column<bool>("OnAdminMenu")
                 );
 
+            ContentDefinitionManager.AlterTypeDefinition("HtmlMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("BodyPart")
+                .WithPart("CommonPart")
+                .DisplayedAs("Html Menu Item")
+                .WithSetting("Description", "Renders some custom HTML in the menu.")
+                .WithSetting("BodyPartSettings.FlavorDefault", "html")
+                .WithSetting("Stereotype", "MenuItem")
+                );
+            
             ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
 
             return 3;
@@ -111,6 +121,16 @@ namespace Orchard.Core.Navigation {
                 .AlterTable("MenuPartRecord", table => table.DropColumn("OnMainMenu"))
                 .AlterTable("MenuPartRecord", table => table.AddColumn<int>("MenuRecord_id"))
                 ;
+
+            ContentDefinitionManager.AlterTypeDefinition("HtmlMenuItem", cfg => cfg
+                 .WithPart("MenuPart")
+                .WithPart("BodyPart")
+                .WithPart("CommonPart")
+                .DisplayedAs("Html Menu Item")
+                .WithSetting("Description", "Renders some custom HTML in the menu.")
+                .WithSetting("BodyPartSettings.FlavorDefault", "html")
+                .WithSetting("Stereotype", "MenuItem")
+               );
 
             return 3;
         }

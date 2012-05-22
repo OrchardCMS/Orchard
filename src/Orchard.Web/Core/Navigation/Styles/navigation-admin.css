@@ -107,7 +107,7 @@
 .menu-items-zone {
     background:#F3F4F5;
     border:1px solid #E4E5E6;
-    padding:5px;
+    padding:0px;
 }
 
 .menu-items-zone h2 {
@@ -118,8 +118,9 @@
 .menu-items-zone li {
     background:#FFF;
     border:1px solid #EAEAEA;
+    margin: 2px;
     padding: 5px;
-    padding-right:60px;
+    padding-right:65px;
     display: block;
     position:relative;
 }

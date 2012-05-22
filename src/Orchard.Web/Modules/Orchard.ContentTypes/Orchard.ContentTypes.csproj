@@ -59,6 +59,7 @@
     <Compile Include="Services\ContentDefinitionService.cs" />
     <Compile Include="Services\IContentDefinitionService.cs" />
     <Compile Include="ViewModels\AddFieldViewModel.cs" />
+    <Compile Include="ViewModels\ContentTypeSettingsViewModel.cs" />
     <Compile Include="ViewModels\EditFieldNameViewModel.cs" />
     <Compile Include="ViewModels\CreatePartViewModel.cs" />
     <Compile Include="ViewModels\EditFieldViewModel.cs" />
@@ -122,7 +123,7 @@
     <Content Include="Views\Admin\EditField.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\ContentTypeSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\ContentTypeSettingsViewModel.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

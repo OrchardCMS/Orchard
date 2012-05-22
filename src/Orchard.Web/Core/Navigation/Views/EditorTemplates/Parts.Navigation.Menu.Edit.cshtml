@@ -29,6 +29,8 @@ else {
         <label for="MenuText">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.MenuText, new { @class = "textMedium", autofocus = "autofocus" })
         <span class="hint">@T("The text that should appear in the menu.")</span>
+        @Html.HiddenFor(m => m.OnMenu, true)
+        @Html.HiddenFor(m => m.CurrentMenuId, Request["menuId"])
     </fieldset>
 
 }

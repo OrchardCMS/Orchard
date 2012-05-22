@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
 
@@ -26,8 +27,14 @@ namespace Orchard.UI.Navigation {
             _item.MenuId = menuId;
             return this;
         }
+
         public NavigationItemBuilder Url(string url) {
             _item.Url = url;
+            return this;
+        }
+
+        public NavigationItemBuilder Content(IContent content) {
+            _item.Content = content;
             return this;
         }
 

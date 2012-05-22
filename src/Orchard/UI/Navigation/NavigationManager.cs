@@ -96,7 +96,8 @@ namespace Orchard.UI.Navigation {
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href,
-                        MenuId = item.MenuId
+                        MenuId = item.MenuId,
+                        Content = item.Content
                     };
                 }
             }
@@ -225,6 +226,7 @@ namespace Orchard.UI.Navigation {
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
                 Permissions = items.SelectMany(x => x.Permissions).Distinct(),
                 MenuId = items.First().MenuId,
+                Content = items.First().Content
             };
             return joined;
         }
