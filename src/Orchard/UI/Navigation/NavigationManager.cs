@@ -7,24 +7,28 @@ using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.UI.Admin;
 
 namespace Orchard.UI.Navigation {
     public class NavigationManager : INavigationManager {
         private readonly IEnumerable<INavigationProvider> _navigationProviders;
         private readonly IEnumerable<IMenuProvider> _menuProviders;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IEnumerable<INavigationFilter> _navigationFilters;
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
 
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders, 
             IEnumerable<IMenuProvider> menuProviders,
-            IAuthorizationService authorizationService, 
+            IAuthorizationService authorizationService,
+            IEnumerable<INavigationFilter> navigationFilters,
             UrlHelper urlHelper, 
             IOrchardServices orchardServices) {
             _navigationProviders = navigationProviders;
             _menuProviders = menuProviders;
             _authorizationService = authorizationService;
+            _navigationFilters = navigationFilters;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
@@ -39,7 +43,7 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            return FinishMenu(Reduce(Arrange(Merge(sources))).ToArray());
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources)))).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -53,6 +57,15 @@ namespace Orchard.UI.Navigation {
             }
 
             return menuItems;
+        }
+
+        private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
+            IEnumerable<MenuItem> result = menuItems;
+            foreach(var filter in _navigationFilters) {
+                result = filter.Filter(result);
+            }
+
+            return result;
         }
 
         public string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary) {
@@ -82,8 +95,8 @@ namespace Orchard.UI.Navigation {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
             foreach (var item in items) {
                 if (hasDebugShowAllMenuItems ||
-                    !item.Permissions.Any() ||
-                    item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) {
+                    AdminFilter.IsApplied(_urlHelper.RequestContext) ||
+                    item.Permissions.Concat(new [] { Permission.Named("ViewContent") }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content))) {
                     yield return new MenuItem {
                         Items = Reduce(item.Items),
                         Permissions = item.Permissions,
@@ -96,7 +109,6 @@ namespace Orchard.UI.Navigation {
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href,
-                        MenuId = item.MenuId,
                         Content = item.Content
                     };
                 }
@@ -225,9 +237,9 @@ namespace Orchard.UI.Navigation {
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
                 Permissions = items.SelectMany(x => x.Permissions).Distinct(),
-                MenuId = items.First().MenuId,
                 Content = items.First().Content
             };
+
             return joined;
         }
 

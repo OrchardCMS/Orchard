@@ -41,6 +41,11 @@ namespace Orchard.UI.Navigation {
             return Add(caption, null, x => { }, classes);
         }
 
+        public NavigationBuilder Remove(MenuItem item) {
+            Contained.Remove(item);
+            return this;
+        }
+
         public NavigationBuilder AddImageSet(string imageSet) {
             _imageSets.Add(imageSet);
             return this;
@@ -49,6 +54,7 @@ namespace Orchard.UI.Navigation {
         public IEnumerable<MenuItem> Build() {
             return (Contained ?? Enumerable.Empty<MenuItem>()).ToList();
         }
+
         public IEnumerable<string> BuildImageSets() {
             return _imageSets.Distinct();
         }

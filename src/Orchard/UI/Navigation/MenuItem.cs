@@ -34,7 +34,5 @@ namespace Orchard.UI.Navigation {
                 _classes = value;
             }
         }
-
-        public int MenuId { get; set; }
    }
 }
