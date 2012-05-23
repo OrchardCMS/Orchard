@@ -35,7 +35,7 @@
 
 .navigation-menu li div:hover  {
 	background: #eee url(images/move.gif) no-repeat 9px 7px;
-	border: 1px solid #487328;
+	border: 1px solid #999;
 }
 
 .navigation-menu-item h2 
@@ -105,8 +105,8 @@
 }
 
 .menu-items-zone {
-    background:#F3F4F5;
-    border:1px solid #E4E5E6;
+    /*background: #F3F4F5;*/
+    /*border:1px solid #E4E5E6;*/
     padding:0px;
 }
 
@@ -117,8 +117,8 @@
 
 .menu-items-zone li {
     background:#FFF;
-    border:1px solid #EAEAEA;
-    margin: 2px;
+    border:1px solid #CCC;
+    margin-bottom: 5px;
     padding: 5px;
     padding-right:65px;
     display: block;

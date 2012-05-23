@@ -27,7 +27,7 @@
         helper: 'clone',
         items: 'li',
         maxLevels: 6,
-        opacity: .6,
+        opacity: 1,
         placeholder: 'navigation-placeholder',
         revert: 50,
         tabSize: 30,
