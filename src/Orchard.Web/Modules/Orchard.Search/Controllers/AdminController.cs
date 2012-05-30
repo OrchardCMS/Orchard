@@ -3,28 +3,24 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc;
 using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Settings;
 using Orchard.Themes;
-using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.Search.Controllers {
-    [Admin]
-    [OrchardFeature("Orchard.Search.ContentPicker")]
-    public class ContentPickerController : Controller {
+    [OrchardFeature("Orchard.Search.Content")]
+    public class AdminController : Controller {
         private readonly ISearchService _searchService;
         private readonly ISiteService _siteService;
 
-        public ContentPickerController(
+        public AdminController(
             IOrchardServices orchardServices,
             ISearchService searchService,
             ISiteService siteService) {
@@ -39,7 +35,6 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        [Themed(false)]
         public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
@@ -70,17 +65,13 @@ namespace Orchard.Search.Controllers {
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
 
-
-            foreach(IShape item in list.Items) {
-                item.Metadata.Type = "ContentPicker";
-            }
-
-            dynamic tab = Services.New.SearchContentTab()
+            dynamic viewModel = Services.New.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .SearchText(searchText);
 
-            return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)viewModel);
         }
     }
 }

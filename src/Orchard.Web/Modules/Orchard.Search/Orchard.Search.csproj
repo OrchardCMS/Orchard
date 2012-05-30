@@ -48,6 +48,8 @@
   <ItemGroup>
     <Compile Include="ContentPickerNavigationProvider.cs" />
     <Compile Include="Controllers\ContentPickerController.cs" />
+    <Compile Include="ContentAdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\SearchFormPartDriver.cs" />
     <Compile Include="Models\SearchFormPart.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -97,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\SearchContentTab.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

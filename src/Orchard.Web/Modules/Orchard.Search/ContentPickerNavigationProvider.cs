@@ -1,7 +1,9 @@
-﻿using Orchard.Localization;
+﻿using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Search {
+    [OrchardFeature("Orchard.Search.ContentPicker")]
     public class ContentPickerNavigationProvider : INavigationProvider {
         public ContentPickerNavigationProvider() {
             T = NullLocalizer.Instance;
