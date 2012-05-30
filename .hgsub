@@ -10,3 +10,4 @@ src/orchard.web/Modules/Orchard.Projections = https://hg.codeplex.com/orchardpro
 src/Orchard.Web/Modules/Orchard.AntiSpam = https://hg.codeplex.com/orchardantispam
 src/Orchard.Web/Modules/Orchard.CustomForms = https://hg.codeplex.com/orchardcustomforms
 src/Orchard.Web/Modules/Orchard.ViewPermissions = https://hg.codeplex.com/orchardpermissions
+src/Orchard.Web/Modules/Orchard.ContentPicker = https://hg.codeplex.com/orchardcontentpicker

@@ -72,6 +72,21 @@ namespace Orchard.Core.Navigation {
             
             ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
 
+            SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("ContentMenuItemRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .WithPart("ContentMenuItemPart")
+                .DisplayedAs("Content Menu Item")
+                .WithSetting("Description", "Adds a Content Item to the menu.")
+                .WithSetting("Stereotype", "MenuItem")
+                );
+
             return 3;
         }
 

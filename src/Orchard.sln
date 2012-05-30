@@ -148,6 +148,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.CustomForms", "Orch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ViewPermissions", "Orchard.Web\Modules\Orchard.ViewPermissions\Orchard.ViewPermissions.csproj", "{E826F796-8CE3-4B5B-8423-5AA5F81D2FC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentPicker", "Orchard.Web\Modules\Orchard.ContentPicker\Orchard.ContentPicker.csproj", "{F301EF7D-F19C-4D83-AA94-CB64F29C037D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -157,6 +159,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
@@ -875,5 +881,6 @@ Global
 		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{AC4402A1-61C4-4229-B840-FB1777DAE10C} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,25 @@
+﻿@model Orchard.Core.Navigation.ViewModels.ContentMenuItemEditViewModel
+@{
+    Script.Require("ContentPicker").AtFoot();
+}
+<fieldset>
+<label for="@Html.FieldIdFor(m => m.ContentItemId)">@T("Content Item")</label>
+    @Html.TextBoxFor(m => m.ContentItemId, new { @class = "small text",  @readonly = "readonly" }) <span id="btn-@Html.FieldIdFor(m => m.ContentItemId)" class="button">@T("Browse")</span>
+    <span class="hint">@T("Select the Content Item to display in the menu.")</span>
+</fieldset>
+
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').click(function () {
+        jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').trigger("orchard-admin-contentpicker-open", {
+            callback: function (data) {
+
+                var id = data.id;
+                jQuery('#@Html.FieldIdFor(m => m.ContentItemId)').val(id);
+            }
+        });
+    });
+//]]>
+</script>
+}
