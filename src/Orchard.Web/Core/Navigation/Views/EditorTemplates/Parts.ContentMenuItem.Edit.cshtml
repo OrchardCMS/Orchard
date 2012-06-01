@@ -19,17 +19,14 @@
         jQuery('#btn-@Html.FieldIdFor(m => m.ContentItemId)').trigger("orchard-admin-contentpicker-open", {
             callback: function(data) {
 
-                var id = data.id;
-                jQuery('#@Html.FieldIdFor(m => m.ContentItemId)').val(id);
+                jQuery('#@Html.FieldIdFor(m => m.ContentItemId)').val(data.id);
 
-                var title = data.title;
-                if (title && title.length > 0) {
-                    jQuery('#title-@Html.FieldIdFor(m => m.ContentItemId)').text(title);
+                jQuery('#title-@Html.FieldIdFor(m => m.ContentItemId)').text(data.displayText);
 
-                    var menuText = jQuery('#MenuText');
-                    if (menuText.length > 0) {
-                        menuText.val(title);
-                    }
+                // define the menu text if it's empty
+                var menuText = jQuery('#MenuText');
+                if (menuText.val().length == 0) {
+                    menuText.val(data.displayText);
                 }
             }
         });
