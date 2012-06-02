@@ -16,6 +16,10 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper) {
+            var currentUser = _workContextAccessor.GetContext().CurrentUser;
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
+                return null;
+
             return ContentShape("Parts_MenuItem_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.MenuItem.Edit", Model: part, Prefix: Prefix));
         }

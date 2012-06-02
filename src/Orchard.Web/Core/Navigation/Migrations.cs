@@ -7,6 +7,7 @@ namespace Orchard.Core.Navigation {
 
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
             
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
@@ -138,7 +139,7 @@ namespace Orchard.Core.Navigation {
                 ;
 
             ContentDefinitionManager.AlterTypeDefinition("HtmlMenuItem", cfg => cfg
-                 .WithPart("MenuPart")
+                .WithPart("MenuPart")
                 .WithPart("BodyPart")
                 .WithPart("CommonPart")
                 .DisplayedAs("Html Menu Item")
@@ -146,6 +147,8 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("BodyPartSettings.FlavorDefault", "html")
                 .WithSetting("Stereotype", "MenuItem")
                );
+
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
 
             return 3;
         }
