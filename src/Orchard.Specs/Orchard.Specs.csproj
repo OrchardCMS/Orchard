@@ -127,6 +127,7 @@
     <Compile Include="Bindings\BindingBase.cs" />
     <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\ContentRights.cs" />
+    <Compile Include="Bindings\Settings.cs" />
     <Compile Include="Bindings\HtmlNodeExtensions.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Bindings\UsersPermissionsAndRoles.cs" />

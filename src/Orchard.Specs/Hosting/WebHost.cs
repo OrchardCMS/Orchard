@@ -214,6 +214,33 @@ namespace Orchard.Specs.Hosting {
                 sourceModule.Combine("Views").DeepCopy(targetModule.Combine("Views"));
         }
 
+        public void CopyFile(string source, string destination) {
+
+            StackTrace st = new StackTrace(true);
+            Path origin = null;
+            foreach(var sf in st.GetFrames()) {
+                var sourceFile = sf.GetFileName();
+                if(String.IsNullOrEmpty(sourceFile)) {
+                    continue;
+                }
+
+                var testOrigin = Path.Get(sourceFile).Parent.Combine(source);
+                if(testOrigin.Exists) {
+                    origin = testOrigin;
+                    break;
+                }
+            }
+            
+            if(origin == null) {
+                throw new FileNotFoundException("File not found: " + source);
+            }
+            
+            var target = _tempSite.Combine(destination);
+
+            Directory.CreateDirectory(target.DirectoryName);
+            File.Copy(origin, target);
+        }
+
         private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
             bool isValidExtension = IsAssemblyFile(path);
             if (!isValidExtension)

@@ -176,6 +176,10 @@ namespace Orchard.Specs.Bindings {
             WhenIGoTo(urlPath);
         }
 
+        [Given(@"I have the file ""(.*)"" in ""(.*)""")]
+        public void GivenIHaveFile(string sourceFileName, string destination) {
+            Host.CopyFile(sourceFileName, destination);
+        }
 
         [When(@"I go to ""(.*)"" on host (.*)")]
         public void WhenIGoToPathOnHost(string urlPath, string host) {

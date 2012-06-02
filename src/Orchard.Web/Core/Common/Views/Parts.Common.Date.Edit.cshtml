@@ -1,11 +1,7 @@
 ﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
 @{
 	var DateEditor = Model;
-    Script.Require("jQueryUtils_TimePicker");
-    Script.Require("jQueryUI_DatePicker");
     Style.Require("Common_DatePicker");
-    Style.Require("jQueryUtils_TimePicker");
-    Style.Require("jQueryUI_DatePicker"); 
 }
 <fieldset class="createdutc-datetime">
     @Html.LabelFor(m => DateEditor.CreatedDate, T("Created On"))
@@ -18,6 +14,7 @@
 
     @* generates the localization script *@
     @Display(New.DatePickerLocalization())
+    @Display(New.TimePickerLocalization())
 
 <script type="text/javascript">
 //<![CDATA[
@@ -38,7 +35,7 @@
             }
         });
         $('#@Html.FieldIdFor(m => DateEditor.CreatedDate)').datepicker({ showAnim: "" });
-        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepickr({ showAnim: "" });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepicker({ stepMinute: 5});
     })
 //]]>
 </script>

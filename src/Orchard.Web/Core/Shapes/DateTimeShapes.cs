@@ -6,12 +6,14 @@ using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Services;
+using System.Globalization;
 
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
         private readonly IDateTimeLocalization _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly Lazy<CultureInfo> _cultureInfo;
 
         public DateTimeShapes(
             IClock clock,
@@ -22,6 +24,8 @@ namespace Orchard.Core.Shapes {
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
+
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
         }
 
         public Localizer T { get; set; }
@@ -52,7 +56,7 @@ namespace Orchard.Core.Shapes {
                 return DateTime(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat);
             }
 
-            return new MvcHtmlString(ConvertToDisplayTime(DateTimeUtc).ToString(CustomFormat.Text));
+            return new MvcHtmlString(ConvertToDisplayTime(DateTimeUtc).ToString(CustomFormat.Text, _cultureInfo.Value));
         }
 
         /// <summary>

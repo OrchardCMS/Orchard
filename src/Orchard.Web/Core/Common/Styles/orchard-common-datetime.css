@@ -12,3 +12,9 @@ fieldset.createdutc-datetime input {
     text-align:center;
     color:#666;
 }
+input#DateEditor_CreatedDate {
+    width:10em;
+}
+input#DateEditor_CreatedTime {
+    width:7em;
+}

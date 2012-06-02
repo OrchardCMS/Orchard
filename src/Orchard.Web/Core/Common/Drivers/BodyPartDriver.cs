@@ -120,10 +120,16 @@ namespace Orchard.Core.Common.Drivers {
             private void Add(string segment) {
                 if (string.IsNullOrEmpty(segment))
                     return;
-                if (string.IsNullOrEmpty(_path))
+
+                if (string.IsNullOrEmpty(_path)) {
                     _path = segment;
-                else
+                }
+                else if (segment.StartsWith("/")) {
+                    _path = _path + segment;
+                }
+                else {
                     _path = _path + "/" + segment;
+                }
             }
         }
     }
