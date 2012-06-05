@@ -36,5 +36,19 @@ namespace Orchard.ContentTypes.Settings {
 
             yield return DefinitionTemplate(model);
         }
+
+        public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition)
+        {
+            var model = definition.Settings.GetModel<ContentPartSettings>();
+            yield return DefinitionTemplate(model);
+        }
+
+        public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel)
+        {
+            var model = new ContentPartSettings();
+            updateModel.TryUpdateModel(model, "ContentPartSettings", null, null);
+            builder.WithSetting("ContentPartSettings.Attachable", model.Attachable.ToString());
+            yield return DefinitionTemplate(model);
+        }
     }
 }

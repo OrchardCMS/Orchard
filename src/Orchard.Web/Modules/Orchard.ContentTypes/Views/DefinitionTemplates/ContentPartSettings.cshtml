@@ -1,0 +1,7 @@
+﻿@model Orchard.Core.Contents.Settings.ContentPartSettings
+
+<fieldset>
+    @Html.EditorFor(m => m.Attachable)
+    <label for="@Html.FieldIdFor(m => m.Attachable)" class="forcheckbox">@T("Attachable")</label>
+    @Html.ValidationMessageFor(m => m.Attachable)
+</fieldset>
