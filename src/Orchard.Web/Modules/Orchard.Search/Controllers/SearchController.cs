@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
-using Orchard.Search.Models;
+using Orchard.Settings;
+using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Collections;
-using Orchard.Themes;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Search.Controllers {
-    using Orchard.Settings;
 
     [ValidateInput(false), Themed]
     public class SearchController : Controller {
@@ -62,9 +61,10 @@ namespace Orchard.Search.Controllers {
             }
 
             var list = Shape.List();
-            var foundIds = searchHits.Select(searchHit => searchHit.ContentItemId);
+            var foundIds = searchHits.Select(searchHit => searchHit.ContentItemId).ToList();
+
             // ignore search results which content item has been removed or unpublished
-            var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints());
+            var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
             foreach (var contentItem in foundItems) {
                 list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
             }
