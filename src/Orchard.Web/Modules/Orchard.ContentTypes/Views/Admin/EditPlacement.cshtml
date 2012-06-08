@@ -17,6 +17,10 @@
         @for (int i = 0; i < Model.AllPlacements.Count; i++ ) {
 
             var placement = Model.AllPlacements[i].PlacementSettings;
+
+            if(placement.Zone != "Content") {
+                continue;
+            }
             
             <li data-shape-type="@placement.ShapeType" data-shape-differentiator="@placement.Differentiator" data-shape-zone="Content" data-shape-position="@placement.Position">
                 <div class="shape-type"><h3>@placement.ShapeType @placement.Differentiator</h3></div>
@@ -45,6 +49,7 @@
         var startPos;
 
         $('#placement').sortable({
+            placeholder: "placement-placeholder",
             start: function (event, ui) {
                 var self = $(ui.item);
                 startPos = self.prevAll().size();
@@ -56,6 +61,11 @@
                 var begin = Math.min(startPos, stopPos);
                 var end = Math.max(startPos, stopPos);
 
+                // do nothing if it was put in place
+                if (begin == end) {
+                    return;
+                }
+                
                 // get siblings ( .siblings() doesn't include itself)
                 var siblings = self.parent().children();
                 for (var i = begin; i < end; i++) {
@@ -81,8 +91,11 @@
                 }
 
                 $('#save-message').show();
+
             }
         });
+
+        $('.shape-editor *').attr('disabled', 'disabled');
 
         $("#placement").disableSelection();
 

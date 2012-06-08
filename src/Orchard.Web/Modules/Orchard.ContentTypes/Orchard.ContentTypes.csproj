@@ -107,7 +107,6 @@
     <Content Include="Views\EditorTemplates\Fields.cshtml" />
     <Content Include="Views\EditorTemplates\TypePart.cshtml" />
     <Content Include="Views\EditorTemplates\TypeParts.cshtml" />
-    <Content Include="Views\EditorTemplates\Settings.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

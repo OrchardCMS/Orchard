@@ -5,12 +5,13 @@
     Layout.Title = T("Edit Content Type - {0}", Model.DisplayName).ToString();
 }
 
+<div class="manage">
+    @Html.ActionLink(T("Edit Placement").Text, "EditPlacement", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+</div>
+
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions
     <div itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
-        <div class="manage add-to-type">
-            @Html.ActionLink(T("Edit Placement").Text, "EditPlacement", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
-        </div>
         @Html.ValidationSummary()
         <fieldset>
             <label for="DisplayName">@T("Display Name")</label>
@@ -34,8 +35,6 @@
                 @Html.ActionLink(T("Add Parts").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
             </div>
             @Html.EditorFor(m => m.Parts, "TypeParts", "")
-            <h2>@T("Placement")</h2>
-            @Html.EditorFor(m => m.Settings, "Placement", "")
         </div>
         <fieldset class="action">
             <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>

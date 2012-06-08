@@ -130,6 +130,7 @@ fieldset.action {
 
     #placement li .shape-editor {
         padding: 10px;
+        background: white;
     }
 
 #save-message {
@@ -137,12 +138,14 @@ fieldset.action {
     margin-bottom: 10px;
 }
 
-.overlay{
-    background:red repeat top left;
-    position:fixed;
-    top:0px;
-    bottom:0px;
-    left:0px;
-    right:0px;
-    z-index:100;
+#placement fieldset 
+{
+    float: inherit;  /* prevent bad layout if float is defined to left in specific parts, e.g. datetimepicker */
+    height: auto;
+}
+
+.placement-placeholder {
+    background: #FDF5BC;
+    border: 1px solid #FDF5BC;
+    height: 100px;
 }
