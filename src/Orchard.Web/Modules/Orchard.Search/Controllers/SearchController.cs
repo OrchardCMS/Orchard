@@ -46,7 +46,7 @@ namespace Orchard.Search.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters, string q = "") {
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
@@ -62,15 +62,13 @@ namespace Orchard.Search.Controllers {
             }
 
             var list = Shape.List();
-            foreach (var contentItem in searchHits.Select(searchHit => _contentManager.Get(searchHit.ContentItemId))) {
-                // ignore search results which content item has been removed or unpublished
-                if(contentItem == null){
-                    searchHits.TotalItemCount--;
-                    continue;
-                }
-
+            var foundIds = searchHits.Select(searchHit => searchHit.ContentItemId);
+            // ignore search results which content item has been removed or unpublished
+            var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints());
+            foreach (var contentItem in foundItems) {
                 list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
             }
+            searchHits.TotalItemCount -= foundIds.Count() - foundItems.Count();
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
 
