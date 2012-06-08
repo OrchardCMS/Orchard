@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
@@ -87,6 +88,36 @@ namespace Orchard.Roles.Drivers {
 
         private static UserRolesViewModel BuildEditorViewModel(UserRolesPart userRolesPart) {
             return new UserRolesViewModel { User = userRolesPart.As<IUser>(), UserRoles = userRolesPart };
+        }
+
+        protected override void Importing(UserRolesPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var roles = context.Attribute(part.PartDefinition.Name, "Roles");
+            if(string.IsNullOrEmpty(roles)) {
+                return;
+            }
+
+            var userRoles = roles.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+
+            // create new roles
+            foreach (var role in userRoles) {
+                var roleRecord = _roleService.GetRoleByName(role);
+
+                // create the role if it doesn't already exist
+                if (roleRecord == null) {
+                    _roleService.CreateRole(role);
+                }
+            }
+
+            var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == part.ContentItem.Id).ToList();
+            var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role).ToList();
+            var targetRoleRecords = userRoles.Select(x => _roleService.GetRoleByName(x)).ToList();
+            foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
+                _userRolesRepository.Create(new UserRolesPartRecord { UserId = part.ContentItem.Id, Role = addingRole });
+            }
+        }
+
+        protected override void Exporting(UserRolesPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Roles", string.Join(",", part.Roles));
         }
     }
 }
