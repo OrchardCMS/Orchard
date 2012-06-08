@@ -35,12 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -49,9 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Extensions\MetadataExtensions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Services\ContentTypePlacementStrategy.cs" />
+    <Compile Include="Services\IPlacementService.cs" />
+    <Compile Include="Services\PlacementService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
+    <Compile Include="Settings\PlacementSettings.cs" />
     <Compile Include="ViewModels\AddPartsViewModel.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Permissions.cs" />
@@ -65,6 +72,7 @@
     <Compile Include="ViewModels\EditFieldViewModel.cs" />
     <Compile Include="ViewModels\EditPartFieldViewModel.cs" />
     <Compile Include="ViewModels\EditPartViewModel.cs" />
+    <Compile Include="ViewModels\EditPlacementViewModel.cs" />
     <Compile Include="ViewModels\EditTypePartViewModel.cs" />
     <Compile Include="ViewModels\ListContentPartsViewModel.cs" />
     <Compile Include="ViewModels\RemoveFieldViewModel.cs" />
@@ -76,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\Images\move.gif" />
     <Content Include="Styles\orchard-contenttypes-admin.css" />
     <Content Include="Views\Admin\AddFieldTo.cshtml" />
     <Content Include="Views\Admin\AddPartsTo.cshtml" />
@@ -115,6 +124,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
@@ -124,6 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\ContentTypeSettingsViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\EditPlacement.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

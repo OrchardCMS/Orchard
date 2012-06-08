@@ -89,5 +89,21 @@ namespace Orchard.ContentManagement.Drivers {
             _groupId=groupId;
             return this;
         }
+
+        public string GetDifferentiator() {
+            return _differentiator;
+        }
+
+        public string GetGroup() {
+            return _groupId;
+        }
+
+        public string GetLocation() {
+            return _defaultLocation;
+        }
+
+        public string GetShapeType() {
+            return _shapeType;
+        }
     }
 }

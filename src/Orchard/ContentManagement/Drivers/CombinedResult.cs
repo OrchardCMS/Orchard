@@ -47,5 +47,9 @@ namespace Orchard.ContentManagement.Drivers {
                 result.Apply(context);
             }
         }
+
+        public IEnumerable<DriverResult> GetResults() {
+            return _results;
+        } 
     }
 }

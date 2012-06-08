@@ -7,3 +7,4 @@ OrchardVersion: 1.4.1
 Description: ContentTypes modules enables the creation and alteration of content types not based on code.
 Dependencies: Contents
 Category: Content
+Priority: -10

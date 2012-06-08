@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.Services;
+using Orchard.ContentTypes.Settings;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.UI;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
@@ -16,17 +22,30 @@ namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IPlacementService _placementService;
+        private readonly Lazy<IEnumerable<IShellSettingsManagerEventHandler>> _settingsManagerEventHandlers;
+        private readonly ShellSettings _settings;
 
-        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService, IContentDefinitionManager contentDefinitionManager) {
+        public AdminController(
+            IOrchardServices orchardServices, 
+            IContentDefinitionService contentDefinitionService, 
+            IContentDefinitionManager contentDefinitionManager,
+            IPlacementService placementService,
+            Lazy<IEnumerable<IShellSettingsManagerEventHandler>> settingsManagerEventHandlers,
+            ShellSettings settings
+            ) {
             Services = orchardServices;
             _contentDefinitionService = contentDefinitionService;
             _contentDefinitionManager = contentDefinitionManager;
+            _placementService = placementService;
+            _settingsManagerEventHandlers = settingsManagerEventHandlers;
+            _settings = settings;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
-
+        public ILogger Logger { get; set; }
         public ActionResult Index() { return List(); }
 
         #region Types
@@ -114,6 +133,89 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
 
             return View(typeViewModel);
+        }
+
+        public ActionResult EditPlacement(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return HttpNotFound();
+
+            var content = Services.ContentManager.New(id);
+            var shape = Services.ContentManager.BuildEditor(content);
+
+            var placementModel = new EditPlacementViewModel {
+                PlacementSettings = contentTypeDefinition.GetPlacement(PlacementType.Editor),
+                AllPlacements = _placementService.GetEditorPlacement(id).OrderBy(x => x.PlacementSettings.Position, new FlatPositionComparer()).ThenBy(x => x.PlacementSettings.ShapeType).ToList(), 
+                ContentTypeDefinition = contentTypeDefinition,
+            };
+
+            return View(placementModel);
+        }
+
+        [HttpPost, ActionName("EditPlacement")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditPlacementPost(string id, EditPlacementViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return HttpNotFound();
+
+            var allPlacements = _placementService.GetEditorPlacement(id).ToList();
+            var result = new List<PlacementSettings>(contentTypeDefinition.GetPlacement(PlacementType.Editor));
+
+            contentTypeDefinition.ResetPlacement(PlacementType.Editor);
+
+            foreach(var driverPlacement in viewModel.AllPlacements) {
+                // if the placement has changed, persist it
+                if (!allPlacements.Any(x => x.PlacementSettings.Equals(driverPlacement.PlacementSettings))) {
+                    result = result.Where(x => !x.IsSameAs(driverPlacement.PlacementSettings)).ToList();
+                    result.Add(driverPlacement.PlacementSettings);
+                }
+            }
+
+            foreach(var placementSetting in result) {
+                contentTypeDefinition.Placement(PlacementType.Editor,
+                                placementSetting.ShapeType,
+                                placementSetting.Differentiator,
+                                placementSetting.Zone,
+                                placementSetting.Position);
+
+            }
+
+            // persist changes
+            _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
+
+            _settingsManagerEventHandlers.Value.Invoke(x => x.Saved(_settings), Logger);
+
+            return RedirectToAction("EditPlacement", new {id});
+        }
+
+        [HttpPost, ActionName("EditPlacement")]
+        [FormValueRequired("submit.Restore")]
+        public ActionResult EditPlacementRestorePost(string id, EditPlacementViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return HttpNotFound();
+
+            contentTypeDefinition.ResetPlacement(PlacementType.Editor);
+
+            // persist changes
+            _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
+
+            _settingsManagerEventHandlers.Value.Invoke(x => x.Saved(_settings), Logger);
+
+            return RedirectToAction("EditPlacement", new { id });
         }
 
         [HttpPost, ActionName("Edit")]
