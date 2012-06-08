@@ -19,9 +19,11 @@ namespace Orchard.UI.Zones {
     /// </summary>
     public class ZoneHoldingBehavior : ClayBehavior {
         private readonly Func<dynamic> _zoneFactory;
+        private readonly dynamic _layoutShape;
 
-        public ZoneHoldingBehavior(Func<dynamic> zoneFactory) {
+        public ZoneHoldingBehavior(Func<dynamic> zoneFactory, dynamic layoutShape) {
             _zoneFactory = zoneFactory;
+            _layoutShape = layoutShape;
         }
 
         public override object GetMember(Func<object> proceed, object self, string name) {
@@ -29,7 +31,7 @@ namespace Orchard.UI.Zones {
                 // provide a robot for zone manipulation on parent object
                 return ClayActivator.CreateInstance(new IClayBehavior[] {                
                     new InterfaceProxyBehavior(),
-                    new ZonesBehavior(_zoneFactory, self) 
+                    new ZonesBehavior(_zoneFactory, self, _layoutShape) 
                 });
             }
 
@@ -49,11 +51,13 @@ namespace Orchard.UI.Zones {
 
         public class ZonesBehavior : ClayBehavior {
             private readonly Func<dynamic> _zoneFactory;
-            private readonly object _parent;
+            private object _parent;
+            private readonly dynamic _layoutShape;
 
-            public ZonesBehavior(Func<dynamic> zoneFactory, object parent) {
+            public ZonesBehavior(Func<dynamic> zoneFactory, object parent, dynamic layoutShape) {
                 _zoneFactory = zoneFactory;
                 _parent = parent;
+                _layoutShape = layoutShape;
             }
 
             public override object GetMember(Func<object> proceed, object self, string name) {
@@ -69,7 +73,15 @@ namespace Orchard.UI.Zones {
             }
             public override object GetIndex(Func<object> proceed, object self, System.Collections.Generic.IEnumerable<object> keys) {
                 if (keys.Count() == 1) {
-                    return GetMember(proceed, null, System.Convert.ToString(keys.Single()));
+                    var key = System.Convert.ToString(keys.Single());
+
+                    // the zone name is in reference of Layout, e.g. /AsideSecond
+                    if(_layoutShape != null && key.StartsWith("/")) {
+                        key = key.Substring(1);
+                        _parent = _layoutShape;
+                    }
+
+                    return GetMember(proceed, null, key);
                 }
                 return proceed();
             }
