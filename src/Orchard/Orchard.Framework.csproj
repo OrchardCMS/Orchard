@@ -105,6 +105,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\lib\aspnetwebapi\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -113,6 +116,12 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -536,6 +545,11 @@
     <Compile Include="Wcf\OrchardInstanceContext.cs" />
     <Compile Include="Wcf\OrchardInstanceProvider.cs" />
     <Compile Include="Wcf\OrchardServiceHostFactory.cs" />
+    <Compile Include="WebApi\AutofacWebApiDependencyResolver.cs" />
+    <Compile Include="WebApi\AutofacWebApiDependencyScope.cs" />
+    <Compile Include="WebApi\DefaultOrchardWebApiHttpControllerSelector.cs" />
+    <Compile Include="WebApi\DefaultOrchardWebApiHttpHttpControllerActivator.cs" />
+    <Compile Include="WebApi\Extensions\RouteExtension.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />

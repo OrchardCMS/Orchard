@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
@@ -50,6 +51,7 @@ namespace Orchard.Environment.ShellBuilders {
             var modules = BuildBlueprint(features, IsModule, BuildModule, excludedTypes);
             var dependencies = BuildBlueprint(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor), excludedTypes);
             var controllers = BuildBlueprint(features, IsController, BuildController, excludedTypes);
+            var httpControllers = BuildBlueprint(features, IsHttpController, BuildController, excludedTypes);
             var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings), excludedTypes);
 
             var result = new ShellBlueprint {
@@ -132,6 +134,10 @@ namespace Orchard.Environment.ShellBuilders {
 
         private static bool IsController(Type type) {
             return typeof(IController).IsAssignableFrom(type);
+        }
+
+        private static bool IsHttpController(Type type) {
+            return typeof(IHttpController).IsAssignableFrom(type);
         }
 
         private static ControllerBlueprint BuildController(Type type, Feature feature) {

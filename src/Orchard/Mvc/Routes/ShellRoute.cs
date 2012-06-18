@@ -49,6 +49,7 @@ namespace Orchard.Mvc.Routes {
 
             // otherwise wrap handler and return it
             routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler);
+            routeData.Values["IWorkContextAccessor"] = _workContextAccessor; //NGM : Added for WebApi
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
             return routeData;
         }
