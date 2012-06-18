@@ -28,7 +28,15 @@ namespace Orchard.ContentManagement.FieldStorage {
         }
 
         public void Set<T>(string name, T value) {
-            Setter(name, typeof(T), Convert.ToString(value, CultureInfo.InvariantCulture));
+            
+            // using a special case for DateTime as it would lose milliseconds otherwise
+            if (typeof(T) == typeof(DateTime)) {
+                var text = ((DateTime)(object)value).ToString("o", CultureInfo.InvariantCulture);
+                Setter(name, typeof(T), text);
+            }
+            else {
+                Setter(name, typeof (T), Convert.ToString(value, CultureInfo.InvariantCulture));
+            }
         }
     }
 }
