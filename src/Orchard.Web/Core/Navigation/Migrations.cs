@@ -43,6 +43,8 @@ namespace Orchard.Core.Navigation {
                 .Column<int>("StartLevel")
                 .Column<int>("Levels")
                 .Column<bool>("Breadcrumb")
+                .Column<bool>("AddHomePage")
+                .Column<bool>("AddCurrentPage")
                 .Column<int>("Menu_id")
                 );
 
@@ -123,6 +125,8 @@ namespace Orchard.Core.Navigation {
                 .Column<int>("StartLevel")
                 .Column<int>("Levels")
                 .Column<bool>("Breadcrumb")
+                .Column<bool>("AddHomePage")
+                .Column<bool>("AddCurrentPage")
                 .Column<int>("Menu_id")
                 );
 

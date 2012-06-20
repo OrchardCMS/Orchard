@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
@@ -124,7 +125,29 @@ namespace Orchard.Core.Navigation.Drivers {
                         menuItems = topLevelItems;
                     }
                 }
-                
+
+                var result = new List<MenuItem>(menuItems);
+
+                // inject the home page
+                if(part.AddHomePage) {
+                    result.Insert(0, new MenuItem {
+                        Href = _navigationManager.GetUrl("~/", null),
+                        Text = T("Home")
+                    });
+                }
+
+                // inject the current page
+                if (!part.AddCurrentPage) {
+                    result.RemoveAt(result.Count - 1);
+                }
+
+                // prevent the home page to be added as the home page and the current page
+                if(result.Count == 2 && String.Equals(result[0].Href, result[1].Href, StringComparison.OrdinalIgnoreCase)) {
+                    result.RemoveAt(1);
+                }
+
+                menuItems = result;
+
                 menuShape.MenuName(menuName);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
@@ -139,6 +162,8 @@ namespace Orchard.Core.Navigation.Drivers {
                         StartLevel = part.StartLevel,
                         StopLevel = part.Levels,
                         Breadcrumb = part.Breadcrumb,
+                        AddCurrentPage = part.AddCurrentPage,
+                        AddHomePage = part.AddHomePage,
                         Menus = _menuService.GetMenus(),
                     };
 
@@ -153,6 +178,8 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.StartLevel = model.StartLevel;
                 part.Levels = model.StopLevel;
                 part.Breadcrumb = model.Breadcrumb;
+                part.AddHomePage = model.AddHomePage;
+                part.AddCurrentPage = model.AddCurrentPage;
                 part.Menu = _contentManager.Get(model.CurrentMenuId).Record;
             }
 

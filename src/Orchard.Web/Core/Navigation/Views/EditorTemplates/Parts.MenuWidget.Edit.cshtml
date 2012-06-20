@@ -29,3 +29,17 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Breadcrumb)">@T("Display as Breadcrumb")</label>
         <span class="hint">@T("Check to render the path to the current content item.")</span>
     </fieldset>
+    
+    <div data-controllerid="@Html.FieldIdFor(m => m.Breadcrumb)">
+        <fieldset>
+            @Html.EditorFor(m => m.AddHomePage) 
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddHomePage)">@T("Add the home page as the first element")</label>
+            <span class="hint">@T("Check to render the home page as the first element of the breadcrumb.")</span>
+        </fieldset>
+
+        <fieldset>
+            @Html.EditorFor(m => m.AddCurrentPage) 
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddCurrentPage)">@T("Add the current content item as the last element")</label>
+            <span class="hint">@T("Check to render the current content item as the last element.")</span>
+        </fieldset>
+    </div>
