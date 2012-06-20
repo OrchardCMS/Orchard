@@ -103,6 +103,7 @@ namespace Orchard.UI.Navigation {
                         Position = item.Position,
                         RouteValues = item.RouteValues,
                         LocalNav = item.LocalNav,
+                        Culture = item.Culture,
                         Text = item.Text,
                         IdHint = item.IdHint,
                         Classes = item.Classes,
@@ -222,22 +223,25 @@ namespace Orchard.UI.Navigation {
         }
 
         static MenuItem Join(IEnumerable<MenuItem> items) {
-            if (items.Count() < 2)
-                return items.Single();
+            var list = items.ToArray();
+
+            if (list.Count() < 2)
+                return list.Single();
 
             var joined = new MenuItem {
-                Text = items.First().Text,
-                IdHint = items.Select(x => x.IdHint).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
-                Classes = items.Select(x => x.Classes).FirstOrDefault(x => x != null && x.Count > 0),
-                Url = items.Select(x => x.Url).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
-                Href = items.Select(x => x.Href).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
-                LinkToFirstChild = items.First().LinkToFirstChild,
-                RouteValues = items.Select(x => x.RouteValues).FirstOrDefault(x => x != null),
-                LocalNav = items.Any(x => x.LocalNav),
-                Items = Merge(items.Select(x => x.Items)).ToArray(),
-                Position = SelectBestPositionValue(items.Select(x => x.Position)),
-                Permissions = items.SelectMany(x => x.Permissions).Distinct(),
-                Content = items.First().Content
+                Text = list.First().Text,
+                IdHint = list.Select(x => x.IdHint).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Classes = list.Select(x => x.Classes).FirstOrDefault(x => x != null && x.Count > 0),
+                Url = list.Select(x => x.Url).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Href = list.Select(x => x.Href).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                LinkToFirstChild = list.First().LinkToFirstChild,
+                RouteValues = list.Select(x => x.RouteValues).FirstOrDefault(x => x != null),
+                LocalNav = list.Any(x => x.LocalNav),
+                Culture = list.First().Culture,
+                Items = Merge(list.Select(x => x.Items)).ToArray(),
+                Position = SelectBestPositionValue(list.Select(x => x.Position)),
+                Permissions = list.SelectMany(x => x.Permissions).Distinct(),
+                Content = list.First().Content
             };
 
             return joined;

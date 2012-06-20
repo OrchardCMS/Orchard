@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
@@ -48,8 +49,24 @@ namespace Orchard.Core.Navigation.Drivers {
                 }
 
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
+                var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
 
                 IEnumerable<MenuItem> menuItems = _navigationManager.BuildMenu(menu);
+
+                var localized = new List<MenuItem>();
+                foreach(var menuItem in menuItems) {
+                    // if there is no associated content, it as culture neutral
+                    if(menuItem.Content == null) {
+                        localized.Add(menuItem);
+                    }
+
+                    // if the menu item is culture neutral or of the current culture
+                    if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
+                        localized.Add(menuItem);
+                    }
+                }
+
+                menuItems = localized;
 
                 var routeData = _workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData;
 

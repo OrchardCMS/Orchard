@@ -33,6 +33,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder Culture(string culture) {
+            _item.Culture = culture;
+            return this;
+        }
+
         public NavigationItemBuilder IdHint(string idHint) {
             _item.IdHint = idHint;
             return this;
