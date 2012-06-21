@@ -87,6 +87,28 @@ namespace Orchard.Core.Navigation.Drivers {
                         menuItems = menuItems.Take(part.Levels);
                     }
 
+                    var result = new List<MenuItem>(menuItems);
+
+                    // inject the home page
+                    if (part.AddHomePage) {
+                        result.Insert(0, new MenuItem {
+                            Href = _navigationManager.GetUrl("~/", null),
+                            Text = T("Home")
+                        });
+                    }
+
+                    // inject the current page
+                    if (!part.AddCurrentPage) {
+                        result.RemoveAt(result.Count - 1);
+                    }
+
+                    // prevent the home page to be added as the home page and the current page
+                    if (result.Count == 2 && String.Equals(result[0].Href, result[1].Href, StringComparison.OrdinalIgnoreCase)) {
+                        result.RemoveAt(1);
+                    }
+
+                    menuItems = result;
+
                     menuShape = shapeHelper.Breadcrumb();
                 }
                 else {
@@ -126,27 +148,7 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
                 }
 
-                var result = new List<MenuItem>(menuItems);
-
-                // inject the home page
-                if(part.AddHomePage) {
-                    result.Insert(0, new MenuItem {
-                        Href = _navigationManager.GetUrl("~/", null),
-                        Text = T("Home")
-                    });
-                }
-
-                // inject the current page
-                if (!part.AddCurrentPage) {
-                    result.RemoveAt(result.Count - 1);
-                }
-
-                // prevent the home page to be added as the home page and the current page
-                if(result.Count == 2 && String.Equals(result[0].Href, result[1].Href, StringComparison.OrdinalIgnoreCase)) {
-                    result.RemoveAt(1);
-                }
-
-                menuItems = result;
+                
 
                 menuShape.MenuName(menuName);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
