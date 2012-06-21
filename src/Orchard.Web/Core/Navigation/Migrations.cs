@@ -1,9 +1,15 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Navigation.Services;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Navigation {
     public class Migrations : DataMigrationImpl {
+        private readonly IMenuService _menuService;
+
+        public Migrations(IMenuService menuService ) {
+            _menuService = menuService;
+        }
 
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
@@ -153,6 +159,21 @@ namespace Orchard.Core.Navigation {
                );
 
             ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
+
+
+            // create a Main Menu
+            var mainMenu = _menuService.Create("Main Menu");
+
+            // assign the Main Menu to all current menu items
+            foreach (var menuItem in _menuService.Get()) {
+                // if they don't have a position, then they are not displayed
+                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition)) {
+                    continue;
+                }
+                menuItem.Menu = mainMenu.ContentItem.Record;
+            }
+
+            // at this point a widget should still be created to display the navigation
 
             return 3;
         }
