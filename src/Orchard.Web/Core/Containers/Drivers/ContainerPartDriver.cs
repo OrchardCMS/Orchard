@@ -10,13 +10,11 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
-using Orchard.DisplayManagement;
 using Orchard.Core.Containers.Extensions;
 using System.Web.Routing;
 using Orchard.Settings;
 using Orchard.Core.Feeds;
 using Orchard.UI.Navigation;
-using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainerPartDriver : ContentPartDriver<ContainerPart> {
