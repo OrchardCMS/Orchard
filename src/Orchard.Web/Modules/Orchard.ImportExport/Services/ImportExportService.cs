@@ -23,6 +23,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IRecipeParser _recipeParser;
         private readonly IRecipeManager _recipeManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
@@ -32,7 +33,8 @@ namespace Orchard.ImportExport.Services {
             IAppDataFolder appDataFolder,
             IRecipeParser recipeParser, 
             IRecipeManager recipeManager, 
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            IEnumerable<IExportEventHandler> exportEventHandlers) {
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionWriter = contentDefinitionWriter;
@@ -40,6 +42,7 @@ namespace Orchard.ImportExport.Services {
             _recipeParser = recipeParser;
             _recipeManager = recipeManager;
             _shellDescriptorManager = shellDescriptorManager;
+            _exportEventHandlers = exportEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -56,6 +59,14 @@ namespace Orchard.ImportExport.Services {
         public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
             var exportDocument = CreateExportRoot();
 
+            var context = new ExportContext {
+                Document = exportDocument,
+                ContentTypes = contentTypes,
+                ExportOptions = exportOptions
+            };
+
+            _exportEventHandlers.Invoke(x => x.Exporting(context), Logger);
+
             if (exportOptions.ExportMetadata) {
                 exportDocument.Element("Orchard").Add(ExportMetadata(contentTypes));
             }
@@ -67,6 +78,8 @@ namespace Orchard.ImportExport.Services {
             if (exportOptions.ExportData) {
                 exportDocument.Element("Orchard").Add(ExportData(contentTypes, exportOptions.VersionHistoryOptions));
             }
+
+            _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
 
             return WriteExportFile(exportDocument.ToString());
         }

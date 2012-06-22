@@ -53,6 +53,8 @@
     <Compile Include="Models\ExportOptions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICustomExportStep.cs" />
+    <Compile Include="Services\IExportEventHandler.cs" />
     <Compile Include="Services\IImportExportService.cs" />
     <Compile Include="Services\ImportExportService.cs" />
     <Compile Include="ViewModels\ExportViewModel.cs" />
