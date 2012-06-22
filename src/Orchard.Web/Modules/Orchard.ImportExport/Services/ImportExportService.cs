@@ -10,7 +10,6 @@ using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
@@ -50,7 +49,6 @@ namespace Orchard.ImportExport.Services {
 
         public void Import(string recipeText) {
             var recipe = _recipeParser.ParseRecipe(recipeText);
-            CheckRecipeSteps(recipe);
             _recipeManager.Execute(recipe);
             UpdateShell();
         }
@@ -178,19 +176,6 @@ namespace Orchard.ImportExport.Services {
             _appDataFolder.CreateFile(path, exportDocument);
 
             return _appDataFolder.MapPath(path);
-        }
-
-        private void CheckRecipeSteps(Recipe recipe) {
-            foreach (var step in recipe.RecipeSteps) {
-                switch (step.Name) {
-                    case "Metadata":
-                    case "Settings":
-                    case "Data":
-                        break;
-                    default:
-                        throw new InvalidOperationException(T("Step {0} is not a supported import step.", step.Name).Text);
-                }
-            }
         }
 
         private void UpdateShell() {
