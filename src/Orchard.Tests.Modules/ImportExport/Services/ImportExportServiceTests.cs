@@ -92,14 +92,14 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
         }
 
         [Test]
-        public void ImportFailsWhenRecipeContainsNonImportSteps() {
-            Assert.Throws(typeof(InvalidOperationException), () => _importExportService.Import(
-                                                                                                @"<Orchard>
-                                                                                                  <Recipe>
-                                                                                                    <Name>MyModuleInstaller</Name>
-                                                                                                  </Recipe>
-                                                                                                  <Module name=""MyModule"" />
-                                                                                                </Orchard>"));
+        public void ImportDoesntFailsWhenRecipeContainsNonImportSteps() {
+            Assert.DoesNotThrow(() => _importExportService.Import(
+                                                                    @"<Orchard>
+                                                                        <Recipe>
+                                                                        <Name>MyModuleInstaller</Name>
+                                                                        </Recipe>
+                                                                        <Module name=""MyModule"" />
+                                                                    </Orchard>"));
         }
     }
 
