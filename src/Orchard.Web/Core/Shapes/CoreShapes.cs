@@ -412,7 +412,7 @@ namespace Orchard.Core.Shapes {
             if (Quantity == null || Quantity < 0)
                 numberOfPagesToShow = 7;
     
-            var totalPageCount = Math.Ceiling(TotalItemCount / pageSize);
+            var totalPageCount = (int)Math.Ceiling(TotalItemCount / pageSize);
 
             var firstText = FirstText ?? T("<<");
             var previousText = PreviousText ?? T("<");
@@ -455,8 +455,8 @@ namespace Orchard.Core.Shapes {
                 routeData.Remove(key);
             }
 
-            var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
-            var lastPage = Math.Min(totalPageCount, Page + (numberOfPagesToShow / 2));
+            int firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
+            int lastPage = Math.Min(totalPageCount, Page + (int)(numberOfPagesToShow / 2));
 
             var pageKey = String.IsNullOrEmpty(PagerId) ? "page" : PagerId;
 
@@ -485,7 +485,7 @@ namespace Orchard.Core.Shapes {
             }
 
             // page numbers
-            if (numberOfPagesToShow > 0) {
+            if (numberOfPagesToShow > 0 && firstPage != lastPage) {
                 for (var p = firstPage; p <= lastPage; p++) {
                     if (p == currentPage) {
                         Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: routeData, Pager: Shape));
