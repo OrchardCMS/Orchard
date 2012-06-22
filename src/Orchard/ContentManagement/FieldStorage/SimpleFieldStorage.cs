@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Xml;
 
 namespace Orchard.ContentManagement.FieldStorage {
     public class SimpleFieldStorage : IFieldStorage {
@@ -22,6 +23,12 @@ namespace Orchard.ContentManagement.FieldStorage {
             // the T is nullable, convert using underlying type
             if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                 t = Nullable.GetUnderlyingType(t);
+            }
+
+            // using a special case for DateTime as it would lose milliseconds otherwise
+            if (typeof(T) == typeof(DateTime)) {
+                var result = DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                return (T) (object)result;
             }
 
             return (T)Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
