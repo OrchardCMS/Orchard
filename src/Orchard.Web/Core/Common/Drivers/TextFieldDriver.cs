@@ -39,10 +39,8 @@ namespace Orchard.Core.Common.Drivers {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
                     object fieldValue = field.Value;
 
-                    if (!string.IsNullOrWhiteSpace(settings.Flavor)) {
-                        fieldValue = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)));
-                    }
-
+                    fieldValue = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)));
+                    
                     return shapeHelper.Fields_Common_Text(Name: field.Name, Value: fieldValue);
                 });
         }
