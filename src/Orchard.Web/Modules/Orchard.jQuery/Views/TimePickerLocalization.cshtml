@@ -37,7 +37,7 @@
             timeFormat: '@timeFormat',
             amNames: ['@cultureInfo.DateTimeFormat.AMDesignator', 'AM', 'A'],
             pmNames: ['@cultureInfo.DateTimeFormat.PMDesignator', 'PM', 'P'],
-            ampm: @ampm
+            ampm: @(timeFormat.Contains("tt") ? "false" : "true" )
         };
 
         $.timepicker.setDefaults($.timepicker.regional['']);
