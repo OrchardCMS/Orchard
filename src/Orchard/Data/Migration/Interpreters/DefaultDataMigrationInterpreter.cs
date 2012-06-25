@@ -339,17 +339,20 @@ namespace Orchard.Data.Migration.Interpreters {
             var session = _sessionLocator.For(typeof(ContentItemRecord));
             var connection = session.Connection;
 
-            foreach (var sqlStatement in _sqlStatements) {
-                Logger.Debug(sqlStatement);
-                using (var command = connection.CreateCommand()) {
-                    command.CommandText = sqlStatement;
-                    command.ExecuteNonQuery();
+            try {
+                foreach (var sqlStatement in _sqlStatements) {
+                    Logger.Debug(sqlStatement);
+                    using (var command = connection.CreateCommand()) {
+                        command.CommandText = sqlStatement;
+                        command.ExecuteNonQuery();
+                    }
+
+                    _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
-
-                _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
             }
-
-            _sqlStatements.Clear();
+            finally {
+                _sqlStatements.Clear();    
+            }
         }
 
         private bool ExecuteCustomInterpreter<T>(T command) where T : ISchemaBuilderCommand {
