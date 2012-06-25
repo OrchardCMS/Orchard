@@ -18,6 +18,7 @@ namespace Orchard.ContentManagement.Handlers {
         public ContentItem ContentItem { get; private set; }
         public dynamic New { get; private set; }
         public string GroupId { get; private set; }
+        public ContentPart ContentPart { get; set; }
 
         public Func<string, string, string, PlacementInfo> FindPlacement { get; set; }
     }

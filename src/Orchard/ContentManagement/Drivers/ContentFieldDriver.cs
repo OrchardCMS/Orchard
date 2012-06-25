@@ -148,7 +148,7 @@ namespace Orchard.ContentManagement.Drivers {
 
             var shapeType = metadata.Type;
             var fieldName = differentiator ?? String.Empty;
-            string partName = shape.ContentPart.PartDefinition.Name;
+            string partName = ctx.ContentPart.PartDefinition.Name;
             string contentType = shape.ContentItem.ContentType;
 
             // whether the content type has been created dynamically or not
