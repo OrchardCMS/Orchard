@@ -15,12 +15,10 @@
 
     var cultureInfo = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
     
-    var dateTimeLocalization = WorkContext.Resolve<IDateTimeLocalization>();
-    
-    var timeFormat = dateTimeLocalization.ShortTimeFormat.Text
+    var timeFormat = cultureInfo.DateTimeFormat.ShortTimePattern
         .Replace("H", "h");
 
-    var ampm = dateTimeLocalization.ShortTimeFormat.Text.Contains("H") ? "false" : "true";
+    var ampm = cultureInfo.DateTimeFormat.ShortTimePattern.Contains("H") ? "false" : "true";
 }
 
 <script type="text/javascript">
@@ -37,7 +35,7 @@
             timeFormat: '@timeFormat',
             amNames: ['@cultureInfo.DateTimeFormat.AMDesignator', 'AM', 'A'],
             pmNames: ['@cultureInfo.DateTimeFormat.PMDesignator', 'PM', 'P'],
-            ampm: @(timeFormat.Contains("tt") ? "false" : "true" )
+            ampm: @ampm
         };
 
         $.timepicker.setDefaults($.timepicker.regional['']);
