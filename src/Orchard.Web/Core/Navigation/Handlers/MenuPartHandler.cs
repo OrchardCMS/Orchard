@@ -19,7 +19,7 @@ namespace Orchard.Core.Navigation.Handlers {
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var part = context.ContentItem.As<MenuPart>();
 
-            if (part != null) {
+            if (part != null && context.ContentItem.TypeDefinition.Settings["Stereotype"] == "MenuItem") {
                 context.Metadata.DisplayText = part.MenuText;
             }
         }
