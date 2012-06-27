@@ -8,7 +8,6 @@ From the base of the checkout, execute
 
 * the ./orchard.proj creates an orchard web site at ./build/Profiling
 * the ./src/Orchard.Profile/profiling-setup-commands.txt holds the additional orchard.exe steps used to initialize
-* the ./src/Orchard.Experimental/Commands/ProfilingCommands.cs holds an additional handful of steps to populate items
 
 The localhost:80 web server should be pointed to the ./build/Profiling folder at this point
 The "admin" password is "profiling-secret" without quotes
