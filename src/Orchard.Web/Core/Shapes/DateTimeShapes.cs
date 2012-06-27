@@ -34,18 +34,32 @@ namespace Orchard.Core.Shapes {
         public IHtmlString DateTimeRelative(dynamic Display, DateTime dateTimeUtc) {
             var time = _clock.UtcNow - dateTimeUtc;
 
-            if (time.TotalDays > 7)
+            if (time.TotalDays > 7 || time.TotalDays < -7)
                 return Display.DateTime(DateTimeUtc: dateTimeUtc, CustomFormat: T("'on' MMM d yyyy 'at' h:mm tt"));
+
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
+            if (time.TotalHours < -24)
+                return T.Plural("in 1 day", "in {0} days", -time.Days);
+
             if (time.TotalMinutes > 60)
                 return T.Plural("1 hour ago", "{0} hours ago", time.Hours);
+            if (time.TotalMinutes < -60)
+                return T.Plural("in 1 hour", "in {0} hours", -time.Hours);
+
             if (time.TotalSeconds > 60)
                 return T.Plural("1 minute ago", "{0} minutes ago", time.Minutes);
+            if (time.TotalSeconds < -60)
+                return T.Plural("in 1 minute", "in {0} minutes", -time.Minutes);
+
             if (time.TotalSeconds > 10)
                 return T.Plural("1 second ago", "{0} seconds ago", time.Seconds); //aware that the singular won't be used
+            if (time.TotalSeconds < -10)
+                return T.Plural("in 1 second", "in {0} seconds", -time.Seconds);
 
-            return T("a moment ago");
+            return time.TotalMilliseconds > 0
+                       ? T("a moment ago")
+                       : T("in a moment");
         }
 
         [Shape]
