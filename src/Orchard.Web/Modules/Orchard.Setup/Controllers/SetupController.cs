@@ -84,6 +84,10 @@ namespace Orchard.Setup.Controllers {
                 if(!Char.IsLetter(model.DatabaseTablePrefix[0])) {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
+
+                if(model.DatabaseTablePrefix.Any(x => !Char.IsLetterOrDigit(x))) {
+                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must contain letters or digits").Text);
+                }
             }
             if (model.Recipe == null) {
                 if (!(recipes.Select(r => r.Name).Contains(DefaultRecipe))) {
