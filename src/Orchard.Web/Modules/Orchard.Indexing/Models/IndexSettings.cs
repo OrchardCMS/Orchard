@@ -29,9 +29,10 @@ namespace Orchard.Indexing.Models
         }
 
         public static IndexSettings Parse(string content) {
-            var doc = XDocument.Parse(content);
 
             try {
+                var doc = XDocument.Parse(content);
+
                 return new IndexSettings {
                     Mode = (IndexingMode) Enum.Parse(typeof (IndexingMode), doc.Descendants(TagMode).First().Value),
                     LastIndexedId = Int32.Parse(doc.Descendants(TagLastIndexedId).First().Value),
