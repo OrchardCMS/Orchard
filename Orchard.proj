@@ -311,6 +311,7 @@
         $(MSBuildProjectDirectory)\**\*.suo;
         $(MSBuildProjectDirectory)\**\*.user;
         $(MSBuildProjectDirectory)\**\*.patch;
+        $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         $(LibFolder)\nunit\addins\**\*;
         " />
