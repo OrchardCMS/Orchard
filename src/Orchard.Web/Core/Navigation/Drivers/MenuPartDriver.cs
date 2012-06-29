@@ -88,7 +88,8 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
-            var menuIdentity = _orchardServices.ContentManager.GetItemMetadata(_orchardServices.ContentManager.Get(part.Menu.Id)).Identity;
+            var menu = _orchardServices.ContentManager.Get(part.Menu.Id);
+            var menuIdentity = _orchardServices.ContentManager.GetItemMetadata(menu).Identity;
             context.Element(part.PartDefinition.Name).SetAttributeValue("Menu", menuIdentity);
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);

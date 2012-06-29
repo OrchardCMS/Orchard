@@ -24,7 +24,7 @@
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Request.RawUrl }, new { @class = "button" })
+                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation" }) }, new { @class = "button" })
             </fieldset>
         }
     }
