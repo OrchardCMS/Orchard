@@ -298,25 +298,36 @@ namespace Orchard.Azure {
                 return "application/unknown";
             }
 
-            string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
-            if (File.Exists(applicationHost)) {
-                var xdoc = XDocument.Load(applicationHost);
-                var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
-                if(mimeMap != null) {
-                    var mimeType = mimeMap.Attribute("mimeType");
-                    if(mimeType != null) {
-                        return mimeType.Value;
+            try {
+                string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
+                string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/").FilePath;
+
+                // search for custom mime types in web.config and applicationhost.config
+                foreach (var configFile in new[] {webConfig, applicationHost}) {
+                    if (File.Exists(configFile)) {
+                        var xdoc = XDocument.Load(configFile);
+                        var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
+                        if (mimeMap != null) {
+                            var mimeType = mimeMap.Attribute("mimeType");
+                            if (mimeType != null) {
+                                return mimeType.Value;
+                            }
+                        }
                     }
                 }
-            }         
 
-            // search into the registry
-            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(extension.ToLower());
-            if (regKey != null) {
-                var contentType = regKey.GetValue("Content Type");
-                if (contentType != null) {
-                    return contentType.ToString();
+                // search into the registry
+                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(extension.ToLower());
+                if (regKey != null) {
+                    var contentType = regKey.GetValue("Content Type");
+                    if (contentType != null) {
+                        return contentType.ToString();
+                    }
                 }
+            }
+            catch {
+                // if an exception occured return application/unknown
+                return "application/unknown";
             }
 
             return "application/unknown";
