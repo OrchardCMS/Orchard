@@ -562,10 +562,18 @@ namespace Orchard.Core.Shapes {
         }
         
         [Shape]
-        public IHtmlString Pager_Link(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
-            Shape.Metadata.Type = "ActionLink";
-            return Display(Shape);
+        public IHtmlString Pager_Link(HtmlHelper Html, dynamic Shape, dynamic Display, object Value) {
+            var RouteValues = (object)Shape.RouteValues;
+            RouteValueDictionary rvd;
+            if (RouteValues == null) {
+                rvd = new RouteValueDictionary();
+            }
+            else {
+                rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+            }
+
+            string value = Html.Encode(Value is string ? (string)Value : Display(Value));
+            return @Html.ActionLink(value, (string)rvd["action"], (string)rvd["controller"], rvd, null);
         }
 
         [Shape]
