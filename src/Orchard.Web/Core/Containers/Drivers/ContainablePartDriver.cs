@@ -40,7 +40,7 @@ namespace Orchard.Core.Containers.Drivers {
                         if (oldContainerId != model.ContainerId) {
                             if (commonPart != null) {
                                 var containerItem = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
-                                commonPart.Record.Container = containerItem == null ? null : containerItem.Record;
+                                commonPart.Container = containerItem;
                             }
                         }
                         part.Weight = model.Weight;
