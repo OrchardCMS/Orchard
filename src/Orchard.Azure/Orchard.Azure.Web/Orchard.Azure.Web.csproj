@@ -231,11 +231,6 @@
       <Name>Orchard.Email</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Experimental\Orchard.Experimental.csproj">
-      <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
-      <Name>Orchard.Experimental</Name>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Fields\Orchard.Fields.csproj">
       <Project>{3787DDE5-E5C8-4841-BDA7-DCB325388064}</Project>
       <Name>Orchard.Fields</Name>
