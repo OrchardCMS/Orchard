@@ -229,8 +229,9 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             lock (_syncLock) {
-                // if a tenant has been altered, and is not disabled or invalid, reload it
-                if (settings.State.CurrentState != TenantState.State.Disabled && settings.State.CurrentState != TenantState.State.Invalid) {
+                
+                // if a tenant has been altered, and is not invalid, reload it
+                if (settings.State.CurrentState != TenantState.State.Invalid) {
                     _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
                 }
             }
@@ -240,8 +241,8 @@ namespace Orchard.Environment {
             // look for the associated shell context
             var shellContext = _shellContexts.FirstOrDefault(c => c.Settings.Name == settings.Name);
 
-            // is this is a new tenant ?
-            if (shellContext == null) {
+            // is this is a new tenant ? or is it a tenant waiting for setup ?
+            if (shellContext == null || settings.State.CurrentState == TenantState.State.Uninitialized) {
                 // create the Shell
                 var context = CreateShellContext(settings);
 
