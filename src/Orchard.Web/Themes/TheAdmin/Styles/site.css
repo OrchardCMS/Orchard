@@ -979,6 +979,25 @@ table.items td .add
 }
 
 
+/* Alternating styles */
+#main .contentItems > ul > li:nth-child(odd),
+ul.contentItems > li:nth-child(odd) ,
+table.items tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#main .contentItems > ul > li:nth-child(even),
+ul.contentItems > li:nth-child(even) ,
+table.items tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#main .contentItems > ul > li:hover,
+ul.contentItems > li:hover,
+table.items tr:hover {
+    background-color: #EDF9F5;
+}
+
 /* Pager
 ***************************************************************/
 
