@@ -8,5 +8,5 @@ c77d9dafaa25a31b302877282a169cb9a0dd06b8 src/Orchard.Web/Modules/Orchard.Rules
 419399ef2e37122a000e6cc8674148d3183d7032 src/Orchard.Web/Modules/Orchard.TaskLease
 0c67b238df7d3758c30ce43b6293d85b1cc18e9a src/Orchard.Web/Modules/Orchard.Tokens
 67dfa347443abf0b9cd266250bdeb97a6a12717e src/orchard.web/Modules/Orchard.Alias
-13f5f86332a11060323f93ca8d06b1414c7706ed src/orchard.web/Modules/Orchard.Projections
+f9253a8db99aebf8d8aa02b03829c8e512e10d6c src/orchard.web/Modules/Orchard.Projections
 aefccf4a2bc96af34bde4b9f86fd62d0523cf40f src/orchard.web/modules/Orchard.Fields
