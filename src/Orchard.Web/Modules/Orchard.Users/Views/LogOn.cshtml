@@ -17,17 +17,20 @@
 <fieldset class="login-form group">
     <legend>@T("Account Information")</legend>
     <ol>
-    <li>
-        <label for="username-email">@T("Username")</label>
-        @Html.TextBox("userNameOrEmail", "", new { id = "username-email", autofocus = "autofocus" })
-        @Html.ValidationMessage("userNameOrEmail")
-    </li>
-    <li>
-        <label for="password">@T("Password")</label>
-        @Html.Password("password")
-        @Html.ValidationMessage("password")
-    </li>
-    <button class="primaryAction" type="submit">@T("Sign In")</button>
+        <li>
+            <label for="username-email">@T("Username")</label>
+            @Html.TextBox("userNameOrEmail", "", new { id = "username-email", autofocus = "autofocus" })
+            @Html.ValidationMessage("userNameOrEmail")
+        </li>
+        <li>
+            <label for="password">@T("Password")</label>
+            @Html.Password("password")
+            @Html.ValidationMessage("password")
+        </li>
+        <li>
+            @Html.CheckBox("rememberMe", new { id = "remember-me" })<label class="forcheckbox" for="remember-me">@T("Remember Me")</label>
+        </li>
     </ol>
+    <button class="primaryAction" type="submit">@T("Sign In")</button>
 </fieldset>
 }
