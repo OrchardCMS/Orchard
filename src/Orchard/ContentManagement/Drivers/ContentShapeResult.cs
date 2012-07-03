@@ -38,6 +38,11 @@ namespace Orchard.ContentManagement.Drivers {
 
             var newShape = _shapeBuilder(context);
 
+            // ignore it if the driver returned a null shape
+            if(newShape == null) {
+                return;
+            }
+
             // add a ContentPart property to the final shape 
             if (ContentPart != null && newShape.ContentPart == null) {
                 newShape.ContentPart = ContentPart;

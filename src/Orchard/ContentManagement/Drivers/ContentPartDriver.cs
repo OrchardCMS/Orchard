@@ -113,7 +113,15 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx));
+            return new ContentShapeResult(shapeType, Prefix, ctx => {
+                var shape = shapeBuilder(ctx);
+                                                                 
+                if(shape == null) {
+                    return null;
+                }
+
+                return AddAlternates(shape, ctx);;
+            });
         }
 
         private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx) {
