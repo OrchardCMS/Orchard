@@ -14,6 +14,11 @@
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "textMedium" })
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
         </div>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
+            @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "textMedium" })
+            <span class="hint">@T("Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
+        </div>    
     </fieldset>
     <fieldset>
         <legend>@T("Database Setup")</legend>

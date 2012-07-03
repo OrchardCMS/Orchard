@@ -17,6 +17,7 @@ namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
     public class SetupController : Controller {
         private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
+        private readonly ShellSettings _shellSettings;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
         private const string DefaultRecipe = "Default";
@@ -24,8 +25,10 @@ namespace Orchard.Setup.Controllers {
         public SetupController(
             INotifier notifier, 
             ISetupService setupService, 
-            IViewsBackgroundCompilation viewsBackgroundCompilation) {
+            IViewsBackgroundCompilation viewsBackgroundCompilation,
+            ShellSettings shellSettings) {
             _viewsBackgroundCompilation = viewsBackgroundCompilation;
+            _shellSettings = shellSettings;
             _notifier = notifier;
             _setupService = setupService;
 
@@ -127,7 +130,7 @@ namespace Orchard.Setup.Controllers {
                 _viewsBackgroundCompilation.Stop();
 
                 // redirect to the welcome page.
-                return Redirect("~/");
+                return Redirect("~/" + _shellSettings.RequestUrlPrefix);
             } catch (Exception ex) {
                 Logger.Error(ex, "Setup failed");
                 _notifier.Error(T("Setup failed: {0}", ex.Message));

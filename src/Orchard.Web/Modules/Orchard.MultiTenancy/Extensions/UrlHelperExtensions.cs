@@ -15,11 +15,11 @@ namespace Orchard.MultiTenancy.Extensions {
                                        !string.IsNullOrEmpty(tenantShellSettings.RequestUrlHost)
                                            ? tenantShellSettings.RequestUrlHost + port : host);
 
-            if (!string.IsNullOrEmpty(tenantShellSettings.RequestUrlPrefix))
-                result += "/" + tenantShellSettings.RequestUrlPrefix;
-
             if (!string.IsNullOrEmpty(urlHelper.RequestContext.HttpContext.Request.ApplicationPath))
                 result += urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+
+            if (!string.IsNullOrEmpty(tenantShellSettings.RequestUrlPrefix))
+                result += "/" + tenantShellSettings.RequestUrlPrefix;
 
             return result;
         }
