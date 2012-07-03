@@ -112,7 +112,7 @@ namespace Orchard.Tests.Environment {
         public void PathAlsoCausesMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
-            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "~/foo" };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "foo" };
             table.Add(settings);
             table.Add(settingsA);
             var match = table.Match(new StubHttpContext("~/foo/bar", "a.example.com"));
@@ -123,10 +123,10 @@ namespace Orchard.Tests.Environment {
         public void PathAndHostMustBothMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com", };
-            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" };
-            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/bar" };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "foo" };
+            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "bar" };
             var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
-            var settingsD = new ShellSettings { Name = "Delta", RequestUrlPrefix = "~/Quux" };
+            var settingsD = new ShellSettings { Name = "Delta", RequestUrlPrefix = "Quux" };
             table.Add(settings);
             table.Add(settingsA);
             table.Add(settingsB);
@@ -152,7 +152,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void PathAloneWillMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "~/foo" };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "foo" };
             table.Add(settingsA);
 
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
