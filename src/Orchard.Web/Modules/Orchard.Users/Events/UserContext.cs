@@ -1,8 +1,8 @@
-﻿using Orchard.Users.Models;
+﻿using Orchard.Security;
 
 namespace Orchard.Users.Events {
     public class UserContext {
-        public UserPart User { get; set; }
+        public IUser User { get; set; }
         public bool Cancel { get; set; }
     }
 }
