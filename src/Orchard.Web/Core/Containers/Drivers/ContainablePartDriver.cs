@@ -7,6 +7,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainablePartDriver : ContentPartDriver<ContainablePart> {
@@ -65,5 +66,15 @@ namespace Orchard.Core.Containers.Drivers {
                 });
         }
 
+        protected override void Importing(ContainablePart part, ImportContentContext context) {
+            var weight = context.Attribute(part.PartDefinition.Name, "Weight");
+            if (weight != null) {
+                part.Weight = Convert.ToInt32(weight);
+            }
+        }
+
+        protected override void Exporting(ContainablePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight);
+        }
     }
 }
