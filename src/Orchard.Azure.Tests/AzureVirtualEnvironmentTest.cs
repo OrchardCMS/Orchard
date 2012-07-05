@@ -17,8 +17,7 @@ namespace Orchard.Azure.Tests {
             if ( count == 0 ) {
                 var start = new ProcessStartInfo {
                     Arguments = "/devstore:start",
-                    FileName =
-                        Path.Combine(ConfigurationManager.AppSettings["AzureSDK"], @"C:\Program Files\Windows Azure Emulator\emulator\csrun.exe")
+                    FileName = Path.Combine(ConfigurationManager.AppSettings["AzureSDK"], @"emulator\csrun.exe")
                 };
 
                 _dsService = new Process { StartInfo = start };
