@@ -6,7 +6,6 @@ using Orchard.ContentTypes.Settings;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.ContentTypes.Extensions;
 using Orchard.Environment;
-using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.ContentTypes.Services {
@@ -39,26 +38,32 @@ namespace Orchard.ContentTypes.Services {
                     var descriptor = shapeTable.Descriptors[shapeType];
                     // there are some custom placements, build a predicate
                     var placement = descriptor.Placement;
-
-                    foreach(var customPlacement in customPlacements) {
-                        // create local variables to prevent LINQ issues
-                        var placementShapeType = customPlacement.Placement.ShapeType;
-                        var type = customPlacement.ContentType;
-                        var differentiator = customPlacement.Placement.Differentiator;
-                        var location = customPlacement.Placement.Zone;
-                        if(!String.IsNullOrEmpty(customPlacement.Placement.Position)) {
-                            location = String.Concat(location, ":", customPlacement.Placement.Position);
-                        }
                         
-                        descriptor.Placement = ctx => {
-                            var nextPlacement = placement(ctx);
-                            if(ctx.DisplayType == null && ((ctx.Differentiator ?? "") == (differentiator ?? "")) && ctx.ContentType == type) {
-                                nextPlacement.Location = location;
-                            }
-
-                            return nextPlacement;
-                        };
+                    if(!customPlacements.Any()) {
+                        continue;
                     }
+
+                    descriptor.Placement = ctx => {
+                        if(ctx.DisplayType != null) {
+                            foreach(var customPlacement in customPlacements) {
+                                
+                                var type = customPlacement.ContentType;
+                                var differentiator = customPlacement.Placement.Differentiator;
+
+                                if (((ctx.Differentiator ?? String.Empty) == (differentiator ?? String.Empty)) && ctx.ContentType == type) {
+                                    
+                                    var location = customPlacement.Placement.Zone;
+                                    if (!String.IsNullOrEmpty(customPlacement.Placement.Position)) {
+                                        location = String.Concat(location, ":", customPlacement.Placement.Position);
+                                    }
+
+                                    return new PlacementInfo { Location = location };
+                                }
+                            }
+                        }
+
+                        return placement(ctx);
+                    };
                 }
             }
         }
