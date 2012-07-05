@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Commands;
 using Orchard.Localization.Services;
 
@@ -41,6 +42,23 @@ namespace Orchard.Localization.Commands {
             _orchardServices.WorkContext.CurrentSite.SiteCulture = cultureName;
 
             Context.Output.WriteLine(T("Site culture set to {0} successfully", cultureName));
+        }
+
+        [CommandHelp("cultures add <culture-name-1> ... <culture-name-n>\r\n\t" + "Add one or more cultures to the site")]
+        [CommandName("cultures add")]
+        public void AddCultures(params string[] cultureNames) {
+            IEnumerable<string> siteCultures = _cultureManager.ListCultures();
+
+            Context.Output.WriteLine(T("Adding site cultures {0}", string.Join(",", cultureNames)));
+
+            foreach (var cultureName in cultureNames.Distinct().Where(s => !siteCultures.Contains(s))) {
+                if (_cultureManager.IsValidCulture(cultureName)) {
+                    _cultureManager.AddCulture(cultureName);
+                }
+                else {
+                    Context.Output.WriteLine(T("Supplied culture name {0} is not valid.", cultureName));
+                }
+            }
         }
     }
 }
