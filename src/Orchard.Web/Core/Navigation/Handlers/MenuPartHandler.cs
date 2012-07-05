@@ -19,8 +19,11 @@ namespace Orchard.Core.Navigation.Handlers {
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var part = context.ContentItem.As<MenuPart>();
 
-            if (part != null && context.ContentItem.TypeDefinition.Settings["Stereotype"] == "MenuItem") {
-                context.Metadata.DisplayText = part.MenuText;
+            if (part != null) {
+                string stereotype;
+                if (context.ContentItem.TypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "MenuItem") {
+                    context.Metadata.DisplayText = part.MenuText;    
+                }
             }
         }
     }
