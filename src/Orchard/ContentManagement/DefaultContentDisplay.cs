@@ -93,7 +93,12 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+
+            var theme = workContext.CurrentTheme;
+            var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
+
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);

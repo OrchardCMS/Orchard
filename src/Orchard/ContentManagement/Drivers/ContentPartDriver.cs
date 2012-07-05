@@ -4,6 +4,7 @@ using System.Globalization;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
@@ -53,6 +54,26 @@ namespace Orchard.ContentManagement.Drivers {
             
             if (part == null) {
                 return null;
+            }
+
+            // checking if the editor needs to be updated (e.g. if it was not hidden)
+            var editor = Editor(part, context.New) as ContentShapeResult;
+
+            if(editor != null) {
+                ShapeDescriptor descriptor;
+                if(context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                    var placementContext = new ShapePlacementContext {
+                        ContentType = part.ContentItem.ContentType, 
+                        Differentiator = editor.GetDifferentiator(),
+                        DisplayType = null
+                    };
+
+                    var location = descriptor.Placement(placementContext).Location;
+
+                    if(String.IsNullOrEmpty(location) || location == "-") {
+                        return editor;
+                    }
+                }
             }
 
             DriverResult result = Editor(part, context.Updater, context.New);
