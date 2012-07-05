@@ -4,6 +4,8 @@
     Style.Require("BlogsArchives");
     Script.Require("BlogsArchives");
     IEnumerable<KeyValuePair<ArchiveData, int>> archives = Model.Archives;
+    var dateTimeLocalization = WorkContext.Resolve<Orchard.Core.Shapes.Localization.IDateTimeLocalization>();
+    var monthNames = dateTimeLocalization.MonthNames.Text.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 }
 <div class="archives">
     @if (archives.Count() > 20) {
@@ -18,21 +20,21 @@
             if (year == lastYear) {
         <li>
             <h4>@year</h4>
-             @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0:MMMM} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+             @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0} ({1})", monthNames[t.Key.ToDateTime().Month], t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
        </li>
             } 
             
             if (year != lastYear) {
         <li class="previous">
             <h4>@year <span>(@yearMonths.Sum(ym => ym.Value))</span></h4>
-            @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0:MMMM} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+            @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0} ({1})", monthNames[t.Key.ToDateTime().Month], t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
         </li>
             }
         }
     </ul>
     } 
     else if (archives.Count() > 0) {
-        @Html.UnorderedList(archives, (t, i) => Html.Link(string.Format("{0:MMMM yyyy} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+        @Html.UnorderedList(archives, (t, i) => Html.Link(string.Format("{0} {2} ({1})", monthNames[t.Key.ToDateTime().Month], t.Value, t.Key.ToDateTime().Year), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
     }
     else {
     <div class="message info">@T("None found")</div>
