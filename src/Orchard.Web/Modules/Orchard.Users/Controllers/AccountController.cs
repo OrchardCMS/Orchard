@@ -82,7 +82,7 @@ namespace Orchard.Users.Controllers {
         [AlwaysAccessible]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe) {
+        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
