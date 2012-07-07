@@ -11,13 +11,5 @@ namespace Orchard.Core.Navigation.Handlers {
             Filters.Add(new ActivatingFilter<MenuItemPart>("MenuItem"));
             Filters.Add(StorageFilter.For(repository));
         }
-
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            var part = context.ContentItem.As<MenuItemPart>();
-
-            if (part != null) {
-                context.Metadata.Identity.Add("MenuItem.Url", part.Url);
-            }
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace Orchard.Core.Navigation.Services {
         public void GetMenu(IContent menu, NavigationBuilder builder) {
             var menuParts = _contentManager
                 .Query<MenuPart, MenuPartRecord>()
-                .Where(x => x.MenuRecord.Id == menu.Id)
+                .Where(x => x.MenuId == menu.Id)
                 .WithQueryHints(new QueryHints().ExpandRecords<MenuItemPartRecord>())
                 .List();
 

@@ -185,7 +185,7 @@ namespace Orchard.Core.Navigation.Controllers {
             var model = Services.ContentManager.UpdateEditor(menuPart, this);
 
             menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-            menuPart.Menu = menu.Record;
+            menuPart.Menu = menu;
 
             Services.ContentManager.Create(menuPart);
 

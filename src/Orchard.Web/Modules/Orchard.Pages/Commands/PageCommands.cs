@@ -82,7 +82,7 @@ namespace Orchard.Pages.Commands {
                 if (menu != null) {
                     page.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                     page.As<MenuPart>().MenuText = MenuText;
-                    page.As<MenuPart>().Menu = menu.ContentItem.Record;
+                    page.As<MenuPart>().Menu = menu.ContentItem;
                 }
             }
 

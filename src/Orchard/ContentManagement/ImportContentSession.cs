@@ -78,7 +78,11 @@ namespace Orchard.ContentManagement {
                 
             }
 
-            return _contentManager.New(_contentTypes[contentIdentity]);
+            var contentItem = _contentManager.Create(_contentTypes[contentIdentity], VersionOptions.Draft);
+            _identities.Add(contentIdentity, contentItem.Id);
+            _contentItemIds.Add(contentItem.Id, contentIdentity);
+
+            return contentItem;
         }
     }
 }

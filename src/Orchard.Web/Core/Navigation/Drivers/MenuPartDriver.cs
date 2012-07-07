@@ -59,7 +59,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
 
                 part.MenuText = model.MenuText;
-                part.Menu = menu != null ? menu.Record : null;
+                part.Menu = menu;
 
                 if (string.IsNullOrEmpty(part.MenuPosition) && menu != null) {
                     part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
@@ -84,7 +84,13 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.MenuPosition = position;
             }
 
-            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
+            var menuIdentity = context.Attribute(part.PartDefinition.Name, "Menu");
+            if (menuIdentity != null) {
+                var menu = context.GetItemFromSession(menuIdentity);
+                if (menu != null) {
+                    part.Menu = menu;
+                }
+            }
         }
 
         protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {

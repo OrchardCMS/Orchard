@@ -93,7 +93,7 @@ namespace Orchard.Blogs.Commands {
                 if (menu != null) {
                     blog.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                     blog.As<MenuPart>().MenuText = MenuText;
-                    blog.As<MenuPart>().Menu = menu.ContentItem.Record;
+                    blog.As<MenuPart>().Menu = menu.ContentItem;
                 }
             }
 

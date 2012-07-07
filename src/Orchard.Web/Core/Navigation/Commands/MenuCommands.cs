@@ -44,7 +44,7 @@ namespace Orchard.Core.Navigation.Commands {
             var menuItem = _contentManager.Create("MenuItem");
             menuItem.As<MenuPart>().MenuPosition = MenuPosition;
             menuItem.As<MenuPart>().MenuText = T(MenuText).ToString();
-            menuItem.As<MenuPart>().Menu = menu.ContentItem.Record;
+            menuItem.As<MenuPart>().Menu = menu.ContentItem;
             menuItem.As<MenuItemPart>().Url = Url;
 
             Context.Output.WriteLine(T("Menu item created successfully.").Text);
