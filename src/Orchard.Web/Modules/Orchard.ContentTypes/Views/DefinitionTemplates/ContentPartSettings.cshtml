@@ -1,0 +1,8 @@
+﻿@model Orchard.Core.Contents.Settings.ContentPartSettings
+
+<fieldset>
+    @Html.EditorFor(m => m.Attachable)
+    <label for="@Html.FieldIdFor(m => m.Attachable)" class="forcheckbox">@T("Attachable")</label>
+    <span class="hint">@T("Check to allow this part to be attached to other content types.")</span> 
+    @Html.ValidationMessageFor(m => m.Attachable)
+</fieldset>

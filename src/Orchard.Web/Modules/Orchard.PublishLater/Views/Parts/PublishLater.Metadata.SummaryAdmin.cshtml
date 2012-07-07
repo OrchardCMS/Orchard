@@ -27,7 +27,7 @@
             <li>@T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))</li> <li>&nbsp;&#124;&nbsp;</li>
         }
         else {
-            <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /></li> <li>@T("Scheduled") </li>
+            <li><img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /></li> <li>@T("Scheduled")&#58;&nbsp;</li>
             <li>@Display.DateTime(DateTimeUtc: ((DateTime?)Model.ScheduledPublishUtc).Value, CustomFormat: T("M/d/yyyy h:mm tt")) &nbsp;&#124;&nbsp;</li>
         }
     }

@@ -13,6 +13,7 @@
     <RootNamespace>Orchard.Localization</RootNamespace>
     <AssemblyName>Orchard.Localization</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\LocalizationPart.cs" />
     <Compile Include="Models\LocalizationPartRecord.cs" />
+    <Compile Include="Projections\CurrentCultureFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ILocalizationService.cs" />

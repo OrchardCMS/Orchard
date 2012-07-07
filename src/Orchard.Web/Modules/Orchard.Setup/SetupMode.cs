@@ -149,7 +149,7 @@ namespace Orchard.Setup {
 
         class SafeModeSite : ContentPart, ISite {
             public string PageTitleSeparator {
-                get { return "*"; }
+                get { return " - "; }
             }
 
             public string SiteName {

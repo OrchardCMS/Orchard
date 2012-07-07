@@ -14,19 +14,24 @@ namespace Orchard.Core.Contents {
         public static readonly Permission EditOwnContent = new Permission { Description = "Edit own content", Name = "EditOwnContent", ImpliedBy = new[] { EditContent, PublishOwnContent } };
         public static readonly Permission DeleteContent = new Permission { Description = "Delete content for others", Name = "DeleteContent" };
         public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete own content", Name = "DeleteOwnContent", ImpliedBy = new[] { DeleteContent } };
+        public static readonly Permission ViewContent = new Permission { Description = "View all content", Name = "ViewContent", ImpliedBy = new[] { EditContent } };
+        public static readonly Permission ViewOwnContent = new Permission { Description = "View own content", Name = "ViewOwnContent", ImpliedBy = new[] { ViewContent } };
+
 
         public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditOwnContent, PublishOwnContent, DeleteOwnContent } };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new [] {
+            return new[] {
                 EditOwnContent,
                 EditContent,
                 PublishOwnContent,
                 PublishContent,
                 DeleteOwnContent,
                 DeleteContent,
+                ViewContent,
+                ViewOwnContent
             };
         }
 
@@ -50,6 +55,14 @@ namespace Orchard.Core.Contents {
                 new PermissionStereotype {
                     Name = "Contributor",
                     Permissions = new[] {EditOwnContent}
+                },
+                new PermissionStereotype {
+                    Name = "Authenticated",
+                    Permissions = new[] {ViewContent}
+                },
+                new PermissionStereotype {
+                    Name = "Anonymous",
+                    Permissions = new[] {ViewContent}
                 },
             };
         }

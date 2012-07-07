@@ -40,4 +40,7 @@
           <Place Parts_Blogs_Blog_Description="Content:before"/>
         </Match>
     </Match>
+  <Match ContentType="BlogPost">
+    <Place Parts_Contents_Publish_SummaryAdmin="-"/>
+  </Match>
 </Placement>

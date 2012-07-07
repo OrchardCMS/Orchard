@@ -93,7 +93,7 @@ namespace Orchard.Environment {
                 .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
                 .SelectMany(group => group
                     .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
-                    .FirstOrDefault(settings => settings.State.CurrentState != TenantState.State.Disabled && appRelativePath.StartsWith(settings.RequestUrlPrefix ?? string.Empty, StringComparison.OrdinalIgnoreCase));
+                    .FirstOrDefault(settings => settings.State.CurrentState != TenantState.State.Disabled && appRelativePath.StartsWith("~/" + (settings.RequestUrlPrefix ?? string.Empty), StringComparison.OrdinalIgnoreCase));
 
             return mostQualifiedMatch ?? _fallback;
         }

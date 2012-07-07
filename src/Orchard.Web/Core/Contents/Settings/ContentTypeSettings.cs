@@ -8,5 +8,9 @@
         /// Used to determine if this content type supports draft versions
         /// </summary>
         public bool Draftable { get; set; }
+        /// <summary>
+        /// Defines the stereotype of the type
+        /// </summary>
+        public string Stereotype { get; set; }
     }
 }

@@ -20,8 +20,7 @@ namespace Orchard.Security.Providers {
 
             Logger = NullLogger.Instance;
             
-            // TEMP: who can say...
-            ExpirationTimeSpan = TimeSpan.FromHours(6);
+            ExpirationTimeSpan = TimeSpan.FromDays(30);
         }
 
         public ILogger Logger { get; set; }
@@ -31,7 +30,7 @@ namespace Orchard.Security.Providers {
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
             var userData = Convert.ToString(user.Id);
-            
+
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
                 user.UserName,
@@ -50,7 +49,11 @@ namespace Orchard.Security.Providers {
             if (FormsAuthentication.CookieDomain != null) {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
-            
+
+            if (createPersistentCookie) {
+                cookie.Expires = ticket.Expiration;
+            }
+
             var httpContext = _httpContextAccessor.Current();
             httpContext.Response.Cookies.Add(cookie);
             _signedInUser = user;

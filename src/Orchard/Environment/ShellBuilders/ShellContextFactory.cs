@@ -96,7 +96,7 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         public ShellContext CreateSetupContext(ShellSettings settings) {
-            Logger.Warning("No shell settings available. Creating shell context for setup");
+            Logger.Debug("No shell settings available. Creating shell context for setup");
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,

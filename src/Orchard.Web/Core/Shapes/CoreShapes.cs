@@ -47,7 +47,7 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe("Layout")
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(() => creating.New.Zone())))
+                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(() => creating.New.Zone(), null)))
                 .OnCreated(created => {
                     var layout = created.Shape;
                     
@@ -92,6 +92,18 @@ namespace Orchard.Core.Shapes {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
                     menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                });
+
+            builder.Describe("MenuItemLink")
+                .OnDisplaying(displaying => {
+                    var menuItem = displaying.Shape;
+                    var menu = menuItem.Menu;
+                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + menu.MenuName);
+
+                    string contentType = menuItem.Content.ContentItem.ContentType;
+                    if(contentType != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
+                    }
                 });
 
             builder.Describe("LocalMenu")
@@ -400,7 +412,7 @@ namespace Orchard.Core.Shapes {
             if (Quantity == null || Quantity < 0)
                 numberOfPagesToShow = 7;
     
-            var totalPageCount = Math.Ceiling(TotalItemCount / pageSize);
+            var totalPageCount = (int)Math.Ceiling(TotalItemCount / pageSize);
 
             var firstText = FirstText ?? T("<<");
             var previousText = PreviousText ?? T("<");
@@ -443,8 +455,8 @@ namespace Orchard.Core.Shapes {
                 routeData.Remove(key);
             }
 
-            var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
-            var lastPage = Math.Min(totalPageCount, Page + (numberOfPagesToShow / 2));
+            int firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
+            int lastPage = Math.Min(totalPageCount, Page + (int)(numberOfPagesToShow / 2));
 
             var pageKey = String.IsNullOrEmpty(PagerId) ? "page" : PagerId;
 
@@ -473,7 +485,7 @@ namespace Orchard.Core.Shapes {
             }
 
             // page numbers
-            if (numberOfPagesToShow > 0) {
+            if (numberOfPagesToShow > 0 && firstPage != lastPage) {
                 for (var p = firstPage; p <= lastPage; p++) {
                     if (p == currentPage) {
                         Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: routeData, Pager: Shape));
@@ -550,10 +562,18 @@ namespace Orchard.Core.Shapes {
         }
         
         [Shape]
-        public IHtmlString Pager_Link(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
-            Shape.Metadata.Type = "ActionLink";
-            return Display(Shape);
+        public IHtmlString Pager_Link(HtmlHelper Html, dynamic Shape, dynamic Display, object Value) {
+            var RouteValues = (object)Shape.RouteValues;
+            RouteValueDictionary rvd;
+            if (RouteValues == null) {
+                rvd = new RouteValueDictionary();
+            }
+            else {
+                rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+            }
+
+            string value = Html.Encode(Value is string ? (string)Value : Display(Value));
+            return @Html.ActionLink(value, (string)rvd["action"], (string)rvd["controller"], rvd, null);
         }
 
         [Shape]

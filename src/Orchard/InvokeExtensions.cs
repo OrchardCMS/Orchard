@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Threading;
-using Orchard.Logging;
 using Orchard.Security;
+using Orchard.Logging;
+using Orchard.Exceptions;
 
 namespace Orchard {
 
@@ -26,7 +24,7 @@ namespace Orchard {
                             ex.GetType().Name);
                     }
 
-                    if (IsFatal(ex)) {
+                    if (ex.IsFatal()) {
                         throw;
                     }
                 }
@@ -34,17 +32,7 @@ namespace Orchard {
         }
 
         private static bool IsLogged(Exception ex) {
-            return ex is OrchardSecurityException || !IsFatal(ex);
-        }
-
-        private static bool IsFatal(Exception ex) {
-            return ex is OrchardSecurityException ||
-                ex is StackOverflowException ||
-                ex is AccessViolationException ||
-                ex is AppDomainUnloadedException ||
-                ex is ThreadAbortException ||
-                ex is SecurityException ||
-                ex is SEHException;
+            return ex is OrchardSecurityException || !ex.IsFatal();
         }
     }
 }

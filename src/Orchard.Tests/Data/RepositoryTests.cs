@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using NHibernate;
@@ -200,6 +201,14 @@ namespace Orchard.Tests.Data {
             Assert.That(two.Name, Is.EqualTo("two"));
         }
 
+        [Test]
+        public void StoringDateTimeDoesntRemovePrecision() {
+            _fooRepos.Create(new FooRecord { Name = "one", Timespan = DateTime.Parse("2001-01-01 16:28:21.489", CultureInfo.InvariantCulture) });
 
+            var one = _fooRepos.Fetch(f => f.Name == "one").Single();
+
+            Assert.That(one.Name, Is.EqualTo("one"));
+            Assert.That(one.Timespan.Value.Millisecond, Is.EqualTo(489));
+        }
     }
 }

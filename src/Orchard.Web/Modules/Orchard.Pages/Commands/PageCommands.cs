@@ -3,20 +3,33 @@ using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Navigation.Models;
+using Orchard.Core.Navigation.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.UI.Navigation;
+using Orchard.Utility;
 
 namespace Orchard.Pages.Commands {
     public class PageCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly ISiteService _siteService;
+        private readonly IMenuService _menuService;
+        private readonly INavigationManager _navigationManager;
 
-        public PageCommands(IContentManager contentManager, IMembershipService membershipService, ISiteService siteService) {
+        public PageCommands(
+            IContentManager contentManager, 
+            IMembershipService membershipService, 
+            ISiteService siteService,
+            IMenuService menuService,
+            INavigationManager navigationManager) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _siteService = siteService;
+            _menuService = menuService;
+            _navigationManager = navigationManager;
         }
 
         [OrchardSwitch]
@@ -43,10 +56,18 @@ namespace Orchard.Pages.Commands {
         [OrchardSwitch]
         public bool UseWelcomeText { get; set; }
 
+        [OrchardSwitch]
+        public string MenuText { get; set; }
+
+        [OrchardSwitch]
+        public string MenuName { get; set; }
+
         [CommandName("page create")]
-        [CommandHelp("page create [/Slug:<slug>] /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
-        [OrchardSwitches("Slug,Title,Path,Text,Owner,Homepage,Publish,UseWelcomeText")]
+        [CommandHelp("page create [/Slug:<slug>] /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
+        [OrchardSwitches("Slug,Title,Path,Text,Owner,MenuText,Homepage,MenuName,Publish,UseWelcomeText")]
         public void Create() {
+            _contentManager.Flush();
+
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }
@@ -54,6 +75,16 @@ namespace Orchard.Pages.Commands {
             var page = _contentManager.Create("Page", VersionOptions.Draft);
             page.As<TitlePart>().Title = Title;
             page.As<ICommonPart>().Owner = owner;
+
+            if (!String.IsNullOrWhiteSpace(MenuText)) {
+                var menu = _menuService.GetMenu(MenuName);
+
+                if (menu != null) {
+                    page.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                    page.As<MenuPart>().MenuText = MenuText;
+                    page.As<MenuPart>().Menu = menu.ContentItem;
+                }
+            }
 
             // (PH:Autoroute) Hackish way to leave Slug and Homepage switches intact without requiring a dependency on Autoroute. This may throw an Exception with
             // no AutoroutePart. But it means that normal setup recipes will still be able to give you a homepage without issue.

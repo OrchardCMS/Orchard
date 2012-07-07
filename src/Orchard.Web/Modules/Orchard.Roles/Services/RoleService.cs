@@ -16,17 +16,22 @@ namespace Orchard.Roles.Services {
 
         private readonly IRepository<RoleRecord> _roleRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
+        private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
 
-        public RoleService(IRepository<RoleRecord> roleRepository,
-                           IRepository<PermissionRecord> permissionRepository,
-                           IEnumerable<IPermissionProvider> permissionProviders,
-                            ICacheManager cacheManager,
-            ISignals signals) {
+        public RoleService(
+            IRepository<RoleRecord> roleRepository,
+            IRepository<PermissionRecord> permissionRepository,
+            IRepository<UserRolesPartRecord> userRolesRepository,
+            IEnumerable<IPermissionProvider> permissionProviders,
+            ICacheManager cacheManager,
+            ISignals signals
+            ) {
             _roleRepository = roleRepository;
             _permissionRepository = permissionRepository;
+            _userRolesRepository = userRolesRepository;
             _permissionProviders = permissionProviders;
             _cacheManager = cacheManager;
             _signals = signals;
@@ -111,6 +116,12 @@ namespace Orchard.Roles.Services {
         }
 
         public void DeleteRole(int id) {
+
+            var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.Role.Id == id);
+            foreach(var userRoleRecord in currentUserRoleRecords) {
+                _userRolesRepository.Delete(userRoleRecord);
+            }
+
             _roleRepository.Delete(GetRole(id));
             TriggerSignal();
         }

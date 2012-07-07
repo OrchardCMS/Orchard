@@ -12,6 +12,8 @@ using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;
 using Orchard.Settings;
 using Orchard.Core.Title.Models;
+using Orchard.UI.Navigation;
+using Orchard.Utility;
 
 namespace Orchard.Blogs.Commands {
     public class BlogCommands : DefaultOrchardCommandHandler {
@@ -20,18 +22,21 @@ namespace Orchard.Blogs.Commands {
         private readonly IBlogService _blogService;
         private readonly IMenuService _menuService;
         private readonly ISiteService _siteService;
+        private readonly INavigationManager _navigationManager;
 
         public BlogCommands(
             IContentManager contentManager,
             IMembershipService membershipService,
             IBlogService blogService,
             IMenuService menuService,
-            ISiteService siteService) {
+            ISiteService siteService,
+            INavigationManager navigationManager) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _blogService = blogService;
             _menuService = menuService;
             _siteService = siteService;
+            _navigationManager = navigationManager;
         }
 
         [OrchardSwitch]
@@ -56,11 +61,14 @@ namespace Orchard.Blogs.Commands {
         public string MenuText { get; set; }
 
         [OrchardSwitch]
+        public string MenuName { get; set; }
+
+        [OrchardSwitch]
         public bool Homepage { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage")]
+        [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
+        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage,MenuName")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -78,10 +86,15 @@ namespace Orchard.Blogs.Commands {
             if (!String.IsNullOrEmpty(Description)) {
                 blog.As<BlogPart>().Description = Description;
             }
+            
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
-                blog.As<MenuPart>().OnMainMenu = true;
-                blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
-                blog.As<MenuPart>().MenuText = MenuText;
+                var menu = _menuService.GetMenu(MenuName);
+
+                if (menu != null) {
+                    blog.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                    blog.As<MenuPart>().MenuText = MenuText;
+                    blog.As<MenuPart>().Menu = menu.ContentItem;
+                }
             }
 
             if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {

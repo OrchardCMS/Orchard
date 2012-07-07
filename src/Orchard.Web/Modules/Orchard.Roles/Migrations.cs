@@ -1,7 +1,13 @@
 ﻿using Orchard.Data.Migration;
+using Orchard.Roles.Services;
 
 namespace Orchard.Roles {
     public class RolesDataMigration : DataMigrationImpl {
+        private readonly IRoleService _roleService;
+
+        public RolesDataMigration(IRoleService roleService) {
+            _roleService = roleService;
+        }
 
         public int Create() {
             SchemaBuilder.CreateTable("PermissionRecord", 
@@ -33,7 +39,16 @@ namespace Orchard.Roles {
                     .Column<int>("Role_id")
                 );
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+
+            // creates default permissions for Orchard v1.4 instances and earlier
+            _roleService.CreatePermissionForRole("Anonymous", Orchard.Core.Contents.Permissions.ViewContent.Name);
+            _roleService.CreatePermissionForRole("Authenticated", Orchard.Core.Contents.Permissions.ViewContent.Name);
+
+            return 2;
         }
     }
 }

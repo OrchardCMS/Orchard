@@ -160,7 +160,16 @@ namespace Orchard.ContentManagement {
                         contentItemVersionCriteria.SetMaxResults(1);
                     });
 
-                versionRecord = contentItemVersionRecords.FirstOrDefault();
+
+                if (options.VersionNumber != 0) {
+                    versionRecord = contentItemVersionRecords.FirstOrDefault(
+                        x => x.Number == options.VersionNumber) ??
+                           _contentItemVersionRepository.Get(
+                               x => x.ContentItemRecord == contentItem.Record && x.Number == options.VersionNumber);
+                }
+                else {
+                    versionRecord = contentItemVersionRecords.FirstOrDefault();
+                }
             }
 
             // no record means content item is not in db
@@ -588,8 +597,6 @@ namespace Orchard.ContentManagement {
                     Published = true
                 };                
             }
-
-            importContentSession.Store(identity, item);
 
             var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {

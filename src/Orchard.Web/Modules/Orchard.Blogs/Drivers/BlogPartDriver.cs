@@ -8,6 +8,10 @@ using Orchard.ContentManagement.Drivers;
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]
     public class BlogPartDriver : ContentPartDriver<BlogPart> {
+        protected override string Prefix {
+            get { return "BlogPart"; }
+        }
+
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Blogs_Blog_Manage",

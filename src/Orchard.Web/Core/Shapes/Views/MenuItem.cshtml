@@ -8,12 +8,20 @@ if (!HasText(Model.Text)) {
 } else {
     string requestUrl = Request.Path.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
     string modelUrl = Model.Href.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-    if ((!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl)) || requestUrl == modelUrl) { 
+    if (requestUrl == modelUrl) { 
 	    Model.Classes.Add("current");
+    }
+    if(items.Any()) {
+        Model.Classes.Add("dropdown");
     }
     var tag = Tag(Model, "li");
     @tag.StartElement
-    <a href="@Model.Href">@Model.Text</a>
+            
+    @* morphing the shape to keep Model untouched*@
+    Model.Metadata.Alternates.Clear(); 
+    Model.Metadata.Type = "MenuItemLink";
+    @Display(Model)
+    
     if (items.Any()) {
         <ul>
         @DisplayChildren(Model)

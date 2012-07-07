@@ -84,6 +84,10 @@ namespace Orchard.Core.Common.Drivers {
                 var contentIdentity = new ContentIdentity(owner);
                 part.Owner = _membershipService.GetUser(contentIdentity.Get("User.UserName"));
             }
+            // use the super user if the referenced one doesn't exist
+            else {
+                part.Owner = _membershipService.GetUser(Services.WorkContext.CurrentSite.SuperUser);
+            }
 
             var container = context.Attribute(part.PartDefinition.Name, "Container");
             if (container != null) {

@@ -1,10 +1,16 @@
 @using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
-<h1 class="page-title">@Html.TitleForPage(T("Archives").Text, (string)Model.ArchiveData.Year.ToString(), (string)(Model.ArchiveData.Month > 0 ? new DateTime(Model.ArchiveData.Year, Model.ArchiveData.Month, 1).ToString("MMMM") : null), (string)(Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null))</h1>
+
+@{
+    var dateTimeLocalization = WorkContext.Resolve<Orchard.Core.Shapes.Localization.IDateTimeLocalization>();
+    var monthNames = dateTimeLocalization.MonthNames.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+}
+
+<h1 class="page-title">@Html.TitleForPage(T("Archives").Text, (string)Model.ArchiveData.Year.ToString(), (string)(Model.ArchiveData.Month > 0 ? monthNames[Model.ArchiveData.Month - 1] : null), (string)(Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null))</h1>
 <div class="archive-trail">
 @T("Archives") / 
 @Html.Link((string)Model.ArchiveData.Year.ToString(), Url.BlogArchiveYear((BlogPart)Model.Blog, (int)Model.ArchiveData.Year))
-@(new MvcHtmlString(Model.ArchiveData.Month > 0 ? string.Format(" / {0}", Html.Link((string)Model.ArchiveData.ToDateTime().ToString("MMMM"), Url.BlogArchiveMonth((BlogPart)Model.Blog, (int)Model.ArchiveData.Year, (int)Model.ArchiveData.Month))) : ""))
+@(new MvcHtmlString(Model.ArchiveData.Month > 0 ? string.Format(" / {0}", Html.Link(monthNames[Model.ArchiveData.Month - 1], Url.BlogArchiveMonth((BlogPart)Model.Blog, (int)Model.ArchiveData.Year, (int)Model.ArchiveData.Month))) : ""))
 @(new MvcHtmlString(Model.ArchiveData.Day > 0 ? string.Format(" / {0}", Html.Link((string)Model.ArchiveData.Day.ToString(), Url.BlogArchiveDay((BlogPart)Model.Blog, (int)Model.ArchiveData.Year, (int)Model.ArchiveData.Month, (int)Model.ArchiveData.Day))) : ""))
 </div>
 @Display(Model.ContentItems)

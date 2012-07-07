@@ -34,12 +34,21 @@ namespace Orchard.ContentManagement.Drivers {
                 return;
 
             dynamic parentShape = context.Shape;
+            context.ContentPart = ContentPart;
+
             var newShape = _shapeBuilder(context);
 
+            // ignore it if the driver returned a null shape
+            if(newShape == null) {
+                return;
+            }
+
+            // add a ContentPart property to the final shape 
             if (ContentPart != null && newShape.ContentPart == null) {
                 newShape.ContentPart = ContentPart;
             }
 
+            // add a ContentField property to the final shape 
             if (ContentField != null && newShape.ContentField == null) {
                 newShape.ContentField = ContentField;
             }
@@ -88,6 +97,22 @@ namespace Orchard.ContentManagement.Drivers {
         public ContentShapeResult OnGroup(string groupId) {
             _groupId=groupId;
             return this;
+        }
+
+        public string GetDifferentiator() {
+            return _differentiator;
+        }
+
+        public string GetGroup() {
+            return _groupId;
+        }
+
+        public string GetLocation() {
+            return _defaultLocation;
+        }
+
+        public string GetShapeType() {
+            return _shapeType;
         }
     }
 }

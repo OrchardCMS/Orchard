@@ -14,10 +14,17 @@ namespace Orchard.ImportExport.Controllers {
     public class AdminController : Controller {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly ICustomExportStep _customExportStep;
 
-        public AdminController(IOrchardServices services, IImportExportService importExportService, IContentDefinitionManager contentDefinitionManager) {
+        public AdminController(
+            IOrchardServices services, 
+            IImportExportService importExportService, 
+            IContentDefinitionManager contentDefinitionManager,
+            ICustomExportStep customExportStep
+            ) {
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
+            _customExportStep = customExportStep;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -50,10 +57,18 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         public ActionResult Export() {
-            var viewModel = new ExportViewModel { ContentTypes = new List<ContentTypeEntry>() };
+            var customSteps = new List<string>();
+            _customExportStep.Register(customSteps);
+
+            var viewModel = new ExportViewModel {
+                ContentTypes = new List<ContentTypeEntry>(),
+                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList()
+            };
+
             foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
                 viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
             }
+
             return View(viewModel);
         }
 
@@ -62,11 +77,21 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new ExportViewModel { ContentTypes = new List<ContentTypeEntry>() };
+            var viewModel = new ExportViewModel {
+                ContentTypes = new List<ContentTypeEntry>(),
+                CustomSteps = new List<CustomStepEntry>()
+            };
 
             UpdateModel(viewModel);
             var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
-            var exportOptions = new ExportOptions { ExportMetadata = viewModel.Metadata, ExportSiteSettings = viewModel.SiteSettings };
+            var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
+            
+            var exportOptions = new ExportOptions {
+                ExportMetadata = viewModel.Metadata, 
+                ExportSiteSettings = viewModel.SiteSettings,
+                CustomSteps = customSteps
+            };
+
             if (viewModel.Data) {
                 exportOptions.ExportData = true;
                 exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);

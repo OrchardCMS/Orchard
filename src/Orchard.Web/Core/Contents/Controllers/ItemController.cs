@@ -20,13 +20,17 @@ namespace Orchard.Core.Contents.Controllers {
         dynamic Shape { get; set; }
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
- 
+
         // /Contents/Item/Display/72
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
 
             if (contentItem == null)
                 return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot view content"))) {
+                return new HttpUnauthorizedResult();
+            }
 
             dynamic model = _contentManager.BuildDisplay(contentItem);
             return new ShapeResult(this, model);
@@ -41,12 +45,16 @@ namespace Orchard.Core.Contents.Controllers {
                 versionOptions = VersionOptions.Number((int)version);
 
             var contentItem = _contentManager.Get(id, versionOptions);
-
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot preview content")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot preview content"))) {
                 return new HttpUnauthorizedResult();
+            }
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot preview content"))) {
+                return new HttpUnauthorizedResult();
+            }
 
             dynamic model = _contentManager.BuildDisplay(contentItem);
             return new ShapeResult(this, model);

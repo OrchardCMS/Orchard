@@ -232,13 +232,35 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             _container.Resolve<DefaultShapeTableManagerTests.TestShapeProvider>().Discover =
                 b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
-                               .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", "~/yadda")), new PlacementInfo { Location = "Match" });
+                               .Placement(ctx => new PlacementInfo { Location = "Content" });
 
             contentManager.UpdateEditor(item.ContentItem, updater);
 
             Assert.That(updater.ModelErrors.ContainsKey("OwnerEditor.Owner"), Is.True);
         }
 
+        [Test]
+        public void PublishingShouldNotFailIfOwnerIsEmptyAndShapeIsHidden() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
+
+            var user = contentManager.New<IUser>("User");
+            _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
+            _authz.Setup(x => x.TryCheckAccess(StandardPermissions.SiteOwner, user, item)).Returns(true);
+
+            item.Owner = user;
+
+            var updater = new UpdatModelStub() { Owner = "" };
+
+            _container.Resolve<DefaultShapeTableManagerTests.TestShapeProvider>().Discover =
+                b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
+                               .Placement(ctx => new PlacementInfo { Location = "-" });
+
+            contentManager.UpdateEditor(item.ContentItem, updater);
+
+            Assert.That(updater.ModelErrors.ContainsKey("OwnerEditor.Owner"), Is.False);
+        }
         [Test]
         public void CreatingShouldSetCreatedAndModifiedUtc() {
             var contentManager = _container.Resolve<IContentManager>();

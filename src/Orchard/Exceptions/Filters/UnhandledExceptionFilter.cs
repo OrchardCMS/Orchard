@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -30,34 +31,38 @@ namespace Orchard.Exceptions.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
-                if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
-                    var shape = _orchardServices.New.ErrorPage();
-                    shape.Message = filterContext.Exception.Message;
-                    shape.Exception = filterContext.Exception;
 
-                    filterContext.ExceptionHandled = true;
+            // don't provide custom errors if the action has some custom code to handle exceptions
+            if(!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any()) {
+                if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
+                    if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
+                        var shape = _orchardServices.New.ErrorPage();
+                        shape.Message = filterContext.Exception.Message;
+                        shape.Exception = filterContext.Exception;
 
-                    // inform exception filters of the exception that was suppressed
-                    var filterInfo = new FilterInfo();
-                    foreach (var filterProvider in _filterProviders.Value) {
-                        filterProvider.AddFilters(filterInfo);
-                    }
+                        filterContext.ExceptionHandled = true;
 
-                    var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
-                    foreach (var exceptionFilter in filterInfo.ExceptionFilters) {
-                        exceptionFilter.OnException(exceptionContext);
-                    }
+                        // inform exception filters of the exception that was suppressed
+                        var filterInfo = new FilterInfo();
+                        foreach (var filterProvider in _filterProviders.Value) {
+                            filterProvider.AddFilters(filterInfo);
+                        }
 
-                    if (exceptionContext.ExceptionHandled) {
-                        filterContext.Result = exceptionContext.Result;
-                    }
-                    else {
-                        filterContext.Result = new ShapeResult(filterContext.Controller, shape);
-                        filterContext.RequestContext.HttpContext.Response.StatusCode = 500;
+                        var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
+                        foreach (var exceptionFilter in filterInfo.ExceptionFilters) {
+                            exceptionFilter.OnException(exceptionContext);
+                        }
 
-                        // prevent IIS 7.0 classic mode from handling the 404/500 itself
-                        filterContext.RequestContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+                        if (exceptionContext.ExceptionHandled) {
+                            filterContext.Result = exceptionContext.Result;
+                        }
+                        else {
+                            filterContext.Result = new ShapeResult(filterContext.Controller, shape);
+                            filterContext.RequestContext.HttpContext.Response.StatusCode = 500;
+
+                            // prevent IIS 7.0 classic mode from handling the 404/500 itself
+                            filterContext.RequestContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+                        }
                     }
                 }
             }

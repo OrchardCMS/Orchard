@@ -103,7 +103,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 descriptor.Placement = ctx => predicate(ctx) ? location : next(ctx);
             });
         }
-
+        
         public ShapeAlteration Build() {
             return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
         }

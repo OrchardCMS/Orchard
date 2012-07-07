@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@{
+    ContentItem contentItem = Model.Content.ContentItem.ContentMenuItemPart.Content;
+}
+
+@if (contentItem != null) {
+    <a href="@Model.Href">@Model.Text</a> 
+}

@@ -10,7 +10,6 @@ using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
@@ -24,6 +23,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IRecipeParser _recipeParser;
         private readonly IRecipeManager _recipeManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
@@ -33,7 +33,8 @@ namespace Orchard.ImportExport.Services {
             IAppDataFolder appDataFolder,
             IRecipeParser recipeParser, 
             IRecipeManager recipeManager, 
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            IEnumerable<IExportEventHandler> exportEventHandlers) {
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
             _contentDefinitionWriter = contentDefinitionWriter;
@@ -41,6 +42,7 @@ namespace Orchard.ImportExport.Services {
             _recipeParser = recipeParser;
             _recipeManager = recipeManager;
             _shellDescriptorManager = shellDescriptorManager;
+            _exportEventHandlers = exportEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -50,13 +52,20 @@ namespace Orchard.ImportExport.Services {
 
         public void Import(string recipeText) {
             var recipe = _recipeParser.ParseRecipe(recipeText);
-            CheckRecipeSteps(recipe);
             _recipeManager.Execute(recipe);
             UpdateShell();
         }
 
         public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
             var exportDocument = CreateExportRoot();
+
+            var context = new ExportContext {
+                Document = exportDocument,
+                ContentTypes = contentTypes,
+                ExportOptions = exportOptions
+            };
+
+            _exportEventHandlers.Invoke(x => x.Exporting(context), Logger);
 
             if (exportOptions.ExportMetadata) {
                 exportDocument.Element("Orchard").Add(ExportMetadata(contentTypes));
@@ -69,6 +78,8 @@ namespace Orchard.ImportExport.Services {
             if (exportOptions.ExportData) {
                 exportDocument.Element("Orchard").Add(ExportData(contentTypes, exportOptions.VersionHistoryOptions));
             }
+
+            _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
 
             return WriteExportFile(exportDocument.ToString());
         }
@@ -178,19 +189,6 @@ namespace Orchard.ImportExport.Services {
             _appDataFolder.CreateFile(path, exportDocument);
 
             return _appDataFolder.MapPath(path);
-        }
-
-        private void CheckRecipeSteps(Recipe recipe) {
-            foreach (var step in recipe.RecipeSteps) {
-                switch (step.Name) {
-                    case "Metadata":
-                    case "Settings":
-                    case "Data":
-                        break;
-                    default:
-                        throw new InvalidOperationException(T("Step {0} is not a supported import step.", step.Name).Text);
-                }
-            }
         }
 
         private void UpdateShell() {

@@ -1,11 +1,21 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Navigation.Services;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Navigation {
     public class Migrations : DataMigrationImpl {
+        private readonly IMenuService _menuService;
+
+        public Migrations(IMenuService menuService ) {
+            _menuService = menuService;
+        }
 
         public int Create() {
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
+            
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table
                     .ContentPartRecord()
@@ -17,14 +27,79 @@ namespace Orchard.Core.Navigation {
                     .ContentPartRecord()
                     .Column<string>("MenuText")
                     .Column<string>("MenuPosition")
-                    .Column<bool>("OnMainMenu")
+                    .Column<int>("MenuId")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
-            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
-            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("IdentityPart")
+                .WithPart("CommonPart")
+                .DisplayedAs("Custom Link")
+                .WithSetting("Description", "Represents a simple custom link with a text and an url.")
+                .WithSetting("Stereotype", "MenuItem") // because we declare a new stereotype, the Shape MenuItem_Edit is needed
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
+                .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
+                .WithPart("TitlePart")
+                );
+
+            SchemaBuilder.CreateTable("MenuWidgetPartRecord", table => table
+                .ContentPartRecord()
+                .Column<int>("StartLevel")
+                .Column<int>("Levels")
+                .Column<bool>("Breadcrumb")
+                .Column<bool>("AddHomePage")
+                .Column<bool>("AddCurrentPage")
+                .Column<int>("Menu_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .WithPart("WidgetPart")
+                .WithPart("MenuWidgetPart")
+                .WithSetting("Stereotype", "Widget")
+                );
+
+            SchemaBuilder.CreateTable("AdminMenuPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("AdminMenuText")
+                    .Column<string>("AdminMenuPosition")
+                    .Column<bool>("OnAdminMenu")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("HtmlMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("BodyPart")
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .DisplayedAs("Html Menu Item")
+                .WithSetting("Description", "Renders some custom HTML in the menu.")
+                .WithSetting("BodyPartSettings.FlavorDefault", "html")
+                .WithSetting("Stereotype", "MenuItem")
+                );
             
-            return 1;
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+
+            SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("ContentMenuItemRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .WithPart("ContentMenuItemPart")
+                .DisplayedAs("Content Menu Item")
+                .WithSetting("Description", "Adds a Content Item to the menu.")
+                .WithSetting("Stereotype", "MenuItem")
+                );
+
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -39,5 +114,73 @@ namespace Orchard.Core.Navigation {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .DisplayedAs("Custom Link")
+                .WithSetting("Description", "Represents a simple custom link with a text and an url.")
+                .WithSetting("Stereotype", "MenuItem") // because we declare a new stereotype, the Shape MenuItem_Edit is needed
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("TitlePart")
+                );
+
+            SchemaBuilder.CreateTable("MenuWidgetPartRecord",table => table
+                .ContentPartRecord()
+                .Column<int>("StartLevel")
+                .Column<int>("Levels")
+                .Column<bool>("Breadcrumb")
+                .Column<bool>("AddHomePage")
+                .Column<bool>("AddCurrentPage")
+                .Column<int>("Menu_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("MenuWidget", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .WithPart("WidgetPart")
+                .WithPart("MenuWidgetPart")
+                .WithSetting("Stereotype", "Widget")
+                );
+
+            SchemaBuilder
+                .AlterTable("MenuPartRecord", table => table.DropColumn("OnMainMenu"))
+                .AlterTable("MenuPartRecord", table => table.AddColumn<int>("MenuId"))
+                ;
+
+            ContentDefinitionManager.AlterTypeDefinition("HtmlMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("BodyPart")
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .DisplayedAs("Html Menu Item")
+                .WithSetting("Description", "Renders some custom HTML in the menu.")
+                .WithSetting("BodyPartSettings.FlavorDefault", "html")
+                .WithSetting("Stereotype", "MenuItem")
+               );
+
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
+
+
+            // create a Main Menu
+            var mainMenu = _menuService.Create("Main Menu");
+
+            // assign the Main Menu to all current menu items
+            foreach (var menuItem in _menuService.Get()) {
+                // if they don't have a position, then they are not displayed
+                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition)) {
+                    continue;
+                }
+                menuItem.Menu = mainMenu.ContentItem;
+            }
+
+            // at this point a widget should still be created to display the navigation
+
+            return 3;
+        }
     }
 }

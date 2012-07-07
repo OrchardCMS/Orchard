@@ -10,7 +10,7 @@
   </Recipe>
 
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
-                   XmlRpc,Orchard.Blogs.RemotePublishing,
+                   XmlRpc,Orchard.Blogs.RemotePublishing,Orchard.ContentPicker, 
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
@@ -55,7 +55,8 @@
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
     theme activate "The Theme Machine"
-    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
-    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
+    menu create /MenuName:"Main Menu"
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog." /MenuText:"Home" /MenuName:"Main Menu"
+    widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
   </Command>
 </Orchard>

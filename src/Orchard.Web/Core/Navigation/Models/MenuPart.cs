@@ -1,12 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Core.Navigation.Models {
     public class MenuPart : ContentPart<MenuPartRecord> {
 
-        public bool OnMainMenu {
-            get { return Record.OnMainMenu; }
-            set { Record.OnMainMenu = value; }
+        private readonly LazyField<IContent> _menu = new LazyField<IContent>();
+        public LazyField<IContent> MenuField { get { return _menu; } }
+
+        public IContent Menu {
+            get { return _menu.Value; }
+            set { _menu.Value = value; }
         }
 
         [StringLength(MenuPartRecord.DefaultMenuTextLength)]

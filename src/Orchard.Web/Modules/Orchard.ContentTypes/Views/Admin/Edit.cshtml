@@ -2,8 +2,12 @@
 @{
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
-    Layout.Title = T("Edit Content Type").ToString();
+    Layout.Title = T("Edit Content Type - {0}", Model.DisplayName).ToString();
 }
+
+<div class="manage">
+    @Html.ActionLink(T("Edit Placement").Text, "EditPlacement", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+</div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions
@@ -19,7 +23,7 @@
             <meta itemprop="Id" content="@Model.Name" />
             @Html.HiddenFor(m => m.Name)
         </fieldset>
-        @{ Html.RenderTemplates(Model.Templates); }
+        @{ Html.RenderTemplates(Model.Templates); }    
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">

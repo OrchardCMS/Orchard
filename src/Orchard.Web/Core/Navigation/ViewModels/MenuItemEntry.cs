@@ -1,4 +1,5 @@
 ﻿using Orchard.UI.Navigation;
+using Orchard.ContentManagement;
 
 namespace Orchard.Core.Navigation.ViewModels {
     public class MenuItemEntry {
@@ -8,5 +9,7 @@ namespace Orchard.Core.Navigation.ViewModels {
         public string Text { get; set; }
         public string Url { get; set; }
         public string Position { get; set; }
+
+        public ContentItem ContentItem { get; set; }
     }
 }

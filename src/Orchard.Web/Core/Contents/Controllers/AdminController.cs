@@ -275,7 +275,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl) {
-            var content = _contentManager.Get(id, VersionOptions.DraftRequired);
+            var content = _contentManager.Get(id, VersionOptions.Latest);
 
             if (content == null)
                 return HttpNotFound();

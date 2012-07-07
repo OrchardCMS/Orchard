@@ -46,7 +46,7 @@ namespace Orchard.Tags.Projections {
                 return T("Any tag");
             }
 
-            var tagNames = tags.Split(new[] { ',' }).Select(x => _tagService.GetTag(Int32.Parse(x)).TagName);
+            var tagNames = tags.Split(new[] { ',' }).Select(x => _tagService.GetTag(Int32.Parse(x))).Where(x => x != null).Select(x => x.TagName);
 
             return T("Tagged with {0}", String.Join(", ", tagNames));
         }

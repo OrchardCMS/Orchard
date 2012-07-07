@@ -241,7 +241,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleManifest.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
-            File.WriteAllText(modulePath + "Module.txt", templateText);
+            File.WriteAllText(modulePath + "Module.txt", templateText, System.Text.Encoding.UTF8);
             content.Add(modulePath + "Module.txt");
 
             var itemGroup = CreateProjectItemGroup(modulePath, content, folders);

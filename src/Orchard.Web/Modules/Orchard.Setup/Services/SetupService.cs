@@ -108,21 +108,17 @@ namespace Orchard.Setup.Services {
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
 
             // initialize database explicitly, and store shell descriptor
-            using (var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint))
-            {
+            using (var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint)) {
 
-                using (var environment = bootstrapLifetimeScope.CreateWorkContextScope())
-                {
+                using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
                     // check if the database is already created (in case an exception occured in the second phase)
-                    var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
-                    try
-                    {
-                        shellDescriptorRepository.Get(x => true);
+                    var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+                    try {
+                        var tablePrefix = String.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
+                        schemaBuilder.ExecuteSql("SELECT * FROM " + tablePrefix + "Settings_ShellDescriptorRecord");
                     }
-                    catch
-                    {
-                        var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+                    catch {
                         var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
 
                         reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
@@ -136,8 +132,7 @@ namespace Orchard.Setup.Services {
                         var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                         dataMigrationManager.Update("Settings");
 
-                        foreach (var feature in context.EnabledFeatures)
-                        {
+                        foreach (var feature in context.EnabledFeatures) {
                             dataMigrationManager.Update(feature);
                         }
 

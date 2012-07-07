@@ -1,7 +1,7 @@
 ﻿@model Orchard.Core.Common.ViewModels.TextFieldDriverViewModel
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.Text)">@Model.Field.DisplayName</label>
+    <label for="@Html.FieldIdFor(m => m.Text)" @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
     @if (String.IsNullOrWhiteSpace(Model.Settings.Flavor)) {
         @Html.TextBoxFor(m => m.Text, new { @class = "text" })        
         @Html.ValidationMessageFor(m => m.Text)

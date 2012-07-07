@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Core.Settings {
     public class Migrations : DataMigrationImpl {
@@ -120,6 +121,12 @@ namespace Orchard.Core.Settings {
                 );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("Site", cfg => { });
+
+            return 4;            
         }
     }
 }

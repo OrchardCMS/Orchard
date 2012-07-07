@@ -2,22 +2,21 @@
 @using Orchard.UI.Resources;
 @{
     RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
+    Script.Include("html5.js").UseCondition("lt IE 9").AtHead();
+
+    string title = Convert.ToString(Model.Title);
+    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 }
 <!DOCTYPE html> 
 <html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()"> 
 <head> 
-    <meta charset="utf-8" /> 
-    <title>@Html.Title()</title> 
-    @{
-     //todo: (heskew) have resource modules that can be leaned on (like a jQuery module that knows about various CDNs and jQuery's version and min naming schemes)
-     //todo: (heskew) this is an interim solution to inlude jQuery in every page and still allow that to be overriden in some theme by it containing a headScripts partial
-     }
-     @*Model.Zones.AddRenderPartial("head:before", "HeadPreload", Model);*@
-     @*Html.Zone("head", ":metas :styles :scripts"); %>*@
-     @Display(Model.Head)
-    <script>(function(d){d.className="dyn "+d.className.substring(7,d.length);})(document.documentElement);</script> 
+    <meta charset="utf-8" />
+    <title>@Html.Title(title, siteName)</title> 
+    @Display(Model.Head)
+    <script>        (function (d) { d.className = "dyn" + d.className.substring(6, d.className.length); })(document.documentElement);</script> 
 </head> 
-<body> 
+<body>
+@* Layout (template) is in the Body zone @ the default position (nothing, zero, zilch) *@
 @Display(Model.Body)
 @Display(Model.Tail)
 </body>

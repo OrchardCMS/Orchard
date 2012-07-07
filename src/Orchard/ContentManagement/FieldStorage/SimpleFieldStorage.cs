@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Xml;
 
 namespace Orchard.ContentManagement.FieldStorage {
     public class SimpleFieldStorage : IFieldStorage {
@@ -24,11 +25,25 @@ namespace Orchard.ContentManagement.FieldStorage {
                 t = Nullable.GetUnderlyingType(t);
             }
 
+            // using a special case for DateTime as it would lose milliseconds otherwise
+            if (typeof(T) == typeof(DateTime)) {
+                var result = DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                return (T) (object)result;
+            }
+
             return (T)Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
         }
 
         public void Set<T>(string name, T value) {
-            Setter(name, typeof(T), Convert.ToString(value, CultureInfo.InvariantCulture));
+            
+            // using a special case for DateTime as it would lose milliseconds otherwise
+            if (typeof(T) == typeof(DateTime)) {
+                var text = ((DateTime)(object)value).ToString("o", CultureInfo.InvariantCulture);
+                Setter(name, typeof(T), text);
+            }
+            else {
+                Setter(name, typeof (T), Convert.ToString(value, CultureInfo.InvariantCulture));
+            }
         }
     }
 }

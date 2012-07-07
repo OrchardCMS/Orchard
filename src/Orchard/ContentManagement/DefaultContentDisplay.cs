@@ -71,6 +71,9 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
+            // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
+            ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
+
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
@@ -90,7 +93,12 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+
+            var theme = workContext.CurrentTheme;
+            var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
+
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
@@ -99,7 +107,7 @@ namespace Orchard.ContentManagement {
         }
 
         private dynamic CreateItemShape(string actualShapeType) {
-            var zoneHoldingBehavior = new ZoneHoldingBehavior(() => _shapeFactory.Create("ContentZone", Arguments.Empty()));
+            var zoneHoldingBehavior = new ZoneHoldingBehavior((Func<dynamic>)(() => _shapeFactory.Create("ContentZone", Arguments.Empty())), _workContextAccessor.GetContext().Layout);
             return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
         }
 

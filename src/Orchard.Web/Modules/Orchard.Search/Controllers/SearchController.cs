@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
-using Orchard.Search.Models;
+using Orchard.Settings;
+using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Collections;
-using Orchard.Themes;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Search.Controllers {
-    using Orchard.Settings;
 
     [ValidateInput(false), Themed]
     public class SearchController : Controller {
@@ -46,7 +45,7 @@ namespace Orchard.Search.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters, string q = "") {
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
@@ -62,15 +61,14 @@ namespace Orchard.Search.Controllers {
             }
 
             var list = Shape.List();
-            foreach (var contentItem in searchHits.Select(searchHit => _contentManager.Get(searchHit.ContentItemId))) {
-                // ignore search results which content item has been removed or unpublished
-                if(contentItem == null){
-                    searchHits.TotalItemCount--;
-                    continue;
-                }
+            var foundIds = searchHits.Select(searchHit => searchHit.ContentItemId).ToList();
 
+            // ignore search results which content item has been removed or unpublished
+            var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
+            foreach (var contentItem in foundItems) {
                 list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
             }
+            searchHits.TotalItemCount -= foundIds.Count() - foundItems.Count();
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
 
