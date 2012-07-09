@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using NUnit.Framework;
+using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Widgets.RuleEngine;
@@ -11,11 +12,14 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
         private IContainer _container;
         private IRuleProvider _urlRuleProvider;
         private StubHttpContextAccessor _stubContextAccessor;
+        private ShellSettings _shellSettings;
 
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            _shellSettings = new ShellSettings {RequestUrlPrefix = string.Empty};
             builder.RegisterType<UrlRuleProvider>().As<IRuleProvider>();
+            builder.RegisterInstance(_shellSettings);
             _stubContextAccessor = new StubHttpContextAccessor();
             builder.RegisterInstance(_stubContextAccessor).As<IHttpContextAccessor>();
             _container = builder.Build();
@@ -66,6 +70,15 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
         public void UrlForAboutPageWithEndingSlashMatchesAboutPagePath() {
             _stubContextAccessor.StubContext = new StubHttpContext("~/About/");
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
+            _urlRuleProvider.Process(context);
+            Assert.That(context.Result, Is.True);
+        }
+
+        [Test]
+        public void UrlForHomePageMatchesHomePagePathWithUrlPrefix() {
+            _stubContextAccessor.StubContext = new StubHttpContext("~/site1");
+            _shellSettings.RequestUrlPrefix = "site1";
+            var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
         }
