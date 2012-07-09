@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Web;
+using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class UrlRuleProvider : IRuleProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ShellSettings _shellSettings;
 
-        public UrlRuleProvider(IHttpContextAccessor httpContextAccessor) {
+        public UrlRuleProvider(IHttpContextAccessor httpContextAccessor, ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
+            _shellSettings = shellSettings;
         }
 
         public void Process(RuleContext ruleContext) {
@@ -21,7 +25,11 @@ namespace Orchard.Widgets.RuleEngine {
                 var appPath = context.Request.ApplicationPath;
                 if (appPath == "/")
                     appPath = "";
-                url = string.Format("{0}/{1}", appPath, url);
+
+                if(!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
+                    appPath = String.Concat(appPath, "/", _shellSettings.RequestUrlPrefix);
+
+                url = String.Concat(appPath, "/", url);
             }
 
             if (!url.Contains("?"))
