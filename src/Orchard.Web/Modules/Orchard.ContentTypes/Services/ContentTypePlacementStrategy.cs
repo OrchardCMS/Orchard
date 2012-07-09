@@ -44,7 +44,7 @@ namespace Orchard.ContentTypes.Services {
                     }
 
                     descriptor.Placement = ctx => {
-                        if(ctx.DisplayType != null) {
+                        if(ctx.DisplayType == null) {
                             foreach(var customPlacement in customPlacements) {
                                 
                                 var type = customPlacement.ContentType;
