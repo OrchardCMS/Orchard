@@ -11,14 +11,14 @@ Features:
         Name: Search
         Description: Standard interface to Orchard's built-in search.
         Dependencies: Orchard.Indexing
-		Category: Search
+        Category: Search
     Orchard.Search.Content:
         Name: Admin Content Search
         Description: Provides a Content Search tab in Admin.
-        Dependencies: Contents
-		Category: Search
+        Dependencies: Contents, Orchard.Search
+        Category: Search
     Orchard.Search.ContentPicker:
         Name: Content Picker Search
         Description: Provides a search tab in Content Picker.
-        Dependencies: Orchard.ContentPicker
-		Category: Search
+        Dependencies: Orchard.ContentPicker, Orchard.Search
+        Category: Search
