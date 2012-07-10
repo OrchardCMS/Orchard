@@ -12,38 +12,38 @@ namespace Orchard.Core.Containers.Extensions {
             switch (partAndProperty) {
                 case "ContainablePart.Weight":
                     query = descendingOrder
-                                ? query.OrderByDescending<ContainablePartRecord, int>(record => record.Weight)
-                                : query.OrderBy<ContainablePartRecord, int>(record => record.Weight);
+                                ? query.OrderByDescending<ContainablePartRecord>(record => record.Weight)
+                                : query.OrderBy<ContainablePartRecord>(record => record.Weight);
                     break;
                 case "TitlePart.Title":
                     query = descendingOrder
-                                ? query.OrderByDescending<TitlePartRecord, string>(record => record.Title)
-                                : query.OrderBy<TitlePartRecord, string>(record => record.Title);
+                                ? query.OrderByDescending<TitlePartRecord>(record => record.Title)
+                                : query.OrderBy<TitlePartRecord>(record => record.Title);
                     break;
                 case "CustomPropertiesPart.CustomOne":
                     query = descendingOrder
-                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomOne)
-                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomOne);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord>(record => record.CustomOne)
+                                : query.OrderBy<CustomPropertiesPartRecord>(record => record.CustomOne);
                     break;
                 case "CustomPropertiesPart.CustomTwo":
                     query = descendingOrder
-                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomTwo)
-                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomTwo);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord>(record => record.CustomTwo)
+                                : query.OrderBy<CustomPropertiesPartRecord>(record => record.CustomTwo);
                     break;
                 case "CustomPropertiesPart.CustomThree":
                     query = descendingOrder
-                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomThree)
-                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomThree);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord>(record => record.CustomThree)
+                                : query.OrderBy<CustomPropertiesPartRecord>(record => record.CustomThree);
                     break;
                 case "CommonPart.CreatedUtc":
                     query = descendingOrder
-                                ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.CreatedUtc)
-                                : query.OrderBy<CommonPartRecord, DateTime?>(record => record.CreatedUtc);
+                                ? query.OrderByDescending<CommonPartRecord>(record => record.CreatedUtc)
+                                : query.OrderBy<CommonPartRecord>(record => record.CreatedUtc);
                     break;
                 default: // "CommonPart.PublishedUtc"
                     query = descendingOrder
-                                ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.PublishedUtc)
-                                : query.OrderBy<CommonPartRecord, DateTime?>(record => record.PublishedUtc);
+                                ? query.OrderByDescending<CommonPartRecord>(record => record.PublishedUtc)
+                                : query.OrderBy<CommonPartRecord>(record => record.PublishedUtc);
                     break;
             }
 

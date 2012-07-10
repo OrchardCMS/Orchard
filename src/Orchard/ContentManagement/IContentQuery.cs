@@ -21,16 +21,16 @@ namespace Orchard.ContentManagement {
         IContentQuery<TPart, TRecord> Join<TRecord>() where TRecord : ContentPartRecord;
 
         IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord;
-        IContentQuery<TPart, TRecord> OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord;
-        IContentQuery<TPart, TRecord> OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord;
+        IContentQuery<TPart, TRecord> OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord;
+        IContentQuery<TPart, TRecord> OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord;
     }
 
     public interface IContentQuery<TPart, TRecord> : IContentQuery<TPart> where TPart : IContent where TRecord : ContentPartRecord {
         new IContentQuery<TPart, TRecord> ForVersion(VersionOptions options);
 
         IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate);
-        IContentQuery<TPart, TRecord> OrderBy<TKey>(Expression<Func<TRecord, TKey>> keySelector);
-        IContentQuery<TPart, TRecord> OrderByDescending<TKey>(Expression<Func<TRecord, TKey>> keySelector);
+        IContentQuery<TPart, TRecord> OrderBy(Expression<Func<TRecord, object>> keySelector);
+        IContentQuery<TPart, TRecord> OrderByDescending(Expression<Func<TRecord, object>> keySelector);
 
         IContentQuery<TPart, TRecord> WithQueryHints(QueryHints hints);
         IContentQuery<TPart, TRecord> WithQueryHintsFor(string contentType);

@@ -31,7 +31,7 @@ namespace Orchard.Tests {
 
         [Test]
         public void WhereClauseShouldLimitResults() {
-            var foos = from f in _session.Linq<FooRecord>() where f.Name == "two" || f.Name == "one" select f;
+            var foos = from f in _session.Query<FooRecord>() where f.Name == "two" || f.Name == "one" select f;
 
             Assert.That(foos.Count(), Is.EqualTo(2));
             Assert.That(foos, Has.Some.Property("Name").EqualTo("one"));

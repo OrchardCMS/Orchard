@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentNHibernate;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
+using FluentNHibernate.Diagnostics;
 using NHibernate.Cfg;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
@@ -48,6 +50,14 @@ namespace Orchard.Data.Providers {
             public TypeSource(IEnumerable<RecordBlueprint> recordDescriptors) { _recordDescriptors = recordDescriptors; }
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
+            
+            public void LogSource(IDiagnosticLogger logger) {
+                throw new NotImplementedException();
+            }
+
+            public string GetIdentifier() {
+                throw new NotImplementedException();
+            }
         }
     }
 }

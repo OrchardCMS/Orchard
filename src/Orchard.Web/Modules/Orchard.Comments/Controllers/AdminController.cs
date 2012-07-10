@@ -69,7 +69,7 @@ namespace Orchard.Comments.Controllers {
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(comments.Count());
             var entries = comments
-                .OrderByDescending<CommentPartRecord, DateTime?>(cpr => cpr.CommentDateUtc)
+                .OrderByDescending<CommentPartRecord>(cpr => cpr.CommentDateUtc)
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList()
                 .Select(comment => CreateCommentEntry(comment.Record));

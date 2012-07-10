@@ -23,7 +23,8 @@ namespace Orchard.Data.Conventions
 
         public void Accept(IAcceptanceCriteria<IManyToOneInspector> criteria)
         {
-            criteria.Expect(x => x.Property != null && x.Property.IsDefined(typeof(AggregateAttribute), false));
+            // todo
+            // criteria.Expect(x => x.Property != null && x.Property.IsDefined(typeof(AggregateAttribute), false));
         }
     
         public void Apply(IOneToManyCollectionInstance instance)
