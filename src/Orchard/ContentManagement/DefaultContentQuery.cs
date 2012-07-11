@@ -76,6 +76,7 @@ namespace Orchard.ContentManagement {
         IQueryOver<ContentItemVersionRecord, ContentItemVersionRecord> BindItemVersionQueryOver() {
             if (_itemVersionQueryOver == null) {
                 _itemVersionQueryOver = BindSession().QueryOver<ContentItemVersionRecord>();
+                //_itemVersionQueryOver.Cacheable();
             }
             return _itemVersionQueryOver;
         }

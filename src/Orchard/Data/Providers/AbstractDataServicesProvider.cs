@@ -8,6 +8,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Diagnostics;
+using NHibernate.Cache;
 using NHibernate.Cfg;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
@@ -25,7 +26,15 @@ namespace Orchard.Data.Providers {
             return Fluently.Configure()
                 .Database(database)
                 .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                .BuildConfiguration();
+                .BuildConfiguration()
+                //.Cache(c => {
+                //           c.UseQueryCache = true;
+                //           c.Provider<HashtableCacheProvider>();
+                //       })
+                //.EntityCache<ContentItemRecord>(x => x.Strategy = EntityCacheUsage.ReadWrite)
+                //.EntityCache<ContentItemVersionRecord>(x => x.Strategy = EntityCacheUsage.ReadWrite)
+                ;
+
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordBlueprint> recordDescriptors) {
