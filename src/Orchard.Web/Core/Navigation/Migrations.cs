@@ -14,7 +14,7 @@ namespace Orchard.Core.Navigation {
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("NavigationPart"));
             
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table

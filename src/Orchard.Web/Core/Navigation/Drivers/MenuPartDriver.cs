@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -31,6 +30,12 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         public Localizer T { get; set; }
+
+        protected override string Prefix {
+            get {
+                return "MenuPart";
+            }
+        }
 
         protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))

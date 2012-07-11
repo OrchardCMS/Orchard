@@ -25,16 +25,21 @@ namespace Orchard.Core.Navigation.Handlers {
             OnActivated<MenuPart>(PropertySetHandlers);
         }
 
-        protected static void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart) {
+        protected void PropertySetHandlers(ActivatedContentContext context, MenuPart menuPart) {
             menuPart.MenuField.Setter(menu => {
-                menuPart.Record.MenuId = menu.ContentItem.Id;
+                if(menu == null || menu.ContentItem == null) {
+                    menuPart.Record.MenuId = 0;
+                }
+                else {
+                    menuPart.Record.MenuId = menu.ContentItem.Id;    
+                }
+                
                 return menu;
             });
-        }
 
-        protected void LazyLoadHandlers(MenuPart menuPart) {
             menuPart.MenuField.Loader(ctx =>
-                _contentManager.Get(menuPart.Record.MenuId, menuPart.IsPublished() ? VersionOptions.Published : VersionOptions.Latest));
+                _contentManager.Get(menuPart.Record.MenuId, menuPart.IsPublished() ? VersionOptions.Published : VersionOptions.Latest)
+            );
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
