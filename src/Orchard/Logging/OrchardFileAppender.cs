@@ -52,7 +52,7 @@ namespace Orchard.Logging {
                     } catch {
                         newSuffix = _suffixes[completeFilename] + i;
 
-                        LogLog.Error(string.Format("OrchardFileAppender: Failed to open [{0}]. Attempting [{1}-{2}] instead.", fileName, fileName, newSuffix));
+                        LogLog.Error(typeof(OrchardFileAppender), string.Format("OrchardFileAppender: Failed to open [{0}]. Attempting [{1}-{2}] instead.", fileName, fileName, newSuffix));
                     }
                 }
 
