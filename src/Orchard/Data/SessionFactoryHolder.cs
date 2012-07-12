@@ -93,7 +93,9 @@ namespace Orchard.Data {
             var config = _sessionConfigurationCache.GetConfiguration(() =>
                 _dataServicesProviderFactory
                     .CreateProvider(parameters)
-                    .BuildConfiguration(parameters));
+                    .BuildConfiguration(parameters)
+                    .Cache( c => c.RegionsPrefix = _shellSettings.Name)
+                    );
             
             #region NH-2.1.2 specific optimization
             // cannot be done in fluent config

@@ -30,6 +30,7 @@ namespace Orchard.Data.Conventions
         public void Apply(IOneToManyCollectionInstance instance)
         {
             instance.Fetch.Select();
+            instance.Cache.NonStrictReadWrite();
         }
 
         public void Accept(IAcceptanceCriteria<IOneToManyCollectionInspector> criteria)

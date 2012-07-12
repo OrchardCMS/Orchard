@@ -325,6 +325,8 @@ namespace Orchard.ContentManagement {
                     contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
             }
 
+            contentItemCriteria.SetCacheable(true);
+
             return contentItemVersionCriteria.List<ContentItemVersionRecord>();
         }
 

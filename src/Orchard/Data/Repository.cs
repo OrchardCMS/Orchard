@@ -27,7 +27,7 @@ namespace Orchard.Data {
         }
 
         public virtual IQueryable<T> Table {
-            get { return Session.Query<T>(); }
+            get { return Session.Query<T>().Cacheable(); }
         }
 
         #region IRepository<T> Members
