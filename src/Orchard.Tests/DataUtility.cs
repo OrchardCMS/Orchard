@@ -21,7 +21,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }));
+            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }).ToList());
             var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
             ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
