@@ -171,8 +171,8 @@ namespace Orchard.Core.Navigation {
 
             // assign the Main Menu to all current menu items
             foreach (var menuItem in _menuService.Get()) {
-                // if they don't have a position, then they are not displayed
-                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition)) {
+                // if they don't have a position or a text, then they are not displayed
+                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition) || string.IsNullOrEmpty(menuItem.MenuText)) {
                     continue;
                 }
                 menuItem.Menu = mainMenu.ContentItem;
