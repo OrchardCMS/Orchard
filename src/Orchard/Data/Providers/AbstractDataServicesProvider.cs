@@ -32,12 +32,7 @@ namespace Orchard.Data.Providers {
                 .Mappings(m => m.AutoMappings.Add(persistenceModel))
                 .ExposeConfiguration(cfg => cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] { new OrchardLoadEventListener() })
                 .BuildConfiguration()
-                .Cache(c => {
-                           c.Provider<NHibernate.Caches.SysCache2.SysCacheProvider>();
-                           c.UseQueryCache = true;
-                       })
                 ;
-
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {

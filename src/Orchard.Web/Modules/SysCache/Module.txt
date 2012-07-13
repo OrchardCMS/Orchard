@@ -1,0 +1,11 @@
+﻿Name: SysCache
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.6
+OrchardVersion: 1.6
+Description: Enables database caching using the SysCache provider.
+Features:
+    SysCache:
+        Description: Enables database caching using the SysCache provider.
+		Category: Performance
