@@ -32,7 +32,7 @@ namespace Orchard.Blogs.Handlers {
             var posts = blogPostService.Get(blogPostPart.BlogPart, VersionOptions.Published);
 
             // create a dictionary of all the year/month combinations and their count of posts that are published in this blog
-            var inMemoryBlogArchives = new Dictionary<DateTime, int>(posts.Count());
+            var inMemoryBlogArchives = new Dictionary<DateTime, int>();
             foreach (var post in posts) {
                 if (!post.Has<CommonPart>())
                     continue;

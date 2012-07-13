@@ -142,7 +142,10 @@ namespace Orchard.Tags.Services {
         }
 
         public int GetTaggedContentItemCount(int tagId, VersionOptions options) {
-            return GetTaggedContentItems(tagId, options).Count();
+            return _orchardServices.ContentManager
+                .Query<TagsPart, TagsPartRecord>()
+                .Where(tpr => tpr.Tags.Any(tr => tr.TagRecord.Id == tagId))
+                .Count();
         }
 
         private void TagContentItem(TagsPartRecord tagsPartRecord, string tagName) {

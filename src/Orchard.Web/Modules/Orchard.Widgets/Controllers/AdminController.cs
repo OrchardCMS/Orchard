@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.Mvc;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -116,9 +117,9 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            IEnumerable<LayerPart> layers = _widgetsService.GetLayers();
+            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
 
-            if (layers.Count() == 0) {
+            if (!layers.Any()) {
                 Services.Notifier.Error(T("Layer not found: {0}", layerId));
                 return RedirectToAction("Index");
             }
@@ -147,8 +148,8 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
             try {
-                int widgetPosition = _widgetsService.GetWidgets().Where(widget => widget.Zone == widgetPart.Zone).Count() + 1;
-                widgetPart.Position = widgetPosition.ToString();
+                int widgetPosition = _widgetsService.GetWidgets().Count(widget => widget.Zone == widgetPart.Zone) + 1;
+                widgetPart.Position = widgetPosition.ToString(CultureInfo.InvariantCulture);
                 widgetPart.Zone = zone;
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
