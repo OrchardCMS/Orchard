@@ -11,7 +11,7 @@ using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 using Orchard.Data.Providers;
 using Orchard.Tests.Records;
-using MsSqlCeConfiguration = FluentNHibernate.Cfg.Db.MsSqlCeConfiguration;
+using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
 namespace Orchard.Tests {
     [TestFixture]

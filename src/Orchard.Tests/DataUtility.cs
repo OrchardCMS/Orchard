@@ -12,7 +12,7 @@ using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Providers;
 using Orchard.Environment.ShellBuilders.Models;
-using MsSqlCeConfiguration = FluentNHibernate.Cfg.Db.MsSqlCeConfiguration;
+using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
 namespace Orchard.Tests {
     public static class DataUtility {
