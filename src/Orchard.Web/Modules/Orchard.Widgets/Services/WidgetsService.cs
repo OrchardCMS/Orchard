@@ -78,6 +78,10 @@ namespace Orchard.Widgets.Services {
         }
 
         public IEnumerable<string> GetZones(ExtensionDescriptor theme) {
+            if(theme == null) {
+                return Enumerable.Empty<string>();
+            }
+
             IEnumerable<string> zones = new List<string>();
 
             // get the zones for this theme

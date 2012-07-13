@@ -80,9 +80,11 @@ namespace Orchard.Pages.Commands {
                 var menu = _menuService.GetMenu(MenuName);
 
                 if (menu != null) {
-                    page.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                    page.As<MenuPart>().MenuText = MenuText;
-                    page.As<MenuPart>().Menu = menu.ContentItem;
+                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
+                    menuItem.Content = page;
+                    menuItem.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                    menuItem.As<MenuPart>().MenuText = MenuText;
+                    menuItem.As<MenuPart>().Menu = menu;
                 }
             }
 

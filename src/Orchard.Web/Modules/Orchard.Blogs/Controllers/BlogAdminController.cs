@@ -154,7 +154,7 @@ namespace Orchard.Blogs.Controllers {
             list.AddRange(_blogService.Get(VersionOptions.Latest)
                               .Select(b => {
                                           var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
-                                          blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
+                                          blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
                                           return blog;
                                       }));
 

@@ -1,8 +1,8 @@
 c47525e90819321d37962a11313006a4ccfc8362 src/Orchard.Web/Modules/Orchard.AntiSpam
 f41ead8138ef8eaec32e2c2826100ca175c15730 src/Orchard.Web/Modules/Orchard.Autoroute
-a8cd78f4730747bf592935aaa605874938a9c89f src/Orchard.Web/Modules/Orchard.ContentPermissions
+5eb5861244852a382332abfbfe2d28ac1b9bd419 src/Orchard.Web/Modules/Orchard.ContentPermissions
 d466369118538a8ca77754d047ee841d016ea9c2 src/Orchard.Web/Modules/Orchard.ContentPicker
-3ad1bdc80b8374433d98469e8740bc48ef114be2 src/Orchard.Web/Modules/Orchard.CustomForms
+8ac5b68b6ad42cfce6be53e6bd776a35ac14c6e7 src/Orchard.Web/Modules/Orchard.CustomForms
 b639cb33d2ba038de6048350400b664399608996 src/Orchard.Web/Modules/Orchard.Forms
 b748de63e3cf8debfc3eba77f26089705147047d src/Orchard.Web/Modules/Orchard.Rules
 419399ef2e37122a000e6cc8674148d3183d7032 src/Orchard.Web/Modules/Orchard.TaskLease

@@ -1,11 +1,11 @@
-Name: UpgradeTo14
+Name: UpgradeTo15
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.5
-OrchardVersion: 1.4
+OrchardVersion: 1.5
 Description: Description for the module
 Features:
-    UpgradeTo14:
-        Description: Description for feature UpgradeTo14.
+    UpgradeTo15:
+        Description: Description for feature UpgradeTo15.
         Dependencies: Orchard.Autoroute, Title

@@ -14,7 +14,7 @@ namespace Orchard.Core.Navigation {
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("NavigationPart"));
             
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
                 table => table
@@ -165,14 +165,29 @@ namespace Orchard.Core.Navigation {
 
             ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
 
+            SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("ContentMenuItemRecord_id")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ContentMenuItem", cfg => cfg
+                .WithPart("MenuPart")
+                .WithPart("CommonPart")
+                .WithPart("IdentityPart")
+                .WithPart("ContentMenuItemPart")
+                .DisplayedAs("Content Menu Item")
+                .WithSetting("Description", "Adds a Content Item to the menu.")
+                .WithSetting("Stereotype", "MenuItem")
+                );
 
             // create a Main Menu
             var mainMenu = _menuService.Create("Main Menu");
 
             // assign the Main Menu to all current menu items
             foreach (var menuItem in _menuService.Get()) {
-                // if they don't have a position, then they are not displayed
-                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition)) {
+                // if they don't have a position or a text, then they are not displayed
+                if(string.IsNullOrWhiteSpace(menuItem.MenuPosition) || string.IsNullOrEmpty(menuItem.MenuText)) {
                     continue;
                 }
                 menuItem.Menu = mainMenu.ContentItem;

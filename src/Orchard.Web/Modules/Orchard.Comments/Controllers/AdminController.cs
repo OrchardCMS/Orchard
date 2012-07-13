@@ -49,26 +49,26 @@ namespace Orchard.Comments.Controllers {
                 options = new CommentIndexOptions();
 
             // Filtering
-            IContentQuery<CommentPart, CommentPartRecord> comments;
+            IContentQuery<CommentPart, CommentPartRecord> commentsQuery;
             switch (options.Filter) {
                 case CommentIndexFilter.All:
-                    comments = _commentService.GetComments();
+                    commentsQuery = _commentService.GetComments();
                     break;
                 case CommentIndexFilter.Approved:
-                    comments = _commentService.GetComments(CommentStatus.Approved);
+                    commentsQuery = _commentService.GetComments(CommentStatus.Approved);
                     break;
                 case CommentIndexFilter.Pending:
-                    comments = _commentService.GetComments(CommentStatus.Pending);
+                    commentsQuery = _commentService.GetComments(CommentStatus.Pending);
                     break;
                 case CommentIndexFilter.Spam:
-                    comments = _commentService.GetComments(CommentStatus.Spam);
+                    commentsQuery = _commentService.GetComments(CommentStatus.Spam);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(comments.Count());
-            var entries = comments
+            var pagerShape = Shape.Pager(pager).TotalItemCount(commentsQuery.Count());
+            var entries = commentsQuery
                 .OrderByDescending<CommentPartRecord>(cpr => cpr.CommentDateUtc)
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList()

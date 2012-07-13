@@ -25,7 +25,7 @@ namespace Orchard.Core.Navigation.Services {
                 if (menuPart != null) {
                     var part = menuPart;
 
-                    builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.AdminMenuText)),
+                    builder.Add(new LocalizedString(part.AdminMenuText),
                                 part.AdminMenuPosition,
                                 item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).AdminRouteValues));
                     // todo: somehow determine if they will ultimately have rights to the destination and hide if not. possibly would need to add a Permission to metadata.

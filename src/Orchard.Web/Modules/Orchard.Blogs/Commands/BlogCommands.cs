@@ -91,9 +91,11 @@ namespace Orchard.Blogs.Commands {
                 var menu = _menuService.GetMenu(MenuName);
 
                 if (menu != null) {
-                    blog.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                    blog.As<MenuPart>().MenuText = MenuText;
-                    blog.As<MenuPart>().Menu = menu.ContentItem;
+                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
+                    menuItem.Content = blog;
+                    menuItem.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
+                    menuItem.As<MenuPart>().MenuText = MenuText;
+                    menuItem.As<MenuPart>().Menu = menu;
                 }
             }
 
