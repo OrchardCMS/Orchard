@@ -84,21 +84,21 @@ namespace Orchard.Core.Shapes {
                     string menuName = menu.MenuName;
                     menu.Classes.Add("menu-" + menuName.HtmlClassify());
                     menu.Classes.Add("menu");
-                    menu.Metadata.Alternates.Add("Menu__" + menuName);
+                    menu.Metadata.Alternates.Add("Menu__" + EncodeAlternateElement(menuName));
                 });
 
             builder.Describe("MenuItem")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
-                    menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                    menuItem.Metadata.Alternates.Add("MenuItem__" + EncodeAlternateElement(menu.MenuName));
                 });
 
             builder.Describe("MenuItemLink")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
-                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + menu.MenuName);
+                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menu.MenuName));
 
                     string contentType = menuItem.Content.ContentItem.ContentType;
                     if(contentType != null) {
@@ -112,14 +112,14 @@ namespace Orchard.Core.Shapes {
                     string menuName = menu.MenuName;
                     menu.Classes.Add("localmenu-" + menuName.HtmlClassify());
                     menu.Classes.Add("localmenu");
-                    menu.Metadata.Alternates.Add("LocalMenu__" + menuName);
+                    menu.Metadata.Alternates.Add("LocalMenu__" + EncodeAlternateElement(menuName));
                 });
             
             builder.Describe("LocalMenuItem")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
-                    menuItem.Metadata.Alternates.Add("LocalMenuItem__" + menu.MenuName);
+                    menuItem.Metadata.Alternates.Add("LocalMenuItem__" + EncodeAlternateElement(menu.MenuName));
                 });
 
             #region Pager alternates
