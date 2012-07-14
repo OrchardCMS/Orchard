@@ -4,12 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
-using FluentNHibernate;
 using NHibernate;
 using NHibernate.Criterion;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Utility.Extensions;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
 using Expression = System.Linq.Expressions.Expression;
@@ -38,20 +36,20 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, U>(IQueryOver<ContentItemVersionRecord, U> queryOver, string name) {
+        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name) {
             if (_joins.ContainsKey(typeof(TRecord).Name)) {
                 return (IQueryOver<ContentItemVersionRecord, TRecord>)_joins[typeof(TRecord).Name];
             }
 
             // public TPartRecord TPartRecord {get;set;}
-            var dynamicMethod = new DynamicMethod(name, typeof(TRecord), null, typeof(U));
-            var syntheticMethod = new ContentItemAlteration.SyntheticMethodInfo(dynamicMethod, typeof(U));
+            var dynamicMethod = new DynamicMethod(name, typeof(TRecord), null, typeof(TU));
+            var syntheticMethod = new ContentItemAlteration.SyntheticMethodInfo(dynamicMethod, typeof(TU));
             var syntheticProperty = new ContentItemAlteration.SyntheticPropertyInfo(syntheticMethod);
 
             // record => record.TPartRecord
-            var parameter = Expression.Parameter(typeof(U), "record");
-            var syntheticExpression = (Expression<Func<U, TRecord>>)Expression.Lambda(
-                typeof(Func<U, TRecord>),
+            var parameter = Expression.Parameter(typeof(TU), "record");
+            var syntheticExpression = (Expression<Func<TU, TRecord>>)Expression.Lambda(
+                typeof(Func<TU, TRecord>),
                 Expression.Property(parameter, syntheticProperty),
                 parameter);
 
@@ -114,6 +112,24 @@ namespace Orchard.ContentManagement {
 
         private void OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
             BindPartQueryOver<TRecord>().OrderBy(keySelector).Desc();
+        }
+
+        private void OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
+            BindPartQueryOver<TRecord>().OrderBy(AddBox(keySelector)).Asc();
+        }
+
+        private void OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
+            BindPartQueryOver<TRecord>().OrderBy(AddBox(keySelector)).Desc();
+        }
+
+        private static Expression<Func<TInput, object>> AddBox<TInput, TOutput>
+        (Expression<Func<TInput, TOutput>> expression) {
+            // Add the boxing operation, but get a weakly typed expression
+            Expression converted = Expression.Convert
+                 (expression.Body, typeof(object));
+            // Use Expression.Lambda to get back to strong typing
+            return Expression.Lambda<Func<TInput, object>>
+                 (converted, expression.Parameters);
         }
 
         private IEnumerable<ContentItem> Slice(int skip, int count) {
@@ -205,6 +221,16 @@ namespace Orchard.ContentManagement {
                 _query.OrderByDescending(keySelector);
                 return new ContentQuery<T, TRecord>(_query);
             }
+
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+                _query.OrderBy(AddBox(keySelector));
+                return new ContentQuery<T, TRecord>(_query);
+            }
+
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+                _query.OrderByDescending(AddBox(keySelector));
+                return new ContentQuery<T, TRecord>(_query);
+            }
         }
 
 
@@ -222,6 +248,16 @@ namespace Orchard.ContentManagement {
 
             IContentQuery<T, TR> IContentQuery<T, TR>.Where(Expression<Func<TR, bool>> predicate) {
                 _query.Where(predicate);
+                return this;
+            }
+
+            IContentQuery<T, TR> IContentQuery<T, TR>.OrderBy<TKey>(Expression<Func<TR, TKey>> keySelector) {
+                _query.OrderBy(keySelector);
+                return this;
+            }
+
+            IContentQuery<T, TR> IContentQuery<T, TR>.OrderByDescending<TKey>(Expression<Func<TR, TKey>> keySelector) {
+                _query.OrderByDescending(keySelector);
                 return this;
             }
 
