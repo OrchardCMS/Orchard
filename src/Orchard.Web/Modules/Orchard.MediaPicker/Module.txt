@@ -5,7 +5,7 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.5
 OrchardVersion: 1.4
-Description: Description for the module
+Description: UI for browsing for, uploading, or selecting an image for an HTML editor.
 Dependencies: Orchard.Media, Orchard.jQuery
 FeatureDescription: UI for browsing for, uploading, or selecting an image for an HTML editor.
 Category: Input Editor
