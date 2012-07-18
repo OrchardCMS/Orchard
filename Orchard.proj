@@ -42,6 +42,12 @@
     <CallTarget Targets="Package"/> 
   </Target>
 
+  <Target Name="FastBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
   <Target Name="FullBuild">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
