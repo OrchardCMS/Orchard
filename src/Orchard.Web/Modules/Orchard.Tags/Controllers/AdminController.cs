@@ -26,6 +26,9 @@ namespace Orchard.Tags.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Can't manage tags")))
+                return new HttpUnauthorizedResult();
+
             IEnumerable<TagRecord> tags = _tagService.GetTags();
             var entries = tags.Select(CreateTagEntry).ToList();
             var model = new TagsAdminIndexViewModel { Tags = entries };
@@ -65,6 +68,9 @@ namespace Orchard.Tags.Controllers {
         [HttpPost, ActionName("Index")]
         [FormValueRequired("submit.Create")]
         public ActionResult IndexCreatePOST() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't create tag")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new TagsAdminCreateViewModel();
 
             if (!TryUpdateModel(viewModel)) {
