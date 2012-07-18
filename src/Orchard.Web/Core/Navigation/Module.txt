@@ -7,4 +7,4 @@ OrchardVersion: 1.5
 Description: The navigation module creates and manages a simple navigation menu for the front-end of the application and allows you to add content items to the admin menu.
 FeatureDescription: Menu management.
 Category: Core
-FeatureDependencies: Orchard.ContentPicker, Title
+Dependencies: Orchard.ContentPicker, Title
