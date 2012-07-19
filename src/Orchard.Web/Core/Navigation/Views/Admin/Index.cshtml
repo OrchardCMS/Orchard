@@ -24,7 +24,7 @@
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation" }) }, new { @class = "button" })
+                @Html.ActionLink(T("Edit").Text, "Edit", "Admin", new { area = "Contents", id = Model.CurrentMenu.Id, returnUrl = Url.Action("Index", "Admin", new { area = "Navigation", menuId = Model.CurrentMenu.Id }) }, new { @class = "button" })
             </fieldset>
         }
     }
@@ -35,6 +35,7 @@
 
 
 @using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Hidden("menuId", Model.CurrentMenu.Id)
     <div class="sections">
         <div class="primary">
             <div class="container">

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
@@ -78,7 +79,7 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries) {
+        public ActionResult IndexPOST(IList<MenuItemEntry> menuItemEntries, int? menuId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -90,7 +91,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { menuId });
         }
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
