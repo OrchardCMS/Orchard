@@ -113,8 +113,11 @@ namespace Orchard.Core.Navigation.Controllers {
                 return new HttpUnauthorizedResult();
 
             MenuPart menuPart = _menuService.Get(id);
+            int? menuId = null;
 
             if (menuPart != null) {
+                menuId = menuPart.Menu.Id;
+
                 // if the menu item is a concrete content item, don't delete it, just unreference the menu
                 if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
                     menuPart.Menu = null;
@@ -124,7 +127,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { menuId });
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
