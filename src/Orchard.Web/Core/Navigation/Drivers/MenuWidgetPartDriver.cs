@@ -43,6 +43,10 @@ namespace Orchard.Core.Navigation.Drivers {
         }
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
             return ContentShape( "Parts_MenuWidget", () => {
+                if(part.Menu == null) {
+                    return null;
+                }
+
                 var menu = _menuService.GetMenu(part.Menu.Id);
 
                 if(menu == null) {

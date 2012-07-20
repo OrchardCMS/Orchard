@@ -196,26 +196,23 @@ namespace Orchard.UI.Navigation {
 
             foreach (var item in items) {
                 MenuItem parent = null;
-                var position = item.Position;
-                
+                var parentPosition = String.Empty;
 
-                while (parent == null && !String.IsNullOrEmpty(position)) {
-                    if (index.TryGetValue(position, out parent)) {
-                        parent.Items = parent.Items.Concat(new [] { item });
-                    }
+                var lastSegment = item.Position.LastIndexOf('.');
+                if (lastSegment != -1) {
+                    parentPosition = item.Position.Substring(0, lastSegment);
+                }
 
-                    position = position.Substring(0, position.Length - 1);
-                };
+                if (index.TryGetValue(parentPosition, out parent)) {
+                    parent.Items = parent.Items.Concat(new [] { item });
+                }
+                else {
+                    result.Add(item);
+                }
 
                 if (!index.ContainsKey(item.Position)) {
                     // prevent invalid positions
                     index.Add(item.Position, item);    
-                }
-                
-
-                // if the current element has no parent, it's a top level item
-                if (parent == null) {
-                    result.Add(item);
                 }
             }
 

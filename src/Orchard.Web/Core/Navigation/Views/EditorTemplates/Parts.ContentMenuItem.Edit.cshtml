@@ -24,7 +24,7 @@
                 jQuery('#title-@Html.FieldIdFor(m => m.ContentItemId)').text(data.displayText);
 
                 // define the menu text if it's empty
-                var menuText = jQuery('#MenuText');
+                var menuText = jQuery('#MenuPart_MenuText');
                 if (menuText.val().length == 0) {
                     menuText.val(data.displayText);
                 }
