@@ -60,6 +60,11 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\mysql\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NuGet.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
       <Private>True</Private>

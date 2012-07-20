@@ -36,12 +36,19 @@ if (!Model.DatabaseIsPreconfigured) {
     </div>
     <div>
         @Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })
-        <label for="sql" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
+        <label for="sql" class="forcheckbox">@T("Use an existing SQL Server, SQL Express or MySql database")</label>
+        <div data-controllerid="sql">
+            <label for="DatabaseProviderName">@T("Database server type")</label>
+            @Html.DropDownListFor(svm => svm.DatabaseType, Enum.GetValues(typeof(Orchard.Setup.Controllers.SetupDatabaseType)).Cast<Orchard.Setup.Controllers.SetupDatabaseType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }), new { id = "databaseType" })
+        </div>
         <div data-controllerid="sql">
             <label for="DatabaseConnectionString">@T("Connection string")</label>
             @Html.EditorFor(svm => svm.DatabaseConnectionString)
-            <span class="hint">
-            @T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+            <span id="databaseType0" class="hint databaseTypeHint">
+            @T("SQL Server Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+            </span>
+            <span id="databaseType1" class="hint databaseTypeHint" style="display: none">
+            @T("MySQL Example:")<br />@T("Server=MySqlServerName;Port=3306;User Id=UserName;Password=Password;Persist Security Info=True;Database=DatabaseName;Pooling=True;")
             </span>
         </div>
         <div data-controllerid="sql">

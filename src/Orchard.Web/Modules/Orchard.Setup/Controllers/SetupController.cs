@@ -111,11 +111,32 @@ namespace Orchard.Setup.Controllers {
             }
 
             try {
+                string providerName = null;
+
+                if (model.DatabaseOptions)
+                    providerName = "SqlCe";
+                else
+                {
+                    switch (model.DatabaseType)
+                    {
+                        case SetupDatabaseType.SqlServer:
+                            providerName = "SqlServer";
+                            break;
+
+                        case SetupDatabaseType.MySql:
+                            providerName = "MySql";
+                            break;
+
+                        default:
+                            throw new ApplicationException("Unknown database type: " + model.DatabaseType);
+                    }
+                }
+
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
                     AdminPassword = model.AdminPassword,
-                    DatabaseProvider = model.DatabaseOptions ? "SqlCe" : "SqlServer",
+                    DatabaseProvider = providerName,
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
                     EnabledFeatures = null, // default list
