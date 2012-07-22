@@ -19,6 +19,7 @@ using Orchard.Data.Conventions;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Providers {
+    [Serializable]
     public abstract class AbstractDataServicesProvider : IDataServicesProvider {
 
         public abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
@@ -56,6 +57,7 @@ namespace Orchard.Data.Providers {
                 .Conventions.AddFromAssemblyOf<DataModule>();
         }
 
+        [Serializable]
         class TypeSource : ITypeSource {
             private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
@@ -72,6 +74,7 @@ namespace Orchard.Data.Providers {
             }
         }
 
+        [Serializable]
         class OrchardLoadEventListener : DefaultLoadEventListener, ILoadEventListener {
 
             public new void OnLoad(LoadEvent @event, LoadType loadType) {

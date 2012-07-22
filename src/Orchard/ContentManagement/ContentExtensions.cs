@@ -137,19 +137,6 @@ namespace Orchard.ContentManagement {
         public static IEnumerable<T> Slice<T>(this IContentQuery<T> query, int count) where T : IContent {
             return query.Slice(0, count);
         }
-
-        public static bool IsStartingWith(this string property, string value) {
-            return property.IsLike(value + "*");
-        }
-
-        public static bool IsEndingWith(this string property, string value) {
-            return property.IsLike("*" + value);
-        }
-
-        public static bool IsContaining(this string property, string value) {
-            return property.IsLike("*" + value + "*");
-        }
-
     }
 
     public static class ContentGetExtensions {

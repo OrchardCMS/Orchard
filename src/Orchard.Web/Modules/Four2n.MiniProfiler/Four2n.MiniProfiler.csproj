@@ -54,14 +54,13 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MiniProfiler">
-      <HintPath>..\..\lib\MiniProfiler\MiniProfiler.dll</HintPath>
+      <HintPath>lib\MiniProfiler.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="PoorMansTSqlFormatterLib, Version=1.2.2.36561, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\PoorMansTSqlFormatter\PoorMansTSqlFormatterLib.dll</HintPath>
+    <Reference Include="PoorMansTSqlFormatterLib">
+      <HintPath>lib\PoorMansTSqlFormatterLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
