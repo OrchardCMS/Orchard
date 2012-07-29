@@ -13,16 +13,16 @@
     }
 })();
 
-(function () {
-    $('#databaseType').change(function () {
-        $('.databaseTypeHint').hide();
-        $('#databaseType' + $(this).val()).show();
-    });
+(function ($) {
+       $('#databaseType').change(function () {
+              $('.databaseTypeHint').hide();
+              $('#databaseType' + $(this).val()).show();
+       });
 
-    // This is to get right info after postback
-    $('.databaseTypeHint').hide();
-    $('#databaseType' + $(this).val()).show();
-})();
+       // This is to get right info after postback
+       $('.databaseTypeHint').hide();
+       $('#databaseType' + $(this).val()).show();
+})(jQuery);
 
 (function ($) {
        $("select.recipe").change(function () { // class="recipe" on the select element 
