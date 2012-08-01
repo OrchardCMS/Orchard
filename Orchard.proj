@@ -21,6 +21,7 @@
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
     <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
+    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
     <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
 
@@ -70,6 +71,13 @@
     <CallTarget Targets="Package-Zip"/>
   </Target>
 
+  <Target Name="Precompiled">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Precompiled"/>
+  </Target>
+  
   <Target Name="Profiling">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
@@ -308,6 +316,26 @@
     <MakeDir Directories="$(MsDeployFolder)\Orchard\bin\HostRestart"/>
   </Target>
 
+  <!-- Packaging (Precompiled) -->
+  <Target Name="Package-Precompiled">
+    <ItemGroup>
+      <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj" />
+      <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Precompiled-Folder-Input)"
+        DestinationFolder="$(PrecompiledFolder)\%(RecursiveDir)"/>
+
+    <!-- disable dynamic compilation loader -->
+    <Move SourceFiles="$(PrecompiledFolder)\Config\Sample.HostComponents.config"
+    DestinationFiles="$(PrecompiledFolder)\Config\HostComponents.config"/>
+
+    <XmlUpdate XmlFileName="$(PrecompiledFolder)\Config\HostComponents.config"
+      XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value"
+      Value="true" />
+
+    <MakeDir Directories="$(PrecompiledFolder)\bin\HostRestart"/>
+  </Target>
   <Target Name="Package-Zip">
     <ItemGroup>
       <Zip-Exclude Include="
