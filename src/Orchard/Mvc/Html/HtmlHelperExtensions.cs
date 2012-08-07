@@ -280,10 +280,9 @@ namespace Orchard.Mvc.Html {
         #region AntiForgeryTokenOrchard
 
         public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
-            var siteSalt = htmlHelper.GetWorkContext().CurrentSite.SiteSalt;
 
             try {
-                return htmlHelper.AntiForgeryToken(siteSalt);
+                return htmlHelper.AntiForgeryToken();
             }
             catch (HttpAntiForgeryException) {
                 // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
@@ -298,7 +297,7 @@ namespace Orchard.Mvc.Html {
                 htmlHelper.ViewContext.HttpContext.Request.Cookies.Remove(antiForgeryTokenName);
 
                 // Try again
-                return htmlHelper.AntiForgeryToken(siteSalt);
+                return htmlHelper.AntiForgeryToken();
             }
         }
 

@@ -59,6 +59,7 @@ namespace Orchard.Environment.ShellBuilders {
                 Descriptor = descriptor,
                 Dependencies = dependencies.Concat(modules).ToArray(),
                 Controllers = controllers,
+                HttpControllers = httpControllers,
                 Records = records,
             };
 

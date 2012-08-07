@@ -32,8 +32,7 @@ namespace Orchard.Mvc.AntiForgery {
                 return;
             }
 
-            var siteSalt = _siteService.GetSiteSettings().SiteSalt;
-            var validator = new ValidateAntiForgeryTokenAttribute {Salt = siteSalt};
+            var validator = new ValidateAntiForgeryTokenAttribute();
             validator.OnAuthorization(filterContext);
 
             if (filterContext.HttpContext is HackHttpContext)

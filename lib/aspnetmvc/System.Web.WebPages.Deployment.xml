@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Web.WebPages.Deployment</name>
+  </assembly>
+  <members>
+    <member name="T:System.Web.WebPages.Deployment.PreApplicationStartCode">
+      <summary>Provides a registration point for pre-application start code for Web Pages deployment.</summary>
+    </member>
+    <member name="M:System.Web.WebPages.Deployment.PreApplicationStartCode.Start">
+      <summary>Registers pre-application start code for Web Pages deployment.</summary>
+    </member>
+    <member name="T:System.Web.WebPages.Deployment.WebPagesDeployment">
+      <summary>Provides methods to confirm the deployment of a Web Pages application.</summary>
+    </member>
+    <member name="F:System.Web.WebPages.Deployment.WebPagesDeployment.CacheKeyPrefix">
+      <summary>Represents the prefix for files that are stored in the cache.</summary>
+    </member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetAssemblyPath(System.Version)">
+      <summary>Returns the full path of the folder that contains ASP.NET Web Pages assemblies for the specified version.</summary>
+      <returns>The full path of the folder that contains ASP.NET Web Pages assemblies.</returns>
+      <param name="version">The version of the assemblies.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="version" /> is null.</exception>
+      <exception cref="T:System.InvalidOperationException">The registry key for the path cannot be found.-or-The path cannot be found.</exception>
+    </member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetIncompatibleDependencies(System.String)"></member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetMaxVersion"></member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetVersion(System.String)">
+      <summary>Returns the version of ASP.NET Web Pages that is installed.</summary>
+      <returns>The version of ASP.NET Web Pages that is installed, or null if the version is undetermined.</returns>
+      <param name="path">The path of the root directory for the application.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="path" /> is null or empty.</exception>
+    </member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetVersionWithoutEnabledCheck(System.String)"></member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetWebPagesAssemblies"></member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.IsEnabled(System.String)">
+      <summary>Returns a value that indicates whether the Web Pages application is enabled.</summary>
+      <returns>true if the Web Pages application is enabled; otherwise, false.</returns>
+      <param name="path">The path of the root directory for the application.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="path" /> is null or empty.</exception>
+    </member>
+    <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.IsExplicitlyDisabled(System.String)">
+      <summary>Returns a value that indicates whether the Web Pages application is explicitly disabled.</summary>
+      <returns>true if the Web Pages application is explicitly disabled; otherwise, false.</returns>
+      <param name="path">The path of the root directory for the application.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="path" /> is null or empty.</exception>
+    </member>
+  </members>
+</doc>
