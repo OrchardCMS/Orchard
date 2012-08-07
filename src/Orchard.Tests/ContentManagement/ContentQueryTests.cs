@@ -201,7 +201,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Clear();
 
             var ascending = _manager.Query("gamma")
-                .OrderBy<GammaRecord, string>(x => x.Frap)
+                .OrderBy<GammaRecord>(x => x.Frap)
                 .List<GammaPart>().ToList();
 
             Assert.That(ascending.Count(), Is.EqualTo(5));
@@ -229,11 +229,11 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
 
             var reverseById = _manager.Query()
-                .OrderByDescending<GammaRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord>(x => x.Id)
                 .List();
 
             var subset = _manager.Query()
-                .OrderByDescending<GammaRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord>(x => x.Id)
                 .Slice(2, 3);
 
             Assert.That(subset.Count(), Is.EqualTo(3));

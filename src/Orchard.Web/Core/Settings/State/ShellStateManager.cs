@@ -19,7 +19,7 @@ namespace Orchard.Core.Settings.State {
         }
 
         public ShellState GetShellState() {
-            var stateRecord = _shellStateRepository.Get(x => true) ?? new ShellStateRecord();
+            var stateRecord = _shellStateRepository.Get(x => x != null) ?? new ShellStateRecord();
             var descriptor = _shellDescriptorManager.GetShellDescriptor();
             var extraFeatures = descriptor == null ? Enumerable.Empty<string>() : descriptor.Features
                 .Select(r => r.Name)
@@ -40,7 +40,7 @@ namespace Orchard.Core.Settings.State {
         }
 
         private ShellFeatureStateRecord FeatureRecord(string name) {
-            var stateRecord = _shellStateRepository.Get(x => true) ?? new ShellStateRecord();
+            var stateRecord = _shellStateRepository.Get(x => x != null) ?? new ShellStateRecord();
             var record = stateRecord.Features.SingleOrDefault(x => x.Name == name);
             if (record == null) {
                 record = new ShellFeatureStateRecord { Name = name };

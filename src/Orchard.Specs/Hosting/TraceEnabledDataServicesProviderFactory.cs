@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Cfg.Db;
 using Orchard.Data.Providers;
+using MsSqlCeConfiguration = FluentNHibernate.Cfg.Db.MsSqlCeConfiguration;
 
 namespace Orchard.Specs.Hosting {
     public class TraceEnabledDataServicesProviderFactory : IDataServicesProviderFactory {

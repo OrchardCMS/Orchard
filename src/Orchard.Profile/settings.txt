@@ -18,7 +18,7 @@ settings
     //   
     //--------------------------------------------------------------------------
 
-    virtualclients = 1;
+    virtualclients = 20;
     
     //--------------------------------------------------------------------------
     // Performance counters (pass '-x' option to wcctl.exe to enable)

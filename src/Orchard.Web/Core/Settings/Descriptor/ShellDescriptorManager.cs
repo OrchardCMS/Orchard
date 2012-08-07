@@ -54,7 +54,7 @@ namespace Orchard.Core.Settings.Descriptor {
         }
 
         private ShellDescriptorRecord GetDescriptorRecord() {
-            return _shellDescriptorRepository.Get(x => true);
+            return _shellDescriptorRepository.Get(x => x != null);
         }
 
         public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {

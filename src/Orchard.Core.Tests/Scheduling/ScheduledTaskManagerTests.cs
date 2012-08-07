@@ -85,7 +85,7 @@ namespace Orchard.Core.Tests.Scheduling {
             _session.Flush();
             _session.Clear();
 
-            var tasks = _repository.Fetch(x => true);
+            var tasks = _repository.Fetch(x => x != null);
             Assert.That(tasks.Count(), Is.EqualTo(2));
             Assert.That(tasks, Has.All.Property("TaskType").EqualTo("Ignore"));
 

@@ -21,6 +21,7 @@ namespace Orchard.Data {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly IDatabaseCacheConfiguration _cacheConfiguration;
         private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly IAppDataFolder _appDataFolder;
         private readonly ISessionConfigurationCache _sessionConfigurationCache;
@@ -34,13 +35,15 @@ namespace Orchard.Data {
             IDataServicesProviderFactory dataServicesProviderFactory,
             IAppDataFolder appDataFolder,
             ISessionConfigurationCache sessionConfigurationCache,
-            IHostEnvironment hostEnvironment) {
+            IHostEnvironment hostEnvironment,
+            IDatabaseCacheConfiguration cacheConfiguration) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _dataServicesProviderFactory = dataServicesProviderFactory;
             _appDataFolder = appDataFolder;
             _sessionConfigurationCache = sessionConfigurationCache;
             _hostEnvironment = hostEnvironment;
+            _cacheConfiguration = cacheConfiguration;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -93,9 +96,11 @@ namespace Orchard.Data {
             var config = _sessionConfigurationCache.GetConfiguration(() =>
                 _dataServicesProviderFactory
                     .CreateProvider(parameters)
-                    .BuildConfiguration(parameters));
+                    .BuildConfiguration(parameters)
+                .Cache(c => _cacheConfiguration.Configure(c))
+            );
             
-            #region NH-2.1.2 specific optimization
+            #region NH specific optimization
             // cannot be done in fluent config
             // the IsSelectable = false prevents unused ContentPartRecord proxies from being created 
             // for each ContentItemRecord or ContentItemVersionRecord.

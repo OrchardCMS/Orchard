@@ -367,7 +367,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
             _session.Clear();
 
-            foreach (var x in _container.Resolve<IRepository<ContentItemVersionRecord>>().Fetch(x => true)) {
+            foreach (var x in _container.Resolve<IRepository<ContentItemVersionRecord>>().Fetch(x => x != null)) {
                 Trace.WriteLine(string.Format("{0}/{1} #{2} published:{3} latest:{4}",
                     x.ContentItemRecord.Id,
                     x.Id,

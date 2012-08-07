@@ -8,7 +8,7 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Data {
-    public class Repository<T> : IRepository<T> {
+    public class Repository<T> : IRepository<T> where T : class {
         private readonly ISessionLocator _sessionLocator;
 
         public Repository(ISessionLocator sessionLocator) {
@@ -27,7 +27,7 @@ namespace Orchard.Data {
         }
 
         public virtual IQueryable<T> Table {
-            get { return Session.Linq<T>(); }
+            get { return Session.Query<T>().Cacheable(); }
         }
 
         #region IRepository<T> Members
@@ -99,7 +99,7 @@ namespace Orchard.Data {
         public virtual void Update(T entity) {
             Logger.Debug("Update {0}", entity);
             Session.Evict(entity);
-            Session.SaveOrUpdateCopy(entity);
+            Session.Merge(entity);
         }
 
         public virtual void Delete(T entity) {

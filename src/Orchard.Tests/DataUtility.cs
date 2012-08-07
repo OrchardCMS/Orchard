@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentNHibernate;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Diagnostics;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Providers;
 using Orchard.Environment.ShellBuilders.Models;
+using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
 namespace Orchard.Tests {
     public static class DataUtility {
@@ -18,7 +21,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }));
+            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }).ToList());
             var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
             ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
@@ -63,6 +66,14 @@ namespace Orchard.Tests {
 
             public IEnumerable<Type> GetTypes() {
                 return _types;
+            }
+
+            public void LogSource(IDiagnosticLogger logger) {
+                throw new NotImplementedException();
+            }
+
+            public string GetIdentifier() {
+                throw new NotImplementedException();
             }
 
             #endregion

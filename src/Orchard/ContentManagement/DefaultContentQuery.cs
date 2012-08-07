@@ -1,29 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection.Emit;
 using NHibernate;
 using NHibernate.Criterion;
-using NHibernate.Impl;
-using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Utility.Extensions;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
-using System.Reflection;
-using Orchard.Data.Conventions;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
         private readonly ISessionLocator _sessionLocator;
         private ISession _session;
-        private ICriteria _itemVersionCriteria;
+        private IQueryOver<ContentItemVersionRecord, ContentItemVersionRecord> _itemVersionQueryOver;
+        private readonly IDictionary<string, object> _joins;
+        
         private VersionOptions _versionOptions;
 
         public DefaultContentQuery(IContentManager contentManager, ISessionLocator sessionLocator) {
             _sessionLocator = sessionLocator;
             ContentManager = contentManager;
+
+            _joins = new Dictionary<string, object>();
         }
 
         public IContentManager ContentManager { get; private set; }
@@ -34,40 +36,61 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        ICriteria BindCriteriaByPath(ICriteria criteria, string path) {
-            return criteria.GetCriteriaByPath(path) ?? criteria.CreateCriteria(path);
+        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name) {
+            if (_joins.ContainsKey(typeof(TRecord).Name)) {
+                return (IQueryOver<ContentItemVersionRecord, TRecord>)_joins[typeof(TRecord).Name];
+            }
+
+            // public TPartRecord TPartRecord {get;set;}
+            var dynamicMethod = new DynamicMethod(name, typeof(TRecord), null, typeof(TU));
+            var syntheticMethod = new ContentItemAlteration.SyntheticMethodInfo(dynamicMethod, typeof(TU));
+            var syntheticProperty = new ContentItemAlteration.SyntheticPropertyInfo(syntheticMethod);
+
+            // record => record.TPartRecord
+            var parameter = Expression.Parameter(typeof(TU), "record");
+            var syntheticExpression = (Expression<Func<TU, TRecord>>)Expression.Lambda(
+                typeof(Func<TU, TRecord>),
+                Expression.Property(parameter, syntheticProperty),
+                parameter);
+
+            var join = queryOver.JoinQueryOver(syntheticExpression);
+            _joins[typeof(TRecord).Name] = join;
+
+            return join;
         }
 
-        ICriteria BindTypeCriteria() {
+        IQueryOver<ContentItemVersionRecord, ContentTypeRecord> BindTypeQueryOver() {
             // ([ContentItemVersionRecord] >join> [ContentItemRecord]) >join> [ContentType]
 
-            return BindCriteriaByPath(BindItemCriteria(), "ContentType");
+            return BindQueryOverByPath<ContentTypeRecord, ContentItemRecord>(BindItemQueryOver(), "ContentType");
         }
 
-        ICriteria BindItemCriteria() {
+        IQueryOver<ContentItemVersionRecord, ContentItemRecord> BindItemQueryOver() {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
 
-            return BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord");
+            return BindQueryOverByPath<ContentItemRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), "ContentItemRecord");
         }
 
-        ICriteria BindItemVersionCriteria() {
-            if (_itemVersionCriteria == null) {
-                _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
+        IQueryOver<ContentItemVersionRecord, ContentItemVersionRecord> BindItemVersionQueryOver() {
+            if (_itemVersionQueryOver == null) {
+                _itemVersionQueryOver = BindSession().QueryOver<ContentItemVersionRecord>();
+                _itemVersionQueryOver.Cacheable();
             }
-            return _itemVersionCriteria;
+            return _itemVersionQueryOver;
         }
 
-        ICriteria BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
-            if (typeof(TRecord).IsSubclassOf(typeof(ContentPartVersionRecord))) {
-                return BindCriteriaByPath(BindItemVersionCriteria(), typeof(TRecord).Name);
+        IQueryOver<ContentItemVersionRecord, TRecord> BindPartQueryOver<TRecord>() where TRecord : ContentPartRecord {
+            if (typeof (TRecord).IsSubclassOf(typeof (ContentPartVersionRecord))) {
+                return BindQueryOverByPath<TRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), typeof(TRecord).Name);
             }
-            return BindCriteriaByPath(BindItemCriteria(), typeof(TRecord).Name);
+
+            return BindQueryOverByPath<TRecord, ContentItemRecord>(BindItemQueryOver(), typeof(TRecord).Name);
         }
 
 
         private void ForType(params string[] contentTypeNames) {
             if (contentTypeNames != null && contentTypeNames.Length != 0)
-                BindTypeCriteria().Add(Restrictions.InG("Name", contentTypeNames));
+                BindTypeQueryOver().Where(Restrictions.InG("Name", contentTypeNames));
         }
 
         public void ForVersion(VersionOptions options) {
@@ -76,86 +99,66 @@ namespace Orchard.ContentManagement {
 
         private void Where<TRecord>() where TRecord : ContentPartRecord {
             // this simply demands an inner join
-            BindPartCriteria<TRecord>();
+            BindPartQueryOver<TRecord>();
         }
 
         private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
+            BindPartQueryOver<TRecord>().Where(predicate);
+        }
 
-            // build a linq to nhibernate expression
-            var options = new QueryOptions();
-            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
-            var queryable = new Query<TRecord>(queryProvider, options).Where(predicate);
+        private void OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
+            BindPartQueryOver<TRecord>().OrderBy(keySelector).Asc();
+        }
 
-            // translate it into the nhibernate ICriteria implementation
-            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
-
-            // attach the criterion from the predicate to this query's criteria for the record
-            var recordCriteria = BindPartCriteria<TRecord>();
-            foreach (var expressionEntry in criteria.IterateExpressionEntries()) {
-                recordCriteria.Add(expressionEntry.Criterion);
-            }
+        private void OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
+            BindPartQueryOver<TRecord>().OrderBy(keySelector).Desc();
         }
 
         private void OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
-            // build a linq to nhibernate expression
-            var options = new QueryOptions();
-            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
-            var queryable = new Query<TRecord>(queryProvider, options).OrderBy(keySelector);
-
-            // translate it into the nhibernate ordering
-            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
-
-            // attaching orderings to the query's criteria
-            var recordCriteria = BindPartCriteria<TRecord>();
-            foreach (var ordering in criteria.IterateOrderings()) {
-                recordCriteria.AddOrder(ordering.Order);
-            }
+            BindPartQueryOver<TRecord>().OrderBy(AddBox(keySelector)).Asc();
         }
 
         private void OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
-            // build a linq to nhibernate expression
-            var options = new QueryOptions();
-            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
-            var queryable = new Query<TRecord>(queryProvider, options).OrderByDescending(keySelector);
+            BindPartQueryOver<TRecord>().OrderBy(AddBox(keySelector)).Desc();
+        }
 
-            // translate it into the nhibernate ICriteria implementation
-            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
-
-            // attaching orderings to the query's criteria
-            var recordCriteria = BindPartCriteria<TRecord>();
-            foreach (var ordering in criteria.IterateOrderings()) {
-                recordCriteria.AddOrder(ordering.Order);
-            }
+        private static Expression<Func<TInput, object>> AddBox<TInput, TOutput>
+        (Expression<Func<TInput, TOutput>> expression) {
+            // Add the boxing operation, but get a weakly typed expression
+            Expression converted = Expression.Convert
+                 (expression.Body, typeof(object));
+            // Use Expression.Lambda to get back to strong typing
+            return Expression.Lambda<Func<TInput, object>>
+                 (converted, expression.Parameters);
         }
 
         private IEnumerable<ContentItem> Slice(int skip, int count) {
-            var criteria = BindItemVersionCriteria();
-            
-            criteria.ApplyVersionOptionsRestrictions(_versionOptions);
+            var queryOver = BindItemVersionQueryOver();
 
-            criteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
-            criteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
+            queryOver.ApplyVersionOptionsRestrictions(_versionOptions);
 
             // TODO: put 'removed false' filter in place
             if (skip != 0) {
-                criteria = criteria.SetFirstResult(skip);
+                queryOver.Skip(skip);
             }
+
             if (count != 0) {
-                criteria = criteria.SetMaxResults(count);
+                queryOver.Take(count);
             }
-            return criteria
-                .List<ContentItemVersionRecord>()
-                .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
-                .ToReadOnlyCollection();
+
+            return new ReadOnlyCollection<ContentItem>(queryOver
+                    .List<ContentItemVersionRecord>()
+                    .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                    .ToList());
         }
 
         int Count() {
-            var criteria = (ICriteria)BindItemVersionCriteria().Clone();
-            criteria.ClearOrders();
+            var queryOver = BindItemVersionQueryOver();
+            queryOver.ClearOrders();
 
-            criteria.ApplyVersionOptionsRestrictions(_versionOptions);
+            queryOver.ApplyVersionOptionsRestrictions(_versionOptions);
 
-            return criteria.SetProjection(Projections.RowCount()).UniqueResult<Int32>();
+            return queryOver.Select(Projections.RowCount()).FutureValue<int>().Value;
         }
 
         IContentQuery<TPart> IContentQuery.ForPart<TPart>() {
@@ -209,13 +212,23 @@ namespace Orchard.ContentManagement {
                 return new ContentQuery<T, TRecord>(_query);
             }
 
-            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) {
                 _query.OrderBy(keySelector);
+                 return new ContentQuery<T, TRecord>(_query);
+            }
+
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) {
+                _query.OrderByDescending(keySelector);
+                return new ContentQuery<T, TRecord>(_query);
+            }
+
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+                _query.OrderBy(AddBox(keySelector));
                 return new ContentQuery<T, TRecord>(_query);
             }
 
             IContentQuery<T, TRecord> IContentQuery<T>.OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
-                _query.OrderByDescending(keySelector);
+                _query.OrderByDescending(AddBox(keySelector));
                 return new ContentQuery<T, TRecord>(_query);
             }
         }
@@ -248,14 +261,23 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
+            IContentQuery<T, TR> IContentQuery<T, TR>.OrderBy(Expression<Func<TR, object>> keySelector) {
+                _query.OrderBy(keySelector);
+                return this;
+            }
+
+            IContentQuery<T, TR> IContentQuery<T, TR>.OrderByDescending(Expression<Func<TR, object>> keySelector) {
+                _query.OrderByDescending(keySelector);
+                return this;
+            }
 
             public IContentQuery<T, TR> WithQueryHints(QueryHints hints) {
                 if (hints == QueryHints.Empty) {
                     return this;
                 }
 
-                var contentItemVersionCriteria = _query.BindItemVersionCriteria();
-                var contentItemCriteria = _query.BindItemCriteria();
+                var contentItemVersionCriteria = _query.BindItemVersionQueryOver();
+                var contentItemCriteria = _query.BindItemQueryOver();
 
                 var contentItemMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemRecord));
                 var contentItemVersionMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemVersionRecord));
@@ -268,18 +290,20 @@ namespace Orchard.ContentManagement {
 
                 // locate hints that match properties in the ContentItemVersionRecord
                 foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
-                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+                    // todo
+                    // contentItemVersionCriteria.Fetch(hit.Hint);
+                    // hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
                 }
 
                 // locate hints that match properties in the ContentItemRecord
                 foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
-                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+                    // todo
+                    // contentItemVersionCriteria.Fetch("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                    // hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
                 }
 
                 if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
-                    contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
+                    contentItemVersionCriteria.TransformUsing(new DistinctRootEntityResultTransformer());
 
                 return this;
             }
@@ -305,18 +329,18 @@ namespace Orchard.ContentManagement {
     }
 
     internal static class CriteriaExtensions {
-        internal static void ApplyVersionOptionsRestrictions(this ICriteria criteria, VersionOptions versionOptions) {
+        internal static void ApplyVersionOptionsRestrictions<T>(this IQueryOver<T, T> criteria, VersionOptions versionOptions) {
             if (versionOptions == null) {
-                criteria.Add(Restrictions.Eq("Published", true));
+                criteria.Where(Restrictions.Eq("Published", true));
             }
             else if (versionOptions.IsPublished) {
-                criteria.Add(Restrictions.Eq("Published", true));
+                criteria.Where(Restrictions.Eq("Published", true));
             }
             else if (versionOptions.IsLatest) {
-                criteria.Add(Restrictions.Eq("Latest", true));
+                criteria.Where(Restrictions.Eq("Latest", true));
             }
             else if (versionOptions.IsDraft) {
-                criteria.Add(Restrictions.And(
+                criteria.Where(Restrictions.And(
                     Restrictions.Eq("Latest", true),
                     Restrictions.Eq("Published", false)));
             }
