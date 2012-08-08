@@ -154,11 +154,14 @@ namespace Orchard.ContentManagement {
 
         int Count() {
             var queryOver = BindItemVersionQueryOver();
-            queryOver.ClearOrders();
 
-            queryOver.ApplyVersionOptionsRestrictions(_versionOptions);
+            // clone the query so that it doesn't affect the current one
+            var countQuery = queryOver.Clone();
+            countQuery.ClearOrders();
 
-            return queryOver.Select(Projections.RowCount()).FutureValue<int>().Value;
+            countQuery.ApplyVersionOptionsRestrictions(_versionOptions);
+
+            return countQuery.Select(Projections.RowCount()).FutureValue<int>().Value;
         }
 
         IContentQuery<TPart> IContentQuery.ForPart<TPart>() {
