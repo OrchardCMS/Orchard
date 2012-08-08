@@ -1,8 +1,8 @@
-﻿@using Orchard.ContentManagement;
+﻿@using Orchard.ContentManagement
 
 @{
-    var userCanRegister = @WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
-    var enableLostPassword = @WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
+    var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
+    var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
 }
 
 <h1 class="page-title">@Html.TitleForPage((string)Model.Title)</h1>
