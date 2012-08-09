@@ -49,8 +49,8 @@ namespace Orchard.WebApi {
             // Service name pattern matches the identification strategy
             var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
 
-            HttpControllerContext controllerContext = new HttpControllerContext(_configuration, routeData, request);
-
+            var controllerContext = new HttpControllerContext(_configuration, routeData, request);
+            
             // Now that the request container is known - try to resolve the controller information
             Meta<Lazy<IHttpController>> info;
             var workContext = controllerContext.GetWorkContext();

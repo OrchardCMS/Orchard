@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Web;
+using System.Web.Http.WebHost.Routing;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
@@ -49,8 +50,12 @@ namespace Orchard.Mvc.Routes {
 
             // otherwise wrap handler and return it
             routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler);
-            routeData.Values["IWorkContextAccessor"] = _workContextAccessor; // for WebApi
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
+
+            if (_route is HttpWebRoute) {
+                routeData.Values["IWorkContextAccessor"] = _workContextAccessor; // for WebApi
+            }
+            
             return routeData;
         }
 

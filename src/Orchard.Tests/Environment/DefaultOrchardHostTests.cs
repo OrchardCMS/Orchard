@@ -22,6 +22,7 @@ using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
+using Orchard.WebApi.Routes;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Tests.Environment {
@@ -60,6 +61,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterAutoMocking()
                         .Ignore<IExtensionFolders>()
                         .Ignore<IRouteProvider>()
+                        .Ignore<IHttpRouteProvider>()
                         .Ignore<IModelBinderProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();

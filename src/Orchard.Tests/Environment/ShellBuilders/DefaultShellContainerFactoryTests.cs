@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Core;
@@ -36,7 +37,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         ShellBlueprint CreateBlueprint(params ShellBlueprintItem[] items) {
             return new ShellBlueprint {
                 Dependencies = items.OfType<DependencyBlueprint>(),
-                Controllers = items.OfType<ControllerBlueprint>(),
+                Controllers = items.OfType<ControllerBlueprint>().Where(bp => typeof(IController).IsAssignableFrom(bp.Type)),
+                HttpControllers = items.OfType<ControllerBlueprint>().Where(bp => typeof(IHttpController).IsAssignableFrom(bp.Type)),
                 Records = items.OfType<RecordBlueprint>(),
             };
         }

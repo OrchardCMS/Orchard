@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Activation;
 using System.Web.Routing;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;

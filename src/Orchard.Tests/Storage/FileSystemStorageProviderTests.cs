@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 using System;
 using Orchard.Environment;
@@ -41,7 +42,14 @@ namespace Orchard.Tests.Storage {
 
         [TearDown]
         public void Term() {
-            Directory.Delete(_folderPath, true);
+            try {
+                Directory.Delete(_folderPath, true);
+            }
+            catch (IOException) {
+                // if a system handle is still active give some time to release it
+                Thread.Sleep(0);
+                Directory.Delete(_folderPath, true);
+            }
         }
 
 
