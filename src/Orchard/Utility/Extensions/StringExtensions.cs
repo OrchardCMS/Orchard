@@ -13,7 +13,7 @@ namespace Orchard.Utility.Extensions {
 
             var sb = new StringBuilder(camel);
 
-            for (int i = camel.Length-1; i>=0; i--) {
+            for (int i = camel.Length-1; i>0; i--) {
                 var current = sb[i];
                 if('A' <= current && current <= 'Z') {
                     sb.Insert(i, ' ');
@@ -138,7 +138,7 @@ namespace Orchard.Utility.Extensions {
                 ToArray();
         }
 
-        private static readonly char[] validSegmentChars = @"/?#[]@""^{}|`<>\t\r\n\f ".ToCharArray();
+        private static readonly char[] validSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
         public static bool IsValidUrlSegment(this string segment) {
             // valid isegment from rfc3987 - http://tools.ietf.org/html/rfc3987#page-8
             // the relevant bits:
