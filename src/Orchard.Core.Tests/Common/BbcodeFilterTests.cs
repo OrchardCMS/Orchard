@@ -25,7 +25,7 @@ namespace Orchard.Core.Tests.Common {
         public void ShouldReplaceImg() {
             const string text = "foo [img]bar[/img] baz";
             var processed = _filter.ProcessContent(text, null);
-            Assert.That(processed, Is.EqualTo("foo <img src=\"bar\">bar</img> baz"));
+            Assert.That(processed, Is.EqualTo("foo <img src=\"bar\" /> baz"));
         }
 
         [Test]
