@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
@@ -34,24 +35,24 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void Ellipsize_ShouldTuncateToTheExactNumber() {
             const string toEllipsize = "Lorem ipsum";
-            Assert.That(toEllipsize.Ellipsize(2, ""), Is.StringMatching("Lo"));
-            Assert.That(toEllipsize.Ellipsize(1, ""), Is.StringMatching("L"));
-            Assert.That(toEllipsize.Ellipsize(0, ""), Is.StringMatching(""));
+            Assert.That(toEllipsize.Ellipsize(2, ""), Is.EqualTo("Lo"));
+            Assert.That(toEllipsize.Ellipsize(1, ""), Is.EqualTo("L"));
+            Assert.That(toEllipsize.Ellipsize(0, ""), Is.EqualTo(""));
         }
         
         [Test]
         public void Ellipsize_TruncatedToWordBoundary() {
             const string toEllipsize = "Lorem ipsum";
-            Assert.That(toEllipsize.Ellipsize(8, ""), Is.StringMatching("Lorem"));
-            Assert.That(toEllipsize.Ellipsize(6, ""), Is.StringMatching("Lorem"));
-            Assert.That(toEllipsize.Ellipsize(5, ""), Is.StringMatching("Lorem"));
-            Assert.That(toEllipsize.Ellipsize(4, ""), Is.StringMatching(""));
+            Assert.That(toEllipsize.Ellipsize(8, ""), Is.EqualTo("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(6, ""), Is.EqualTo("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(5, ""), Is.EqualTo("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(4, ""), Is.EqualTo("Lore"));
         }
 
         [Test]
         public void Ellipsize_LongStringTruncatedToNearestWord() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
-            Assert.That(toEllipsize.Ellipsize(45), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur&#160;&#8230;"));
+            Assert.That(toEllipsize.Ellipsize(46), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur&#160;&#8230;"));
         }
 
         [Test]
@@ -73,6 +74,12 @@ namespace Orchard.Tests.Utility.Extensions {
         public void Ellipsize_CustomEllipsisStringIsUsed() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
             Assert.That(toEllipsize.Ellipsize(45, "........"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur........"));
+        }
+        [Test]
+        public void Ellipsize_WordBoundary() {
+            const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
+            Assert.That(toEllipsize.Ellipsize(43, "..."), Is.StringMatching("Lorem ipsum dolor sit amet, consectet..."));
+            Assert.That(toEllipsize.Ellipsize(43, "...", true), Is.StringMatching("Lorem ipsum dolor sit amet, ..."));
         }
 
         [Test]
@@ -172,7 +179,7 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void ReplaceNewLinesWith_ReplaceCRLFWithHtmlPsAndCRLF() {
             const string lotsOfLineFeeds = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\nMaecenas sed purus quis purus orci aliquam.";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith(@"</p>$1<p>"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>Maecenas sed purus quis purus orci aliquam."));
+            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith(@"</p>{0}<p>"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>Maecenas sed purus quis purus orci aliquam."));
         }
         [Test]
         public void ReplaceNewLinesWith_EmptyStringReturnsEmptyString() {
@@ -183,6 +190,87 @@ namespace Orchard.Tests.Utility.Extensions {
         public void ReplaceNewLinesWith_NullValueReturnsEmptyString() {
             const string lotsOfLineFeeds = null;
             Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching(""));
+        }
+
+        [Test]
+        public void StripShouldRemoveStart() {
+            Assert.That("abc".Strip('a'), Is.StringMatching("bc"));
+            Assert.That("abc".Strip("ab".ToCharArray()), Is.StringMatching("c"));
+        }
+
+        [Test]
+        public void StripShouldRemoveInside() {
+            Assert.That("abc".Strip('b'), Is.StringMatching("ac"));
+            Assert.That("abc".Strip("abc".ToCharArray()), Is.StringMatching(""));
+        }
+
+        [Test]
+        public void StripShouldRemoveEnd() {
+            Assert.That("abc".Strip('c'), Is.StringMatching("ab"));
+            Assert.That("abc".Strip("bc".ToCharArray()), Is.StringMatching("a"));
+        }
+
+        [Test]
+        public void StripShouldReturnIfEmpty() {
+            Assert.That("".Strip('a'), Is.StringMatching(""));
+            Assert.That("a".Strip("".ToCharArray()), Is.StringMatching("a"));
+        }
+
+        [Test]
+        public void AnyShouldReturnTrueAtStart() {
+            Assert.That("abc".Any('a'), Is.True);
+            Assert.That("abc".Any("ab".ToCharArray()), Is.True);
+        }
+
+        [Test]
+        public void AnyShouldReturnTrueAtEnd() {
+            Assert.That("abc".Any('c'), Is.True);
+            Assert.That("abc".Any("bc".ToCharArray()), Is.True);
+        }
+
+        [Test]
+        public void AnyShouldReturnTrueAtMiddle() {
+            Assert.That("abc".Any('b'), Is.True);
+            Assert.That("abc".Any("abc".ToCharArray()), Is.True);
+        }
+
+        [Test]
+        public void AnyShouldReturnFalseIfNotPresent() {
+            Assert.That("abc".Any("".ToCharArray()), Is.False);
+            Assert.That("abc".Any("d".ToCharArray()), Is.False);
+        }
+
+        [Test]
+        public void AllShouldReturnTrueIfAllArePresent() {
+            Assert.That("abc".All("abc".ToCharArray()), Is.True);
+            Assert.That("abc".All("abcd".ToCharArray()), Is.True);
+            Assert.That("".All("a".ToCharArray()), Is.True);
+            Assert.That("abc".All("abcd".ToCharArray()), Is.True);
+        }
+
+        [Test]
+        public void AllShouldReturnFalseIfAnyIsNotPresent() {
+            Assert.That("abc".All("".ToCharArray()), Is.False);
+            Assert.That("abc".All("a".ToCharArray()), Is.False);
+        }
+
+        [Test]
+        public void TranslateShouldThrowException() {
+            Assert.Throws<ArgumentNullException>(() => "a".Translate("".ToCharArray(), "a".ToCharArray()));
+            Assert.Throws<ArgumentNullException>(() => "a".Translate("a".ToCharArray(), "".ToCharArray()));
+        }
+
+        [Test]
+        public void TranslateShouldReturnSource() {
+            Assert.That("a".Translate("".ToCharArray(), "".ToCharArray()), Is.StringMatching(""));
+            Assert.That("".Translate("abc".ToCharArray(), "abc".ToCharArray()), Is.StringMatching(""));
+        }
+
+        [Test]
+        public void TranslateShouldReplaceChars() {
+            Assert.That("abc".Translate("a".ToCharArray(), "d".ToCharArray()), Is.StringMatching("dbc"));
+            Assert.That("abc".Translate("d".ToCharArray(), "d".ToCharArray()), Is.StringMatching("abc"));
+            Assert.That("abc".Translate("abc".ToCharArray(), "def".ToCharArray()), Is.StringMatching("def"));
         }
     }
 }

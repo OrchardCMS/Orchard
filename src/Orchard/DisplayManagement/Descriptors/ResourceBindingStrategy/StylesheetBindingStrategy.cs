@@ -9,6 +9,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.UI.Resources;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
     // discovers .css files and turns them into Style__<filename> shapes.
@@ -16,7 +17,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private static readonly Regex _safeName = new Regex(@"[/:?#\[\]@!&'()*+,;=\s\""<>\.\-_]+", RegexOptions.Compiled);
+        private static readonly char[] unsafeCharList = "/:?#[]@!&'()*+,;=\r\n\t\f\" <>.-_".ToCharArray();
 
         public StylesheetBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) {
             _extensionManager = extensionManager;
@@ -27,7 +28,8 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         private static string SafeName(string name) {
             if (string.IsNullOrWhiteSpace(name))
                 return String.Empty;
-            return _safeName.Replace(name, String.Empty).ToLowerInvariant();
+
+            return name.Strip(unsafeCharList).ToLowerInvariant();
         }
 
         public static string GetAlternateShapeNameFromFileName(string fileName) {
