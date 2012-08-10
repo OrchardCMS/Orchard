@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\BbcodeFilterTests.cs" />
     <Compile Include="Common\Providers\CommonPartProviderTests.cs" />
     <Compile Include="Body\BodyPartTests.cs" />
     <Compile Include="Feeds\Controllers\FeedControllerTests.cs" />
