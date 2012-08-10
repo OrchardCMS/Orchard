@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using NHibernate.Criterion;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
@@ -47,24 +48,34 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        private IEnumerable<WidgetPart> GetAllWidgets() {
+        public IEnumerable<WidgetPart> GetWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
+                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>()).
+                List();
+        }
+
+        public IEnumerable<WidgetPart> GetOrphanedWidgets() {
+            return _contentManager
+                .Query<WidgetPart, WidgetPartRecord>()
+                .Where<CommonPartRecord>(x => x.Container == null)
+                .List();
+        }
+
+        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
+            return _contentManager
+                .Query<WidgetPart, WidgetPartRecord>()
+                .Where<CommonPartRecord>(x => x.Container.Id == layerId)
                 .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets() {
-            return GetAllWidgets().Where(w => w.Has<ICommonPart>());
-        }
-
-        // info: (heskew) Just including invalid widgets for now. Eventually need to include any in a layer which no longer exists if possible.
-        public IEnumerable<WidgetPart> GetOrphanedWidgets() {
-            return GetAllWidgets().Where(w => !w.Has<ICommonPart>());
-        }
-
-        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
-            return GetWidgets().Where(widgetPart => widgetPart.As<ICommonPart>().Container.ContentItem.Id == layerId);
+        public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
+            return _contentManager
+                .Query<WidgetPart, WidgetPartRecord>()
+                .Where<CommonPartRecord>(x => x.Container.Id.IsIn(layerIds))
+                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
+                .List();
         }
 
         public IEnumerable<string> GetZones() {
