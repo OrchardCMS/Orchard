@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.AcceptanceCriteria;
 using FluentNHibernate.Conventions.Inspections;
@@ -18,12 +19,11 @@ namespace Orchard.Data.Conventions {
         }
 
         public void Accept(IAcceptanceCriteria<IManyToOneInspector> criteria) {
-            // todo
-            // criteria.Expect(x => x.Property != null && x.Property.IsDefined(typeof(AggregateAttribute), false));
+            criteria.Expect(x => x.Property != null && x.Property.MemberInfo.GetCustomAttributes(typeof(AggregateAttribute), false).Any());
         }
 
         public void Apply(IOneToManyCollectionInstance instance) {
-            instance.Fetch.Select();
+            instance.Fetch.Join();
             instance.Cache.NonStrictReadWrite();
         }
 

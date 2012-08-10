@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
+using FluentNHibernate.Mapping;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.ContentManagement.Records {
@@ -221,7 +222,7 @@ namespace Orchard.ContentManagement.Records {
             }
 
             public override object[] GetCustomAttributes(Type attributeType, bool inherit) {
-                throw new NotImplementedException();
+                return _getMethod.GetCustomAttributes(attributeType, inherit);
             }
 
             public override int MetadataToken {
