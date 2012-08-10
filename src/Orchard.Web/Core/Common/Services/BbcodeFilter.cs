@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using Orchard.Services;
 
@@ -82,30 +80,6 @@ namespace Orchard.Core.Common.Services {
 
                 sb.Insert(start, String.Format("<img src=\"{0}\" />", url));
             }
-
-            //var urlRegex = new Regex(@"\[url\]([^\]]+)\[\/url\]");
-            //var urlRegexWithLink = new Regex(@"\[url=([^\]]+)\]([^\]]+)\[\/url\]");
-            //var imgRegex = new Regex(@"\[img\]([^\]]+)\[\/img\]");
-
-            //text = urlRegex.Replace(text, "<a href=\"$1\">$1</a>");
-            //text = urlRegexWithLink.Replace(text, "<a href=\"$1\">$2</a>");
-
-            //var matches = imgRegex.Matches(text).OfType<Match>().OrderByDescending(m => m.Groups[0].Index);
-            //foreach(var match in matches) {
-            //    var index2 = match.Groups[0].Index;
-            //    var length = match.Groups[0].Length;
-            //    var url = match.Groups[1].Value.Trim();
-            //    if (!string.IsNullOrEmpty(url)) {
-            //        if (url[0]=='~')
-            //            url = VirtualPathUtility.ToAbsolute(url);
-            //        text =
-            //            text.Substring(0, index2) +
-            //            string.Format("<img src=\"{0}\" />", url) +
-            //            text.Substring(index2 + length);
-            //    }
-            //}
-
-            //text = imgRegex.Replace(text, "<img src=\"$1\" />");
 
             return sb.ToString();
         }
