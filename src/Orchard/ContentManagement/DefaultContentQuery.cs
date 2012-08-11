@@ -293,16 +293,14 @@ namespace Orchard.ContentManagement {
 
                 // locate hints that match properties in the ContentItemVersionRecord
                 foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    // todo
-                    // contentItemVersionCriteria.Fetch(hit.Hint);
-                    // hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+                    contentItemVersionCriteria.UnderlyingCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria.UnderlyingCriteria, ExtendCriteria);
                 }
 
                 // locate hints that match properties in the ContentItemRecord
                 foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    // todo
-                    // contentItemVersionCriteria.Fetch("ContentItemRecord." + hit.Hint, FetchMode.Eager);
-                    // hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+                    contentItemVersionCriteria.UnderlyingCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria.UnderlyingCriteria, ExtendCriteria);
                 }
 
                 if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
