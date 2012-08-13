@@ -148,6 +148,7 @@
     <Compile Include="Indexing\IndexingTaskExecutorTests.cs" />
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
+    <Compile Include="Media\Extensions\MediaHelpersTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
     <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
     <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />

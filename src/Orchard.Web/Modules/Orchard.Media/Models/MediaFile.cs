@@ -8,5 +8,6 @@ namespace Orchard.Media.Models {
         public long Size { get; set; }
         public string FolderName { get; set; }
         public DateTime LastUpdated { get; set; }
+        public string MediaPath { get; set; }
     }
 }

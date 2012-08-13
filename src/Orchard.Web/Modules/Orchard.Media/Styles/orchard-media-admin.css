@@ -10,3 +10,9 @@
     max-height:640px;
     max-width:640px;
 }
+.smallPreviewImage {
+    max-height:64px;
+    max-width:128px;
+    float: left;
+    margin-right: 16px;
+}
