@@ -120,7 +120,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Content Include="Config\log4net.config" />
+    <Content Include="Config\log4net.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Config\Sample.HostComponents.config">
       <SubType>Designer</SubType>
     </Content>
