@@ -50,7 +50,17 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(relativePath, "relativePath");
 
             return _storageProvider.GetPublicUrl(relativePath);
-         }
+        }
+
+        /// <summary>
+        /// Returns the public URL for a media file.
+        /// </summary>
+        /// <param name="mediaPath">The relative path of the media folder containing the media.</param>
+        /// <param name="fileName">The media file name.</param>
+        /// <returns>The public URL for the media.</returns>
+        public string GetMediaPublicUrl(string mediaPath, string fileName) {
+            return GetPublicUrl(Path.Combine(mediaPath, fileName));
+        }
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -79,7 +89,8 @@ namespace Orchard.Media.Services {
                     Size = file.GetSize(),
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
-                    FolderName = relativePath
+                    FolderName = relativePath,
+                    MediaPath = GetMediaPublicUrl(relativePath, file.GetName())
                 }).ToList();
         }
 

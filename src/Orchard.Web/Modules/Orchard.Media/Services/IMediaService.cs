@@ -17,6 +17,14 @@ namespace Orchard.Media.Services {
         string GetPublicUrl(string relativePath);
 
         /// <summary>
+        /// Returns the public URL for a media file.
+        /// </summary>
+        /// <param name="mediaPath">The relative path of the media folder containing the media.</param>
+        /// <param name="fileName">The media file name.</param>
+        /// <returns>The public URL for the media.</returns>
+        string GetMediaPublicUrl(string mediaPath, string fileName);
+
+        /// <summary>
         /// Retrieves the media folders within a given relative path.
         /// </summary>
         /// <param name="relativePath">The path where to retrieve the media folder from. null means root.</param>

@@ -252,7 +252,7 @@ namespace Orchard.Media.Controllers {
         }
 
         public ActionResult EditMedia(MediaItemEditViewModel model) {
-            model.PublicUrl = _mediaService.GetPublicUrl(Path.Combine(model.MediaPath, model.Name));
+            model.PublicUrl = _mediaService.GetMediaPublicUrl(model.MediaPath, model.Name);
             return View(model);
         }
 
