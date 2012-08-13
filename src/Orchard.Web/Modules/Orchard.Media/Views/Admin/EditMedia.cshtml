@@ -5,8 +5,7 @@
 @{
     Style.Require("MediaAdmin");
     Layout.Title = T("Edit Media - {0}", Model.Name).ToString();
-    var isPicture = new[] {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico"}
-        .Contains(Path.GetExtension(Model.RelativePath ?? "").ToLowerInvariant());
+    var isPicture = Html.IsPicture(Model.Name);
     var embedHTML = isPicture ?
         "<img src=\"" + Model.PublicUrl + "\"/>" :
         "<a href=\"" + Model.PublicUrl + "\">" + Model.Name + "</a>";
