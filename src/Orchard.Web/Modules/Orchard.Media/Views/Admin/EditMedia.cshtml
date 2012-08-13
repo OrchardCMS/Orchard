@@ -28,6 +28,9 @@
                 <img src="@Model.PublicUrl" class="previewImage"/>
             </div>
         }
+        else {
+            <a href="@Model.PublicUrl">@Model.Name</a>
+        }
         @* todo: make these real (including markup) *@
         <div>
             @* <label>@T("Dimensions: <span>500 x 375 pixels</span>")</label> *@
