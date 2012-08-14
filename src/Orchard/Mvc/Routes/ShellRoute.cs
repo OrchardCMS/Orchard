@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Web;
+using System.Web.Http.WebHost;
 using System.Web.Http.WebHost.Routing;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -31,6 +32,7 @@ namespace Orchard.Mvc.Routes {
 
         public string ShellSettingsName { get { return _shellSettings.Name; } }
         public string Area { get; private set; }
+        public bool IsHttpRoute { get; set; }
 
         public override RouteData GetRouteData(HttpContextBase httpContext) {
             // locate appropriate shell settings for request
@@ -52,7 +54,7 @@ namespace Orchard.Mvc.Routes {
             routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler);
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
 
-            if (_route is HttpWebRoute) {
+            if (IsHttpRoute) {
                 routeData.Values["IWorkContextAccessor"] = _workContextAccessor; // for WebApi
             }
             
@@ -93,6 +95,7 @@ namespace Orchard.Mvc.Routes {
 
             public IHttpHandler GetHttpHandler(RequestContext requestContext) {
                 var httpHandler = _routeHandler.GetHttpHandler(requestContext);
+                 
                 if (httpHandler is IHttpAsyncHandler) {
                     return new HttpAsyncHandler(_workContextAccessor, (IHttpAsyncHandler)httpHandler);
                 }

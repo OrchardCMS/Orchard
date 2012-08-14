@@ -24,7 +24,7 @@ namespace Orchard.WebApi.Extensions {
 
         public static string GetAreaName(this IHttpRouteData routeData) {
             object area;
-            if (routeData.Route.DataTokens.TryGetValue("area", out area)) {
+            if (routeData.Route.Defaults.TryGetValue("area", out area)) {
                 return area as string;
             }
 
