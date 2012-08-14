@@ -514,9 +514,6 @@
     <Content Include="Navigation\Views\Admin\CreateMenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Navigation\Views\MenuItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Navigation\Views\MenuItem.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
