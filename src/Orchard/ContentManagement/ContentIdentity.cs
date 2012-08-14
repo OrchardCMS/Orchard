@@ -47,6 +47,10 @@ namespace Orchard.ContentManagement {
         }
 
         private static string EncodeIdentityValue(string identityValue) {
+            if(String.IsNullOrEmpty(identityValue)) {
+                return "";
+            }
+
             var stringBuilder = new StringBuilder();
             foreach (var ch in identityValue.ToCharArray()) {
                 switch (ch) {
