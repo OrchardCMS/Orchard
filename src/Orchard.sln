@@ -1,10 +1,20 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E681ED-FECC-4034-B9BD-01B0BB1BDECA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{383DBA32-4A3E-48D1-AAC3-75377A694452}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
+	ProjectSection(SolutionItems) = preProject
+		Shapes.txt = Shapes.txt
+		Zones.txt = Zones.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{74492CBC-7201-417E-BC29-28B4C25A58B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{3E10BF6D-ADA5-417D-B36C-EBB0660B475E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web", "Orchard.Web\Orchard.Web.csproj", "{50B779EA-EC00-4699-84C0-03B395C365D2}"
 EndProject
@@ -37,12 +47,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Profile", "Orchard.Profile\Orchard.Profile.csproj", "{94E694A2-D140-468D-A277-C5FCE1D13E9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Tools\Orchard.Tests\Orchard.Tests.csproj", "{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
-	ProjectSection(SolutionItems) = preProject
-		Shapes.txt = Shapes.txt
-		Zones.txt = Zones.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Modules", "Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj", "{17F86780-9A1F-4AA1-86F1-875EEC2730C7}"
 EndProject
@@ -80,8 +84,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.CodeGeneration", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Migrations", "Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj", "{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{74492CBC-7201-417E-BC29-28B4C25A58B0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themes", "Orchard.Web\Themes\Themes.csproj", "{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.PublishLater", "Orchard.Web\Modules\Orchard.PublishLater\Orchard.PublishLater.csproj", "{C889167C-E52C-4A65-A419-224B3D1B957D}"
@@ -97,8 +99,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Scripting.Dlr", "Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj", "{2AD6973D-C7BB-416E-89FE-EEE34664E05F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Scripting", "Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj", "{99002B65-86F7-415E-BF4A-381AA8AB9CCC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{3E10BF6D-ADA5-417D-B36C-EBB0660B475E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DesignerTools", "Orchard.Web\Modules\Orchard.DesignerTools\Orchard.DesignerTools.csproj", "{4A4595EF-6C37-4F99-96ED-4AE0B9E438D3}"
 EndProject
@@ -890,10 +890,10 @@ Global
 		{5E5E7A21-C7B2-44D8-8593-2F9541AE041D} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{33B1BC8D-E292-4972-A363-22056B207156} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
-		{94E694A2-D140-468D-A277-C5FCE1D13E9B} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
+		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 		{7354DF37-934B-46CF-A13C-455D5F5F5413} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
+		{94E694A2-D140-468D-A277-C5FCE1D13E9B} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{AC4402A1-61C4-4229-B840-FB1777DAE10C} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
-		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 	EndGlobalSection
 EndGlobal
