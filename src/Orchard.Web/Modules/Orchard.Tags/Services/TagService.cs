@@ -131,9 +131,9 @@ namespace Orchard.Tags.Services {
 
         public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take, VersionOptions options) {
             return _orchardServices.ContentManager
-                .Query<TagsPart, TagsPartRecord>()
-                .Where(tpr => tpr.Tags.Any(tr => tr.TagRecord.Id == tagId))
-                .Join<CommonPartRecord>().OrderByDescending(x => x.CreatedUtc)
+                .HqlQuery<TagsPart>()
+                .Where(tpr => tpr.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags"), x => x.Eq("TagRecord.Id", tagId))
+                .OrderBy(alias => alias.ContentPartRecord<CommonPartRecord>(), x => x.Desc("CreatedUtc"))
                 .Slice(skip, take);
         }
 
@@ -143,8 +143,8 @@ namespace Orchard.Tags.Services {
 
         public int GetTaggedContentItemCount(int tagId, VersionOptions options) {
             return _orchardServices.ContentManager
-                .Query<TagsPart, TagsPartRecord>()
-                .Where(tpr => tpr.Tags.Any(tr => tr.TagRecord.Id == tagId))
+                .HqlQuery<TagsPart>()
+                .Where(tpr => tpr.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags"), x => x.Eq("TagRecord.Id", tagId))
                 .Count();
         }
 
