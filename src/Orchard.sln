@@ -6,12 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E681ED
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{383DBA32-4A3E-48D1-AAC3-75377A694452}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
-	ProjectSection(SolutionItems) = preProject
-		Shapes.txt = Shapes.txt
-		Zones.txt = Zones.txt
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{74492CBC-7201-417E-BC29-28B4C25A58B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{3E10BF6D-ADA5-417D-B36C-EBB0660B475E}"
