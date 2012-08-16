@@ -12,19 +12,21 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
-    public class DynamicExtensionLoader : ExtensionLoaderBase {
+    /// <summary>
+    /// In case <see cref="DynamicExtensionLoader"/> is disabled, this loader will dynamically compile the assembly
+    /// and save a copy to the probing folder so that next restart doesn't need to compile it again.
+    /// </summary>
+    public class ProbingExtensionLoader : ExtensionLoaderBase {
         public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
 
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
-        private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
-        public DynamicExtensionLoader(
+        public ProbingExtensionLoader(
             IBuildManager buildManager,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor,
@@ -36,7 +38,6 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             _buildManager = buildManager;
             _virtualPathProvider = virtualPathProvider;
-            _virtualPathMonitor = virtualPathMonitor;
             _hostEnvironment = hostEnvironment;
             _assemblyProbingFolder = assemblyProbingFolder;
             _projectFileParser = projectFileParser;
@@ -48,36 +49,10 @@ namespace Orchard.Environment.Extensions.Loaders {
         public ILogger Logger { get; set; }
         public bool Disabled { get; set; }
 
-        public override int Order { get { return 100; } }
+        public override int Order { get { return 110; } }
 
         public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
             yield return new ExtensionCompilationReference { BuildProviderTarget = dependency.VirtualPath };
-        }
-
-        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
-            // Return csproj and all .cs files
-            return GetDependencies(dependency.VirtualPath);
-        }
-
-        public IEnumerable<string> GetFileHashDependencies(DependencyDescriptor dependency) {
-            return GetDependencies(dependency.VirtualPath);
-        }
-
-        public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
-            if (Disabled)
-                return;
-
-            // Monitor .csproj and all .cs files
-            string projectPath = GetProjectPath(descriptor);
-            if (projectPath != null) {
-                foreach (var path in GetDependencies(projectPath)) {
-                    Logger.Debug("Monitoring virtual path \"{0}\"", path);
-
-                    var token = _virtualPathMonitor.WhenPathChanges(path);
-                    monitor(token);
-                    _reloadWorkaround.Monitor(token);
-                }
-            }
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
@@ -87,10 +62,6 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
-                ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
-            }
         }
 
         public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
@@ -116,29 +87,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             return result;
         }
 
-        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
-            //Note: This is the same implementation as "PrecompiledExtensionLoader"
-            if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
-                return;
-
-            string sourceFileName = _virtualPathProvider.MapPath(referenceEntry.VirtualPath);
-
-            // Copy the assembly if it doesn't exist or if it is older than the source file.
-            bool copyAssembly =
-                !_assemblyProbingFolder.AssemblyExists(referenceEntry.Name) ||
-                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(referenceEntry.Name);
-
-            if (copyAssembly) {
-                context.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(referenceEntry.Name, sourceFileName));
-
-                // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
-                    Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
-                    context.RestartAppDomain = true;
-                }
-            }
-        }
-
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
             if (Disabled)
                 return null;
@@ -151,7 +99,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(reference.VirtualPath), ".dll"))
                 result = _assemblyProbingFolder.LoadAssembly(reference.Name);
             else {
-                result = _buildManager.GetCompiledAssembly(reference.VirtualPath);
+                result = ProbeAssembly(reference.Name, reference.VirtualPath);
             }
 
             Logger.Information("Done loading reference '{0}'", reference.Name);
@@ -173,7 +121,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Loader = this,
                 Priority = 50,
                 VirtualPath = projectPath,
-                VirtualPathDependencies = GetDependencies(projectPath).ToList(),
+                VirtualPathDependencies = new string[] { projectPath },
             };
 
             Logger.Information("Done probing for module '{0}'", descriptor.Id);
@@ -184,13 +132,17 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return null;
 
-            string projectPath = GetProjectPath(descriptor);
-            if (projectPath == null)
-                return null;
-
             Logger.Information("Start loading dynamic extension \"{0}\"", descriptor.Name);
 
-            var assembly = _buildManager.GetCompiledAssembly(projectPath);
+            var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Id);
+            if (assembly == null) {
+                string projectPath = GetProjectPath(descriptor);
+                if (projectPath == null)
+                    return null;
+                
+                assembly = ProbeAssembly(descriptor.Id, projectPath);
+            }
+
             if (assembly == null)
                 return null;
 
@@ -201,12 +153,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes(),
             };
-        }
-
-        protected IEnumerable<string> GetDependencies(string projectPath) {
-            var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            AddDependencies(projectPath, dependencies);
-            return dependencies;
         }
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
@@ -250,6 +196,16 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
+        private Assembly ProbeAssembly(string moduleName, string virtualPath)         {
+            var assembly = _buildManager.GetCompiledAssembly(virtualPath);
+            if (assembly != null) {
+                _assemblyProbingFolder.StoreAssembly(moduleName, assembly.Location);
+                return assembly;
+            }
+
+            return null;
+        }
+
         private static string PrefixMatch(string virtualPath, params string[] prefixes) {
             return prefixes
                 .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
@@ -264,33 +220,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
 
             return projectPath;
-        }
-
-        /// <summary>
-        /// We should be able to support reloading multiple version of a compiled module from
-        /// a ".csproj" file in the same AppDomain. However, we are currently running into a 
-        /// limitation with NHibernate getting confused when a type name is present in
-        /// multiple assemblies loaded in an AppDomain.  So, until a solution is found, any change 
-        /// to a ".csproj" file of an active module requires an AppDomain restart.
-        /// The purpose of this class is to keep track of all .csproj files monitored until
-        /// an AppDomain restart.
-        /// </summary>
-        internal class ReloadWorkaround {
-            private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
-
-            public void Monitor(IVolatileToken whenProjectFileChanges) {
-                lock (_tokens) {
-                    _tokens.Add(whenProjectFileChanges);
-                }
-            }
-
-            public bool AppDomainRestartNeeded {
-                get {
-                    lock (_tokens) {
-                        return _tokens.Any(t => t.IsCurrent == false);
-                    }
-                }
-            }
         }
     }
 }
