@@ -173,7 +173,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // A pre-compiled module is _not_ compatible with a dynamically loaded module
             // because a pre-compiled module usually references a pre-compiled assembly binary
             // which will have a different identity (i.e. name) from the dynamic module.
-            bool result = references.All(r => r.Loader.GetType() != typeof (DynamicExtensionLoader));
+            bool result = references.All(r => r.Loader.GetType() != typeof(DynamicExtensionLoader) && r.Loader.GetType() != typeof(ProbingExtensionLoader));
             if (!result) {
                 Logger.Information("Extension \"{0}\" will not be loaded as pre-compiled extension because one or more referenced extension is dynamically compiled", extension.Id);
             }
@@ -193,6 +193,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
                 Loader = this,
+                Priority = 80,
                 VirtualPath = assemblyPath,
                 VirtualPathDependencies = new[] { assemblyPath },
             };

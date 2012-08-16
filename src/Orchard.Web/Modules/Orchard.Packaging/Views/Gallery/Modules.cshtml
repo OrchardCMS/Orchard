@@ -41,7 +41,7 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-            string iconUrl = @item.IconUrl;
+            string iconUrl = item.IconUrl;
             if (string.IsNullOrWhiteSpace(iconUrl)) {
                 iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
             }

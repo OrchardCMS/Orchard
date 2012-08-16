@@ -64,8 +64,7 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException),
-            ExpectedMessage = "Sequence contains more than one element")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void GetThatReturnsTwoOrMoreShouldThrowException() {
             CreateThreeFoos();
             _fooRepos.Get(f => f.Name == "one" || f.Name == "three");

@@ -4,10 +4,18 @@
     <name>System.Web.WebPages.Razor</name>
   </assembly>
   <members>
-    <member name="T:System.Web.WebPages.Razor.CompilingPathEventArgs"></member>
-    <member name="M:System.Web.WebPages.Razor.CompilingPathEventArgs.#ctor(System.String,System.Web.WebPages.Razor.WebPageRazorHost)"></member>
-    <member name="P:System.Web.WebPages.Razor.CompilingPathEventArgs.Host"></member>
-    <member name="P:System.Web.WebPages.Razor.CompilingPathEventArgs.VirtualPath"></member>
+    <member name="T:System.Web.WebPages.Razor.CompilingPathEventArgs">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
+    <member name="M:System.Web.WebPages.Razor.CompilingPathEventArgs.#ctor(System.String,System.Web.WebPages.Razor.WebPageRazorHost)">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
+    <member name="P:System.Web.WebPages.Razor.CompilingPathEventArgs.Host">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
+    <member name="P:System.Web.WebPages.Razor.CompilingPathEventArgs.VirtualPath">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="T:System.Web.WebPages.Razor.PreApplicationStartCode">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
@@ -35,7 +43,9 @@
     <member name="E:System.Web.WebPages.Razor.RazorBuildProvider.CodeGenerationStarted">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
-    <member name="E:System.Web.WebPages.Razor.RazorBuildProvider.CompilingPath"></member>
+    <member name="E:System.Web.WebPages.Razor.RazorBuildProvider.CompilingPath">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.CreateHost">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
@@ -45,11 +55,15 @@
     <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.GetGeneratedType(System.CodeDom.Compiler.CompilerResults)">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
-    <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.GetHostFromConfig"></member>
+    <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.GetHostFromConfig">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.InternalOpenReader">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
-    <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.OnBeforeCompilePath(System.Web.WebPages.Razor.CompilingPathEventArgs)"></member>
+    <member name="M:System.Web.WebPages.Razor.RazorBuildProvider.OnBeforeCompilePath(System.Web.WebPages.Razor.CompilingPathEventArgs)">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="P:System.Web.WebPages.Razor.RazorBuildProvider.VirtualPath">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
@@ -108,14 +122,18 @@
     <member name="M:System.Web.WebPages.Razor.WebPageRazorHost.GetGlobalImports">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
-    <member name="P:System.Web.WebPages.Razor.WebPageRazorHost.InstrumentedSourceFilePath"></member>
+    <member name="P:System.Web.WebPages.Razor.WebPageRazorHost.InstrumentedSourceFilePath">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="P:System.Web.WebPages.Razor.WebPageRazorHost.IsSpecialPage">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
     <member name="P:System.Web.WebPages.Razor.WebPageRazorHost.PhysicalPath">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>
-    <member name="M:System.Web.WebPages.Razor.WebPageRazorHost.PostProcessGeneratedCode(System.Web.Razor.Generator.CodeGeneratorContext)"></member>
+    <member name="M:System.Web.WebPages.Razor.WebPageRazorHost.PostProcessGeneratedCode(System.Web.Razor.Generator.CodeGeneratorContext)">
+      <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
+    </member>
     <member name="M:System.Web.WebPages.Razor.WebPageRazorHost.RegisterSpecialFile(System.String,System.String)">
       <summary>This type/member supports the .NET Framework infrastructure and is not intended to be used directly from your code.</summary>
     </member>

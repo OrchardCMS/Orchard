@@ -196,6 +196,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "StartLevel", x => part.StartLevel = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Levels", x => part.Levels = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Breadcrumb", x => part.Breadcrumb = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddCurrentPage", x => part.AddCurrentPage = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddHomePage", x => part.AddHomePage = Convert.ToBoolean(x));
 
             context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
         }
@@ -207,6 +209,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("StartLevel", part.StartLevel);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Levels", part.Levels);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Breadcrumb", part.Breadcrumb);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddCurrentPage", part.AddCurrentPage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddHomePage", part.AddHomePage);
         }
 
     }

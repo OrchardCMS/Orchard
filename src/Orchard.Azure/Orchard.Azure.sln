@@ -1,6 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{84650275-884D-4CBB-9CC0-67553996E211}"
+EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Orchard.Azure.CloudService", "Orchard.Azure.CloudService\Orchard.Azure.CloudService.ccproj", "{03C5327D-4E8E-45A7-ACD1-E18E7CAA3C4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.Web", "Orchard.Azure.Web\Orchard.Azure.Web.csproj", "{0DF8F426-9F30-4918-8F64-A5B40BA12D10}"
@@ -10,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Framework", "..\Orchard\Orchard.Framework.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core", "..\Orchard.Web\Core\Orchard.Core.csproj", "{9916839C-39FC-4CEB-A5AF-89CA7E87119F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj", "{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}"
 EndProject
@@ -41,8 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Users", "..\Orchard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMce", "..\Orchard.Web\Modules\TinyMce\TinyMce.csproj", "{954CA994-D204-468B-9D69-51F6AD3E1C29}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard", "..\Tools\Orchard\Orchard.csproj", "{33B1BC8D-E292-4972-A363-22056B207156}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene", "..\Orchard.Web\Modules\Lucene\Lucene.csproj", "{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}"
@@ -60,8 +62,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Migrations", "..\Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj", "{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Widgets", "..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj", "{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{84650275-884D-4CBB-9CC0-67553996E211}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themes", "..\Orchard.Web\Themes\Themes.csproj", "{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}"
 EndProject

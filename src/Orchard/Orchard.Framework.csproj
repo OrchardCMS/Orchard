@@ -201,6 +201,7 @@
     <Compile Include="Environment\Extensions\Folders\CoreModuleFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\IExtensionHarvester.cs" />
     <Compile Include="Environment\Extensions\IExtensionMonitoringCoordinator.cs" />
+    <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\OrchardSuppressDependencyAttribute.cs" />
     <Compile Include="Environment\Features\IFeatureManager.cs" />
     <Compile Include="Environment\IAssemblyNameResolver.cs" />

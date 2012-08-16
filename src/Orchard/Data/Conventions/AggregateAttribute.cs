@@ -24,7 +24,7 @@ namespace Orchard.Data.Conventions {
 
         public void Apply(IOneToManyCollectionInstance instance) {
             instance.Fetch.Join();
-            instance.Cache.NonStrictReadWrite();
+            instance.Cache.ReadWrite();
         }
 
         public void Accept(IAcceptanceCriteria<IOneToManyCollectionInspector> criteria) {

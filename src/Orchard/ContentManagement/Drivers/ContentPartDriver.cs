@@ -65,7 +65,8 @@ namespace Orchard.ContentManagement.Drivers {
                     var placementContext = new ShapePlacementContext {
                         ContentType = part.ContentItem.ContentType, 
                         Differentiator = editor.GetDifferentiator(),
-                        DisplayType = null
+                        DisplayType = null,
+                        Path = String.Empty
                     };
 
                     var location = descriptor.Placement(placementContext).Location;

@@ -54,8 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\lib\fluentnhibernate\log4net.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />

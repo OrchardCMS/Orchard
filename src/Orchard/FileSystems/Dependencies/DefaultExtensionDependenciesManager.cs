@@ -111,6 +111,7 @@ namespace Orchard.FileSystems.Dependencies {
             //      implementations.
             return
                 loaderName == "DynamicExtensionLoader" ||
+                loaderName == "ProbingExtensionLoader" ||
                 loaderName == "PrecompiledExtensionLoader";
         }
 

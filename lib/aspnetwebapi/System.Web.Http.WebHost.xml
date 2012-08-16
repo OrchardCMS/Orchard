@@ -5,16 +5,24 @@
   </assembly>
   <members>
     <member name="T:System.Web.Http.GlobalConfiguration">
-      <summary> Provides a global <see cref="T:System.Web.Http.HttpConfiguration" /> for ASP applications. </summary>
+      <summary> Provides a global <see cref="T:System.Web.Http.HttpConfiguration" /> for ASP.NET applications. </summary>
     </member>
-    <member name="P:System.Web.Http.GlobalConfiguration.Configuration">
-      <summary> Gets the global <see cref="T:System.Web.Http.HttpConfiguration" />. </summary>
+    <member name="P:System.Web.Http.GlobalConfiguration.Configuration"></member>
+    <member name="P:System.Web.Http.GlobalConfiguration.DefaultHandler">
+      <summary> Gets the default message handler that will be called for all requests. </summary>
     </member>
     <member name="T:System.Web.Http.RouteCollectionExtensions">
       <summary> Extension methods for <see cref="T:System.Web.Routing.RouteCollection" /></summary>
     </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String)">
+      <summary>Maps the specified route template.</summary>
+      <returns>A reference to the mapped route.</returns>
+      <param name="routes">A collection of routes for the application.</param>
+      <param name="name">The name of the route to map.</param>
+      <param name="routeTemplate">The route template for the route.</param>
+    </member>
     <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object)">
-      <summary> Maps the specified route template and sets default constraints, and namespaces. </summary>
+      <summary>Maps the specified route template and sets default route.</summary>
       <returns>A reference to the mapped route.</returns>
       <param name="routes">A collection of routes for the application.</param>
       <param name="name">The name of the route to map.</param>
@@ -22,13 +30,23 @@
       <param name="defaults">An object that contains default route values.</param>
     </member>
     <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object,System.Object)">
-      <summary> Maps the specified route template and sets default route values, constraints, and namespaces. </summary>
+      <summary>Maps the specified route template and sets default route values and constraints.</summary>
       <returns>A reference to the mapped route.</returns>
       <param name="routes">A collection of routes for the application.</param>
       <param name="name">The name of the route to map.</param>
       <param name="routeTemplate">The route template for the route.</param>
       <param name="defaults">An object that contains default route values.</param>
       <param name="constraints">A set of expressions that specify values for routeTemplate.</param>
+    </member>
+    <member name="M:System.Web.Http.RouteCollectionExtensions.MapHttpRoute(System.Web.Routing.RouteCollection,System.String,System.String,System.Object,System.Object,System.Net.Http.HttpMessageHandler)">
+      <summary>Maps the specified route template and sets default route values, constraints,  and end-point message handler.</summary>
+      <returns>A reference to the mapped route.</returns>
+      <param name="routes">A collection of routes for the application.</param>
+      <param name="name">The name of the route to map.</param>
+      <param name="routeTemplate">The route template for the route.</param>
+      <param name="defaults">An object that contains default route values.</param>
+      <param name="constraints">A set of expressions that specify values for routeTemplate.</param>
+      <param name="handler">The handler to which the request will be dispatched.</param>
     </member>
     <member name="T:System.Web.Http.WebHost.HttpControllerHandler">
       <summary> A <see cref="T:System.Web.IHttpAsyncHandler" /> that passes ASP.NET requests into the <see cref="T:System.Web.Http.HttpServer" /> pipeline and write the result back. </summary>
@@ -91,6 +109,28 @@
       <summary> Provides the object that processes the request. </summary>
       <returns> An object that processes the request. </returns>
       <param name="requestContext">An object that encapsulates information about the request.</param>
+    </member>
+    <member name="T:System.Web.Http.WebHost.PreApplicationStartCode">
+      <summary>Provides a registration point for the simple membership pre-application start code.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.PreApplicationStartCode.Start">
+      <summary>Registers the simple membership pre-application start code.</summary>
+    </member>
+    <member name="T:System.Web.Http.WebHost.WebHostBufferPolicySelector">
+      <summary>Represents the web host buffer policy selector.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.WebHost.WebHostBufferPolicySelector" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.UseBufferedInputStream(System.Object)">
+      <summary>Gets a value that indicates whether the host should buffer the entity body of the HTTP request.</summary>
+      <returns>true if buffering should be used; otherwise a streamed request should be used.</returns>
+      <param name="hostContext">The host context.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostBufferPolicySelector.UseBufferedOutputStream(System.Net.Http.HttpResponseMessage)">
+      <summary>Uses a buffered output stream for the web host.</summary>
+      <returns>A buffered output stream.</returns>
+      <param name="response">The response.</param>
     </member>
   </members>
 </doc>
