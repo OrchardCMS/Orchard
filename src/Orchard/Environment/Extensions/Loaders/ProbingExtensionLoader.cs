@@ -87,6 +87,29 @@ namespace Orchard.Environment.Extensions.Loaders {
             return result;
         }
 
+        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+            //Note: This is the same implementation as "PrecompiledExtensionLoader"
+            if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
+                return;
+
+            string sourceFileName = _virtualPathProvider.MapPath(referenceEntry.VirtualPath);
+
+            // Copy the assembly if it doesn't exist or if it is older than the source file.
+            bool copyAssembly =
+                !_assemblyProbingFolder.AssemblyExists(referenceEntry.Name) ||
+                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(referenceEntry.Name);
+
+            if (copyAssembly) {
+                context.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(referenceEntry.Name, sourceFileName));
+
+                // We need to restart the appDomain if the assembly is loaded
+                if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
+                    Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
+                    context.RestartAppDomain = true;
+                }
+            }
+        }
+
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
             if (Disabled)
                 return null;
