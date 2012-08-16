@@ -303,7 +303,7 @@ namespace Orchard.ContentManagement {
                     hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria.UnderlyingCriteria, ExtendCriteria);
                 }
 
-                if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
+                // if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
                     contentItemVersionCriteria.TransformUsing(new DistinctRootEntityResultTransformer());
 
                 return this;
