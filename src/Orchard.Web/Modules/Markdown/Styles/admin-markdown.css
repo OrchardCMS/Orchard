@@ -55,17 +55,30 @@
 
 .wmd-preview blockquote {
     margin: 1em 3em;
-	color: #999;
+	color: #333;
 	border-left: 2px solid #999;
 	padding-left: 1em;
 }
 
 .wmd-preview pre, .wmd-preview code {
     margin: 1em 3em;
-	color: #999;
+	color: #333;
 	border-left: 2px solid #999;
 	padding-left: 1em;
     font-family: Courier New;
+}
+
+.wmd-preview pre code {
+    border: none;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+
+.wmd-preview p code {
+    border: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 /* Grippie */
