@@ -36,7 +36,7 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name) {
+        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name, JoinType joinType = JoinType.InnerJoin) {
             if (_joins.ContainsKey(typeof(TRecord).Name)) {
                 return (IQueryOver<ContentItemVersionRecord, TRecord>)_joins[typeof(TRecord).Name];
             }
@@ -53,7 +53,7 @@ namespace Orchard.ContentManagement {
                 Expression.Property(parameter, syntheticProperty),
                 parameter);
 
-            var join = queryOver.JoinQueryOver(syntheticExpression);
+            var join = queryOver.JoinQueryOver(syntheticExpression, joinType);
             _joins[typeof(TRecord).Name] = join;
 
             return join;
@@ -62,13 +62,13 @@ namespace Orchard.ContentManagement {
         IQueryOver<ContentItemVersionRecord, ContentTypeRecord> BindTypeQueryOver() {
             // ([ContentItemVersionRecord] >join> [ContentItemRecord]) >join> [ContentType]
 
-            return BindQueryOverByPath<ContentTypeRecord, ContentItemRecord>(BindItemQueryOver(), "ContentType");
+            return BindQueryOverByPath<ContentTypeRecord, ContentItemRecord>(BindItemQueryOver(), "ContentType", JoinType.LeftOuterJoin);
         }
 
         IQueryOver<ContentItemVersionRecord, ContentItemRecord> BindItemQueryOver() {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
 
-            return BindQueryOverByPath<ContentItemRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), "ContentItemRecord");
+            return BindQueryOverByPath<ContentItemRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), "ContentItemRecord", JoinType.LeftOuterJoin);
         }
 
         IQueryOver<ContentItemVersionRecord, ContentItemVersionRecord> BindItemVersionQueryOver() {
@@ -146,10 +146,12 @@ namespace Orchard.ContentManagement {
                 queryOver.Take(count);
             }
 
-            return new ReadOnlyCollection<ContentItem>(queryOver
+            var result = queryOver
                     .List<ContentItemVersionRecord>()
                     .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
-                    .ToList());
+                    .ToList();
+
+            return new ReadOnlyCollection<ContentItem>(result);
         }
 
         int Count() {
@@ -291,6 +293,8 @@ namespace Orchard.ContentManagement {
                     .GroupBy(item => item.Segments.FirstOrDefault())
                     .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
 
+                var aggregatedProperty = false;
+
                 // locate hints that match properties in the ContentItemVersionRecord
                 foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
                     contentItemVersionCriteria.UnderlyingCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
@@ -303,7 +307,7 @@ namespace Orchard.ContentManagement {
                     hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria.UnderlyingCriteria, ExtendCriteria);
                 }
 
-                // if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
+                if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
                     contentItemVersionCriteria.TransformUsing(new DistinctRootEntityResultTransformer());
 
                 return this;
