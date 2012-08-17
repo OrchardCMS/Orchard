@@ -32,6 +32,7 @@ namespace Orchard.ContentManagement {
         new IContentQuery<TPart, TRecord> ForVersion(VersionOptions options);
 
         IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate);
+        IContentQuery<TPart, TRecord> WhereAny<TKey>(Expression<Func<TRecord, IEnumerable<TKey>>> selector, Expression<Func<TKey, bool>> predicate);
         IContentQuery<TPart, TRecord> OrderBy(Expression<Func<TRecord, object>> keySelector);
         IContentQuery<TPart, TRecord> OrderByDescending(Expression<Func<TRecord, object>> keySelector);
 

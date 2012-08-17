@@ -103,7 +103,14 @@ namespace Orchard.ContentManagement {
         }
 
         private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
-            BindPartQueryOver<TRecord>().Where(predicate);
+            var processedCriteria = NHibernate.Impl.ExpressionProcessor.ProcessExpression(predicate);
+            BindPartQueryOver<TRecord>().Where(processedCriteria);
+            //BindPartQueryOver<TRecord>().WithSubquery.WhereSome(.Where(predicate);
+        }
+
+        private void WhereAny<TRecord, TKey>(Expression<Func<TRecord, IEnumerable<TKey>>> selector, Expression<Func<TKey, bool>> predicate) where TRecord : ContentPartRecord {
+            //var address = BindPartQueryOver<TRecord>() QueryOver.Of<TRecord>().Where(selector);
+            BindPartQueryOver<TRecord>().JoinQueryOver<TKey>(selector).Where(predicate);
         }
 
         private void OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
@@ -256,6 +263,11 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
+            IContentQuery<T, TR> IContentQuery<T, TR>.WhereAny<TKey>(Expression<Func<TR, IEnumerable<TKey>>> selector, Expression<Func<TKey, bool>> predicate) {
+                _query.WhereAny(selector, predicate);
+                return this;
+            }
+
             IContentQuery<T, TR> IContentQuery<T, TR>.OrderBy<TKey>(Expression<Func<TR, TKey>> keySelector) {
                 _query.OrderBy(keySelector);
                 return this;
@@ -292,8 +304,6 @@ namespace Orchard.ContentManagement {
                     .Select(hint => new { Hint = hint, Segments = hint.Split('.') })
                     .GroupBy(item => item.Segments.FirstOrDefault())
                     .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
-
-                var aggregatedProperty = false;
 
                 // locate hints that match properties in the ContentItemVersionRecord
                 foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
