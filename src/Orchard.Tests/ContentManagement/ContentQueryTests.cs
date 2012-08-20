@@ -454,7 +454,7 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void IsStartingExtensionShouldBeUsed() {
+        public void StartsWithExtensionShouldBeUsed() {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
@@ -462,7 +462,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
-                .Where(x => x.Frap.IsStartingWith("t"))
+                .Where(x => x.Frap.StartsWith("t"))
                 .List();
 
             Assert.That(result.Count(), Is.EqualTo(2));
@@ -471,7 +471,7 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void IsEndingExtensionShouldBeUsed() {
+        public void EndsWithExtensionShouldBeUsed() {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
@@ -479,7 +479,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
-                .Where(x => x.Frap.IsEndingWith("e"))
+                .Where(x => x.Frap.EndsWith("e"))
                 .List();
 
             Assert.That(result.Count(), Is.EqualTo(2));
@@ -488,7 +488,7 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
-        public void IsContainingExtensionShouldBeUsed() {
+        public void ContainsExtensionShouldBeUsed() {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
@@ -496,7 +496,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
 
             var result = _manager.Query<GammaPart, GammaRecord>()
-                .Where(x => x.Frap.IsContaining("o"))
+                .Where(x => x.Frap.Contains("o"))
                 .List();
 
             Assert.That(result.Count(), Is.EqualTo(3));
@@ -504,7 +504,6 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "two"), Is.EqualTo(1));
             Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "four"), Is.EqualTo(1));
         }
-
     }
 }
 

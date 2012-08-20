@@ -10,42 +10,30 @@ using Orchard.ContentManagement.Records;
 namespace Orchard.ContentManagement {
     public static class RestrictionExtensions {
         public static void RegisterExtensions() {
-            ExpressionProcessor.RegisterCustomMethodCall(() => RestrictionExtensions.IsStartingWith("", ""), RestrictionExtensions.ProcessIsStartingWith);
-            ExpressionProcessor.RegisterCustomMethodCall(() => RestrictionExtensions.IsEndingWith("", ""), RestrictionExtensions.ProcessIsEndingWith);
-            ExpressionProcessor.RegisterCustomMethodCall(() => RestrictionExtensions.IsContaining("", ""), RestrictionExtensions.ProcessIsContaining);
+            ExpressionProcessor.RegisterCustomMethodCall(() => "".StartsWith(""), RestrictionExtensions.ProcessStartsWith);
+            ExpressionProcessor.RegisterCustomMethodCall(() => "".EndsWith(""), RestrictionExtensions.ProcessEndsWith);
+            ExpressionProcessor.RegisterCustomMethodCall(() => "".Contains(""), RestrictionExtensions.ProcessContains);
         }
 
-        public static bool IsStartingWith(this string item, string value) {
-            throw new NotImplementedException("Do not use this method directly");
-        }
-
-        public static bool IsEndingWith(this string item, string value) {
-            throw new NotImplementedException("Do not use this method directly");
-        }
-
-        public static bool IsContaining(this string item, string value) {
-            throw new NotImplementedException("Do not use this method directly");
-        }
-
-        public static ICriterion ProcessIsStartingWith(MethodCallExpression methodCallExpression) {
-            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Arguments[0]);
-            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[1]);
+        public static ICriterion ProcessStartsWith(MethodCallExpression methodCallExpression) {
+            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Object);
+            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[0]);
             MatchMode matchMode = MatchMode.Start;
             return projection.Create<ICriterion>(s => Restrictions.InsensitiveLike(s, value, matchMode), p => Restrictions.InsensitiveLike(p, value, matchMode));
         }
 
 
-        public static ICriterion ProcessIsEndingWith(MethodCallExpression methodCallExpression) {
-            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Arguments[0]);
-            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[1]);
+        public static ICriterion ProcessEndsWith(MethodCallExpression methodCallExpression) {
+            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Object);
+            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[0]);
             MatchMode matchMode = MatchMode.End;
             return projection.Create<ICriterion>(s => Restrictions.InsensitiveLike(s, value, matchMode), p => Restrictions.InsensitiveLike(p, value, matchMode));
         }
 
 
-        public static ICriterion ProcessIsContaining(MethodCallExpression methodCallExpression) {
-            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Arguments[0]);
-            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[1]);
+        public static ICriterion ProcessContains(MethodCallExpression methodCallExpression) {
+            ExpressionProcessor.ProjectionInfo projection = ExpressionProcessor.FindMemberProjection(methodCallExpression.Object);
+            string value = (string)ExpressionProcessor.FindValue(methodCallExpression.Arguments[0]);
             MatchMode matchMode = MatchMode.Anywhere;
             return projection.Create<ICriterion>(s => Restrictions.InsensitiveLike(s, value, matchMode), p => Restrictions.InsensitiveLike(p, value, matchMode));
         }
