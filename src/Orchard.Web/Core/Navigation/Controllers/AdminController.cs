@@ -58,7 +58,6 @@ namespace Orchard.Core.Navigation.Controllers {
                 : menus.FirstOrDefault(menu => menu.Id == menuId);
 
             if (currentMenu == null && menuId != null) { // incorrect menu id passed
-                Services.Notifier.Error(T("Menu not found: {0}", menuId));
                 return RedirectToAction("Index");
             }
 
