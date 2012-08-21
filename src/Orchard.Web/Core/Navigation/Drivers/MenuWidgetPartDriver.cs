@@ -79,7 +79,7 @@ namespace Orchard.Core.Navigation.Drivers {
                                              
                 dynamic menuShape = shapeHelper.Menu();
 
-                if (part.Breadcrumb) {
+                if (part.Breadcrumb && selectedPath != null) {
                     menuItems = selectedPath;
                     foreach (var menuItem in menuItems) {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
