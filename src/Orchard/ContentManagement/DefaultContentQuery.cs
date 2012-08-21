@@ -36,7 +36,7 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name) {
+        IQueryOver<ContentItemVersionRecord, TRecord> BindQueryOverByPath<TRecord, TU>(IQueryOver<ContentItemVersionRecord, TU> queryOver, string name, JoinType joinType = JoinType.InnerJoin) {
             if (_joins.ContainsKey(typeof(TRecord).Name)) {
                 return (IQueryOver<ContentItemVersionRecord, TRecord>)_joins[typeof(TRecord).Name];
             }
@@ -53,7 +53,7 @@ namespace Orchard.ContentManagement {
                 Expression.Property(parameter, syntheticProperty),
                 parameter);
 
-            var join = queryOver.JoinQueryOver(syntheticExpression);
+            var join = queryOver.JoinQueryOver(syntheticExpression, joinType);
             _joins[typeof(TRecord).Name] = join;
 
             return join;
@@ -62,13 +62,13 @@ namespace Orchard.ContentManagement {
         IQueryOver<ContentItemVersionRecord, ContentTypeRecord> BindTypeQueryOver() {
             // ([ContentItemVersionRecord] >join> [ContentItemRecord]) >join> [ContentType]
 
-            return BindQueryOverByPath<ContentTypeRecord, ContentItemRecord>(BindItemQueryOver(), "ContentType");
+            return BindQueryOverByPath<ContentTypeRecord, ContentItemRecord>(BindItemQueryOver(), "ContentType", JoinType.LeftOuterJoin);
         }
 
         IQueryOver<ContentItemVersionRecord, ContentItemRecord> BindItemQueryOver() {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
 
-            return BindQueryOverByPath<ContentItemRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), "ContentItemRecord");
+            return BindQueryOverByPath<ContentItemRecord, ContentItemVersionRecord>(BindItemVersionQueryOver(), "ContentItemRecord", JoinType.LeftOuterJoin);
         }
 
         IQueryOver<ContentItemVersionRecord, ContentItemVersionRecord> BindItemVersionQueryOver() {
@@ -103,7 +103,14 @@ namespace Orchard.ContentManagement {
         }
 
         private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
-            BindPartQueryOver<TRecord>().Where(predicate);
+            var processedCriteria = NHibernate.Impl.ExpressionProcessor.ProcessExpression(predicate);
+            BindPartQueryOver<TRecord>().Where(processedCriteria);
+            //BindPartQueryOver<TRecord>().WithSubquery.WhereSome(.Where(predicate);
+        }
+
+        private void WhereAny<TRecord, TKey>(Expression<Func<TRecord, IEnumerable<TKey>>> selector, Expression<Func<TKey, bool>> predicate) where TRecord : ContentPartRecord {
+            //var address = BindPartQueryOver<TRecord>() QueryOver.Of<TRecord>().Where(selector);
+            BindPartQueryOver<TRecord>().JoinQueryOver<TKey>(selector).Where(predicate);
         }
 
         private void OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord {
@@ -146,10 +153,12 @@ namespace Orchard.ContentManagement {
                 queryOver.Take(count);
             }
 
-            return new ReadOnlyCollection<ContentItem>(queryOver
+            var result = queryOver
                     .List<ContentItemVersionRecord>()
                     .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
-                    .ToList());
+                    .ToList();
+
+            return new ReadOnlyCollection<ContentItem>(result);
         }
 
         int Count() {
@@ -251,6 +260,11 @@ namespace Orchard.ContentManagement {
 
             IContentQuery<T, TR> IContentQuery<T, TR>.Where(Expression<Func<TR, bool>> predicate) {
                 _query.Where(predicate);
+                return this;
+            }
+
+            IContentQuery<T, TR> IContentQuery<T, TR>.WhereAny<TKey>(Expression<Func<TR, IEnumerable<TKey>>> selector, Expression<Func<TKey, bool>> predicate) {
+                _query.WhereAny(selector, predicate);
                 return this;
             }
 

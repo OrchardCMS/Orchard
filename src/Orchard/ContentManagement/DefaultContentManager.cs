@@ -34,6 +34,9 @@ namespace Orchard.ContentManagement {
         private const string Published = "Published";
         private const string Draft = "Draft";
 
+        static DefaultContentManager() {
+            RestrictionExtensions.RegisterExtensions();
+        }
         public DefaultContentManager(
             IComponentContext context,
             IRepository<ContentTypeRecord> contentTypeRepository,

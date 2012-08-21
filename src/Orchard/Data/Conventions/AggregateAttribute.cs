@@ -23,7 +23,7 @@ namespace Orchard.Data.Conventions {
         }
 
         public void Apply(IOneToManyCollectionInstance instance) {
-            instance.Fetch.Join();
+            instance.Fetch.Select();
             instance.Cache.ReadWrite();
         }
 
