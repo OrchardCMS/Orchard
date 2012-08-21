@@ -4,7 +4,8 @@ namespace Orchard.jQuery {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("jQuery").SetUrl("jquery-1.7.1.min.js", "jquery-1.7.1.js").SetVersion("1.7.1");
+            manifest.DefineScript("jQuery").SetUrl("jquery-1.8.0.min.js", "jquery-1.8.0.js").SetVersion("1.8.0")
+                .SetCdn("http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js", "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js", true);
 
             // Full jQuery UI bundle
             manifest.DefineScript("jQueryUI").SetUrl("jquery-ui.min.js", "jquery-ui.js").SetVersion("1.8.18").SetDependencies("jQuery");
