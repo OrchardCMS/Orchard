@@ -1,0 +1,38 @@
+﻿@model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
+@using Orchard.Autoroute
+@using Orchard.Utility.Extensions;
+
+@if(Model.Settings.DefaultPatternIndex == -1) {
+    <div class="message message-Error">@T("The current Content Type does not have a default Autoroute Pattern. Please edit the settings first.")</div>
+    return;
+}
+
+@{
+    var defaultPattern = Model.Settings.Patterns[Model.Settings.DefaultPatternIndex];
+}
+
+<fieldset class="permalink">
+    <label>@T("Permalink")</label>
+    @if (Model.Settings.AllowCustomPattern) {
+        <span>@ViewContext.RequestContext.HttpContext.Request.ToApplicationRootUrlString()/</span>
+        <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text" })</span>
+    }
+    else {
+        <span>@ViewContext.RequestContext.HttpContext.Request.ToApplicationRootUrlString()/</span>
+        <span>@Model.CurrentUrl</span>    
+    }
+
+    <span class="hint">@T("Leave empty to use the default permalink pattern ({0}: {1})", defaultPattern.Name, defaultPattern.Description)</span>
+
+</fieldset>
+
+<fieldset>
+    @if (AuthorizedFor(Permissions.SetHomePage) && !Model.PromoteToHomePage) {
+        <span class="checkbox-and-label">
+            @Html.EditorFor(m => m.PromoteToHomePage)
+            <label for="@Html.FieldIdFor(m => m.PromoteToHomePage)" class="forcheckbox">@T("Set as home page")</label>
+        </span>
+        <span class="hint">@T("Check to promote this content as the home page")</span>
+    }
+
+</fieldset>

@@ -1,0 +1,23 @@
+﻿.autoroute-settings-default {
+    width: 5%;
+}
+.autoroute-settings-name {
+    width: 20%
+}
+
+.autoroute-settings-pat {
+    width: 30%
+}
+
+.autoroute-settings-desc {
+    width: 40%
+}
+
+.autoroute-settings-actions {
+    width: 10%;
+    text-align: right;
+}
+
+.autoroute-settings-patterns tr td input {
+    width: 100%;
+}
