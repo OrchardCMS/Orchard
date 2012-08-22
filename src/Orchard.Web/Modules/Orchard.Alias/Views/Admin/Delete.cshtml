@@ -1,0 +1,13 @@
+@{
+    Layout.Title = T("Delete Alias");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+<fieldset>
+    <legend>@T("Delete alias")</legend>
+    <p>@T("Removing alias '{0}'. Are you sure?", ViewBag.Path)</p>
+    @Html.Hidden("path")
+    @Html.Hidden("confirmed", true)
+    <button class="primaryAction" type="submit">@T("Yes")</button>
+</fieldset>
+}
