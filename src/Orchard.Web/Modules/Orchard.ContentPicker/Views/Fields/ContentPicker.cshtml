@@ -1,0 +1,23 @@
+﻿@using Orchard.ContentPicker.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (ContentPickerField) Model.ContentField;
+    string name = field.DisplayName;
+    var contentItems = field.ContentItems;
+}
+<p class="content-picker-field content-picker-field-@name.HtmlClassify()">
+    <span class="name">@name:</span>
+    @if(contentItems.Any()) {
+        foreach(var contentItem in contentItems) {
+            <span class="value">@Html.ItemDisplayLink(contentItem)</span>
+            if(contentItem != contentItems.Last()) {
+                <span>,</span>
+            }
+        }
+    }
+    else {
+        <span class="value">@T("No content items.")</span>
+    }
+</p>
+
