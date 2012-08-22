@@ -1,0 +1,9 @@
+﻿@using Orchard.Utility.Extensions;
+
+@{
+    string name = Model.ContentField.DisplayName;
+}
+<p class="date-time-field date-time-field-@name.HtmlClassify()">
+    <span class="name">@name.CamelFriendly():</span>
+    <span class="value">@if (Model.Model.ShowDate) { <text>@Model.Model.Date</text> } @if (Model.Model.ShowTime) { <text>@Model.Model.Time</text> }</span>
+</p>

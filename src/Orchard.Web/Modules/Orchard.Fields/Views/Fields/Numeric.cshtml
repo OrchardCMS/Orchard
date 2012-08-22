@@ -1,0 +1,12 @@
+﻿@using Orchard.Utility.Extensions
+@{
+    decimal? number = Model.ContentField.Value;
+    string name = Model.ContentField.DisplayName;
+}
+
+@if (number.HasValue) {
+    <p class="numeric-field numeric-field-@name.HtmlClassify()">
+        <span class="name">@name:</span>
+        <span class="value">@(number.Value)</span>
+    </p>
+}

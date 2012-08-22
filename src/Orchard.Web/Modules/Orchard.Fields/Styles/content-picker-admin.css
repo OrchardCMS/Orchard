@@ -1,0 +1,12 @@
+﻿table.content-picker tr td:nth-child(1) {
+	background: url(images/move.gif) no-repeat 12px 14px;
+    cursor: move;
+}
+
+.content-picker-message {
+    display: none;
+}
+
+.ui-sortable-helper .content-picker-remove {
+    display: none;
+}

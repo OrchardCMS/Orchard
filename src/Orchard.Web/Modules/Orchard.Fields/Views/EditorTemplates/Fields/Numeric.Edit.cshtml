@@ -1,0 +1,12 @@
+﻿@model Orchard.Fields.Fields.NumericField
+@using System.Globalization
+@using Orchard.Fields.Settings;
+@{
+    var settings = Model.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
+}
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
+    @Html.TextBoxFor(m => m.Value, new { @class = "text-small", type = "number", min = (settings.Minimum.HasValue) ? settings.Minimum.Value : 0, max = (settings.Maximum.HasValue) ? settings.Maximum.Value : 1000000, step = Math.Pow(10, 0 - settings.Scale).ToString(CultureInfo.InvariantCulture) })
+    @Html.ValidationMessageFor(m => m.Value)
+    <span class="hint">@settings.Hint</span>
+</fieldset>

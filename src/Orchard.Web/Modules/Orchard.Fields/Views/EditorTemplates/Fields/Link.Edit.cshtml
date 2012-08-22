@@ -1,0 +1,51 @@
+﻿@model Orchard.Fields.Fields.LinkField
+@using Orchard.Fields.Settings;
+@{
+    var settings = Model.PartFieldDefinition.Settings.GetModel<LinkFieldSettings>();
+    string target = string.Empty;
+    switch (settings.TargetMode) {
+        case TargetMode.NewWindow:
+            target = "_blank";
+            break;
+        case TargetMode.Parent:
+            target = "_parent";
+            break;
+        case TargetMode.Top:
+            target = "_top";
+            break;
+	}
+}
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
+    <span class="hint">@settings.Hint</span>
+
+    <div class="editor-label">
+        <label for="@Html.FieldIdFor(m => m.Value)" @if(settings.Required) { <text>class="required"</text> }>@T("Url")</label>
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.Value, new { @class = "large text" })
+        <span class="hint">@T("A valid url, i.e. http://orchardproject.net, /content/file.pdf, ...")</span>
+    </div>
+    @if (settings.LinkTextMode == LinkTextMode.Optional || settings.LinkTextMode == LinkTextMode.Required) {
+        <div class="editor-label">
+            <label for="@Html.FieldIdFor(m => m.Text)" @if(settings.LinkTextMode == LinkTextMode.Required) { <text>class="required"</text> }>@T("Text")</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Text, new {@class = "textMedium"})
+            <span class="hint">@T("The text of the link. If left empty, the url will be used instead.")</span>
+        </div>
+    }
+    
+    @if (settings.TargetMode == TargetMode.UserChoice) {
+        <div class="editor-label">
+            <label for="@Html.FieldIdFor(m => m.Target)">@T("Target")</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Target, new { @class = "text"})
+            <span class="hint">@T("A valid HTML target attribute value. e.g., _blank, _parent, _top, or an anchor. ")</span>
+        </div>
+    }
+    else {
+        @Html.Hidden(Html.FieldNameFor(m => m.Target), target)
+    }
+</fieldset>

@@ -1,0 +1,59 @@
+﻿@model Orchard.Fields.Settings.BooleanFieldSettings
+@using Orchard.Fields.Settings;
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Optional) <label for="@Html.FieldIdFor(m => m.Optional)" class="forcheckbox">@T("Add a neutral option")</label>
+        <span class="hint">@T("Check to allow the user to enter a neutral value, like 'Maybe'.")</span>
+    </div>
+</fieldset>
+<fieldset>
+	<div class="editor-field" data-controllerid="@Html.FieldIdFor(m => m.Optional)">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.NotSetLabel)">@T("Neutral option text")</label>
+        @Html.TextBoxFor(m => m.NotSetLabel, new { @class = "text" })
+        @Html.ValidationMessageFor(m => m.NotSetLabel)
+        <span class="hint">@T("The text displayed when the field is not selected.")</span>
+	</div>
+</fieldset>
+<fieldset>
+	<div class="editor-field">
+        <label class="forpicker" for="@Html.FieldIdFor(m => m.OnLabel)">@T("On Label")</label>
+        @Html.TextBoxFor(m => m.OnLabel, new { @class = "text"})
+        @Html.ValidationMessageFor(m => m.OnLabel)
+        <span class="hint">@T("The text displayed when the field is selected.")</span>
+	</div>
+</fieldset>
+<fieldset>
+    <label class="forpicker" for="@Html.FieldIdFor(m => m.OffLabel)">@T("Off Label")</label>
+	<div class="editor-field">
+        @Html.TextBoxFor(m => m.OffLabel, new { @class = "text" })
+        @Html.ValidationMessageFor(m => m.OffLabel)
+        <span class="hint">@T("The text displayed when the field is unselected.")</span>
+	</div>
+</fieldset>
+<fieldset>
+    <label class="forpicker" for="@Html.FieldIdFor(m => m.SelectionMode)">@T("Selection mode")</label>    
+    <select id="@Html.FieldIdFor(m => m.SelectionMode)" name="@Html.FieldNameFor(m => m.SelectionMode)">
+        @Html.SelectOption(SelectionMode.Checkbox, Model.SelectionMode == SelectionMode.Checkbox, T("Checkbox").ToString())
+        @Html.SelectOption(SelectionMode.Radiobutton, Model.SelectionMode == SelectionMode.Radiobutton, T("Radio buttons").ToString())
+        @Html.SelectOption(SelectionMode.Dropdown, Model.SelectionMode == SelectionMode.Dropdown, T("Dropdown list").ToString())
+    </select> 
+    <span class="hint">@T("When Checkbox is selected, the label for 'on' will be used.")</span>
+</fieldset>
+<fieldset>
+	<label class="forpicker" for="@Html.FieldIdFor(m => m.DefaultValue)">@T("Default value")</label>    
+    <select id="@Html.FieldIdFor(m => m.DefaultValue)" name="@Html.FieldNameFor(m => m.DefaultValue)">
+        @Html.SelectOption((object)String.Empty, !Model.DefaultValue.HasValue, T("Neutral").ToString())
+        @Html.SelectOption((object)true, Model.DefaultValue.HasValue && Model.DefaultValue == true, T("True").ToString())
+        @Html.SelectOption((object)false, Model.DefaultValue.HasValue && Model.DefaultValue == false, T("False").ToString())
+    </select> 
+    <span class="hint">@T("When Checkbox is selected, the label for 'on' will be used.")</span>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+        @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+        <span class="hint">@T("The help text is written under the field when the user is selecting a value.")</span>
+        @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>
