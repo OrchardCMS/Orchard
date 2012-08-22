@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,7 +101,7 @@
       <Name>Orchard.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Recipes\Orchard.Recipes.csproj">
-      <Project>{FC1D74E8-7A4D-48F4-83DE-95C6173780C4}</Project>
+      <Project>{fc1d74e8-7a4d-48f4-83de-95c6173780c4}</Project>
       <Name>Orchard.Recipes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">

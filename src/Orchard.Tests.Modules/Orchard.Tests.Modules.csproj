@@ -250,7 +250,7 @@
       <Name>Orchard.Scripting</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
-      <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
+      <Project>{8c7fcbc2-e6e1-405e-bfb5-d8d9e67a09c4}</Project>
       <Name>Orchard.Setup</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
@@ -262,7 +262,7 @@
       <Name>Orchard.Themes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
-      <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj">
