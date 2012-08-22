@@ -1,0 +1,18 @@
+﻿.permission 
+{
+    clear:both;
+}
+
+.content-permissions th, .content-permissions td {
+    width: 150px;
+}
+
+.content-permissions th, .content-permissions td {
+    text-align: center;
+}
+
+.content-permissions .role {
+    text-align: right;
+    padding-right: 2em;
+    width: inherit;
+}
