@@ -1,0 +1,11 @@
+﻿@model Orchard.Rules.ViewModels.EditActionViewModel
+           
+@{
+    Layout.Title = T("Edit Action - {0}", Model.Action.Name);
+}
+
+@Html.ValidationSummary()
+<h2>@Model.Action.Description</h2>
+@Display(Model.Form)
+
+@Display.TokenHint()
