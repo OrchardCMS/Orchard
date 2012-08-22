@@ -35,23 +35,22 @@ namespace Orchard.Specs.Hosting {
             _tempSite = _orchardTemp.Combine(System.IO.Path.GetRandomFileName());
             try { _tempSite.Delete(); }
             catch { }
+            
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
-            //if (ConfigurationManager.AppSettings["orchardHosting"] != null) {
-            //    _orchardWebPath = baseDir.Combine(ConfigurationManager.AppSettings["orchardHosting"]);
-            //}
-            //else {
-            for (int i = 1; i < 10; i++) {
-                _orchardWebPath = baseDir.Up(i).Combine("Orchard.Web");
-                if (_orchardWebPath.Exists) {
-                    break;
-                }
+            
+            _orchardWebPath = baseDir;
+
+            while (!_orchardWebPath.Combine("Orchard.proj").Exists && _orchardWebPath.Parent != null) {
+                _orchardWebPath = _orchardWebPath.Parent;
             }
-            //}
+
+            _orchardWebPath = _orchardWebPath.Combine("build").Combine("stage");
 
             if (!_orchardWebPath.Exists) {
-                _orchardWebPath = baseDir.Parent.Combine("stage");
+                throw new ApplicationException("Could not locate stage folder at: " + _orchardWebPath.ToString());
             }
+
             Log("Initialization of ASP.NET host for template web site \"{0}\":", templateName);
             Log(" Source location: \"{0}\"", _orchardWebPath);
             Log(" Temporary location: \"{0}\"", _tempSite);

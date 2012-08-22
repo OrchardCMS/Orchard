@@ -145,7 +145,7 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
   </Target>
 
-  <Target Name ="Spec">
+  <Target Name ="Spec" DependsOnTargets="Package-Stage">
     <!-- TeamCity support -->
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
@@ -165,7 +165,7 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
 
-  <Target Name="Package-Stage">
+  <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
     <CallTarget Targets="ValidateProjectFiles"/>
 

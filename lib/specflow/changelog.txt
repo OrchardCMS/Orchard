@@ -1,6 +1,55 @@
-﻿1.8.1 - 20111/10/25
+1.9.0 - 2012/08/06
+
+See detailed feature summary at http://go.specflow.org/whatsnew-19
+
+New Features:
++ Visual Studio 2012 support
++ Download IDE integration packages through their own distribution channel:
+    Visual Studio 2012 and 2010: Visual Studio Gallery (http://go.specflow.org/vsgallery)
+    MonoDevelop: MonoDevelop Add-in Repository (http://go.specflow.org/monodevelop-addin)
+    SharpDevelop: download addin and install it from SharpDevelop AddIn Manager (http://go.specflow.org/download-sdaddin)
+    Visual Studio 2008: download installer (http://go.specflow.org/download-vs2008msi)
++ Visual Studio 2012 generic test runner support
++ Added SpecFlow.xUnit NuGet package
++ Guids can now be used as arguments to step definitions.
++ Any missing characters on a guid in tables or step arguments will be filled with trailing zeroes. ("7" => 70000000-0000-0000-0000-000000000000)
++ Better comparison exceptions when comparing tables to sets.
++ Using standard Gherkin parser (http://github.com/aslakhellesoy/gherkin) v2.6.5
++ VS2010: Comment and uncomment selection
++ VS2010: Cache analysis result for faster solution startup
++ VS2010: It can now be installed on machines used for SharePoint development
++ Step Definitions without Regular Expressions (underscore style, pascal-case style)
++ F# step definitions (regex method names, Visual Studio integration)
++ SpecFlow.NUnit NuGet package has been split to SpecFlow.NUnit (w/o AddOn for NUnit runner) and SpecFlow.NUnit.Runners (with runner support)
++ ReSharper: editor features (toggle comment, go to step definition, run/debug scenarios) can be used with R# keyboard shortcuts
++ MsTest: Support for MSTest's [Owner] and [WorkItem] attributes with tags like @owner:foo @workitem:123 (Issue 162, Pull 161)
++ NuGet package for creating custom generator extensions: SpecFlow.CustomPlugin
++ VS2010: Integration can track files changed outside of VS (e.g. updated by a SCC pull)
++ VS2010: Collect bindings from assembly references
++ VS2010: Navigation from step definitions to the matching steps (Issue 192)
++ VS2010: Context-dependent navigation (go to step definition / go to steps) with Alt+Ctrl+Shift+S
++ VS2010: Generate missing step definitions from a feature file
++ Support custom step definition skeleton templates (dirrerent style customizable in config, template can be overriden in 
+  "C:\Users\<user>\AppData\Local\SpecFlow\SkeletonTemplates.sftemplate", see http://go.specflow.org/doc-stepdefstyles) (Issue 137, Pull 113)
++ VS2010: Highlight unbound steps and step parameters in the editor (beta, can be switched off in Tools/Options/SpecFlow) (Issue 49, Pull 189, with support of matgiro)
++ Plugin infrastructure
++ The default MsTest unit test provider is changed to the MsTest.2010. If you need to use the MsTest 2008 provider, you have to specify "MsTest.2008". 
+  For newer MsTest providers, you can use "MsTest" (recommended) or "MsTest.2010".
 
 Fixed issues:
++ VS2010: The message "Step bindings are still being analyzed. Please wait." displayed infinitely (Issue 168)
++ SharePoint: throws errors when creating a test class based on the .feature file generated in SharePoint progress because the content of the file is xml. (Issue 151, Pull 170)
++ VS2010: Formatting table fails if table row does not end with a pipe (Issue 146)
++ Support for missing feature/GenerationTargetLanguage (Issue 163)
++ RuntimePluginLoader: IsAssignableFrom is backwards (Issue 164)
++ VS2010: Specflow options show up as "General" in VS Import/Export settings (Issue 184)
++ Dispose IDisposable user objects created by SpecFlow (Issue 22)
+
+1.8.1 - 2011/10/25
+
+Fixed issues:
++ ReSharper: NUnit scenario outline without tag on example set (rowtest enabled) causes inconclusive result (Issue 116)
++ Step definition with more than 10 parameters causing BindingException (extended now to 20)
 + Run & debug scenarios from the feature file context menu does not work with ReSharper 6 (Issue 138)
 + VS2010 step autocomplete: New steps form external project are not found unless IDE is restarted (Issue 88, by Stanislaw Wozniak)
 + VS2010 step autocomplete: Duplicated steps

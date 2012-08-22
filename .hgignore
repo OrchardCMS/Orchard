@@ -27,3 +27,4 @@ glob:src/Orchard.Azure/Orchard.Azure.Web/Themes
 syntax: glob
 src/Orchard.Web/Orchard.Web.Publish.xml
 glob:src/TestResults/*
+glob:TestResults.xml
