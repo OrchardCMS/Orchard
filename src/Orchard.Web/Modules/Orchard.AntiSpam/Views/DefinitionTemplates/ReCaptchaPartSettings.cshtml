@@ -1,0 +1,18 @@
+﻿@model ReCaptchaPartSettings
+@using Orchard.AntiSpam.Settings;
+
+<fieldset>
+    <div>
+        @Html.TextBoxFor(m => m.PublicKey, new { @class = "textMedium"})
+        <span class="hint">@T("Your public key.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.TextBoxFor(m => m.PrivateKey, new { @class = "textMedium"})
+        <span class="hint">@T("Your private key.")</span>
+    </div>
+</fieldset>
+
+@T("Get custom keys:") <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a>

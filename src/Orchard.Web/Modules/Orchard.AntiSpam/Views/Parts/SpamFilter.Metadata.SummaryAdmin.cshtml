@@ -1,0 +1,9 @@
+﻿@using Orchard.AntiSpam.Models
+@if (Model.ContentPart.Status == SpamStatus.Spam) {
+    <ul class="pageStatus">
+        <li>
+            <img class="icon" src="@Href("~/Modules/Orchard.AntiSpam/Content/Admin/Images/spam.gif")" alt="@T("Spam")" title="@T("The content has been categorized as spam")" />
+        </li>
+        <li> @T("Spam")&nbsp;&#124;&nbsp;</li>
+    </ul>
+}

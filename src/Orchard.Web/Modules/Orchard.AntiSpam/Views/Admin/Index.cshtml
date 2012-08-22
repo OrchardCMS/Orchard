@@ -1,0 +1,61 @@
+@model SpamIndexViewModel
+
+@using Orchard.AntiSpam.ViewModels
+@using Orchard.Utility.Extensions
+
+@{
+    var spamIndex = 0;
+
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
+}
+
+<h1>@Html.TitleForPage(T("Manage Spam").ToString()) </h1>
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage"></div>
+
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, SpamBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, SpamBulkAction.Spam, T("Mark as Spam").ToString()) 
+            @Html.SelectOption(Model.Options.BulkAction, SpamBulkAction.Ham, T("Mark as Ham").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, SpamBulkAction.Delete, T("Delete").ToString())
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
+    </fieldset>
+    <fieldset class="bulk-actions">
+        <label for="filterResults">@T("Filter:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
+            @Html.SelectOption(Model.Options.Filter, SpamFilter.All, T("any (show all)").ToString())
+            @Html.SelectOption(Model.Options.Filter, SpamFilter.Spam, T("Spam").ToString()) 
+            @Html.SelectOption(Model.Options.Filter, SpamFilter.Ham, T("Ham").ToString())
+        </select>
+    </fieldset>
+    <fieldset class="bulk-actions">
+		<label for="sortResults">@T("Sort by:")</label>
+        <select id="sortResults" name="@Html.NameOf(m => m.Options.Order)">
+            @Html.SelectOption(Model.Options.Order, SpamOrder.Creation, T("Creation date").ToString())
+        </select>
+		<input type="hidden" name="Page" value="1" />
+		<label for="pageSize">@T("Show:")</label>
+		<select id="pageSize" name="PageSize">
+			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+			@foreach (int size in pageSizes.OrderBy(p => p)) {
+				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+   }
+		</select>
+        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <fieldset class="contentItems bulk-items">
+            @foreach (var entry in Model.Spams) { 
+                @Display(entry.Shape)
+                spamIndex++;
+            }
+	@Display(Model.Pager)
+    </fieldset>
+} 
