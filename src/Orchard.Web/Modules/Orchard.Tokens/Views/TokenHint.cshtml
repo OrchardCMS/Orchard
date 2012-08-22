@@ -1,0 +1,13 @@
+﻿@{
+    Script.Require("jQueryUI_Autocomplete");
+    Script.Include("orchard-tokens-admin.js").AtFoot();
+    Style.Include("orchard-tokens-admin.css");
+}   
+
+@using(Script.Head()) {
+<script type="text/javascript">
+//<![CDATA[
+    var tokensUrl = '@Url.Action("Tokens", "Admin", new { area = "Orchard.Tokens" })';
+//]]>
+</script>
+}
