@@ -22,7 +22,7 @@ namespace Four2n.Orchard.MiniProfiler.Data.Providers
         {
         }
 
-        public static string ProviderName
+        public new static string ProviderName
         {
             get { return global::Orchard.Data.Providers.SqlCeDataServicesProvider.ProviderName; }
         }
