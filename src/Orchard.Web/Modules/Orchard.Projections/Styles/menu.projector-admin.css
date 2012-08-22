@@ -1,0 +1,13 @@
+﻿.navicon-queries {
+background-image:url(images/menu.queries.png) !important;
+}
+.navicon-queries:hover {
+background-position:0 -30px !important;
+}
+
+.subnavicon-projection {
+background-image:url(images/menu.projection.png) !important;
+}
+.subnavicon-projection:hover {
+background-position:0 -30px !important;
+}
