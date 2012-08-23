@@ -73,7 +73,7 @@ namespace Orchard.Media.Services {
             try {
                 // delete the file if it already exists, e.g. an updated image in a blog post
                 // it's safe to delete the file as each content item gets a specific folder
-                _mediaService.DeleteFile(Path.GetDirectoryName(name), Path.GetFileName(name));
+                _mediaService.DeleteFile(directoryName, Path.GetFileName(name));
             }
             catch {
                 // current way to delete a file if it exists
