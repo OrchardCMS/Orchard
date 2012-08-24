@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Orchard.Recipes.Models;
 using Orchard.Setup.Annotations;
+using Orchard.Setup.Controllers;
 
 namespace Orchard.Setup.ViewModels {
     public class SetupViewModel  {
         public SetupViewModel() {
-            DatabaseOptions = true;
         }
 
         [SiteNameValid(maximumLength: 70)]
@@ -16,8 +16,8 @@ namespace Orchard.Setup.ViewModels {
         public string AdminPassword { get; set; }
         [PasswordConfirmationRequired]
         public string ConfirmPassword { get; set; }
-        public bool DatabaseOptions { get; set; }
-        [SqlDatabaseConnectionString]
+        public SetupDatabaseType DatabaseProvider { get; set; }
+        
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public bool DatabaseIsPreconfigured { get; set; }

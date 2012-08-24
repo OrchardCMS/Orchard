@@ -73,6 +73,7 @@
     <Compile Include="Annotations\StringLengthMin.cs" />
     <Compile Include="Commands\SetupCommand.cs" />
     <Compile Include="Controllers\SetupController.cs" />
+    <Compile Include="Controllers\SetupDatabaseType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\ISetupService.cs" />
