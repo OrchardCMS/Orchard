@@ -14,17 +14,6 @@
 })();
 
 (function ($) {
-       $('#databaseType').change(function () {
-              $('.databaseTypeHint').hide();
-              $('#databaseType' + $(this).val()).show();
-       });
-
-       // This is to get right info after postback
-       $('.databaseTypeHint').hide();
-       $('#databaseType' + $(this).val()).show();
-})(jQuery);
-
-(function ($) {
        $("select.recipe").change(function () { // class="recipe" on the select element 
               var description = $(this).find(":selected").attr("recipedescription"); // reads the html attribute of the selected option
               $("#recipedescription").text(description); // make the contents of <div id="recipe-description"></div> be the escaped description string

@@ -6,7 +6,6 @@ using Orchard.Setup.Controllers;
 namespace Orchard.Setup.ViewModels {
     public class SetupViewModel  {
         public SetupViewModel() {
-            DatabaseOptions = true;
         }
 
         [SiteNameValid(maximumLength: 70)]
@@ -17,14 +16,11 @@ namespace Orchard.Setup.ViewModels {
         public string AdminPassword { get; set; }
         [PasswordConfirmationRequired]
         public string ConfirmPassword { get; set; }
-        public bool DatabaseOptions { get; set; }
+        public SetupDatabaseType DatabaseProvider { get; set; }
         
-        // TODO: Do a better validation of connection string that works with MySQL database connection string also
-        // [SqlDatabaseConnectionString]
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public bool DatabaseIsPreconfigured { get; set; }
-        public SetupDatabaseType DatabaseType { get; set; }
 
         public IEnumerable<Recipe> Recipes { get; set; }
         public string Recipe { get; set; }

@@ -74,15 +74,15 @@ namespace Orchard.Setup.Controllers {
         public ActionResult IndexPOST(SetupViewModel model) {
             var recipes = OrderRecipes(_setupService.Recipes());
 
-            //TODO: Couldn't get a custom ValidationAttribute to validate two properties
-            if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
-                ModelState.AddModelError("DatabaseConnectionString", T("A SQL connection string is required").Text);
+            // if no builtin provider, a connection string is mandatory
+            if (model.DatabaseProvider != SetupDatabaseType.Builtin && string.IsNullOrEmpty(model.DatabaseConnectionString))
+                ModelState.AddModelError("DatabaseConnectionString", T("A connection string is required").Text);
 
             if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").Text);
             }
 
-            if(!model.DatabaseOptions && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
+            if (model.DatabaseProvider != SetupDatabaseType.Builtin && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
                 model.DatabaseTablePrefix = model.DatabaseTablePrefix.Trim();
                 if(!Char.IsLetter(model.DatabaseTablePrefix[0])) {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
@@ -113,23 +113,22 @@ namespace Orchard.Setup.Controllers {
             try {
                 string providerName = null;
 
-                if (model.DatabaseOptions)
-                    providerName = "SqlCe";
-                else
+                switch (model.DatabaseProvider)
                 {
-                    switch (model.DatabaseType)
-                    {
-                        case SetupDatabaseType.SqlServer:
-                            providerName = "SqlServer";
-                            break;
+                    case SetupDatabaseType.Builtin:
+                        providerName = "SqlCe";
+                        break;
 
-                        case SetupDatabaseType.MySql:
-                            providerName = "MySql";
-                            break;
+                    case SetupDatabaseType.SqlServer:
+                        providerName = "SqlServer";
+                        break;
 
-                        default:
-                            throw new ApplicationException("Unknown database type: " + model.DatabaseType);
-                    }
+                    case SetupDatabaseType.MySql:
+                        providerName = "MySql";
+                        break;
+
+                    default:
+                        throw new ApplicationException("Unknown database type: " + model.DatabaseProvider);
                 }
 
                 var setupContext = new SetupContext {
