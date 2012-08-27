@@ -34,7 +34,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, LinkField field, dynamic shapeHelper) {
-            return ContentShape("Fields_Link_Edit",
+            return ContentShape("Fields_Link_Edit", GetDifferentiator(field, part),
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
         }
 

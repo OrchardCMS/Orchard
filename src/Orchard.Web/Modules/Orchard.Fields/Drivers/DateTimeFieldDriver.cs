@@ -72,7 +72,7 @@ namespace Orchard.Fields.Drivers {
                 Required = settings.Required
             };
 
-            return ContentShape("Fields_DateTime_Edit", // this is just a key in the Shape Table
+            return ContentShape("Fields_DateTime_Edit", GetDifferentiator(field, part),
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: GetPrefix(field, part))); 
         }
 
