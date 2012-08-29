@@ -18,10 +18,12 @@ namespace Orchard.Pages.Commands {
         private readonly ISiteService _siteService;
         private readonly IMenuService _menuService;
         private readonly INavigationManager _navigationManager;
+        private readonly IAuthenticationService _authenticationService;
 
         public PageCommands(
             IContentManager contentManager, 
             IMembershipService membershipService, 
+            IAuthenticationService authenticationService,
             ISiteService siteService,
             IMenuService menuService,
             INavigationManager navigationManager) {
@@ -30,6 +32,7 @@ namespace Orchard.Pages.Commands {
             _siteService = siteService;
             _menuService = menuService;
             _navigationManager = navigationManager;
+            _authenticationService = authenticationService;
         }
 
         [OrchardSwitch]
@@ -71,7 +74,10 @@ namespace Orchard.Pages.Commands {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }
+
             var owner = _membershipService.GetUser(Owner);
+            _authenticationService.SetAuthenticatedUserForRequest(owner);
+
             var page = _contentManager.Create("Page", VersionOptions.Draft);
             page.As<TitlePart>().Title = Title;
             page.As<ICommonPart>().Owner = owner;

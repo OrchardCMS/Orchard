@@ -84,7 +84,7 @@ namespace Orchard.Security.Providers {
                 Logger.Fatal("User id not a parsable integer");
                 return null;
             }
-            return _contentManager.Get(userId).As<IUser>();
+            return _signedInUser = _contentManager.Get(userId).As<IUser>();
         }
     }
 }
