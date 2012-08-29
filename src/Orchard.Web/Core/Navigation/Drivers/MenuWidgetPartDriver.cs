@@ -66,7 +66,7 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     // if the menu item is culture neutral or of the current culture
-                    if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
+                    else if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
                         localized.Add(menuItem);
                     }
                 }
