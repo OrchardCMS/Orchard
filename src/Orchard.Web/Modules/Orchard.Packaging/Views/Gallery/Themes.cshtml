@@ -42,7 +42,7 @@
             <li>
                 @{
             string extensionClass = "iconThumbnail";
-            string iconUrl = @item.IconUrl;
+            string iconUrl = item.IconUrl;
             if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
                 iconUrl = @item.FirstScreenshot;
                 extensionClass = "screenshotThumbnail";
