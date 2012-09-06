@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
@@ -169,46 +169,21 @@ namespace Orchard.Tests.Modules.Media.Services {
         private MemoryStream CreateZipMemoryStream() {
             // Setup memory stream with zip archive for more complex scenarios
             MemoryStream memoryStream = new MemoryStream();
-            ZipOutputStream zipOut = new ZipOutputStream(memoryStream);
+            using (ZipFile zipOut = new ZipFile()) {
 
-            zipOut.PutNextEntry(new ZipEntry(TextFileName));
-            zipOut.Write(new byte[] { 0x01 }, 0, 1);
-            zipOut.CloseEntry();
+                zipOut.AddEntry(TextFileName, new byte[] { 0x01 });
+                zipOut.AddEntry(WebconfigFileName, new byte[] { 0x02 });
+                zipOut.AddEntry(DllFileName, new byte[] { 0x03 });
+                zipOut.AddEntry(ZipFileName, new byte[] { 0x04 });
+                zipOut.AddEntry(NoExtensionFileName, new byte[] { 0x05 });
+                zipOut.AddEntry(PaddedWebconfigFileName, new byte[] { 0x06 });
+                zipOut.AddEntry(FinalDottedWebconfigFileName, new byte[] { 0x07 });
+                zipOut.AddEntry(PaddedTextFileName, new byte[] { 0x08 });
+                zipOut.AddEntry(FinalDottedTextFileName, new byte[] { 0x09 });
 
-            zipOut.PutNextEntry(new ZipEntry(WebconfigFileName));
-            zipOut.Write(new byte[] { 0x02 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(DllFileName));
-            zipOut.Write(new byte[] { 0x03 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(ZipFileName));
-            zipOut.Write(new byte[] { 0x04 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(NoExtensionFileName));
-            zipOut.Write(new byte[] { 0x05 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(PaddedWebconfigFileName));
-            zipOut.Write(new byte[] { 0x06 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(FinalDottedWebconfigFileName));
-            zipOut.Write(new byte[] { 0x07 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(PaddedTextFileName));
-            zipOut.Write(new byte[] { 0x08 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.PutNextEntry(new ZipEntry(FinalDottedTextFileName));
-            zipOut.Write(new byte[] { 0x09 }, 0, 1);
-            zipOut.CloseEntry();
-
-            zipOut.Close();
-
+                zipOut.Save(memoryStream);
+            }
+                
             return new MemoryStream(memoryStream.ToArray());
         }
 

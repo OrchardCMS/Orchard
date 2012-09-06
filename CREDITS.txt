@@ -63,6 +63,12 @@ Website:      http://dlr.codeplex.com
 Copyright:    Copyright (c) Microsoft Corporation
 License:      Apache Software Foundation License 2.0
 
+DotNetZip
+-----
+Website:      http://dotnetzip.codeplex.com/
+Copyright:    
+License:      MS-PL
+
 Eric Meyer's Reset CSS
 -----
 Website:      http://meyerweb.com/eric/tools/css/reset/
@@ -178,12 +184,6 @@ Website:      http://www.nunit.org/index.php
 Copyright:    Copyright (c) 2002-2007 NUnit.org
               Portions Copyright (c) 2002-2008 Charlie Poole or Copyright (c) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov or Copyright (c) 2000-2002 Philip A. Craig
 License:      Derived from zlib: http://nunit.org/index.php?p=license&r=2.4
-
-SharpZipLib
------
-Website:      http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
-Copyright:    Copyright (c) 2000-2009 IC#Code
-License:      GPLv2 with Classpath Exception: http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
 
 SpecFlow
 -----
