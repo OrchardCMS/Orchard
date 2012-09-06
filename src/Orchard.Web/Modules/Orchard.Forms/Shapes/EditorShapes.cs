@@ -245,7 +245,7 @@ namespace Orchard.Forms.Shapes {
             }
 
             Output.Write(select.ToString(TagRenderMode.StartTag));
-            Output.WriteLine(Value);
+            Output.Write(Value);
             Output.WriteLine(select.ToString(TagRenderMode.EndTag));
         }
 
