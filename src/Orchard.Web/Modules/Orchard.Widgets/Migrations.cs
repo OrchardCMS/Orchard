@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Widgets.Models;
 
@@ -77,6 +78,13 @@ namespace Orchard.Widgets {
                 .AlterTable("WidgetPartRecord", table => table.AddColumn<string>("Name"));
 
             return 3;
+        }
+
+        public int UpdateFrom3()
+        {
+            ContentDefinitionManager.AlterPartDefinition("WidgetPart", builder => builder.Attachable());
+
+            return 4;
         }
     }
 }
