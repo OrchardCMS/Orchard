@@ -6,7 +6,7 @@
 }
 <p class="media-picker-field media-picker-field-@name.HtmlClassify()">
     @if (Html.IsPicture((string)Model.ContentField.Url)) {
-        <img src="@Href(Model.ContentField.Url)"@if (!String.IsNullOrWhiteSpace(Model.ContentField.Class)) {
+        <img src="@Url.Content(Model.ContentField.Url)"@if (!String.IsNullOrWhiteSpace(Model.ContentField.Class)) {
                  <text> class="@Model.ContentField.Class"</text>
              }@if (!String.IsNullOrWhiteSpace(Model.ContentField.Style)) {
                  <text> style="@Model.ContentField.Style"</text>
@@ -21,7 +21,7 @@
              }/>
     }
     else if (!String.IsNullOrWhiteSpace(Model.ContentField.Url)) {
-        <a href="@Href(Model.ContentField.Url)" class="value">@name</a>
+        <a href="@Url.Content(Model.ContentField.Url)" class="value">@name</a>
     }
 </p>
 
@@ -35,5 +35,5 @@
     Height: @Model.ContentField.Height
     
     You can also display an image using this example, and add the attributes you need:
-    <img src="@Href(Model.ContentField.Url)" />
+    <img src="@Url.Content(Model.ContentField.Url)" />
 *@
