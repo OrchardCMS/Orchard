@@ -93,10 +93,19 @@ namespace Orchard.UI.Navigation {
         /// </summary>
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            var isAdminMenu = AdminFilter.IsApplied(_urlHelper.RequestContext);
+
             foreach (var item in items) {
-                if (hasDebugShowAllMenuItems ||
-                    AdminFilter.IsApplied(_urlHelper.RequestContext) ||
-                    item.Permissions.Concat(new [] { Permission.Named("ViewContent") }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content))) {
+                if (
+                    // debug flag is on
+                    hasDebugShowAllMenuItems ||
+
+                    // a content item is linked and the user can view it
+                    item.Content != null && item.Permissions.Concat(new [] { Permission.Named("ViewContent") }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
+
+                    // it's the admin menu and permissions are effective
+                    isAdminMenu && (!item.Permissions.Any() || item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) ) {
+
                     yield return new MenuItem {
                         Items = Reduce(item.Items),
                         Permissions = item.Permissions,
