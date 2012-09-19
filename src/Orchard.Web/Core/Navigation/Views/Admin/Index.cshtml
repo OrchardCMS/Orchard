@@ -67,7 +67,7 @@
     </div>
     
     <fieldset class="actions">
-        <button type="submit" class="button">@T("Save All")</button>
+        <button id="saveButton" type="submit" class="button">@T("Save All")</button>
     </fieldset>
 }
 
@@ -125,4 +125,12 @@
         }
     }
     @:</ol>
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    var leaveConfirmation = '@T("Some items where not saved.")';
+//]]>
+</script>
 }
