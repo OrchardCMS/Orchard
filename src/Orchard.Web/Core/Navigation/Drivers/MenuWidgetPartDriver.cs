@@ -41,6 +41,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 return "MenuWidget";
             }
         }
+
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
             return ContentShape( "Parts_MenuWidget", () => {
                 if(part.Menu == null) {
@@ -85,7 +86,7 @@ namespace Orchard.Core.Navigation.Drivers {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
                     }
 
-                    // apply level limites to breadcrumb
+                    // apply level limits to breadcrumb
                     menuItems = menuItems.Skip(part.StartLevel - 1);
                     if (part.Levels > 0) {
                         menuItems = menuItems.Take(part.Levels);
@@ -119,7 +120,9 @@ namespace Orchard.Core.Navigation.Drivers {
                     IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
                     
                     if(part.StartLevel > 1) {
-                        topLevelItems = selectedPath.Where(x => x.Selected);
+                        // the selected path will return the whole selected hierarchy
+                        // intersecting will return the root selected menu item
+                        topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
                     }
 
                     if (topLevelItems.Any()) {
@@ -133,26 +136,30 @@ namespace Orchard.Core.Navigation.Drivers {
                             topLevelItems = temp;
                         }
 
-                        // apply display level
+                        // apply display level ?
                         if(part.Levels > 0) {
                             var current = topLevelItems.ToList();
-                            for (; i < part.Levels - part.StartLevel; i++ ) {
+                            for (int j=1; j < part.Levels; j++ ) {
                                 var temp = new List<MenuItem>();
                                 foreach (var menuItem in current) {
                                     temp.AddRange(menuItem.Items);
                                 }
                                 current = temp;
                             }
-                            foreach(var menuItem in current) {
+
+                            topLevelItems = current;
+
+                            // cut the sub-levels of any selected menu item
+                            foreach (var menuItem in topLevelItems) {
                                 menuItem.Items = Enumerable.Empty<MenuItem>();
-                            }
+                            }                
+
                         }
 
                         menuItems = topLevelItems;
                     }
                 }
 
-                
 
                 menuShape.MenuName(menuName);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
