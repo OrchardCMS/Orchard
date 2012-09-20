@@ -17,6 +17,7 @@ namespace Orchard.Users.Handlers {
 
             if (part != null) {
                 context.Metadata.Identity.Add("User.UserName", part.UserName);
+                context.Metadata.DisplayText = part.UserName;
             }
         }
     }
