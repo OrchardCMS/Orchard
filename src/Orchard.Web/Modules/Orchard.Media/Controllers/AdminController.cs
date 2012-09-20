@@ -76,7 +76,7 @@ namespace Orchard.Media.Controllers {
                 return View(viewModel);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Edit", new { viewModel.Name, viewModel.MediaPath });
         }
 
         public ActionResult Edit(string name, string mediaPath) {
@@ -93,7 +93,7 @@ namespace Orchard.Media.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Edit(FormCollection input) {
+        public ActionResult Edit(FormCollection input, string name, string mediaPath) {
             foreach (string key in input.Keys) {
                 if (key.StartsWith("Checkbox.File.") && input[key] == "true") {
                     string fileName = key.Substring("Checkbox.File.".Length);
@@ -124,7 +124,8 @@ namespace Orchard.Media.Controllers {
                     }
                 }
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Edit", new { name, mediaPath });
         }
 
         public ActionResult EditProperties(string folderName, string mediaPath) {
