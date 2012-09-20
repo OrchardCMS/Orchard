@@ -310,8 +310,20 @@ namespace Orchard.Media.Services {
                         // skip disallowed files
                         if (FileAllowed(entry.FileName, false)) {
                             string fullFileName = _storageProvider.Combine(targetFolder, entry.FileName);
+
                             using (var stream = entry.OpenReader()) {
-                                _storageProvider.TrySaveStream(fullFileName, stream);
+                                // the call will return false if the file already exists
+                                if (!_storageProvider.TrySaveStream(fullFileName, stream)) {
+                                    
+                                    // try to delete the file and save again
+                                    try {
+                                        _storageProvider.DeleteFile(fullFileName);
+                                        _storageProvider.TrySaveStream(fullFileName, stream);
+                                    }
+                                    catch (ArgumentException) {
+                                        // ignore the exception as the file doesn't exist
+                                    }
+                                }
                             }
                         }
                     }
