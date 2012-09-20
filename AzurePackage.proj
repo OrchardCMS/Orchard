@@ -16,7 +16,8 @@
   </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets')"/>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets')"/>
 
   <!-- Coordinating Targets -->
 
