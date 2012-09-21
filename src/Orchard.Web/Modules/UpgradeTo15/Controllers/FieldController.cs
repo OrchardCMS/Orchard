@@ -68,7 +68,7 @@ namespace UpgradeTo15.Controllers {
                     IEnumerable<ContentItem> contents;
 
                     do {
-                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(count, 100);
+                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).ForVersion(VersionOptions.Latest).Slice(count, 100);
 
                         foreach (ContentItem content in contents) {
 

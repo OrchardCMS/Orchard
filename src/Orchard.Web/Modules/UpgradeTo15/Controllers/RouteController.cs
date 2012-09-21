@@ -100,7 +100,7 @@ namespace UpgradeTo15.Controllers {
                     bool errors = false;
 
                     do {
-                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(count, 100).ToList();
+                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).ForVersion(VersionOptions.Latest).Slice(count, 100).ToList();
 
                         foreach (dynamic content in contents) {
                             var autoroutePart = ((ContentItem)content).As<AutoroutePart>();
