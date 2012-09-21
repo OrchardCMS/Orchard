@@ -24,12 +24,20 @@ namespace Orchard.ContentManagement {
             _contentTypes[contentIdentity] = contentType;
         }
 
-        public ContentItem Get(string id) {
+        public ContentItem Get(string id, string contentTypeHint = null) {
             var contentIdentity = new ContentIdentity(id);
 
             // lookup in local cache
-            if (_identities.ContainsKey(contentIdentity))
-                return _contentManager.Get(_identities[contentIdentity], VersionOptions.DraftRequired);
+            if (_identities.ContainsKey(contentIdentity)) {
+                var result = _contentManager.Get(_identities[contentIdentity], VersionOptions.DraftRequired);
+
+                // if two identities are conflicting, then ensure that there types are the same
+                // e.g., importing a blog as home page (alias=) and the current home page is a page, the blog
+                // won't be imported, and blog posts will be attached to the page
+                if (contentTypeHint == null || result.ContentType == contentTypeHint) {
+                    return result;
+                }
+            }
 
             // no result ? then check if there are some more content items to load from the db
             if(_lastIndex != int.MaxValue) {
@@ -79,8 +87,8 @@ namespace Orchard.ContentManagement {
             }
 
             var contentItem = _contentManager.Create(_contentTypes[contentIdentity], VersionOptions.Draft);
-            _identities.Add(contentIdentity, contentItem.Id);
-            _contentItemIds.Add(contentItem.Id, contentIdentity);
+            _identities[contentIdentity] = contentItem.Id;
+            _contentItemIds[contentItem.Id] = contentIdentity;
 
             return contentItem;
         }

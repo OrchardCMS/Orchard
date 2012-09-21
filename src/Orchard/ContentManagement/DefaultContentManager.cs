@@ -580,7 +580,7 @@ namespace Orchard.ContentManagement {
             var identity = elementId.Value;
             var status = element.Attribute("Status");
 
-            var item = importContentSession.Get(identity);
+            var item = importContentSession.Get(identity, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
