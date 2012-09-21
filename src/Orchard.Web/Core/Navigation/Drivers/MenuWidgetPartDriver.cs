@@ -118,8 +118,8 @@ namespace Orchard.Core.Navigation.Drivers {
                 }
                 else {
                     IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
-                    
-                    if(part.StartLevel > 1) {
+
+                    if (part.StartLevel > 1 && selectedPath != null) {
                         // the selected path will return the whole selected hierarchy
                         // intersecting will return the root selected menu item
                         topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
