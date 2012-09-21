@@ -62,7 +62,6 @@ namespace Orchard.Projections.FilterEditors.Forms {
 
                     _resourceManager.Value.Require("script", "jQuery");
                     _resourceManager.Value.Include("script", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
-                    _resourceManager.Value.Include("stylesheet", "~/Modules/Orchard.Projections/Styles/numeric-editor-filter.css", "~/Modules/Orchard.Projections/Styles/numeric-editor-filter.css");
 
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(NumericOperator.LessThan), Text = T("Is less than").Text });
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(NumericOperator.LessThanEquals), Text = T("Is less than or equal to").Text });
