@@ -64,9 +64,11 @@
     $("ul a").each(function () {
         var self = $(this);
         var link = self.attr("href");
+        var url = link.split("?");
+
         // if the link doesn't define the "callback" query string, then append it
         // n.b., pagers already append it
-        if (query("callback", link).length == 0) {
+        if (url.length == 1 || query("callback", "?" + url[1]).length == 0) {
             link = link + "?callback=" + query("callback");
             self.attr("href", link);
         }

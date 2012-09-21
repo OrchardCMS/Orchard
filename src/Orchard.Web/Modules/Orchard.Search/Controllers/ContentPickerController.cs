@@ -75,6 +75,9 @@ namespace Orchard.Search.Controllers {
                 item.Metadata.Type = "ContentPicker";
             }
 
+            // retain the parameter in the pager links
+            RouteData.Values["searchText"] = searchText;
+
             dynamic tab = Services.New.SearchContentTab()
                 .ContentItems(list)
                 .Pager(pagerShape)

@@ -45,6 +45,7 @@ namespace Orchard.ContentPicker.Controllers {
                                             ? contentTypeDefinition.DisplayName
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.Options.SelectedFilter);
+
             }
             
             switch (model.Options.OrderBy) {
@@ -78,6 +79,10 @@ namespace Orchard.ContentPicker.Controllers {
                 .Pager(pagerShape)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
+
+            // retain the parameter in the pager links
+            RouteData.Values["Options.SelectedFilter"] = model.Options.SelectedFilter;
+            RouteData.Values["Options.OrderBy"] = model.Options.OrderBy.ToString();
 
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }
