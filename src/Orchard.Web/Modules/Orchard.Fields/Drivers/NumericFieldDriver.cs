@@ -6,15 +6,19 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Localization;
+using Orchard.Fields.ViewModels;
 
 namespace Orchard.Fields.Drivers {
     public class NumericFieldDriver : ContentFieldDriver<NumericField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Numeric.Edit";
+        private readonly Lazy<CultureInfo> _cultureInfo;
 
         public NumericFieldDriver(IOrchardServices services) {
             Services = services;
             T = NullLocalizer.Instance;
+
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
         }
 
         public Localizer T { get; set; }
@@ -29,22 +33,47 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Display(ContentPart part, NumericField field, string displayType, dynamic shapeHelper) {
             return ContentShape("Fields_Numeric", GetDifferentiator(field, part), () => {
-                var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
-                return shapeHelper.Fields_Numeric().Settings(settings);
+                return shapeHelper.Fields_Numeric()
+                    .Settings(field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>())
+                    .Value(Convert.ToString(field.Value, _cultureInfo.Value));
             });
         }
 
         protected override DriverResult Editor(ContentPart part, NumericField field, dynamic shapeHelper) {
+
             return ContentShape("Fields_Numeric_Edit", GetDifferentiator(field, part),
-                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
+                () => {
+                    var model = new NumericFieldViewModel {
+                        Field = field,
+                        Settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>(),
+                        Value = Convert.ToString(field.Value, _cultureInfo.Value)
+                    };
+
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: GetPrefix(field, part));
+                });
         }
 
         protected override DriverResult Editor(ContentPart part, NumericField field, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
+            var viewModel = new NumericFieldViewModel();
+
+            if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
+                Decimal value;
+
                 var settings = field.PartFieldDefinition.Settings.GetModel<NumericFieldSettings>();
 
-                if (settings.Required && !field.Value.HasValue) {
+                if (settings.Required && String.IsNullOrWhiteSpace(viewModel.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("The field {0} is mandatory.", T(field.DisplayName)));
+                }
+
+                if (!settings.Required && String.IsNullOrWhiteSpace(viewModel.Value)) {
+                    field.Value = null;
+                }
+                else if (Decimal.TryParse(viewModel.Value, NumberStyles.Any, _cultureInfo.Value, out value)) { 
+                    field.Value = value;
+                }
+                else {
+                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid number", field.DisplayName));
+                    field.Value = null;
                 }
 
                 if (settings.Minimum.HasValue && field.Value.HasValue && field.Value.Value < settings.Minimum.Value) {

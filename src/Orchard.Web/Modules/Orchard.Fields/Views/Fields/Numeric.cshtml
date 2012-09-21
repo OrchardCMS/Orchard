@@ -7,6 +7,6 @@
 @if (number.HasValue) {
     <p class="numeric-field numeric-field-@name.HtmlClassify()">
         <span class="name">@name:</span>
-        <span class="value">@(number.Value)</span>
+        <span class="value">@(Model.Value)</span>
     </p>
 }
