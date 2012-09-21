@@ -67,7 +67,7 @@ namespace Orchard.CustomForms.Controllers {
             dynamic model = _contentManager.BuildEditor(contentItem);
 
             model
-                .ContenItem(form)
+                .ContentItem(form)
                 .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.

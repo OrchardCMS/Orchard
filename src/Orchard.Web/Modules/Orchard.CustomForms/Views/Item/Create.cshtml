@@ -2,10 +2,13 @@
 @{
     ContentItem customForm = Model.ContentItem;
     string returnUrl = Model.ReturnUrl;
-
+    var titlePart = customForm.As<Orchard.Core.Title.Models.TitlePart>();
+    
     // remove default Save/Publish buttons
     Model.Zones["Sidebar"].Items.Clear();
 }
+
+@Display(New.Parts_Title().ContentPart(titlePart).Title(titlePart.Title))
 
 @using (Html.BeginFormAntiForgeryPost(returnUrl)) {
     @Html.ValidationSummary()
