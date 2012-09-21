@@ -63,8 +63,10 @@
                     <td>
                         @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl }) |
                         @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.QueryId }) |
-                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
-                        @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
+                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        @if (entry.Query.FilterGroups.SelectMany(x => x.Filters).Any()) {
+                            <text>| </text> @Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.QueryId })
+                        }
                     </td>
                 </tr>
                 index++;

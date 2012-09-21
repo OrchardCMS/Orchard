@@ -109,7 +109,9 @@
 
         
     <fieldset>
-        @Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" })
+        @if(Model.FilterGroups.SelectMany(x => x.Filters).Any()) {
+            @Html.ActionLink(T("Preview").ToString(), "Preview", new { Model.Id }, new { @class = "button" });
+        }
         @Html.ActionLink(T("Close").ToString(), "Index", new { }, new { @class = "button" })
     </fieldset>
     
