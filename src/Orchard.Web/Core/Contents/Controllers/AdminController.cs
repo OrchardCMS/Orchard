@@ -128,11 +128,12 @@ namespace Orchard.Core.Contents.Controllers {
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             if (itemIds != null) {
+                var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest, QueryHints.Empty);
                 switch (options.BulkAction) {
                     case ContentsBulkAction.None:
                         break;
                     case ContentsBulkAction.PublishNow:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -143,7 +144,7 @@ namespace Orchard.Core.Contents.Controllers {
                         Services.Notifier.Information(T("Content successfully published."));
                         break;
                     case ContentsBulkAction.Unpublish:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
@@ -154,7 +155,7 @@ namespace Orchard.Core.Contents.Controllers {
                         Services.Notifier.Information(T("Content successfully unpublished."));
                         break;
                     case ContentsBulkAction.Remove:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        foreach (var item in checkedContentItems) {
                             if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
