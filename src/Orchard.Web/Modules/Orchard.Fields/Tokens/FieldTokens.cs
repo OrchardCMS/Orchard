@@ -2,6 +2,9 @@
 using Orchard.Events;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
+using Orchard.Services;
+using Orchard.Core.Shapes.Localization;
+using System.Globalization;
 
 namespace Orchard.Fields.Tokens {
     public interface ITokenProvider : IEventHandler {
@@ -10,6 +13,27 @@ namespace Orchard.Fields.Tokens {
     }
 
     public class FieldTokens : ITokenProvider {
+
+        private readonly IClock _clock;
+        private readonly IDateTimeLocalization _dateTimeLocalization;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly Lazy<TimeZoneInfo> _timeZone;
+
+
+        public FieldTokens(
+            IClock clock, 
+            IDateTimeLocalization dateTimeLocalization, 
+            IWorkContextAccessor workContextAccessor) {
+            _clock = clock;
+            _dateTimeLocalization = dateTimeLocalization;
+            _workContextAccessor = workContextAccessor;
+
+            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
+            _timeZone = new Lazy<TimeZoneInfo>(() => _workContextAccessor.GetContext().CurrentTimeZone);
+
+            T = NullLocalizer.Instance;
+        }
 
         public Localizer T { get; set; }
 
@@ -24,6 +48,7 @@ namespace Orchard.Fields.Tokens {
             context.For("DateTimeField", T("Date Time Field"), T("Tokens for Date Time Fields"))
                 .Token("Date", T("Date"), T("The date only."))
                 .Token("Time", T("Time"), T("The time only."))
+                .Token("DateTime", T("Date Time"), T("The date and time."))
                 ;
 
             context.For("MediaPickerField", T("Media Picker Field"), T("Tokens for Media Picker Fields"))
@@ -47,8 +72,10 @@ namespace Orchard.Fields.Tokens {
                 ;
 
             context.For<DateTimeField>("DateTimeField")
-                .Token("Date", (Func<DateTimeField, object>)(field => field.DateTime))
-                .Chain("Date", "Date", (Func<DateTimeField, object>)(field => field.DateTime))
+                .Token("Date", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value)))
+                .Token("Time", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value)))
+                .Token("DateTime", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateFormat.Text + " " + _dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value)))
+                .Chain("DateTime", "Date", (Func<DateTimeField, object>)(field => field.DateTime))
                 ;
 
             context.For<MediaPickerField>("MediaPickerField")
@@ -60,11 +87,6 @@ namespace Orchard.Fields.Tokens {
                 .Token("Alignment", (Func<MediaPickerField, object>)(field => field.Alignment))
                 .Token("Width", (Func<MediaPickerField, object>)(field => field.Width))
                 .Token("Height", (Func<MediaPickerField, object>)(field => field.Height))
-                ;
-
-            context.For<DateTimeField>("DateTimeField")
-                .Token("Date", (Func<DateTimeField, object>)(field => field.DateTime))
-                .Chain("Date", "Date", (Func<DateTimeField, object>)(field => field.DateTime))
                 ;
         }
     }
