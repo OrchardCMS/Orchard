@@ -24,6 +24,10 @@ namespace Orchard.Widgets.Drivers {
 
         public Localizer T { get; set; }
 
+        protected override string Prefix {
+            get { return "WidgetPart"; }
+        }
+
         protected override DriverResult Editor(WidgetPart widgetPart, dynamic shapeHelper) {
             widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
