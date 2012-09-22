@@ -20,7 +20,7 @@
                 <label for="menuId">@T("Current Menu:")</label>
                 <select id="menuId" name="menuId">
                     @foreach (var menu in Model.Menus) {
-                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Html.ItemDisplayText(menu).ToString())
+                        @Html.SelectOption(Model.CurrentMenu.Id, menu.Id, Convert.ToString(Html.ItemDisplayText(menu)))
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
