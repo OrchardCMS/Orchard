@@ -15,7 +15,6 @@ namespace Orchard.Fields.Drivers {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private static readonly DateTime DefaultValue = new DateTime(1980, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public DateTimeFieldDriver(IOrchardServices services) {
             Services = services;
