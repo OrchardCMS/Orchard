@@ -28,15 +28,15 @@
             : null;
 
         IHtmlString sectionHeaderMarkup;
-        if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
-            sectionHeaderMarkup = HasText(itemId)
-                ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName, id = itemId })
-                : Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName });
-        }
-        else if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
+        if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
             sectionHeaderMarkup = HasText(itemId)
                 ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName, id = itemId })
                 : Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName });
+        }
+        else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
+            sectionHeaderMarkup = HasText(itemId)
+                ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName, id = itemId })
+                : Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName });
         }
         else {
             // if the header isn't linked and there are no children there's no reason for this item in the menu other than to look pretty
