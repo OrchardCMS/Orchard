@@ -18,6 +18,7 @@ using Orchard.UI.Notify;
 
 namespace Orchard.CustomForms.Controllers {
     [Themed(true)]
+    [ValidateInput(false)]
     public class ItemController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
