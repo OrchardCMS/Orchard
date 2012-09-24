@@ -6,6 +6,8 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.CustomForms.Models;
 using Orchard.CustomForms.ViewModels;
+using Orchard.ContentManagement.Handlers;
+using System;
 
 namespace Orchard.CustomForms.Drivers {
     public class CustomFormPartDriver : ContentPartDriver<CustomFormPart> {
@@ -55,6 +57,30 @@ namespace Orchard.CustomForms.Drivers {
 
             updater.TryUpdateModel(viewModel, Prefix, null, null);
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(CustomFormPart part, ImportContentContext context) {
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "ContentType"), x => part.Record.ContentType = x);
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "SaveContentItem"), x => part.Record.SaveContentItem = Boolean.Parse(x));
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "CustomMessage"), x => part.Record.CustomMessage = Boolean.Parse(x));
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "Message"), x => part.Record.Message = x);
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "Redirect"), x => part.Record.Redirect = Boolean.Parse(x));
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "RedirectUrl"), x => part.Record.RedirectUrl = x);
+        }
+
+        private static void IfNotNull<T>(T value, Action<T> then) {
+            if (value != null) {
+                then(value);
+            }
+        }
+
+        protected override void Exporting(CustomFormPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ContentType", part.Record.ContentType);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SaveContentItem", part.Record.SaveContentItem);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CustomMessage", part.Record.CustomMessage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Record.Message);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Redirect", part.Record.Redirect);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RedirectUrl", part.Record.RedirectUrl);
         }
     }
 }
