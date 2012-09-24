@@ -15,6 +15,7 @@ namespace Orchard.Fields.Drivers {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
         private readonly Lazy<CultureInfo> _cultureInfo;
+        private static readonly DateTime DefaultValue = new DateTime(1980, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public DateTimeFieldDriver(IOrchardServices services) {
             Services = services;
@@ -98,7 +99,13 @@ namespace Orchard.Fields.Drivers {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required", field.DisplayName));
                 }
 
-                if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out value)) {
+                if(!settings.Required
+                    && (settings.Display != DateTimeFieldDisplays.TimeOnly && String.IsNullOrWhiteSpace(viewModel.Date))
+                    || (settings.Display != DateTimeFieldDisplays.DateOnly && String.IsNullOrWhiteSpace(viewModel.Time))
+                    ) {
+                        field.DateTime = DateTime.MinValue;
+                }
+                else if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out value)) {
                     field.DateTime = TimeZoneInfo.ConvertTimeToUtc(value, Services.WorkContext.CurrentTimeZone);
                 }
                 else {

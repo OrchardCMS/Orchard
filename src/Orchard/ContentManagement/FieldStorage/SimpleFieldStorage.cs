@@ -27,7 +27,7 @@ namespace Orchard.ContentManagement.FieldStorage {
 
             // using a special case for DateTime as it would lose milliseconds otherwise
             if (typeof(T) == typeof(DateTime)) {
-                var result = DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToUniversalTime();
+                var result = XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Utc);
                 return (T) (object)result;
             }
 
