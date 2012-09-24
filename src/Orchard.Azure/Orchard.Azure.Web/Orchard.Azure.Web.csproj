@@ -396,6 +396,9 @@
     <Content Include="Config\log4net.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\HostComponents.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Config\Sites.config">
       <SubType>Designer</SubType>
     </Content>

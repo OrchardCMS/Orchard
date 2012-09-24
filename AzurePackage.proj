@@ -84,8 +84,8 @@
     
     <ItemGroup>
       <!-- filter to exclude any binary from a folder -->
-      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.user;" />
-   
+      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.user; $(SrcFolder)\**\*.cs;$(SrcFolder)\**\*.csproj" />
+
       <!-- list of files from Themes, Core and Modules to export -->
       <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
       <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
