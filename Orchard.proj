@@ -272,6 +272,14 @@
     <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
       XPath="/log4net/root/appender-ref[@ref='debug-file']" />
 
+    <!-- disable dynamic compilation loader -->
+    <Move SourceFiles="$(StageFolder)\Config\Sample.HostComponents.config"
+    DestinationFiles="$(StageFolder)\Config\HostComponents.config"/>
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
+      XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value"
+      Value="true" />
+    
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
@@ -325,14 +333,6 @@
 
     <Copy SourceFiles="@(Precompiled-Folder-Input)"
         DestinationFolder="$(PrecompiledFolder)\%(RecursiveDir)"/>
-
-    <!-- disable dynamic compilation loader -->
-    <Move SourceFiles="$(PrecompiledFolder)\Config\Sample.HostComponents.config"
-    DestinationFiles="$(PrecompiledFolder)\Config\HostComponents.config"/>
-
-    <XmlUpdate XmlFileName="$(PrecompiledFolder)\Config\HostComponents.config"
-      XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value"
-      Value="true" />
 
     <MakeDir Directories="$(PrecompiledFolder)\bin\HostRestart"/>
   </Target>
