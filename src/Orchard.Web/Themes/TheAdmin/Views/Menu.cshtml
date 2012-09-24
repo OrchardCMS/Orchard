@@ -70,6 +70,8 @@
                 <ul class="menuItems">
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
                     string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
+                    var firstOfTheThird = ((IEnumerable<dynamic>)secondLevelMenuItem).FirstOrDefault();
+
                     var secondLevelItemClassName = HasText(secondLevelTextHint)
                         ? "subnavicon-" + secondLevelTextHint.HtmlClassify()
                         : "subnavicon";
@@ -82,12 +84,16 @@
                     }
 
                     var secondLevelTag = Tag(secondLevelMenuItem, "li");
+                    var secondLevelUrl = secondLevelMenuItem.Href;
+                    if (firstOfTheThird != null && secondLevelMenuItem.LinkToFirstChild && (firstOfTheThird.RouteValues != null || HasText(firstOfTheThird.Url))) {
+                        secondLevelUrl = firstOfTheThird.Href;
+                    }                    
                     @secondLevelTag.StartElement
                         if (HasText(secondLevelItemId)) {
-                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text</a>
+                            <a href="@secondLevelUrl" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text</a>
                         }
                         else {
-                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName">@secondLevelMenuItem.Text</a>
+                            <a href="@secondLevelUrl" class="@secondLevelItemClassName">@secondLevelMenuItem.Text</a>
                         }
                     @secondLevelTag.EndElement
                 }
