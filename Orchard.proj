@@ -39,7 +39,7 @@
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
-    <!--<CallTarget Targets="Test"/>-->
+    <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/> 
   </Target>
 
@@ -133,7 +133,7 @@
   <Target Name ="Test">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
@@ -148,7 +148,7 @@
   <Target Name ="Spec" DependsOnTargets="Package-Stage">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
