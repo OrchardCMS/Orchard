@@ -1,0 +1,4 @@
+This library has been modified to be compatible with NH 3.3.
+The file DetachedCriteriaAdapter.cs in this folder is used instead of the original onw from soure code.
+
+Source code can be found at http://sourceforge.net/projects/nhcontrib/files/NHibernate.Linq/1.0/NHibernate.Linq-1.0.0.GA-src.zip

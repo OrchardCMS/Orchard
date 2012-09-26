@@ -96,6 +96,9 @@
     <Reference Include="NHibernate.Caches.SysCache2">
       <HintPath>..\..\lib\nhibernate\NHibernate.Caches.SysCache2.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate.Linq">
+      <HintPath>..\..\lib\nhibernate.linq\NHibernate.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -171,7 +174,6 @@
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />
-    <Compile Include="ContentManagement\RestrictionExtensions.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
     <Compile Include="Data\Conventions\CacheConvention.cs" />
