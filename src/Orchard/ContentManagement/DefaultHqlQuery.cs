@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using NHibernate;
+using NHibernate.Transform;
 using Orchard.ContentManagement.Records;
 using Orchard.Utility.Extensions;
 
@@ -158,12 +159,15 @@ namespace Orchard.ContentManagement {
         public IEnumerable<ContentItem> Slice(int skip, int count) {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
             var hql = ToHql(false);
-            var query = _session.CreateQuery(hql);
+            var query = _session
+                .CreateQuery(hql)
+                .SetCacheable(true)
+                .SetResultTransformer(new DistinctRootEntityResultTransformer());
 
             if (skip != 0) {
                 query.SetFirstResult(skip);
             }
-            if (count != 0) {
+            if (count != 0 && count != Int32.MaxValue) {
                 query.SetMaxResults(count);
             }
 
@@ -174,7 +178,12 @@ namespace Orchard.ContentManagement {
 
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            return Convert.ToInt32(_session.CreateQuery(ToHql(true)).UniqueResult());
+            return Convert.ToInt32(
+                _session.CreateQuery(ToHql(true))
+                .SetCacheable(true)
+                .SetResultTransformer(new DistinctRootEntityResultTransformer())
+                .UniqueResult()
+                );
         }
 
         public string ToHql(bool count) {

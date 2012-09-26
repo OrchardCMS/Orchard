@@ -10,17 +10,20 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
+using Orchard.Environment.Configuration;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
         private readonly ISessionLocator _sessionLocator;
+        private readonly ShellSettings _shellSettings;
         private ISession _session;
         private ICriteria _itemVersionCriteria;
         private VersionOptions _versionOptions;
 
-        public DefaultContentQuery(IContentManager contentManager, ISessionLocator sessionLocator) {
+        public DefaultContentQuery(IContentManager contentManager, ISessionLocator sessionLocator, ShellSettings shellSettings) {
             _sessionLocator = sessionLocator;
+            _shellSettings = shellSettings;
             ContentManager = contentManager;
         }
 
@@ -51,7 +54,7 @@ namespace Orchard.ContentManagement {
         ICriteria BindItemVersionCriteria() {
             if (_itemVersionCriteria == null) {
                 _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
-                _itemVersionCriteria.SetCacheable(true);
+                _itemVersionCriteria.SetCacheable(true).SetCacheRegion(_shellSettings.Name);
             }
             return _itemVersionCriteria;
         }
@@ -142,6 +145,7 @@ namespace Orchard.ContentManagement {
             if (count != 0) {
                 criteria = criteria.SetMaxResults(count);
             }
+
             return criteria
                 .List<ContentItemVersionRecord>()
                 .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))

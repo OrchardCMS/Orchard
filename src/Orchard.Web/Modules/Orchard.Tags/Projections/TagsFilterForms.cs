@@ -35,8 +35,17 @@ namespace Orchard.Tags.Projections {
                             Description: T("Select some tags."),
                             Size: 10,
                             Multiple: true
-                            )
-                        );
+                            ),
+                        _Exclusion: Shape.FieldSet(
+                            _OperatorOneOf: Shape.Radio(
+                                Id: "operator-is-one-of", Name: "Operator",
+                                Title: T("Is one of"), Value: "0", Checked: true
+                                ),
+                            _OperatorIsAllOf: Shape.Radio(
+                                Id: "operator-is-all-of", Name: "Operator",
+                                Title: T("Is all of"), Value: "1"
+                                )
+                            ));
 
                     foreach (var tag in _tagService.GetTags()) {
                         f._Tags.Add(new SelectListItem { Value = tag.Id.ToString(), Text = tag.TagName });

@@ -34,8 +34,33 @@ namespace Orchard.Tags.Projections {
             string tags = Convert.ToString(context.State.TagIds);
             if (!String.IsNullOrEmpty(tags)) {
                 var ids = tags.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
-                var query = (IHqlQuery)context.Query;
-                context.Query = query.Where(x => x.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags"), x => x.In("TagRecord.Id", ids));
+
+                if (ids.Length == 0) {
+                    return;
+                }
+
+                int op = Convert.ToInt32(context.State.Operator);
+
+                switch (op) {
+                    case 0:
+                        // is one of
+                            Action<IAliasFactory> s = alias => alias.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags").Property("TagRecord", "tagRecord");
+                            Action<IHqlExpressionFactory> f = x => x.InG("Id", ids);
+                            context.Query.Where(s, f);
+                        break;
+                    case 1:
+                        // is all of
+                        foreach (var id in ids) {
+                            int tagId = id;
+                            Action<IAliasFactory> selector = alias => alias.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags" + tagId);
+                            Action<IHqlExpressionFactory> filter = x => x.Eq("TagRecord.Id", tagId);
+                            context.Query.Where(selector, filter);
+                        }
+                        break;
+                    case 2:
+                        // is not one of can't be done without sub queries
+                        break;
+                }
             }
         }
 
