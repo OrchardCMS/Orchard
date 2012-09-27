@@ -202,9 +202,19 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StylesheetBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Style__" + fileName);
+                    }
+                });
+
+            builder.Describe("Script")
+                .OnDisplaying(displaying => {
+                    var resource = displaying.Shape;
+                    string url = resource.Url;
+                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    if (!string.IsNullOrEmpty(fileName)) {
+                        resource.Metadata.Alternates.Add("Script__" + fileName);
                     }
                 });
 
@@ -212,7 +222,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StylesheetBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Resource__" + fileName);
                     }
@@ -331,6 +341,11 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
+        public void Script(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+        }
+
+        [Shape]
         public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
             ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
@@ -375,6 +390,9 @@ namespace Orchard.Core.Shapes {
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
                     result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                }
+                else if (resourceType == "script") { 
+                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else {
                     result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
