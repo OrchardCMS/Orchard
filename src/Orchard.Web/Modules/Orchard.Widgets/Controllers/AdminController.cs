@@ -318,7 +318,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id, string returnUrl) {
+        public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -329,7 +329,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 // override the CommonPart's persisting of the current container
-                widgetPart.LayerPart = _widgetsService.GetLayer(widgetPart.LayerId);
+                widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
                     // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
