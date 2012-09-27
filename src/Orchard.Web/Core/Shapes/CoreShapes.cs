@@ -376,7 +376,7 @@ namespace Orchard.Core.Shapes {
             }
             var defaultSettings = new RequireSettings {
                 DebugMode = debugMode,
-                Culture = CultureInfo.CurrentUICulture.Name,
+                Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
             var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
