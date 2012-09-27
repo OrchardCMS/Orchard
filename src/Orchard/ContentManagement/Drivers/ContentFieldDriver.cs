@@ -156,31 +156,31 @@ namespace Orchard.ContentManagement.Drivers {
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
             if ( !string.IsNullOrEmpty(fieldName) )
-                metadata.Alternates.Add(shapeType + "__" + fieldName);
+                metadata.Alternates.Add(shapeType + "__" + EncodeAlternateElement(fieldName));
 
             // [ShapeType__PartName] e.g. Fields/Common.Text-TeaserPart
             if ( !string.IsNullOrEmpty(partName) ) {
-                metadata.Alternates.Add(shapeType + "__" + partName);
+                metadata.Alternates.Add(shapeType + "__" + EncodeAlternateElement(partName));
             }
 
             // [ShapeType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart
             if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(contentType) && !dynamicType ) {
-                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName);
+                metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + partName));
             }
 
             // [ShapeType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser
             if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "__" + partName + "__" + fieldName);
+                metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + partName + "__" + fieldName));
             }
 
             // [ShapeType]__[ContentType]__[FieldName] e.g. Fields/Common.Text-Blog-Teaser
             if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + fieldName);
+                metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + fieldName));
             }
 
             // [ShapeType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser
             if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
-                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName );
+                metadata.Alternates.Add(EncodeAlternateElement(shapeType + "__" + contentType + "__" + partName));
             }
             
             return shape;
@@ -206,6 +206,15 @@ namespace Orchard.ContentManagement.Drivers {
 
         public CombinedResult Combined(params DriverResult[] results) {
             return new CombinedResult(results);
+        }
+
+        /// <summary>
+        /// Encodes dashed and dots so that they don't conflict in filenames 
+        /// </summary>
+        /// <param name="alternateElement"></param>
+        /// <returns></returns>
+        private static string EncodeAlternateElement(string alternateElement) {
+            return alternateElement.Replace("-", "__").Replace(".", "_");
         }
     }
 }
