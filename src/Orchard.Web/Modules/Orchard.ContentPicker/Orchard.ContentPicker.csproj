@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\ContentPicker.js" />
+    <Content Include="Styles\content-picker-admin.css" />
     <Content Include="Styles\ContentPicker.css" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
