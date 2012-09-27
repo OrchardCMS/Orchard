@@ -16,14 +16,12 @@ using Orchard.Utility.Extensions;
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
         private readonly ISessionLocator _sessionLocator;
-        private readonly ShellSettings _shellSettings;
         private ISession _session;
         private ICriteria _itemVersionCriteria;
         private VersionOptions _versionOptions;
 
-        public DefaultContentQuery(IContentManager contentManager, ISessionLocator sessionLocator, ShellSettings shellSettings) {
+        public DefaultContentQuery(IContentManager contentManager, ISessionLocator sessionLocator) {
             _sessionLocator = sessionLocator;
-            _shellSettings = shellSettings;
             ContentManager = contentManager;
         }
 
@@ -54,7 +52,7 @@ namespace Orchard.ContentManagement {
         ICriteria BindItemVersionCriteria() {
             if (_itemVersionCriteria == null) {
                 _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
-                _itemVersionCriteria.SetCacheable(true).SetCacheRegion(_shellSettings.Name);
+                _itemVersionCriteria.SetCacheable(true);
             }
             return _itemVersionCriteria;
         }

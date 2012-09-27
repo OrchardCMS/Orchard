@@ -318,7 +318,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id, int layerId, string returnUrl) {
+        public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
