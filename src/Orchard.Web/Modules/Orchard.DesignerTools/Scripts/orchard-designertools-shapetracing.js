@@ -190,8 +190,11 @@ jQuery(function ($) {
 
     shapeTracingWindowTree.append(shapes);
 
+    // remove empty list items
+    shapeTracingWindowTree.find('ul:empty').remove();
+
     // add the expand/collapse logic to the shapes tree
-    shapeTracingWindowTree.find('li:has(ul:has(li))').prepend($(glyph));
+    shapeTracingWindowTree.find('li:has(ul)').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowTree.find('ul ul').toggle(false);
@@ -321,8 +324,11 @@ jQuery(function ($) {
     // move all shape tracing meta blocks to the content window
     $("[shape-id-meta]").detach().prependTo(shapeTracingWindowContent);
 
+    // remove empty list items
+    shapeTracingWindowContent.find('ul:empty').remove();
+
     // add the expand/collapse logic to the shape model
-    shapeTracingWindowContent.find('li:has(ul:has(li))').prepend($(glyph));
+    shapeTracingWindowContent.find('ul:has(ul)').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowContent.find('ul ul').toggle(false);
@@ -343,8 +349,11 @@ jQuery(function ($) {
 
         shapeTracingBreadcrumb.text('');
 
+        // remove empty list items
+        shapeTracingMetaContent.find('ul:empty').remove();
+
         // create collapsible containers
-        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
+        shapeTracingMetaContent.find('li:has(ul)').prepend($(glyph));
         shapeTracingMetaContent.find('ul ul').toggle(false);
         shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
 
@@ -377,8 +386,11 @@ jQuery(function ($) {
 
         shapeTracingBreadcrumb.text('');
 
+        // remove empty list items
+        shapeTracingMetaContent.find('ul:empty').remove();
+
         // create collapsible containers
-        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
+        shapeTracingMetaContent.find('li:has(ul)').prepend($(glyph));
         shapeTracingMetaContent.find('ul ul').toggle(false);
         shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
 

@@ -1,11 +1,5 @@
-﻿@using Orchard;
-@using Orchard.DisplayManagement.Descriptors;
-@using Orchard.DesignerTools.Services;
-@using System.Xml;
-
-@{
-    Script.Require("jQueryUI_Tabs").AtHead();
-    Script.Require("jQueryUI_Resizable").AtHead();
+﻿@{
+    Script.Require("jQueryUI").AtHead();
     Script.Include("orchard-designertools-shapetracing.js").AtHead();
     Script.Include("jquery.scrollTo-min.js").AtHead();
     Style.Include("orchard-designertools-shapetracing.css");
