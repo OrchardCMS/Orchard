@@ -12,10 +12,17 @@ using Orchard.Data;
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
+        private readonly WorkContext _workContext;
         // contains the creation time of a blog part before it has been changed
         private readonly Dictionary<BlogPostPart, DateTime> _previousCreatedUtc = new Dictionary<BlogPostPart,DateTime>();
 
-        public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService) {
+        public BlogPartArchiveHandler(
+            IRepository<BlogPartArchiveRecord> blogArchiveRepository, 
+            IBlogPostService blogPostService,
+            WorkContext workContext) {
+
+            _workContext = workContext;
+
             OnVersioning<BlogPostPart>((context, bp1, bp2) => {
                 var commonPart = bp1.As<CommonPart>();
                 if(commonPart == null || !commonPart.CreatedUtc.HasValue || !bp1.IsPublished)
@@ -24,23 +31,30 @@ namespace Orchard.Blogs.Handlers {
                 _previousCreatedUtc[bp2] = commonPart.CreatedUtc.Value;
             });
 
-            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
-            OnUnpublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
-            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
+            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
+            OnUnpublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
+            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
         }
 
-        private void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService, BlogPostPart blogPostPart) {
+        private void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, BlogPostPart blogPostPart) {
             blogArchiveRepository.Flush();
             
             var commonPart = blogPostPart.As<CommonPart>();
                 if(commonPart == null || !commonPart.CreatedUtc.HasValue)
                     return;
 
+            // get the time zone for the current request
+            var timeZone = _workContext.CurrentTimeZone;
+
             var previousCreatedUtc = _previousCreatedUtc.ContainsKey(blogPostPart) ? _previousCreatedUtc[blogPostPart] : DateTime.MinValue;
-            var previousMonth = previousCreatedUtc != null ? previousCreatedUtc.Month : 0;
-            var previousYear = previousCreatedUtc != null ? previousCreatedUtc.Year : 0;
+            previousCreatedUtc = TimeZoneInfo.ConvertTimeFromUtc(previousCreatedUtc, timeZone);
+
+            var previousMonth = previousCreatedUtc.Month;
+            var previousYear = previousCreatedUtc.Year;
 
             var newCreatedUtc = commonPart.CreatedUtc;
+            newCreatedUtc = newCreatedUtc.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(newCreatedUtc.Value, timeZone) : newCreatedUtc;
+
             var newMonth = newCreatedUtc.HasValue ? newCreatedUtc.Value.Month : 0;
             var newYear = newCreatedUtc.HasValue ? newCreatedUtc.Value.Year : 0;
 
