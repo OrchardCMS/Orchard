@@ -12,6 +12,7 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI;
 using Orchard.UI.Admin;
+using System.Web;
 
 namespace Orchard.DesignerTools.Services {
     [OrchardFeature("Orchard.DesignerTools")]
@@ -203,8 +204,12 @@ namespace Orchard.DesignerTools.Services {
         }
 
         public static string FormatJsonValue(string value) {
+            if(String.IsNullOrEmpty(value)) {
+                return String.Empty;
+            }
+
             // replace " by \" in json strings
-            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
+            return HttpUtility.HtmlEncode(value).Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
         }
 
         private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
