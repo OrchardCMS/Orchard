@@ -65,7 +65,7 @@ namespace Orchard.ContentPermissions.Drivers {
                 ContentPermissionsPartViewModel model;
 
                 // copy defaults settings if new content item
-                if (!part.Enabled && !part.ContentItem.HasDraft() || !part.ContentItem.HasPublished()) {
+                if (!part.Enabled && !part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
                     model = new ContentPermissionsPartViewModel {
                         ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.View),
                         ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.ViewOwn),

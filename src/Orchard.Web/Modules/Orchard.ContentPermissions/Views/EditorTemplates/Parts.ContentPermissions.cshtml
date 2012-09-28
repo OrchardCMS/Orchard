@@ -23,9 +23,9 @@
                 <th><h3>@T("Delete this item")</h3></th>
             </tr>
             
-            @foreach (var r in Model.AllRoles.Where(x => x.Checked).Select((x, i) => new { Index = i, Name = x.Role })) {
+            @foreach (var r in Model.AllRoles.Select((x, i) => new { Index = i, Name = x.Role, x.Checked })) {
                 var role = r;
-                <tr>
+                <tr style="@(!role.Checked ? "display:none" : "")">
                     <td class="role">@role.Name</td>
                     <td>
                         <label>
@@ -67,9 +67,9 @@
                 <th><h3>@T("Delete own")</h3></th>
             </tr>
 
-            @foreach (var r in Model.AllRoles.Where(x => x.Checked).Select((x, i) => new { Index = i, Name = x.Role })) {
+            @foreach (var r in Model.AllRoles.Select((x, i) => new { Index = i, Name = x.Role, x.Checked })) {
                 var role = r;
-                <tr>
+                <tr style="@(!role.Checked ? "display:none" : "")">
                     <td class="role">@role.Name</td>
                     <td>
                         <label>
