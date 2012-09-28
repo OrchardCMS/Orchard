@@ -61,7 +61,7 @@ namespace Orchard.Widgets.Filters {
                 }
             }
 
-            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets(activeLayerIds.ToArray());
+            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets(layerIds: activeLayerIds.ToArray());
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;

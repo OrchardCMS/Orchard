@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using NHibernate.Criterion;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
@@ -73,7 +71,7 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
-                .Where<CommonPartRecord>(x => x.Container.Id.IsIn(layerIds))
+                .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
                 .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
                 .List();
         }
