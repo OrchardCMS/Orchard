@@ -75,12 +75,6 @@ namespace Orchard.UI.Zones {
                 if (keys.Count() == 1) {
                     var key = System.Convert.ToString(keys.Single());
 
-                    // the zone name is in reference of Layout, e.g. /AsideSecond
-                    if(_layoutShape != null && key.StartsWith("/")) {
-                        key = key.Substring(1);
-                        _parent = _layoutShape;
-                    }
-
                     return GetMember(proceed, null, key);
                 }
                 return proceed();

@@ -73,6 +73,12 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Add(wrapper);
             }
 
+            // the zone name is in reference of Layout, e.g. /AsideSecond
+            if (placement.Location.StartsWith("/")) {
+                placement.Location = placement.Location.Substring(1);
+                parentShape = context.Layout;
+            }
+
             var delimiterIndex = placement.Location.IndexOf(':');
             if (delimiterIndex < 0) {
                 parentShape.Zones[placement.Location].Add(newShape);
