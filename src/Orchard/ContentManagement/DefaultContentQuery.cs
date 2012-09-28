@@ -10,7 +10,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
-using Orchard.Environment.Configuration;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
@@ -146,7 +145,7 @@ namespace Orchard.ContentManagement {
 
             return criteria
                 .List<ContentItemVersionRecord>()
-                .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                .Select(x => ContentManager.Get(x.Id, _versionOptions == VersionOptions.DraftRequired ? _versionOptions : VersionOptions.VersionRecord(x.Id)))
                 .ToReadOnlyCollection();
         }
 
@@ -316,10 +315,13 @@ namespace Orchard.ContentManagement {
             else if (versionOptions.IsLatest) {
                 criteria.Add(Restrictions.Eq("Latest", true));
             }
-            else if (versionOptions.IsDraft) {
+            else if (versionOptions.IsDraft && !versionOptions.IsDraftRequired) {
                 criteria.Add(Restrictions.And(
                     Restrictions.Eq("Latest", true),
                     Restrictions.Eq("Published", false)));
+            }
+            else if (versionOptions.IsDraft || versionOptions.IsDraftRequired) {
+                criteria.Add(Restrictions.Eq("Latest", true));
             }
             else if (versionOptions.IsAllVersions) {
                 // no-op... all versions will be returned by default

@@ -261,21 +261,25 @@ namespace Orchard.ContentManagement {
                 else if (options.IsLatest) {
                     contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
                 }
-                else if (options.IsDraft) {
+                else if (options.IsDraft && !options.IsDraftRequired) {
                     contentItemVersionCriteria.Add(
                         Restrictions.And(Restrictions.Eq("Published", false),
                                         Restrictions.Eq("Latest", true)));
                 }
+                else if (options.IsDraft || options.IsDraftRequired) {
+                    contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                }
             });
+
             var itemsById = contentItemVersionRecords
-                .Select(r => Get(r.ContentItemRecord.Id, VersionOptions.VersionRecord(r.Id)))
+                .Select(r => Get(r.ContentItemRecord.Id, options == VersionOptions.DraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 
             return ids.SelectMany(id => {
-                                      IGrouping<int, ContentItem> values;
-                                      return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
-                                  }).AsPart<T>().ToArray();
+                    IGrouping<int, ContentItem> values;
+                    return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
+                }).AsPart<T>().ToArray();
         }
         
         public IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent {
