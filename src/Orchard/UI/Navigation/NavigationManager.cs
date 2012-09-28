@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Admin;
+using Orchard.Utility;
 
 namespace Orchard.UI.Navigation {
     public class NavigationManager : INavigationManager {
@@ -38,12 +39,17 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Reduce(Merge(sources)).ToArray());
+            return FinishMenu(Reduce(Merge(sources), menuName == "admin").ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources)))).ToArray());
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
+        }
+
+        public string GetNextPosition(IContent menu) {
+            var sources = GetSources(menu);
+            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -91,9 +97,8 @@ namespace Orchard.UI.Navigation {
         /// <summary>
         /// Updates the items by checking for permissions
         /// </summary>
-        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
+        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu) {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            var isAdminMenu = AdminFilter.IsApplied(_urlHelper.RequestContext);
 
             foreach (var item in items) {
                 if (
@@ -107,7 +112,7 @@ namespace Orchard.UI.Navigation {
                     isAdminMenu && (!item.Permissions.Any() || item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) ) {
 
                     yield return new MenuItem {
-                        Items = Reduce(item.Items),
+                        Items = Reduce(item.Items, isAdminMenu),
                         Permissions = item.Permissions,
                         Position = item.Position,
                         RouteValues = item.RouteValues,

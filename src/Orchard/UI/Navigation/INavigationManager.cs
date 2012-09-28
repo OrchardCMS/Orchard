@@ -8,5 +8,6 @@ namespace Orchard.UI.Navigation {
         IEnumerable<MenuItem> BuildMenu(IContent menu);
         IEnumerable<string> BuildImageSets(string menuName);
         string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary);
+        string GetNextPosition(IContent menu);
     }
 }
