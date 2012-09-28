@@ -21,6 +21,17 @@ namespace Orchard.Data {
         public ILogger Logger { get; set; }
 
         void ITransactionManager.Demand() {
+            if(_cancelled) {
+                try {
+                    _scope.Dispose();
+                }
+                catch {
+                    // swallowing the exception
+                }
+
+                _scope = null;
+            }
+
             if (_scope == null) {
                 Logger.Debug("Creating transaction on Demand");
                 _scope = new TransactionScope(
