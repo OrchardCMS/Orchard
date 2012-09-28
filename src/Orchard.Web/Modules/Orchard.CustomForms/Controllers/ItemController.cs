@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -126,7 +127,14 @@ namespace Orchard.CustomForms.Controllers {
                 _transactionManager.Cancel();
 
                 // if custom form is inside a widget, we display the form itself
-                if (form.ContentType == "CustomFormWidget") {}
+                if (form.ContentType == "CustomFormWidget") {
+                    foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
+                        Services.Notifier.Error(T(error));
+                    } 
+                    if (returnUrl != null) {
+                        return Redirect(returnUrl);
+                    }
+                }
 
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
