@@ -5,14 +5,15 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "Content"; } }
 
-        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {            
-            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata));
+        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata), context.Logger);
         }
 
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
@@ -25,7 +26,7 @@ namespace Orchard.ContentManagement.Drivers {
                 }
                 
                 return result;
-            });
+            }, context.Logger);
         }
 
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
@@ -38,7 +39,7 @@ namespace Orchard.ContentManagement.Drivers {
                 }
                 
                 return result;
-            });
+            }, context.Logger);
         }
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
@@ -51,40 +52,39 @@ namespace Orchard.ContentManagement.Drivers {
                 }
                 
                 return result;
-            });
+            }, context.Logger);
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Importing(part, field, context));
+            Process(context.ContentItem, (part, field) => Importing(part, field, context), context.Logger);
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Imported(part, field, context));
+            Process(context.ContentItem, (part, field) => Imported(part, field, context), context.Logger);
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exporting(part, field, context));
+            Process(context.ContentItem, (part, field) => Exporting(part, field, context), context.Logger);
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exported(part, field, context));
+            Process(context.ContentItem, (part, field) => Exported(part, field, context), context.Logger);
         }
 
         void IContentFieldDriver.Describe(DescribeMembersContext context) {
             Describe(context);
         }
 
-        void Process(ContentItem item, Action<ContentPart, TField> effort) {
+        void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
-            foreach (var occurence in occurences) {
-                effort(occurence.part, occurence.field);
-            }
+            occurences.Invoke(pf => effort(pf.part, pf.field), logger);
         }
 
-        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
+        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
             var results = item.Parts
-                    .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
-                    .Select(pf => effort(pf.part, pf.field));
+                .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
+                .Invoke(pf => effort(pf.part, pf.field), logger);
+
             return Combined(results.ToArray());
         }
 

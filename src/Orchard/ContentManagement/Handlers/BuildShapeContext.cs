@@ -1,6 +1,7 @@
 using System;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Handlers {
     public class BuildShapeContext {
@@ -20,6 +21,7 @@ namespace Orchard.ContentManagement.Handlers {
         public IShape Layout { get; set; }
         public string GroupId { get; private set; }
         public ContentPart ContentPart { get; set; }
+        public ILogger Logger { get; set; }
 
         public Func<string, string, string, PlacementInfo> FindPlacement { get; set; }
     }
