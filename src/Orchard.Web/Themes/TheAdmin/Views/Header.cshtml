@@ -1,5 +1,5 @@
 ﻿@model dynamic
 <div id="branding">
-<div id="app">@Html.ActionLink(T("Project Orchard").ToString(), "Index", new { Area = "", Controller = "Home" })</div>
-<div id="site">@Html.ActionLink(T("Your Site").ToString(), "Index", new { Area = "", Controller = "Home" })</div>
+<div id="app">@Html.Link(T("Project Orchard").ToString(), Url.Content("~/"))</div>
+<div id="site">@Html.Link(T("Your Site").ToString(), Url.Content("~/"))</div>
 </div>
