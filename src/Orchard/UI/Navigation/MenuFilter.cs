@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
@@ -35,8 +36,17 @@ namespace Orchard.UI.Navigation {
 
             IEnumerable<MenuItem> menuItems = _navigationManager.BuildMenu(menuName);
 
+            // adding query string parameters
+            var routeData = new RouteValueDictionary(filterContext.RouteData.Values);
+            var queryString = workContext.HttpContext.Request.QueryString;
+            if (queryString != null) {
+                foreach (var key in from string key in queryString.Keys where key != null && !routeData.ContainsKey(key) let value = queryString[key] select key) {
+                    routeData[key] = queryString[key];
+                }
+            }
+
             // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, filterContext.RouteData);
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
 
             // Populate main nav
             dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);
