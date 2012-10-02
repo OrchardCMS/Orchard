@@ -60,8 +60,7 @@ namespace Orchard.Tags.Services {
                     break;
                 case "metaWeblog.newPost":
                     MetaWeblogUpdateTags(
-                        GetId(context.Response),
-                        Convert.ToString(context.Request.Params[0].Value),
+                        Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
                         (XRpcStruct)context.Request.Params[3].Value,
@@ -70,8 +69,7 @@ namespace Orchard.Tags.Services {
                     break;
                 case "metaWeblog.editPost":
                     MetaWeblogUpdateTags(
-                        GetId(context.Response),
-                        Convert.ToString(context.Request.Params[0].Value),
+                        Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
                         (XRpcStruct)context.Request.Params[3].Value,
@@ -113,12 +111,6 @@ namespace Orchard.Tags.Services {
                        : null;
         }
 
-        private static int GetId(XRpcMethodResponse response) {
-            return response != null && response.Params.Count == 1 && response.Params[0].Value is int
-                       ? Convert.ToInt32(response.Params[0].Value)
-                       : 0;
-        }
-
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
@@ -139,7 +131,7 @@ namespace Orchard.Tags.Services {
             return array;
         }
 
-        private void MetaWeblogUpdateTags(int contentItemId, string appKey, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogUpdateTags(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
             var user = _membershipService.ValidateUser(userName, password);
 
             var rawTags = content.Optional<string>("mt_keywords");

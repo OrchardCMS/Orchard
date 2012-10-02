@@ -23,8 +23,7 @@ namespace Orchard.Core.Common.Services {
             switch (context.Request.MethodName) {
                 case "metaWeblog.newPost":
                     MetaWeblogSetCustomCreatedDate(
-                        GetId(context.Response),
-                        Convert.ToString(context.Request.Params[0].Value),
+                        Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
                         (XRpcStruct) context.Request.Params[3].Value,
@@ -33,8 +32,7 @@ namespace Orchard.Core.Common.Services {
                     break;
                 case "metaWeblog.editPost":
                     MetaWeblogSetCustomCreatedDate(
-                        GetId(context.Response),
-                        Convert.ToString(context.Request.Params[0].Value),
+                        Convert.ToInt32(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
                         (XRpcStruct) context.Request.Params[3].Value,
@@ -44,7 +42,7 @@ namespace Orchard.Core.Common.Services {
             }
         }
 
-        private void MetaWeblogSetCustomCreatedDate(int contentItemId, string appKey, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogSetCustomCreatedDate(int contentItemId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
             if (!publish)
                 return;
 
