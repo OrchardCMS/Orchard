@@ -67,6 +67,16 @@ namespace Orchard.UI.Navigation {
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, RouteData currentRouteData) {
+            return SetSelectedPath(menuItems, currentRouteData.Values);
+        }
+
+        /// <summary>
+        /// Identifies the currently selected path, starting from the selected node.
+        /// </summary>
+        /// <param name="menuItems">All the menuitems in the navigation menu.</param>
+        /// <param name="currentRouteData">The current route data.</param>
+        /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
+        public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, RouteValueDictionary currentRouteData) {
             if (menuItems == null)
                 return null;
 
@@ -78,7 +88,7 @@ namespace Orchard.UI.Navigation {
                     return selectedPath;
                 }
 
-                if (RouteMatches(menuItem.RouteValues, currentRouteData.Values)) {
+                if (RouteMatches(menuItem.RouteValues, currentRouteData)) {
                     menuItem.Selected = true;
 
                     selectedPath = new Stack<MenuItem>();
