@@ -6,7 +6,11 @@
 }
 @functions {
     static string EncodeLineBreaks(string text) {
-        return text.Replace(Environment.NewLine, "\\\\n");
+		if (!String.IsNullOrEmpty(text)){
+			return text.Replace(Environment.NewLine, "\\\\n");
+		}
+	
+		return text;
     }
 }
 <script type="text/javascript">
