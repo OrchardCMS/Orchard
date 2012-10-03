@@ -93,9 +93,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Caches.SysCache2">
-      <HintPath>..\..\lib\nhibernate\NHibernate.Caches.SysCache2.dll</HintPath>
-    </Reference>
     <Reference Include="NHibernate.Linq">
       <HintPath>..\..\lib\nhibernate.linq\NHibernate.Linq.dll</HintPath>
     </Reference>
