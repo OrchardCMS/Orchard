@@ -21,6 +21,7 @@ using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -299,7 +300,7 @@ namespace Orchard.Core.Contents.Controllers {
             string previousRoute = null;
             if(contentItem.Has<IAliasAspect>() 
                 &&!string.IsNullOrWhiteSpace(returnUrl) 
-                && Url.IsLocalUrl(returnUrl)
+                && Request.IsLocalUrl(returnUrl)
                 // only if the original returnUrl is the content itself
                 && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
                 ) {

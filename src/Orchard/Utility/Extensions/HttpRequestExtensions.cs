@@ -1,3 +1,4 @@
+using System;
 using System.Web;
 
 namespace Orchard.Utility.Extensions {
@@ -56,6 +57,40 @@ namespace Orchard.Utility.Extensions {
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToUrlString(this HttpRequest request) {
             return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
+        }
+
+
+        /// <summary>
+        /// Returns wether the specified url is local to the host or not
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static bool IsLocalUrl(this HttpRequestBase request, string url) {
+
+            if (string.IsNullOrWhiteSpace(url)) {
+                return false;
+            }
+
+            if (url.StartsWith("//") || url.StartsWith("/\\")) {
+                return false;
+            }
+
+            // at this point is the url starts with "/" it is local
+            if (url.StartsWith("/")) {
+                return true;
+            }
+
+            // at this point, check for an fully qualified url
+            try {
+                var uri = new Uri(url);
+                return uri.Authority.Equals(request.Headers["Host"], StringComparison.OrdinalIgnoreCase);
+            }
+            catch {
+                // mall-formed url e.g, "abcdef"
+                return false;
+            }
+
         }
     }
 }
