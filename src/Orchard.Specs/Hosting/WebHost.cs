@@ -45,11 +45,7 @@ namespace Orchard.Specs.Hosting {
                 _orchardWebPath = _orchardWebPath.Parent;
             }
 
-            _orchardWebPath = _orchardWebPath.Combine("build").Combine("stage");
-
-            if (!_orchardWebPath.Exists) {
-                throw new ApplicationException("Could not locate stage folder at: " + _orchardWebPath.ToString());
-            }
+            _orchardWebPath = _orchardWebPath.Combine("src").Combine("Orchard.Web");
 
             Log("Initialization of ASP.NET host for template web site \"{0}\":", templateName);
             Log(" Source location: \"{0}\"", _orchardWebPath);
