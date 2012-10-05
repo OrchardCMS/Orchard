@@ -1,4 +1,9 @@
 ﻿@{
+    if (Model.IgnoreShapeTracer != null && (bool)Model.IgnoreShapeTracer) {
+        @Display(Model.Metadata.ChildContent)
+        return;
+    }
+    
     Script.Require("jQueryUI").AtHead();
     Script.Include("orchard-designertools-shapetracing.js").AtHead();
     Script.Include("jquery.scrollTo-min.js").AtHead();
