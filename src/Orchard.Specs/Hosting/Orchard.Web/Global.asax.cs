@@ -9,9 +9,6 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
     public class MvcApplication : HttpApplication {
         private static IOrchardHost _host;
 
-        public MvcApplication() {
-        }
-
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
         }
@@ -19,8 +16,9 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
         protected void Application_Start() {
             RegisterRoutes(RouteTable.Routes);
             _host = OrchardStarter.CreateHost(MvcSingletons);
+
             _host.Initialize();
-            
+
             // initialize shells to speed up the first dynamic query
             _host.BeginRequest();
             _host.EndRequest();

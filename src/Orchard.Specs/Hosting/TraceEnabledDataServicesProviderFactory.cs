@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Cfg.Db;
 using Orchard.Data.Providers;
-using MsSqlCeConfiguration = FluentNHibernate.Cfg.Db.MsSqlCeConfiguration;
+using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
 namespace Orchard.Specs.Hosting {
     public class TraceEnabledDataServicesProviderFactory : IDataServicesProviderFactory {
@@ -13,7 +13,7 @@ namespace Orchard.Specs.Hosting {
             }
             public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
                 var config = (MsSqlCeConfiguration)base.GetPersistenceConfigurer(createDatabase);
-                //config.ShowSql();
+                config.ShowSql();
                 return config;
             }
         }
