@@ -3,21 +3,26 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 using Orchard.Logging;
 using Orchard.Security;
+using Orchard.Services;
 
 namespace Orchard.Core.XmlRpc.Controllers {
     public class HomeController : Controller {
         private readonly IXmlRpcWriter _writer;
         private readonly IEnumerable<IXmlRpcHandler> _xmlRpcHandlers;
+        private readonly IClock _clock;
 
         public HomeController(
             IXmlRpcWriter writer,
-            IEnumerable<IXmlRpcHandler> xmlRpcHandlers) {
+            IEnumerable<IXmlRpcHandler> xmlRpcHandlers,
+            IClock clock) {
             _writer = writer;
             _xmlRpcHandlers = xmlRpcHandlers;
+            _clock = clock;
 
             Logger = NullLogger.Instance;
         }
@@ -33,11 +38,18 @@ namespace Orchard.Core.XmlRpc.Controllers {
             if (methodResponse == null)
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
-            // using Save() to render the xml declaration
-            var content = new StringBuilder();
-            _writer.MapMethodResponse(methodResponse).Save(new StringWriter(content));
+            var result = _writer.MapMethodResponse(methodResponse);
+            return Content(result.ToString(), "text/xml");        
+        }
 
-            return Content(content.ToString(), "text/xml");        
+        [HttpHead, ActionName("Index")]
+        [AlwaysAccessible]
+        public ActionResult ExistenceDiscovery() {
+            //see http://blogs.msdn.com/b/vsofficedeveloper/archive/2008/03/11/office-existence-discovery-protocol.aspx
+            Logger.Debug("Microsoft Office Existence Discovery");
+
+            Response.AddHeader("Last-Modified", _clock.UtcNow.ToString("o"));
+            return Content("", "text/xml");
         }
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {
