@@ -12,6 +12,9 @@ namespace Orchard.Specs.Util {
             if (path.Parent.Equals(basePath))
                 return path.FileName;
 
+            if (!path.IsDirectory && path.DirectoryName.Equals(basePath.DirectoryName))
+                return path.FileName;
+
             return path.Parent.GetRelativePath(basePath).Combine(path.FileName);
         }
 
