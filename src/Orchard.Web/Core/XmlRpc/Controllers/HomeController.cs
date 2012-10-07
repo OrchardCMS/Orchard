@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
@@ -38,18 +39,15 @@ namespace Orchard.Core.XmlRpc.Controllers {
             if (methodResponse == null)
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
-            var result = _writer.MapMethodResponse(methodResponse);
-            return Content(result.ToString(), "text/xml");        
-        }
+            
+            var sb = new StringBuilder();
+            var settings = new XmlWriterSettings {Encoding = Encoding.UTF8};
 
-        [HttpHead, ActionName("Index")]
-        [AlwaysAccessible]
-        public ActionResult ExistenceDiscovery() {
-            //see http://blogs.msdn.com/b/vsofficedeveloper/archive/2008/03/11/office-existence-discovery-protocol.aspx
-            Logger.Debug("Microsoft Office Existence Discovery");
-
-            Response.AddHeader("Last-Modified", _clock.UtcNow.ToString("o"));
-            return Content("", "text/xml");
+            using (XmlWriter w = XmlWriter.Create(sb, settings)) {
+                var result = _writer.MapMethodResponse(methodResponse);
+                result.Save(w);
+                return Content(result.ToString(), "text/xml");        
+            }
         }
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {
@@ -68,4 +66,5 @@ namespace Orchard.Core.XmlRpc.Controllers {
             return context.Response;
         }
     }
+
 }
