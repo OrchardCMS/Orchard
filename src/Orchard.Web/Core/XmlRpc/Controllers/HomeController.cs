@@ -40,13 +40,21 @@ namespace Orchard.Core.XmlRpc.Controllers {
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
             
-            var sb = new StringBuilder();
-            var settings = new XmlWriterSettings {Encoding = Encoding.UTF8};
+            var settings = new XmlWriterSettings {
+                Encoding = Encoding.UTF8,
+                OmitXmlDeclaration = false,
+                Indent = true
+            };
 
-            using (XmlWriter w = XmlWriter.Create(sb, settings)) {
-                var result = _writer.MapMethodResponse(methodResponse);
-                result.Save(w);
-                return Content(result.ToString(), "text/xml");        
+            // save to an intermediate MemoryStream to preserve the encoding declaration
+            using (var stream = new MemoryStream()) {
+                using (XmlWriter w = XmlWriter.Create(stream, settings)) {
+                    var result = _writer.MapMethodResponse(methodResponse);
+                    result.Save(w);
+                }
+
+                var content = Encoding.UTF8.GetString(stream.ToArray());
+                return Content(content, "text/xml");
             }
         }
 
