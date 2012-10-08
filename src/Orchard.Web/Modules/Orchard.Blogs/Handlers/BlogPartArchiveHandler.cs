@@ -12,16 +12,15 @@ using Orchard.Data;
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
-        private readonly WorkContext _workContext;
+        private readonly IWorkContextAccessor _workContextAccessor;
         // contains the creation time of a blog part before it has been changed
         private readonly Dictionary<BlogPostPart, DateTime> _previousCreatedUtc = new Dictionary<BlogPostPart,DateTime>();
 
         public BlogPartArchiveHandler(
             IRepository<BlogPartArchiveRecord> blogArchiveRepository, 
             IBlogPostService blogPostService,
-            WorkContext workContext) {
-
-            _workContext = workContext;
+            IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
 
             OnVersioning<BlogPostPart>((context, bp1, bp2) => {
                 var commonPart = bp1.As<CommonPart>();
@@ -44,7 +43,7 @@ namespace Orchard.Blogs.Handlers {
                     return;
 
             // get the time zone for the current request
-            var timeZone = _workContext.CurrentTimeZone;
+            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
 
             var previousCreatedUtc = _previousCreatedUtc.ContainsKey(blogPostPart) ? _previousCreatedUtc[blogPostPart] : DateTime.MinValue;
             previousCreatedUtc = TimeZoneInfo.ConvertTimeFromUtc(previousCreatedUtc, timeZone);
