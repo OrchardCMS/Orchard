@@ -272,7 +272,7 @@ namespace Orchard.ContentManagement {
             });
 
             var itemsById = contentItemVersionRecords
-                .Select(r => Get(r.ContentItemRecord.Id, options == VersionOptions.DraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
+                .Select(r => Get(r.ContentItemRecord.Id, options.IsDraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 

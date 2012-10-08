@@ -55,6 +55,7 @@ namespace Orchard.Tests.ContentManagement {
             _contentDefinitionManager = new Mock<IContentDefinitionManager>();
 
             var builder = new ContainerBuilder();
+            builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
@@ -398,6 +399,67 @@ namespace Orchard.Tests.ContentManagement {
             Trace.WriteLine("gamma2");
             var gamma2 = _manager.Get(gamma1.Id);
             Assert.That(gamma2.Record.Versions, Has.Count.EqualTo(2));
+        }
+
+        [Test]
+        public void UsingGetManyDraftRequiredShouldBuildNewVersionIfLatestIsAlreadyPublished() {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft1");
+            var gammaDraft1 = _manager.GetMany<ContentItem>(new [] { gamma1.Id }, VersionOptions.Draft, QueryHints.Empty);
+            Assert.That(gammaDraft1.Count(), Is.EqualTo(0));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft2");
+            var gammaDraft2 = _manager.GetMany<ContentItem>(new[] { gamma1.Id }, VersionOptions.DraftRequired, QueryHints.Empty);
+            Assert.That(gammaDraft2.Count(), Is.EqualTo(1));
+            Assert.That(gammaDraft2.First().VersionRecord.Id, Is.Not.EqualTo(gamma1.VersionRecord.Id));
+            Assert.That(gamma1.Version, Is.EqualTo(1));
+            Assert.That(gammaDraft2.First().Version, Is.EqualTo(2));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+        }
+
+
+        [Test]
+        public void UsingQueryDraftRequiredShouldBuildNewVersionIfLatestIsAlreadyPublished() {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create<GammaPart>(DefaultGammaName, VersionOptions.Published);
+            gamma1.Record.Frap = "foo";
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaPublished");
+            var gammaPublished = _manager.Query<GammaPart, GammaRecord>().Where(x => x.Frap == "foo").List();
+            Assert.That(gammaPublished.Count(), Is.EqualTo(1));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft1");
+            var gammaDraft1 = _manager.Query<GammaPart, GammaRecord>(VersionOptions.Draft).Where(x => x.Frap == "foo").List();
+            Assert.That(gammaDraft1.Count(), Is.EqualTo(0));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
+
+            Trace.WriteLine("gammaDraft2");
+            var gammaDraft2 = _manager.Query<GammaPart, GammaRecord>(VersionOptions.DraftRequired).Where(x => x.Frap == "foo").List();
+            Assert.That(gammaDraft2.Count(), Is.EqualTo(1));
+            Assert.That(gammaDraft2.First().ContentItem.VersionRecord.Id, Is.Not.EqualTo(gamma1.ContentItem.VersionRecord.Id));
+            Assert.That(gamma1.ContentItem.Version, Is.EqualTo(1));
+            Assert.That(gammaDraft2.First().ContentItem.Version, Is.EqualTo(2));
+            Trace.WriteLine("flush");
+            _session.Flush();
+            _session.Clear();
         }
 
         [Test]

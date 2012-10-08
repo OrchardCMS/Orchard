@@ -145,7 +145,7 @@ namespace Orchard.ContentManagement {
 
             return criteria
                 .List<ContentItemVersionRecord>()
-                .Select(x => ContentManager.Get(x.Id, _versionOptions == VersionOptions.DraftRequired ? _versionOptions : VersionOptions.VersionRecord(x.Id)))
+                .Select(x => ContentManager.Get(x.ContentItemRecord.Id, _versionOptions != null && _versionOptions.IsDraftRequired ? _versionOptions : VersionOptions.VersionRecord(x.Id)))
                 .ToReadOnlyCollection();
         }
 
