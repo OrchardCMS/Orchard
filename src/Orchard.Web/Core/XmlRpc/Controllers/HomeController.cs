@@ -4,26 +4,21 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
-using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 using Orchard.Logging;
 using Orchard.Security;
-using Orchard.Services;
 
 namespace Orchard.Core.XmlRpc.Controllers {
     public class HomeController : Controller {
         private readonly IXmlRpcWriter _writer;
         private readonly IEnumerable<IXmlRpcHandler> _xmlRpcHandlers;
-        private readonly IClock _clock;
 
         public HomeController(
             IXmlRpcWriter writer,
-            IEnumerable<IXmlRpcHandler> xmlRpcHandlers,
-            IClock clock) {
+            IEnumerable<IXmlRpcHandler> xmlRpcHandlers) {
             _writer = writer;
             _xmlRpcHandlers = xmlRpcHandlers;
-            _clock = clock;
 
             Logger = NullLogger.Instance;
         }
