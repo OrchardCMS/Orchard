@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +63,17 @@
     <Content Include="Scripts\plugins\fullscreen\editor_plugin.js" />
     <Content Include="Scripts\plugins\fullscreen\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\fullscreen\fullscreen.htm" />
+    <Content Include="Scripts\plugins\inlinepopups\editor_plugin.js" />
+    <Content Include="Scripts\plugins\inlinepopups\editor_plugin_src.js" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\alert.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\button.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\buttons.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\confirm.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\corners.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\horizontal.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\vertical.gif" />
+    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\window.css" />
+    <Content Include="Scripts\plugins\inlinepopups\template.htm" />
     <Content Include="Scripts\plugins\mediapicker\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\mediapicker\editor_plugin.js" />
     <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
