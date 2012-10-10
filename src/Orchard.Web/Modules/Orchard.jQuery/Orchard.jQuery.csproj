@@ -55,7 +55,8 @@
   <ItemGroup>
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
-    <Content Include="Scripts\jquery.ui.timepicker.min.js" />
+    <Content Include="Scripts\jquery-ui-sliderAccess.js" />
+    <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.effects.blind.js" />
@@ -121,7 +122,6 @@
     <Content Include="Scripts\jquery.ui.widget.js" />
     <Content Include="Scripts\jquery.ui.widget.min.js" />
     <Content Include="Scripts\jquery.utils.js" />
-    <Content Include="Scripts\jquery.ui.timepicker.js" />
     <Content Include="Styles\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Styles\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Styles\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -136,8 +136,8 @@
     <Content Include="Styles\images\ui-icons_888888_256x240.png" />
     <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Styles\jquery-ui-1.8.23.custom.css" />
+    <Content Include="Styles\jquery-ui-timepicker-addon.css" />
     <Content Include="Styles\ui.datepicker.css" />
-    <Content Include="Styles\ui.timepicker.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

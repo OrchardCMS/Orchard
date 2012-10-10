@@ -35,7 +35,8 @@
             timeFormat: '@timeFormat',
             amNames: ['@cultureInfo.DateTimeFormat.AMDesignator', 'AM', 'A'],
             pmNames: ['@cultureInfo.DateTimeFormat.PMDesignator', 'PM', 'P'],
-            ampm: @ampm
+            ampm: @ampm,
+            isRTL: @(cultureInfo.TextInfo.IsRightToLeft ? "true" : "false")
         };
 
         $.timepicker.setDefaults($.timepicker.regional['']);
