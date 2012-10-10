@@ -1,0 +1,14 @@
+﻿@using Orchard.Utility.Extensions
+
+@{ Layout.Title = T("Migrate Menu").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Migrating Menu:")</legend>
+        <span class="hint">@T("This migration step will create a new Menu named \"Main Menu\" and add all your previous menu items to it. Finally it will create a new \"Menu Widget\" instance to render this menu on the website.")</span>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Migrate")</button>
+    </fieldset>
+}
