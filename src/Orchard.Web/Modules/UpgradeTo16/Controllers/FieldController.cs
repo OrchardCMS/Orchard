@@ -9,9 +9,9 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using UpgradeTo15.ViewModels;
+using UpgradeTo16.ViewModels;
 
-namespace UpgradeTo15.Controllers {
+namespace UpgradeTo16.Controllers {
     [Admin]
     public class FieldController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;

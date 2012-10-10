@@ -10,8 +10,8 @@
     <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UpgradeTo15</RootNamespace>
-    <AssemblyName>UpgradeTo15</AssemblyName>
+    <RootNamespace>UpgradeTo16</RootNamespace>
+    <AssemblyName>UpgradeTo16</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
@@ -88,9 +88,14 @@
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\FieldController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="ViewModels\MigrateViewModel.cs" />
@@ -101,6 +106,9 @@
   <ItemGroup>
     <Content Include="Views\Field\Index.cshtml" />
     <Content Include="Views\Route\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Menu\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

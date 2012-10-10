@@ -142,7 +142,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentPermissions"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysCache", "Orchard.Web\Modules\SysCache\SysCache.csproj", "{3BD22132-D538-48C6-8854-F71333C798EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo15", "Orchard.Web\Modules\UpgradeTo15\UpgradeTo15.csproj", "{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo16", "Orchard.Web\Modules\UpgradeTo16\UpgradeTo16.csproj", "{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
