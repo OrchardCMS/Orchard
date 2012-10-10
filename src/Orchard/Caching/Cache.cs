@@ -23,6 +23,24 @@ namespace Orchard.Caching {
             return entry.Result;
         }
 
+        public bool TryGet(TKey key, out TResult value){
+            CacheEntry cacheEntry;
+            if (_entries.TryGetValue(key, out cacheEntry)){
+                value = cacheEntry.Result;
+                return true;
+            }
+            value = default(TResult);
+            return false;
+        }
+
+        public bool IsValid(TKey key){
+            CacheEntry currentEntry;
+            if (_entries.TryGetValue(key, out currentEntry)){
+                return currentEntry.Tokens.Any(t => !t.IsCurrent);
+            }
+            return false;
+        }
+
         private CacheEntry AddEntry(TKey k, Func<AcquireContext<TKey>, TResult> acquire) {
             var entry = CreateEntry(k, acquire);
             PropagateTokens(entry);
