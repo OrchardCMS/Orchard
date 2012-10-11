@@ -165,7 +165,7 @@ namespace Orchard.ContentManagement {
                     versionRecord = contentItemVersionRecords.FirstOrDefault(
                         x => x.Number == options.VersionNumber) ??
                            _contentItemVersionRepository.Get(
-                               x => x.ContentItemRecord == contentItem.Record && x.Number == options.VersionNumber);
+                               x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
                 }
                 else {
                     versionRecord = contentItemVersionRecords.FirstOrDefault();
