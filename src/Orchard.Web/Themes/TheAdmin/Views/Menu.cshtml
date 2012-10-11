@@ -5,8 +5,10 @@
     Script.Include("admin.js");
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
-    foreach (var imageSet in Model.ImageSets) {
-        RegisterImageSet("menu." + imageSet, Model.MenuName /* style */, 16 /* bounding box */);
+    if (Model.ImageSets != null) {
+        foreach (var imageSet in Model.ImageSets) {
+            RegisterImageSet("menu." + imageSet, Model.MenuName /* style */, 16 /* bounding box */);
+        }
     }
 
     Model.Attributes.Add("role", "navigation");

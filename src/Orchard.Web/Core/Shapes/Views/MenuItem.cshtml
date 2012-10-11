@@ -1,6 +1,6 @@
 ﻿@{
     // odd formatting in this file is to cause more attractive results in the output.
-    var items = (IEnumerable<dynamic>)Enumerable.Cast<dynamic>(Model);
+    var items = Enumerable.Cast<dynamic>((System.Collections.IEnumerable)Model);
 }
 @{
 if (!HasText(Model.Text)) {
