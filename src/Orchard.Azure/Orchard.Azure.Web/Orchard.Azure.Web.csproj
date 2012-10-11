@@ -151,6 +151,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Startup\ConfigureIIS.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

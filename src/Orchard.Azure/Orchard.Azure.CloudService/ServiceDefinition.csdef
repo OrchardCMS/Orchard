@@ -17,5 +17,8 @@
     <Endpoints>
       <InputEndpoint name="HttpIn" protocol="http" port="80" />
     </Endpoints>
+    <Startup>
+        <Task commandLine="Startup\ConfigureIIS.cmd" executionContext="elevated" taskType="simple" />
+    </Startup>
   </WebRole>
 </ServiceDefinition>
