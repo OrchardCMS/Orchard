@@ -56,7 +56,8 @@ namespace Orchard.Core.Scheduling.Services {
         }
 
         public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate = null ) {
-            var tasks = _repository
+            // if contentItem is null, all tasks are used
+            var tasks = contentItem == null ? _repository.Table : _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record);
 
             foreach (var task in tasks) {
