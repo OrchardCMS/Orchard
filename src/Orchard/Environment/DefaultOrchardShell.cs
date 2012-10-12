@@ -48,11 +48,11 @@ namespace Orchard.Environment {
             _routePublisher.Publish(allRoutes);
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            _sweepGenerator.Activate();
-
             using (var events = _eventsFactory()) {
                 events.Value.Activated();
             }
+
+            _sweepGenerator.Activate();
         }
 
         public void Terminate() {
