@@ -56,15 +56,22 @@ namespace Orchard.Environment {
         }
 
         public void Terminate() {
-            using (var events = _eventsFactory()) {
-                try {
-                    events.Value.Terminating();
-                }
-                catch {
-                    // ignore exceptions while terminating the application
-                }
+            SafelyTerminate(() => {
+                       using (var events = _eventsFactory()) {
+                           SafelyTerminate(() => events.Value.Terminating());
+                       }
+                   });
 
-                _sweepGenerator.Terminate();
+            SafelyTerminate(() => _sweepGenerator.Terminate());
+        }
+
+
+        private void SafelyTerminate(Action action) {
+            try {
+                action();
+            }
+            catch(Exception e) {
+                Logger.Error(e, "An unexcepted error occured while terminating the Shell");
             }
         }
     }
