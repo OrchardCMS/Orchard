@@ -1,5 +1,6 @@
 ﻿Name: Themes
 AntiForgery: enabled
+SessionState: required
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.5

@@ -6,8 +6,10 @@ using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.Mvc;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
@@ -36,6 +38,10 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.RegisterModule(new WorkContextModule());
             rootBuilder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             rootBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
+            rootBuilder.RegisterType<ExtensionManager>().As<IExtensionManager>();
+            rootBuilder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            rootBuilder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
+            rootBuilder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
             _rootContainer = rootBuilder.Build();
 

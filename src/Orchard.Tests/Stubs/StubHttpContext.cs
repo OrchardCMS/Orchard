@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
+using System.Web.SessionState;
 
 namespace Orchard.Tests.Stubs {
     public class StubHttpContext : HttpContextBase {
@@ -22,6 +23,9 @@ namespace Orchard.Tests.Stubs {
         public StubHttpContext(string appRelativeCurrentExecutionFilePath, string hostHeader) {
             _appRelativeCurrentExecutionFilePath = appRelativeCurrentExecutionFilePath;
             _hostHeader = hostHeader;
+        }
+
+        public override void SetSessionStateBehavior(SessionStateBehavior sessionStateBehavior) {
         }
 
         public override HttpRequestBase Request {

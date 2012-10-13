@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Routing;
+using System.Web.SessionState;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+﻿using Orchard.Environment.Extensions;
 
 namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
@@ -11,16 +14,19 @@ namespace Orchard.Mvc.Routes {
         private readonly ShellSettings _shellSettings;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRunningShellTable _runningShellTable;
+        private readonly IExtensionManager _extensionManager;
 
         public RoutePublisher(
             RouteCollection routeCollection,
             ShellSettings shellSettings,
             IWorkContextAccessor workContextAccessor,
-            IRunningShellTable runningShellTable) {
+            IRunningShellTable runningShellTable,
+            IExtensionManager extensionManager) {
             _routeCollection = routeCollection;
             _shellSettings = shellSettings;
             _workContextAccessor = workContextAccessor;
             _runningShellTable = runningShellTable;
+            _extensionManager = extensionManager;
         }
 
         public void Publish(IEnumerable<RouteDescriptor> routes) {
@@ -58,10 +64,35 @@ namespace Orchard.Mvc.Routes {
 
                 // new routes are added
                 foreach (var routeDescriptor in routesArray) {
-                    var shellRoute = new ShellRoute(routeDescriptor.Route, _shellSettings, _workContextAccessor, _runningShellTable){IsHttpRoute = routeDescriptor is HttpRouteDescriptor};
+                    // Loading session state information. 
+                    var defaultSessionState = SessionStateBehavior.Default;
+
+                    if(routeDescriptor.Route is Route) {
+                        object extensionId;
+                        var routeCasted = routeDescriptor.Route as Route;
+                        if(routeCasted != null && routeCasted.Constraints != null && routeCasted.Constraints.TryGetValue("area", out extensionId)) {
+                            var extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString());
+                            if(extensionDescriptor != null) {
+                                // if session state is not define explicitly, use the one define for the extension
+                                if(routeDescriptor.SessionState == SessionStateBehavior.Default) {
+                                    Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);    
+                                }
+                            }
+                        }
+                    }
+
+                    // Route-level setting overrides module-level setting (from manifest).
+                    var sessionStateBehavior = routeDescriptor.SessionState == SessionStateBehavior.Default ? defaultSessionState : routeDescriptor.SessionState ;
+
+                    var shellRoute = new ShellRoute(routeDescriptor.Route, _shellSettings, _workContextAccessor, _runningShellTable) {
+                        IsHttpRoute = routeDescriptor is HttpRouteDescriptor,
+                        SessionState = sessionStateBehavior
+                    };
                     _routeCollection.Add(routeDescriptor.Name, shellRoute);
                 }
             }
         }
+
+
     }
 }

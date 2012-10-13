@@ -28,6 +28,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private const string FeatureNameSection = "featurename";
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
+        private const string SessionStateSection = "sessionstate";
 
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
@@ -116,7 +117,8 @@ namespace Orchard.Environment.Extensions.Folders {
                 Tags = GetValue(manifest, TagsSection),
                 AntiForgery = GetValue(manifest, AntiForgerySection),
                 Zones = GetValue(manifest, ZonesSection),
-                BaseTheme = GetValue(manifest, BaseThemeSection)
+                BaseTheme = GetValue(manifest, BaseThemeSection),
+                SessionState = GetValue(manifest, SessionStateSection)
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -201,6 +203,9 @@ namespace Orchard.Environment.Extensions.Folders {
                             break;
                         case PrioritySection:
                             manifest.Add(PrioritySection, field[1]);
+                            break;
+                        case SessionStateSection:
+                            manifest.Add(SessionStateSection, field[1]);
                             break;
                         case FeaturesSection:
                             manifest.Add(FeaturesSection, reader.ReadToEnd());
