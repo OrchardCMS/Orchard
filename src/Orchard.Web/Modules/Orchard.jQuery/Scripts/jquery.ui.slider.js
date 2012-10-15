@@ -1,12 +1,11 @@
 /*!
- * jQuery UI Slider 1.9.0
- * http://jqueryui.com
+ * jQuery UI Slider @VERSION
  *
- * Copyright 2012 jQuery Foundation and other contributors
- * Released under the MIT license.
+ * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * http://api.jqueryui.com/slider/
+ * http://docs.jquery.com/UI/Slider
  *
  * Depends:
  *	jquery.ui.core.js
@@ -20,7 +19,7 @@
 var numPages = 5;
 
 $.widget( "ui.slider", $.ui.mouse, {
-	version: "1.9.0",
+
 	widgetEventPrefix: "slide",
 
 	options: {
@@ -36,7 +35,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_create: function() {
-		var i,
+		var self = this,
 			o = this.options,
 			existingHandles = this.element.find( ".ui-slider-handle" ).addClass( "ui-state-default ui-corner-all" ),
 			handle = "<a class='ui-slider-handle ui-state-default ui-corner-all' href='#'></a>",
@@ -75,15 +74,15 @@ $.widget( "ui.slider", $.ui.mouse, {
 				.addClass( "ui-slider-range" +
 				// note: this isn't the most fittingly semantic framework class for this element,
 				// but worked best visually with a variety of themes
-				" ui-widget-header" +
+				" ui-widget-header" + 
 				( ( o.range === "min" || o.range === "max" ) ? " ui-slider-range-" + o.range : "" ) );
 		}
 
-		for ( i = existingHandles.length; i < handleCount; i++ ) {
+		for ( var i = existingHandles.length; i < handleCount; i += 1 ) {
 			handles.push( handle );
 		}
 
-		this.handles = existingHandles.add( $( handles.join( "" ) ).appendTo( this.element ) );
+		this.handles = existingHandles.add( $( handles.join( "" ) ).appendTo( self.element ) );
 
 		this.handle = this.handles.eq( 0 );
 
@@ -91,12 +90,11 @@ $.widget( "ui.slider", $.ui.mouse, {
 			.click(function( event ) {
 				event.preventDefault();
 			})
-			.mouseenter(function() {
+			.hover(function() {
 				if ( !o.disabled ) {
 					$( this ).addClass( "ui-state-hover" );
 				}
-			})
-			.mouseleave(function() {
+			}, function() {
 				$( this ).removeClass( "ui-state-hover" );
 			})
 			.focus(function() {
@@ -112,14 +110,21 @@ $.widget( "ui.slider", $.ui.mouse, {
 			});
 
 		this.handles.each(function( i ) {
-			$( this ).data( "ui-slider-handle-index", i );
+			$( this ).data( "index.ui-slider-handle", i );
 		});
 
-		this._on( this.handles, {
-			keydown: function( event ) {
-				var allowed, curVal, newVal, step,
-					index = $( event.target ).data( "ui-slider-handle-index" );
-
+		this.handles
+			.keydown(function( event ) {
+				var index = $( this ).data( "index.ui-slider-handle" ),
+					allowed,
+					curVal,
+					newVal,
+					step;
+	
+				if ( self.options.disabled ) {
+					return;
+				}
+	
 				switch ( event.keyCode ) {
 					case $.ui.keyCode.HOME:
 					case $.ui.keyCode.END:
@@ -130,73 +135,73 @@ $.widget( "ui.slider", $.ui.mouse, {
 					case $.ui.keyCode.DOWN:
 					case $.ui.keyCode.LEFT:
 						event.preventDefault();
-						if ( !this._keySliding ) {
-							this._keySliding = true;
-							$( event.target ).addClass( "ui-state-active" );
-							allowed = this._start( event, index );
+						if ( !self._keySliding ) {
+							self._keySliding = true;
+							$( this ).addClass( "ui-state-active" );
+							allowed = self._start( event, index );
 							if ( allowed === false ) {
 								return;
 							}
 						}
 						break;
 				}
-
-				step = this.options.step;
-				if ( this.options.values && this.options.values.length ) {
-					curVal = newVal = this.values( index );
+	
+				step = self.options.step;
+				if ( self.options.values && self.options.values.length ) {
+					curVal = newVal = self.values( index );
 				} else {
-					curVal = newVal = this.value();
+					curVal = newVal = self.value();
 				}
-
+	
 				switch ( event.keyCode ) {
 					case $.ui.keyCode.HOME:
-						newVal = this._valueMin();
+						newVal = self._valueMin();
 						break;
 					case $.ui.keyCode.END:
-						newVal = this._valueMax();
+						newVal = self._valueMax();
 						break;
 					case $.ui.keyCode.PAGE_UP:
-						newVal = this._trimAlignValue( curVal + ( (this._valueMax() - this._valueMin()) / numPages ) );
+						newVal = self._trimAlignValue( curVal + ( (self._valueMax() - self._valueMin()) / numPages ) );
 						break;
 					case $.ui.keyCode.PAGE_DOWN:
-						newVal = this._trimAlignValue( curVal - ( (this._valueMax() - this._valueMin()) / numPages ) );
+						newVal = self._trimAlignValue( curVal - ( (self._valueMax() - self._valueMin()) / numPages ) );
 						break;
 					case $.ui.keyCode.UP:
 					case $.ui.keyCode.RIGHT:
-						if ( curVal === this._valueMax() ) {
+						if ( curVal === self._valueMax() ) {
 							return;
 						}
-						newVal = this._trimAlignValue( curVal + step );
+						newVal = self._trimAlignValue( curVal + step );
 						break;
 					case $.ui.keyCode.DOWN:
 					case $.ui.keyCode.LEFT:
-						if ( curVal === this._valueMin() ) {
+						if ( curVal === self._valueMin() ) {
 							return;
 						}
-						newVal = this._trimAlignValue( curVal - step );
+						newVal = self._trimAlignValue( curVal - step );
 						break;
 				}
-
-				this._slide( event, index, newVal );
-			},
-			keyup: function( event ) {
-				var index = $( event.target ).data( "ui-slider-handle-index" );
-
-				if ( this._keySliding ) {
-					this._keySliding = false;
-					this._stop( event, index );
-					this._change( event, index );
-					$( event.target ).removeClass( "ui-state-active" );
+	
+				self._slide( event, index, newVal );
+			})
+			.keyup(function( event ) {
+				var index = $( this ).data( "index.ui-slider-handle" );
+	
+				if ( self._keySliding ) {
+					self._keySliding = false;
+					self._stop( event, index );
+					self._change( event, index );
+					$( this ).removeClass( "ui-state-active" );
 				}
-			}
-		});
+	
+			});
 
 		this._refreshValue();
 
 		this._animateOff = false;
 	},
 
-	_destroy: function() {
+	destroy: function() {
 		this.handles.remove();
 		this.range.remove();
 
@@ -207,15 +212,26 @@ $.widget( "ui.slider", $.ui.mouse, {
 				" ui-slider-disabled" +
 				" ui-widget" +
 				" ui-widget-content" +
-				" ui-corner-all" );
+				" ui-corner-all" )
+			.removeData( "slider" )
+			.unbind( ".slider" );
 
 		this._mouseDestroy();
+
+		return this;
 	},
 
 	_mouseCapture: function( event ) {
-		var position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
-			that = this,
-			o = this.options;
+		var o = this.options,
+			position,
+			normValue,
+			distance,
+			closestHandle,
+			self,
+			index,
+			allowed,
+			offset,
+			mouseOverHandle;
 
 		if ( o.disabled ) {
 			return false;
@@ -230,8 +246,9 @@ $.widget( "ui.slider", $.ui.mouse, {
 		position = { x: event.pageX, y: event.pageY };
 		normValue = this._normValueFromMouse( position );
 		distance = this._valueMax() - this._valueMin() + 1;
+		self = this;
 		this.handles.each(function( i ) {
-			var thisDistance = Math.abs( normValue - that.values(i) );
+			var thisDistance = Math.abs( normValue - self.values(i) );
 			if ( distance > thisDistance ) {
 				distance = thisDistance;
 				closestHandle = $( this );
@@ -253,12 +270,12 @@ $.widget( "ui.slider", $.ui.mouse, {
 		}
 		this._mouseSliding = true;
 
-		this._handleIndex = index;
+		self._handleIndex = index;
 
 		closestHandle
 			.addClass( "ui-state-active" )
 			.focus();
-
+		
 		offset = closestHandle.offset();
 		mouseOverHandle = !$( event.target ).parents().andSelf().is( ".ui-slider-handle" );
 		this._clickOffset = mouseOverHandle ? { left: 0, top: 0 } : {
@@ -284,7 +301,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 	_mouseDrag: function( event ) {
 		var position = { x: event.pageX, y: event.pageY },
 			normValue = this._normValueFromMouse( position );
-
+		
 		this._slide( event, this._handleIndex, normValue );
 
 		return false;
@@ -303,7 +320,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 
 		return false;
 	},
-
+	
 	_detectOrientation: function() {
 		this.orientation = ( this.options.orientation === "vertical" ) ? "vertical" : "horizontal";
 	},
@@ -360,7 +377,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 		if ( this.options.values && this.options.values.length ) {
 			otherVal = this.values( index ? 0 : 1 );
 
-			if ( ( this.options.values.length === 2 && this.options.range === true ) &&
+			if ( ( this.options.values.length === 2 && this.options.range === true ) && 
 					( ( index === 0 && newVal > otherVal) || ( index === 1 && newVal < otherVal ) )
 				) {
 				newVal = otherVal;
@@ -481,10 +498,10 @@ $.widget( "ui.slider", $.ui.mouse, {
 				if ( value ) {
 					this.handles.filter( ".ui-state-focus" ).blur();
 					this.handles.removeClass( "ui-state-hover" );
-					this.handles.prop( "disabled", true );
+					this.handles.propAttr( "disabled", true );
 					this.element.addClass( "ui-disabled" );
 				} else {
-					this.handles.prop( "disabled", false );
+					this.handles.propAttr( "disabled", false );
 					this.element.removeClass( "ui-disabled" );
 				}
 				break;
@@ -545,7 +562,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			return vals;
 		}
 	},
-
+	
 	// returns the step-aligned value that val is closest to, between (inclusive) min and max
 	_trimAlignValue: function( val ) {
 		if ( val <= this._valueMin() ) {
@@ -574,34 +591,38 @@ $.widget( "ui.slider", $.ui.mouse, {
 	_valueMax: function() {
 		return this.options.max;
 	},
-
+	
 	_refreshValue: function() {
-		var lastValPercent, valPercent, value, valueMin, valueMax,
-			oRange = this.options.range,
+		var oRange = this.options.range,
 			o = this.options,
-			that = this,
+			self = this,
 			animate = ( !this._animateOff ) ? o.animate : false,
-			_set = {};
+			valPercent,
+			_set = {},
+			lastValPercent,
+			value,
+			valueMin,
+			valueMax;
 
 		if ( this.options.values && this.options.values.length ) {
 			this.handles.each(function( i, j ) {
-				valPercent = ( that.values(i) - that._valueMin() ) / ( that._valueMax() - that._valueMin() ) * 100;
-				_set[ that.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+				valPercent = ( self.values(i) - self._valueMin() ) / ( self._valueMax() - self._valueMin() ) * 100;
+				_set[ self.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
 				$( this ).stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
-				if ( that.options.range === true ) {
-					if ( that.orientation === "horizontal" ) {
+				if ( self.options.range === true ) {
+					if ( self.orientation === "horizontal" ) {
 						if ( i === 0 ) {
-							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { left: valPercent + "%" }, o.animate );
+							self.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { left: valPercent + "%" }, o.animate );
 						}
 						if ( i === 1 ) {
-							that.range[ animate ? "animate" : "css" ]( { width: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+							self.range[ animate ? "animate" : "css" ]( { width: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
 						}
 					} else {
 						if ( i === 0 ) {
-							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { bottom: ( valPercent ) + "%" }, o.animate );
+							self.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { bottom: ( valPercent ) + "%" }, o.animate );
 						}
 						if ( i === 1 ) {
-							that.range[ animate ? "animate" : "css" ]( { height: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+							self.range[ animate ? "animate" : "css" ]( { height: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
 						}
 					}
 				}
@@ -614,7 +635,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			valPercent = ( valueMax !== valueMin ) ?
 					( value - valueMin ) / ( valueMax - valueMin ) * 100 :
 					0;
-			_set[ this.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+			_set[ self.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
 			this.handle.stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
 
 			if ( oRange === "min" && this.orientation === "horizontal" ) {
@@ -632,6 +653,10 @@ $.widget( "ui.slider", $.ui.mouse, {
 		}
 	}
 
+});
+
+$.extend( $.ui.slider, {
+	version: "@VERSION"
 });
 
 }(jQuery));

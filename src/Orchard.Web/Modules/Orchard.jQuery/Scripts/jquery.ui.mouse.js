@@ -1,12 +1,11 @@
 /*!
- * jQuery UI Mouse 1.9.0
- * http://jqueryui.com
+ * jQuery UI Mouse @VERSION
  *
- * Copyright 2012 jQuery Foundation and other contributors
- * Released under the MIT license.
+ * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * http://api.jqueryui.com/mouse/
+ * http://docs.jquery.com/UI/Mouse
  *
  * Depends:
  *	jquery.ui.widget.js
@@ -19,22 +18,21 @@ $( document ).mouseup( function( e ) {
 });
 
 $.widget("ui.mouse", {
-	version: "1.9.0",
 	options: {
-		cancel: 'input,textarea,button,select,option',
+		cancel: ':input,option',
 		distance: 1,
 		delay: 0
 	},
 	_mouseInit: function() {
-		var that = this;
+		var self = this;
 
 		this.element
 			.bind('mousedown.'+this.widgetName, function(event) {
-				return that._mouseDown(event);
+				return self._mouseDown(event);
 			})
 			.bind('click.'+this.widgetName, function(event) {
-				if (true === $.data(event.target, that.widgetName + '.preventClickEvent')) {
-					$.removeData(event.target, that.widgetName + '.preventClickEvent');
+				if (true === $.data(event.target, self.widgetName + '.preventClickEvent')) {
+				    $.removeData(event.target, self.widgetName + '.preventClickEvent');
 					event.stopImmediatePropagation();
 					return false;
 				}
@@ -56,18 +54,18 @@ $.widget("ui.mouse", {
 
 	_mouseDown: function(event) {
 		// don't let more than one widget handle mouseStart
-		if( mouseHandled ) { return; }
+		if( mouseHandled ) { return };
 
 		// we may have missed mouseup (out of window)
 		(this._mouseStarted && this._mouseUp(event));
 
 		this._mouseDownEvent = event;
 
-		var that = this,
-			btnIsLeft = (event.which === 1),
+		var self = this,
+			btnIsLeft = (event.which == 1),
 			// event.target.nodeName works around a bug in IE 8 with
 			// disabled inputs (#7620)
-			elIsCancel = (typeof this.options.cancel === "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
+			elIsCancel = (typeof this.options.cancel == "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
 		if (!btnIsLeft || elIsCancel || !this._mouseCapture(event)) {
 			return true;
 		}
@@ -75,7 +73,7 @@ $.widget("ui.mouse", {
 		this.mouseDelayMet = !this.options.delay;
 		if (!this.mouseDelayMet) {
 			this._mouseDelayTimer = setTimeout(function() {
-				that.mouseDelayMet = true;
+				self.mouseDelayMet = true;
 			}, this.options.delay);
 		}
 
@@ -94,10 +92,10 @@ $.widget("ui.mouse", {
 
 		// these delegates are required to keep context
 		this._mouseMoveDelegate = function(event) {
-			return that._mouseMove(event);
+			return self._mouseMove(event);
 		};
 		this._mouseUpDelegate = function(event) {
-			return that._mouseUp(event);
+			return self._mouseUp(event);
 		};
 		$(document)
 			.bind('mousemove.'+this.widgetName, this._mouseMoveDelegate)
@@ -137,8 +135,8 @@ $.widget("ui.mouse", {
 		if (this._mouseStarted) {
 			this._mouseStarted = false;
 
-			if (event.target === this._mouseDownEvent.target) {
-				$.data(event.target, this.widgetName + '.preventClickEvent', true);
+			if (event.target == this._mouseDownEvent.target) {
+			    $.data(event.target, this.widgetName + '.preventClickEvent', true);
 			}
 
 			this._mouseStop(event);
