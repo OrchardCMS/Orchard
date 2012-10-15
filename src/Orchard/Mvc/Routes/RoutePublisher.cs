@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 ﻿using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
@@ -67,17 +69,24 @@ namespace Orchard.Mvc.Routes {
                     // Loading session state information. 
                     var defaultSessionState = SessionStateBehavior.Default;
 
+                    ExtensionDescriptor extensionDescriptor = null;
                     if(routeDescriptor.Route is Route) {
                         object extensionId;
-                        var routeCasted = routeDescriptor.Route as Route;
-                        if(routeCasted != null && routeCasted.Constraints != null && routeCasted.Constraints.TryGetValue("area", out extensionId)) {
-                            var extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString());
-                            if(extensionDescriptor != null) {
-                                // if session state is not define explicitly, use the one define for the extension
-                                if(routeDescriptor.SessionState == SessionStateBehavior.Default) {
-                                    Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);    
-                                }
-                            }
+                        var route = routeDescriptor.Route as Route;
+                        if(route.DataTokens != null && route.DataTokens.TryGetValue("area", out extensionId) || 
+                           route.Defaults != null && route.Defaults.TryGetValue("area", out extensionId)) {
+                            extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString()); 
+                        }
+                    }
+                    else if(routeDescriptor.Route is IRouteWithArea) {
+                        var route = routeDescriptor.Route as IRouteWithArea;
+                        extensionDescriptor = _extensionManager.GetExtension(route.Area); 
+                    }
+
+                    if (extensionDescriptor != null) {
+                        // if session state is not define explicitly, use the one define for the extension
+                        if (routeDescriptor.SessionState == SessionStateBehavior.Default) {
+                            Enum.TryParse(extensionDescriptor.SessionState, true /*ignoreCase*/, out defaultSessionState);
                         }
                     }
 
@@ -92,7 +101,5 @@ namespace Orchard.Mvc.Routes {
                 }
             }
         }
-
-
     }
 }
