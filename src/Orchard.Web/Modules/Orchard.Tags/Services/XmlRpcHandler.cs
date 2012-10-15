@@ -60,7 +60,7 @@ namespace Orchard.Tags.Services {
                     break;
                 case "metaWeblog.newPost":
                     MetaWeblogUpdateTags(
-                        Convert.ToInt32(context.Request.Params[0].Value),
+                        GetId(context.Response), // for a new Post, the id is in the Response, as the request contains the blogId
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value),
                         (XRpcStruct)context.Request.Params[3].Value,
@@ -77,6 +77,12 @@ namespace Orchard.Tags.Services {
                         context._drivers);
                     break;
             }
+        }
+
+        private static int GetId(XRpcMethodResponse response) {
+            return response != null && response.Params.Count == 1 && response.Params[0].Value is int
+                       ? Convert.ToInt32(response.Params[0].Value)
+                       : 0;
         }
 
         private void MetaWeblogAttachTagsToPost(XRpcStruct postStruct, int postId, string userName, string password, ICollection<IXmlRpcDriver> drivers) {
