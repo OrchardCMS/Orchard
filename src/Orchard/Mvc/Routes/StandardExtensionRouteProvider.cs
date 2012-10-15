@@ -47,7 +47,7 @@ namespace Orchard.Mvc.Routes {
 
                 yield return new RouteDescriptor {
                     Priority = -10,
-                    SessionState = defaultSessionState == SessionStateBehavior.Default ? SessionStateBehavior.Disabled : defaultSessionState, // sessions are disabled by default on front-end
+                    SessionState = defaultSessionState,
                     Route = new Route(
                         displayPath + "/{controller}/{action}/{id}",
                         new RouteValueDictionary {
