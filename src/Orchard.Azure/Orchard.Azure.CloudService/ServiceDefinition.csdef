@@ -18,7 +18,20 @@
       <InputEndpoint name="HttpIn" protocol="http" port="80" />
     </Endpoints>
     <Startup>
-        <Task commandLine="Startup\ConfigureIIS.cmd" executionContext="elevated" taskType="simple" />
+      <Task commandLine="Startup\ConfigureIIS.cmd" executionContext="elevated" taskType="simple">
+        <Environment>
+
+          <!-- Create the environment variable that informs the startup task whether it is running 
+               in the Compute Emulator or in the cloud. "%ComputeEmulatorRunning%"=="true" when 
+               running in the Compute Emulator, "%ComputeEmulatorRunning%"=="false" when running 
+               in the cloud. -->
+
+          <Variable name="ComputeEmulatorRunning">
+            <RoleInstanceValue xpath="/RoleEnvironment/Deployment/@emulated" />
+          </Variable>
+
+        </Environment>
+      </Task>
     </Startup>
   </WebRole>
 </ServiceDefinition>
