@@ -7,10 +7,11 @@ using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
-using Orchard.UI.Admin;
+using Orchard.UI;
+using Orchard.UI.Navigation;
 using Orchard.Utility;
 
-namespace Orchard.UI.Navigation {
+namespace Orchard.Core.Navigation.Services {
     public class NavigationManager : INavigationManager {
         private readonly IEnumerable<INavigationProvider> _navigationProviders;
         private readonly IEnumerable<IMenuProvider> _menuProviders;
@@ -106,7 +107,7 @@ namespace Orchard.UI.Navigation {
                     hasDebugShowAllMenuItems ||
 
                     // a content item is linked and the user can view it
-                    item.Content != null && item.Permissions.Concat(new [] { Permission.Named("ViewContent") }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
+                    item.Content != null && item.Permissions.Concat(new[] { Contents.Permissions.ViewContent }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
 
                     // it's the admin menu and permissions are effective
                     isAdminMenu && (!item.Permissions.Any() || item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) ) {

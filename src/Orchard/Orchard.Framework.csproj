@@ -880,7 +880,6 @@
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />
     <Compile Include="UI\Navigation\MenuItemComparer.cs" />
-    <Compile Include="UI\Navigation\NavigationManager.cs" />
     <Compile Include="UI\Notify\Notifier.cs" />
     <Compile Include="UI\Notify\NotifierExtensions.cs" />
     <Compile Include="UI\Notify\NotifyEntry.cs" />

@@ -152,10 +152,12 @@
     <Compile Include="Navigation\Models\NavigationPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
+    <Compile Include="Navigation\Security\ContentMenuItemAuthorizationEventHandler.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
     <Compile Include="Navigation\Services\DefaultMenuProvider.cs" />
+    <Compile Include="Navigation\Services\NavigationManager.cs" />
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
