@@ -353,32 +353,62 @@ namespace Orchard.Tests.ContentManagement {
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
+            var count1 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .Count();
+
             var list2 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
+
+            var count2 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .Count();
 
             var list3 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
+            var count3 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .Count();
+
             var listOne = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
+
+            var countOne = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .Count();
 
             var listTwo = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
+            var countTwo = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .Count();
+
             var listThree = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 
+            var countThree = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .Count();
+
             Assert.That(list1.Count(), Is.EqualTo(0));
+            Assert.That(count1, Is.EqualTo(0));
             Assert.That(list2.Count(), Is.EqualTo(1));
+            Assert.That(count2, Is.EqualTo(1));
             Assert.That(list3.Count(), Is.EqualTo(1));
+            Assert.That(count3, Is.EqualTo(1));
             Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(countOne, Is.EqualTo(0));
             Assert.That(listTwo.Count(), Is.EqualTo(1));
+            Assert.That(countTwo, Is.EqualTo(1));
             Assert.That(listThree.Count(), Is.EqualTo(1));
+            Assert.That(countThree, Is.EqualTo(1));
         }
 
         [Test]
