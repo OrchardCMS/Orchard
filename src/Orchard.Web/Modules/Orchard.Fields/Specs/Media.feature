@@ -40,9 +40,6 @@ Scenario: Creating and using media fields
 		And I hit "Save"
 		And I am redirected
 	Then I should see "Your Event has been created."
-	When I go to "Admin/Contents/List"
-	Then I should see "File:" 
-		And I should see ""
 
 	# The hint should be displayed
 	When I go to "Admin/ContentTypes/Edit/Event"
@@ -78,4 +75,4 @@ Scenario: Creating and using media fields
 	        | name           | value |
 	        | Event.File.Url | ~/Media/Default/images/Image.png   |
 		And I hit "Save"
-	Then I should see "The field File must be have one of these extensions: jpg"
+	Then I should see "The field File must have one of these extensions: jpg"
