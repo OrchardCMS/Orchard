@@ -19,7 +19,7 @@
 
         // remove trailing slash if any
         if (baseUrl.substr(-1) == '/')
-            baseUrl.substr(0, baseUrl.length - 1);
+            baseUrl = baseUrl.substr(0, baseUrl.length - 1);
         
         var url = baseUrl
             + "/Admin/Orchard.ContentPicker?"
