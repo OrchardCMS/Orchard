@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -104,7 +105,7 @@ namespace Orchard.Tokens.Providers {
                             var tokenName = "Fields." + typePart.PartDefinition.Name + "." + partField.Name;
                             forContent.Token(
                                 tokenName,
-                                content => LookupField(content, part.PartDefinition.Name, field.Name).Storage.Get<string>());
+                                content => Convert.ToString(LookupField(content, part.PartDefinition.Name, field.Name).Storage.Get<object>()));
                             forContent.Chain(
                                 tokenName,
                                 partField.FieldDefinition.Name,
@@ -118,7 +119,10 @@ namespace Orchard.Tokens.Providers {
                 .Token("Absolute", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url));
 
             context.For<TextField>("TextField")
-                .Token("Length", field => (field.Value ?? "").Length);
+                .Token("Length", field => (field.Value ?? "").Length)
+                .Token("Text", field => field.Value ?? "")
+                .Chain("Text", "Text", field => field.Value ?? "")
+                ;
 
             context.For<ContentTypeDefinition>("TypeDefinition")
                 .Token("Name", def => def.Name)
