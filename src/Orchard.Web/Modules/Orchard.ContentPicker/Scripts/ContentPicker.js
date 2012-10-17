@@ -15,9 +15,13 @@
         };
         $[callbackName].data = data;
 
-        var adminIndex = location.href.toLowerCase().indexOf("/admin/");
-        if (adminIndex === -1) return;
-        var url = location.href.substr(0, adminIndex)
+        var baseUrl = data.baseUrl;
+
+        // remove trailing slash if any
+        if (baseUrl.substr(-1) == '/')
+            baseUrl.substr(0, baseUrl.length - 1);
+        
+        var url = baseUrl
             + "/Admin/Orchard.ContentPicker?"
             + "callback=" + callbackName
             + "&" + (new Date() - 0);

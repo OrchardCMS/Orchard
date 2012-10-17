@@ -86,7 +86,8 @@
 
                     refreshIds();
                     $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
-                }
+                },
+                baseUrl: '@Url.Content("~/")'
             });
         });
 
