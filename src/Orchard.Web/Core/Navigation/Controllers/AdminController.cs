@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -117,13 +118,22 @@ namespace Orchard.Core.Navigation.Controllers {
             if (menuPart != null) {
                 menuId = menuPart.Menu.Id;
 
-                // if the menu item is a concrete content item, don't delete it, just unreference the menu
-                if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
-                    menuPart.Menu = null;
+                // get all sub-menu items from the same menu
+                var menuItems = _menuService.GetMenuParts(menuPart.Menu.Id)
+                    .Where(x => x.MenuPosition.StartsWith(menuPart.MenuPosition + "."))
+                    .Select(x => x.As<MenuPart>())
+                    .ToList();
+
+                foreach (var menuItem in menuItems.Concat(new [] {menuPart})) {
+                    // if the menu item is a concrete content item, don't delete it, just unreference the menu
+                    if (!menuPart.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || menuPart.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
+                        menuPart.Menu = null;
+                    }
+                    else {
+                        _menuService.Delete(menuItem);
+                    }
                 }
-                else {
-                    _menuService.Delete(menuPart);
-                }
+
             }
 
             return RedirectToAction("Index", new { menuId });
