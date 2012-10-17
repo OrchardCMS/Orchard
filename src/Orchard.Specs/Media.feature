@@ -5,14 +5,12 @@
 
 Scenario: Media admin is available
     Given I have installed Orchard
-        And I have installed "Orchard.Media"
     When I go to "admin/media"
     Then I should see "Media"
         And the status should be 200 "OK"
 
 Scenario: Creating a folder
     Given I have installed Orchard
-        And I have installed "Orchard.Media"
     When I go to "admin/media/create"
         And I fill in
             | name | value |
@@ -25,7 +23,6 @@ Scenario: Creating a folder
 
 Scenario: Limited access
     Given I have installed Orchard
-        And I have installed "Orchard.Media"
     When I go to "admin/media/edit?name=..\..\bin&mediaPath=..\..\bin"
         And I am redirected
     Then I should see "Media"
