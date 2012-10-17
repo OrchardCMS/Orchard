@@ -34,7 +34,7 @@ namespace Orchard.Data.Migration {
             var enabledFeatures = _featureManager.GetEnabledFeatures().Select(f => f.Id).ToList();
             var featuresToEnable = theseFeaturesShouldAlwaysBeActive.Where(shouldBeActive => !enabledFeatures.Contains(shouldBeActive)).ToList();
             if (featuresToEnable.Any()) {
-                _featureManager.EnableFeatures(featuresToEnable);
+                _featureManager.EnableFeatures(featuresToEnable, true);
             }
 
             foreach (var feature in _dataMigrationManager.GetFeaturesThatNeedUpdate()) {
