@@ -52,16 +52,16 @@ namespace Orchard.Specs.Hosting {
             Log(" Temporary location: \"{0}\"", _tempSite);
 
             _knownModules = _orchardWebPath.Combine("Modules").Directories.Where(d => d.Combine("module.txt").Exists).Select(d => d.FileName).ToList();
-            foreach (var filename in _knownModules)
-                Log("Available Module: \"{0}\"", filename);
+            //foreach (var filename in _knownModules)
+            //    Log("Available Module: \"{0}\"", filename);
 
             _knownThemes = _orchardWebPath.Combine("Themes").Directories.Where(d => d.Combine("theme.txt").Exists).Select(d => d.FileName).ToList();
-            foreach (var filename in _knownThemes)
-                Log("Available Theme: \"{0}\"", filename);
+            //foreach (var filename in _knownThemes)
+            //    Log("Available Theme: \"{0}\"", filename);
 
             _knownBinAssemblies = _orchardWebPath.Combine("bin").GetFiles("*.dll").Select(f => f.FileNameWithoutExtension);
-            foreach (var filename in _knownBinAssemblies)
-                Log("Assembly in ~/bin: \"{0}\"", filename);
+            //foreach (var filename in _knownBinAssemblies)
+            //    Log("Assembly in ~/bin: \"{0}\"", filename);
 
             Log("Copy files from template \"{0}\"", templateName);
             baseDir.Combine("Hosting").Combine(templateName)
