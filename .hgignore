@@ -24,6 +24,7 @@ glob:*.build.csdef
 glob:src/Orchard.Azure/Orchard.Azure.Web/Core
 glob:src/Orchard.Azure/Orchard.Azure.Web/Modules
 glob:src/Orchard.Azure/Orchard.Azure.Web/Themes
+glob:src/Orchard.Azure/Orchard.Azure.CloudService/csx/Debug/*
 syntax: glob
 src/Orchard.Web/Orchard.Web.Publish.xml
 glob:src/TestResults/*
