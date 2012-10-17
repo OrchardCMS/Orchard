@@ -56,7 +56,7 @@ Scenario: I can add a widget to a specific zone in a specific layer
     Then I should see "<h1[^>]*>Add Widget</h1>"
     When I fill in
             | name | value |
-            | Title | Flashy HTML Widget |
+            | WidgetPart.Title | Flashy HTML Widget |
             | Body.Text | <p><blink>hi</blink></p> |
         And I hit "Save"
         And I am redirected
