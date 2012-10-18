@@ -6,6 +6,7 @@ namespace Orchard.ContentManagement.Handlers {
         public XElement Data { get; set; }
         private ImportContentSession Session { get; set; }
 
+
         public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {
             Data = data;

@@ -225,9 +225,9 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("drop index {0}.{1}",
-                _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)));
+            builder.AppendFormat("drop index {0} ON {1}",
+                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
+                _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
             _sqlStatements.Add(builder.ToString());
         }
 

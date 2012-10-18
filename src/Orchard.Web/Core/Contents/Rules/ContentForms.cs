@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
@@ -40,7 +41,7 @@ namespace Orchard.Core.Contents.Rules {
 
                     f._Parts.Add(new SelectListItem { Value = "", Text = T("Any").Text });
 
-                    foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions()) {
+                    foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.DisplayName)) {
                         f._Parts.Add(new SelectListItem { Value = contentType.Name, Text = contentType.DisplayName });
                     }
 

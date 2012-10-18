@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentNHibernate;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Diagnostics;
 using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 using Orchard.Data.Providers;
 using Orchard.Tests.Records;
+using MsSqlCeConfiguration = Orchard.Data.Providers.MsSqlCeConfiguration;
 
 namespace Orchard.Tests {
     [TestFixture]
@@ -24,6 +27,14 @@ namespace Orchard.Tests {
 
             public IEnumerable<Type> GetTypes() {
                 return _types;
+            }
+
+            public void LogSource(IDiagnosticLogger logger) {
+                throw new NotImplementedException();
+            }
+
+            public string GetIdentifier() {
+                throw new NotImplementedException();
             }
 
             #endregion

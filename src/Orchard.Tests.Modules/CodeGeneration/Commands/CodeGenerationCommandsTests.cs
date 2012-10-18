@@ -46,6 +46,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
+            builder.RegisterType<DefaultDatabaseCacheConfiguration>().As<IDatabaseCacheConfiguration>();
             builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();

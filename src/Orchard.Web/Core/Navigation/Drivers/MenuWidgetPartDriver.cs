@@ -41,6 +41,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 return "MenuWidget";
             }
         }
+
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
             return ContentShape( "Parts_MenuWidget", () => {
                 if(part.Menu == null) {
@@ -66,7 +67,7 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     // if the menu item is culture neutral or of the current culture
-                    if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
+                    else if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
                         localized.Add(menuItem);
                     }
                 }
@@ -79,13 +80,13 @@ namespace Orchard.Core.Navigation.Drivers {
                                              
                 dynamic menuShape = shapeHelper.Menu();
 
-                if (part.Breadcrumb) {
+                if (part.Breadcrumb && selectedPath != null) {
                     menuItems = selectedPath;
                     foreach (var menuItem in menuItems) {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
                     }
 
-                    // apply level limites to breadcrumb
+                    // apply level limits to breadcrumb
                     menuItems = menuItems.Skip(part.StartLevel - 1);
                     if (part.Levels > 0) {
                         menuItems = menuItems.Take(part.Levels);
@@ -117,9 +118,11 @@ namespace Orchard.Core.Navigation.Drivers {
                 }
                 else {
                     IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
-                    
-                    if(part.StartLevel > 1) {
-                        topLevelItems = selectedPath.Where(x => x.Selected);
+
+                    if (part.StartLevel > 1 && selectedPath != null) {
+                        // the selected path will return the whole selected hierarchy
+                        // intersecting will return the root selected menu item
+                        topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
                     }
 
                     if (topLevelItems.Any()) {
@@ -133,26 +136,30 @@ namespace Orchard.Core.Navigation.Drivers {
                             topLevelItems = temp;
                         }
 
-                        // apply display level
+                        // apply display level ?
                         if(part.Levels > 0) {
                             var current = topLevelItems.ToList();
-                            for (; i < part.Levels - part.StartLevel; i++ ) {
+                            for (int j=1; j < part.Levels; j++ ) {
                                 var temp = new List<MenuItem>();
                                 foreach (var menuItem in current) {
                                     temp.AddRange(menuItem.Items);
                                 }
                                 current = temp;
                             }
-                            foreach(var menuItem in current) {
+
+                            topLevelItems = current;
+
+                            // cut the sub-levels of any selected menu item
+                            foreach (var menuItem in topLevelItems) {
                                 menuItem.Items = Enumerable.Empty<MenuItem>();
-                            }
+                            }                
+
                         }
 
                         menuItems = topLevelItems;
                     }
                 }
 
-                
 
                 menuShape.MenuName(menuName);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
@@ -196,6 +203,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "StartLevel", x => part.StartLevel = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Levels", x => part.Levels = Convert.ToInt32(x));
             context.ImportAttribute(part.PartDefinition.Name, "Breadcrumb", x => part.Breadcrumb = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddCurrentPage", x => part.AddCurrentPage = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "AddHomePage", x => part.AddHomePage = Convert.ToBoolean(x));
 
             context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
         }
@@ -207,6 +216,8 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("StartLevel", part.StartLevel);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Levels", part.Levels);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Breadcrumb", part.Breadcrumb);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddCurrentPage", part.AddCurrentPage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AddHomePage", part.AddHomePage);
         }
 
     }

@@ -42,7 +42,9 @@ namespace Orchard.Core.Common.OwnerEditor {
             
             var settings = part.TypePartDefinition.Settings.GetModel<OwnerEditorSettings>();
             if (!settings.ShowOwnerEditor) {
-                part.Owner = currentUser;
+                if (part.Owner == null) {
+                    part.Owner = currentUser;
+                }
                 return null;
             }
 

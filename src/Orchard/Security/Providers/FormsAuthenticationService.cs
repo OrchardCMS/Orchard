@@ -12,6 +12,7 @@ namespace Orchard.Security.Providers {
         private readonly IContentManager _contentManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IUser _signedInUser;
+        private bool _isAuthenticated = false;
 
         public FormsAuthenticationService(IClock clock, IContentManager contentManager, IHttpContextAccessor httpContextAccessor) {
             _clock = clock;
@@ -56,20 +57,24 @@ namespace Orchard.Security.Providers {
 
             var httpContext = _httpContextAccessor.Current();
             httpContext.Response.Cookies.Add(cookie);
+
+            _isAuthenticated = true;
             _signedInUser = user;
         }
 
         public void SignOut() {
             _signedInUser = null;
+            _isAuthenticated = false;
             FormsAuthentication.SignOut();
         }
 
         public void SetAuthenticatedUserForRequest(IUser user) {
             _signedInUser = user;
+            _isAuthenticated = true;
         }
 
         public IUser GetAuthenticatedUser() {
-            if (_signedInUser != null)
+            if (_signedInUser != null || _isAuthenticated)
                 return _signedInUser;
 
             var httpContext = _httpContextAccessor.Current();
@@ -84,7 +89,9 @@ namespace Orchard.Security.Providers {
                 Logger.Fatal("User id not a parsable integer");
                 return null;
             }
-            return _contentManager.Get(userId).As<IUser>();
+
+            _isAuthenticated = true;
+            return _signedInUser = _contentManager.Get(userId).As<IUser>();
         }
     }
 }

@@ -31,6 +31,31 @@ namespace Orchard {
             }
         }
 
+        public static IEnumerable<TResult> Invoke<TEvents, TResult>(this IEnumerable<TEvents> events, Func<TEvents, TResult> dispatch, ILogger logger) {
+            
+            foreach (var sink in events) {
+                TResult result = default(TResult);
+                try {
+                    result = dispatch(sink);
+                }
+                catch (Exception ex) {
+                    if (IsLogged(ex)) {
+                        logger.Error(ex, "{2} thrown from {0} by {1}",
+                            typeof(TEvents).Name,
+                            sink.GetType().FullName,
+                            ex.GetType().Name);
+                    }
+
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
+                }
+
+                yield return result;
+            }
+        }
+
+
         private static bool IsLogged(Exception ex) {
             return ex is OrchardSecurityException || !ex.IsFatal();
         }

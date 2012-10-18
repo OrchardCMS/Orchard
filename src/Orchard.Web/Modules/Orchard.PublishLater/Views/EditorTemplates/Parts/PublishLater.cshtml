@@ -1,7 +1,15 @@
 ﻿@model Orchard.PublishLater.ViewModels.PublishLaterViewModel
+
+@using Orchard.ContentManagement;
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions;
+
 @{
     Style.Require("PublishLater_DatePicker");
 }
+
+@if (Authorizer.Authorize(Permissions.PublishContent, Model.ContentItem)) {
+    
 <fieldset class="publish-later-datetime">
     <legend>@T("Publish")</legend>
     <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")">@T("Date")</label>
@@ -10,7 +18,8 @@
     @Html.EditorFor(m => m.ScheduledPublishTime)
 	<button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
 </fieldset>
-@using(Script.Foot()) {
+
+using (Script.Foot()) {
 
     @* generates the localization script *@
     @Display(New.DatePickerLocalization())
@@ -41,4 +50,6 @@
     })
 //]]>
 </script>
+}
+
 }

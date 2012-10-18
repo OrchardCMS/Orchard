@@ -25,6 +25,12 @@ namespace Orchard.UI.Admin.Notification {
             // if it's not a view result, a redirect for example
             if (!(filterContext.Result is ViewResultBase))
                 return;
+
+            // if it's a child action, a partial view for example
+            if (filterContext.IsChildAction)
+                return;
+	             
+	
             
             var messageEntries = _notificationManager.GetNotifications().ToList();
             if (!messageEntries.Any())

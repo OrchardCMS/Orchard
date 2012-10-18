@@ -144,9 +144,6 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
-            var content = Services.ContentManager.New(id);
-            var shape = Services.ContentManager.BuildEditor(content);
-
             var placementModel = new EditPlacementViewModel {
                 PlacementSettings = contentTypeDefinition.GetPlacement(PlacementType.Editor),
                 AllPlacements = _placementService.GetEditorPlacement(id).OrderBy(x => x.PlacementSettings.Position, new FlatPositionComparer()).ThenBy(x => x.PlacementSettings.ShapeType).ToList(), 

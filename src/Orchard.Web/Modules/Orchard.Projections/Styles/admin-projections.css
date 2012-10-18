@@ -1,0 +1,8 @@
+﻿
+td.status-disabled  {
+    background: transparent url(../Content/Admin/images/offline.gif) no-repeat right;
+}
+
+td.status-enabled  {
+    background: transparent url(../Content/Admin/images/online.gif) no-repeat right;
+}

@@ -45,7 +45,7 @@ namespace Orchard.Tests.DataMigration {
         }
 
         public void InitDb() {
-            foreach ( var record in _repository.Fetch(m => true) ) {
+            foreach ( var record in _repository.Fetch(m => m != null) ) {
                 _repository.Delete(record);
             }
             _repository.Flush();

@@ -81,6 +81,7 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterInstance(manager).As<IDataServicesProviderFactory>();
             builder.RegisterType<NullInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
+            builder.RegisterType<DefaultDatabaseCacheConfiguration>().As<IDatabaseCacheConfiguration>();
             builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<StubLoaders>().As<IExtensionLoader>();

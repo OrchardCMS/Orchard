@@ -1,4 +1,5 @@
 using System.Web;
+using System.Web.SessionState;
 using Orchard.Mvc.Wrappers;
 
 namespace Orchard.Mvc.Routes {
@@ -14,6 +15,11 @@ namespace Orchard.Mvc.Routes {
             get {
                 return new AdjustedRequest(_httpContextBase.Request, _prefix);
             }
+        }
+
+        public override void SetSessionStateBehavior(SessionStateBehavior sessionStateBehavior)
+        {
+            _httpContextBase.SetSessionStateBehavior(sessionStateBehavior);
         }
 
         class AdjustedRequest : HttpRequestBaseWrapper {

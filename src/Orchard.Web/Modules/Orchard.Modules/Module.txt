@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.5
+Version: 1.6
 OrchardVersion: 1.4
 Description: The Modules module enables the administrator of the site to manage the installed modules as well as activate and de-activate features.
 FeatureDescription: Standard module and feature management.

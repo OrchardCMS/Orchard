@@ -1,0 +1,218 @@
+﻿@model PropertyEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Script.Require("jQuery");
+    Layout.Title = T("Edit Property - {0}", Model.Property.Name);
+}
+
+@Html.ValidationSummary()
+
+<h2>@Model.Property.Name</h2>
+<span class="hint">@Model.Property.Description</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+    @* Field settings *@
+    <fieldset>
+        @Html.LabelFor(m => m.Description, T("Description"))
+        @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+        <span class="hint">@T("You may optionally give a description to this property, to be used in the dashboard screens.")</span>
+    </fieldset>
+    
+    <fieldset>
+        <legend>@T("Display")</legend>
+        <div>
+            @Html.CheckBoxFor(m => m.LinkToContent)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LinkToContent)">@T("Link to original content item")</label>
+            <span class="hint">@T("Check to make this property a link to the original content item.")</span>
+        </div>
+        <div>
+            @Html.CheckBoxFor(m => m.ExcludeFromDisplay)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ExcludeFromDisplay)">@T("Exclude from display")</label>
+            <span class="hint">@T("Check if this property should not be displayed, but only used by the layout for grouping for instance.")</span>
+        </div>
+    </fieldset>
+
+    @* Render the dynamic form *@    
+    if (Model.Form != null) {
+        <fieldset>
+            @DisplayChildren(Model.Form)
+        </fieldset>
+    }
+    
+    <fieldset>
+        <legend>@T("Label")</legend>
+        <div class="expando">
+            @Html.CheckBoxFor(m => m.CreateLabel)
+            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CreateLabel)">@T("Create a label")</label>
+            <div data-controllerid="@Html.FieldIdFor(m => m.CreateLabel)">
+                <div>
+                    @Html.TextBoxFor(m => m.Label, new { @class = "textMedium tokenized" })
+                    <span class="hint">@T("The text to display as a label for this property.")</span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    
+    @* Field parameters *@
+    <fieldset>
+        <legend>@T("Style")</legend>
+        <div class="expando">
+            <div>
+                @Html.CheckBoxFor(m => m.CustomizePropertyHtml)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizePropertyHtml)">@T("Customize property HTML")</label>
+                <div data-controllerid="@Html.FieldIdFor(m => m.CustomizePropertyHtml)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomPropertyTag)">@T("HTML element")</label>
+                        @Html.TextBoxFor(m => m.CustomPropertyTag, new { @class = "text-small" })
+                        <span class="hint">@T("The HTML element to wrap around this property (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
+                    </div>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomPropertyCss)">@T("Css class")</label>
+                        @Html.TextBoxFor(m => m.CustomPropertyCss, new { @class = "textMedium tokenized" })
+                        <span class="hint">@T("The Css class to apply to this element.")</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                @Html.CheckBoxFor(m => m.CustomizeLabelHtml)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizeLabelHtml)">@T("Customize label HTML")</label>
+                <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeLabelHtml)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomLabelTag)">@T("HTML element")</label>
+                        @Html.TextBoxFor(m => m.CustomLabelTag, new { @class = "text-small" })
+                        <span class="hint">@T("The HTML element to wrap around this label (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
+                    </div>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomLabelCss)">@T("Css class")</label>
+                        @Html.TextBoxFor(m => m.CustomLabelCss, new { @class = "textMedium tokenized" })
+                        <span class="hint">@T("The Css class to apply to this element.")</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                @Html.CheckBoxFor(m => m.CustomizeWrapperHtml)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CustomizeWrapperHtml)">@T("Customize Wrapper HTML")</label>
+                <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeWrapperHtml)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomWrapperTag)">@T("HTML element")</label>
+                        @Html.TextBoxFor(m => m.CustomWrapperTag, new { @class = "text-small" })
+                        <span class="hint">@T("The HTML element to wrap around this wrapper (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
+                    </div>
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.CustomWrapperCss)">@T("Css class")</label>
+                        @Html.TextBoxFor(m => m.CustomWrapperCss, new { @class = "textMedium tokenized" })
+                        <span class="hint">@T("The Css class to apply to this element.")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>@T("No Results")</legend>
+        <div class="expando">
+            <div>
+                <div>
+                    <label for="@Html.FieldIdFor(m => m.NoResultText)">@T("No results text")</label>
+                    @Html.TextBoxFor(m => m.NoResultText, new { @class = "textMedium tokenized" })
+                    <span class="hint">@T("Text to display when the property is empty.")</span>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.ZeroIsEmpty)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ZeroIsEmpty)">@T("Number 0 as empty")</label>
+                    <span class="hint">@T("Check to simulate empty text when result is the number 0")</span>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.HideEmpty)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.HideEmpty)">@T("Hide if empty")</label>
+                    <span class="hint">@T("Check to hide the whole property when the value is empty.")</span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>@T("Rewrite Results")</legend>
+        <div class="expando">
+            <div>
+                <div>
+                    @Html.CheckBoxFor(m => m.RewriteOutput)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.RewriteOutput)">@T("Rewrite output")</label>
+                    <span class="hint">@T("Check to override the output of this property.")</span>
+                </div>
+                
+                <div data-controllerid="@Html.FieldIdFor(m => m.RewriteOutput)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.RewriteText)">@T("Rewrite text")</label>
+                        @Html.TextBoxFor(m => m.RewriteText, new { @class = "large text tokenized" })
+                        <span class="hint">@T("The text to write for this field. It may include HTML. {Text} can be used to inject the current property text.")</span>
+                    </div>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.TrimLength)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimLength)">@T("Trim")</label>
+                    <span class="hint">@T("Check to trim the result if it's longer that a specified amount of characters.")</span>
+                </div>
+
+                <div data-controllerid="@Html.FieldIdFor(m => m.TrimLength)">
+                    <div>
+                        <label for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
+                        @Html.TextBoxFor(m => m.MaxLength, new { @class = "text-small" })
+                        <span class="hint">@T("The maximum number of characters this property can be.")</span>
+                    </div>
+                    
+                    <div>
+                        @Html.CheckBoxFor(m => m.TrimOnWordBoundary)
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimOnWordBoundary)">@T("Trim only on a word boundary")</label>
+                        <span class="hint">@T("Checked to trim the property only on a word boundary.")</span>
+                    </div>
+
+                    <div>
+                        @Html.CheckBoxFor(m => m.AddEllipsis)
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.AddEllipsis)">@T("Add an Ellipsis")</label>
+                        <span class="hint">@T("Check to insert and ellipsis ({0}) if the property is trimmed.", new HtmlString("&#160;&#8230;"))</span>
+                    </div>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.StripHtmlTags)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.StripHtmlTags)">@T("Strip HTML tags")</label>
+                    <span class="hint">@T("Check to remove any HTML tag from the property.")</span>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.TrimWhiteSpace)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.TrimWhiteSpace)">@T("Remove whitespace")</label>
+                    <span class="hint">@T("Check to remove the spaces at both the beginning and the end of the property.")</span>
+                </div>
+
+                <div>
+                    @Html.CheckBoxFor(m => m.PreserveLines)
+                    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.PreserveLines)">@T("Preserve new lines")</label>
+                    <span class="hint">@T("Check to convert a line break to a &lt;br /&gt; tag.")</span>
+                </div>
+            </div>
+        </div>
+    </fieldset>    
+    @Display.TokenHint()
+
+    <fieldset>
+        <button class="primaryAction button" type="submit">@T("Save")</button>
+        @Html.ActionLink(T("Cancel").Text, "Edit", "Layout", new { id = Model.Id }, new { @class = "primaryAction button" })
+    </fieldset>
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+    })(jQuery);//]]>
+</script>
+}

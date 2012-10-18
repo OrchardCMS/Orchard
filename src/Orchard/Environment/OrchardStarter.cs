@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
+using System.Web.Http;
+using System.Web.Http.Dispatcher;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
@@ -28,6 +30,7 @@ using Orchard.Mvc.DataAnnotations;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
+using Orchard.WebApi;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -100,6 +103,7 @@ namespace Orchard.Environment {
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<DynamicExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+                            builder.RegisterType<ProbingExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<RawThemeExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                         }
                     }
@@ -141,6 +145,11 @@ namespace Orchard.Environment {
             }
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new DefaultOrchardWebApiHttpControllerSelector(GlobalConfiguration.Configuration));
+            GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpHttpControllerActivator(GlobalConfiguration.Configuration));
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
 

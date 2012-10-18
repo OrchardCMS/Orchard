@@ -16,6 +16,7 @@ using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Tests.Stubs;
+using NHibernate.Impl;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -201,7 +202,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Clear();
 
             var ascending = _manager.Query("gamma")
-                .OrderBy<GammaRecord, string>(x => x.Frap)
+                .OrderBy<GammaRecord>(x => x.Frap)
                 .List<GammaPart>().ToList();
 
             Assert.That(ascending.Count(), Is.EqualTo(5));
@@ -229,11 +230,11 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
 
             var reverseById = _manager.Query()
-                .OrderByDescending<GammaRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord>(x => x.Id)
                 .List();
 
             var subset = _manager.Query()
-                .OrderByDescending<GammaRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord>(x => x.Id)
                 .Slice(2, 3);
 
             Assert.That(subset.Count(), Is.EqualTo(3));
@@ -352,32 +353,62 @@ namespace Orchard.Tests.ContentManagement {
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
+            var count1 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .Count();
+
             var list2 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
+
+            var count2 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .Count();
 
             var list3 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
+            var count3 = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .Count();
+
             var listOne = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
+
+            var countOne = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .Count();
 
             var listTwo = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
+            var countTwo = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .Count();
+
             var listThree = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 
+            var countThree = _manager.Query<GammaPart>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .Count();
+
             Assert.That(list1.Count(), Is.EqualTo(0));
+            Assert.That(count1, Is.EqualTo(0));
             Assert.That(list2.Count(), Is.EqualTo(1));
+            Assert.That(count2, Is.EqualTo(1));
             Assert.That(list3.Count(), Is.EqualTo(1));
+            Assert.That(count3, Is.EqualTo(1));
             Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(countOne, Is.EqualTo(0));
             Assert.That(listTwo.Count(), Is.EqualTo(1));
+            Assert.That(countTwo, Is.EqualTo(1));
             Assert.That(listThree.Count(), Is.EqualTo(1));
+            Assert.That(countThree, Is.EqualTo(1));
         }
 
         [Test]
@@ -450,6 +481,58 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(listOne.Count(), Is.EqualTo(0));
             Assert.That(listTwo.Count(), Is.EqualTo(2));
             Assert.That(listThree.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void StartsWithExtensionShouldBeUsed() {
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
+            _session.Flush();
+
+            var result = _manager.Query<GammaPart, GammaRecord>()
+                .Where(x => x.Frap.StartsWith("t"))
+                .List();
+
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "two"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "three"), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void EndsWithExtensionShouldBeUsed() {
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
+            _session.Flush();
+
+            var result = _manager.Query<GammaPart, GammaRecord>()
+                .Where(x => x.Frap.EndsWith("e"))
+                .List();
+
+            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "one"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "three"), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ContainsExtensionShouldBeUsed() {
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
+            _session.Flush();
+
+            var result = _manager.Query<GammaPart, GammaRecord>()
+                .Where(x => x.Frap.Contains("o"))
+                .List();
+
+            Assert.That(result.Count(), Is.EqualTo(3));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "one"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "two"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Get<GammaPart>().Record.Frap == "four"), Is.EqualTo(1));
         }
     }
 }

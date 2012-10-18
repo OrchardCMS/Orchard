@@ -1,0 +1,121 @@
+﻿@model LayoutEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Edit Layout - {0}", Model.Layout.Name);
+}
+
+@Html.ValidationSummary()
+
+<h2>@Model.Layout.Name</h2>
+<span class="hint">@Model.Layout.Description</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+    @Html.HiddenFor(m => m.QueryId)
+    @Html.HiddenFor(m => m.Category)
+    @Html.HiddenFor(m => m.Type)
+
+    <fieldset>
+        @Html.LabelFor(m => m.Description, T("Description"))
+        @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+        <span class="hint">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
+    </fieldset>
+
+    <fieldset>
+        <div>
+            <h2>@T("Display mode")</h2>
+            @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Content, Model.Display == (int)LayoutRecord.Displays.Content, new { id = "display-content-radio" })
+            <label for="display-content-radio" class="forcheckbox">@T("Content")</label>
+            <br />
+            @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
+            <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
+            <span class="hint">@T("You can choose to display each content item using specific properties only.")</span>
+
+            <div class="options">
+                <span data-controllerid="display-content-radio">
+                    <label for="DatabaseConnectionString">@T("Display Type")</label>
+                    @Html.TextBoxFor(m => m.DisplayType, new { @class = "textMedium" })
+                    <span class="hint">@T("The display type represents or the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
+                </span>
+            </div>
+
+        </div>
+    </fieldset>
+
+    <fieldset class="bulk-actions">
+        <h2>@T("Properties")</h2>
+    </fieldset>
+
+    <div class="manage">
+    @Html.ActionLink(T("Add a new Property").Text, "Add", new { controller = "Property", id = Model.Id }, new { @class = "button primaryAction" })
+    </div>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" >@T("Description")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+    @foreach (var property in Model.Properties) {
+        <tr>
+            <td>@(property.DisplayText)</td>
+            <td>
+                @Html.ActionLink(T("Edit").Text, "Edit", new { controller = "Property", id = Model.Id, category = property.Category, type = property.Type, propertyId = property.PropertyRecordId }) |
+                @Html.ActionLink(T("Delete").Text, "Delete", new { controller = "Property", id = Model.Id, propertyId = property.PropertyRecordId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                @if (property != Model.Properties.First()) {
+                    <text>|</text> @Html.ActionLink(T("Up").Text, "Move", new { controller = "Property", id = property.PropertyRecordId, direction = "up", layoutId = Model.Id })
+                }
+                @if (property != Model.Properties.Last()) {
+                    <text>|</text> @Html.ActionLink(T("Down").Text, "Move", new { controller = "Property", id = property.PropertyRecordId, direction = "down", layoutId = Model.Id })
+                }
+            </td>    
+        </tr>
+    }
+    </table>
+
+    @* Render a button at the bottom only if there are several fields in the table *@
+    if (Model.Properties.Count() > 5) {
+        <div class="manage">
+        @Html.ActionLink(T("Add a new Property").Text, "Add", new { controller = "Property", id = Model.Id }, new { @class = "button primaryAction" })
+        </div>
+    }
+
+    @* Group property *@
+    <h2>@T("Grouping property")</h2>
+    if (Model.Properties.Any()) {
+        <select name="@Html.FieldNameFor(m => m.GroupPropertyId)" size="1">
+            @Html.SelectOption(0, false, T("None").Text)
+            @foreach (var property in Model.Properties) {
+                @Html.SelectOption(Model.GroupPropertyId, property.PropertyRecordId, property.DisplayText)
+            }
+        </select>
+        <span class="hint">@T("Optionally, select a property which will be used to group content items.")</span>
+    }
+    else {
+        <span class="hint">@T("No properties are currently available in order to group this view.")</span>
+    }        
+
+        @* Render the dynamic form *@    
+    <fieldset>
+        @DisplayChildren(Model.Form)
+    </fieldset>
+    
+    @Display.TokenHint()
+
+    <fieldset>
+        <button class="primaryAction button" type="submit">@T("Save")</button>
+         @Html.ActionLink(T("Close").Text, "Edit", "Admin", new { id = Model.QueryId }, new { @class = "primaryAction button" })
+    </fieldset>
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando > div"); }, { collapse: true, remember: false });
+    })(jQuery);//]]>
+</script>
+}

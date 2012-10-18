@@ -1,0 +1,21 @@
+@using Orchard.ContentManagement
+@{
+    ContentItem customForm = Model.ContentItem;
+    string returnUrl = Model.ReturnUrl;
+    
+    // remove default Save/Publish buttons
+    Model.Zones["Sidebar"].Items.Clear();
+}
+
+@Display(New.Parts_Title().Title(Html.ItemDisplayText(customForm)))
+
+@using (Html.BeginFormAntiForgeryPost(returnUrl)) {
+    @Html.ValidationSummary()
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
+    @Display(Model)
+
+    <fieldset class="submit-button">
+        <button type="submit" name="submit.Save" value="submit.Save">@T("Submit")</button>
+    </fieldset>
+}
+

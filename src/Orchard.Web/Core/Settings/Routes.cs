@@ -48,10 +48,11 @@ namespace Orchard.Core.Settings {
             // just hard-coding to know action name strings for now
             var potentialActionName = values[parameterName] as string;
             return !string.IsNullOrWhiteSpace(potentialActionName)
-                && potentialActionName != "Index"
-                && potentialActionName != "Culture"
-                && potentialActionName != "AddCulture"
-                && potentialActionName != "DeleteCulture";
+                   && !potentialActionName.Equals("Index", StringComparison.OrdinalIgnoreCase)
+                   && !potentialActionName.Equals("Culture", StringComparison.OrdinalIgnoreCase)
+                   && !potentialActionName.Equals("AddCulture", StringComparison.OrdinalIgnoreCase)
+                   && !potentialActionName.Equals("DeleteCulture", StringComparison.OrdinalIgnoreCase)
+                ;
         }
     }
 }

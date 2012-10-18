@@ -1,0 +1,31 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>AutorouteBlogs</Name>
+    <Description>Adds Autoroute functionality to an existing blog</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>blog, autoroute</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Blogs" />
+
+  <Metadata>
+    <Types>
+      <Blog>
+        <AutoroutePart />
+      </Blog>
+      <BlogPost>
+        <AutoroutePart />
+      </BlogPost>
+    </Types>
+  </Metadata>
+
+  <Migration features="*" />
+
+  <Command>
+    autoroute create "Blog" "Title" "{Content.Slug}" "http://website.com/my-blog" true
+    autoroute create "BlogPost" "Date and Title" "{Content.Date.Format:yyyy}/{Content.Date.Format:MM}/{Content.Date.Format:dd}/{Content.Slug}" "http://website.com/2011/05/12/a-blog-post" true
+  </Command>
+</Orchard>

@@ -1,0 +1,13 @@
+Name: Autoroute
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.6
+OrchardVersion: 1.3
+Description: Description for the module
+Features:
+    Orchard.Autoroute:
+		Name: Autoroute
+        Description: Enables the Autoroute part for tokenized routing
+		Dependencies: Orchard.Alias, Orchard.Tokens
+		Category: Content

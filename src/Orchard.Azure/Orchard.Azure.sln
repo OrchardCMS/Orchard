@@ -1,6 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{84650275-884D-4CBB-9CC0-67553996E211}"
+EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Orchard.Azure.CloudService", "Orchard.Azure.CloudService\Orchard.Azure.CloudService.ccproj", "{03C5327D-4E8E-45A7-ACD1-E18E7CAA3C4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.Web", "Orchard.Azure.Web\Orchard.Azure.Web.csproj", "{0DF8F426-9F30-4918-8F64-A5B40BA12D10}"
@@ -10,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Framework", "..\Orchard\Orchard.Framework.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core", "..\Orchard.Web\Core\Orchard.Core.csproj", "{9916839C-39FC-4CEB-A5AF-89CA7E87119F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj", "{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}"
 EndProject
@@ -41,8 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Users", "..\Orchard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMce", "..\Orchard.Web\Modules\TinyMce\TinyMce.csproj", "{954CA994-D204-468B-9D69-51F6AD3E1C29}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard", "..\Tools\Orchard\Orchard.csproj", "{33B1BC8D-E292-4972-A363-22056B207156}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene", "..\Orchard.Web\Modules\Lucene\Lucene.csproj", "{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}"
@@ -60,8 +62,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Migrations", "..\Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj", "{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Widgets", "..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj", "{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{84650275-884D-4CBB-9CC0-67553996E211}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themes", "..\Orchard.Web\Themes\Themes.csproj", "{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}"
 EndProject
@@ -109,7 +109,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentPermissions"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.CustomForms", "..\Orchard.Web\Modules\Orchard.CustomForms\Orchard.CustomForms.csproj", "{2CF067CA-064B-43C6-8B88-5E3B99A65F1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo15", "..\Orchard.Web\Modules\UpgradeTo15\UpgradeTo15.csproj", "{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentPicker", "..\Orchard.Web\Modules\Orchard.ContentPicker\Orchard.ContentPicker.csproj", "{F301EF7D-F19C-4D83-AA94-CB64F29C037D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ImportExport", "..\Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj", "{FE5C5947-D2D5-42C5-992A-13D672946135}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Warmup", "..\Orchard.Web\Modules\Orchard.Warmup\Orchard.Warmup.csproj", "{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SysCache", "..\Orchard.Web\Modules\SysCache\SysCache.csproj", "{3BD22132-D538-48C6-8854-F71333C798EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpgradeTo16", "..\Orchard.Web\Modules\UpgradeTo16\UpgradeTo16.csproj", "{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -321,6 +329,22 @@ Global
 		{2CF067CA-064B-43C6-8B88-5E3B99A65F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CF067CA-064B-43C6-8B88-5E3B99A65F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CF067CA-064B-43C6-8B88-5E3B99A65F1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5C5947-D2D5-42C5-992A-13D672946135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5C5947-D2D5-42C5-992A-13D672946135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5C5947-D2D5-42C5-992A-13D672946135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5C5947-D2D5-42C5-992A-13D672946135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD22132-D538-48C6-8854-F71333C798EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD22132-D538-48C6-8854-F71333C798EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD22132-D538-48C6-8854-F71333C798EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD22132-D538-48C6-8854-F71333C798EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -374,6 +398,10 @@ Global
 		{91BC2E7F-DA04-421C-98EF-76D37CEC130C} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{E826F796-8CE3-4B5B-8423-5AA5F81D2FC3} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{2CF067CA-064B-43C6-8B88-5E3B99A65F1D} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{F301EF7D-F19C-4D83-AA94-CB64F29C037D} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{FE5C5947-D2D5-42C5-992A-13D672946135} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{9CD5C81F-5828-4384-8474-2E2BE71D5EDD} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{3BD22132-D538-48C6-8854-F71333C798EB} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{8A9FDB57-342D-49C2-BAFC-D885AAE5CC7C} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{33B1BC8D-E292-4972-A363-22056B207156} = {75E7476C-C05B-4C41-8E38-081D3EB55659}
 		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {84650275-884D-4CBB-9CC0-67553996E211}

@@ -1,0 +1,33 @@
+﻿@model BindingSelectViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Add a Binding");
+}
+
+@if (!Model.Records.Any()) {
+    <h3>@T("There are no currently available bindings")</h3>
+}
+
+@foreach (var record in Model.Records.OrderBy(x => x.FullName)) {
+
+    if (!record.Members.Any()) {
+        continue;
+    }
+    
+    <h2>@record.FullName</h2>
+    
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" style="width:300px">@T("Name")</th>
+            </tr>
+        </thead>
+        @foreach (var member in record.Members) {
+        <tr>
+            <td>@Html.ActionLink(member.Member, "Create", new { fullName = record.FullName, member = member.Member })</td>
+        </tr>
+        }
+    </table>
+}

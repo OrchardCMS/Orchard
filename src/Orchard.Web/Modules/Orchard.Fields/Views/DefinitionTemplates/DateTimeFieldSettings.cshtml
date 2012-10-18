@@ -1,0 +1,29 @@
+﻿@model Orchard.Fields.Settings.DateTimeFieldSettings
+@using Orchard.Fields.Settings;
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Display)" class="forcheckbox">@T("Display options")</label>  
+    <select id="@Html.FieldIdFor(m => m.Display)" name="@Html.FieldNameFor(m => m.Display)">
+        @Html.SelectOption(DateTimeFieldDisplays.DateAndTime, Model.Display == DateTimeFieldDisplays.DateAndTime, T("Date and time").ToString())
+        @Html.SelectOption(DateTimeFieldDisplays.DateOnly, Model.Display == DateTimeFieldDisplays.DateOnly, T("Date only").ToString())
+        @Html.SelectOption(DateTimeFieldDisplays.TimeOnly, Model.Display == DateTimeFieldDisplays.TimeOnly, T("Time only").ToString())
+    </select> 
+
+    @Html.ValidationMessageFor(m => m.Display)
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("Required")</label>
+        <span class="hint">@T("Check if the field is required.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+        @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" })
+        <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
+        @Html.ValidationMessageFor(m => m.Hint)
+    </div>
+</fieldset>

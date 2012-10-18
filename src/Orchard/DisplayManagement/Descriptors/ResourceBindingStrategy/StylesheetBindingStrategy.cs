@@ -3,31 +3,36 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.UI.Resources;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
-    // discovers .css files and turns them into Style__<filename> shapes.
-    public class StylesheetBindingStrategy : IShapeTableProvider {
+    // discovers static files and turns them into shapes.
+    public abstract class StaticFileBindingStrategy {
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private static readonly Regex _safeName = new Regex(@"[/:?#\[\]@!&'()*+,;=\s\""<>\.\-_]+", RegexOptions.Compiled);
+        private static readonly char[] unsafeCharList = "/:?#[]@!&'()*+,;=\r\n\t\f\" <>.-_".ToCharArray();
 
-        public StylesheetBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) {
+        protected StaticFileBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) {
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
             _virtualPathProvider = virtualPathProvider;
         }
 
+        public abstract string GetFileExtension();
+        public abstract string GetFolder();
+        public abstract string GetShapePrefix();
+
         private static string SafeName(string name) {
             if (string.IsNullOrWhiteSpace(name))
                 return String.Empty;
-            return _safeName.Replace(name, String.Empty).ToLowerInvariant();
+
+            return name.Strip(unsafeCharList).ToLowerInvariant();
         }
 
         public static string GetAlternateShapeNameFromFileName(string fileName) {
@@ -57,14 +62,14 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
                 var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
-                var virtualPath = Path.Combine(basePath, "Styles").Replace(Path.DirectorySeparatorChar, '/');
+                var virtualPath = Path.Combine(basePath, GetFolder()).Replace(Path.DirectorySeparatorChar, '/');
                 var shapes = _virtualPathProvider.ListFiles(virtualPath)
                     .Select(Path.GetFileName)
-                    .Where(fileName => string.Equals(Path.GetExtension(fileName), ".css", System.StringComparison.OrdinalIgnoreCase))
+                    .Where(fileName => string.Equals(Path.GetExtension(fileName), GetFileExtension(), StringComparison.OrdinalIgnoreCase))
                     .Select(cssFileName => new {
                         fileName = Path.GetFileNameWithoutExtension(cssFileName),
                         fileVirtualPath = Path.Combine(virtualPath, cssFileName).Replace(Path.DirectorySeparatorChar, '/'),
-                        shapeType = "Style__" + GetAlternateShapeNameFromFileName(cssFileName),
+                        shapeType = GetShapePrefix() + GetAlternateShapeNameFromFileName(cssFileName),
                         extensionDescriptor
                     });
                 return shapes;
@@ -96,4 +101,42 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                 _shellDescriptor.Features.Any(sf => sf.Name == fd.Id);
         }
     }
+
+    // discovers .css files and turns them into Style__<filename> shapes.
+    public class StylesheetBindingStrategy : StaticFileBindingStrategy, IShapeTableProvider {
+        public StylesheetBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider) : base(extensionManager, shellDescriptor, virtualPathProvider) {
+        }
+
+        public override string GetFileExtension() {
+            return ".css";
+        }
+
+        public override string GetFolder() {
+            return "Styles";
+        }
+
+        public override string GetShapePrefix() {
+            return "Style__";
+        }
+    }
+
+    // discovers .css files and turns them into Style__<filename> shapes.
+    public class ScriptBindingStrategy : StaticFileBindingStrategy, IShapeTableProvider {
+        public ScriptBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider)
+            : base(extensionManager, shellDescriptor, virtualPathProvider) {
+        }
+
+        public override string GetFileExtension() {
+            return ".js";
+        }
+
+        public override string GetFolder() {
+            return "Scripts";
+        }
+
+        public override string GetShapePrefix() {
+            return "Script__";
+        }
+    }
+
 }

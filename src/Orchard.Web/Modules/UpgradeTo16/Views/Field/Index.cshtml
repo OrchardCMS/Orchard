@@ -1,0 +1,26 @@
+﻿@using Orchard.Utility.Extensions
+@model UpgradeTo16.ViewModels.MigrateViewModel
+
+@{ Layout.Title = T("Migrate Fields").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    Html.ValidationSummary();
+    <fieldset>
+        <legend>@T("Choose the types to migrate:")</legend>
+        <span class="hint">@T("The migration process fields data. You will still need to enable Orchard.Fields, and remove Contrib.DateTime and Contrib.MediaPicker if you have installed them.")</span>
+        <ol>
+            @{ var contentTypeIndex = 0; }
+            @foreach (var contentTypeEntry in Model.ContentTypes) {
+                <li>
+                    <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" id="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" />
+                    <label class="forcheckbox" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName.CamelFriendly()</label>
+                </li>
+                contentTypeIndex = contentTypeIndex + 1;
+            }
+        </ol>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Migrate")</button>
+    </fieldset>
+}

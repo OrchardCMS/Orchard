@@ -1,0 +1,47 @@
+﻿@model BindingEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+
+@{
+    Layout.Title = T("Binding").Text;
+    Style.Include("admin-projections.css");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+    @Html.HiddenFor(m => m.Id);
+                              
+    <fieldset>
+        <div>
+            @Html.LabelFor(m => m.FullName, T("Content Part Record"))
+            @Html.TextBoxFor(m => m.FullName, new { @class = "textMedium text", @readonly = "readonly" }) 
+            <span class="hint">@T("The content part to add to the providers.")</span>
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.Member, T("Member"))
+            @Html.TextBoxFor(m => m.Member, new { @class = "small-text text", @readonly = "readonly" }) 
+            <span class="hint">@T("The name of the member.")</span>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <div>
+            @Html.LabelFor(m => m.Display, T("Display"))
+            @Html.TextBoxFor(m => m.Display, new { @class = "textMedium text" }) 
+            <span class="hint">@T("Text to display in lists for this property.")</span>
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.Description, T("Description"))
+            @Html.TextBoxFor(m => m.Description, new { @class = "large text" }) 
+            <span class="hint">@T("Description to display in lists for this property.")</span>
+        </div>
+    </fieldset>
+            
+    <fieldset>
+        <button class="primaryAction button" type="submit" name="submit.Save" value="submit.Save" >@T("Save")</button>
+    </fieldset>
+    
+}

@@ -1,0 +1,20 @@
+﻿@using Orchard.Utility.Extensions
+@{
+    string valueToDisplay;
+    bool? booleanValue = Model.ContentField.Value;
+    if (booleanValue.HasValue) {
+        valueToDisplay = booleanValue.Value
+            ? T(Model.Settings.OnLabel).ToString() 
+            : T(Model.Settings.OffLabel).ToString();
+    }
+    else {
+        valueToDisplay = T(Model.Settings.NotSetLabel).ToString();
+    }
+    if (!string.IsNullOrEmpty(valueToDisplay)) {
+        string name = Model.ContentField.DisplayName;
+    <p class="text-field text-field-@name.HtmlClassify()">
+        <span class="name">@name:</span>
+        <span class="value">@valueToDisplay</span>
+    </p>    
+    }
+}

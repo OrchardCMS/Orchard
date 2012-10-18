@@ -24,11 +24,21 @@ namespace Orchard.Core.Navigation.Services {
                 if (menuPart != null) {
                     var part = menuPart;
 
-                    // fetch the culture of the menu item, if any
                     string culture = null;
+                    // fetch the culture of the content menu item, if any
                     var localized = part.As<ILocalizableAspect>();
-                    if(localized != null) {
+                    if (localized != null) {
                         culture = localized.Culture;
+                    }
+                    else {
+                        // fetch the culture of the content menu item, if any
+                        var contentMenuItemPart = part.As<ContentMenuItemPart>();
+                        if (contentMenuItemPart != null) {
+                            localized = contentMenuItemPart.Content.As<ILocalizableAspect>();
+                            if (localized != null) {
+                                culture = localized.Culture;
+                            }
+                        }
                     }
 
                     if (part.Is<MenuItemPart>())

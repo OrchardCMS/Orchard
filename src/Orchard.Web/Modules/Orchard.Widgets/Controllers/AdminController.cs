@@ -14,7 +14,6 @@ using Orchard.Mvc.Extensions;
 using Orchard.Themes.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
@@ -22,8 +21,6 @@ namespace Orchard.Widgets.Controllers {
 
     [ValidateInput(false), Admin]
     public class AdminController : Controller, IUpdateModel {
-
-        private const string NotAuthorizedManageWidgetsLabel = "Not authorized to manage widgets";
 
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteThemeService _siteThemeService;
@@ -94,7 +91,7 @@ namespace Orchard.Widgets.Controllers {
             if (!string.IsNullOrWhiteSpace(moveOut))
                 return DeleteWidget(widgetId, returnUrl);
 
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             if (!string.IsNullOrWhiteSpace(moveUp))
@@ -107,9 +104,13 @@ namespace Orchard.Widgets.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
+        private bool IsAuthorizedToManageWidgets() {
+            return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets"));
+        }
+
 
         public ActionResult ChooseWidget(int layerId, string zone, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrWhiteSpace(zone)) {
@@ -141,7 +142,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         public ActionResult AddWidget(int layerId, string widgetType, string zone, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
@@ -165,7 +166,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("AddWidget")]
         public ActionResult AddWidgetPOST(int layerId, string widgetType, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
@@ -194,7 +195,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         public ActionResult AddLayer(string name, string description, string layerRule) { // <- hints for a new layer
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             LayerPart layerPart = Services.ContentManager.New<LayerPart>("Layer");
@@ -217,7 +218,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("AddLayer")]
         public ActionResult AddLayerPOST() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             LayerPart layerPart = _widgetsService.CreateLayer("", "", "");
@@ -237,7 +238,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         public ActionResult EditLayer(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             LayerPart layerPart = _widgetsService.GetLayer(id);
@@ -252,7 +253,7 @@ namespace Orchard.Widgets.Controllers {
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditLayerSavePOST(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             LayerPart layerPart = _widgetsService.GetLayer(id);
@@ -275,7 +276,7 @@ namespace Orchard.Widgets.Controllers {
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditLayerDeletePOST(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             try {
@@ -290,7 +291,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         public ActionResult EditWidget(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = null;
@@ -317,8 +318,8 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id, int layerId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+        public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = null;
@@ -350,7 +351,7 @@ namespace Orchard.Widgets.Controllers {
             return DeleteWidget(id, returnUrl);
         }
         private ActionResult DeleteWidget(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
+            if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = null;

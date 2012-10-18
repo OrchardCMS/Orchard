@@ -31,24 +31,34 @@ if (!Model.DatabaseIsPreconfigured) {
     <legend>@T("How would you like to store your data?")</legend>
         @Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage")
     <div>
-        @Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.Builtin.ToString(), new { id = "builtin" })
         <label for="builtin" class="forcheckbox">@T("Use built-in data storage (SQL Server Compact)")</label>
     </div>
     <div>
-        @Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })
-        <label for="sql" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
-        <div data-controllerid="sql">
-            <label for="DatabaseConnectionString">@T("Connection string")</label>
-            @Html.EditorFor(svm => svm.DatabaseConnectionString)
-            <span class="hint">
-            @T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
-            </span>
-        </div>
-        <div data-controllerid="sql">
-            <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
-            @Html.EditorFor(svm => svm.DatabaseTablePrefix)
-        </div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.SqlServer.ToString(), new { id = "sqlserver" })
+        <label for="sqlserver" class="forcheckbox">@T("Use an existing SQL Server, SQL Express database")</label>
     </div>
+    <div>
+        @Html.RadioButtonFor(svm => svm.DatabaseProvider, Orchard.Setup.Controllers.SetupDatabaseType.MySql.ToString(), new { id = "mysql" })
+        <label for="mysql" class="forcheckbox">@T("Use an existing MySql database")</label>
+    </div>
+    <div data-controllerid="builtin" data-defaultstate="hidden">
+        <label for="DatabaseConnectionString">@T("Connection string")</label>
+        @Html.EditorFor(svm => svm.DatabaseConnectionString)
+            
+        <span data-controllerid="sqlserver" class="hint databaseTypeHint">
+            @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+        </span>
+
+        <span data-controllerid="mysql" class="hint databaseTypeHint">
+            @T("Data Source=serverName;Database=dbName;User Id=userName;Password=password")
+        </span>
+
+        <br /><br />
+        <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
+        @Html.EditorFor(svm => svm.DatabaseTablePrefix)
+    </div>
+
 </fieldset>
 }
 <fieldset>

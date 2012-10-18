@@ -8,9 +8,6 @@
     var uploadAction = Url.Action("AddFromClient", "Admin", new { area = "Orchard.Media" });
     // media directory to save uploaded files into
     var mediaPath = Request["uploadpath"];
-    if (!Url.IsLocalUrl(mediaPath)) {
-        mediaPath = "";
-    }
 }
         <div id="image-preview">
             <img alt="" id="img-loader" style="display:none" src="" />

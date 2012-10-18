@@ -141,6 +141,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
             _folders.Manifests.Add("Sample", @"
 NaMe: Sample Extension
+SESSIONSTATE: disabled
 version: 2.x
 DESCRIPTION: HELLO
 ");
@@ -150,6 +151,7 @@ DESCRIPTION: HELLO
             Assert.That(descriptor.Name, Is.EqualTo("Sample Extension"));
             Assert.That(descriptor.Version, Is.EqualTo("2.x"));
             Assert.That(descriptor.Description, Is.EqualTo("HELLO"));
+            Assert.That(descriptor.SessionState, Is.EqualTo("disabled"));
         }
 
         [Test]
@@ -193,6 +195,7 @@ Features:
 
             _folders.Manifests.Add("MyCompany.AnotherWiki", @"
 Name: AnotherWiki
+SessionState: required
 Author: Coder Notaprogrammer
 Website: http://anotherwiki.codeplex.com
 Version: 1.2.3
@@ -224,6 +227,7 @@ Features:
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(5));
+            Assert.That(descriptor.SessionState, Is.EqualTo("required"));
             foreach (var featureDescriptor in descriptor.Features) {
                 switch (featureDescriptor.Id) {
                     case "AnotherWiki":

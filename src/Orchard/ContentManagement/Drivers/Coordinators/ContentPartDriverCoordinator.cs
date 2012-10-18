@@ -26,7 +26,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             if (contentTypeDefinition == null)
                 return;
 
-            var partInfos = _drivers.SelectMany(cpp => cpp.GetPartInfo());
+            var partInfos = _drivers.SelectMany(cpp => cpp.GetPartInfo()).ToList();
 
             foreach (var typePartDefinition in contentTypeDefinition.Parts) {
                 var partName = typePartDefinition.PartDefinition.Name;

@@ -1,0 +1,23 @@
+Name: AntiSpam
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.6
+OrchardVersion: 1.0
+Description: Provides anti-spam services to protect your content from malicious submissions.
+Features:
+    Orchard.AntiSpam:
+		Name: Anti-Spam
+        Description: Provides anti-spam services to protect your content from malicious submissions.
+		Category: Security
+		Dependencies: Orchard.Tokens
+	Akismet.Filter:
+		Name: Akismet Anti-Spam Filter
+        Description: Provides an anti-spam filter based on Akismet.
+		Category: Security
+		Dependencies: Orchard.AntiSpam
+	TypePad.Filter: 
+        Name: TypePad Anti-Spam Filter
+        Description: Provides an anti-spam filter based on TypePad.
+		Category: Security
+		Dependencies: Orchard.AntiSpam

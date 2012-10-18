@@ -1,0 +1,111 @@
+﻿@model Orchard.ContentPicker.ViewModels.ContentPickerFieldViewModel
+@using Orchard.Utility.Extensions;
+@using Orchard.ContentPicker.Settings;
+
+@{
+    Script.Require("ContentPicker").AtFoot();
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Style.Include("content-picker-admin.css");
+    
+    var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldSettings>();
+}
+
+<fieldset>
+    <label @if(settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    <div id="save-message-@Html.FieldIdFor(m => m.Field.Ids)" class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
+    <table id="content-picker-@Html.FieldIdFor(m => m.Field.Ids)" class="items content-picker" summary="@Model.Field.DisplayName">
+        <colgroup>
+            <col id="Col1" style="width:20px" />
+            <col id="Col2" />
+            <col id="Col3" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col" >&nbsp;&darr;</th>
+                <th scope="col">@T("Content Item")</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contentItem in Model.ContentItems) {
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span data-id="@contentItem.Id" data-fieldid="@Html.FieldIdFor(m => m.Field.Ids)" class="content-picker-item">@Html.ItemEditLink(contentItem)</span>
+                    </td>
+                    <td>
+                        <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <span id="btn-@Html.FieldIdFor(m => m.Field.Ids)" class="button">@T("Add")</span>
+    
+    @Html.HiddenFor(m => m.SelectedIds)
+    <span class="hint">@settings.Hint</span>
+</fieldset>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+
+    (function($) {
+
+        var required = @(settings.Required ? "true" : "false");
+        var multiple = @(settings.Multiple ? "true" : "false");
+        var addButton = $('#btn-@Html.FieldIdFor(m => m.Field.Ids)');
+        var @Html.FieldIdFor(m => m.Field.Ids)_Template = '<tr><td>&nbsp;</td><td><span data-id="{contentItemId}" data-fieldid="@Html.FieldIdFor(m => m.Field.Ids)" class="content-picker-item">{edit-link}</span></td><td><span data-id="{contentItemId}" class="content-picker-remove button grey">@T("Remove")</span></td></tr>';
+        
+        var refreshIds = function() {
+            var id = $('#@Html.FieldIdFor(m => m.SelectedIds)');
+            id.val('');
+            $("span[data-fieldid = @Html.FieldIdFor(m => m.Field.Ids)]").each(function() {
+                id.val(id.val() + "," + $(this).attr("data-id"));
+            });
+
+            var itemsCount = $("span[data-fieldid = @Html.FieldIdFor(m => m.Field.Ids)]").length;
+            
+            if(!multiple && itemsCount > 0) {
+                addButton.hide();    
+            }
+            else {
+                addButton.show();
+            }
+        };
+
+        refreshIds();
+        
+        addButton.click(function() {
+            addButton.trigger("orchard-admin-contentpicker-open", {
+                callback: function(data) {
+                    var template = @Html.FieldIdFor(m => m.Field.Ids)_Template.replace( /\{contentItemId\}/g , data.id).replace( /\{edit-link\}/g , data.editLink);
+                    var content = $(template);
+                    $('#content-picker-@Html.FieldIdFor(m => m.Field.Ids) tbody').append(content);
+
+                    refreshIds();
+                    $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+                },
+                baseUrl: '@Url.Content("~/")'
+            });
+        });
+
+        $('#content-picker-@Html.FieldIdFor(m => m.Field.Ids) .content-picker-remove').live("click", function() {
+            $(this).closest('tr').remove();
+            refreshIds();
+            $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+        });
+            
+        $("#content-picker-@Html.FieldIdFor(m => m.Field.Ids) tbody").sortable({
+            handle: 'td:first',
+            stop: function(event, ui) {
+                refreshIds();
+                $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+            }
+        }).disableSelection();
+        
+    })(jQuery);
+//]]>
+</script>
+}

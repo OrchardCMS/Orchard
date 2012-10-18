@@ -64,8 +64,7 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException),
-            ExpectedMessage = "Sequence contains more than one element")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void GetThatReturnsTwoOrMoreShouldThrowException() {
             CreateThreeFoos();
             _fooRepos.Get(f => f.Name == "one" || f.Name == "three");
@@ -114,25 +113,6 @@ namespace Orchard.Tests.Data {
             Assert.That(foos.Count(), Is.EqualTo(2));
             Assert.That(foos.First().Name, Is.EqualTo("three"));
             Assert.That(foos.Skip(1).First().Name, Is.EqualTo("two"));
-        }
-
-        [Test]
-        public void LinqOrderByCanBeUsedToControlResultsBug() {
-            CreateThreeFoos();
-
-            // If look at the "LinqOrderByCanBeUsedToControlResults", you will see this query
-            // works fine is the static type of "foos" is "IEnumerable<Foo>"...
-            IOrderedQueryable<FooRecord> foos =
-                        from f in _fooRepos.Table
-                        where f.Name == "two" || f.Name == "three"
-                        orderby f.Name, f.Id ascending
-                        select f;
-
-            Assert.That(foos.Count(), Is.EqualTo(2));
-            Assert.That(foos.First().Name, Is.EqualTo("three"));
-
-            // Looks like a bug in NHib implementation of IOrderedQueryable<T>
-            Assert.Throws<AssertionException>(() => Assert.That(foos.Skip(1).First().Name, Is.EqualTo("two")));
         }
 
         [Test]

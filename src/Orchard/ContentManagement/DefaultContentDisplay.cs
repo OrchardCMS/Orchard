@@ -54,6 +54,9 @@ namespace Orchard.ContentManagement {
             itemShape.Metadata.DisplayType = actualDisplayType;
 
             var context = new BuildDisplayContext(itemShape, content, actualDisplayType, groupId, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+            context.Layout = workContext.Layout;
+
             BindPlacement(context, actualDisplayType, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);

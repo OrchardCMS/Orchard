@@ -1,1 +1,0 @@
-http://logging.apache.org/log4net/license.html

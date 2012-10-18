@@ -1,0 +1,9 @@
+Name: Projector
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardprojections.codeplex.com
+Version: 1.6
+OrchardVersion: 1.5
+Description: Provides methods to control how lists of content items are filtered and displayed
+Category: Content
+Dependencies: Orchard.Tokens, Orchard.Forms, Feeds, Title

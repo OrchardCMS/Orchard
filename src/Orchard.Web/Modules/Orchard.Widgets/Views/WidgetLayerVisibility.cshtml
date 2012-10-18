@@ -4,6 +4,15 @@
     Script.Require("jQuery");
     IEnumerable<LayerPart> layers = Model.Layers;
 }
+@functions {
+    static string EncodeLineBreaks(string text) {
+		if (!String.IsNullOrEmpty(text)){
+			return text.Replace(Environment.NewLine, "\\\\n");
+		}
+	
+		return text;
+    }
+}
 <script type="text/javascript">
 //<![CDATA[
     document.write("<div id=\"widgets-layer-visibility\"><h3>@T("All Layers:")</h3></div>");
@@ -16,7 +25,7 @@
         var currentLayerId = @Model.CurrentLayer.Id;
         var layers = [
         @foreach (var layer in layers) {
-            <text>{"name":"@layer.Name","description":"@layer.Description","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
+            <text>{"name":"@layer.Name","description":"@EncodeLineBreaks(layer.Description)","id":@layer.Id}@(layer != layers.Last() ? "," : "")</text>
         }
         ];
         var visWrapper = $("#widgets-layer-visibility");

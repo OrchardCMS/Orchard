@@ -17,6 +17,6 @@ namespace Orchard.ContentManagement.Records {
 
         [StringLengthMax]
         public virtual string Data { get { return Infoset.Data; } set { Infoset.Data = value; } }
-        public virtual Infoset Infoset { get; private set; }
+        public virtual Infoset Infoset { get; protected set; }
     }
 }

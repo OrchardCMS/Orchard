@@ -1,0 +1,20 @@
+﻿@model Orchard.ContentPicker.Settings.ContentPickerFieldSettings
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("A content item is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing at least one content item.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Multiple) <label for="@Html.FieldIdFor(m => m.Multiple)" class="forcheckbox">@T("Allow multiple content items")</label>
+        <span class="hint">@T("Check to allow the user to select multiple content items.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when authors are selecting content items.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>

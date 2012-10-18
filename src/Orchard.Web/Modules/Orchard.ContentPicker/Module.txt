@@ -1,0 +1,12 @@
+Name: Orchard.ContentPicker
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardcontentpicker.codeplex.com
+Version: 1.6
+OrchardVersion: 1.4
+Description: UI for selecting Content Items.
+Features:
+    Orchard.ContentPicker:
+        Description: UI for selecting Content Items.
+		Dependencies: Contents
+		Category: Input Editor

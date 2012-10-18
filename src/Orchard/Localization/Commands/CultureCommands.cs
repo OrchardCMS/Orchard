@@ -39,6 +39,8 @@ namespace Orchard.Localization.Commands {
                 Context.Output.WriteLine(T("Supplied culture name {0} is not valid.", cultureName));
                 return;
             }
+
+            _cultureManager.AddCulture(cultureName); 
             _orchardServices.WorkContext.CurrentSite.SiteCulture = cultureName;
 
             Context.Output.WriteLine(T("Site culture set to {0} successfully", cultureName));

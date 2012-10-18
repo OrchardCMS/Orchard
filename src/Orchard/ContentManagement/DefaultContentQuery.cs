@@ -8,11 +8,9 @@ using NHibernate.Impl;
 using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Utility.Extensions;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
-using System.Reflection;
-using Orchard.Data.Conventions;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
@@ -53,6 +51,7 @@ namespace Orchard.ContentManagement {
         ICriteria BindItemVersionCriteria() {
             if (_itemVersionCriteria == null) {
                 _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
+                _itemVersionCriteria.SetCacheable(true);
             }
             return _itemVersionCriteria;
         }
@@ -143,9 +142,10 @@ namespace Orchard.ContentManagement {
             if (count != 0) {
                 criteria = criteria.SetMaxResults(count);
             }
+
             return criteria
                 .List<ContentItemVersionRecord>()
-                .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                .Select(x => ContentManager.Get(x.ContentItemRecord.Id, _versionOptions != null && _versionOptions.IsDraftRequired ? _versionOptions : VersionOptions.VersionRecord(x.Id)))
                 .ToReadOnlyCollection();
         }
 
@@ -209,12 +209,12 @@ namespace Orchard.ContentManagement {
                 return new ContentQuery<T, TRecord>(_query);
             }
 
-            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) {
                 _query.OrderBy(keySelector);
                 return new ContentQuery<T, TRecord>(_query);
             }
 
-            IContentQuery<T, TRecord> IContentQuery<T>.OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            IContentQuery<T, TRecord> IContentQuery<T>.OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) {
                 _query.OrderByDescending(keySelector);
                 return new ContentQuery<T, TRecord>(_query);
             }
@@ -315,10 +315,13 @@ namespace Orchard.ContentManagement {
             else if (versionOptions.IsLatest) {
                 criteria.Add(Restrictions.Eq("Latest", true));
             }
-            else if (versionOptions.IsDraft) {
+            else if (versionOptions.IsDraft && !versionOptions.IsDraftRequired) {
                 criteria.Add(Restrictions.And(
                     Restrictions.Eq("Latest", true),
                     Restrictions.Eq("Published", false)));
+            }
+            else if (versionOptions.IsDraft || versionOptions.IsDraftRequired) {
+                criteria.Add(Restrictions.Eq("Latest", true));
             }
             else if (versionOptions.IsAllVersions) {
                 // no-op... all versions will be returned by default

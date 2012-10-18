@@ -46,7 +46,6 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets();
             IEnumerable<LayerPart> activeLayers = _contentManager.Query<LayerPart, LayerPartRecord>().List();
 
             var activeLayerIds = new List<int>();
@@ -61,6 +60,8 @@ namespace Orchard.Widgets.Filters {
                     Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
+
+            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets(layerIds: activeLayerIds.ToArray());
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
@@ -77,10 +78,8 @@ namespace Orchard.Widgets.Filters {
                     continue;
                 }
 
-                if (activeLayerIds.Contains(commonPart.Container.ContentItem.Id)) {
-                    var widgetShape = _contentManager.BuildDisplay(widgetPart);
-                    zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
-                }
+                var widgetShape = _contentManager.BuildDisplay(widgetPart);
+                zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
             }
         }
 

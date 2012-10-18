@@ -1,0 +1,30 @@
+﻿@model SortCriterionAddViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Add a Sort Criterion");
+}
+
+@if (!Model.SortCriteria.Any()) {
+    <h3>@T("There are no currently available sort criterias")</h3>
+}
+
+@foreach (var sortCriterion in Model.SortCriteria.OrderBy(x => x.Name.Text)) {
+    <h2>@sortCriterion.Name</h2>
+    
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col" style="width:300px">@T("Name")</th>
+                <th scope="col">@T("Description")</th>
+            </tr>
+        </thead>
+        @foreach (var descriptor in sortCriterion.Descriptors) {
+        <tr>
+            <td>@Html.ActionLink(descriptor.Name.Text, "Edit", new { id = Model.Id, category = descriptor.Category, type = descriptor.Type })</td>
+            <td>@descriptor.Description</td>    
+        </tr>
+        }
+    </table>
+}

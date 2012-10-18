@@ -47,8 +47,10 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
             builder.RegisterType<StubReportsCoordinator>().As<IReportsCoordinator>();
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
+            builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
+            builder.RegisterType<DefaultDatabaseCacheConfiguration>().As<IDatabaseCacheConfiguration>();
             builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();

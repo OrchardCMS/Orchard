@@ -1,0 +1,47 @@
+﻿@model Orchard.Fields.ViewModels.DateTimeFieldViewModel
+
+@{
+    Style.Include("datetime.css");
+    
+    Script.Require("jQuery").AtFoot();
+    Script.Require("jQueryUI_Core").AtFoot();
+    Script.Require("jQueryUI_Widget").AtFoot();
+    Style.Require("jQueryUI_Orchard").AtFoot();
+    Script.Include("hint.js").AtFoot();
+}
+
+    <fieldset>
+        <label for="@Html.FieldIdFor(m => Model.Date)" @if(Model.Required) { <text>class="required"</text> }>@Model.Name</label>
+        
+        @if ( Model.ShowDate ) {
+        <label class="forpicker" for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
+        <span class="date">@Html.EditorFor(m => m.Date)</span>
+        }
+
+        @if ( Model.ShowTime ) {
+        <label class="forpicker" for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
+        <span class="time">@Html.EditorFor(m => m.Time)</span>
+        }
+        @if(Model.ShowDate) { <text>@Html.ValidationMessageFor(m=>m.Date)</text> } @if(Model.ShowTime) { <text>@Html.ValidationMessageFor(m=>m.Time)</text> }
+    
+        <span class="hint">@Model.Hint</span>
+    </fieldset>
+
+@using(Script.Foot()) {
+
+    @* generates the localization script *@
+    if (Model.ShowDate) { @Display.DatePickerLocalization() }
+    if (Model.ShowTime) { @Display.TimePickerLocalization() }
+     
+<script type="text/javascript">    
+//<![CDATA[
+    $(function () {
+
+        $("#@Html.FieldIdFor(m => Model.Date)").datepicker({ showAnim: "" });
+        @if(Model.ShowTime) {
+            <text>$("#@Html.FieldIdFor(m => Model.Time)").timepicker({ stepMinute: 5 });</text>
+        }    
+    })
+//]]>
+</script>
+}

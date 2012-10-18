@@ -1,0 +1,12 @@
+Name: Tokens
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardtokens.codeplex.com
+Version: 1.6
+OrchardVersion: 1.4
+Description: Provides a system for performing string replacements with common site values.
+Features:
+    Orchard.Tokens:
+        Name: Tokens
+        Description: Provides a system for performing string replacements with common site values.
+		Category: Content

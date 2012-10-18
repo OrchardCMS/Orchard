@@ -1,0 +1,8 @@
+﻿<Placement>   
+  <Place Parts_ContentPermissions_Edit="Content:15"/>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_ContentPermissions_SummaryAdmin="Meta:5"/>
+  </Match>
+  
+</Placement>

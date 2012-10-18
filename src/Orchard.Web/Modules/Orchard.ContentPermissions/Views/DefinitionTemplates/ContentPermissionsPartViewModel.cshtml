@@ -1,0 +1,118 @@
+﻿@model Orchard.ContentPermissions.ViewModels.ContentPermissionsPartViewModel
+
+@{
+    Style.Include("orchard-contentpermissions-admin.css");
+}
+
+<span class="hint">@T("Those permissions will be applied by default to any content item of this type. Users with sufficient permissions can change them for each content item.")</span>
+
+<fieldset>
+    <div>
+        <table class="content-permissions">
+            <tr>
+                <th class="role"><h3>@T("Role")</h3></th>
+                <th><h3>@T("View any content")</h3></th>
+                <th><h3>@T("Edit any content")</h3></th>
+                <th><h3>@T("Publish any content")</h3></th>
+                <th><h3>@T("Delete any content")</h3></th>
+            </tr>
+            
+            @foreach (var r in Model.AllRoles.Select((x, i) => new { Index = i, Name = x.Role })) {
+                var role = r;
+                <tr>
+                    <td class="role">@role.Name</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.ViewRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.ViewRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.ViewRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.ViewRoles[role.Index].Checked)" @if (!Model.ViewRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.ViewRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.PublishRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.PublishRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.PublishRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.PublishRoles[role.Index].Checked)" @if (!Model.PublishRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.PublishRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.EditRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.EditRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.EditRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.EditRoles[role.Index].Checked)" @if (!Model.EditRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.EditRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.DeleteRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.DeleteRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.DeleteRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.DeleteRoles[role.Index].Checked)" @if (!Model.DeleteRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.DeleteRoles[role.Index].Role)
+                    </td>
+                </tr>
+            }
+        </table>
+        <table class="content-permissions">
+            <tr>
+                <th class="role"><h3>@T("Role")</h3></th>
+                <th><h3>@T("View own content")</h3></th>
+                <th><h3>@T("Edit own content")</h3></th>
+                <th><h3>@T("Publish own content")</h3></th>
+                <th><h3>@T("Delete own content")</h3></th>
+            </tr>
+
+            @foreach (var r in Model.AllRoles.Select((x, i) => new { Index = i, Name = x.Role })) {
+                var role = r;
+                <tr>
+                    <td class="role">@role.Name</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.ViewOwnRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.ViewOwnRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.ViewOwnRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.ViewOwnRoles[role.Index].Checked)" @if (!Model.ViewOwnRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.ViewOwnRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.PublishOwnRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.PublishOwnRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.PublishOwnRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.PublishOwnRoles[role.Index].Checked)" @if (!Model.PublishOwnRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.PublishOwnRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.EditOwnRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.EditOwnRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.EditOwnRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.EditOwnRoles[role.Index].Checked)" @if (!Model.EditOwnRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label>
+                        @Html.HiddenFor(m => m.EditOwnRoles[role.Index].Role)
+                    </td>
+                    <td>
+                        <label>
+                            <input type="checkbox" disabled="disabled" @if (Model.DeleteOwnRoles.Any(x => x.Role == role.Name && x.Default)) { <text>checked="checked"</text> } title="Default value"/>
+                            <input type="checkbox" value="true" @if (Model.DeleteOwnRoles.Any(x => x.Role == role.Name && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.DeleteOwnRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.DeleteOwnRoles[role.Index].Checked)" @if (!Model.DeleteOwnRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/>
+                        </label></td>
+                    @Html.HiddenFor(m => m.DeleteOwnRoles[role.Index].Role)
+                </tr>
+            }
+        </table>
+    </div>
+    <div>
+        
+        <h4>@T("Only show those roles in the editor:")</h4>
+        <span class="hint">@T("Uncheck the roles for which you don't want the editor to change the permissions for.")</span>
+        <div>
+            <ul>
+
+                @foreach (var r in Model.AllRoles.Select((x, i) => new { Index = i, Entry = x })) {
+                    var role = r;
+                    <li>
+                        <label>
+                            <input type="checkbox" value="true" @if (Model.AllRoles.Any(x => x.Role == role.Entry.Role && x.Checked)) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.AllRoles[role.Index].Checked)" id="@Html.FieldIdFor(m => m.AllRoles[role.Index].Checked)" @if (!Model.ViewOwnRoles[role.Index].Enabled) { <text>disabled="disabled"</text> }/> @role.Entry.Role
+                        </label>
+                        @Html.HiddenFor(m => m.AllRoles[role.Index].Role)
+                    </li>
+                }            
+            </ul>
+            </div>
+    </div>
+</fieldset>

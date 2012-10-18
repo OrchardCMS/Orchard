@@ -79,7 +79,7 @@ namespace Orchard.Core.Tests.Scheduling {
             _repository.Flush();
             _executor.Sweep();
             _repository.Flush();
-            Assert.That(_repository.Count(x => true), Is.EqualTo(1));
+            Assert.That(_repository.Count(x => x != null), Is.EqualTo(1));
         }
 
 

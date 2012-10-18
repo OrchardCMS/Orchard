@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>AutorouteLists</Name>
+    <Description>Adds Autoroute functionality to an existing blog</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>container, autoroute</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Pages" />
+
+  <Metadata>
+    <Types>
+      <List>
+        <AutoroutePart />
+      </List>
+    </Types>
+  </Metadata>
+
+  <Migration features="*" />
+
+  <Command>
+    autoroute create "List" "Title" "{Content.Slug}" "http://website.com/events" true
+  </Command>
+</Orchard>

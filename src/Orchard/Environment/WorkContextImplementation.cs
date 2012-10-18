@@ -29,7 +29,7 @@ namespace Orchard.Environment {
         }
 
         Func<object> FindResolverForState<T>(string name) {
-            var resolver = Enumerable.FirstOrDefault(_workContextStateProviders.Select(wcsp => wcsp.Get<T>(name)), value => !Equals(value, default(T)));
+            var resolver = _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name)).FirstOrDefault(value => !Equals(value, default(T)));
 
             if (resolver == null) {
                 return () => default(T);

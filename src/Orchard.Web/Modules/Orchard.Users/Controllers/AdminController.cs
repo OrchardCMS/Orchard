@@ -229,7 +229,7 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get<UserPart>(id);
+            var user = Services.ContentManager.Get<UserPart>(id, VersionOptions.DraftRequired);
             string previousName = user.UserName;
 
             dynamic model = Services.ContentManager.UpdateEditor(user, this);
@@ -263,6 +263,8 @@ namespace Orchard.Users.Controllers {
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
+
+            Services.ContentManager.Publish(user.ContentItem);
 
             Services.Notifier.Information(T("User information updated"));
             return RedirectToAction("Index");

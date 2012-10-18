@@ -35,38 +35,33 @@ namespace Orchard.Specs.Hosting {
             _tempSite = _orchardTemp.Combine(System.IO.Path.GetRandomFileName());
             try { _tempSite.Delete(); }
             catch { }
+            
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
-            //if (ConfigurationManager.AppSettings["orchardHosting"] != null) {
-            //    _orchardWebPath = baseDir.Combine(ConfigurationManager.AppSettings["orchardHosting"]);
-            //}
-            //else {
-            for (int i = 1; i < 10; i++) {
-                _orchardWebPath = baseDir.Up(i).Combine("Orchard.Web");
-                if (_orchardWebPath.Exists) {
-                    break;
-                }
-            }
-            //}
+            
+            _orchardWebPath = baseDir;
 
-            if (!_orchardWebPath.Exists) {
-                _orchardWebPath = baseDir.Parent.Combine("stage");
+            while (!_orchardWebPath.Combine("Orchard.proj").Exists && _orchardWebPath.Parent != null) {
+                _orchardWebPath = _orchardWebPath.Parent;
             }
+
+            _orchardWebPath = _orchardWebPath.Combine("src").Combine("Orchard.Web");
+
             Log("Initialization of ASP.NET host for template web site \"{0}\":", templateName);
             Log(" Source location: \"{0}\"", _orchardWebPath);
             Log(" Temporary location: \"{0}\"", _tempSite);
 
             _knownModules = _orchardWebPath.Combine("Modules").Directories.Where(d => d.Combine("module.txt").Exists).Select(d => d.FileName).ToList();
-            foreach (var filename in _knownModules)
-                Log("Available Module: \"{0}\"", filename);
+            //foreach (var filename in _knownModules)
+            //    Log("Available Module: \"{0}\"", filename);
 
             _knownThemes = _orchardWebPath.Combine("Themes").Directories.Where(d => d.Combine("theme.txt").Exists).Select(d => d.FileName).ToList();
-            foreach (var filename in _knownThemes)
-                Log("Available Theme: \"{0}\"", filename);
+            //foreach (var filename in _knownThemes)
+            //    Log("Available Theme: \"{0}\"", filename);
 
             _knownBinAssemblies = _orchardWebPath.Combine("bin").GetFiles("*.dll").Select(f => f.FileNameWithoutExtension);
-            foreach (var filename in _knownBinAssemblies)
-                Log("Assembly in ~/bin: \"{0}\"", filename);
+            //foreach (var filename in _knownBinAssemblies)
+            //    Log("Assembly in ~/bin: \"{0}\"", filename);
 
             Log("Copy files from template \"{0}\"", templateName);
             baseDir.Combine("Hosting").Combine(templateName)

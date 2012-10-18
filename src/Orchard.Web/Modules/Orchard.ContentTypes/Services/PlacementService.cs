@@ -74,6 +74,9 @@ namespace Orchard.ContentTypes.Services {
             itemShape.Metadata.DisplayType = actualDisplayType;
 
             var context = new BuildDisplayContext(itemShape, content, actualDisplayType, String.Empty, _shapeFactory);
+            var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+            context.Layout = workContext.Layout;
+
             BindPlacement(context, actualDisplayType, "Content");
 
             var placementSettings = new List<DriverResultPlacement>();

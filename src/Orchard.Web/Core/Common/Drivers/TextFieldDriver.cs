@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
@@ -37,10 +38,8 @@ namespace Orchard.Core.Common.Drivers {
             return ContentShape("Fields_Common_Text", GetDifferentiator(field, part), 
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>();
-                    object fieldValue = field.Value;
 
-                    fieldValue = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)));
-                    
+                    object fieldValue = new HtmlString(_htmlFilters.Aggregate(field.Value, (text, filter) => filter.ProcessContent(text, settings.Flavor)));
                     return shapeHelper.Fields_Common_Text(Name: field.Name, Value: fieldValue);
                 });
         }
@@ -59,6 +58,11 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
+            
+            if(field.Name == "Note") {
+                throw new ArgumentException();
+            }
+
             var viewModel = new TextFieldDriverViewModel {
                 Field = field,
                 Text = field.Value,

@@ -1,6 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Orchard.Indexing.Services;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Indexing.ViewModels;
@@ -14,16 +16,26 @@ namespace Orchard.Indexing.Controllers {
             _indexingService = indexingService;
             Services = services;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            var viewModel = new IndexViewModel { IndexEntry = _indexingService.GetIndexEntry(DefaultIndexName) };
+            var viewModel = new IndexViewModel();
+            
+            try {
+                viewModel.IndexEntry = _indexingService.GetIndexEntry(DefaultIndexName);
 
-            if (viewModel.IndexEntry == null)
-                Services.Notifier.Information(T("There is no search index to manage for this site."));
+                if (viewModel.IndexEntry == null)
+                    Services.Notifier.Information(T("There is no search index to manage for this site."));
+            }
+            catch(Exception e) {
+                Logger.Error(e, "Search index couldn't be read.");
+                Services.Notifier.Information(T("The index might be corrupted. If you can't recover click on Rebuild."));
+            }
 
             return View(viewModel);
         }

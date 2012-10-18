@@ -28,8 +28,11 @@ namespace Orchard.Mvc.Routes {
             Area = route.GetAreaName();
         }
 
+        public SessionStateBehavior SessionState { get; set; }
+
         public string ShellSettingsName { get { return _shellSettings.Name; } }
         public string Area { get; private set; }
+        public bool IsHttpRoute { get; set; }
 
         public override RouteData GetRouteData(HttpContextBase httpContext) {
             // locate appropriate shell settings for request
@@ -47,9 +50,17 @@ namespace Orchard.Mvc.Routes {
             if (routeData == null)
                 return null;
 
+            // push provided session state behavior to underlying MvcHandler
+            effectiveHttpContext.SetSessionStateBehavior(SessionState);
+
             // otherwise wrap handler and return it
-            routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler);
+            routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler, SessionState);
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
+
+            if (IsHttpRoute) {
+                routeData.Values["IWorkContextAccessor"] = _workContextAccessor; // for WebApi
+            }
+            
             return routeData;
         }
 
@@ -79,14 +90,18 @@ namespace Orchard.Mvc.Routes {
         class RouteHandler : IRouteHandler {
             private readonly IWorkContextAccessor _workContextAccessor;
             private readonly IRouteHandler _routeHandler;
+            private readonly SessionStateBehavior _sessionStateBehavior;
 
-            public RouteHandler(IWorkContextAccessor workContextAccessor, IRouteHandler routeHandler) {
+            public RouteHandler(IWorkContextAccessor workContextAccessor, IRouteHandler routeHandler, SessionStateBehavior sessionStateBehavior) {
                 _workContextAccessor = workContextAccessor;
                 _routeHandler = routeHandler;
+                _sessionStateBehavior = sessionStateBehavior;
             }
 
             public IHttpHandler GetHttpHandler(RequestContext requestContext) {
                 var httpHandler = _routeHandler.GetHttpHandler(requestContext);
+                requestContext.HttpContext.SetSessionStateBehavior(_sessionStateBehavior);
+                 
                 if (httpHandler is IHttpAsyncHandler) {
                     return new HttpAsyncHandler(_workContextAccessor, (IHttpAsyncHandler)httpHandler);
                 }

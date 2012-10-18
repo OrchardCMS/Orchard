@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
 using Orchard.Caching;
 using Orchard.Data;
@@ -83,11 +82,21 @@ namespace Orchard.Localization.Services {
         // "<languagecode2>-<country/regioncode2>" or
         // "<languagecode2>-<scripttag>-<country/regioncode2>"
         public bool IsValidCulture(string cultureName) {
-            Regex cultureRegex = new Regex(@"\w{2}(-\w{2,})*");
-            if (cultureRegex.IsMatch(cultureName)) {
-                return true;
+            var segments = cultureName.Split('-');
+
+            if(segments.Length == 0) {
+                return false;
             }
-            return false;
+
+            if (segments.Length > 3) {
+                return false;
+            }
+
+            if (segments.Any(s => s.Length < 2)) {
+                return false;
+            }
+            
+            return true;
         }
     }
 }

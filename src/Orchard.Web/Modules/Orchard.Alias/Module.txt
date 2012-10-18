@@ -1,0 +1,15 @@
+Name: Alias
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.6
+OrchardVersion: 1.3
+Description: Description for the module
+FeatureDescription: Description for feature Orchard.Alias.
+Category: Content
+Features:
+    Orchard.Alias.UI:
+		Name: Alias UI
+        Description: Admin user interace for Orchard.Alias.
+		Dependencies: Orchard.Alias
+		Category: Content

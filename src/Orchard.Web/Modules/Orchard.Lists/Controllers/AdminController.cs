@@ -132,13 +132,13 @@ namespace Orchard.Lists.Controllers {
                 : query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == containerId);
             switch (orderBy) {
                 case ContentsOrder.Modified:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    query = query.OrderByDescending<CommonPartRecord>(cr => cr.CreatedUtc);
                     break;
             }
 

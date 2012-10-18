@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Extensions {
     public static class ControllerExtensions {
         public static ActionResult RedirectLocal(this Controller controller, string redirectUrl, Func<ActionResult> invalidUrlBehavior) {
-            if (!string.IsNullOrWhiteSpace(redirectUrl) && controller.Url.IsLocalUrl(redirectUrl)) {
+            if (!string.IsNullOrWhiteSpace(redirectUrl) && controller.Request.IsLocalUrl(redirectUrl)) {
                 return new RedirectResult(redirectUrl);
             }
             return invalidUrlBehavior != null ? invalidUrlBehavior() : null;
@@ -15,14 +17,10 @@ namespace Orchard.Mvc.Extensions {
         }
 
         public static ActionResult RedirectLocal(this Controller controller, string redirectUrl, string defaultUrl) {
-            if (!string.IsNullOrWhiteSpace(redirectUrl) 
-                && controller.Url.IsLocalUrl(redirectUrl)
-                && !redirectUrl.StartsWith("//")
-                && !redirectUrl.StartsWith("/\\")) {
-                
-                
+            if (controller.Request.IsLocalUrl(redirectUrl)) {
                 return new RedirectResult(redirectUrl);
             }
+
             return new RedirectResult(defaultUrl ?? "~/");
         }
     }

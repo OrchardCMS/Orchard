@@ -24,6 +24,10 @@ namespace Orchard.Themes.Preview {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            if(filterContext.Result as ViewResult == null) {
+                return;
+            }
+
             var previewThemeName = _previewTheme.GetPreviewTheme();
             if (string.IsNullOrEmpty(previewThemeName))
                 return;

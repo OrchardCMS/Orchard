@@ -1,0 +1,43 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.CustomForms.ViewModels.CustomFormPartEditViewModel
+           
+@Display.TokenHint()
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.ContentType)">@T("Content Type")</label>  
+    <select id="@Html.FieldIdFor(m => m.CustomFormPart.ContentType)" name="@Html.FieldNameFor(m => m.CustomFormPart.ContentType)">
+        @foreach(string contentType in Model.ContentTypes) {
+            @Html.SelectOption(contentType, contentType.Equals(Model.CustomFormPart.ContentType, StringComparison.OrdinalIgnoreCase), contentType.CamelFriendly())
+        }
+    </select> 
+    <span class="hint">@T("Select the content type which will be used to render the custom form.")</span>
+    @Html.ValidationMessageFor(m => m.CustomFormPart.ContentType)
+</fieldset>
+
+<fieldset>
+    @Html.EditorFor(m => m.CustomFormPart.SaveContentItem)
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.SaveContentItem)" class="forcheckbox">@T("Save the content item once the form is submitted")</label>
+    <span class="hint">@T("Check if you want to save the content item associated to the form. Leave empty if you just want to trigger an action on the event.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.EditorFor(m => m.CustomFormPart.CustomMessage)
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.CustomMessage)" class="forcheckbox">@T("Specify a custom message when the form is submitted")</label>
+
+    <div data-controllerid="@Html.FieldIdFor(m => m.CustomFormPart.CustomMessage)">
+        @Html.LabelFor(m => m.CustomFormPart.Message)
+        @Html.TextBoxFor(m => m.CustomFormPart.Message, new { @class = "text large"})
+        <span class="hint">@T("The custom message to display to the user when the form is submitted. Leave empty if no messages should be displayed.")</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    @Html.EditorFor(m => m.CustomFormPart.Redirect)
+    <label for="@Html.FieldIdFor(m => m.CustomFormPart.Redirect)" class="forcheckbox">@T("Redirect the user once the form is submitted")</label>
+
+    <div data-controllerid="@Html.FieldIdFor(m => m.CustomFormPart.Redirect)">
+        @Html.LabelFor(m => m.CustomFormPart.RedirectUrl)
+        @Html.TextBoxFor(m => m.CustomFormPart.RedirectUrl, new { @class = "text large tokenized" })
+        <span class="hint">@T("The url the user should be redirected to once the form is successfully submitted. e.g.: ~/About")</span>
+    </div>
+</fieldset>

@@ -59,7 +59,7 @@ namespace Orchard.Data.Migration.Generator {
             //var features = dependencies.Select(name => new ShellFeature {Name = name}).Union(new[] {new ShellFeature {Name = feature}, new ShellFeature {Name = "Orchard.Framework"}});
 
             var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            parameters.RecordDescriptors = shellBlueprint.Records;
+            parameters.RecordDescriptors = shellBlueprint.Records.ToList();
 
             var configuration = _dataServicesProviderFactory
                 .CreateProvider(parameters)

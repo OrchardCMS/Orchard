@@ -1,0 +1,13 @@
+Name: Rules
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardrules.codeplex.com
+Version: 1.6
+OrchardVersion: 1.4
+Description: Provides a system de trigger actions based on events.
+Features:
+    Orchard.Rules:
+        Name: Rules
+        Description: Provides a system de trigger actions based on events.
+        Dependencies: Orchard.Tokens, Orchard.Scripting, Orchard.Forms
+		Category: Rules

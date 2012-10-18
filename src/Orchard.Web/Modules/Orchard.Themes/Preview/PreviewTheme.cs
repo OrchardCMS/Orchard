@@ -12,16 +12,22 @@ namespace Orchard.Themes.Preview {
 
         public string GetPreviewTheme() {
             var httpContext = _httpContextAccessor.Current();
-            return Convert.ToString(httpContext.Session[PreviewThemeKey]);
+            if (httpContext.Session != null) {
+                return Convert.ToString(httpContext.Session[PreviewThemeKey]);
+            }
+
+            return null;
         }
 
         public void SetPreviewTheme(string themeName) {
             var httpContext = _httpContextAccessor.Current();
-            if (string.IsNullOrEmpty(themeName)) {
-                httpContext.Session.Remove(PreviewThemeKey);
-            }
-            else {
-                httpContext.Session[PreviewThemeKey] = themeName;
+            if (httpContext.Session != null) {
+                if (string.IsNullOrEmpty(themeName)) {
+                    httpContext.Session.Remove(PreviewThemeKey);
+                }
+                else {
+                    httpContext.Session[PreviewThemeKey] = themeName;
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 using Orchard.Logging;
@@ -33,8 +34,23 @@ namespace Orchard.Core.XmlRpc.Controllers {
             if (methodResponse == null)
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
-            var content = _writer.MapMethodResponse(methodResponse).ToString();
-            return Content(content, "text/xml");        
+            
+            var settings = new XmlWriterSettings {
+                Encoding = Encoding.UTF8,
+                OmitXmlDeclaration = false,
+                Indent = true
+            };
+
+            // save to an intermediate MemoryStream to preserve the encoding declaration
+            using (var stream = new MemoryStream()) {
+                using (XmlWriter w = XmlWriter.Create(stream, settings)) {
+                    var result = _writer.MapMethodResponse(methodResponse);
+                    result.Save(w);
+                }
+
+                var content = Encoding.UTF8.GetString(stream.ToArray());
+                return Content(content, "text/xml");
+            }
         }
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {
@@ -53,4 +69,5 @@ namespace Orchard.Core.XmlRpc.Controllers {
             return context.Response;
         }
     }
+
 }

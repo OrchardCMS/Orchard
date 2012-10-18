@@ -38,8 +38,19 @@
             // update all positions whenever a menu item was moved
             populate(this, '');
             $('#save-message').show();
+
+            // display a message on leave if changes have been made
+            window.onbeforeunload = function (e) {
+                return leaveConfirmation;
+            };
+
+            // cancel leaving message on save
+            $('#saveButton').click(function (e) {
+                window.onbeforeunload = function () { };
+            });
         }
     });
 
+    
 
-})(jQuery);
+})(jQuery);

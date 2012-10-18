@@ -165,7 +165,7 @@ namespace Orchard.ContentManagement {
                     versionRecord = contentItemVersionRecords.FirstOrDefault(
                         x => x.Number == options.VersionNumber) ??
                            _contentItemVersionRepository.Get(
-                               x => x.ContentItemRecord == contentItem.Record && x.Number == options.VersionNumber);
+                               x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
                 }
                 else {
                     versionRecord = contentItemVersionRecords.FirstOrDefault();
@@ -261,21 +261,25 @@ namespace Orchard.ContentManagement {
                 else if (options.IsLatest) {
                     contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
                 }
-                else if (options.IsDraft) {
+                else if (options.IsDraft && !options.IsDraftRequired) {
                     contentItemVersionCriteria.Add(
                         Restrictions.And(Restrictions.Eq("Published", false),
                                         Restrictions.Eq("Latest", true)));
                 }
+                else if (options.IsDraft || options.IsDraftRequired) {
+                    contentItemVersionCriteria.Add(Restrictions.Eq("Latest", true));
+                }
             });
+
             var itemsById = contentItemVersionRecords
-                .Select(r => Get(r.ContentItemRecord.Id, VersionOptions.VersionRecord(r.Id)))
+                .Select(r => Get(r.ContentItemRecord.Id, options.IsDraftRequired ? options : VersionOptions.VersionRecord(r.Id)))
                 .GroupBy(ci => ci.Id)
                 .ToDictionary(g => g.Key);
 
             return ids.SelectMany(id => {
-                                      IGrouping<int, ContentItem> values;
-                                      return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
-                                  }).AsPart<T>().ToArray();
+                    IGrouping<int, ContentItem> values;
+                    return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
+                }).AsPart<T>().ToArray();
         }
         
         public IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent {
@@ -324,6 +328,8 @@ namespace Orchard.ContentManagement {
                 if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
                     contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
             }
+
+            contentItemCriteria.SetCacheable(true);
 
             return contentItemVersionCriteria.List<ContentItemVersionRecord>();
         }
@@ -575,7 +581,7 @@ namespace Orchard.ContentManagement {
             var identity = elementId.Value;
             var status = element.Attribute("Status");
 
-            var item = importContentSession.Get(identity);
+            var item = importContentSession.Get(identity, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {

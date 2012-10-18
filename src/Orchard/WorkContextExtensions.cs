@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -27,6 +28,26 @@ namespace Orchard {
 
             var workContextAccessor = (IWorkContextAccessor)workContextValue;
             return workContextAccessor.GetContext(requestContext.HttpContext);
+        }
+
+        public static WorkContext GetWorkContext(this HttpControllerContext controllerContext) {
+            if (controllerContext == null)
+                return null;
+
+            var routeData = controllerContext.RouteData;
+            if (routeData == null || routeData.Values == null)
+                return null;
+
+            object workContextValue;
+            if (!routeData.Values.TryGetValue("IWorkContextAccessor", out workContextValue)) {
+                return null;
+            }
+
+            if (workContextValue == null || !(workContextValue is IWorkContextAccessor))
+                return null;
+
+            var workContextAccessor = (IWorkContextAccessor)workContextValue;
+            return workContextAccessor.GetContext();
         }
 
         private static object FindWorkContextInParent(RouteData routeData) {

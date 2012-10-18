@@ -198,12 +198,23 @@ namespace Orchard.Mvc.Html {
             return htmlHelper.Link(linkContents, href, null);
         }
 
+        public static IHtmlString Link(this HtmlHelper htmlHelper, IHtmlString linkContents, string href) {
+            return htmlHelper.Link(linkContents, href, null);
+        }
+
         public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
             return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
         public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
-            TagBuilder tagBuilder = new TagBuilder("a") { InnerHtml = htmlHelper.Encode(linkContents) };
+            var tagBuilder = new TagBuilder("a") { InnerHtml = htmlHelper.Encode(linkContents) };
+            tagBuilder.MergeAttributes(htmlAttributes);
+            tagBuilder.MergeAttribute("href", href);
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
+        }
+
+        public static IHtmlString Link(this HtmlHelper htmlHelper, IHtmlString linkContents, string href, IDictionary<string, object> htmlAttributes) {
+            var tagBuilder = new TagBuilder("a") { InnerHtml = linkContents.ToHtmlString() };
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("href", href);
             return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
@@ -280,10 +291,9 @@ namespace Orchard.Mvc.Html {
         #region AntiForgeryTokenOrchard
 
         public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
-            var siteSalt = htmlHelper.GetWorkContext().CurrentSite.SiteSalt;
 
             try {
-                return htmlHelper.AntiForgeryToken(siteSalt);
+                return htmlHelper.AntiForgeryToken();
             }
             catch (HttpAntiForgeryException) {
                 // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
@@ -298,7 +308,7 @@ namespace Orchard.Mvc.Html {
                 htmlHelper.ViewContext.HttpContext.Request.Cookies.Remove(antiForgeryTokenName);
 
                 // Try again
-                return htmlHelper.AntiForgeryToken(siteSalt);
+                return htmlHelper.AntiForgeryToken();
             }
         }
 

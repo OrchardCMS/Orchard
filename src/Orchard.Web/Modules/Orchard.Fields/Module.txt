@@ -1,0 +1,12 @@
+Name: Fields
+AntiForgery: enabled
+Author: Antoine Griffard, Sébastien Ros
+Website: http://orchardfields.codeplex.com
+Version: 1.6
+OrchardVersion: 1.4
+Description: Some content fields
+Features:
+    Orchard.Fields:
+        Description: Contains the following fields: Input, Boolean, DateTime, Numeric, Link, Enumeration, Media Picker
+        Category: Fields
+        Dependencies: Orchard.jQuery, Orchard.Media, Orchard.MediaPicker

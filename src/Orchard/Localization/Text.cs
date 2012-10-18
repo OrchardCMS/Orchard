@@ -11,7 +11,6 @@ namespace Orchard.Localization {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ILocalizedStringManager _localizedStringManager;
 
-
         public Text(string scope, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
             _scope = scope;
             _workContextAccessor = workContextAccessor;
@@ -30,7 +29,7 @@ namespace Orchard.Localization {
 
             return args.Length == 0 
                 ? new LocalizedString(localizedFormat, _scope, textHint, args)
-                : new LocalizedString(string.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray()), _scope, textHint, args);
+                : new LocalizedString(string.Format(GetFormatProvider(currentCulture), localizedFormat, args), _scope, textHint, args);
         }
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {
@@ -40,13 +39,6 @@ namespace Orchard.Localization {
             catch {
                 return null;
             }
-        }
-
-        static object Encode(object arg) {
-            if (arg is IFormattable || arg is IHtmlString) {
-                return arg;
-            }
-            return HttpUtility.HtmlEncode(arg);
         }
     }
 }

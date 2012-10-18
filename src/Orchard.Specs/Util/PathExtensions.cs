@@ -12,6 +12,9 @@ namespace Orchard.Specs.Util {
             if (path.Parent.Equals(basePath))
                 return path.FileName;
 
+            if (!path.IsDirectory && path.DirectoryName.Equals(basePath.DirectoryName))
+                return path.FileName;
+
             return path.Parent.GetRelativePath(basePath).Combine(path.FileName);
         }
 
@@ -47,7 +50,7 @@ namespace Orchard.Specs.Util {
         private static void FileCopy(Path sourcePath, Path targetPath, Path sourceFile) {
             var targetFile = targetPath.Combine(sourceFile.GetRelativePath(sourcePath));
             targetFile.Parent.CreateDirectory();
-            Trace.WriteLine(string.Format("Copying file '{0}' to '{1}'", sourceFile, targetFile));
+            // Trace.WriteLine(string.Format("Copying file '{0}' to '{1}'", sourceFile, targetFile));
             File.Copy(sourceFile, targetFile, true /*overwrite*/);
         }
     }

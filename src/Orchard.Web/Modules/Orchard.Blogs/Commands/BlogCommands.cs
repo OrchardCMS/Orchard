@@ -68,7 +68,7 @@ namespace Orchard.Blogs.Commands {
 
         [CommandName("blog create")]
         [CommandHelp("blog create [/Slug:<slug>] /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage,MenuName")]
+        [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage,MenuName")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -86,18 +86,6 @@ namespace Orchard.Blogs.Commands {
             if (!String.IsNullOrEmpty(Description)) {
                 blog.As<BlogPart>().Description = Description;
             }
-            
-            if ( !String.IsNullOrWhiteSpace(MenuText) ) {
-                var menu = _menuService.GetMenu(MenuName);
-
-                if (menu != null) {
-                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
-                    menuItem.Content = blog;
-                    menuItem.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
-                    menuItem.As<MenuPart>().MenuText = MenuText;
-                    menuItem.As<MenuPart>().Menu = menu;
-                }
-            }
 
             if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
                 dynamic dblog = blog;
@@ -108,6 +96,18 @@ namespace Orchard.Blogs.Commands {
             }
             
             _contentManager.Create(blog);
+
+            if (!String.IsNullOrWhiteSpace(MenuText)) {
+                var menu = _menuService.GetMenu(MenuName);
+
+                if (menu != null) {
+                    var menuItem = _contentManager.Create<ContentMenuItemPart>("ContentMenuItem");
+                    menuItem.Content = blog;
+                    menuItem.As<MenuPart>().MenuPosition = _navigationManager.GetNextPosition(menu);
+                    menuItem.As<MenuPart>().MenuText = MenuText;
+                    menuItem.As<MenuPart>().Menu = menu;
+                }
+            }
 
             Context.Output.WriteLine(T("Blog created successfully"));
         }

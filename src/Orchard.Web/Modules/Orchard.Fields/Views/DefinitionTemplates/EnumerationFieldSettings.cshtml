@@ -1,0 +1,30 @@
+﻿@model Orchard.Fields.Settings.EnumerationFieldSettings
+@using Orchard.Fields.Settings;
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.Required) <label for="@Html.FieldIdFor(m => m.Required)" class="forcheckbox">@T("An option is required")</label>
+        <span class="hint">@T("Check to ensure the user is providing an option for this field.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <label class="forpicker" for="@Html.FieldIdFor(m => m.Options)">@T("Options")</label>
+	<div class="editor-field">
+    @Html.TextAreaFor(m => m.Options, new { @class = "textMedium", rows = "5" })
+    @Html.ValidationMessageFor(m => m.Options)
+    <span class="hint">@T("Enter an option per line.")</span>
+	</div>
+    
+	<label class="forpicker" for="@Html.FieldIdFor(m => m.ListMode)">@T("List mode")</label>    
+    <select id="@Html.FieldIdFor(m => m.ListMode)" name="@Html.FieldNameFor(m => m.ListMode)">
+        @Html.SelectOption(ListMode.Dropdown, Model.ListMode == ListMode.Dropdown, T("Dropdown list").ToString())
+        @Html.SelectOption(ListMode.Radiobutton, Model.ListMode == ListMode.Radiobutton, T("Radio button list").ToString())
+        @Html.SelectOption(ListMode.Listbox, Model.ListMode == ListMode.Listbox, T("Listbox").ToString())
+        @Html.SelectOption(ListMode.Checkbox, Model.ListMode == ListMode.Checkbox, T("Checkbox").ToString())
+    </select> 
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+    <span class="hint">@T("The help text is written under the field when users are selecting an option.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>

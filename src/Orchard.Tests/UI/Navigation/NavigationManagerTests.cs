@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.Core.Navigation.Services;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;

@@ -1,4 +1,5 @@
 using Orchard.ContentManagement.Records;
+using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Handlers {
     public class ContentContextBase {
@@ -15,5 +16,6 @@ namespace Orchard.ContentManagement.Handlers {
         public ContentItem ContentItem { get; private set; }
         public ContentItemRecord ContentItemRecord { get; private set; }
         public IContentManager ContentManager { get; private set; }
+        public ILogger Logger { get; set; }
     }
 }

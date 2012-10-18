@@ -170,6 +170,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                 @"wo..oly@example.com",
                 @"pootietang.@example.com",
                 @".@example.com",
+                @"@example.com",
                 @"Ima Fool@example.com")]
             string email) {
 

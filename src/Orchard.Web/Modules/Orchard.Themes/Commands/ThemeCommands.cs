@@ -40,7 +40,7 @@ namespace Orchard.Themes.Commands {
 
             var themes = _extensionManager.AvailableExtensions()
                 .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
-                .Where(d => d.Tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase)) == false)
+                .Where(d => d.Tags!= null && d.Tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase)) == false)
                 .Select(d => new ThemeEntry {
                     Descriptor = d,
                     NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),

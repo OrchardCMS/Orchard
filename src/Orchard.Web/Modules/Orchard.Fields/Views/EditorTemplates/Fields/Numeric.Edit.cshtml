@@ -1,0 +1,10 @@
+﻿@model Orchard.Fields.ViewModels.NumericFieldViewModel
+@using System.Globalization
+@using Orchard.Fields.Settings;
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Value)" @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    @Html.TextBoxFor(m => m.Value, new { @class = "text-small", type = "text", min = (Model.Settings.Minimum.HasValue) ? Model.Settings.Minimum.Value : 0, max = (Model.Settings.Maximum.HasValue) ? Model.Settings.Maximum.Value : 1000000, step = Math.Pow(10, 0 - Model.Settings.Scale).ToString(CultureInfo.InvariantCulture) })
+    @Html.ValidationMessageFor(m => m.Value)
+    <span class="hint">@Model.Settings.Hint</span>
+</fieldset>

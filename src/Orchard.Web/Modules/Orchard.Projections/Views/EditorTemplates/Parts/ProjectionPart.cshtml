@@ -1,0 +1,74 @@
+﻿@model ProjectionPartEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+
+@{
+    var selectedQueryRecordId = -1;
+}
+
+<fieldset>
+    @Html.LabelFor(m => m.QueryLayoutRecordId, T("For Query"))
+    <select id="@Html.FieldIdFor(m => m.QueryLayoutRecordId)" name="@Html.FieldNameFor(m => m.QueryLayoutRecordId)">
+        @foreach (QueryRecordEntry queryRecord in Model.QueryRecordEntries.OrderBy(x => x.Name)) {
+            <optgroup label="@queryRecord.Name">
+                @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";-1", queryRecord.Name + " " + T("(Default Layout)").Text)
+                @if (Model.QueryLayoutRecordId == queryRecord.Id + ";-1") {
+                    selectedQueryRecordId = queryRecord.Id;
+                }
+
+                @foreach (LayoutRecordEntry layoutRecord in queryRecord.LayoutRecordEntries.OrderBy(x => x.Description)) {
+                    @Html.SelectOption(Model.QueryLayoutRecordId, queryRecord.Id + ";" + layoutRecord.Id, queryRecord.Name + " " + T("({0})", layoutRecord.Description).Text)
+                    if (Model.QueryLayoutRecordId == queryRecord.Id + ";" + layoutRecord.Id) {
+                        selectedQueryRecordId = queryRecord.Id;
+                    }
+                }
+            </optgroup>
+        }
+    </select>
+    @if (selectedQueryRecordId != -1) {
+        @Html.ActionLink(T("Edit Query").Text, "Edit", new { area = "Orchard.Projections", id = selectedQueryRecordId }, new { })
+    }
+    <span class="hint">@T("The query to display.")</span>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.Items, T("Items to display"))
+        @Html.TextBoxFor(m => m.Items, new { @class = "text-small" })
+        <span class="hint">@T("The number of items to display. Enter 0 for no limit. When using pagination, this is the number of items per page.")</span>
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Skip, T("Offset"))
+        @Html.TextBoxFor(m => m.Skip, new { @class = "text-small" })
+        <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.MaxItems, T("Maximum items"))
+        @Html.TextBoxFor(m => m.MaxItems, new { @class = "text-small" })
+        <span class="hint">@T("Maximum number of items which can be queried at once. Use 0 for unlimited. This is only used as a failsafe when the number of items comes from a user-provided source such as the query string.")</span>
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.PagerSuffix, T("Suffix"))
+        @Html.TextBoxFor(m => m.PagerSuffix, new { @class = "text-box" })
+        <span class="hint">@T("Optional. Provide a suffix to use when multiple pagers are displayed on the same page, e.g., when using multiple Projection Widgets, or to define alternates.")</span>
+    </div>
+
+    <div>
+        @Html.CheckBoxFor(m => m.DisplayPager)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DisplayPager)">@T("Show pager")</label>
+        <span class="hint">@T("Check to add a pager to the list.")</span>
+    </div>
+</fieldset>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando"); }, { collapse: true, remember: false });
+    })(jQuery);
+//]]>
+</script>
+}

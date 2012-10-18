@@ -17,6 +17,7 @@ namespace Orchard.Environment.ShellBuilders.Models {
 
         public IEnumerable<DependencyBlueprint> Dependencies { get; set; }
         public IEnumerable<ControllerBlueprint> Controllers { get; set; }
+        public IEnumerable<ControllerBlueprint> HttpControllers { get; set; }
         public IEnumerable<RecordBlueprint> Records { get; set; }
     }
 

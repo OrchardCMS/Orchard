@@ -68,6 +68,9 @@
                                                                               size = mediaFile.Size, 
                                                                               folderName = mediaFile.FolderName,
                                                                               mediaPath = Model.MediaPath })
+                        @if (Html.IsPicture(mediaFile.Name)) {
+                            <img src="@mediaFile.MediaPath" class="smallPreviewImage" alt="@mediaFile.Name"/>
+                        }
                     </td>
                     <td>@mediaFile.User</td>
                     <td>@mediaFile.LastUpdated</td>

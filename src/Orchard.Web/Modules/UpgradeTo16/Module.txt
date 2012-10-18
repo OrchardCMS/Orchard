@@ -1,0 +1,11 @@
+Name: UpgradeTo16
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.6
+OrchardVersion: 1.6
+Description: Description for the module
+Features:
+    UpgradeTo16:
+        Description: Description for feature UpgradeTo16.
+        Dependencies: Orchard.Autoroute, Title, Navigation

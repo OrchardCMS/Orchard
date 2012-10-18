@@ -299,21 +299,26 @@ namespace Orchard.Azure {
             }
 
             try {
-                string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
-                string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/").FilePath;
+                try {
+                    string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
+                    string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(null).FilePath;
 
-                // search for custom mime types in web.config and applicationhost.config
-                foreach (var configFile in new[] {webConfig, applicationHost}) {
-                    if (File.Exists(configFile)) {
-                        var xdoc = XDocument.Load(configFile);
-                        var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
-                        if (mimeMap != null) {
-                            var mimeType = mimeMap.Attribute("mimeType");
-                            if (mimeType != null) {
-                                return mimeType.Value;
+                    // search for custom mime types in web.config and applicationhost.config
+                    foreach (var configFile in new[] {webConfig, applicationHost}) {
+                        if (File.Exists(configFile)) {
+                            var xdoc = XDocument.Load(configFile);
+                            var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
+                            if (mimeMap != null) {
+                                var mimeType = mimeMap.Attribute("mimeType");
+                                if (mimeType != null) {
+                                    return mimeType.Value;
+                                }
                             }
                         }
                     }
+                }
+                catch {
+                    // ignore issues with web.config to fall back to registry
                 }
 
                 // search into the registry

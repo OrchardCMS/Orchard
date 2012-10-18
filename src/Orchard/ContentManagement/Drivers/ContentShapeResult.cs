@@ -73,13 +73,22 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Add(wrapper);
             }
 
-            var delimiterIndex = placement.Location.IndexOf(':');
+            // copy the current location for further processing
+            var localPlacement = placement.Location;
+
+            // the zone name is in reference of Layout, e.g. /AsideSecond
+            if (placement.Location.StartsWith("/")) {
+                localPlacement = placement.Location.Substring(1);
+                parentShape = context.Layout;
+            }
+
+            var delimiterIndex = localPlacement.IndexOf(':');
             if (delimiterIndex < 0) {
-                parentShape.Zones[placement.Location].Add(newShape);
+                parentShape.Zones[localPlacement].Add(newShape);
             }
             else {
-                var zoneName = placement.Location.Substring(0, delimiterIndex);
-                var position = placement.Location.Substring(delimiterIndex + 1);
+                var zoneName = localPlacement.Substring(0, delimiterIndex);
+                var position = localPlacement.Substring(delimiterIndex + 1);
                 parentShape.Zones[zoneName].Add(newShape, position);
             }
         }

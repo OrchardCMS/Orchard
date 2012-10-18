@@ -11,7 +11,7 @@
                     <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
                 </h4>
             </header>
-            <p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).ReplaceNewLinesWith("<br />$1")))</p>
+            <p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).Replace("\r\n", "<br />\r\n")))</p>
         </article>
     </li>
 }

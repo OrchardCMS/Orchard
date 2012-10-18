@@ -1,0 +1,37 @@
+﻿@model FilterEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Edit Filter - {0}", Model.Filter.Name);
+    //Style.Include("admin-projections.css");
+    //Script.Require("jQuery");
+    //Script.Include("admin-projections.js");
+}
+
+@Html.ValidationSummary()
+
+<h2>@Model.Filter.Name</h2>
+<span class="hint">@Model.Filter.Description</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+<fieldset>
+    @Html.LabelFor(m => m.Description, T("Description"))
+    @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+    <span class="hint">@T("You may optionally give a description to this filter, to be used in the dashboard screens.")</span>
+</fieldset>
+
+    @* Render the dynamic form *@    
+    if (Model.Form != null) {
+        <fieldset>
+            @DisplayChildren(Model.Form)
+        </fieldset>
+    }
+
+    @Display.TokenHint()
+
+<fieldset>
+    <button class="primaryAction" type="submit">@T("Save")</button>
+</fieldset>
+}

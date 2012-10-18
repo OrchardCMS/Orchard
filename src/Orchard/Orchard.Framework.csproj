@@ -66,38 +66,35 @@
     <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+    <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\fluentnhibernate\log4net.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Linq, Version=1.0.0.4000, Culture=neutral, PublicKeyToken=444cf6a87fdab271, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NHibernate.Linq">
+      <HintPath>..\..\lib\nhibernate.linq\NHibernate.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -108,6 +105,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\lib\aspnetwebapi\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -116,6 +116,12 @@
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -167,7 +173,11 @@
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
+    <Compile Include="Data\Conventions\CacheConvention.cs" />
+    <Compile Include="Data\DefaultDatabaseCacheConfiguration.cs" />
+    <Compile Include="Data\IDatabaseCacheConfiguration.cs" />
     <Compile Include="Data\Migration\AutomaticDataMigrations.cs" />
+    <Compile Include="Data\Migration\Interpreters\SqlCeCommandInterpreter.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -192,6 +202,7 @@
     <Compile Include="Environment\Extensions\Folders\CoreModuleFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\IExtensionHarvester.cs" />
     <Compile Include="Environment\Extensions\IExtensionMonitoringCoordinator.cs" />
+    <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\OrchardSuppressDependencyAttribute.cs" />
     <Compile Include="Environment\Features\IFeatureManager.cs" />
     <Compile Include="Environment\IAssemblyNameResolver.cs" />
@@ -536,6 +547,13 @@
     <Compile Include="Wcf\OrchardInstanceContext.cs" />
     <Compile Include="Wcf\OrchardInstanceProvider.cs" />
     <Compile Include="Wcf\OrchardServiceHostFactory.cs" />
+    <Compile Include="WebApi\AutofacWebApiDependencyResolver.cs" />
+    <Compile Include="WebApi\AutofacWebApiDependencyScope.cs" />
+    <Compile Include="WebApi\DefaultOrchardWebApiHttpControllerSelector.cs" />
+    <Compile Include="WebApi\DefaultOrchardWebApiHttpHttpControllerActivator.cs" />
+    <Compile Include="WebApi\Extensions\RouteExtension.cs" />
+    <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
+    <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
@@ -719,6 +737,7 @@
     <Compile Include="Data\Providers\DataServicesProviderFactory.cs" />
     <Compile Include="Data\Providers\IDataServicesProviderFactory.cs" />
     <Compile Include="Data\Providers\SqlServerDataServicesProvider.cs" />
+    <Compile Include="Data\Providers\MySqlDataServicesProvider.cs" />
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
@@ -861,7 +880,6 @@
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />
     <Compile Include="UI\Navigation\MenuItemComparer.cs" />
-    <Compile Include="UI\Navigation\NavigationManager.cs" />
     <Compile Include="UI\Notify\Notifier.cs" />
     <Compile Include="UI\Notify\NotifierExtensions.cs" />
     <Compile Include="UI\Notify\NotifyEntry.cs" />
@@ -889,7 +907,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ContentManagement\Diagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

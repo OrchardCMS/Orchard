@@ -1,0 +1,73 @@
+﻿@model LayoutEditViewModel
+@using Orchard.Projections.Models;
+@using Orchard.Projections.ViewModels;
+           
+@{
+    Layout.Title = T("Edit Layout - {0}", Model.Layout.Name);
+}
+
+@Html.ValidationSummary()
+
+<h2>@Model.Layout.Name</h2>
+<span class="hint">@Model.Layout.Description</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+    @Html.HiddenFor(m => m.QueryId)
+    @Html.HiddenFor(m => m.Category)
+    @Html.HiddenFor(m => m.Type)
+
+    <fieldset>
+        @Html.LabelFor(m => m.Description, T("Description"))
+        @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+        <span class="hint">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
+    </fieldset>
+
+    <fieldset>
+        <div>
+            <h2>@T("Display mode")</h2>
+            @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Content, Model.Display == (int)LayoutRecord.Displays.Content, new { id = "display-content-radio" })
+            <label for="display-content-radio" class="forcheckbox">@T("Content")</label>
+            <br />
+            @Html.RadioButton(Html.FieldNameFor(m => m.Display), (int)LayoutRecord.Displays.Properties, Model.Display == (int)LayoutRecord.Displays.Properties, new { id = "display-fields-radio" })
+            <label for="display-fields-radio" class="forcheckbox">@T("Properties")</label>
+            <span class="hint">@T("You can choose to display each content item using specific properties only.")</span>
+
+            <div class="options">
+                <span data-controllerid="display-content-radio">
+                    <label for="DatabaseConnectionString">@T("Display Type")</label>
+                    @Html.TextBoxFor(m => m.DisplayType, new { @class = "textMedium" })
+                    <span class="hint">@T("The display type represents or the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
+                </span>
+            </div>
+
+            <div class="options">
+                <span data-controllerid="display-fields-radio">
+                    <div class="message message-Warning">@T("You can only add properties when this layout is saved.")</div>
+                </span>
+            </div>
+
+        </div>
+    </fieldset>
+
+    @* Render the dynamic form *@    
+    <fieldset>
+        @DisplayChildren(Model.Form)
+    </fieldset>
+    
+    @Display.TokenHint()
+
+    <fieldset>
+        <button class="primaryAction button" type="submit">@T("Save")</button>
+         @Html.ActionLink(T("Cancel").Text, "Edit", "Admin", new { id = Model.QueryId }, new { @class = "primaryAction button" })
+    </fieldset>
+}
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $("fieldset legend").expandoControl(function (controller) { return controller.nextAll(".expando > div"); }, { collapse: true, remember: false });
+    })(jQuery);//]]>
+</script>
+}

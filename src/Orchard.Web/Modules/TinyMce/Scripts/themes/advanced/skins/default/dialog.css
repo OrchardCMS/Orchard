@@ -1,6 +1,7 @@
 /* Generic */
 body {
-font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;
+font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+color: #333; 
 scrollbar-3dlight-color:#F0F0EE;
 scrollbar-arrow-color:#676662;
 scrollbar-base-color:#F0F0EE;
@@ -15,8 +16,8 @@ margin:8px 8px 0 8px;
 }
 
 html {background:#F0F0EE;}
-td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
-textarea {resize:none;outline:none;}
+td {}
+textarea {resize:none;outline:none; }
 a:link, a:visited {color:black;}
 a:hover {color:#2B6FB6;}
 .nowrap {white-space: nowrap}
@@ -29,24 +30,64 @@ label.invalid {color:#EE0000; display:inline;}
 input.invalid {border:1px solid #EE0000;}
 input {background:#FFF; border:1px solid #CCC;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
-input, select, textarea {border:1px solid #808080;}
+input, select, textarea { }
 input.radio {border:1px none #000000; background:transparent; vertical-align:middle;}
 input.checkbox {border:1px none #000000; background:transparent; vertical-align:middle;}
 .input_noborder {border:0;}
+div#wrapline label {font-size: 11px; margin-right: 2px;}
 
 /* Buttons */
 #insert, #cancel, input.button, .updateButton {
 border:0; margin:0; padding:0;
-font-weight:bold;
+float:left;
 width:94px; height:26px;
-background:url(img/buttons.png) 0 -26px;
 cursor:pointer;
 padding-bottom:2px;
-float:left;
-}
+background:#6a7b42;
+border:1px solid #487328;
+color:#fff;
+cursor: pointer;
+display: inline-block;
+font: 12px Arial,Helvetica,sans-serif;
+padding: 5px 14px 5px 14px;
+/*position: relative;*/
+text-align: center;
+text-decoration: none;
+/*----CSS3 properties----*/
+text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+/*test - base green in pallet is 155,179,108*/
+background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;}
+#insert:hover, #cancel:hover, input.button:hover, .updateButton:hover{
+border-color:#3a822e;
+color:#eefcec;
+text-decoration:none; 
+background: #809f43;
+/*CSS3 properties*/  
+filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));}
+#insert:active, #cancel:active, input.button:active, .updateButton:active{
+text-decoration:none; 
+background:#6a7b42;
+border:1px solid #487328;
+color:#fff;
+/*CSS3 properties*/
+text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));}
+#cancel {float:right; margin-right: 4px;}
 
-#insert {background:url(img/buttons.png) 0 -52px}
-#cancel {background:url(img/buttons.png) 0 0; float:right}
 
 /* Browse */
 a.pickcolor, a.browse {text-decoration:none}
@@ -96,7 +137,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #A
 /* Titles */
 h1, h2, h3, h4 {color:#2B6FB6; margin:0; padding:0; padding-top:5px;}
 h3 {font-size:14px;}
-.title {font-size:12px; font-weight:bold; color:#2B6FB6;}
+.title {font-size:12px; font-weight:bold; color:#333;}
 
 /* Dialog specific */
 #link .panel_wrapper, #link div.current {height:125px;}
@@ -105,11 +146,12 @@ h3 {font-size:14px;}
 #plugintable, #about #plugintable td {border:1px solid #919B9C;}
 #plugintable {width:96%; margin-top:10px;}
 #pluginscontainer {height:290px; overflow:auto;}
-#colorpicker #preview {float:right; width:50px; height:14px;line-height:1px; border:1px solid black; margin-left:5px;}
+#colorpicker #preview {display:inline-block; padding-left:40px; height:14px; border:1px solid black; margin-left:5px; margin-right: 5px}
+#colorpicker #previewblock {position: relative; top: -3px; padding-left:5px; padding-top: 0px; display:inline}
+#colorpicker #preview_wrapper { text-align:center; padding-top:4px; white-space: nowrap}
 #colorpicker #colors {float:left; border:1px solid gray; cursor:crosshair;}
 #colorpicker #light {border:1px solid gray; margin-left:5px; float:left;width:15px; height:150px; cursor:crosshair;}
 #colorpicker #light div {overflow:hidden;}
-#colorpicker #previewblock {float:right; padding-left:10px; height:20px;}
 #colorpicker .panel_wrapper div.current {height:175px;}
 #colorpicker #namedcolors {width:150px;}
 #colorpicker #namedcolors a {display:block; float:left; width:10px; height:10px; margin:1px 1px 0 0; overflow:hidden;}

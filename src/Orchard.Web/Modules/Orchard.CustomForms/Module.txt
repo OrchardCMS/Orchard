@@ -1,0 +1,13 @@
+Name: Custom Forms
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardcustomforms.codeplex.com
+Version: 1.6
+OrchardVersion: 1.4
+Description: Create custom forms like contact forms or content contributions.
+Features:
+    Orchard.CustomForms:
+		Name: Custom Forms
+        Description: Create custom forms like contact forms or content contributions.
+        Category: Forms
+        Dependencies: Contents, Orchard.Tokens

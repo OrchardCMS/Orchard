@@ -21,6 +21,7 @@
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
     <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
+    <PrecompiledFolder>$(BuildFolder)\Precompiled</PrecompiledFolder>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
     <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
 
@@ -70,6 +71,13 @@
     <CallTarget Targets="Package-Zip"/>
   </Target>
 
+  <Target Name="Precompiled">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Precompiled"/>
+  </Target>
+  
   <Target Name="Profiling">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
@@ -125,7 +133,7 @@
   <Target Name ="Test">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
@@ -137,10 +145,10 @@
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
   </Target>
 
-  <Target Name ="Spec">
+  <Target Name ="Spec" DependsOnTargets="Package-Stage">
     <!-- TeamCity support -->
     <ItemGroup>
-      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.6.0.*" />
     </ItemGroup>
     <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
@@ -157,7 +165,7 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
 
-  <Target Name="Package-Stage">
+  <Target Name="Package-Stage" DependsOnTargets="Compile">
     <CallTarget Targets="CompileMsBuildTasks"/>
     <CallTarget Targets="ValidateProjectFiles"/>
 
@@ -264,6 +272,14 @@
     <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
       XPath="/log4net/root/appender-ref[@ref='debug-file']" />
 
+    <!-- disable dynamic compilation loader -->
+    <Move SourceFiles="$(StageFolder)\Config\Sample.HostComponents.config"
+    DestinationFiles="$(StageFolder)\Config\HostComponents.config"/>
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
+      XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value"
+      Value="true" />
+    
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
@@ -308,6 +324,18 @@
     <MakeDir Directories="$(MsDeployFolder)\Orchard\bin\HostRestart"/>
   </Target>
 
+  <!-- Packaging (Precompiled) -->
+  <Target Name="Package-Precompiled">
+    <ItemGroup>
+      <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj" />
+      <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Precompiled-Folder-Input)"
+        DestinationFolder="$(PrecompiledFolder)\%(RecursiveDir)"/>
+
+    <MakeDir Directories="$(PrecompiledFolder)\bin\HostRestart"/>
+  </Target>
   <Target Name="Package-Zip">
     <ItemGroup>
       <Zip-Exclude Include="

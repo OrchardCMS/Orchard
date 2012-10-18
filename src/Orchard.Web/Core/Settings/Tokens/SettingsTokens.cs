@@ -35,10 +35,10 @@ namespace Orchard.Core.Settings.Tokens {
                 ;
 
             // Token descriptors for fields
-            var customSettingsPart = _contentDefinitionManager.GetPartDefinition("Site");
-            if (customSettingsPart != null && customSettingsPart.Fields.Any()) {
+            var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
+            if (customSettingsPart != null && customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields).Any()) {
                 var partContext = context.For("Site");
-                foreach (var partField in customSettingsPart.Fields) {
+                foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields)) {
                     var field = partField;
                     var tokenName = field.Name;
 
@@ -63,8 +63,8 @@ namespace Orchard.Core.Settings.Tokens {
             if (context.Target == "Site") {
                 // is there a content available in the context ?
                 if (forContent.Data != null && forContent.Data.ContentItem != null) {
-                    var customSettingsPart = _contentDefinitionManager.GetPartDefinition("Site");
-                    foreach (var partField in customSettingsPart.Fields) {
+                    var customSettingsPart = _contentDefinitionManager.GetTypeDefinition("Site");
+                    foreach (var partField in customSettingsPart.Parts.SelectMany(x => x.PartDefinition.Fields)) {
                         var field = partField;
                         var tokenName = partField.Name;
                         forContent.Token(

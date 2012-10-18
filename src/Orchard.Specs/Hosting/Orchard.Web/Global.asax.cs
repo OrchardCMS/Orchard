@@ -8,21 +8,27 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Specs.Hosting.Orchard.Web {
     public class MvcApplication : HttpApplication {
-        private static IContainer _hostContainer;
         private static IOrchardHost _host;
+        private static IContainer _container;
+
+        public static void RegisterRoutes(RouteCollection routes) {
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+        }
 
         protected void Application_Start() {
-            _hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
-            _host = _hostContainer.Resolve<IOrchardHost>();
+            RegisterRoutes(RouteTable.Routes);
+            _container = OrchardStarter.CreateHostContainer(MvcSingletons);
+            _host = _container.Resolve<IOrchardHost>();
+
             _host.Initialize();
 
-            var route = RouteTable.Routes.MapRoute("foo", "hello-world", new { controller = "Home", action = "Index" });
-            route.RouteHandler = new HelloYetAgainHandler();
+            // initialize shells to speed up the first dynamic query
+            _host.BeginRequest();
+            _host.EndRequest();
         }
 
         protected void Application_BeginRequest() {
             Context.Items["originalHttpContext"] = Context;
-
             _host.BeginRequest();
         }
 
@@ -30,13 +36,10 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
             _host.EndRequest();
         }
 
-        protected void MvcSingletons(ContainerBuilder builder) {
+        static void MvcSingletons(ContainerBuilder builder) {
             builder.Register(ctx => RouteTable.Routes).SingleInstance();
             builder.Register(ctx => ModelBinders.Binders).SingleInstance();
             builder.Register(ctx => ViewEngines.Engines).SingleInstance();
-
-            builder.RegisterInstance(ControllerBuilder.Current);
-            builder.RegisterInstance(ModelMetadataProviders.Current);
         }
 
         public static void ReloadExtensions() {
@@ -44,14 +47,14 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
         }
 
         public static IWorkContextScope CreateStandaloneEnvironment(string name) {
-            var settings = _hostContainer.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
+            var settings = _container.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
             if (settings == null) {
                 settings = new ShellSettings {
                     Name = name,
                     State = new TenantState("Uninitialized")
                 };
             }
-
+    
             return _host.CreateStandaloneEnvironment(settings);
         }
     }

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>AutoroutePages</Name>
+    <Description>Adds Autoroute functionality to an existing blog</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>page, autoroute</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Pages" />
+
+  <Metadata>
+    <Types>
+      <Page>
+        <AutoroutePart />
+      </Page>
+    </Types>
+  </Metadata>
+
+  <Migration features="*" />
+
+  <Command>
+    autoroute create "Page" "Title" "{Content.Slug}" "http://website.com/about-us" false
+  </Command>
+</Orchard>

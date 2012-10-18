@@ -1,0 +1,24 @@
+﻿@model SpamFilterPartSettings
+@using Orchard.AntiSpam.Settings;
+
+@Display.TokenHint()
+
+<fieldset>
+    <label>@T("When should items for this content type be categorized as Spam ?")</label>
+    <div>
+        <input type="radio" name="@Html.FieldNameFor(m => m.Action)" id="radio-1" value="@SpamFilterAction.One" @if (Model.Action == SpamFilterAction.One) { <text>checked="checked"</text> } />
+        <label for="radio-1" class="forcheckbox">@T("At least one filter reports spam")</label>
+    </div>
+    <div>
+        <input type="radio" name="@Html.FieldNameFor(m => m.Action)" id="radio-2" value="@SpamFilterAction.AllOrNothing" @if (Model.Action == SpamFilterAction.AllOrNothing) { <text>checked="checked"</text> } />
+        <label for="radio-2" class="forcheckbox">@T("All filters report spam")</label>
+    </div>
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Pattern)">@T("Analyzed text")</label>
+    <div>
+        @Html.TextBoxFor(m => m.Pattern, new { @class = "text large tokenized" })
+        <span class="hint">@T("The tokenized pattern generating the text to submit to spam filters.")</span>
+    </div>
+</fieldset>

@@ -6,8 +6,7 @@ using Orchard.Security;
 using Orchard.Mvc.Extensions;
 using Orchard.Themes;
 
-namespace Orchard.DesignerTools.Controllers
-{
+namespace Orchard.DesignerTools.Controllers {
     [Themed]
     public class AlternateController : Controller {
         private readonly IWebSiteFolder _webSiteFolder;
@@ -30,9 +29,10 @@ namespace Orchard.DesignerTools.Controllers
 
             var currentTheme = _themeManager.GetRequestTheme(Request.RequestContext);
             var alternateFilename = Server.MapPath(Path.Combine(currentTheme.Location, currentTheme.Id, "Views", alternate));
+            var isCodeTemplate = template.Contains("::");
 
             // use same extension as template, or ".cshtml" if it's a code template))
-            if (_webSiteFolder.FileExists(template)) {
+            if (!isCodeTemplate && _webSiteFolder.FileExists(template)) {
                 alternateFilename += Path.GetExtension(template);
 
                 using (var stream = System.IO.File.Create(alternateFilename)) {
@@ -41,7 +41,7 @@ namespace Orchard.DesignerTools.Controllers
             }
             else {
                 alternateFilename += ".cshtml";
-                using (System.IO.File.Create(alternateFilename)) {}
+                using (System.IO.File.Create(alternateFilename)) { }
             }
 
             return this.RedirectLocal(returnUrl);

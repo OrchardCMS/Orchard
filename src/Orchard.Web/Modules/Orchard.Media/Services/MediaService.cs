@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
@@ -50,7 +50,17 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(relativePath, "relativePath");
 
             return _storageProvider.GetPublicUrl(relativePath);
-         }
+        }
+
+        /// <summary>
+        /// Returns the public URL for a media file.
+        /// </summary>
+        /// <param name="mediaPath">The relative path of the media folder containing the media.</param>
+        /// <param name="fileName">The media file name.</param>
+        /// <returns>The public URL for the media.</returns>
+        public string GetMediaPublicUrl(string mediaPath, string fileName) {
+            return GetPublicUrl(Path.Combine(mediaPath, fileName));
+        }
 
         /// <summary>
         /// Retrieves the media folders within a given relative path.
@@ -79,7 +89,8 @@ namespace Orchard.Media.Services {
                     Size = file.GetSize(),
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
-                    FolderName = relativePath
+                    FolderName = relativePath,
+                    MediaPath = GetMediaPublicUrl(relativePath, file.GetName())
                 }).ToList();
         }
 
@@ -282,21 +293,39 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(targetFolder, "targetFolder");
             Argument.ThrowIfNull(zipStream, "zipStream");
 
-            var fileInflater = new ZipInputStream(zipStream);
-            ZipEntry entry;
-            // We want to preserve whatever directory structure the zip file contained instead
-            // of flattening it.
-            // The API below doesn't necessarily return the entries in the zip file in any order.
-            // That means the files in subdirectories can be returned as entries from the stream 
-            // before the directories that contain them, so we create directories as soon as first
-            // file below their path is encountered.
-            while ((entry = fileInflater.GetNextEntry()) != null) {
-                if (!entry.IsDirectory && !string.IsNullOrEmpty(entry.Name)) {
+            using (var fileInflater = ZipFile.Read(zipStream)) {
+                // We want to preserve whatever directory structure the zip file contained instead
+                // of flattening it.
+                // The API below doesn't necessarily return the entries in the zip file in any order.
+                // That means the files in subdirectories can be returned as entries from the stream 
+                // before the directories that contain them, so we create directories as soon as first
+                // file below their path is encountered.
+                foreach (ZipEntry entry in fileInflater) {
+                    if (entry == null) {
+                        continue;
+                    }
 
-                    // skip disallowed files
-                    if (FileAllowed(entry.Name, false)) {
-                        string fullFileName = _storageProvider.Combine(targetFolder, entry.Name);
-                        _storageProvider.TrySaveStream(fullFileName, fileInflater);
+                    if (!entry.IsDirectory && !string.IsNullOrEmpty(entry.FileName)) {
+
+                        // skip disallowed files
+                        if (FileAllowed(entry.FileName, false)) {
+                            string fullFileName = _storageProvider.Combine(targetFolder, entry.FileName);
+
+                            using (var stream = entry.OpenReader()) {
+                                // the call will return false if the file already exists
+                                if (!_storageProvider.TrySaveStream(fullFileName, stream)) {
+                                    
+                                    // try to delete the file and save again
+                                    try {
+                                        _storageProvider.DeleteFile(fullFileName);
+                                        _storageProvider.TrySaveStream(fullFileName, stream);
+                                    }
+                                    catch (ArgumentException) {
+                                        // ignore the exception as the file doesn't exist
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

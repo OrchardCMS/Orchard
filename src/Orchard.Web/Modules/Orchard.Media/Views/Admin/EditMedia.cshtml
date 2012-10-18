@@ -5,6 +5,10 @@
 @{
     Style.Require("MediaAdmin");
     Layout.Title = T("Edit Media - {0}", Model.Name).ToString();
+    var isPicture = Html.IsPicture(Model.Name);
+    var embedHTML = isPicture ?
+        "<img src=\"" + Model.PublicUrl + "\"/>" :
+        "<a href=\"" + Model.PublicUrl + "\">" + Model.Name + "</a>";
 }
 
 <div class="breadCrumbs">
@@ -18,23 +22,27 @@
 
 <div class="sections clearBoth">
     <div class="primary">
-        <div>
-            <img src="@Model.PublicUrl" class="previewImage"/>
-        </div>
-
+        @if (isPicture) {
+            <div>
+                <img src="@Model.PublicUrl" class="previewImage"/>
+            </div>
+        }
+        else {
+            <a href="@Model.PublicUrl">@Model.Name</a>
+        }
         @* todo: make these real (including markup) *@
         <div>
-        @* <label>@T("Dimensions: <span>500 x 375 pixels</span>")</label> *@
+            @* <label>@T("Dimensions: <span>500 x 375 pixels</span>")</label> *@
 
-        <label>@T("Size: <span>{0}</span>", Model.Size.ToFriendlySizeString())</label>
+            <label>@T("Size: <span>{0}</span>", Model.Size.ToFriendlySizeString())</label>
                
-        <label>@T("Added on: <span>{0}</span>", Model.LastUpdated)</label>
+            <label>@T("Added on: <span>{0}</span>", Model.LastUpdated)</label>
         </div>
 
         <div>
             <label for="embedPath">@T("Embed:")</label>
-            <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;@Model.PublicUrl&quot; @* width=&quot;500&quot; height=&quot;375&quot; *@ /&gt;" />
-            <span class="hint">@T("Copy this html to add this image to your site.")</span>
+            <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="@embedHTML" />
+            <span class="hint">@T("Copy this html to add this media file to your site.")</span>
         </div>
 
         @using (Html.BeginFormAntiForgeryPost()) {
