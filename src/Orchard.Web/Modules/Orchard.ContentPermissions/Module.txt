@@ -2,7 +2,7 @@ Name: Orchard.ContentPermissions
 AntiForgery: enabled
 Author: Chris Pyle, Sébastien Ros
 Website: http://orchardproject.net
-Version: 1.5
+Version: 1.6
 OrchardVersion: 1.5
 Description: Allows item-level front end view permissions.
 Features:

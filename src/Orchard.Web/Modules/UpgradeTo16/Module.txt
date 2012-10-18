@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.6
-OrchardVersion: 1.5
+OrchardVersion: 1.6
 Description: Description for the module
 Features:
     UpgradeTo16:
