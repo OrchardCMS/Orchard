@@ -325,12 +325,6 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("ChallengeEmailFail");
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext) {
-            if (filterContext.HttpContext.User.Identity is WindowsIdentity) {
-                throw new InvalidOperationException(T("Windows authentication is not supported.").ToString());
-            }
-        }
-
         #region Validation Methods
         private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword) {
             if ( String.IsNullOrEmpty(currentPassword) ) {
