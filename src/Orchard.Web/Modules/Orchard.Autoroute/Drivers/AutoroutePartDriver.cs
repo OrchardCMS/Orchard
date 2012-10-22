@@ -98,7 +98,7 @@ namespace Orchard.Autoroute.Drivers {
                     if (path.StartsWith(".") || path.EndsWith("."))
                         updater.AddModelError("CurrentUrl", T("The \".\" can't be used at either end of the permalink."));
                     else
-                        updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\". No spaces are allowed (please use dashes or underscores instead)."));
+                        updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\". No spaces are allowed (please use dashes or underscores instead)."));
                 }
 
                 // if CurrentUrl is set, the handler won't try to create an alias for it

@@ -7,7 +7,7 @@ namespace Orchard.Autoroute.Services {
     public class DefaultSlugService : ISlugService {
 
         private readonly ISlugEventHandler _slugEventHandler;
-        
+
         public DefaultSlugService(
             ISlugEventHandler slugEventHander
             ) {
@@ -26,7 +26,7 @@ namespace Orchard.Autoroute.Services {
 
             if (!slugContext.Adjusted) {
                 
-                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\]+");
+                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|]+");
 
                 slugContext.Slug = disallowed.Replace(slugContext.Title, "-").Trim('-','.');
 
