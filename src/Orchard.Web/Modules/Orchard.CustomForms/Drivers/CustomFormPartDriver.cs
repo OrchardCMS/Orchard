@@ -33,8 +33,7 @@ namespace Orchard.CustomForms.Drivers {
             return ContentShape("Parts_CustomForm_Wrapper", () => {
                 return shapeHelper.Parts_CustomForm_Wrapper()
                     .Editor(_orchardServices.ContentManager.BuildEditor(contentItem))
-                    .ContenItem(part)
-                    .ReturnUrl(part.Redirect ? part.RedirectUrl : _orchardServices.WorkContext.HttpContext.Request.RawUrl);
+                    .ContenItem(part);
             });
         }
 

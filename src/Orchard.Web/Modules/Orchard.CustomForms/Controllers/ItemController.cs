@@ -131,8 +131,9 @@ namespace Orchard.CustomForms.Controllers {
                     foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
                         Services.Notifier.Error(T(error));
                     } 
+
                     if (returnUrl != null) {
-                        return Redirect(returnUrl);
+                        return this.RedirectLocal(returnUrl);
                     }
                 }
 
@@ -165,7 +166,8 @@ namespace Orchard.CustomForms.Controllers {
                 }
             }
 
-            return this.RedirectLocal(returnUrl, () => Redirect(Request.RawUrl));
+            var referrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : null;
+            return this.RedirectLocal(returnUrl, () => this.RedirectLocal(referrer, () => Redirect(Request.RawUrl)));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
