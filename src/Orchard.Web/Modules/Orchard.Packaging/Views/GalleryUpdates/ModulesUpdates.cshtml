@@ -36,7 +36,7 @@
     @foreach (var module in Model.Entries) {
         <li>
             @{
-                string iconUrl = @module.NewVersionToInstall.IconUrl;
+                string iconUrl = module.NewVersionToInstall.IconUrl;
                 if (string.IsNullOrWhiteSpace(iconUrl)) {
                     iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
                 }
