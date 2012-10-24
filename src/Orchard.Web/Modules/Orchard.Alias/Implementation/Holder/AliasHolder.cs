@@ -25,7 +25,7 @@ namespace Orchard.Alias.Implementation.Holder {
         }
 
         public void SetAlias(AliasInfo alias) {
-            foreach(var map in _aliasMaps.Values) {
+            foreach (var map in _aliasMaps.Values) {
                 map.Remove(alias);
             }
 
