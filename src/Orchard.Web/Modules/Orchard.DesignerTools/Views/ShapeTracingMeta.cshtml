@@ -67,7 +67,7 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
 
 @if (!String.IsNullOrEmpty((string)Model.PlacementSource) && (WorkContext.HttpContext.Items[(string)Model.PlacementSource] == null)) {
     WorkContext.HttpContext.Items[(string)Model.PlacementSource] = new object();
-<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@ShapeTracingFactory.FormatJsonValue((string)Model.PlacementContent)'; </text>
+<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@HttpUtility.JavaScriptStringEncode((string)Model.PlacementContent)'; </text>
 }
 
 </script>
