@@ -190,5 +190,17 @@ namespace Orchard.Tests.Data {
             Assert.That(one.Name, Is.EqualTo("one"));
             Assert.That(one.Timespan.Value.Millisecond, Is.EqualTo(489));
         }
+
+
+        [Test]
+        public void RepositoryFetchTakesExistsPredicate() {
+            CreateThreeFoos();
+
+            var array = new[] { "one", "two" };
+
+            var result = _fooRepos.Fetch(f => array.Contains(f.Name)).ToList();
+
+            Assert.That(result.Count(), Is.EqualTo(2));
+        }
     }
 }
