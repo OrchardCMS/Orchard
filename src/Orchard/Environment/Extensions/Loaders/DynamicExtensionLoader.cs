@@ -59,10 +59,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public IEnumerable<string> GetFileHashDependencies(DependencyDescriptor dependency) {
-            return GetDependencies(dependency.VirtualPath);
-        }
-
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             if (Disabled)
                 return;
