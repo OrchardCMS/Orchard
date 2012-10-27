@@ -4,7 +4,7 @@
     <AddLink InDashboard="True" InLearn="True">
       <Title>Getting Started with Orchard</Title>
       <Description>Welcome to the Orchard community! We want your experience with your new site to be as smooth as possible. Please read this to get started...</Description>
-      <Uri>http://orchardproject.net/docs/Getting-Started.ashx</Uri>
+      <Uri>http://docs.orchardproject.net/Documentation/Getting-Started</Uri>
       <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
     </AddLink>
     <AddLink InDashboard="True" InLearn="True">
@@ -16,19 +16,19 @@
     <AddLink InDashboard="True" InLearn="True">
       <Title>More documentation</Title>
       <Description>We have documentation available on a variety of topics.</Description>
-      <Uri>http://orchardproject.net/docs/</Uri>
+      <Uri>http://docs.orchardproject.net</Uri>
       <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
     </AddLink>
     <AddLink InDashboard="True" InLearn="True">
       <Title>More videos</Title>
       <Description>Learn through these great video tutorials.</Description>
-      <Uri>http://orchardproject.net/docs/Orchard-TV.ashx</Uri>
+      <Uri>http://docs.orchardproject.net/Documentation/Orchard-TV</Uri>
       <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
     </AddLink>
 	<AddLink InDashboard="True">
       <Title>Orchard Gallery</Title>
       <Description>Hundreds of free modules and themes are available from our gallery.</Description>
-      <Uri>http://orchardproject.net/gallery</Uri>
+      <Uri>http://gallery.orchardproject.net/</Uri>
       <ImageUri>http://orchardproject.net/Themes/OrchardProject.Net/Images/orchardicon.png</ImageUri>
     </AddLink>
     <AddLink InDashboard="True">
