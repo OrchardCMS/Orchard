@@ -72,6 +72,10 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
 
+            if (url.StartsWith("~/")) {
+                return true;
+            }
+
             if (url.StartsWith("//") || url.StartsWith("/\\")) {
                 return false;
             }

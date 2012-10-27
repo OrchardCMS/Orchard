@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.5.1
-OrchardVersion: 1.5.1
+Version: 1.6
+OrchardVersion: 1.6
 Description: The dashboard module is providing the reports screen of the application.
 FeatureDescription: Reports management.
 Category: Core

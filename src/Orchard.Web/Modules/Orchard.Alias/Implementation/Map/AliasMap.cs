@@ -53,6 +53,10 @@ namespace Orchard.Alias.Implementation.Map {
             CollapseTree(_root, info.Path, info.RouteValues);
         }
 
+        public bool Any() {
+            return _aliases.Any();
+        }
+
         private static void CollapseTree(Node root, string path, IDictionary<string, string> routeValues) {
             foreach (var expanded in Expand(routeValues)) {
                 var focus = root;
@@ -96,14 +100,6 @@ namespace Orchard.Alias.Implementation.Map {
             return from item1 in source1 from item2 in source2 select produce(item1, item2);
         }
 
-        private static IEnumerable<T> Single<T>(T t) {
-            yield return t;
-        }
-
-        private static IEnumerable<T> Empty<T>() {
-            return Enumerable.Empty<T>();
-        }
-
         /// <summary>
         /// Expand the route values into all possible combinations of keys
         /// </summary>
@@ -111,7 +107,7 @@ namespace Orchard.Alias.Implementation.Map {
         /// <returns></returns>
         private static IEnumerable<IEnumerable<KeyValuePair<string, string>>> Expand(IDictionary<string, string> routeValues) {
             var ordered = routeValues.OrderBy(kv => kv.Key, StringComparer.InvariantCultureIgnoreCase);
-            var empty = Empty<KeyValuePair<string, string>>();
+            var empty = Enumerable.Empty<KeyValuePair<string, string>>();
 
             // For each key/value pair, we want a list containing a single list with either the term, or the term and the "default" value
             var termSets = ordered.Select(term => {
@@ -119,15 +115,15 @@ namespace Orchard.Alias.Implementation.Map {
                                                   var termKey = term.Key.Substring(0, term.Key.Length - 1);
                                                   return new[] {
                                                       // This entry will auto-match in some cases because it was omitted from the route values
-                                                      Single(new KeyValuePair<string, string>(termKey, "\u0000")),
-                                                      Single(new KeyValuePair<string, string>(termKey, term.Value))
+                                                      new [] { new KeyValuePair<string, string>(termKey, "\u0000") },
+                                                      new [] { new KeyValuePair<string, string>(termKey, term.Value) }
                                                   };
                                               }
                                               return new[] {new[] {term}};
                                           });
 
             // Run each of those lists through an aggregation function, by taking the product of each set, so producting a tree of possibilities
-            var produced = termSets.Aggregate(Single(empty), (coords, termSet) => Product(coords, termSet, (coord, term) => coord.Concat(term)));
+            var produced = termSets.Aggregate(new[] { empty }.AsEnumerable(), (coords, termSet) => Product(coords, termSet, (coord, term) => coord.Concat(term)));
             return produced;
         }
 

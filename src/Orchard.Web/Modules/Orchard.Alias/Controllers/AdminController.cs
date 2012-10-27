@@ -22,7 +22,7 @@ namespace Orchard.Alias.Controllers {
         public AdminController(
             IAliasService aliasService,
             IOrchardServices orchardServices,
-            IAliasHolder aliasHolder ) {
+            IAliasHolder aliasHolder) {
             _aliasService = aliasService;
             _aliasHolder = aliasHolder;
             Services = orchardServices;
@@ -65,7 +65,7 @@ namespace Orchard.Alias.Controllers {
                     aliases = aliases.OrderBy(x => x.Path);
                     break;
             }
-            
+
             if (pager.PageSize != 0) {
                 aliases = aliases.Skip(pager.GetStartIndex()).Take(pager.PageSize);
             }
@@ -73,7 +73,7 @@ namespace Orchard.Alias.Controllers {
             var model = new AdminIndexViewModel {
                 Options = options,
                 Pager = pagerShape,
-                AliasEntries = aliases.Select(x => new AliasEntry() {Alias = x, IsChecked = false}).ToList()
+                AliasEntries = aliases.Select(x => new AliasEntry() { Alias = x, IsChecked = false }).ToList()
             };
 
             return View(model);
@@ -103,7 +103,7 @@ namespace Orchard.Alias.Controllers {
                     throw new ArgumentOutOfRangeException();
             }
 
-            return RedirectToAction("Index"); 
+            return RedirectToAction("Index");
         }
 
         public ActionResult Add() {
@@ -118,7 +118,7 @@ namespace Orchard.Alias.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
-            if(aliasPath == "/") {
+            if (aliasPath == "/") {
                 aliasPath = String.Empty;
             }
 
@@ -130,7 +130,7 @@ namespace Orchard.Alias.Controllers {
                 ModelState.AddModelError("Route", T("Route can't be empty").Text);
             }
 
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid) {
                 return View();
             }
 
@@ -162,11 +162,11 @@ namespace Orchard.Alias.Controllers {
 
             var routeValues = _aliasService.Get(path);
 
-            if (routeValues==null)
+            if (routeValues == null)
                 return HttpNotFound();
 
-            var virtualPaths = _aliasService.LookupVirtualPaths(routeValues,HttpContext)
-                .Select(vpd=>vpd.VirtualPath);
+            var virtualPaths = _aliasService.LookupVirtualPaths(routeValues, HttpContext)
+                .Select(vpd => vpd.VirtualPath);
 
             ViewBag.AliasPath = path;
             ViewBag.RoutePath = virtualPaths.FirstOrDefault();
@@ -181,19 +181,18 @@ namespace Orchard.Alias.Controllers {
 
             // TODO: (PH:Autoroute) This could overwrite an existing Alias without warning, should handle this
             _aliasService.Set(aliasPath, routePath, "Custom");
-            
+
             // Remove previous alias
-            if (path != aliasPath)
-            {
+            if (path != aliasPath) {
                 // TODO: (PH:Autoroute) Ability to fire an "AliasChanged" event so we make a redirect
                 _aliasService.Delete(path);
             }
 
             Services.Notifier.Information(T("Alias {0} updated", path));
-            
+
             return RedirectToAction("Index");
         }
-            
+
         [HttpPost]
         public ActionResult Delete(string path) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))

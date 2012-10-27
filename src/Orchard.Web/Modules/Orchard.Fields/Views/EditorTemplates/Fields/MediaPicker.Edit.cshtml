@@ -21,14 +21,13 @@
     @Html.HiddenFor(m => m.Class)
     @Html.HiddenFor(m => m.Style)
     @Html.HiddenFor(m => m.Alignment)
-    @Html.HiddenFor(m => m.Alignment)
     @Html.HiddenFor(m => m.Width)
     @Html.HiddenFor(m => m.Height)
 
 </fieldset>
 
-@using (Script.Foot())
-{
+@using (Script.Foot()) {
+
 <script type="text/javascript">
 //<![CDATA[
 
@@ -37,8 +36,22 @@
     });
 
     jQuery('#btn-@Html.FieldIdFor(m => m.Url)').click(function () {
+        
+        var currentImageUrl  = $('#@Html.FieldIdFor(m => m.Url)').val();
+        if (currentImageUrl && currentImageUrl.length > 2 && currentImageUrl.substr(0, 2) == "~/") {
+            currentImageUrl = '@Url.Content("~/")' + currentImageUrl.substr(2);
+        }
+        
         jQuery('#btn-@Html.FieldIdFor(m => m.Url)').trigger("orchard-admin-pickimage-open", {
-            img: null,
+            img: {
+                src: currentImageUrl,
+                "class": $('#@Html.FieldIdFor(m => m.Class)').val(),
+                style: $('#@Html.FieldIdFor(m => m.Style)').val(),
+                alt: $('#@Html.FieldIdFor(m => m.AlternateText)').val(),
+                width: $('#@Html.FieldIdFor(m => m.Width)').val(),
+                height: $('#@Html.FieldIdFor(m => m.Height)').val(),
+                align: $('#@Html.FieldIdFor(m => m.Alignment)').val()
+            },
             uploadMediaPath: 'images',
             callback: function (data) {
                 var applicationPath = '@Url.RequestContext.HttpContext.Request.ApplicationPath.ToLower()';

@@ -37,9 +37,9 @@
         <li>
             @{
                 string extensionClass = "iconThumbnail";
-                string iconUrl = @theme.NewVersionToInstall.IconUrl;
+                string iconUrl = theme.NewVersionToInstall.IconUrl;
                 if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
-                    iconUrl = @theme.NewVersionToInstall.FirstScreenshot;
+                    iconUrl = theme.NewVersionToInstall.FirstScreenshot;
                     extensionClass = "screenshotThumbnail";
                 } else if (string.IsNullOrWhiteSpace(iconUrl)) {
                     iconUrl = Href("../../Content/Images/imagePlaceholder.png");

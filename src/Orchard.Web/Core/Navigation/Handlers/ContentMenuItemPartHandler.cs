@@ -27,6 +27,12 @@ namespace Orchard.Core.Navigation.Handlers {
             var contentMenuItemPart = context.ContentItem.As<ContentMenuItemPart>();
             // the display route for the menu item is the one for the referenced content item
             if(contentMenuItemPart != null) {
+
+                // if the content doesn't exist anymore
+                if(contentMenuItemPart.Content == null) {
+                    return;
+                }
+
                 context.Metadata.DisplayRouteValues = _contentManager.GetItemMetadata(contentMenuItemPart.Content).DisplayRouteValues;
             }
         }
