@@ -167,7 +167,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
                 Loader = this,
-                Priority = 50,
                 VirtualPath = projectPath,
                 VirtualPathDependencies = GetDependencies(projectPath).ToList(),
             };
