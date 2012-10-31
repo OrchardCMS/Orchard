@@ -59,10 +59,6 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
             
-            if(field.Name == "Note") {
-                throw new ArgumentException();
-            }
-
             var viewModel = new TextFieldDriverViewModel {
                 Field = field,
                 Text = field.Value,
