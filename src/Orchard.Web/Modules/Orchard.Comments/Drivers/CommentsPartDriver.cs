@@ -4,14 +4,19 @@ using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using System.Collections.Generic;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
-    
-        public CommentsPartDriver(ICommentService commentService) {
+        private readonly IContentManager _contentManager;
+
+        public CommentsPartDriver(
+            ICommentService commentService,
+            IContentManager contentManager) {
             _commentService = commentService;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
@@ -23,10 +28,25 @@ namespace Orchard.Comments.Drivers {
             Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
 
             return Combined(
-                ContentShape("Parts_Comments",
-                    () => shapeHelper.Parts_Comments()),
+                ContentShape("Parts_ListOfComments",
+                    () => {
+                        var commentShapes = new List<dynamic>();
+                        foreach (var item in part.Comments) {
+                            commentShapes.Add(_contentManager.BuildDisplay(item.ContentItem, "Summary"));
+                        }
+
+                        return shapeHelper.Parts_ListOfComments(CommentShapes: commentShapes);
+                    }),
+                ContentShape("Parts_CommentForm",
+                    () => {
+                        var newComment = _contentManager.New("Comment");
+                        if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
+                        var editorShape = _contentManager.BuildEditor(newComment);
+
+                        return shapeHelper.Parts_CommentForm(EditorShape: editorShape);
+                    }),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())), 
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
                     () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount(), PendingCount: pendingCount()))
             );

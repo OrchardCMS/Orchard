@@ -4,15 +4,84 @@ using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Services;
+using Orchard.Localization;
+using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
         private readonly IContentManager _contentManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IClock _clock;
+        private readonly ICommentService _commentService;
+
         protected override string Prefix { get { return "Comments"; } }
 
-        public CommentPartDriver(IContentManager contentManager) {
+        public Localizer T { get; set; }
+
+        public CommentPartDriver(
+            IContentManager contentManager,
+            IWorkContextAccessor workContextAccessor,
+            IClock clock,
+            ICommentService commentService) {
             _contentManager = contentManager;
+            _workContextAccessor = workContextAccessor;
+            _clock = clock;
+            _commentService = commentService;
+
+            T = NullLocalizer.Instance;
+        }
+
+        protected override DriverResult Display(CommentPart part, string displayType, dynamic shapeHelper) {
+            return Combined(
+                ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment()),
+                ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin())
+                );
+        }
+
+        // GET
+        protected override DriverResult Editor(CommentPart part, dynamic shapeHelper) {
+            if (Orchard.UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
+                return ContentShape("Parts_Comment_AdminEdit", 
+                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment.AdminEdit", Model: part, Prefix: Prefix));
+            }
+            else {
+                return ContentShape("Parts_Comment_Edit", 
+                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment", Model: part, Prefix: Prefix));
+	        }
+        }
+
+        // POST
+        protected override DriverResult Editor(CommentPart part, IUpdateModel updater, dynamic shapeHelper) {
+            updater.TryUpdateModel(part, Prefix, null, null);
+            var workContext = _workContextAccessor.GetContext();
+
+            part.CommentDateUtc = _clock.UtcNow;
+
+            if (!String.IsNullOrEmpty(part.SiteName) && !part.SiteName.StartsWith("http://") && !part.SiteName.StartsWith("https://")) {
+                part.SiteName = "http://" + part.SiteName;
+            }
+
+            // TODO: it's very bad how the corresponding user is stored. Needs revision.
+            var currentUser = workContext.CurrentUser;
+            part.UserName = (currentUser != null ? currentUser.UserName : null);
+
+            if (currentUser != null) part.Author = currentUser.UserName;
+
+            if (String.IsNullOrEmpty(part.Author)) updater.AddModelError("NameMissing", T("You didn't specify your name."));
+
+            // TODO: needs spam handling
+            part.Status = workContext.CurrentSite.As<CommentSettingsPart>().ModerateComments ? CommentStatus.Pending : CommentStatus.Approved;
+
+            var commentedOn = _contentManager.Get<ICommonPart>(part.CommentedOn);
+            if (commentedOn != null && commentedOn.Container != null) {
+                part.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
+            }
+            commentedOn.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
+
+            return Editor(part, shapeHelper);
         }
 
         protected override void Importing(CommentPart part, ContentManagement.Handlers.ImportContentContext context) {
@@ -38,7 +107,7 @@ namespace Orchard.Comments.Drivers {
 
             var status = context.Attribute(part.PartDefinition.Name, "Status");
             if (status != null) {
-                part.Record.Status = (CommentStatus) Enum.Parse(typeof(CommentStatus), status);
+                part.Record.Status = (CommentStatus)Enum.Parse(typeof(CommentStatus), status);
             }
 
             var commentDate = context.Attribute(part.PartDefinition.Name, "CommentDateUtc");

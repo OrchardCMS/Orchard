@@ -33,8 +33,6 @@ namespace Orchard.Comments {
                 .ContentPartRecord()
                 .Column<bool>("ModerateComments")
                 .Column<bool>("EnableSpamProtection")
-                .Column<string>("AkismetKey")
-                .Column<string>("AkismetUrl")
                );
 
             SchemaBuilder.CreateTable("CommentsPartRecord", table => table
@@ -46,7 +44,10 @@ namespace Orchard.Comments {
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("CommentPart")
-                   .WithPart("CommonPart")
+                   .WithPart("CommonPart", 
+                        p => p
+                            .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
+                            .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                    .WithPart("IdentityPart")
                 );
 
@@ -83,6 +84,26 @@ namespace Orchard.Comments {
             }
             
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("Comment",
+               cfg => cfg
+                   .WithPart("CommonPart",
+                        p => p
+                            .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
+                            .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
+                );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("AkismetKey")
+               );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("AkismetUrl")
+               );
+
+            return 4;
         }
     }
 }

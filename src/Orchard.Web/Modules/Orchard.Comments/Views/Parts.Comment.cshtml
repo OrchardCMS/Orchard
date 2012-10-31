@@ -1,0 +1,13 @@
+﻿@{
+    var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
+}
+
+@using Orchard.Utility.Extensions;
+
+<header>
+    <h4>
+        <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
+        <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
+    </h4>
+</header>
+<p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).Replace("\r\n", "<br />\r\n")))</p>

@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,11 +46,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Joel.Net.Akismet, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\joel.net.akismet\Joel.Net.Akismet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -97,14 +96,12 @@
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\CommentValidator.cs" />
     <Compile Include="Services\ICommentValidator.cs" />
-    <Compile Include="ViewModels\CommentsCreateViewModel.cs" />
     <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
-    <Compile Include="ViewModels\CommentsEditViewModel.cs" />
     <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
-    <Compile Include="ViewModels\EditCommentsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Release notes.txt" />
     <Content Include="Styles\images\menu.comments.png" />
     <Content Include="Styles\menu.comments-admin.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
@@ -124,12 +121,12 @@
   <ItemGroup>
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Parts.Comments.cshtml" />
+    <Content Include="Views\Parts.CommentForm.cshtml" />
     <Content Include="Views\Parts.Comments.Count.cshtml" />
     <Content Include="Views\Parts.Comments.Count.SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Comments.Comments.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Comments.SiteSettings.cshtml" />
-    <Content Include="Views\ListOfComments.cshtml" />
+    <Content Include="Views\Parts.ListOfComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -149,6 +146,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CommentMetadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
+    <Content Include="Views\Content-Comment.SummaryAdmin.cshtml" />
+    <None Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

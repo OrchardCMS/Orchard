@@ -32,26 +32,18 @@ namespace Orchard.Comments.Services {
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status) {
-            return _orchardServices.ContentManager
-                       .Query<CommentPart, CommentPartRecord>()
+            return GetComments()
                        .Where(c => c.Status == status);
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id) {
-            return _orchardServices.ContentManager
-                       .Query<CommentPart, CommentPartRecord>()
+            return GetComments()
                        .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id);
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status) {
-            return _orchardServices.ContentManager
-                       .Query<CommentPart, CommentPartRecord>()
-                       .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
-                       .Where(ctx => ctx.Status == status);
-        }
-
-        public CommentPart GetComment(int id) {
-            return _orchardServices.ContentManager.Get<CommentPart>(id);
+            return GetCommentsForCommentedContent(id)
+                       .Where(c => c.Status == status);
         }
 
         public ContentItemMetadata GetDisplayForCommentedContent(int id) {
@@ -68,47 +60,18 @@ namespace Orchard.Comments.Services {
             return result;
         }
 
-        public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
-            return _orchardServices.ContentManager.Create<CommentPart>("Comment", comment => {
-                comment.Record.Author = context.Author;
-                comment.Record.CommentDateUtc = _clock.UtcNow;
-                comment.Record.CommentText = context.CommentText;
-                comment.Record.Email = context.Email;
-                comment.Record.SiteName = context.SiteName;
-                comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser != null ? _orchardServices.WorkContext.CurrentUser.UserName : null);
-                comment.Record.CommentedOn = context.CommentedOn;
-                comment.Record.Status = _commentValidator.ValidateComment(comment)
-                                            ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved
-                                            : CommentStatus.Spam;
-                var commentedOn = _orchardServices.ContentManager.Get<ICommonPart>(comment.Record.CommentedOn);
-                if (commentedOn != null && commentedOn.Container != null) {
-                    comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
-                }
-                commentedOn.As<CommentsPart>().Record.CommentPartRecords.Add(comment.Record);
-            });
-        }
-
-        public void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status) {
-            CommentPart commentPart = GetComment(id);
-            commentPart.Record.Author = name;
-            commentPart.Record.Email = email;
-            commentPart.Record.SiteName = siteName;
-            commentPart.Record.CommentText = commentText;
-            commentPart.Record.Status = status;
-        }
-
         public void ApproveComment(int commentId) {
-            CommentPart commentPart = GetComment(commentId);
+            var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Approved;
         }
 
         public void UnapproveComment(int commentId) {
-            CommentPart commentPart = GetComment(commentId);
+            var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Pending;
         }
 
         public void MarkCommentAsSpam(int commentId) {
-            CommentPart commentPart = GetComment(commentId);
+            var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Spam;
         }
 
@@ -126,6 +89,10 @@ namespace Orchard.Comments.Services {
 
         public void EnableCommentsForCommentedContent(int id) {
             _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = true;
+        }
+
+        private CommentPart GetCommentWithQueryHints(int id) {
+            return _orchardServices.ContentManager.Get<CommentPart>(id, VersionOptions.Latest, new QueryHints().ExpandParts<CommentPart>());
         }
     }
 }

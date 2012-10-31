@@ -1,0 +1,14 @@
+﻿@if (Model.ContentPart.Comments.Count > 0) {
+<div id="comments">
+    <h2 class="comment-count">@T.Plural("1 Comment", "{0} Comments", (int)Model.ContentPart.Comments.Count)</h2>
+        <ul class="comments">
+        @foreach (var comment in Model.CommentShapes) {
+            <li>
+                <article class="comment" id="comment-@comment.ContentItem.Id">
+                    @Display(comment)
+                </article>
+            </li>
+        }
+        </ul>
+</div>
+}

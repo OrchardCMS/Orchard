@@ -1,0 +1,44 @@
+﻿@model Orchard.Comments.Models.CommentPart
+
+@using Orchard.Comments.Models;
+
+<fieldset class="who">
+    <ol>
+        <li>
+            @Html.LabelFor(m => m.Author, T("Name"))
+            @Html.TextBoxFor(m => m.Author)
+        </li>
+        <li>
+            @Html.LabelFor(m => m.Email, T("Email"))
+            @Html.TextBoxFor(m => m.Email)
+        </li>
+        <li>
+            @Html.LabelFor(m => m.SiteName, T("Url"))
+            @Html.TextBoxFor(m => m.SiteName)
+        </li>
+    </ol>
+    </fieldset>
+<fieldset class="what">
+    <div>
+        @Html.LabelFor(m => m.CommentText, T("Comment"))
+        @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
+        @Html.HiddenFor(m => m.Id)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.RadioButtonFor(m => m.Status, CommentStatus.Pending)
+        <label class="forcheckbox" for="Status_Pending">@T("Pending")</label>
+    </div>
+    <div>
+        @Html.RadioButtonFor(m => m.Status, CommentStatus.Approved)
+        <label class="forcheckbox" for="Status_Approved">@T("Approved")</label>
+    </div>
+    <div>
+        @Html.RadioButtonFor(m => m.Status, CommentStatus.Spam)
+        <label class="forcheckbox" for="Status_Spam">@T("Mark as spam")</label>
+    </div>
+</fieldset>
+<fieldset>
+    <button class="primaryAction" type="submit">@T("Save")</button>
+</fieldset>

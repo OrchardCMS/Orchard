@@ -17,19 +17,19 @@ namespace Orchard.Comments.Handlers {
 
             Filters.Add(StorageFilter.For(commentsRepository));
 
-            OnInitializing<CommentsPart>((ctx, x) => {
-                x.CommentsActive = true;
-                x.CommentsShown = true;
-                x.Comments = new List<CommentPart>();
+            OnInitializing<CommentsPart>((ctx, part) => {
+                part.CommentsActive = true;
+                part.CommentsShown = true;
+                part.Comments = new List<CommentPart>();
             });
 
             OnLoading<CommentsPart>((context, comments) => {
-                comments._comments.Loader(list => contentManager
+                comments.CommentsField.Loader(list => contentManager
                     .Query<CommentPart, CommentPartRecord>()
                     .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Approved)
                     .List().ToList());
 
-                comments._pendingComments.Loader(list => contentManager
+                comments.PendingCommentsField.Loader(list => contentManager
                     .Query<CommentPart, CommentPartRecord>()
                     .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Pending)
                     .List().ToList());
