@@ -15,7 +15,7 @@ namespace Orchard.Comments.Drivers {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
-        private readonly ICommentService _commentService;
+        private readonly ICommentValidator _commentValidator;
 
         protected override string Prefix { get { return "Comments"; } }
 
@@ -25,11 +25,12 @@ namespace Orchard.Comments.Drivers {
             IContentManager contentManager,
             IWorkContextAccessor workContextAccessor,
             IClock clock,
-            ICommentService commentService) {
+            ICommentService commentService,
+            ICommentValidator commentValidator) {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _clock = clock;
-            _commentService = commentService;
+            _commentValidator = commentValidator;
 
             T = NullLocalizer.Instance;
         }
@@ -43,7 +44,7 @@ namespace Orchard.Comments.Drivers {
 
         // GET
         protected override DriverResult Editor(CommentPart part, dynamic shapeHelper) {
-            if (Orchard.UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
+            if (UI.Admin.AdminFilter.IsApplied(_workContextAccessor.GetContext().HttpContext.Request.RequestContext)) {
                 return ContentShape("Parts_Comment_AdminEdit", 
                     () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comment.AdminEdit", Model: part, Prefix: Prefix));
             }
@@ -64,7 +65,6 @@ namespace Orchard.Comments.Drivers {
                 part.SiteName = "http://" + part.SiteName;
             }
 
-            // TODO: it's very bad how the corresponding user is stored. Needs revision.
             var currentUser = workContext.CurrentUser;
             part.UserName = (currentUser != null ? currentUser.UserName : null);
 
@@ -72,8 +72,11 @@ namespace Orchard.Comments.Drivers {
 
             if (String.IsNullOrEmpty(part.Author)) updater.AddModelError("NameMissing", T("You didn't specify your name."));
 
-            // TODO: needs spam handling
-            part.Status = workContext.CurrentSite.As<CommentSettingsPart>().ModerateComments ? CommentStatus.Pending : CommentStatus.Approved;
+            // applying anti-spam filters
+            var moderateComments = workContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments;
+            part.Status = _commentValidator.ValidateComment(part) 
+                ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved 
+                : CommentStatus.Spam;
 
             var commentedOn = _contentManager.Get<ICommonPart>(part.CommentedOn);
             if (commentedOn != null && commentedOn.Container != null) {

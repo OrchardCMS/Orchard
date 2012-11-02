@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -89,6 +93,8 @@
     <Compile Include="Drivers\SpamFilterPartDriver.cs" />
     <Compile Include="Drivers\ReCaptchaPartDriver.cs" />
     <Compile Include="Drivers\SubmissionLimitPartDriver.cs" />
+    <Compile Include="EventHandlers\DefaultCheckSpamEventHandler.cs" />
+    <Compile Include="EventHandlers\ICheckSpamEventHandler.cs" />
     <Compile Include="Handlers\AkismetSettingsPartHandler.cs" />
     <Compile Include="Handlers\TypePadSettingsPartHandler.cs" />
     <Compile Include="Handlers\SpamFilterPartHandler.cs" />

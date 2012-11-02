@@ -13,7 +13,6 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Comments.ViewModels;
 using Orchard.Comments.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Controllers {
     using Orchard.Settings;

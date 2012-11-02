@@ -7,6 +7,7 @@ namespace Orchard.Comments.Services {
         IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status);
         IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id);
         IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status);
+        CommentPart GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
         ContentItem GetCommentedContent(int id);
         void ApproveComment(int commentId);

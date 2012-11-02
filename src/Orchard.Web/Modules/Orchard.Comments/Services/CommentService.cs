@@ -1,31 +1,24 @@
-﻿using System;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.Comments.Models;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
-using Orchard.Services;
 
 namespace Orchard.Comments.Services {
     [UsedImplicitly]
     public class CommentService : ICommentService {
-        private readonly IClock _clock;
-        private readonly ICommentValidator _commentValidator;
         private readonly IOrchardServices _orchardServices;
 
-        public CommentService(IClock clock,
-                              ICommentValidator commentValidator,
-                              IOrchardServices orchardServices) {
-            _clock = clock;
-            _commentValidator = commentValidator;
+        public CommentService(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
+        public CommentPart GetComment(int id) {
+            return _orchardServices.ContentManager.Get<CommentPart>(id);
+        }
+        
         public IContentQuery<CommentPart, CommentPartRecord> GetComments() {
             return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>();

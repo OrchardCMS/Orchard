@@ -106,20 +106,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void UpdateShouldChangeComment() {
-            var commentedItem = _contentManager.New("commentedItem");
-            _contentManager.Create(commentedItem);
-            _contentManager.Create(commentedItem, VersionOptions.Published);
-            int commentId = commentedItem.As<CommentPart>().Id;
-
-            Assert.That(_commentService.GetComment(commentId).Record.Author, Is.Null.Or.Empty);
-
-            _commentService.UpdateComment(commentId, "test", "", "", "new text", CommentStatus.Pending);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Author, Is.EqualTo("test"));
-        }
-
-        [Test]
         public void CommentsShouldBePendingByDefault() {
             var commentedItem = _contentManager.New("commentedItem");
             _contentManager.Create(commentedItem);

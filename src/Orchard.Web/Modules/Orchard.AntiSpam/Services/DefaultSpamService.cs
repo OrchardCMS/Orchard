@@ -26,6 +26,11 @@ namespace Orchard.AntiSpam.Services {
         }
 
         public SpamStatus CheckForSpam(string text, SpamFilterAction action) {
+
+            if (string.IsNullOrWhiteSpace(text)) {
+                return SpamStatus.Ham;
+            }
+
             var spamFilters = GetSpamFilters().ToList();
 
             switch (action) {
@@ -52,6 +57,10 @@ namespace Orchard.AntiSpam.Services {
 
             // evaluate the text to submit to the spam filters
             var text = _tokenizer.Replace(settings.Pattern, new Dictionary<string, object> { { "Content", part.ContentItem } });
+
+            if (string.IsNullOrWhiteSpace(text)) {
+                return SpamStatus.Ham;
+            }
 
             var result = CheckForSpam(text, settings.Action);
 

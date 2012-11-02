@@ -7,12 +7,6 @@ The Outercurve Foundation (http://www.outercurve.org/).
 
 Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
-Akismet.Net
------
-Website:      http://www.codeplex.com/wikipage?ProjectName=AkismetApi
-Copyright:    Copyright (c) 2006, Joel Thoms
-License:      New BSD
-
 Antlr
 -----
 Website:      http://www.antlr.org/

@@ -63,6 +63,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Drivers\MissingFilterBanner.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\CommentPartDriver.cs" />
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />
+    <Compile Include="Services\CommentValidator.cs" />
+    <Compile Include="Services\ICheckSpamEventHandler.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
@@ -94,7 +97,6 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommentService.cs" />
-    <Compile Include="Services\CommentValidator.cs" />
     <Compile Include="Services\ICommentValidator.cs" />
     <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
     <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
