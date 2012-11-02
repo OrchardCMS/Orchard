@@ -6,7 +6,7 @@ using Orchard.Services;
 
 namespace Orchard.Core.Common.Services {
     public class BbcodeFilter : IHtmlFilter {
-        public string ProcessContent(string text, string flavor) {
+        public string ProcessContent(string text) {
             return BbcodeReplace(text);
         }
 

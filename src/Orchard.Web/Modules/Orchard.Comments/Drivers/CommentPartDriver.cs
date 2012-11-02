@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Aspects;
@@ -17,6 +20,7 @@ namespace Orchard.Comments.Drivers {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
         private readonly ICommentValidator _commentValidator;
+        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         protected override string Prefix { get { return "Comments"; } }
 
@@ -27,19 +31,28 @@ namespace Orchard.Comments.Drivers {
             IWorkContextAccessor workContextAccessor,
             IClock clock,
             ICommentService commentService,
-            ICommentValidator commentValidator) {
+            ICommentValidator commentValidator,
+            IEnumerable<IHtmlFilter> htmlFilters) {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _clock = clock;
             _commentValidator = commentValidator;
+            _htmlFilters = htmlFilters;
 
             T = NullLocalizer.Instance;
         }
 
         protected override DriverResult Display(CommentPart part, string displayType, dynamic shapeHelper) {
+            var formattedText = new Lazy<string>(() => {
+                var commentsPart = _contentManager.Get<CommentsPart>(part.CommentedOn);
+                var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+                var formatted = _htmlFilters.Where(x => x.GetType().Name.Equals(settings.HtmlFilter, StringComparison.OrdinalIgnoreCase)).Aggregate(part.CommentText, (text, filter) => filter.ProcessContent(text));
+                return formatted;
+            });
+            
             return Combined(
-                ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment()),
-                ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin())
+                ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment(FormattedText: formattedText.Value)),
+                ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin(FormattedText: formattedText.Value))
                 );
         }
 

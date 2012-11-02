@@ -1,0 +1,32 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.Comments.ViewModels.CommentsPartSettingsViewModel
+
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Settings.HtmlFilter)" class="forcheckbox">@T("Comments formatting")</label>  
+        <select id="@Html.FieldIdFor(m => m.Settings.HtmlFilter)" name="@Html.FieldNameFor(m => m.Settings.HtmlFilter)">
+            @Html.SelectOption("", String.IsNullOrWhiteSpace(Model.Settings.HtmlFilter), T("No formatting").ToString())
+            @foreach(var htmlFilter in Model.HtmlFilters) {
+                var htmlFilterName = htmlFilter.GetType().Name;
+                @Html.SelectOption(htmlFilterName, htmlFilterName.Equals(Model.Settings.HtmlFilter, StringComparison.OrdinalIgnoreCase), htmlFilterName.CamelFriendly())
+            }
+        </select> 
+
+        @Html.ValidationMessageFor(m => m.Settings.HtmlFilter)
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.Settings.DefaultThreadedComments)
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.Settings.DefaultThreadedComments)">@T("Use threaded comments by default")</label>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.Settings.MustBeAuthenticated)
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.Settings.MustBeAuthenticated)">@T("Users must be authenticated to comment")</label>
+    </div>
+</fieldset>
+

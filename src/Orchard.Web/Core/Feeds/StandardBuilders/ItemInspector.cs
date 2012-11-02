@@ -50,7 +50,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
         public string Description {
             get {
                 if (_body != null && !string.IsNullOrEmpty(_body.Text)) {
-                    return _htmlFilters.Aggregate(_body.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(_body)));
+                    return _htmlFilters.Where(x => x.GetType().Name.Equals(GetFlavor(_body) + "filter", StringComparison.OrdinalIgnoreCase)).Aggregate(_body.Text, (text, filter) => filter.ProcessContent(text));
                 }
                 return Title;
             }

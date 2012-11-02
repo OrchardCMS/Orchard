@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
@@ -37,12 +38,13 @@ namespace Orchard.Core.Common.Drivers {
             return Combined(
                 ContentShape("Parts_Common_Body",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
+                                 var flavor = GetFlavor(part);
+                                 var bodyText = _htmlFilters.Where(x => x.GetType().Name.Equals(flavor + "filter", StringComparison.OrdinalIgnoreCase)).Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
                                  return shapeHelper.Parts_Common_Body(Html: new HtmlString(bodyText));
                              }),
                 ContentShape("Parts_Common_Body_Summary",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
+                                 var bodyText = _htmlFilters.Where(x => x.GetType().Name.Equals(GetFlavor(part) + "filter", StringComparison.OrdinalIgnoreCase)).Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
                                  return shapeHelper.Parts_Common_Body_Summary(Html: new HtmlString(bodyText));
                              })
                 );

@@ -14,5 +14,8 @@
         }
     </h4>
 </header>
-<p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).Replace("\r\n", "<br />\r\n")))</p>
+<p class="text">@Html.Raw(Convert.ToString(Model.FormattedText))</p>
+
+@**@
+
 
