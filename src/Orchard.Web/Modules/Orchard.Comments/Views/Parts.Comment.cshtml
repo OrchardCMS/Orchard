@@ -1,13 +1,18 @@
-﻿@{
-    var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
-}
+﻿@using Orchard.Comments.Models
+@using Orchard.ContentManagement
 
-@using Orchard.Utility.Extensions;
+@{
+    var comment = (CommentPart) Model.ContentPart;
+}
 
 <header>
     <h4>
         <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
         <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
+        @if (comment.CommentedOnContentItem.As<CommentsPart>().ThreadedComments) {
+            <span class="reply">@Display.CommentReplyButton(ContentPart: comment)</span>
+        }
     </h4>
 </header>
 <p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).Replace("\r\n", "<br />\r\n")))</p>
+

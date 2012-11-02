@@ -10,8 +10,6 @@ namespace Orchard.Comments.Services {
         }
 
         public bool ValidateComment(CommentPart commentPart) {
-            // true == spam
-
             var text = commentPart.Author + System.Environment.NewLine
                        + commentPart.CommentText + System.Environment.NewLine
                        + commentPart.Email + System.Environment.NewLine
@@ -24,7 +22,7 @@ namespace Orchard.Comments.Services {
 
             _spamEventHandler.CheckSpam(context);
 
-            return context.IsSpam;
+            return !context.IsSpam;
         }
     }
 }

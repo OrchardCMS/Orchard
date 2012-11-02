@@ -16,14 +16,22 @@
   <Match ContentType="Comment">
     <Place Content_SaveButton="-"/><!--Show default save button only on admin-->
   </Match>
+
   <Match DisplayType="Detail">
-    <Place Parts_ListOfComments="Content:10" />
-    <Place Parts_CommentForm="Content:10" />
+    <Place Parts_ListOfComments="Content:10.2" />
+    <Place Parts_CommentForm="Content:10.3" />
   </Match>
+
+  <Match ContentType="Comment" DisplayType="Summary">
+    <Place  Parts_Common_Metadata_Summary="-" 
+            Parts_Comment="Content:10"
+    />
+  </Match>
+
   <Match DisplayType="Summary">
-    <Place Parts_Comments_Count="Meta:5"
-           Parts_Comment="Content:10" />
+    <Place Parts_Comments_Count="Meta:5" />
   </Match>
+  
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Comment_SummaryAdmin="Content:10"
            Parts_Comments_Count_SummaryAdmin="Meta:4" />

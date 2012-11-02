@@ -34,7 +34,9 @@ else {
         </li>
         <li>
             <button class="primaryAction" type="submit">@T("Submit Comment")</button>
-            @Html.Hidden("CommentedOn", Model.CommentedOn)
+            @Html.HiddenFor(m => m.CommentedOn)
+            @Html.HiddenFor(m => m.RepliedOn)
+
         </li>
     </ol>
 </fieldset>

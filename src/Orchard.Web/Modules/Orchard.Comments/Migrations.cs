@@ -26,6 +26,8 @@ namespace Orchard.Comments {
                 .Column<string>("CommentText", column => column.Unlimited())
                 .Column<int>("CommentedOn")
                 .Column<int>("CommentedOnContainer")
+                .Column<int>("RepliedOn", c => c.WithDefault(null))
+                .Column<decimal>("Position")
                 .Column<int>("CommentsPartRecord_id")
                 );
 
@@ -39,6 +41,7 @@ namespace Orchard.Comments {
                 .ContentPartRecord()
                 .Column<bool>("CommentsShown")
                 .Column<bool>("CommentsActive")
+                .Column<bool>("ThreadedComments")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Comment",
@@ -58,7 +61,7 @@ namespace Orchard.Comments {
 
             ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -103,6 +106,23 @@ namespace Orchard.Comments {
                 .DropColumn("AkismetUrl")
                );
 
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<int>("RepliedOn", c => c.WithDefault(null))
+            );
+
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<decimal>("Position")
+            );
+
+            SchemaBuilder.AlterTable("CommentsPartRecord", table => table
+                .AddColumn<bool>("ThreadedComments")
+                );
+
+            // define the default value for positions
+            foreach (var comment in _commentService.GetComments().List()) {
+                comment.Position = comment.Id;
+            }
+            
             return 4;
         }
     }

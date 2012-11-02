@@ -23,6 +23,13 @@ namespace Orchard.Comments.Handlers {
                 );
             });
 
+
+            OnRemoving<CommentPart>((context, comment) => {
+                foreach(var response in contentManager.Query<CommentPart, CommentPartRecord>().Where(x => x.RepliedOn == comment.Id).List()) {
+                    contentManager.Remove(response.ContentItem);
+                }
+            });
+
             OnIndexing<CommentPart>((context, commentPart) => context.DocumentIndex
                                                                 .Add("commentText", commentPart.Record.CommentText));
         }

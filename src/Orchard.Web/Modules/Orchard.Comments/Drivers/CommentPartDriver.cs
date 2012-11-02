@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Xml;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
@@ -108,6 +109,11 @@ namespace Orchard.Comments.Drivers {
                 part.Record.Email = email;
             }
 
+            var position = context.Attribute(part.PartDefinition.Name, "Position");
+            if (position != null) {
+                part.Record.Position = decimal.Parse(position, CultureInfo.InvariantCulture);
+            }
+
             var status = context.Attribute(part.PartDefinition.Name, "Status");
             if (status != null) {
                 part.Record.Status = (CommentStatus)Enum.Parse(typeof(CommentStatus), status);
@@ -133,6 +139,16 @@ namespace Orchard.Comments.Drivers {
                 contentItem.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
             }
 
+            var repliedOn = context.Attribute(part.PartDefinition.Name, "RepliedOn");
+            if (repliedOn != null) {
+                var contentItem = context.GetItemFromSession(repliedOn);
+                if (contentItem != null) {
+                    part.Record.RepliedOn = contentItem.Id;
+                }
+
+                contentItem.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
+            }
+
             var commentedOnContainer = context.Attribute(part.PartDefinition.Name, "CommentedOnContainer");
             if (commentedOnContainer != null) {
                 var container = context.GetItemFromSession(commentedOnContainer);
@@ -147,6 +163,7 @@ namespace Orchard.Comments.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("SiteName", part.Record.SiteName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.Record.UserName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Email", part.Record.Email);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Record.Position.ToString(CultureInfo.InvariantCulture));
             context.Element(part.PartDefinition.Name).SetAttributeValue("Status", part.Record.Status.ToString());
 
             if (part.Record.CommentDateUtc != null) {
@@ -165,6 +182,14 @@ namespace Orchard.Comments.Drivers {
             if (commentedOnContainer != null) {
                 var commentedOnContainerIdentity = _contentManager.GetItemMetadata(commentedOnContainer).Identity;
                 context.Element(part.PartDefinition.Name).SetAttributeValue("CommentedOnContainer", commentedOnContainerIdentity.ToString());
+            }
+
+            if (part.Record.RepliedOn.HasValue) {
+                var repliedOn = _contentManager.Get(part.Record.RepliedOn.Value);
+                if (repliedOn != null) {
+                    var repliedOnIdentity = _contentManager.GetItemMetadata(repliedOn).Identity;
+                    context.Element(part.PartDefinition.Name).SetAttributeValue("RepliedOn", repliedOnIdentity.ToString());
+                }
             }
         }
     }

@@ -29,5 +29,10 @@ namespace Orchard.Comments.Models {
             get { return Record.CommentsActive; }
             set { Record.CommentsActive = value; }
         }
+
+        public bool ThreadedComments {
+            get { return Record.ThreadedComments; }
+            set { Record.ThreadedComments = value; }
+        }
     }
 }

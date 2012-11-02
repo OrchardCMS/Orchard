@@ -30,12 +30,30 @@ namespace Orchard.Comments.Drivers {
             return Combined(
                 ContentShape("Parts_ListOfComments",
                     () => {
+                        // create a hierarchy of shapes
                         var commentShapes = new List<dynamic>();
+                        var index = new Dictionary<int, dynamic>();
+
                         foreach (var item in part.Comments) {
-                            commentShapes.Add(_contentManager.BuildDisplay(item.ContentItem, "Summary"));
+                            var shape = _contentManager.BuildDisplay(item.ContentItem, "Summary");
+                            index.Add(item.Id, shape);
+
+                            if (!item.RepliedOn.HasValue) {
+                                commentShapes.Add(shape);
+                            }
+                            else {
+                                if (index.ContainsKey(item.RepliedOn.Value)) {
+                                    var parent = index[item.RepliedOn.Value];
+                                    if (parent.CommentShapes == null) {
+                                        parent.CommentShapes = new List<dynamic>();
+                                    }
+
+                                    parent.CommentShapes.Add(shape);
+                                }
+                            }
                         }
 
-                        return shapeHelper.Parts_ListOfComments(CommentShapes: commentShapes);
+                        return shapeHelper.Parts_ListOfComments(CommentShapes: commentShapes, CommentCount: approvedCount());
                     }),
                 ContentShape("Parts_CommentForm",
                     () => {
@@ -72,11 +90,17 @@ namespace Orchard.Comments.Drivers {
             if (commentsActive != null) {
                 part.CommentsActive = Convert.ToBoolean(commentsActive);
             }
+
+            var threadedComments = context.Attribute(part.PartDefinition.Name, "ThreadedComments");
+            if (threadedComments != null) {
+                part.ThreadedComments = Convert.ToBoolean(threadedComments);
+            }
         }
 
         protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ThreadedComments", part.ThreadedComments);
         }
     }
 }

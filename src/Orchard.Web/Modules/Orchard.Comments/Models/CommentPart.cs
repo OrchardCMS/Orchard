@@ -57,7 +57,17 @@ namespace Orchard.Comments.Models {
             get { return Record.CommentedOn; }
             set { Record.CommentedOn = value; }
         }
-        
+
+        public int? RepliedOn {
+            get { return Record.RepliedOn; }
+            set { Record.RepliedOn = value; }
+        }
+
+        public decimal Position {
+            get { return Record.Position; }
+            set { Record.Position = value; }
+        }
+
         public ContentItem CommentedOnContentItem {
             get { return _commentedOnContentItem.Value; }
             set { _commentedOnContentItem.Value = value; }

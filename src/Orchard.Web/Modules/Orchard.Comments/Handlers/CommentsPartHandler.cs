@@ -20,6 +20,7 @@ namespace Orchard.Comments.Handlers {
             OnInitializing<CommentsPart>((ctx, part) => {
                 part.CommentsActive = true;
                 part.CommentsShown = true;
+                part.ThreadedComments = true;
                 part.Comments = new List<CommentPart>();
             });
 
@@ -27,6 +28,7 @@ namespace Orchard.Comments.Handlers {
                 comments.CommentsField.Loader(list => contentManager
                     .Query<CommentPart, CommentPartRecord>()
                     .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Approved)
+                    .OrderBy(x => x.Position)
                     .List().ToList());
 
                 comments.PendingCommentsField.Loader(list => contentManager

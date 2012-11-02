@@ -38,6 +38,58 @@ namespace Orchard.Comments.Controllers {
                 if (comment.Has<CommentPart>()) {
                     var commentPart = comment.As<CommentPart>();
 
+                    // ensure the comments are not closed on the container, as the html could have been tampered manually
+                    var container = Services.ContentManager.Get(commentPart.CommentedOnContainer);
+                    CommentsPart commentsPart = null;
+                    if(container != null) {
+                        commentsPart = container.As<CommentsPart>();
+                        if(commentsPart != null && !commentsPart.CommentsActive) {
+                            Services.TransactionManager.Cancel();
+                            return this.RedirectLocal(returnUrl, "~/");
+                        }
+                    }
+
+                    // is it a response to another comment ?
+                    if(commentPart.RepliedOn.HasValue && (commentsPart == null || !commentsPart.ThreadedComments)) {
+                        var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
+                        if(replied != null) {
+                            var repliedPart = replied.As<CommentPart>();
+                            
+                            // what is the next position after the anwered comment
+                            if(repliedPart != null) {
+                                // the next comment is the one right after the RepliedOn one, at the same level
+                                var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOnContainer)
+                                    .Where(x => x.RepliedOn == repliedPart.RepliedOn && x.CommentDateUtc > repliedPart.CommentDateUtc)
+                                    .OrderBy(x => x.CommentDateUtc)
+                                    .Slice(0, 1)
+                                    .FirstOrDefault();
+
+                                // the previous comment is the last one under the RepliedOn
+                                var previousComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOnContainer)
+                                    .Where(x => x.RepliedOn == commentPart.RepliedOn)
+                                    .OrderByDescending(x => x.CommentDateUtc)
+                                    .Slice(0, 1)
+                                    .FirstOrDefault();
+
+                                if(nextComment == null) {
+                                    commentPart.Position = repliedPart.Position + 1;
+                                }
+                                else {
+                                    if (previousComment == null) {
+                                        commentPart.Position = (repliedPart.Position + nextComment.Position) / 2;
+                                    }
+                                    else {
+                                        commentPart.Position = (previousComment.Position + nextComment.Position) / 2;
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                    else {
+                        commentPart.RepliedOn = null;
+                    }
+
                     if (commentPart.Status == CommentStatus.Pending) {
                         // if the user who submitted the comment has the right to moderate, don't make this comment moderated
                         if (Services.Authorizer.Authorize(Permissions.ManageComments)) {

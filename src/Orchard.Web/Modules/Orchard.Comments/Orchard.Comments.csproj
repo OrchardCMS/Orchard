@@ -158,6 +158,8 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
     <Content Include="Views\Content-Comment.SummaryAdmin.cshtml" />
+    <Content Include="Views\ListOfComments.cshtml" />
+    <Content Include="Views\CommentReplyButton.cshtml" />
     <None Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>

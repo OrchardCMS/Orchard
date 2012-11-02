@@ -10,6 +10,7 @@ namespace Orchard.Comments.Models {
 
         public virtual bool CommentsShown { get; set; }
         public virtual bool CommentsActive { get; set; }
+        public virtual bool ThreadedComments { get; set; }
 
         [CascadeAllDeleteOrphan]
         public virtual IList<CommentPartRecord> CommentPartRecords { get; set; }
