@@ -27,6 +27,11 @@ namespace Orchard.AntiSpam.Drivers {
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
             return ContentShape("Parts_ReCaptcha_Fields", () => {
                 var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
+
+                if(settings.ByPassAuthenticated && _workContextAccessor.GetContext().CurrentUser != null) {
+                    return null;
+                }
+
                 var viewModel = new ReCaptchaPartEditViewModel {
                     PublicKey =  settings.PublicKey
                 };
@@ -37,10 +42,14 @@ namespace Orchard.AntiSpam.Drivers {
 
         protected override DriverResult Editor(ReCaptchaPart part, IUpdateModel updater, dynamic shapeHelper) {
 
+            var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
+            if (settings.ByPassAuthenticated && _workContextAccessor.GetContext().CurrentUser != null) {
+                return null;
+            }
+
             var submitViewModel = new ReCaptchaPartSubmitViewModel();
 
             if(updater.TryUpdateModel(submitViewModel, String.Empty, null, null)) {
-                var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
                 var context = _workContextAccessor.GetContext().HttpContext;
 
                 var result = ExecuteValidateRequest(
@@ -54,7 +63,6 @@ namespace Orchard.AntiSpam.Drivers {
                     updater.AddModelError("Parts_ReCaptcha_Fields", T("Incorrect word"));
                 }
             }
-
 
             return Editor(part, shapeHelper);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -30,6 +31,7 @@ namespace Orchard.AntiSpam.Settings {
             if (updateModel.TryUpdateModel(settings, "ReCaptchaPartSettings", null, null)) {
                 builder.WithSetting("ReCaptchaPartSettings.PublicKey", settings.PublicKey);
                 builder.WithSetting("ReCaptchaPartSettings.PrivateKey", settings.PrivateKey);
+                builder.WithSetting("ReCaptchaPartSettings.ByPassAuthenticated", settings.ByPassAuthenticated.ToString(CultureInfo.InvariantCulture));
             }
 
             yield return DefinitionTemplate(settings);

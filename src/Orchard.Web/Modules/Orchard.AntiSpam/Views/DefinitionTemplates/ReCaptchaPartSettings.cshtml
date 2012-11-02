@@ -16,3 +16,12 @@
 </fieldset>
 
 @T("Get custom keys:") <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a>
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.ByPassAuthenticated, new { @class = "textMedium"})
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.ByPassAuthenticated)">@T("Hide for authenticated users")</label>
+        <span class="hint">@T("Enable to hide reCaptcha when the user is authenticated.")</span>
+    </div>
+</fieldset>
+

@@ -1,5 +1,5 @@
 ﻿<Placement>
-  <Place Parts_ReCaptcha_Fields="Content:10"/>
+  <Place Parts_ReCaptcha_Fields="Content:20"/>
   <Match DisplayType="SummaryAdmin">
     <Place Parts_SpamFilter_Metadata_SummaryAdmin="Meta:2"/>
   </Match>

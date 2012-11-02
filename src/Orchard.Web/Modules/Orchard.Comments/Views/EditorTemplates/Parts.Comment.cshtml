@@ -33,7 +33,6 @@ else {
             @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
         </li>
         <li>
-            <button class="primaryAction" type="submit">@T("Submit Comment")</button>
             @Html.HiddenFor(m => m.CommentedOn)
             @Html.HiddenFor(m => m.RepliedOn)
 
