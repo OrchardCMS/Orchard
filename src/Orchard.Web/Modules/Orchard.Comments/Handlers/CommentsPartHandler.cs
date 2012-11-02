@@ -20,7 +20,6 @@ namespace Orchard.Comments.Handlers {
             OnInitializing<CommentsPart>((ctx, part) => {
                 part.CommentsActive = true;
                 part.CommentsShown = true;
-                part.ThreadedComments = true;
                 part.Comments = new List<CommentPart>();
             });
 

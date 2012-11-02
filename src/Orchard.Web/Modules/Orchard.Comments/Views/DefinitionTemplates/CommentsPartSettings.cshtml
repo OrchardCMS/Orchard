@@ -1,0 +1,9 @@
+﻿@model Orchard.Comments.Settings.CommentsPartSettings
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.DefaultThreadedComments)
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.DefaultThreadedComments)">@T("Use threaded comments by default")</label>
+    </div>
+</fieldset>
+

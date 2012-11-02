@@ -75,6 +75,8 @@
     <Compile Include="Rules\CommentsForms.cs" />
     <Compile Include="Services\CommentValidator.cs" />
     <Compile Include="Services\ICheckSpamEventHandler.cs" />
+    <Compile Include="Settings\CommentsPartSettings.cs" />
+    <Compile Include="Settings\CommentsPartSettingsEvents.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
@@ -160,6 +162,7 @@
     <Content Include="Views\Content-Comment.SummaryAdmin.cshtml" />
     <Content Include="Views\ListOfComments.cshtml" />
     <Content Include="Views\CommentReplyButton.cshtml" />
+    <Content Include="Views\DefinitionTemplates\CommentsPartSettings.cshtml" />
     <None Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>

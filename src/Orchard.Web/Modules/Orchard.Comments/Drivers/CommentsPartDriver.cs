@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
+using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
@@ -72,7 +73,14 @@ namespace Orchard.Comments.Drivers {
 
         protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Comments_Enable",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.Comments", Model: part, Prefix: Prefix));
+                                () => {
+                                    // if the part is new, then apply threaded comments defaults
+                                    if(!part.ContentItem.HasDraft() && !part.ContentItem.HasPublished()) {
+                                        var settings = part.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+                                        part.ThreadedComments = settings.DefaultThreadedComments;
+                                    }
+                                    return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.Comments", Model: part, Prefix: Prefix);
+                                });
         }
 
         protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {
