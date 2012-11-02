@@ -1,5 +1,12 @@
 ﻿@using Orchard.Comments;
+@using Orchard.Comments.Models
+@using Orchard.Comments.Settings
 @using Orchard.Utility.Extensions;
+
+@{
+    CommentsPart commentsPart = Model.ContentPart;
+    var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+}
 
 @if (!Model.ContentPart.CommentsActive) {
     if (Model.ContentPart.Comments.Count > 0) {
@@ -7,6 +14,11 @@
         <p class="comment-disabled">@T("Comments have been disabled for this content.")</p>
     </div>
     }
+}
+else if (settings.MustBeAuthenticated && WorkContext.CurrentUser == null) {
+    <div id="comments">
+        <p class="comment-disabled">@T("You must be authenticated in order to add a comment.")</p>
+    </div>
 }
 else if (WorkContext.CurrentUser == null && !AuthorizedFor(Permissions.AddComment)) {
     <h2 id="add-comment">@T("Add a Comment")</h2>

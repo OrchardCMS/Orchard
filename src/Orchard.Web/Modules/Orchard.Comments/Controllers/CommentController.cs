@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
+using Orchard.Comments.Settings;
 using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -43,9 +44,13 @@ namespace Orchard.Comments.Controllers {
                     CommentsPart commentsPart = null;
                     if(container != null) {
                         commentsPart = container.As<CommentsPart>();
-                        if(commentsPart != null && !commentsPart.CommentsActive) {
-                            Services.TransactionManager.Cancel();
-                            return this.RedirectLocal(returnUrl, "~/");
+                        if (commentsPart != null) {
+                            var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+                            if (!commentsPart.CommentsActive
+                                || (settings.MustBeAuthenticated && Services.WorkContext.CurrentUser == null)) {
+                                Services.TransactionManager.Cancel();
+                                return this.RedirectLocal(returnUrl, "~/");
+                            }
                         }
                     }
 

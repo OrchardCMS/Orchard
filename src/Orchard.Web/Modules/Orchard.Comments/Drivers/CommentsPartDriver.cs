@@ -12,12 +12,15 @@ namespace Orchard.Comments.Drivers {
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public CommentsPartDriver(
             ICommentService commentService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IWorkContextAccessor workContextAccessor) {
             _commentService = commentService;
             _contentManager = contentManager;
+            _workContextAccessor = workContextAccessor;
         }
 
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
@@ -58,6 +61,7 @@ namespace Orchard.Comments.Drivers {
                     }),
                 ContentShape("Parts_CommentForm",
                     () => {
+
                         var newComment = _contentManager.New("Comment");
                         if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
                         var editorShape = _contentManager.BuildEditor(newComment);

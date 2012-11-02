@@ -30,6 +30,7 @@ namespace Orchard.Comments.Settings {
 
             if (updateModel.TryUpdateModel(settings, "CommentsPartSettings", null, null)) {
                 builder.WithSetting("CommentsPartSettings.DefaultThreadedComments", settings.DefaultThreadedComments.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("CommentsPartSettings.MustBeAuthenticated", settings.MustBeAuthenticated.ToString(CultureInfo.InvariantCulture));
             }
 
             yield return DefinitionTemplate(settings);
