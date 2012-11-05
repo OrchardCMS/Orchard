@@ -30,16 +30,16 @@ namespace Orchard.Comments.Tokens {
 
         public void Evaluate(dynamic context) {
             context.For<IContent>("Content")
-                .Token("CommentedOn", (Func<IContent, object>)(content => content.As<CommentPart>().Record.CommentedOn))
-                .Chain("CommentedOn", "Content", (Func<IContent, object>)(content => _contentManager.Get(content.As<CommentPart>().Record.CommentedOn)))
-                .Token("CommentMessage", (Func<IContent, object>)(content => content.As<CommentPart>().Record.CommentText))
+                .Token("CommentedOn", (Func<IContent, object>)(content => content.As<CommentPart>().CommentedOn))
+                .Chain("CommentedOn", "Content", (Func<IContent, object>)(content => _contentManager.Get(content.As<CommentPart>().CommentedOn)))
+                .Token("CommentMessage", (Func<IContent, object>)(content => content.As<CommentPart>().CommentText))
                 .Token("CommentAuthor", (Func<IContent, object>)CommentAuthor)
                 ;
         }
 
         private static string CommentAuthor(IContent comment) {
             var commentPart = comment.As<CommentPart>();
-            return String.IsNullOrWhiteSpace(commentPart.Record.UserName) ? commentPart.Record.Author : commentPart.Record.UserName;
+            return String.IsNullOrWhiteSpace(commentPart.UserName) ? commentPart.Author : commentPart.UserName;
         }
     }
 }

@@ -32,8 +32,9 @@ namespace Orchard.Comments.Controllers {
 
             var comment = Services.ContentManager.New("Comment");
 
-            Services.ContentManager.Create(comment);
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
+
+            Services.ContentManager.Create(comment);
 
             if (ModelState.IsValid) {
                 if (comment.Has<CommentPart>()) {
