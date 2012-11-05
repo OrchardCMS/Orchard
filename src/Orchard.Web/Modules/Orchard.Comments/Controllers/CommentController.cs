@@ -55,7 +55,7 @@ namespace Orchard.Comments.Controllers {
                     }
 
                     // is it a response to another comment ?
-                    if(commentPart.RepliedOn.HasValue && (commentsPart == null || !commentsPart.ThreadedComments)) {
+                    if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
                         var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
                         if(replied != null) {
                             var repliedPart = replied.As<CommentPart>();
@@ -116,6 +116,10 @@ namespace Orchard.Comments.Controllers {
                 }
 
                 TempData["Comments.InvalidCommentEditorShape"] = editorShape;
+                var commentPart = comment.As<CommentPart>(); 
+                if(commentPart.RepliedOn.HasValue) {
+                    TempData["Comments.RepliedOn"] = commentPart.RepliedOn.Value;
+                }
             }
 
             return this.RedirectLocal(returnUrl, "~/");

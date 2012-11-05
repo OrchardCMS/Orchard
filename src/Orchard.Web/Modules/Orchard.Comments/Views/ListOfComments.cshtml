@@ -2,7 +2,7 @@
 @foreach (var comment in Model.CommentShapes) {
     <li>
         @{
-            comment.Id = "comment-" + comment.ContentPart.Id;
+            comment.Id = "comment-" + comment.ContentItem.Id;
             var tag = Tag(comment, "article"); // using Tag so the comment can be altered by custom modules
             tag.AddCssClass("comment");
         }
