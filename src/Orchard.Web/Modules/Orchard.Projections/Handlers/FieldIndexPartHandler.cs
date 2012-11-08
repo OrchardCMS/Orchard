@@ -35,8 +35,6 @@ namespace Orchard.Projections.Handlers {
         protected override void Activating(ActivatingContentContext context) {
             base.Activating(context);
 
-            context.Builder.Weld<FieldIndexPart>();
-
             // weld the FieldIndexPart dynamically, if a field has been assigned to one of its parts
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
             if (contentTypeDefinition == null)
