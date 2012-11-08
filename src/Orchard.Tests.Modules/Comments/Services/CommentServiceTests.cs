@@ -32,7 +32,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<CommentService>().As<ICommentService>();
-            builder.RegisterType<StubCommentValidator>().As<ICommentValidator>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
@@ -142,21 +141,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
 
         [Test]
-        public void MarkAsSpamShouldFlagComments() {
-            var commentedItem = _contentManager.New("commentedItem");
-            _contentManager.Create(commentedItem);
-            _contentManager.Create(commentedItem, VersionOptions.Published);
-            int commentId = commentedItem.As<CommentPart>().Id;
-            _commentService.ApproveComment(commentId);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Approved));
-
-            _commentService.MarkCommentAsSpam(commentId);
-
-            Assert.That(_commentService.GetComment(commentId).Record.Status, Is.EqualTo(CommentStatus.Spam));
-        }
-
-        [Test]
         public void DeleteShouldRemoveComments() {
             var commentIds = new int[12];
 
@@ -193,11 +177,5 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
     public class CommentedItemDriver : ContentPartDriver<CommentedItem> {
         public static readonly string ContentTypeName = "commentedItem";
-    }
-
-    public class StubCommentValidator : ICommentValidator {
-        public bool ValidateComment(CommentPart commentPart) {
-            return true;
-        }
     }
 }

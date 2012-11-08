@@ -1,5 +1,4 @@
-﻿@model Orchard.Comments.ViewModels.CommentsDetailsViewModel
-@using Orchard.Comments.Models;
+﻿@model CommentsDetailsViewModel
 @using Orchard.Comments.ViewModels;
 
 @{ Layout.Title = T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString(); }
@@ -27,7 +26,6 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Unapprove, T("Unapprove").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
@@ -38,7 +36,6 @@
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, T("Approved Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments").ToString())
-            @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, T("Spam").ToString())
         </select>
         <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
@@ -72,8 +69,7 @@
                     <input type="hidden" value="@Model.CommentedItemId" name="CommentedItemId" />
                 </td>
                 <td>
-                    @if (commentEntry.Comment.Status == CommentStatus.Spam) { @T("Spam"); }
-                    else if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending"); }
+                    if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending"); }
                     else { @T("Approved"); }
                 </td>
                 <td>@commentEntry.Comment.Author</td>

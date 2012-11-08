@@ -1,46 +1,19 @@
 ﻿@using Orchard.Comments.Models;
-@using Orchard.Utility.Extensions;
+@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
 
 @{
-    var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
+    CommentPart comment = Model.ContentPart;
+    var settings = WorkContext.CurrentSite.As<CommentSettingsPart>();
 }
 
-<td>
-    @if (comment.Status == CommentStatus.Spam) { @T("Spam") }
-    else if (comment.Status == CommentStatus.Pending) { @T("Pending") } 
-    else { @T("Approved") }
-</td>
-<td>
-    <div>@comment.Author</div>
-    @if (HasText(comment.UserName) && comment.Author != comment.UserName) {
-        <div class="authenticated-commenter-id">@comment.UserName</div>
-    }
-</td>
-<td>
-    @* would ideally have permalinks for individual comments *@
-    <p><a href="@Url.RouteUrl(comment.CommentedOnContentItemMetadata.DisplayRouteValues)#comments"><time>@Display.DateTime(DateTimeUtc: comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
-    @if (comment.CommentText != null) {
-        var ellipsized = Html.Ellipsize(comment.CommentText, 500);
-        var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
-        <p>@paragraphed</p>
-    }
-    else {
-        @T("[Empty]")
-    }
-</td>
-<td>@Html.Link(comment.CommentedOnContentItemMetadata.DisplayText, @Url.RouteUrl(comment.CommentedOnContentItemMetadata.DisplayRouteValues))</td>
-<td>
-    <div class="actions">
-        @if (comment.Status != CommentStatus.Spam) {
-            <a href="@Url.Action("MarkAsSpam", new { comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Spam")</a>@T(" | ")
-        }
-        @if (comment.Status != CommentStatus.Approved) {
-            <a href="@Url.Action("Approve", new { comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
-        }
-        else {
-            <a href="@Url.Action("Unapprove", new { comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
-        }
-        <a href="@Url.Action("Edit", new { comment.Id })" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-        <a href="@Url.Action("Delete", new { comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
-    </div>
-</td>
+@if(settings.ModerateComments) {
+
+     if (comment.Status != CommentStatus.Pending) {
+         @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+     }
+     else {
+         @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+     }
+    @T(" | ")
+}

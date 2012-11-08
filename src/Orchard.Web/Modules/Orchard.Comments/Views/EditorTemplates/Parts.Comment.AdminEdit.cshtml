@@ -35,10 +35,6 @@
         @Html.RadioButtonFor(m => m.Status, CommentStatus.Approved)
         <label class="forcheckbox" for="Status_Approved">@T("Approved")</label>
     </div>
-    <div>
-        @Html.RadioButtonFor(m => m.Status, CommentStatus.Spam)
-        <label class="forcheckbox" for="Status_Spam">@T("Mark as spam")</label>
-    </div>
 </fieldset>
 <fieldset>
     <button class="primaryAction" type="submit">@T("Save")</button>

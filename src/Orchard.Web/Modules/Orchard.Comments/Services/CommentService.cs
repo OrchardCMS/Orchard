@@ -63,11 +63,6 @@ namespace Orchard.Comments.Services {
             commentPart.Record.Status = CommentStatus.Pending;
         }
 
-        public void MarkCommentAsSpam(int commentId) {
-            var commentPart = GetCommentWithQueryHints(commentId);
-            commentPart.Record.Status = CommentStatus.Spam;
-        }
-
         public void DeleteComment(int commentId) {
             _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(commentId));
         }

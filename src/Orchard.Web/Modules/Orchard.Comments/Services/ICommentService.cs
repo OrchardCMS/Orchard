@@ -12,7 +12,6 @@ namespace Orchard.Comments.Services {
         ContentItem GetCommentedContent(int id);
         void ApproveComment(int commentId);
         void UnapproveComment(int commentId);
-        void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
         bool CommentsDisabledForCommentedContent(int id);
         void DisableCommentsForCommentedContent(int id);

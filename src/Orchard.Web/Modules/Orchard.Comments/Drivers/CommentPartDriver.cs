@@ -19,7 +19,6 @@ namespace Orchard.Comments.Drivers {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
-        private readonly ICommentValidator _commentValidator;
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         protected override string Prefix { get { return "Comments"; } }
@@ -31,12 +30,10 @@ namespace Orchard.Comments.Drivers {
             IWorkContextAccessor workContextAccessor,
             IClock clock,
             ICommentService commentService,
-            ICommentValidator commentValidator,
             IEnumerable<IHtmlFilter> htmlFilters) {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _clock = clock;
-            _commentValidator = commentValidator;
             _htmlFilters = htmlFilters;
 
             T = NullLocalizer.Instance;
@@ -86,11 +83,8 @@ namespace Orchard.Comments.Drivers {
 
             if (String.IsNullOrEmpty(part.Author)) updater.AddModelError("NameMissing", T("You didn't specify your name."));
 
-            // applying anti-spam filters
             var moderateComments = workContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments;
-            part.Status = _commentValidator.ValidateComment(part) 
-                ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved 
-                : CommentStatus.Spam;
+            part.Status = moderateComments ? CommentStatus.Pending : CommentStatus.Approved;
 
             var commentedOn = _contentManager.Get<ICommonPart>(part.CommentedOn);
             if (commentedOn != null && commentedOn.Container != null) {

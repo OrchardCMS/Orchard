@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Orchard.AntiSpam.Models;
 using Orchard.AntiSpam.Settings;
+using Orchard.ContentManagement;
 
 namespace Orchard.AntiSpam.Services {
     public interface ISpamService : IDependency {
-        SpamStatus CheckForSpam(string text, SpamFilterAction action);
+        SpamStatus CheckForSpam(string text, SpamFilterAction action, IContent content);
         SpamStatus CheckForSpam(SpamFilterPart part);
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.AntiSpam.Models;
 using Orchard.AntiSpam.Rules;
 using Orchard.AntiSpam.Settings;
+using Orchard.ContentManagement;
 using Orchard.Tokens;
 
 namespace Orchard.AntiSpam.Services {
@@ -25,7 +26,7 @@ namespace Orchard.AntiSpam.Services {
             _rulesManager = rulesManager;
         }
 
-        public SpamStatus CheckForSpam(string text, SpamFilterAction action) {
+        public SpamStatus CheckForSpam(string text, SpamFilterAction action, IContent content) {
 
             if (string.IsNullOrWhiteSpace(text)) {
                 return SpamStatus.Ham;
@@ -33,22 +34,40 @@ namespace Orchard.AntiSpam.Services {
 
             var spamFilters = GetSpamFilters().ToList();
 
+            var result = SpamStatus.Ham;
+
             switch (action) {
                 case SpamFilterAction.AllOrNothing:
                     if (spamFilters.All(x => x.CheckForSpam(text) == SpamStatus.Spam)) {
-                        return SpamStatus.Spam;
+                        result = SpamStatus.Spam;
                     }
 
-                    return SpamStatus.Ham;
+                    break;
                 case SpamFilterAction.One:
                     if (spamFilters.Any(x => x.CheckForSpam(text) == SpamStatus.Spam)) {
-                        return SpamStatus.Spam;
+                        result =  SpamStatus.Spam;
                     }
 
-                    return SpamStatus.Ham;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            // trigger events and rules
+            switch (result) {
+                case SpamStatus.Spam:
+                    _spamEventHandler.SpamReported(content);
+                    _rulesManager.TriggerEvent("AntiSpam", "Spam", () => new Dictionary<string, object> { { "Content", content } });
+                    break;
+                case SpamStatus.Ham:
+                    _spamEventHandler.HamReported(content);
+                    _rulesManager.TriggerEvent("AntiSpam", "Ham", () => new Dictionary<string, object> { { "Content", content } });
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return result;
         }
 
         public SpamStatus CheckForSpam(SpamFilterPart part) {
@@ -62,21 +81,7 @@ namespace Orchard.AntiSpam.Services {
                 return SpamStatus.Ham;
             }
 
-            var result = CheckForSpam(text, settings.Action);
-
-            // trigger events and rules
-            switch (result) {
-                case SpamStatus.Spam:
-                    _spamEventHandler.SpamReported(part);
-                    _rulesManager.TriggerEvent("AntiSpam", "Spam", () => new Dictionary<string, object> { { "Content", part.ContentItem } });
-                    break;
-                case SpamStatus.Ham:
-                    _spamEventHandler.HamReported(part);
-                    _rulesManager.TriggerEvent("AntiSpam", "Ham", () => new Dictionary<string, object> { { "Content", part.ContentItem } });
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var result = CheckForSpam(text, settings.Action, part);
 
             return result;
         }

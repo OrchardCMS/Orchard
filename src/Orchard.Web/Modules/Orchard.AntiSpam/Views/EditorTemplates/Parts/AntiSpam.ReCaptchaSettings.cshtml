@@ -1,27 +1,24 @@
-﻿@model ReCaptchaPartSettings
-@using Orchard.AntiSpam.Settings;
+﻿﻿@model Orchard.AntiSpam.Models.ReCaptchaSettingsPartRecord
 
 <fieldset>
+    <legend>@T("ReCaptcha")</legend>
     <div>
         @Html.TextBoxFor(m => m.PublicKey, new { @class = "textMedium"})
         <span class="hint">@T("Your public key.")</span>
     </div>
-</fieldset>
-
-<fieldset>
     <div>
         @Html.TextBoxFor(m => m.PrivateKey, new { @class = "textMedium"})
         <span class="hint">@T("Your private key.")</span>
     </div>
-</fieldset>
 
-@T("Get custom keys:") <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a>
+    @T("Get custom keys:") <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a>
 
-<fieldset>
     <div>
-        @Html.EditorFor(m => m.ByPassAuthenticated, new { @class = "textMedium"})
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.ByPassAuthenticated)">@T("Hide for authenticated users")</label>
+        @Html.EditorFor(m => m.TrustAuthenticatedUsers, new { @class = "textMedium"})
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.TrustAuthenticatedUsers)">@T("Hide for authenticated users")</label>
         <span class="hint">@T("Enable to hide reCaptcha when the user is authenticated.")</span>
     </div>
 </fieldset>
+
+
 

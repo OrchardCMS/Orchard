@@ -61,9 +61,6 @@ namespace Orchard.Comments.Controllers {
                 case CommentIndexFilter.Pending:
                     commentsQuery = _commentService.GetComments(CommentStatus.Pending);
                     break;
-                case CommentIndexFilter.Spam:
-                    commentsQuery = _commentService.GetComments(CommentStatus.Spam);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -73,7 +70,7 @@ namespace Orchard.Comments.Controllers {
                 .OrderByDescending<CommentPartRecord>(cpr => cpr.CommentDateUtc)
                 .Slice(pager.GetStartIndex(), pager.PageSize)
                 .ToList()
-                .Select(comment => CreateCommentEntry(comment));
+                .Select(CreateCommentEntry);
 
             var model = new CommentsIndexViewModel {
                 Comments = entries.ToList(),
@@ -93,14 +90,6 @@ namespace Orchard.Comments.Controllers {
             IEnumerable<CommentEntry> checkedEntries = viewModel.Comments.Where(c => c.IsChecked);
             switch (viewModel.Options.BulkAction) {
                 case CommentIndexBulkAction.None:
-                    break;
-                case CommentIndexBulkAction.MarkAsSpam:
-                    if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
-                        return new HttpUnauthorizedResult();
-                    //TODO: Transaction
-                    foreach (CommentEntry entry in checkedEntries) {
-                        _commentService.MarkCommentAsSpam(entry.Comment.Id);
-                    }
                     break;
                 case CommentIndexBulkAction.Unapprove:
                     if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
@@ -151,9 +140,6 @@ namespace Orchard.Comments.Controllers {
                 case CommentDetailsFilter.Pending:
                     comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Pending);
                     break;
-                case CommentDetailsFilter.Spam:
-                    comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Spam);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -177,14 +163,6 @@ namespace Orchard.Comments.Controllers {
             IEnumerable<CommentEntry> checkedEntries = viewModel.Comments.Where(c => c.IsChecked);
             switch (viewModel.Options.BulkAction) {
                 case CommentDetailsBulkAction.None:
-                    break;
-                case CommentDetailsBulkAction.MarkAsSpam:
-                    if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
-                        return new HttpUnauthorizedResult();
-                    //TODO: Transaction
-                    foreach (CommentEntry entry in checkedEntries) {
-                        _commentService.MarkCommentAsSpam(entry.Comment.Id);
-                    }
                     break;
                 case CommentDetailsBulkAction.Unapprove:
                     if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
@@ -297,21 +275,6 @@ namespace Orchard.Comments.Controllers {
         }
 
         [HttpPost]
-        public ActionResult MarkAsSpam(int id, string returnUrl) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't mark comment as spam")))
-                return new HttpUnauthorizedResult();
-
-            var commentPart = _contentManager.Get<CommentPart>(id);
-            if (commentPart == null)
-                return new HttpNotFoundResult();
-
-            int commentedOn = commentPart.Record.CommentedOn;
-            _commentService.MarkCommentAsSpam(id);
-
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
-        }
-
-        [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                 return new HttpUnauthorizedResult();
@@ -329,7 +292,7 @@ namespace Orchard.Comments.Controllers {
         private CommentEntry CreateCommentEntry(CommentPart item) {
             return new CommentEntry {
                 Comment = item.Record,
-                Shape = _contentManager.BuildDisplay(item, "SummaryAdmin"),
+                CommentedOn = _commentService.GetCommentedContent(item.CommentedOn),
                 IsChecked = false,
             };
         }

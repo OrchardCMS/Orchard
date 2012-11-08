@@ -21,8 +21,10 @@ namespace Orchard.AntiSpam.Drivers {
         }
 
         protected override DriverResult Display(SpamFilterPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_SpamFilter_Metadata_SummaryAdmin",
-                                () => shapeHelper.Parts_SpamFilter_Metadata_SummaryAdmin());
+            return Combined(
+                ContentShape("Parts_SpamFilter_Metadata_SummaryAdmin", () => shapeHelper.Parts_SpamFilter_Metadata_SummaryAdmin()),
+                ContentShape("Parts_SpamFilter_Metadata_Actions", () => shapeHelper.Parts_SpamFilter_Metadata_Actions())
+                );
         }
 
         protected override void Importing(SpamFilterPart part, ImportContentContext context) {

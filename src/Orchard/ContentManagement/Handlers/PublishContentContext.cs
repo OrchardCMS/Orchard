@@ -9,5 +9,7 @@ namespace Orchard.ContentManagement.Handlers {
 
         public ContentItemVersionRecord PublishingItemVersionRecord { get; set; }
         public ContentItemVersionRecord PreviousItemVersionRecord { get; set; }
+
+        public bool Cancel { get; set; }
     }
 }

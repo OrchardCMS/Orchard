@@ -34,7 +34,6 @@ namespace Orchard.Comments {
             SchemaBuilder.CreateTable("CommentSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("ModerateComments")
-                .Column<bool>("EnableSpamProtection")
                );
 
             SchemaBuilder.CreateTable("CommentsPartRecord", table => table
@@ -104,6 +103,10 @@ namespace Orchard.Comments {
 
             SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
                 .DropColumn("AkismetUrl")
+               );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("EnableSpamProtected")
                );
 
             SchemaBuilder.AlterTable("CommentPartRecord", table => table

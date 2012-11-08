@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Orchard.AntiSpam.Models;
-using Orchard.AntiSpam.Settings;
 using Orchard.AntiSpam.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -26,9 +25,10 @@ namespace Orchard.AntiSpam.Drivers {
 
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
             return ContentShape("Parts_ReCaptcha_Fields", () => {
-                var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
+                var workContext = _workContextAccessor.GetContext();
+                var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
 
-                if(settings.ByPassAuthenticated && _workContextAccessor.GetContext().CurrentUser != null) {
+                if(settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
                     return null;
                 }
 
@@ -41,16 +41,17 @@ namespace Orchard.AntiSpam.Drivers {
         }
 
         protected override DriverResult Editor(ReCaptchaPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var workContext = _workContextAccessor.GetContext();
+            var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
 
-            var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
-            if (settings.ByPassAuthenticated && _workContextAccessor.GetContext().CurrentUser != null) {
+            if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
                 return null;
             }
 
             var submitViewModel = new ReCaptchaPartSubmitViewModel();
 
             if(updater.TryUpdateModel(submitViewModel, String.Empty, null, null)) {
-                var context = _workContextAccessor.GetContext().HttpContext;
+                var context = workContext.HttpContext;
 
                 var result = ExecuteValidateRequest(
                     settings.PrivateKey, 

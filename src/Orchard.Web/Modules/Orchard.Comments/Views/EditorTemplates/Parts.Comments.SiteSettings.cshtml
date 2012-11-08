@@ -8,10 +8,4 @@
         @Html.ValidationMessage("ModerateComments", "*")
         <span class="hint">@T("Check if you want to manually approve comments before they can be displayed.")</span>
     </div>
-    <div>
-        @Html.EditorFor(m => m.EnableSpamProtection) 
-        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableSpamProtection)">@T("Enable spam protection")</label>
-        @Html.ValidationMessage("EnableSpamProtection", "*")
-        <span class="hint">@T("Check to use an anti-spam filter on incoming comments. This requires that you have also enabled an actual filter like Akismet or Typepad.")</span>
-    </div>
 </fieldset>

@@ -6,10 +6,5 @@ namespace Orchard.Comments.Models {
             get { return Record.ModerateComments; }
             set { Record.ModerateComments = value; }
         }
-
-        public bool EnableSpamProtection {
-            get { return Record.EnableSpamProtection; }
-            set { Record.EnableSpamProtection = value; }
-        } 
     }
 }

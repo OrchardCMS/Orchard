@@ -22,7 +22,7 @@ namespace Orchard.AntiSpam.EventHandlers {
                 return;
             }
 
-            context.IsSpam = _spamService.CheckForSpam(context.Text, SpamFilterAction.One) == SpamStatus.Spam;
+            context.IsSpam = _spamService.CheckForSpam(context.Text, SpamFilterAction.One, context.Content) == SpamStatus.Spam;
         }
     }
 }

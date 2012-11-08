@@ -22,3 +22,11 @@
         <span class="hint">@T("The tokenized pattern generating the text to submit to spam filters.")</span>
     </div>
 </fieldset>
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.DeleteSpam)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.DeleteSpam)">@T("Delete spam when found")</label>
+        <span class="hint">@T("Enable to have spam automatically deleted when found. You won't be able to find false positive.")</span>
+    </div>
+</fieldset>

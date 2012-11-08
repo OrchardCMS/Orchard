@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -30,6 +31,7 @@ namespace Orchard.AntiSpam.Settings {
             if (updateModel.TryUpdateModel(settings, "SpamFilterPartSettings", null, null)) {
                 builder.WithSetting("SpamFilterPartSettings.Action", settings.Action.ToString());
                 builder.WithSetting("SpamFilterPartSettings.Pattern", settings.Pattern);
+                builder.WithSetting("SpamFilterPartSettings.DeleteSpam", settings.DeleteSpam.ToString(CultureInfo.InvariantCulture));
             }
 
             yield return DefinitionTemplate(settings);

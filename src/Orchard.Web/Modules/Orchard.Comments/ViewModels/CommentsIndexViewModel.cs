@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Comments.ViewModels {
     public class CommentsIndexViewModel {
@@ -9,10 +10,9 @@ namespace Orchard.Comments.ViewModels {
         public dynamic Pager { get; set; }
     }
 
-    [Bind(Exclude = "Shape")]
     public class CommentEntry {
         public CommentPartRecord Comment { get; set; }
-        public dynamic Shape { get; set; }
+        public IContent CommentedOn { get; set; }
         public bool IsChecked { get; set; }
     }
 
@@ -25,7 +25,6 @@ namespace Orchard.Comments.ViewModels {
         None,
         Unapprove,
         Approve,
-        MarkAsSpam,
         Delete
     }
 
@@ -33,6 +32,5 @@ namespace Orchard.Comments.ViewModels {
         All,
         Pending,
         Approved,
-        Spam,
     }
 }

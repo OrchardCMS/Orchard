@@ -33,7 +33,7 @@
   </Match>
   
   <Match DisplayType="SummaryAdmin">
-    <Place Parts_Comment_SummaryAdmin="Content:10"
+    <Place Parts_Comment_SummaryAdmin="Actions:6"
            Parts_Comments_Count_SummaryAdmin="Meta:4" />
   </Match>
 </Placement>

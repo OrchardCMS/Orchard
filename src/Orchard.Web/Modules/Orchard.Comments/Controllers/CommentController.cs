@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
-using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
@@ -30,82 +29,80 @@ namespace Orchard.Comments.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                 return this.RedirectLocal(returnUrl, "~/");
 
-            var comment = Services.ContentManager.New("Comment");
+            var comment = Services.ContentManager.New<CommentPart>("Comment");
 
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
             Services.ContentManager.Create(comment);
 
             if (ModelState.IsValid) {
-                if (comment.Has<CommentPart>()) {
-                    var commentPart = comment.As<CommentPart>();
+                var commentPart = comment.As<CommentPart>();
 
-                    // ensure the comments are not closed on the container, as the html could have been tampered manually
-                    var container = Services.ContentManager.Get(commentPart.CommentedOn);
-                    CommentsPart commentsPart = null;
-                    if(container != null) {
-                        commentsPart = container.As<CommentsPart>();
-                        if (commentsPart != null) {
-                            var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
-                            if (!commentsPart.CommentsActive
-                                || (settings.MustBeAuthenticated && Services.WorkContext.CurrentUser == null)) {
-                                Services.TransactionManager.Cancel();
-                                return this.RedirectLocal(returnUrl, "~/");
-                            }
+                // ensure the comments are not closed on the container, as the html could have been tampered manually
+                var container = Services.ContentManager.Get(commentPart.CommentedOn);
+                CommentsPart commentsPart = null;
+                if(container != null) {
+                    commentsPart = container.As<CommentsPart>();
+                    if (commentsPart != null) {
+                        var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+                        if (!commentsPart.CommentsActive
+                            || (settings.MustBeAuthenticated && Services.WorkContext.CurrentUser == null)) {
+                            Services.TransactionManager.Cancel();
+                            return this.RedirectLocal(returnUrl, "~/");
                         }
                     }
+                }
 
-                    // is it a response to another comment ?
-                    if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
-                        var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
-                        if(replied != null) {
-                            var repliedPart = replied.As<CommentPart>();
+                // is it a response to another comment ?
+                if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
+                    var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
+                    if(replied != null) {
+                        var repliedPart = replied.As<CommentPart>();
                             
-                            // what is the next position after the anwered comment
-                            if(repliedPart != null) {
-                                // the next comment is the one right after the RepliedOn one, at the same level
-                                var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
-                                    .Where(x => x.RepliedOn == repliedPart.RepliedOn && x.CommentDateUtc > repliedPart.CommentDateUtc)
-                                    .OrderBy(x => x.Position)
-                                    .Slice(0, 1)
-                                    .FirstOrDefault();
+                        // what is the next position after the anwered comment
+                        if(repliedPart != null) {
+                            // the next comment is the one right after the RepliedOn one, at the same level
+                            var nextComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
+                                .Where(x => x.RepliedOn == repliedPart.RepliedOn && x.CommentDateUtc > repliedPart.CommentDateUtc)
+                                .OrderBy(x => x.Position)
+                                .Slice(0, 1)
+                                .FirstOrDefault();
 
-                                // the previous comment is the last one under the RepliedOn
-                                var previousComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
-                                    .Where(x => x.RepliedOn == commentPart.RepliedOn)
-                                    .OrderByDescending(x => x.Position)
-                                    .Slice(0, 1)
-                                    .FirstOrDefault();
+                            // the previous comment is the last one under the RepliedOn
+                            var previousComment = _commentService.GetCommentsForCommentedContent(commentPart.CommentedOn)
+                                .Where(x => x.RepliedOn == commentPart.RepliedOn)
+                                .OrderByDescending(x => x.Position)
+                                .Slice(0, 1)
+                                .FirstOrDefault();
 
-                                if(nextComment == null) {
-                                    commentPart.Position = repliedPart.Position + 1;
+                            if(nextComment == null) {
+                                commentPart.Position = repliedPart.Position + 1;
+                            }
+                            else {
+                                if (previousComment == null) {
+                                    commentPart.Position = (repliedPart.Position + nextComment.Position) / 2;
                                 }
                                 else {
-                                    if (previousComment == null) {
-                                        commentPart.Position = (repliedPart.Position + nextComment.Position) / 2;
-                                    }
-                                    else {
-                                        commentPart.Position = (previousComment.Position + nextComment.Position) / 2;
-                                    }
+                                    commentPart.Position = (previousComment.Position + nextComment.Position) / 2;
                                 }
                             }
                         }
+                    }
                         
+                }
+                else {
+                    // new comment, last in position
+                    commentPart.RepliedOn = null;
+                    commentPart.Position = comment.Id;
+                }
+
+                if (commentPart.Status == CommentStatus.Pending) {
+                    // if the user who submitted the comment has the right to moderate, don't make this comment moderated
+                    if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
+                        commentPart.Status = CommentStatus.Approved;
                     }
                     else {
-                        // new comment, last in position
-                        commentPart.RepliedOn = null;
-                        commentPart.Position = comment.Id;
-                    }
-
-                    if (commentPart.Status == CommentStatus.Pending) {
-                        // if the user who submitted the comment has the right to moderate, don't make this comment moderated
-                        if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
-                            commentPart.Status = CommentStatus.Approved;
-                        }
-                        else {
-                            Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
-                        }
+                        Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
                     }
                 }
             }

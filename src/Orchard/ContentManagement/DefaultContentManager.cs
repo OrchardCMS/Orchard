@@ -349,6 +349,10 @@ namespace Orchard.ContentManagement {
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
             Handlers.Invoke(handler => handler.Publishing(context), Logger);
 
+            if(context.Cancel) {
+                return;
+            }
+
             if (previous != null) {
                 previous.Published = false;
             }
