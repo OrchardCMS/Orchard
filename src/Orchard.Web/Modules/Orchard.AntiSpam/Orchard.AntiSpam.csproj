@@ -93,8 +93,6 @@
     <Compile Include="Drivers\SpamFilterPartDriver.cs" />
     <Compile Include="Drivers\ReCaptchaPartDriver.cs" />
     <Compile Include="Drivers\SubmissionLimitPartDriver.cs" />
-    <Compile Include="EventHandlers\DefaultCheckSpamEventHandler.cs" />
-    <Compile Include="EventHandlers\ICheckSpamEventHandler.cs" />
     <Compile Include="Handlers\AkismetSettingsPartHandler.cs" />
     <Compile Include="Handlers\ReCaptchaSettingsPartHandler.cs" />
     <Compile Include="Handlers\TypePadSettingsPartHandler.cs" />
@@ -102,6 +100,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AkismetSettingsPartRecord.cs" />
     <Compile Include="Models\AkismetSettingsPart.cs" />
+    <Compile Include="Models\CommentCheckContext.cs" />
     <Compile Include="Models\ReCaptchaSettingsPart.cs" />
     <Compile Include="Models\ReCaptchaSettingsPartRecord.cs" />
     <Compile Include="Models\TypePadSettingsPart.cs" />

@@ -5,14 +5,14 @@ using Orchard.ContentManagement;
 
 namespace Orchard.AntiSpam.Services {
     public interface ISpamService : IDependency {
-        SpamStatus CheckForSpam(string text, SpamFilterAction action, IContent content);
+        SpamStatus CheckForSpam(CommentCheckContext text, SpamFilterAction action, IContent content);
         SpamStatus CheckForSpam(SpamFilterPart part);
 
         /// <summary>
         /// Explicitely report some content as spam in order to improve the service.
         /// </summary>
-        /// <param name="text">The text to report as spam.</param>
-        void ReportSpam(string text);
+        /// <param name="context">The comment context to report as spam.</param>
+        void ReportSpam(CommentCheckContext context);
 
         /// <summary>
         /// Explicitely report some content as ham in order to improve the service.
@@ -23,8 +23,8 @@ namespace Orchard.AntiSpam.Services {
         /// <summary>
         /// Explicitely report some content as ham in order to improve the service.
         /// </summary>
-        /// <param name="text">The text to report as ham (false positive).</param>
-        void ReportHam(string text);
+        /// <param name="context">The comment context to report as ham (false positive).</param>
+        void ReportHam(CommentCheckContext context);
 
         /// <summary>
         /// Explicitely report some content as ham in order to improve the service.

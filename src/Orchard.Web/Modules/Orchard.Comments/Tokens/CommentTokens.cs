@@ -21,10 +21,12 @@ namespace Orchard.Comments.Tokens {
         public Localizer T { get; set; }
 
         public void Describe(dynamic context) {
-            context.For("Content", T("Content Items"), T("Content Items"))
+            context.For("Content", T("Comments"), T("Comments"))
                 .Token("CommentedOn", T("Commented On"), T("The content item this comment was created on."))
                 .Token("CommentMessage", T("Comment Message"), T("The text of the comment itself"))
                 .Token("CommentAuthor", T("Comment Author"), T("The author of the comment."))
+                .Token("CommentAuthorUrl", T("Comment Author Url"), T("The url provided by the author of the comment."))
+                .Token("CommentAuthorEmail", T("Comment Author Email"), T("The email provided by the author of the comment."))
                 ;
         }
 
@@ -34,6 +36,8 @@ namespace Orchard.Comments.Tokens {
                 .Chain("CommentedOn", "Content", (Func<IContent, object>)(content => _contentManager.Get(content.As<CommentPart>().CommentedOn)))
                 .Token("CommentMessage", (Func<IContent, object>)(content => content.As<CommentPart>().CommentText))
                 .Token("CommentAuthor", (Func<IContent, object>)CommentAuthor)
+                .Token("CommentAuthorUrl", (Func<IContent, object>)(content => content.As<CommentPart>().SiteName))
+                .Token("CommentAuthorEmail", (Func<IContent, object>)(content => content.As<CommentPart>().Email))
                 ;
         }
 
