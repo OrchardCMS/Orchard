@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
@@ -100,7 +101,7 @@ namespace Orchard.Core.Shapes {
                     var menu = menuItem.Menu;
                     menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menu.MenuName));
 
-                    string contentType = menuItem.Content.ContentItem.ContentType;
+                    var contentType = ((IContent)menuItem.Content).ContentItem.ContentType;
                     if(contentType != null) {
                         menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
                     }
