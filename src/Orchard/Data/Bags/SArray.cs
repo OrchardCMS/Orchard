@@ -3,7 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
-namespace Orchard.Projections.Settings {
+namespace Orchard.Data.Bags {
     public class SArray : DynamicObject, ISItem {
         public ISItem[] Values { get; private set; }
 
@@ -70,7 +70,7 @@ namespace Orchard.Projections.Settings {
             return new SArray(o1.Values.Union(new[] { o1 }).ToArray());
         }
 
-        public static SObject operator &(SArray o1, SObject o2) {
+        public static Bag operator &(SArray o1, Bag o2) {
             return o2;
         }
 

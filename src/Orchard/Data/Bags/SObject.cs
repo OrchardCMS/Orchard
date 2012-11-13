@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 
-namespace Orchard.Projections.Settings {
-    public class SObject : DynamicObject, IEnumerable<KeyValuePair<string, object>>, ISItem {
+namespace Orchard.Data.Bags {
+    public class Bag : DynamicObject, IEnumerable<KeyValuePair<string, object>>, ISItem {
         internal readonly Dictionary<string, ISItem> _properties = new Dictionary<string, ISItem>();
 
         public static dynamic New() {
-            return new SObject();
+            return new Bag();
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value) {
@@ -52,12 +52,12 @@ namespace Orchard.Projections.Settings {
             return GetMember(indexes[0].ToString(), out result);
         }
 
-        public static SObject operator &(SObject o1, SObject o2) {
+        public static Bag operator &(Bag o1, Bag o2) {
             if (o1 == null) {
                 return o2;
             }
 
-            var clone = (SObject)o1.Clone();
+            var clone = (Bag)o1.Clone();
             dynamic dclone = clone;
 
             foreach (var pair in o2._properties) {

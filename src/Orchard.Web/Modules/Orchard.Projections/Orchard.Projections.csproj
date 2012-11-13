@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -217,16 +221,8 @@
     <Compile Include="Services\PropertyShapes.cs" />
     <Compile Include="Services\ProjectionManager.cs" />
     <Compile Include="Services\QueryService.cs" />
-    <Compile Include="Settings\Serialization\XmlSettingsSerializer.cs" />
-    <Compile Include="Settings\Serialization\ISettingsSerializer.cs" />
     <Compile Include="Services\FieldIndexService.cs" />
     <Compile Include="Services\IFieldIndexService.cs" />
-    <Compile Include="Settings\SArray.cs" />
-    <Compile Include="Settings\SConvert.cs" />
-    <Compile Include="Settings\SItem.cs" />
-    <Compile Include="Settings\StateValueProvider.cs" />
-    <Compile Include="Settings\SValue.cs" />
-    <Compile Include="Settings\SObject.cs" />
     <Compile Include="StandardQueries\QueryFeedQuery.cs" />
     <Compile Include="ViewModels\BindingIndexViewModel.cs" />
     <Compile Include="ViewModels\BindingSelectViewModel.cs" />

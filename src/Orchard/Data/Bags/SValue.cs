@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Orchard.Projections.Settings {
+namespace Orchard.Data.Bags {
     public class SValue : ISItem {
         public object Value { get; set; }
 
@@ -23,7 +23,7 @@ namespace Orchard.Projections.Settings {
             return new SArray(new[] { o1 }.Union(o2.Values).ToArray());
         }
 
-        public static SObject operator &(SValue o1, SObject o2) {
+        public static Bag operator &(SValue o1, Bag o2) {
             return o2;
         }
 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace Orchard.Projections.Settings.Serialization {
-    public class XmlSettingsSerializer : ISettingsSerializer {
-        private const string Root = "SObject";
+namespace Orchard.Data.Bags.Serialization {
+    public class XmlSettingsSerializer : IBagSerializer {
+        private const string Root = "Bag";
 
-        public void Serialize(TextWriter tw, SObject o) {
+        public void Serialize(TextWriter tw, Bag o) {
             using (var writer = new XmlTextWriter(tw)) {
                 writer.WriteStartDocument();
                 writer.WriteStartElement(Root);
@@ -17,9 +17,9 @@ namespace Orchard.Projections.Settings.Serialization {
             }
         }
 
-        public SObject Deserialize(TextReader tr) {
+        public Bag Deserialize(TextReader tr) {
             var reader = new XmlTextReader(tr);
-            var result = new SObject();
+            var result = new Bag();
 
             // ignore root element
             while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == Root) {
@@ -33,7 +33,7 @@ namespace Orchard.Projections.Settings.Serialization {
             return result;
         }
 
-        private void ReadElement(XmlReader reader, SObject parent) {
+        private void ReadElement(XmlReader reader, Bag parent) {
             var name = XmlConvert.DecodeName(reader.LocalName);
             var type = reader["type"];
 
@@ -51,7 +51,7 @@ namespace Orchard.Projections.Settings.Serialization {
                 }
             }
             else {
-                var grappe = new SObject();
+                var grappe = new Bag();
                 reader.Read();
                 parent.SetMember(name, grappe);
                 while (reader.MoveToContent() == XmlNodeType.Element) {
@@ -66,7 +66,7 @@ namespace Orchard.Projections.Settings.Serialization {
             var list = new List<object>();
             reader.Read();
             while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "Item") {
-                dynamic o = new SObject();
+                dynamic o = new Bag();
                 ReadElement(reader, o);
                 list.Add(o.Item);
             }
@@ -74,16 +74,16 @@ namespace Orchard.Projections.Settings.Serialization {
             return new SArray(list.ToArray());
         }
 
-        private void WriteGrappe(XmlWriter writer, SObject grappe) {
+        private void WriteGrappe(XmlWriter writer, Bag grappe) {
             foreach (var pair in grappe._properties) {
                 WriteAny(writer, pair.Key, pair.Value);
             }
         }
 
         private void WriteAny(XmlWriter writer, string name, object value) {
-            if (value is SObject) {
+            if (value is Bag) {
                 writer.WriteStartElement(XmlConvert.EncodeLocalName(name));
-                WriteGrappe(writer, (SObject)value);
+                WriteGrappe(writer, (Bag)value);
                 writer.WriteEndElement();
             }
             if (value is SArray) {

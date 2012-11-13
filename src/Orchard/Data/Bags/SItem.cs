@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orchard.Projections.Settings {
+namespace Orchard.Data.Bags {
     public interface ISItem : ICloneable {
 
     }

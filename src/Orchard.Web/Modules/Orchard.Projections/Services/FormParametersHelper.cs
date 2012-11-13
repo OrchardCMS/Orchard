@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using Orchard.Projections.Settings;
+using Orchard.Data.Bags;
 
 namespace Orchard.Projections.Services {
     public static class FormParametersHelper {
@@ -43,7 +43,7 @@ namespace Orchard.Projections.Services {
 
 
         public static dynamic ToDynamic(string parameters) {
-            var result = SObject.New();
+            var result = Bag.New();
 
             if (String.IsNullOrEmpty(parameters)) {
                 return result;

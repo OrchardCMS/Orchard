@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace Orchard.Projections.Settings {
+namespace Orchard.Data.Bags {
     public class SettingsValueProvider : IValueProvider {
         private readonly dynamic _state;
 

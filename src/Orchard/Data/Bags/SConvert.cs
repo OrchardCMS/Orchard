@@ -4,14 +4,14 @@ using System.Reflection;
 using System.Globalization;
 using System.Xml;
 
-namespace Orchard.Projections.Settings {
+namespace Orchard.Data.Bags {
     public class SConvert {
         public static ISItem ToSettings(object o) {
             if (o is SValue) {
                 return (ISItem)o;
             }
 
-            if (o is SObject) {
+            if (o is Bag) {
                 return (ISItem)o;
             }
 
@@ -24,7 +24,7 @@ namespace Orchard.Projections.Settings {
             }
 
             if (IsAnonymousType(o.GetType())) {
-                dynamic grappe = new SObject();
+                dynamic grappe = new Bag();
 
                 foreach (var p in o.GetType().GetProperties()) {
                     grappe[p.Name] = p.GetValue(o, null);

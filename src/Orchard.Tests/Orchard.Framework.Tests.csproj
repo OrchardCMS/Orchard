@@ -217,6 +217,7 @@
     <Compile Include="Data\ProviderUtilities.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\ProvidersTests.cs" />
+    <Compile Include="Data\Bags\SettingsTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
