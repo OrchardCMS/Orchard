@@ -1,0 +1,1 @@
+This is a patched version of NHibernate to prevent background JIT from failing.
