@@ -160,7 +160,7 @@
     <Content Include="Views\ListOfComments.cshtml" />
     <Content Include="Views\CommentReplyButton.cshtml" />
     <Content Include="Views\DefinitionTemplates\CommentsPartSettingsViewModel.cshtml" />
-    <None Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
+    <Content Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
