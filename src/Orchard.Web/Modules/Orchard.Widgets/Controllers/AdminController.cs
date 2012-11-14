@@ -165,7 +165,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST(int layerId, string widgetType, string returnUrl) {
+        public ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
