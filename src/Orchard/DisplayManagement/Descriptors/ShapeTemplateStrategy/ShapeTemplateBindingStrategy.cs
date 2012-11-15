@@ -70,6 +70,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                     var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
                     var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
                     var fileNames = _cacheManager.Get(virtualPath, ctx => {
+                        if (!_virtualPathProvider.DirectoryExists(virtualPath))
+                            return new List<string>();
+
                         ctx.Monitor(_virtualPathMonitor.WhenPathChanges(virtualPath));
                         return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName).ToReadOnlyCollection();
                     });
