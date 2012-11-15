@@ -1,1 +1,14 @@
 This is a patched version of NHibernate to prevent background JIT from failing.
+Applied https://nhibernate.jira.com/browse/NH-2958:
+
+        private static XmlSerializer _mappingDocumentSerializer = null; 
+
+        private XmlSerializer mappingDocumentSerializer 
+        { 
+            get 
+            { 
+                if (_mappingDocumentSerializer == null) 
+                    _mappingDocumentSerializer = new XmlSerializer(typeof (HbmMapping)); 
+                return _mappingDocumentSerializer; 
+            } 
+        } 
