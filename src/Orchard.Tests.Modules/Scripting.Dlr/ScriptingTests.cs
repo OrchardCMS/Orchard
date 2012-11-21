@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Autofac;
-using ClaySharp;
 using NUnit.Framework;
 using Orchard.Scripting.Dlr.Services;
 using Path = Bleroy.FluentPath.Path;
@@ -81,22 +80,6 @@ namespace Orchard.Tests.Modules.Scripting.Dlr {
             File.WriteAllText(targetPath, "def f\r\nreturn 32\r\nend\r\n");
             _scriptingManager.ExecuteFile(targetPath);
             Assert.That(_scriptingManager.ExecuteExpression("f / 4"), Is.EqualTo(8));
-        }
-
-
-        [Test]
-        public void CanDeclareCallbackOnGlobalMethod() {
-            _scriptingManager.SetVariable("x", new Clay(new ReturnMethodNameLengthBehavior()));
-
-            Assert.That(_scriptingManager.ExecuteExpression("3 + x.foo()"), Is.EqualTo(6));
-        }
-
-
-        public class ReturnMethodNameLengthBehavior : ClayBehavior {
-            public override object InvokeMemberMissing(Func<object> proceed, object self, string name, INamedEnumerable<object> args) {
-                Trace.WriteLine("Returning length of " + name);
-                return name.Length;
-            }
         }
 
         [Test]

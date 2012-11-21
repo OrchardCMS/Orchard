@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
-using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
@@ -110,8 +109,7 @@ namespace Orchard.ContentManagement {
         }
 
         private dynamic CreateItemShape(string actualShapeType) {
-            var zoneHoldingBehavior = new ZoneHoldingBehavior((Func<dynamic>)(() => _shapeFactory.Create("ContentZone", Arguments.Empty())), _workContextAccessor.GetContext().Layout);
-            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
+            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), () => new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty())));
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {

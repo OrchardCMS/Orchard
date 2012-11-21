@@ -1,5 +1,4 @@
 ﻿using System;
-using ClaySharp.Implementation;
 using Orchard.DisplayManagement;
 
 namespace Orchard.UI.Zones {

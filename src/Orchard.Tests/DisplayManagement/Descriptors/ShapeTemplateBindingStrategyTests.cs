@@ -94,7 +94,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
 
             public bool DirectoryExists(string virtualPath) {
-                throw new NotImplementedException();
+                return true;
             }
 
             public void CreateDirectory(string virtualPath) {

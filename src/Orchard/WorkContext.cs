@@ -41,7 +41,7 @@ namespace Orchard {
         /// The Layout shape corresponding to the work context
         /// </summary>
         public dynamic Layout {
-            get { return GetState<object>("Layout"); }
+            get { return GetState<dynamic>("Layout"); }
             set { SetState("Layout", value); }
         }
 
