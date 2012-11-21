@@ -136,7 +136,10 @@ namespace Orchard.CustomForms.Controllers {
             list.AddRange(submissions);
             
             var totalItemCount = Services.ContentManager
-                .Query<CommonPart, CommonPartRecord>().Where(x => x.Container == formPart.ContentItem.Record).Count();
+                    .Query<CommonPart, CommonPartRecord>()
+                    .ForVersion(VersionOptions.Latest)
+                    .Where(x => x.Container.Id == id)
+                    .Count();
             shape.Pager(Services.New.Pager(pager).TotalItemCount(totalItemCount));
             shape.List(list);
             return View(shape);
