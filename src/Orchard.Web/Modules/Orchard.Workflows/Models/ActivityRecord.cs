@@ -1,16 +1,24 @@
-﻿using System.Collections.Generic;
-
-namespace Orchard.Workflows.Models {
+﻿namespace Orchard.Workflows.Models {
+    /// <summary>
+    /// Represents an activity in a <see cref="WorkflowDefinitionRecord"/>
+    /// </summary>
     public class ActivityRecord {
         public virtual int Id { get; set; }
-        public virtual string Category { get; set; }
+        
+        /// <summary>
+        /// The type of the activity.
+        /// </summary>
         public virtual string Type { get; set; }
+
+        /// <summary>
+        /// The serialized parameters of the activity.
+        /// </summary>
         public virtual string Parameters { get; set; }
 
-        // Parent property
+        /// <summary>
+        /// The parent <see cref="WorkflowDefinitionRecord"/> 
+        /// containing this activity.
+        /// </summary>
         public virtual WorkflowDefinitionRecord WorkflowDefinitionRecord { get; set; }
-
-        // Parent property
-        public virtual IList<ActivityRecord> RegisteredWorkflows { get; set; }
     }
 }

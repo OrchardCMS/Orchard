@@ -6,8 +6,8 @@ namespace Orchard.Workflows.Models.Descriptors {
     public class DescribeActivityContext {
         private readonly Dictionary<string, DescribeActivityFor> _describes = new Dictionary<string, DescribeActivityFor>();
 
-        public IEnumerable<TypeDescriptor<ActionDescriptor>> Describe() {
-            return _describes.Select(kp => new TypeDescriptor<ActionDescriptor> {
+        public IEnumerable<TypeDescriptor<ActivityDescriptor>> Describe() {
+            return _describes.Select(kp => new TypeDescriptor<ActivityDescriptor> {
                 Category = kp.Key,
                 Name = kp.Value.Name,
                 Description = kp.Value.Description,

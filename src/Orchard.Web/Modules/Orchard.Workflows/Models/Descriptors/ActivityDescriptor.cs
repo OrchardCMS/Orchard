@@ -2,7 +2,7 @@
 using Orchard.Localization;
 
 namespace Orchard.Workflows.Models.Descriptors {
-    public class ActionDescriptor {
+    public class ActivityDescriptor {
         public string Category { get; set; }
         public string Type { get; set; }
         public LocalizedString Name { get; set; }

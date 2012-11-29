@@ -1,0 +1,11 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+    string name = Model.Name;
+    bool blocking = Model.IsBlocking;
+}
+
+<div class="activity @blocking">
+    @name.CamelFriendly()
+</div>
+

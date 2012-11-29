@@ -1,0 +1,98 @@
+﻿.activity {
+    border: 1px solid #346789;
+    /*box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa;
+    -moz-border-radius: 0.5em;*/
+    border-radius: 0.5em;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    min-width: 5em;
+    min-height: 5em;
+    line-height: 5em;
+    text-align: center;
+    z-index: 20;
+    position: absolute;
+    background-color: #eeeeef;
+    color: black;
+    font-family: helvetica;
+    padding: 0.5em;
+    font-size: 0.9em;
+}
+
+    .activity:hover, .dragHover {
+        box-shadow: 2px 2px 19px #444;
+        -o-box-shadow: 2px 2px 19px #444;
+        -webkit-box-shadow: 2px 2px 19px #444;
+        -moz-box-shadow: 2px 2px 19px #444;
+        opacity: 0.6;
+        filter: alpha(opacity=60);
+    }
+
+    .blocking {
+        background-image: url(images/blocking.png) ;
+        background-position: top right;
+        background-repeat: no-repeat;
+    }
+
+._jsPlumb_connector { z-index:4; }
+._jsPlumb_endpoint { z-index:21;cursor:pointer; }
+
+.sourceEndpointLabel, .targetEndpointLabel {
+    z-index: 21;
+    cursor: pointer;
+}
+
+.active {
+	border:1px dotted green;
+}
+.hover {
+	border:1px dotted red;
+}
+
+
+/* attempt to make the editor section to take the full height */
+#layout-main, #main, #content {
+    height: 100%
+}
+
+.editor {
+    position: relative;
+	height:auto !important; /* real browsers */
+	min-height:500px; /* real browsers */
+}
+
+.connection-label {
+    z-index: 10;
+	opacity:0.8; 
+	filter:alpha(opacity=80);
+	background-color:white;
+	color:black;
+	padding:0 0.5em; 
+    border:1px solid #346789; 
+}
+
+/* toolbox */
+
+#activity-toolbox {
+    border: 1px solid #E4E5E6;
+    background-color: #F3F4F5;
+    padding: 0 5px;
+}
+
+    #activity-toolbox .activity-toolbox-item {
+        display: block;
+        padding: 0 10px;
+        width: 150px;
+        border: 1px solid #EAEAEA;
+        background-color: white;
+        margin: 5px 0;
+    }
+
+    #activity-toolbox .activity-toolbox-item h2 {
+        color: #333;
+        padding: 2px;
+        font-size: 1.077em;
+    }
+

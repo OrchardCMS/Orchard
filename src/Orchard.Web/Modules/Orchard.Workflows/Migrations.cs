@@ -1,21 +1,46 @@
-﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 
 namespace Orchard.Workflows {
-    public class WorkflowsDataMigration : DataMigrationImpl {
-        public int Create() {
-            SchemaBuilder.CreateTable("WorkflowPartRecord",
-                table => table
-                    .ContentPartRecord()
-                );
+    public class Migrations : DataMigrationImpl {
 
-            ContentDefinitionManager.AlterTypeDefinition("Workflow",
-               cfg => cfg
-                   .WithPart("WorkflowPart")
-                   .WithPart("TitlePart")
-                   .WithPart("IdentityPart")
-                   .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
-                );
+        public int Create() {
+			// Creating table TransitionRecord
+			SchemaBuilder.CreateTable("TransitionRecord", table => table
+				.Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("SourceEndpoint")
+                .Column<string>("DestinationEndpoint")
+                .Column<int>("SourceActivityRecord_id")
+                .Column<int>("DestinationActivityRecord_id")
+                .Column<int>("WorkflowDefinitionRecord_id")
+			);
+
+			// Creating table WorkflowRecord
+			SchemaBuilder.CreateTable("WorkflowRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("State", column => column.Unlimited())
+                .Column<int>("WorkflowDefinitionRecord_id")
+			);
+
+			// Creating table WorkflowDefinitionRecord
+			SchemaBuilder.CreateTable("WorkflowDefinitionRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+				.Column<bool>("Enabled")
+                .Column<string>("Name", column => column.WithLength(1024))
+			);
+
+			// Creating table AwaitingActivityRecord
+			SchemaBuilder.CreateTable("AwaitingActivityRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<int>("ActivityRecord_id")
+			);
+
+			// Creating table ActivityRecord
+			SchemaBuilder.CreateTable("ActivityRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("Type")
+				.Column<string>("Parameters")
+                .Column<int>("WorkflowDefinitionRecord_id")
+			);
 
             return 1;
         }
