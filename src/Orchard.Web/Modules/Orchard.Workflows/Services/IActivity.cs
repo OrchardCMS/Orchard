@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Workflows.Models.Descriptors;
 
@@ -14,8 +11,20 @@ namespace Orchard.Workflows.Services {
         bool IsBlocking { get; }
         string Form { get; }
 
+        /// <summary>
+        /// List of possible outcomes when the activity is executed
+        /// </summary>
         IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context);
-        bool CanTransition(ActivityContext context);
-        LocalizedString Transition(ActivityContext context);
+
+        /// <summary>
+        /// Whether the activity can transition to the next outcome. Can prevent the activity from being transitioned
+        /// because a condition is not valid.
+        /// </summary>
+        bool CanExecute(ActivityContext context);
+
+        /// <summary>
+        /// Executes the current activity
+        /// </summary>
+        LocalizedString Execute(ActivityContext context);
     }
 }

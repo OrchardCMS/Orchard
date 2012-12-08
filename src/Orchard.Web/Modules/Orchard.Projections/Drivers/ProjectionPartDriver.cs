@@ -10,6 +10,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.Property;

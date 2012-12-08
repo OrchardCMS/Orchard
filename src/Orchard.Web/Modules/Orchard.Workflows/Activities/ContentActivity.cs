@@ -11,7 +11,7 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override bool CanTransition(ActivityContext context) {
+        public override bool CanExecute(ActivityContext context) {
             string contenttypes = context.State.ContentTypes;
             var content = context.Tokens["Content"] as IContent;
 
@@ -33,7 +33,7 @@ namespace Orchard.Workflows.Activities {
             return new[] { T("Success") };
         }
 
-        public override LocalizedString Transition(ActivityContext context) {
+        public override LocalizedString Execute(ActivityContext context) {
             return T("True");
         }
     }

@@ -38,7 +38,7 @@ namespace Orchard.Workflows {
 			SchemaBuilder.CreateTable("ActivityRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("Type")
-				.Column<string>("Parameters")
+				.Column<string>("State", c => c.Unlimited())
                 .Column<int>("WorkflowDefinitionRecord_id")
 			);
 

@@ -57,7 +57,7 @@
     height: 100%
 }
 
-.editor {
+#activity-editor {
     position: relative;
 	height:auto !important; /* real browsers */
 	min-height:500px; /* real browsers */

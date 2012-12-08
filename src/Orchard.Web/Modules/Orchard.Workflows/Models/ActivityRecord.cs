@@ -1,4 +1,6 @@
-﻿namespace Orchard.Workflows.Models {
+﻿using Orchard.Data.Conventions;
+
+namespace Orchard.Workflows.Models {
     /// <summary>
     /// Represents an activity in a <see cref="WorkflowDefinitionRecord"/>
     /// </summary>
@@ -11,9 +13,10 @@
         public virtual string Type { get; set; }
 
         /// <summary>
-        /// The serialized parameters of the activity.
+        /// The serialized state of the activity.
         /// </summary>
-        public virtual string Parameters { get; set; }
+        [StringLengthMax]
+        public virtual string State { get; set; }
 
         /// <summary>
         /// The parent <see cref="WorkflowDefinitionRecord"/> 

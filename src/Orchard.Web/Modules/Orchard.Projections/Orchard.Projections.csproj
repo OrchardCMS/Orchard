@@ -213,7 +213,6 @@
     <Compile Include="Services\IPropertyService.cs" />
     <Compile Include="Services\LayoutProvider.cs" />
     <Compile Include="Services\ISortCriteriaProvider.cs" />
-    <Compile Include="Services\FormParametersHelper.cs" />
     <Compile Include="Services\IFilterProvider.cs" />
     <Compile Include="Services\IProjectionManager.cs" />
     <Compile Include="Services\IQueryService.cs" />

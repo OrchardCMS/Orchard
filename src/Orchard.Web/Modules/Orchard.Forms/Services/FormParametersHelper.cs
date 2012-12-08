@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Orchard.Data.Bags;
 
-namespace Orchard.Projections.Services {
+namespace Orchard.Forms.Services {
     public static class FormParametersHelper {
         public static string ToString(IDictionary<string, string> parameters) {
             var doc = new XDocument();
@@ -59,6 +62,34 @@ namespace Orchard.Projections.Services {
             }
 
             return result;
+        }
+
+        public static dynamic FromJsonString(string state) {
+            if (string.IsNullOrWhiteSpace(state)) {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject(state);
+        }
+
+        public static string ToJsonString(FormCollection formCollection) {
+            var o = new JObject();
+
+            foreach (var key in formCollection.AllKeys) {
+                o.Add(new JProperty(key, formCollection.Get(key)));
+            }
+
+            return JsonConvert.SerializeObject(o);
+        }
+
+        public static string ToJsonString(IDictionary<string, object> dictionary) {
+            var o = new JObject();
+
+            foreach (var entry in dictionary) {
+                o.Add(new JProperty(entry.Key, entry.Value));
+            }
+
+            return JsonConvert.SerializeObject(o);
         }
     }
 }

@@ -177,6 +177,14 @@
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
+    <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="Data\Bags\SConvert.cs" />
+    <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
+    <Compile Include="Data\Bags\Serialization\XmlSettingsSerializer.cs" />
+    <Compile Include="Data\Bags\SItem.cs" />
+    <Compile Include="Data\Bags\SObject.cs" />
+    <Compile Include="Data\Bags\StateValueProvider.cs" />
+    <Compile Include="Data\Bags\SValue.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
     <Compile Include="Data\Conventions\CacheConvention.cs" />
     <Compile Include="Data\DefaultDatabaseCacheConfiguration.cs" />

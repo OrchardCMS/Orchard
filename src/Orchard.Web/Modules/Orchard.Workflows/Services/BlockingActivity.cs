@@ -19,10 +19,10 @@ namespace Orchard.Workflows.Services {
 
         public abstract IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context);
         
-        public virtual bool CanTransition(ActivityContext context) {
+        public virtual bool CanExecute(ActivityContext context) {
             return true;
         }
 
-        public abstract LocalizedString Transition(ActivityContext context);
+        public abstract LocalizedString Execute(ActivityContext context);
     }
 }

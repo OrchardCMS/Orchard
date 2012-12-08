@@ -7,7 +7,7 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class NotificationActivity : Activity {
+    public class NotificationActivity : BaseActivity {
         private readonly INotifier _notifier;
         private readonly ITokenizer _tokenizer;
 
@@ -39,7 +39,7 @@ namespace Orchard.Workflows.Activities {
             yield return T("Done");
         }
 
-        public override LocalizedString Transition(ActivityContext context) {
+        public override LocalizedString Execute(ActivityContext context) {
             string notification = context.State.Notification;
             string message = context.State.Message;
 

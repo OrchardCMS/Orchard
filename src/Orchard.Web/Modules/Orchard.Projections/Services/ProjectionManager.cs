@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Forms.Services;
 using Orchard.Projections.Descriptors;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Property;

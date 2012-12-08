@@ -19,6 +19,9 @@ glob:*.ReSharper
 glob:*.orig
 glob:*.suo
 glob:src/Orchard.Web/Modules-temp/*
+glob:src/Backup/*
+glob:src/packages/*
+glob:src/UpgradeLog.*
 glob:*.itrace.csdef
 glob:*.build.csdef
 glob:src/Orchard.Azure/Orchard.Azure.Web/Core
