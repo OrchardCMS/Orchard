@@ -106,7 +106,7 @@ namespace Orchard.Comments {
                );
 
             SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
-                .DropColumn("EnableSpamProtected")
+                .DropColumn("EnableSpamProtection")
                );
 
             SchemaBuilder.AlterTable("CommentPartRecord", table => table
