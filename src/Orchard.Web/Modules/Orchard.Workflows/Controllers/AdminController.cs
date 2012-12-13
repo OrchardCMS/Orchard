@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -172,7 +171,7 @@ namespace Orchard.Workflows.Controllers {
 
             var viewModel = new AdminEditViewModel {
                 LocalId = localId,
-                AllActivities = _activitiesManager.GetActivities()
+                AllActivities = _activitiesManager.GetActivities(),
             };
 
             return View("Edit", viewModel);
@@ -191,12 +190,18 @@ namespace Orchard.Workflows.Controllers {
             }
 
             IShape shape = New.Activity(activity);
+
+            if (model.State != null) {
+                var dynamicState = FormParametersHelper.ToDynamic(FormParametersHelper.ToString(model.State));
+                ((dynamic)shape).State(dynamicState);
+            }
+
             shape.Metadata.Alternates.Add("Activity__" + activity.Name);
 
             return new ShapeResult(this, shape);
         }
 
-        public ActionResult EditActivity(string localId, ActivityViewModel model) {
+        public ActionResult EditActivity(string localId, string clientId, ActivityViewModel model) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
                 return new HttpUnauthorizedResult();
 
@@ -209,12 +214,9 @@ namespace Orchard.Workflows.Controllers {
             // build the form, and let external components alter it
             var form = activity.Form == null ? null : _formManager.Build(activity.Form);
 
-            // bind form with existing values.
-            if (model.State != null) {
-                _formManager.Bind(form, new DictionaryValueProvider<string>(model.State, CultureInfo.InvariantCulture));
-            }
+            // form is bound on client side
 
-            var viewModel = New.ViewModel(LocalId: localId, Form: form);
+            var viewModel = New.ViewModel(LocalId: localId, ClientId: clientId, Form: form);
             
             return View(viewModel);
         }
@@ -248,7 +250,16 @@ namespace Orchard.Workflows.Controllers {
                 return View(viewModel);
             }
 
-            return RedirectToAction("EditLocal", new {localId});
+            var model = new UpdatedActivityModel {
+                ClientId = clientId,
+                Data = formValues
+            };
+
+            TempData["UpdatedViewModel"] = model;
+
+            return RedirectToAction("EditLocal", new {
+                localId
+            });
         }
 
         [HttpPost, ActionName("EditActivity")]

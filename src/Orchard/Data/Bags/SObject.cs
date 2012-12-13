@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace Orchard.Data.Bags {
     public class Bag : DynamicObject, IEnumerable<KeyValuePair<string, object>>, ISItem {
-        internal readonly Dictionary<string, ISItem> _properties = new Dictionary<string, ISItem>();
+        internal readonly Dictionary<string, ISItem> _properties = new Dictionary<string, ISItem>(StringComparer.OrdinalIgnoreCase);
 
         public static dynamic New() {
             return new Bag();

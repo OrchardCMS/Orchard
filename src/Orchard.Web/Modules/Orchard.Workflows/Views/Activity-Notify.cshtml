@@ -1,0 +1,15 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+    string name = Model.Name;
+    bool blocking = Model.IsBlocking;
+    string blockingClass = blocking ? "blocking" : null;
+}
+
+<div class="@blockingClass" title="@Model.State.Message">
+    @name.CamelFriendly() 
+    @if (Model.State.Notification != null) {
+        @:- @Model.State.Notification
+    }
+    
+</div>

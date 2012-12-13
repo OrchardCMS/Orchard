@@ -6,6 +6,8 @@
     Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
 
     Layout.Title = @T("Edit Activity");
+    Script.Require("jQueryUI");
+    Script.Include("orchard-workflows-serialize.js");
 }
 
 @Html.ValidationSummary()
@@ -25,4 +27,19 @@
     <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
     <button class="cancel" type="submit" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
 </fieldset>
+}
+
+@using (Script.Head()) {
+<script type="text/javascript">
+    //<![CDATA[
+    var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
+    var localId = '@Model.LocalId';
+    //]]>
+</script>
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        loadForm('@Model.LocalId', '@Model.ClientId');
+    </script>
 }

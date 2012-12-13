@@ -43,7 +43,7 @@
 
         // deserialize the previously locally saved workflow
         loadActivities(localId);
-
+        
         // a new connection is created
         jsPlumb.bind("jsPlumbConnection", function (connectionInfo) {
             // ...update your data model here.  The contents of the 'connectionInfo' are described below.
@@ -126,7 +126,7 @@
 
                 if (activities[name].hasForm) {
                     dom.dblclick(function() {
-                        saveLocal();
+                        saveLocal(localId);
                         window.location.href = editActivityUrl + "/0?name=" + name + "&clientId=" + elt.viewModel.clientId + "&localId=" + localId;
                     });
                 }

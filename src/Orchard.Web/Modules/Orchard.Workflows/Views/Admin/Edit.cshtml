@@ -1,6 +1,7 @@
 ﻿@model Orchard.Workflows.ViewModels.AdminEditViewModel
 @using ClaySharp.Implementation
 @using Orchard.ContentManagement
+@using Orchard.Forms.Services
 @using Orchard.Localization
 @using Orchard.Utility.Extensions
 @using Orchard.Workflows.Models;
@@ -36,7 +37,18 @@
     var editActivityUrl = '@Url.Action("EditActivity", "Admin", new { area = "Orchard.Workflows" })';
     var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
     var localId = '@Model.LocalId';
-
+    var updatedActivityClientId = null;
+    var updatedActivityState = null;
+    
+    @if (TempData.ContainsKey("UpdatedViewModel")) {
+        var model = TempData["UpdatedViewModel"] as UpdatedActivityModel;
+        if (model != null) {
+    <text>
+    updatedActivityClientId = '@(model.ClientId)';
+    updatedActivityState = '@Html.Raw(FormParametersHelper.ToJsonString(model.Data))';
+    </text>
+        }
+    }
     //]]>
 </script>
 }
