@@ -37,10 +37,10 @@ namespace Orchard.UI.Navigation {
             }
 
             if (!string.IsNullOrWhiteSpace(x.Position) && !string.IsNullOrWhiteSpace(y.Position)) {
-                var xLastDot = x.Position.LastIndexOf('.');
-                var yLastDot = y.Position.LastIndexOf('.');
-                var xParentPosition = xLastDot == -1 ? null : x.Position.Substring(0, xLastDot);
-                var yParentPosition = yLastDot == -1 ? null : y.Position.Substring(0, yLastDot);
+                var xPosSplitted = x.Position.Split('.').Where(ss => ss != "0").ToArray();
+                var yPosSplitted = y.Position.Split('.').Where(ss => ss != "0").ToArray();
+                var xParentPosition = xPosSplitted.Length > 0 ? string.Join(".", xPosSplitted.Take(xPosSplitted.Length - 1)) : null;
+                var yParentPosition = yPosSplitted.Length > 0 ? string.Join(".", yPosSplitted.Take(yPosSplitted.Length - 1)) : null;
 
                 if (!string.Equals(xParentPosition, yParentPosition))
                 {
