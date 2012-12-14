@@ -36,6 +36,18 @@ namespace Orchard.UI.Navigation {
                 return false;
             }
 
+            if (!string.IsNullOrWhiteSpace(x.Position) && !string.IsNullOrWhiteSpace(y.Position)) {
+                var xLastDot = x.Position.LastIndexOf('.');
+                var yLastDot = y.Position.LastIndexOf('.');
+                var xParentPosition = xLastDot == -1 ? null : x.Position.Substring(0, xLastDot);
+                var yParentPosition = yLastDot == -1 ? null : y.Position.Substring(0, yLastDot);
+
+                if (!string.Equals(xParentPosition, yParentPosition))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
