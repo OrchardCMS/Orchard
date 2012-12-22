@@ -137,8 +137,8 @@ namespace Orchard.CustomForms.Controllers {
                     }
                 }
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                model.ContentItem(form);
+                return View(model);
             }
 
             contentItem.As<ICommonPart>().Container = customForm.ContentItem;
