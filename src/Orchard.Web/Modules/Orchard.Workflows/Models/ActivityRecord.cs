@@ -10,13 +10,23 @@ namespace Orchard.Workflows.Models {
         /// <summary>
         /// The type of the activity.
         /// </summary>
-        public virtual string Type { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// The serialized state of the activity.
         /// </summary>
         [StringLengthMax]
         public virtual string State { get; set; }
+
+        /// <summary>
+        /// The left coordinate of the activity.
+        /// </summary>
+        public virtual int X { get; set; }
+
+        /// <summary>
+        /// The top coordinate of the activity.
+        /// </summary>
+        public virtual int Y { get; set; }
 
         /// <summary>
         /// The parent <see cref="WorkflowDefinitionRecord"/> 

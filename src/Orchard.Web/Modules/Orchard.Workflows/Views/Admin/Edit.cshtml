@@ -1,12 +1,6 @@
-﻿@model Orchard.Workflows.ViewModels.AdminEditViewModel
-@using ClaySharp.Implementation
-@using Orchard.ContentManagement
+﻿@model AdminEditViewModel
 @using Orchard.Forms.Services
-@using Orchard.Localization
-@using Orchard.Utility.Extensions
-@using Orchard.Workflows.Models;
 @using Orchard.Workflows.ViewModels;
-@using Orchard.DisplayManagement;
 
 @{
     Layout.Title = @T("Edit Workflow");
@@ -23,14 +17,13 @@
     Script.Include("orchard-workflows-serialize.js").AtFoot();
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginFormAntiForgeryPost("Edit")) {
     @Html.ValidationSummary()
 
     <div id="activity-editor">
     </div>
-}
 
-@using (Script.Head()) {
+using (Script.Head()) {
 <script type="text/javascript">
     //<![CDATA[
     var renderActivityUrl = '@Url.Action("RenderActivity", "Admin", new { area = "Orchard.Workflows" })';
@@ -43,12 +36,42 @@
     @if (TempData.ContainsKey("UpdatedViewModel")) {
         var model = TempData["UpdatedViewModel"] as UpdatedActivityModel;
         if (model != null) {
-    <text>
+            <text>
     updatedActivityClientId = '@(model.ClientId)';
     updatedActivityState = '@Html.Raw(FormParametersHelper.ToJsonString(model.Data))';
-    </text>
+            </text>
         }
     }
+    else if(!Model.IsLocal) {
+        <text>
+    var state = @Html.Raw(Model.WorkflowDefinition.JsonData);
+    sessionStorage.setItem(localId, JSON.stringify(state));
+        </text>
+    }
+    
     //]]>
 </script>
+    }
+
+@Html.Hidden("id", Model.WorkflowDefinition.Id)
+@Html.Hidden("localId", Model.LocalId)
+@Html.Hidden("data", String.Empty)
+
+using (Script.Foot()) {
+<script type="text/javascript">
+    //<![CDATA[
+    $("form").submit(function () {
+        saveLocal(localId);
+        var workflow = loadWorkflow(localId);
+        var data = JSON.stringify(workflow);
+        $("[name='data']").val(data);
+    });
+    //]]>
+</script>
+}
+
+<fieldset>
+    <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+    <button class="cancel" type="submit" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+</fieldset>
 }

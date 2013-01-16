@@ -1,20 +1,20 @@
 ﻿
 var saveLocal = function (localId) {
-    var wokflow = {
-        activities: [],
-        connections: []
+    var workflow = {
+        Activities: [],
+        Connections: []
     };
 
     var allActivities = $('.activity');
     for (var i = 0; i < allActivities.length; i++) {
         var activity = allActivities[i];
 
-        wokflow.activities.push({
-            name: activity.viewModel.name,
-            clientId: activity.viewModel.clientId,
-            state: activity.viewModel.state,
-            left: $(activity).position().left,
-            top: $(activity).position().top
+        workflow.Activities.push({
+            Name: activity.viewModel.name,
+            ClientId: activity.viewModel.clientId,
+            State: activity.viewModel.state,
+            Left: $(activity).position().left,
+            Top: $(activity).position().top
         });
     }
 
@@ -22,15 +22,36 @@ var saveLocal = function (localId) {
     for (var i = 0; i < allConnections.length; i++) {
         var connection = allConnections[i];
 
-        wokflow.connections.push({
-            sourceId: connection.sourceId,
-            targetId: connection.targetId,
-            sourceEndpoint: connection.endpoints[0].outcome,
+        workflow.Connections.push({
+            SourceId: connection.sourceId,
+            TargetId: connection.targetId,
+            SourceEndpoint: connection.endpoints[0].outcome,
             //targetEndpoint: connection.targetEndpoint
         });
     }
     // serialize the object
-    sessionStorage.setItem(localId, JSON.stringify(wokflow));
+    sessionStorage.setItem(localId, JSON.stringify(workflow));
+};
+
+var updateActivities = function(localId) {
+    var workflow = loadWorkflow(localId);
+    if (workflow == null) {
+        return;
+    }
+
+    // activities        
+    if (updatedActivityState != null) {
+        for (var i = 0; i < workflow.Activities.length; i++) {
+            var activity = workflow.Activities[i];
+
+            if (updatedActivityClientId == activity.ClientId) {
+                // if an activity has been modified, update it
+                activity.State = JSON.parse(updatedActivityState);
+            }
+        }
+    }
+    
+    sessionStorage.setItem(localId, JSON.stringify(workflow));
 };
 
 var loadActivities = function (localId) {
@@ -40,32 +61,27 @@ var loadActivities = function (localId) {
     }
     
     // activities        
-    for (var i = 0; i < workflow.activities.length; i++) {
-        var activity = workflow.activities[i];
-
-        // if an activity has been modified, update it
-        if (updatedActivityState != null && updatedActivityClientId == activity.clientId) {
-            activity.state = JSON.parse(updatedActivityState);
-        }
-
-        renderActivity(activity.clientId, activity.name, activity.state, activity.top, activity.left);
+    for (var i = 0; i < workflow.Activities.length; i++) {
+        var activity = workflow.Activities[i];
+        renderActivity(activity.ClientId, activity.Name, activity.State, activity.Top, activity.Left);
     }
 
     // connections
-    for (var i = 0; i < workflow.connections.length; i++) {
-        var connection = workflow.connections[i];
+    for (var i = 0; i < workflow.Connections.length; i++) {
+        var connection = workflow.Connections[i];
 
-        var source = document.getElementById(connection.sourceId);
-        var ep = source.endpoints[connection.sourceEndpoint];
+        var source = document.getElementById(connection.SourceId);
+        var ep = source.endpoints[connection.SourceEndpoint];
 
         jsPlumb.connect({
             source: ep,
-            target: connection.targetId,
+            target: connection.TargetId,
             newConnection: true
 
         });
     }
-    
+
+    return workflow;
 };
 
 var loadWorkflow = function(localId) {
@@ -90,9 +106,9 @@ var getActivity = function(localId, clientId) {
     }
 
     var activity = null;
-    for (var i = 0; i < workflow.activities.length; i++) {
-        var a = workflow.activities[i];
-        if (a.clientId == clientId) {
+    for (var i = 0; i < workflow.Activities.length; i++) {
+        var a = workflow.Activities[i];
+        if (a.ClientId == clientId) {
             activity = a;
         }
     }
@@ -105,7 +121,7 @@ var loadForm = function(localId, clientId) {
     // bind state to form
 
     var activity = getActivity(localId, clientId);
-    bindForm($('form'), activity.state);
+    bindForm($('form'), activity.State);
 };
 
 var bindForm = function(form, data) {
@@ -126,38 +142,3 @@ var bindForm = function(form, data) {
         }
     });
 };
-
-/*
-var serializeForm = function(form) {
-    var data = {};
-
-    $(form).find('select, input, textarea').each(function(index, el) {
-        var $el = $(el);
-        var name = $el.attr('name');
-        var type = $el.attr('type');
-
-        switch (type) {
-            case 'checkbox':
-                data[name] = $el.attr('checked') ? 'true' : false;
-                break;
-            case 'radio':
-                var value = $el.filter('checked').attr('value');
-                if (value) {
-                    data[name] = value;
-                }
-                break;
-            default:
-                data[name] = $el.val();
-        }
-    });
-
-    return data;
-};
-
-var saveState = function(localId, clientId, data) {
-    var activity = getActivity(localId, clientId);
-    activity.state = data;
-    
-    sessionStorage.setItem(localId, JSON.stringify(wokflow));
-};
-*/

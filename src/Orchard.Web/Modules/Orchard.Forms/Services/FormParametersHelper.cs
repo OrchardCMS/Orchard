@@ -46,7 +46,7 @@ namespace Orchard.Forms.Services {
 
 
         public static dynamic ToDynamic(string parameters) {
-            var result = Bag.New();
+            var result = new JObject();
 
             if (String.IsNullOrEmpty(parameters)) {
                 return result;
@@ -69,27 +69,25 @@ namespace Orchard.Forms.Services {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject(state);
+            return JsonConvert.DeserializeObject<dynamic>(state);
         }
 
         public static string ToJsonString(FormCollection formCollection) {
             var o = new JObject();
 
             foreach (var key in formCollection.AllKeys) {
+                if (key.StartsWith("_")) {
+                    continue;
+                }
+
                 o.Add(new JProperty(key, formCollection.Get(key)));
             }
 
             return JsonConvert.SerializeObject(o);
         }
 
-        public static string ToJsonString(IDictionary<string, object> dictionary) {
-            var o = new JObject();
-
-            foreach (var entry in dictionary) {
-                o.Add(new JProperty(entry.Key, entry.Value));
-            }
-
-            return JsonConvert.SerializeObject(o);
+        public static string ToJsonString(object item) {
+            return JsonConvert.SerializeObject(item);
         }
     }
 }

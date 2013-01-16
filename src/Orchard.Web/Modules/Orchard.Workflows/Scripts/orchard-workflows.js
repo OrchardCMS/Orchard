@@ -26,12 +26,13 @@
     jsPlumb.bind("ready", function () {
 
         jsPlumb.importDefaults({
+            Anchor : "Continuous",
             // default drag options
             DragOptions: { cursor: 'pointer', zIndex: 2000 },
             // default to blue at one end and green at the other
-            EndpointStyles: [{ fillStyle: '#225588' }, { fillStyle: '#558822' }],
-            // blue endpoints 7 px; green endpoints 11.
-            Endpoints: [["Dot", { radius: 7 }], ["Dot", { radius: 7 }]],
+            EndpointStyles: [{ fillStyle: '#225588' }],
+            // blue endpoints 7 px; Blank endpoints.
+            Endpoints: [["Dot", { radius: 7 }], ["Blank"]],
             // the overlays to decorate each connection with.  note that the label overlay uses a function to generate the label text; in this
             // case it returns the 'labelText' member that we set on each connection in the 'init' method below.
             ConnectionOverlays: [
@@ -40,6 +41,9 @@
             ],
             ConnectorZIndex: 5
         });
+
+        // updates the state of any edited activity
+        updateActivities(localId);
 
         // deserialize the previously locally saved workflow
         loadActivities(localId);
@@ -127,7 +131,7 @@
                 if (activities[name].hasForm) {
                     dom.dblclick(function() {
                         saveLocal(localId);
-                        window.location.href = editActivityUrl + "/0?name=" + name + "&clientId=" + elt.viewModel.clientId + "&localId=" + localId;
+                        window.location.href = editActivityUrl + "/" + $("#id").val() + "?name=" + name + "&clientId=" + elt.viewModel.clientId + "&localId=" + localId;
                     });
                 }
 

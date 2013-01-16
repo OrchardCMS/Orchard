@@ -5,7 +5,7 @@ namespace Orchard.Workflows {
 
         public int Create() {
 			// Creating table TransitionRecord
-			SchemaBuilder.CreateTable("TransitionRecord", table => table
+            SchemaBuilder.CreateTable("TransitionRecord", table => table
 				.Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("SourceEndpoint")
                 .Column<string>("DestinationEndpoint")
@@ -37,7 +37,9 @@ namespace Orchard.Workflows {
 			// Creating table ActivityRecord
 			SchemaBuilder.CreateTable("ActivityRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Type")
+                .Column<string>("Name")
+                .Column<int>("X")
+                .Column<int>("Y")
 				.Column<string>("State", c => c.Unlimited())
                 .Column<int>("WorkflowDefinitionRecord_id")
 			);
