@@ -1,19 +1,19 @@
 ﻿    var connectorPaintStyle = {
-        lineWidth: 3,
-        strokeStyle: "grey",
+        lineWidth: 2,
+        strokeStyle: "#999",
         joinstyle: "round",
         //outlineColor: "white",
         //outlineWidth: 7
     };
 
     var connectorHoverStyle = {
-        lineWidth: 3,
-        strokeStyle: "#2e2aF8"
+        lineWidth: 2,
+        strokeStyle: "#225588"
     };
 
     var sourceEndpointOptions = {
-        endpoint: "Dot",
-        paintStyle: { fillStyle: "#225588", radius: 7 },
+        endpoint: ["Dot", { cssClass: 'sourceEndpoint', radius: 5 }],
+        paintStyle: { fillStyle: '#225588' },
         isSource: true,
         isTarget: false,
         connector: ["Flowchart"], // gap needs to be the same as makeTarget.paintStyle.radius
@@ -48,6 +48,9 @@
         // deserialize the previously locally saved workflow
         loadActivities(localId);
         
+        // create activity overlays for controlling their states
+        createOverlays();
+
         // a new connection is created
         jsPlumb.bind("jsPlumbConnection", function (connectionInfo) {
             // ...update your data model here.  The contents of the 'connectionInfo' are described below.
@@ -63,7 +66,7 @@
 
     // instanciates a new workflow widget in the editor
     var createActivity = function (activityName) {
-        renderActivity(null, activityName, {}, 10, 10);
+        renderActivity(null, activityName, {}, false, 10, 10);
     };
 
     
@@ -74,7 +77,7 @@
         createActivity(activityName);
     });
 
-    var renderActivity = function (clientId, name, state, top, left) {
+    var renderActivity = function (clientId, name, state, start, top, left) {
 
         $.ajax({
             type: 'POST',
@@ -89,6 +92,10 @@
                 }
 
                 dom.addClass('activity');
+                
+                if (start) {
+                    dom.addClass('start');
+                }
 
                 if (clientId) {
                     dom.attr('id', clientId);
@@ -97,7 +104,7 @@
                 var editor = $('#activity-editor');
                 editor.append(dom);
 
-                jsPlumb.draggable(dom, { containment: "parent", scroll: true });
+                jsPlumb.draggable(dom, { containment: "parent", scroll: true, drag: function () { hideOverlay(true); } });
 
                 jsPlumb.makeTarget(dom, {
                     dropOptions: { hoverClass: "dragHover" },
@@ -110,6 +117,7 @@
                 elt.viewModel = {
                     name: name,
                     state: state,
+                    start: start,
                     clientId: dom.attr("id"),
                 };
 
@@ -143,6 +151,78 @@
 
     };
 
+    var onActivity = false;
+    var onOverlay = false;
 
+    $("#initial-state").button();
+    
+    var createOverlays = function () {
+        var events = $('.activity.blocking');
+
+        $('#activity-overlay').hover(
+            function () {
+                onOverlay = true;
+            },
+            function () {
+                onOverlay = false;
+                setTimeout(hideOverlay, 50);
+            });
+
+        
+        hideOverlay();
+        events.hover(
+            // mouse enter
+            function () {
+                var self = $(this);
+                var overlay = $('#activity-overlay');
+
+                overlay.position({
+                    my: "right bottom",
+                    at: "right top",
+                    offset: "10 10",
+                    of: self, // or $("#otherdiv)
+                    collision: "none"
+                });
+
+                onActivity = true;
+
+                if (!overlay.is(":visible")) {
+                    var state = $("#initial-state");
+                    state.prop('checked', self.hasClass('start')).button("refresh");
+
+                    state.unbind("click").click(function () {
+                        updateStart(self, state.is(":checked"));
+                    });
+                    
+                    overlay.show();
+                }
+            },
+            // mouse leave
+            function () {
+                onActivity = false;
+                setTimeout(hideOverlay, 50);
+            }
+        );
+    };
+    
+    var hideOverlay = function (force) {
+        if (force || (!onOverlay && !onActivity)) {
+            var overlay = $('#activity-overlay');
+            overlay.offset({ top: 0, left: 0 });
+            overlay.hide();
+            
+            onOverlay = false;
+            onActivity = false;
+        }
+    };
+
+    var updateStart = function(dom, isStart) {
+        var clientId = $(dom).attr('id');
+        var activity = getActivity(localId, clientId);
+        
+        $(dom).get(0).viewModel.start = isStart;
+
+        $(dom).toggleClass('start', isStart);
+    };
     
 

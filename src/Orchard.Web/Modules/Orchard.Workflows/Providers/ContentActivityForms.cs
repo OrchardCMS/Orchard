@@ -27,7 +27,7 @@ namespace Orchard.Workflows.Providers {
                     var f = Shape.Form(
                         Id: "AnyOfContentTypes",
                         _Parts: Shape.SelectList(
-                            Id: "contenttypes", Name: "contenttypes",
+                            Id: "contenttypes", Name: "ContentTypes",
                             Title: T("Content types"),
                             Description: T("Select some content types."),
                             Size: 10,

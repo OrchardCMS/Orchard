@@ -12,6 +12,7 @@ var saveLocal = function (localId) {
         workflow.Activities.push({
             Name: activity.viewModel.name,
             ClientId: activity.viewModel.clientId,
+            Start: activity.viewModel.start,
             State: activity.viewModel.state,
             Left: $(activity).position().left,
             Top: $(activity).position().top
@@ -63,7 +64,7 @@ var loadActivities = function (localId) {
     // activities        
     for (var i = 0; i < workflow.Activities.length; i++) {
         var activity = workflow.Activities[i];
-        renderActivity(activity.ClientId, activity.Name, activity.State, activity.Top, activity.Left);
+        renderActivity(activity.ClientId, activity.Name, activity.State, activity.Start, activity.Top, activity.Left);
     }
 
     // connections

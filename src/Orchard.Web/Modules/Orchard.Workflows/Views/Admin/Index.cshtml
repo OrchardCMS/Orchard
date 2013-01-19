@@ -59,9 +59,9 @@
                         @Html.ActionLink(entry.Name, "Edit", new { id = entry.WokflowDefinitionId }) 
                     </td>
                     <td>
-                        @*@Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.QueryId, returnurl = HttpContext.Current.Request.RawUrl })*@ |
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.WokflowDefinitionId}) |
-                        @*@Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.QueryId }, new { itemprop = "RemoveUrl UnsafeUrl" })*@
+                        @* TODO: As WD is not a Content Item, an EditProperties action is necessary @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.WokflowDefinitionId, returnurl = HttpContext.Current.Request.RawUrl }) |*@
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.WokflowDefinitionId }) |
+                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.WokflowDefinitionId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                     </td>
                 </tr>
                 index++;

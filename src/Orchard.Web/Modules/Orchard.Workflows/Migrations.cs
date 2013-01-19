@@ -32,7 +32,8 @@ namespace Orchard.Workflows {
 			SchemaBuilder.CreateTable("AwaitingActivityRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("ActivityRecord_id")
-			);
+                .Column<int>("WorkflowRecord_id")
+            );
 
 			// Creating table ActivityRecord
 			SchemaBuilder.CreateTable("ActivityRecord", table => table
@@ -41,10 +42,12 @@ namespace Orchard.Workflows {
                 .Column<int>("X")
                 .Column<int>("Y")
 				.Column<string>("State", c => c.Unlimited())
+                .Column<bool>("Start")
                 .Column<int>("WorkflowDefinitionRecord_id")
 			);
 
             return 1;
         }
+
     }
 }

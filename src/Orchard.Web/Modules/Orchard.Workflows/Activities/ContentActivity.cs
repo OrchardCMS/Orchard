@@ -12,21 +12,26 @@ namespace Orchard.Workflows.Activities {
         public Localizer T { get; set; }
 
         public override bool CanExecute(ActivityContext context) {
-            string contenttypes = context.State.ContentTypes;
-            var content = context.Tokens["Content"] as IContent;
+            try {
+                string contenttypes = context.State.ContentTypes;
+                var content = context.Tokens["Content"] as IContent;
 
-            // "" means 'any'
-            if (String.IsNullOrEmpty(contenttypes)) {
-                return true;
+                // "" means 'any'
+                if (String.IsNullOrEmpty(contenttypes)) {
+                    return true;
+                }
+
+                if (content == null) {
+                    return false;
+                }
+
+                var contentTypes = contenttypes.Split(new[] {','});
+
+                return contentTypes.Any(contentType => content.ContentItem.TypeDefinition.Name == contentType);
             }
-
-            if (content == null) {
+            catch {
                 return false;
             }
-
-            var contentTypes = contenttypes.Split(new[] { ',' });
-
-            return contentTypes.Any(contentType => content.ContentItem.TypeDefinition.Name == contentType);
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
@@ -34,7 +39,13 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Execute(ActivityContext context) {
-            return T("True");
+            return T("Success");
+        }
+
+        public override string Form {
+            get {
+                return "SelectContentTypes";
+            }
         }
     }
 

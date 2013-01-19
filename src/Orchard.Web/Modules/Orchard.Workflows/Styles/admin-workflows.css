@@ -1,10 +1,10 @@
-﻿.activity {
+﻿/*.activity {
     border: 1px solid #346789;
     /*box-shadow: 2px 2px 19px #aaa;
     -o-box-shadow: 2px 2px 19px #aaa;
     -webkit-box-shadow: 2px 2px 19px #aaa;
     -moz-box-shadow: 2px 2px 19px #aaa;
-    -moz-border-radius: 0.5em;*/
+    -moz-border-radius: 0.5em; /
     border-radius: 0.5em;
     opacity: 0.8;
     filter: alpha(opacity=80);
@@ -28,7 +28,32 @@
         -moz-box-shadow: 2px 2px 19px #444;
         opacity: 0.6;
         filter: alpha(opacity=60);
+    }*/
+
+.activity {
+    border: 1px solid #999;
+    border-radius: 2px;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    /*min-width: 5em;*/
+    text-align: center;
+    z-index: 20;
+    position: absolute;
+    background-color: white;
+    font-family: helvetica;
+    padding: 1em;
+    font-size: 0.9em;
+}
+
+    .activity:hover, .dragHover {
+        box-shadow: 2px 2px 19px #aaa;
+        -o-box-shadow: 2px 2px 19px #aaa;
+        -webkit-box-shadow: 2px 2px 19px #aaa;
+        -moz-box-shadow: 2px 2px 19px #aaa;
+        /*opacity: 0.6;
+        filter: alpha(opacity=60);*/
     }
+
 
     .blocking {
         background-image: url(images/blocking.png) ;
@@ -36,8 +61,17 @@
         background-repeat: no-repeat;
     }
 
+    .start {
+        background-color: #eee;
+        border-width: 2px;
+    }
+
 ._jsPlumb_connector { z-index:4; }
 ._jsPlumb_endpoint { z-index:21;cursor:pointer; }
+
+.sourceEndpoint {
+    fill:  red;
+}
 
 .sourceEndpointLabel, .targetEndpointLabel {
     z-index: 21;
@@ -65,12 +99,14 @@
 
 .connection-label {
     z-index: 10;
-	opacity:0.8; 
+    border-radius: 2px;
 	filter:alpha(opacity=80);
 	background-color:white;
-	color:black;
 	padding:0 0.5em; 
-    border:1px solid #346789; 
+    border:1px solid #999; 
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+
 }
 
 /* toolbox */
@@ -96,3 +132,14 @@
         font-size: 1.077em;
     }
 
+
+#activity-overlay {
+    position: absolute;
+    z-index: 30;
+    width: 100px;
+    height: 20px;
+    background-color: #EAEAEA;
+    border: 1px solid #ccc;
+    left: -2000px;
+    padding: 2px;
+}

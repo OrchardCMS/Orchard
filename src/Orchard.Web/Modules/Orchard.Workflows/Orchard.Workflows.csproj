@@ -72,6 +72,7 @@
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
     <Content Include="Styles\admin-workflows.css" />
+    <Content Include="Styles\workflows-activity-decision.css" />
     <Content Include="Styles\images\blocking.png" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
@@ -104,6 +105,7 @@
     <Compile Include="Activities\NotificationActivity.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Handlers\ContentHandler.cs" />
     <Compile Include="Models\AwaitingActivityRecord.cs" />
     <Compile Include="Models\Descriptors\ActivityContext.cs" />
     <Compile Include="Models\Descriptors\ActivityDescriptor.cs" />
@@ -125,13 +127,13 @@
     <Compile Include="Services\IActivityProvider.cs" />
     <Compile Include="Services\ActivitiesManager.cs" />
     <Compile Include="Services\IActivitiesManager.cs" />
+    <Compile Include="Services\IWorkflowManager.cs" />
+    <Compile Include="Services\WorkflowManager.cs" />
     <Compile Include="ViewModels\AdminEditViewModel.cs" />
     <Compile Include="ViewModels\AdminIndexViewModel.cs" />
     <Compile Include="ViewModels\WorkflowDefinitionViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Handlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
@@ -155,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-Notify.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Decision.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

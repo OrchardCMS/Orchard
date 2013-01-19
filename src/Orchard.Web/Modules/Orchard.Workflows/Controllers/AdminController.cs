@@ -146,6 +146,21 @@ namespace Orchard.Workflows.Controllers {
             return View(viewModel);
         }
 
+        [HttpPost]
+        public ActionResult Delete(int id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
+                return new HttpUnauthorizedResult();
+
+            var workflowDefinition = _workflowDefinitionRecords.Get(id);
+
+            if (workflowDefinition != null) {
+                _workflowDefinitionRecords.Delete(workflowDefinition);
+                Services.Notifier.Information(T("Workflow {0} deleted", workflowDefinition.Name));
+            }
+
+            return RedirectToAction("Index");
+        }
+
         private WorkflowDefinitionViewModel CreateWorkflowDefinitionViewModel(WorkflowDefinitionRecord workflowDefinitionRecord) {
             if (workflowDefinitionRecord == null) {
                 throw new ArgumentNullException("workflowDefinitionRecord");
@@ -162,6 +177,7 @@ namespace Orchard.Workflows.Controllers {
                 activity.ClientId = x.Name + "_" + x.Id;
                 activity.Left = x.X;
                 activity.Top = x.Y;
+                activity.Start = x.Start;
                 activity.State = FormParametersHelper.FromJsonString(x.State);
 
                 return activity;
@@ -193,6 +209,8 @@ namespace Orchard.Workflows.Controllers {
                 return HttpNotFound();
             }
 
+            workflowDefinitionRecord.Enabled = true;
+
             var state = FormParametersHelper.FromJsonString(data);
             var activitiesIndex = new Dictionary<string, ActivityRecord>();
 
@@ -205,6 +223,7 @@ namespace Orchard.Workflows.Controllers {
                     Name = activity.Name,
                     X = activity.Left,
                     Y = activity.Top,
+                    Start = activity.Start,
                     State = FormParametersHelper.ToJsonString(activity.State),
                     WorkflowDefinitionRecord = workflowDefinitionRecord
                 });

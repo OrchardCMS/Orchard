@@ -7,6 +7,6 @@ namespace Orchard.Workflows.Models {
         public virtual ActivityRecord ActivityRecord { get; set; }
         
         // Parent property
-        public virtual IList<WorkflowRecord> WorkflowRecords { get; set; }
+        public virtual WorkflowRecord WorkflowRecord { get; set; }
     }
 }

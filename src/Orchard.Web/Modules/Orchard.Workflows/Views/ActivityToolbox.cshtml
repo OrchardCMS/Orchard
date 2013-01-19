@@ -12,7 +12,9 @@
         @foreach (var activity in allActivities) {
             <li class="activity-toolbox-item" data-activity-name="@activity.Name">
                 <h2>@activity.Name</h2>
-            </li>    
+            </li>
+
+            Style.Include("workflows-activity-" + activity.Name.ToLower());
         }   
     </ul> 
 </div>

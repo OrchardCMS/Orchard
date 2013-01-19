@@ -3,9 +3,10 @@
 @{
     string name = Model.Name;
     bool blocking = Model.IsBlocking;
-    string blockingClass = blocking ? "blocking" : null;
 }
 
-<div class="@blockingClass">
-    @name.CamelFriendly()
+<div class="@blocking">
+    <div class="diamond"></div>
+    @*@name.CamelFriendly()*@
 </div>
+
