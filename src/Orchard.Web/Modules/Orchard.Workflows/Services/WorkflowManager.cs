@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using Orchard.ContentManagement;
 using Orchard.Forms.Services;
 using Orchard.Logging;
 using Orchard.Workflows.Models;
@@ -40,7 +41,7 @@ namespace Orchard.Workflows.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public void TriggerEvent(string name, Func<Dictionary<string, object>> tokensContext) {
+        public void TriggerEvent(string name, IContent target, Func<Dictionary<string, object>> tokensContext) {
             var tokens = tokensContext();
 
             var activity = _activitiesManager.GetActivityByName(name);
@@ -60,9 +61,9 @@ namespace Orchard.Workflows.Services {
 
             var awaitingActivities = new List<AwaitingActivityRecord>();
 
-            // and any running workflow paused on this kind of activity
+            // and any running workflow paused on this kind of activity for this content
             awaitingActivities.AddRange(_awaitingActivityRepository.Table.Where(
-                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false
+                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && x.ContentItemRecord == target.ContentItem.Record
                 ).ToList()
             );
 
@@ -75,9 +76,10 @@ namespace Orchard.Workflows.Services {
             awaitingActivities = awaitingActivities.Where(a => {
                 var formatted = JsonConvert.DeserializeXNode(a.ActivityRecord.State).ToString();
                 var tokenized = _tokenizer.Replace(formatted, tokens);
-                var serialized = JsonConvert.SerializeXNode(XElement.Parse(tokenized));
+                var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
                 var state = FormParametersHelper.FromJsonString(serialized);
-                var context = new ActivityContext { Tokens = tokens, State = state };
+                var workflowState = FormParametersHelper.FromJsonString(a.WorkflowRecord.State);
+                var context = new ActivityContext { Tokens = tokens, State = state, WorkflowState = workflowState, Content = target};
 
                 // check the condition
                 try {
@@ -93,9 +95,10 @@ namespace Orchard.Workflows.Services {
             startedWorkflows = startedWorkflows.Where(a => {
                 var formatted = JsonConvert.DeserializeXNode(a.State).ToString();
                 var tokenized = _tokenizer.Replace(formatted, tokens);
-                var serialized = JsonConvert.SerializeXNode(XElement.Parse(tokenized));
+                var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
                 var state = FormParametersHelper.FromJsonString(serialized);
-                var context = new ActivityContext { Tokens = tokens, State = state };
+                var workflowState = FormParametersHelper.FromJsonString("{}");
+                var context = new ActivityContext { Tokens = tokens, State = state, WorkflowState = workflowState, Content = target };
 
                 // check the condition
                 try {
@@ -119,17 +122,18 @@ namespace Orchard.Workflows.Services {
 
             // resume halted workflows
             foreach (var a in awaitingActivities) {
-                ResumeWorkflow(a, tokens);
+                ResumeWorkflow(a, target, tokens);
             }
 
             // start new workflows
             foreach (var a in startedWorkflows) {
-                StartWorkflow(a, tokens);
+                StartWorkflow(a, target, tokens);
             }
         }
 
-        private void StartWorkflow(ActivityRecord activityRecord, Dictionary<string, object> tokens) {
-            var lastActivity = ExecuteWorkflow(activityRecord.WorkflowDefinitionRecord, activityRecord, tokens);
+        private void StartWorkflow(ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens) {
+            var workflowState = FormParametersHelper.FromJsonString("{}");
+            var lastActivity = ExecuteWorkflow(activityRecord.WorkflowDefinitionRecord, activityRecord, target, tokens, workflowState);
 
             // is the workflow halted on a blocking activity ?
             if (lastActivity == null) {
@@ -138,20 +142,22 @@ namespace Orchard.Workflows.Services {
             else {
                 // workflow halted, create a workflow state
                 var workflow = new WorkflowRecord {
-                    WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord
+                    WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
+                    State = FormParametersHelper.ToJsonString(workflowState)
                 };
 
-                workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
-                    ActivityRecord = activityRecord,
-                    WorkflowRecord = workflow
-                });
-
                 _workflowRepository.Create(workflow);
+
+                workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
+                    ActivityRecord = lastActivity,
+                    ContentItemRecord = target.ContentItem.Record
+                });
             }
         }
 
-        private void ResumeWorkflow(AwaitingActivityRecord awaitingActivityRecord, Dictionary<string, object> tokens) {
-            var lastActivity = ExecuteWorkflow(awaitingActivityRecord.WorkflowRecord.WorkflowDefinitionRecord, awaitingActivityRecord.ActivityRecord, tokens);
+        private void ResumeWorkflow(AwaitingActivityRecord awaitingActivityRecord, IContent target, Dictionary<string, object> tokens) {
+            var workflowState = FormParametersHelper.FromJsonString(awaitingActivityRecord.WorkflowRecord.State);
+            var lastActivity = ExecuteWorkflow(awaitingActivityRecord.WorkflowRecord.WorkflowDefinitionRecord, awaitingActivityRecord.ActivityRecord, target, tokens, workflowState);
 
             // is the workflow halted on a blocking activity ?
             if (lastActivity == null) {
@@ -164,7 +170,7 @@ namespace Orchard.Workflows.Services {
             }
         }
 
-        public ActivityRecord ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, Dictionary<string, object> tokens) {
+        public ActivityRecord ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens, dynamic workflowState) {
             var firstPass = true;
 
             while (true) {
@@ -179,7 +185,7 @@ namespace Orchard.Workflows.Services {
                 }
                 
                 var state = FormParametersHelper.FromJsonString(activityRecord.State);
-                var activityContext = new ActivityContext {Tokens = tokens, State = state};
+                var activityContext = new ActivityContext {Tokens = tokens, State = state, WorkflowState = workflowState, Content = target };
                 var outcome = activity.Execute(activityContext);
 
                 if (outcome != null) {

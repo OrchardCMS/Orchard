@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Orchard.ContentManagement.Records;
 
 namespace Orchard.Workflows.Models {
     public class AwaitingActivityRecord {
         public virtual int Id { get; set; }
 
         public virtual ActivityRecord ActivityRecord { get; set; }
-        
+
+        public virtual ContentItemRecord ContentItemRecord { get; set; }
+
         // Parent property
         public virtual WorkflowRecord WorkflowRecord { get; set; }
     }

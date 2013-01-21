@@ -11,21 +11,25 @@ namespace Orchard.Workflows.Handlers {
             OnPublished<ContentPart>(
                 (context, part) =>
                     workflowManager.TriggerEvent("ContentPublished",
+                    context.ContentItem,
                     () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
-            OnRemoved<ContentPart>(
+            OnRemoving<ContentPart>(
                 (context, part) =>
                     workflowManager.TriggerEvent("ContentRemoved",
+                    context.ContentItem,
                     () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
             OnVersioned<ContentPart>(
                 (context, part1, part2) =>
                     workflowManager.TriggerEvent("ContentVersioned",
-                    () => new Dictionary<string, object> { { "Content", part1.ContentItem } }));
+                    context.BuildingContentItem,
+                    () => new Dictionary<string, object> { { "Content", context.BuildingContentItem } }));
 
             OnCreated<ContentPart>(
                 (context, part) =>
                     workflowManager.TriggerEvent("ContentCreated",
+                    context.ContentItem,
                     () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
         }

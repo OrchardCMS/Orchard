@@ -32,6 +32,7 @@ namespace Orchard.Workflows {
 			SchemaBuilder.CreateTable("AwaitingActivityRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("ActivityRecord_id")
+                .Column<int>("ContentItemRecord_id")
                 .Column<int>("WorkflowRecord_id")
             );
 
@@ -48,6 +49,5 @@ namespace Orchard.Workflows {
 
             return 1;
         }
-
     }
 }

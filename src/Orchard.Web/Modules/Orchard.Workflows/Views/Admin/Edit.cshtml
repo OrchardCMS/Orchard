@@ -31,10 +31,10 @@
     using (Script.Head()) {
 <script type="text/javascript">
     //<![CDATA[
-    var renderActivityUrl = '@Url.Action("RenderActivity", "Admin", new { area = "Orchard.Workflows" })';
-    var editActivityUrl = '@Url.Action("EditActivity", "Admin", new { area = "Orchard.Workflows" })';
-    var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
-    var localId = '@Model.LocalId';
+    var renderActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("RenderActivity", "Admin", new { area = "Orchard.Workflows" }))';
+    var editActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("EditActivity", "Admin", new { area = "Orchard.Workflows" }))';
+    var requestAntiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+    var localId = '@HttpUtility.JavaScriptStringEncode(Model.LocalId)';
     var updatedActivityClientId = null;
     var updatedActivityState = null;
     
@@ -43,7 +43,7 @@
         if (model != null) {
             <text>
     updatedActivityClientId = '@(model.ClientId)';
-    updatedActivityState = '@Html.Raw(FormParametersHelper.ToJsonString(model.Data))';
+    updatedActivityState = '@Html.Raw(HttpUtility.JavaScriptStringEncode(FormParametersHelper.ToJsonString(model.Data)))';
             </text>
         }
     }

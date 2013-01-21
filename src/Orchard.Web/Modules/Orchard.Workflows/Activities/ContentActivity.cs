@@ -13,6 +13,7 @@ namespace Orchard.Workflows.Activities {
 
         public override bool CanExecute(ActivityContext context) {
             try {
+
                 string contenttypes = context.State.ContentTypes;
                 var content = context.Tokens["Content"] as IContent;
 
@@ -35,17 +36,21 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
-            return new[] { T("Success") };
+            return new[] { T("Done") };
         }
 
         public override LocalizedString Execute(ActivityContext context) {
-            return T("Success");
+            return T("Done");
         }
 
         public override string Form {
             get {
                 return "SelectContentTypes";
             }
+        }
+
+        public override LocalizedString Category {
+            get { return T("Content Items"); }
         }
     }
 
@@ -54,12 +59,42 @@ namespace Orchard.Workflows.Activities {
             get { return "ContentCreated"; }
         }
 
-        public override LocalizedString Category {
-            get { return T("Content Items"); }
-        }
 
         public override LocalizedString Description {
-            get { return T("Content is actually created."); }
+            get { return T("Content is created."); }
+        }
+    }
+
+    public class ContentPublishedActivity : ContentActivity {
+        public override string Name {
+            get { return "ContentPublished"; }
+        }
+
+
+        public override LocalizedString Description {
+            get { return T("Content is published."); }
+        }
+    }
+
+    public class ContentVersionedActivity : ContentActivity {
+        public override string Name {
+            get { return "ContentVersioned"; }
+        }
+
+
+        public override LocalizedString Description {
+            get { return T("Content is  versioned."); }
+        }
+    }
+
+    public class ContentRemovedActivity : ContentActivity {
+        public override string Name {
+            get { return "ContentRemoved"; }
+        }
+
+
+        public override LocalizedString Description {
+            get { return T("Content is  removed."); }
         }
     }
 }
