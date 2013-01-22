@@ -124,6 +124,11 @@
                 elt.endpoints = {};
 
                 var outcomes = activities[name].outcomes;
+                
+                if (dom.data('outcomes')) {
+                    outcomes = eval('[' + dom.data('outcomes') + ']');
+                }
+                
                 for (i = 0; i < outcomes.length; i++) {
                     var ep = jsPlumb.addEndpoint(dom, {
                             anchor: "Continuous",

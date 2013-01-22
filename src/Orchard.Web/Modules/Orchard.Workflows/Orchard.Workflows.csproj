@@ -72,8 +72,17 @@
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
     <Content Include="Styles\admin-workflows.css" />
+    <Content Include="Styles\admin-usertask.css" />
+    <Content Include="Styles\workflows-activity-isinrole.css" />
+    <Content Include="Styles\workflows-activity-usertask.css" />
+    <Content Include="Styles\workflows-activity-notify.css" />
+    <Content Include="Styles\workflows-activity-publish.css" />
+    <Content Include="Styles\workflows-activity-sendemail.css" />
+    <Content Include="Styles\workflows-activity-contentremoved.css" />
+    <Content Include="Styles\workflows-activity-contentpublished.css" />
+    <Content Include="Styles\workflows-activity-contentversioned.css" />
+    <Content Include="Styles\workflows-activity-contentcreated.css" />
     <Content Include="Styles\workflows-activity-decision.css" />
-    <Content Include="Styles\images\blocking.png" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -94,6 +103,10 @@
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
@@ -101,10 +114,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\ContentActivity.cs" />
+    <Compile Include="Activities\IsInRoleActivity.cs" />
+    <Compile Include="Activities\Mail\MailActivity.cs" />
+    <Compile Include="Activities\Mail\MailForms.cs" />
+    <Compile Include="Activities\PublishActivity.cs" />
+    <Compile Include="Activities\UserTaskActivity.cs" />
     <Compile Include="Activities\DecisionActivity.cs" />
     <Compile Include="Activities\NotificationActivity.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\UserTaskDriver.cs" />
     <Compile Include="Drivers\WorkflowDriver.cs" />
     <Compile Include="Handlers\ContentHandler.cs" />
     <Compile Include="Handlers\WorkflowHandler.cs" />
@@ -121,6 +140,8 @@
     <Compile Include="Models\WorkflowDefinitionRecord.cs" />
     <Compile Include="Providers\ContentActivityProvider.cs" />
     <Compile Include="Providers\ContentActivityForms.cs" />
+    <Compile Include="Providers\SelectRolesForms.cs" />
+    <Compile Include="Providers\UserTaskForms.cs" />
     <Compile Include="Providers\NotificationActivityForms.cs" />
     <Compile Include="Providers\NotificationActivityProvider.cs" />
     <Compile Include="Services\BaseActivity.cs" />
@@ -167,6 +188,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Workflow.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserTask.ActionButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-UserTask.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-IsInRole.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Styles\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-SendEmail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

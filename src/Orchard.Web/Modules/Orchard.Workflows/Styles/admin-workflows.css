@@ -55,11 +55,11 @@
     }
 
 
-    .blocking {
-        background-image: url(images/blocking.png) ;
-        background-position: top right;
-        background-repeat: no-repeat;
-    }
+.blocking {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAKVJREFUOE+lkmENwyAQRusJA7WADiSgAA0oqAMUoAAr/QMh38oCbJQbLR3JS5rvjscFugD4CzKcgQxnKB/QWkMphRgjpJRgjJGs64p931uBMaY2bNuGEAI4583GQidwznVN1tqj9hkzcUiXJO0E1EnnpqFgVPzmsaDUfk15KUiM7qkRnJsSWYrzS+V1LUgIIeC9r/9KXu+9dcynkOEMZDgDGd4HywvvUq4US/BOrgAAAABJRU5ErkJggg==');
+    background-position: top right;
+    background-repeat: no-repeat;
+}
 
     .start {
         background-color: #eee;
@@ -115,15 +115,17 @@
     border: 1px solid #E4E5E6;
     background-color: #F3F4F5;
     padding: 0 5px;
+    height: 100px;
 }
 
     #activity-toolbox .activity-toolbox-item {
         display: block;
         padding: 0 10px;
-        width: 150px;
+        width: auto;
         border: 1px solid #EAEAEA;
         background-color: white;
-        margin: 5px 0;
+        margin: 5px 5px;
+        float: left;
     }
 
     #activity-toolbox .activity-toolbox-item h2 {

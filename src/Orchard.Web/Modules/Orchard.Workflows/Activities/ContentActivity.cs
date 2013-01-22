@@ -14,19 +14,20 @@ namespace Orchard.Workflows.Activities {
         public override bool CanExecute(ActivityContext context) {
             try {
 
-                string contenttypes = context.State.ContentTypes;
-                var content = context.Tokens["Content"] as IContent;
+                string contentTypesState = context.State.ContentTypes;
 
                 // "" means 'any'
-                if (String.IsNullOrEmpty(contenttypes)) {
+                if (String.IsNullOrEmpty(contentTypesState)) {
                     return true;
                 }
+
+                string[] contentTypes = contentTypesState.Split(',');
+
+                var content = context.Tokens["Content"] as IContent;
 
                 if (content == null) {
                     return false;
                 }
-
-                var contentTypes = contenttypes.Split(new[] {','});
 
                 return contentTypes.Any(contentType => content.ContentItem.TypeDefinition.Name == contentType);
             }

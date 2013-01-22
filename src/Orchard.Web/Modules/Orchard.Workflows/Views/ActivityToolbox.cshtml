@@ -11,7 +11,7 @@
 <div id="activity-toolbox">
     <ul>
         @foreach (var activity in allActivities) {
-            <li class="activity-toolbox-item" data-activity-name="@activity.Name">
+            <li class="activity-toolbox-item" data-activity-name="@activity.Name" title="@activity.Description">
                 <h2>@activity.Name.CamelFriendly()</h2>
             </li>
 
@@ -26,9 +26,9 @@
         //<![CDATA[
         var activities = { @foreach (var activity in allActivities) { <text>
             '@activity.Name': {
-                outcomes: [ @Html.Raw("'" + String.Join("', '", activity.GetPossibleOutcomes(new ActivityContext()).Select(x => HttpUtility.JavaScriptStringEncode(x.Text)).ToArray()) + "'")],
-                category: '@activity.Category.Text',
-                description: '@activity.Description.Text',
+                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "'" + HttpUtility.JavaScriptStringEncode(x.Text) + "'").ToArray()))],
+                category: '@HttpUtility.JavaScriptStringEncode(activity.Category.Text)',
+                description: '@HttpUtility.JavaScriptStringEncode(activity.Description.Text)',
                 isBlocking: @(activity.IsBlocking ? "true" : "false"),
                 hasForm: @(!String.IsNullOrWhiteSpace(activity.Form) ? "true" : "false")
             },</text> 

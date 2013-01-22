@@ -74,12 +74,12 @@ namespace Orchard.Workflows.Services {
 
             // evaluate processing condition
             awaitingActivities = awaitingActivities.Where(a => {
-                var formatted = JsonConvert.DeserializeXNode(a.ActivityRecord.State).ToString();
+                var formatted = JsonConvert.DeserializeXNode(a.ActivityRecord.State, "Root").ToString();
                 var tokenized = _tokenizer.Replace(formatted, tokens);
                 var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
                 var state = FormParametersHelper.FromJsonString(serialized);
                 var workflowState = FormParametersHelper.FromJsonString(a.WorkflowRecord.State);
-                var context = new ActivityContext { Tokens = tokens, State = state, WorkflowState = workflowState, Content = target};
+                var context = new ActivityContext { Tokens = tokens, State = state.Root, WorkflowState = workflowState, Content = target };
 
                 // check the condition
                 try {
@@ -93,12 +93,12 @@ namespace Orchard.Workflows.Services {
 
             // evaluate processing condition
             startedWorkflows = startedWorkflows.Where(a => {
-                var formatted = JsonConvert.DeserializeXNode(a.State).ToString();
+                var formatted = JsonConvert.DeserializeXNode(a.State, "Root").ToString();
                 var tokenized = _tokenizer.Replace(formatted, tokens);
                 var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
                 var state = FormParametersHelper.FromJsonString(serialized);
                 var workflowState = FormParametersHelper.FromJsonString("{}");
-                var context = new ActivityContext { Tokens = tokens, State = state, WorkflowState = workflowState, Content = target };
+                var context = new ActivityContext { Tokens = tokens, State = state.Root, WorkflowState = workflowState, Content = target };
 
                 // check the condition
                 try {
