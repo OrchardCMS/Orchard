@@ -1,9 +1,9 @@
 ﻿using Orchard.UI.Resources;
 
-namespace Orchard.Widgets {
+namespace Orchard.Workflows {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
-            builder.Add().DefineStyle("WidgetsAdmin").SetUrl("orchard-widgets-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
+            builder.Add().DefineStyle("WorkflowsAdmin").SetUrl("orchard-workflows-admin.css").SetDependencies("~/Themes/TheAdmin/Styles/Site.css");
         }
     }
 }

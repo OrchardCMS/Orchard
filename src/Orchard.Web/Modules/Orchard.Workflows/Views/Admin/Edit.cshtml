@@ -4,7 +4,7 @@
 
 @{
     Layout.Title = @T("Edit Workflow");
-    Style.Include("admin-workflows.css");
+    Style.Require("WorkflowsAdmin");
     Script.Require("jQueryUI");
     Style.Require("jQueryUI_Orchard");
     Script.Include("jquery.jsPlumb-1.3.16-all-min.js");
@@ -22,9 +22,18 @@
     @Html.ValidationSummary()
 
     <div id="activity-editor">
-        <span id="activity-overlay">
-            <input type="checkbox" id="initial-state" /><label for="initial-state">@T("Start")</label>
-        </span>
+        <div id="activity-toolbar">
+            <div id="activity-toolbar-start">
+                <input type="checkbox" id="activity-toolbar-start-checkbox"/>
+                <label for="activity-toolbar-start-checkbox" title="@T("Start")"></label>
+            </div>
+            <div id="activity-toolbar-edit">
+                <label title="@T("Edit")"></label>
+            </div>
+            <div id="activity-toolbar-delete">
+                <label title="@T("Remove")"></label>
+            </div>
+        </div>
     </div>
 
     
@@ -77,6 +86,6 @@
 
 <fieldset>
     <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-    <button class="cancel" type="submit" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+    @Html.ActionLink(T("Cancel").Text, "Index", "Admin", new { area = "Orchard.Workflows" }, new { @class = "primaryAction button" })
 </fieldset>
 }

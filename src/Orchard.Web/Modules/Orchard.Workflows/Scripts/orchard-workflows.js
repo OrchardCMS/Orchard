@@ -48,8 +48,8 @@
         // deserialize the previously locally saved workflow
         loadActivities(localId);
         
-        // create activity overlays for controlling their states
-        createOverlays();
+        // create activity toolbar for controlling their states
+        createToolbar();
 
         // a new connection is created
         jsPlumb.bind("jsPlumbConnection", function (connectionInfo) {
@@ -104,7 +104,7 @@
                 var editor = $('#activity-editor');
                 editor.append(dom);
 
-                jsPlumb.draggable(dom, { containment: "parent", scroll: true, drag: function () { hideOverlay(true); } });
+                jsPlumb.draggable(dom, { containment: "parent", scroll: true, drag: hideToolbar });
 
                 jsPlumb.makeTarget(dom, {
                     dropOptions: { hoverClass: "dragHover" },
@@ -119,6 +119,7 @@
                     state: state,
                     start: start,
                     clientId: dom.attr("id"),
+                    hasForm: activities[name].hasForm
                 };
 
                 elt.endpoints = {};
@@ -131,9 +132,9 @@
                 
                 for (i = 0; i < outcomes.length; i++) {
                     var ep = jsPlumb.addEndpoint(dom, {
-                            anchor: "Continuous",
-                            connectorOverlays: [["Label", { label: outcomes[i], cssClass: "connection-label" }]],
-                        },
+                        anchor: "Continuous",
+                        connectorOverlays: [["Label", { label: outcomes[i], cssClass: "connection-label" }]],
+                    },
                         sourceEndpointOptions);
 
                     elt.endpoints[outcomes[i]] = ep;
@@ -142,92 +143,99 @@
                 }
 
                 if (activities[name].hasForm) {
-                    dom.dblclick(function() {
+                    var edit = function() {
                         saveLocal(localId);
                         window.location.href = editActivityUrl + "/" + $("#id").val() + "?name=" + name + "&clientId=" + elt.viewModel.clientId + "&localId=" + localId;
-                    });
+                    };
+                    
+                    dom.dblclick(edit);
+                    elt.viewModel.edit = edit;
                 }
 
                 dom.css('top', top + 'px');
                 dom.css('left', left + 'px');
                 jsPlumb.repaint(elt.viewModel.clientId);
+                
+                dom.on("click", function () {
+                    var self = $(this);
+                    var toolbar = $('#activity-toolbar');
+
+                    toolbar.position({
+                        my: "right bottom",
+                        at: "right top",
+                        offset: "0 -5",
+                        of: self,
+                        collision: "none"
+                    });
+
+                    toolbar.target = this;
+                    refreshToolbar(this);
+                    toolbar.show();
+
+                    return false;
+                });
             }
+            
         });
 
     };
 
-    var onActivity = false;
-    var onOverlay = false;
+    var createToolbar = function () {
+        var editor = $('#activity-editor');
 
-    $("#initial-state").button();
-    
-    var createOverlays = function () {
-        var events = $('.activity.blocking');
+        editor.on("click", function () {
+            hideToolbar();
+        });
 
-        $('#activity-overlay').hover(
-            function () {
-                onOverlay = true;
-            },
-            function () {
-                onOverlay = false;
-                setTimeout(hideOverlay, 50);
-            });
+        initToolbar();
+    };
 
+    var initToolbar = function() {
+        $('#activity-toolbar-start-checkbox').change(function () {
+            var target = $(toolbar.target);
+            //var clientId = target.attr('id');
+            //var activity = getActivity(localId, clientId);
+            var checked = $(this).is(':checked');
+            target.get(0).viewModel.start = checked;
+            target.toggleClass('start', checked);
+        });
         
-        hideOverlay();
-        events.hover(
-            // mouse enter
-            function () {
-                var self = $(this);
-                var overlay = $('#activity-overlay');
+    };
 
-                overlay.position({
-                    my: "right bottom",
-                    at: "right top",
-                    offset: "10 10",
-                    of: self, // or $("#otherdiv)
-                    collision: "none"
-                });
+    var refreshToolbar = function(target) {
+        target = $(target);
 
-                onActivity = true;
+        // start button
+        $('#activity-toolbar-start').toggle(target.hasClass('blocking'));
+        $('#activity-toolbar-start-checkbox').prop('checked', target.get(0).viewModel.start);
 
-                if (!overlay.is(":visible")) {
-                    var state = $("#initial-state");
-                    state.prop('checked', self.hasClass('start')).button("refresh");
+        // edit button
+        var editButton = $('#activity-toolbar-edit');
+        if (target.get(0).viewModel.hasForm) {
+            editButton.unbind("click").click(target.get(0).viewModel.edit);
+            editButton.toggle(true);
+        } else {
+            editButton.toggle(false);
+        }
 
-                    state.unbind("click").click(function () {
-                        updateStart(self, state.is(":checked"));
-                    });
-                    
-                    overlay.show();
-                }
-            },
-            // mouse leave
-            function () {
-                onActivity = false;
-                setTimeout(hideOverlay, 50);
-            }
-        );
+        // delete button
+        var deleteButton = $('#activity-toolbar-delete');
+        deleteButton.unbind("click").click(function() {
+            jsPlumb.removeAllEndpoints(target.attr('id'));
+            target.remove();
+        });
+
     };
     
-    var hideOverlay = function (force) {
-        if (force || (!onOverlay && !onActivity)) {
-            var overlay = $('#activity-overlay');
-            overlay.offset({ top: 0, left: 0 });
-            overlay.hide();
-            
-            onOverlay = false;
-            onActivity = false;
-        }
+    // hides the 
+    var hideToolbar = function () {
+        var toolbar = $('#activity-toolbar');
+        toolbar.offset({ top: 0, left: 0 });
+        toolbar.hide();
     };
 
     var updateStart = function(dom, isStart) {
-        var clientId = $(dom).attr('id');
-        var activity = getActivity(localId, clientId);
         
-        $(dom).get(0).viewModel.start = isStart;
-
-        $(dom).toggleClass('start', isStart);
     };
     
 

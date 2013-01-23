@@ -1,10 +1,15 @@
 ﻿@using Orchard.DisplayManagement
+@using Orchard.UI.Resources
 @using Orchard.Utility.Extensions
 @using Orchard.Workflows.Models.Descriptors
 @using Orchard.Workflows.Services
 
 @{
     IList<IActivity> allActivities = Model.AllActivities;
+
+    foreach (var activity in allActivities) {
+        Style.Include("workflows-activity-" + activity.Name.ToLower()).Define(x => x.SetDependencies("WidgetsAdmin"));
+    }   
     
 }
 <!-- List of available activities -->
@@ -14,8 +19,6 @@
             <li class="activity-toolbox-item" data-activity-name="@activity.Name" title="@activity.Description">
                 <h2>@activity.Name.CamelFriendly()</h2>
             </li>
-
-            Style.Include("workflows-activity-" + activity.Name.ToLower());
         }   
     </ul> 
 </div>
@@ -32,7 +35,7 @@
                 isBlocking: @(activity.IsBlocking ? "true" : "false"),
                 hasForm: @(!String.IsNullOrWhiteSpace(activity.Form) ? "true" : "false")
             },</text> 
-        }
+                           }
 
         };
         //]]>
