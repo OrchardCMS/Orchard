@@ -160,6 +160,9 @@
                     var self = $(this);
                     var toolbar = $('#activity-toolbar');
 
+
+                    refreshToolbar(this);
+
                     toolbar.position({
                         my: "right bottom",
                         at: "right top",
@@ -168,8 +171,7 @@
                         collision: "none"
                     });
 
-                    toolbar.target = this;
-                    refreshToolbar(this);
+                    toolbar.get(0).target = this;
                     toolbar.show();
 
                     return false;
@@ -183,24 +185,31 @@
     var createToolbar = function () {
         var editor = $('#activity-editor');
 
+        // editor.focus(function () {
         editor.on("click", function () {
             hideToolbar();
         });
 
         initToolbar();
     };
-
+    
     var initToolbar = function() {
         $('#activity-toolbar-start-checkbox').change(function () {
-            var target = $(toolbar.target);
+            var toolbar = $('#activity-toolbar');
+            var target = $(toolbar).get(0).target;
             //var clientId = target.attr('id');
             //var activity = getActivity(localId, clientId);
             var checked = $(this).is(':checked');
-            target.get(0).viewModel.start = checked;
-            target.toggleClass('start', checked);
+            target.viewModel.start = checked;
+            $(target).toggleClass('start', checked);
         });
-        
+
+        // prevent the editor from getting clicked when the label is clicked
+        $('#activity-toolbar-start').click(function (event) {
+            event.stopPropagation();
+        });
     };
+
 
     var refreshToolbar = function(target) {
         target = $(target);
@@ -220,7 +229,11 @@
 
         // delete button
         var deleteButton = $('#activity-toolbar-delete');
-        deleteButton.unbind("click").click(function() {
+        deleteButton.unbind("click").click(function () {
+            if (!confirm($("#confirm-delete-activity").val())) {
+                return false;
+            }
+            
             jsPlumb.removeAllEndpoints(target.attr('id'));
             target.remove();
         });
@@ -233,9 +246,3 @@
         toolbar.offset({ top: 0, left: 0 });
         toolbar.hide();
     };
-
-    var updateStart = function(dom, isStart) {
-        
-    };
-    
-
