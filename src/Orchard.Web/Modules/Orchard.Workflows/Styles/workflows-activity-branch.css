@@ -1,0 +1,7 @@
+﻿.branch {
+    width: 36px;
+    height: 36px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAYAAADpnJ2CAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAJlJREFUSEvtk8sJwCAQBe3JBmzBsqzBfqzAVjx52GhAkM0jagyC4GEum2dm/awgoi6stSSlhBhjUgSv48AiJ8YotNZQllFKUQgBruXAIucIj7AGFhFLx6Km7HZkVzWw+MbeQu89vKMZnHPp10DYeolf4SfxELaOajbXDHD2E/YO9F+5uwv0MVO6K92iTGYkd4RHeDMkXDsWhi7rGDeiuX27SQAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+    background-position: center;
+}

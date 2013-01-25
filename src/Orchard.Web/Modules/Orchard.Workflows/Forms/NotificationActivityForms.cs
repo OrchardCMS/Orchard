@@ -3,7 +3,7 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Workflows.Providers {
+namespace Orchard.Workflows.Forms {
     public class NotificationActivityForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }

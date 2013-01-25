@@ -3,18 +3,22 @@ using Orchard.Localization;
 using Orchard.Workflows.Models.Descriptors;
 
 namespace Orchard.Workflows.Services {
-    public abstract class BlockingActivity : IActivity {
+    public abstract class Event : IActivity {
 
         public abstract string Name { get; }
         public abstract LocalizedString Category { get; }
         public abstract LocalizedString Description { get; }
 
-        public virtual bool IsBlocking {
+        public virtual bool IsEvent {
             get { return true; }
         }
 
         public virtual string Form {
             get { return null; }
+        }
+
+        public virtual bool CanStartWorkflow {
+            get { return false; }
         }
 
         public abstract IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context);
@@ -23,6 +27,10 @@ namespace Orchard.Workflows.Services {
             return true;
         }
 
-        public abstract LocalizedString Execute(ActivityContext context);
+        public abstract IEnumerable<LocalizedString> Execute(ActivityContext context);
+
+        public virtual void Touch(dynamic workflowState) {
+            
+        }
     }
 }

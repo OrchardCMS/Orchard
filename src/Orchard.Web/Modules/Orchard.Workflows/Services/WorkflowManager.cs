@@ -53,7 +53,9 @@ namespace Orchard.Workflows.Services {
             
             var startedWorkflows = new List<ActivityRecord>();
 
-            // look for workflow definitions with a corresponding starting activity, 
+            // look for workflow definitions with a corresponding starting activity
+            // it's important to return activities at this point and not workflows,
+            // as a workflow definition could have multiple entry points with the same type of activity
             startedWorkflows.AddRange(_activityRepository.Table.Where(
                 x =>x.Name == name && x.Start && x.WorkflowDefinitionRecord.Enabled
                 )
@@ -62,6 +64,8 @@ namespace Orchard.Workflows.Services {
             var awaitingActivities = new List<AwaitingActivityRecord>();
 
             // and any running workflow paused on this kind of activity for this content
+            // it's important to return activities at this point as a workflow could be awaiting 
+            // on several ones. When an activity is restarted, all the other ones of the same workflow are cancelled.
             awaitingActivities.AddRange(_awaitingActivityRepository.Table.Where(
                 x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && x.ContentItemRecord == target.ContentItem.Record
                 ).ToList()
@@ -133,10 +137,10 @@ namespace Orchard.Workflows.Services {
 
         private void StartWorkflow(ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens) {
             var workflowState = FormParametersHelper.FromJsonString("{}");
-            var lastActivity = ExecuteWorkflow(activityRecord.WorkflowDefinitionRecord, activityRecord, target, tokens, workflowState);
+            IEnumerable<ActivityRecord> blockedOn = ExecuteWorkflow(activityRecord.WorkflowDefinitionRecord, activityRecord, target, tokens, workflowState);
 
             // is the workflow halted on a blocking activity ?
-            if (lastActivity == null) {
+            if (blockedOn == null || !blockedOn.Any()) {
                 // no, nothing to do
             }
             else {
@@ -148,61 +152,83 @@ namespace Orchard.Workflows.Services {
 
                 _workflowRepository.Create(workflow);
 
-                workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
-                    ActivityRecord = lastActivity,
-                    ContentItemRecord = target.ContentItem.Record
-                });
+                foreach (var blocking in blockedOn) {
+                    workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
+                        ActivityRecord = blocking,
+                        ContentItemRecord = target.ContentItem.Record
+                    });
+                }
             }
         }
 
         private void ResumeWorkflow(AwaitingActivityRecord awaitingActivityRecord, IContent target, Dictionary<string, object> tokens) {
             var workflowState = FormParametersHelper.FromJsonString(awaitingActivityRecord.WorkflowRecord.State);
-            var lastActivity = ExecuteWorkflow(awaitingActivityRecord.WorkflowRecord.WorkflowDefinitionRecord, awaitingActivityRecord.ActivityRecord, target, tokens, workflowState);
+            IEnumerable<ActivityRecord> blockedOn = ExecuteWorkflow(awaitingActivityRecord.WorkflowRecord.WorkflowDefinitionRecord, awaitingActivityRecord.ActivityRecord, target, tokens, workflowState);
 
             // is the workflow halted on a blocking activity ?
-            if (lastActivity == null) {
+            if (blockedOn == null || !blockedOn.Any()) {
                 // no, delete the workflow
                 _workflowRepository.Delete(awaitingActivityRecord.WorkflowRecord);
             }
             else {
-                // workflow halted, save state
-                awaitingActivityRecord.ActivityRecord = lastActivity;
+                // remove all previous awaiting activities
+                var workflow = awaitingActivityRecord.WorkflowRecord;
+                workflow.State = FormParametersHelper.ToJsonString(workflowState);
+                workflow.AwaitingActivities.Clear();
+
+                // add the new ones
+                foreach (var blocking in blockedOn) {
+                    workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
+                        ActivityRecord = blocking,
+                        ContentItemRecord = target.ContentItem.Record
+                    });
+                }
             }
         }
 
-        public ActivityRecord ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens, dynamic workflowState) {
+        public IEnumerable<ActivityRecord> ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens, dynamic workflowState) {
             var firstPass = true;
+            var pending = new Stack<ActivityRecord>();
+            pending.Push(activityRecord);
 
-            while (true) {
+            var blocking = new List<ActivityRecord>();
+
+            while (pending.Any()) {
+                
+                activityRecord = pending.Pop();
+
                 // while there is an activity to process
                 var activity = _activitiesManager.GetActivityByName(activityRecord.Name);
 
-                if (!firstPass && activity.IsBlocking) {
-                    return activityRecord;
+                if (!firstPass){
+                    if(activity.IsEvent) {
+                        activity.Touch(workflowState);
+                        blocking.Add(activityRecord);
+                        continue;
+                    }
                 }
                 else {
                     firstPass = false;    
                 }
-                
+
                 var state = FormParametersHelper.FromJsonString(activityRecord.State);
-                var activityContext = new ActivityContext {Tokens = tokens, State = state, WorkflowState = workflowState, Content = target };
-                var outcome = activity.Execute(activityContext);
+                var activityContext = new ActivityContext { Tokens = tokens, State = state, WorkflowState = workflowState, Content = target };
+                var outcomes = activity.Execute(activityContext);
 
-                if (outcome != null) {
-                    // look for next activity in the graph
-                    var transition = workflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
+                if (outcomes != null) {
+                    foreach (var outcome in outcomes) {
+                        // look for next activity in the graph
+                        var transition = workflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
 
-                    if (transition == null) {
-                        return null;
+                        if (transition != null) {
+                            pending.Push(transition.DestinationActivityRecord);
+                        }
                     }
-                    else {
-                        activityRecord = transition.DestinationActivityRecord;
-                    }
-                }
-                else {
-                    return null;
                 }
             }
+
+            // apply Distinct() as two paths could block on the same activity
+            return blocking.Distinct();
         }
     }
 }

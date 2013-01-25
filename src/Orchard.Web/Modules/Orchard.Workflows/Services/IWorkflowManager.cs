@@ -15,7 +15,7 @@ namespace Orchard.Workflows.Services {
         /// <param name="tokensContext">An object containing the tokens context</param>
         void TriggerEvent(string name, IContent target, Func<Dictionary<string, object>> tokensContext);
 
-        ActivityRecord ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens, dynamic workflowState);
+        IEnumerable<ActivityRecord> ExecuteWorkflow(WorkflowDefinitionRecord workflowDefinitionRecord, ActivityRecord activityRecord, IContent target, Dictionary<string, object> tokens, dynamic workflowState);
     }
 
 }

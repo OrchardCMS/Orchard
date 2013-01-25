@@ -4,7 +4,7 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class DecisionActivity : BaseActivity {
+    public class DecisionActivity : Task {
 
         public DecisionActivity() {
             T = NullLocalizer.Instance;
@@ -28,8 +28,8 @@ namespace Orchard.Workflows.Activities {
             return new[] { T("True"), T("False") };
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
-            return T("True");
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+            yield return T("True");
         }
     }
 }

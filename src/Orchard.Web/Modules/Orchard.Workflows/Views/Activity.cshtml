@@ -2,11 +2,11 @@
 
 @{
     string name = Model.Name;
-    bool blocking = Model.IsBlocking;
-    string blockingClass = blocking ? "blocking" : null;
+    string isEventClass = Model.IsEvent ? "event" : null;
+    string canStartClass = Model.CanStartWorkflow ? "canStart" : null;
 }
 
-<div class="@blockingClass">
+<div class="@isEventClass @canStartClass">
     @name.CamelFriendly()
 </div>
 

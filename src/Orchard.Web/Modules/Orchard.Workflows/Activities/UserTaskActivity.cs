@@ -7,7 +7,7 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class UserTaskActivity : BlockingActivity {
+    public class UserTaskActivity : Event {
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public UserTaskActivity(IWorkContextAccessor workContextAccessor) {
@@ -43,13 +43,11 @@ namespace Orchard.Workflows.Activities {
             return ActionIsValid(context) && UserIsInRole(context);
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
 
             if (ActionIsValid(context) && UserIsInRole(context)) {
-                return T(context.Tokens["UserTask.Action"].ToString());
+                yield return T(context.Tokens["UserTask.Action"].ToString());
             }
-            
-            return null;
         }
 
         private bool UserIsInRole(ActivityContext context) {

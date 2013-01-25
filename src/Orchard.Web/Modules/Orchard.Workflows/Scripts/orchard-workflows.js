@@ -215,7 +215,7 @@
         target = $(target);
 
         // start button
-        $('#activity-toolbar-start').toggle(target.hasClass('blocking'));
+        $('#activity-toolbar-start').toggle(target.hasClass('canStart'));
         $('#activity-toolbar-start-checkbox').prop('checked', target.get(0).viewModel.start);
 
         // edit button

@@ -5,7 +5,7 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class PublishActivity : BaseActivity {
+    public class PublishActivity : Task {
         private readonly IContentManager _contentManager;
 
         public PublishActivity(IContentManager contentManager) {
@@ -22,9 +22,9 @@ namespace Orchard.Workflows.Activities {
             return new[] { T("Published") };
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
             _contentManager.Publish(context.Content.ContentItem);
-            return T("Published");
+            yield return T("Published");
         }
 
         public override string Name {

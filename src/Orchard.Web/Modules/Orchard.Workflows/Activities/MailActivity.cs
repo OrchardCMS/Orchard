@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Core.Common.Models;
-using Orchard.Events;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
@@ -12,9 +11,9 @@ using Orchard.Security;
 using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Activities.Mail {
+namespace Orchard.Workflows.Activities {
 
-    public class MailActions : BaseActivity {
+    public class MailActions : Task {
         private readonly IMessageManager _messageManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
@@ -55,12 +54,13 @@ namespace Orchard.Workflows.Activities.Mail {
             get { return T("Sends an e-mail to a specific user."); }
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
             string recipient = context.State.Recipient;
-            var properties = new Dictionary<string, string>(); // context.State.Properties
 
-            properties.Add("Body", context.State.Body.ToString());
-            properties.Add("Subject", context.State.Subject.ToString());
+            var properties = new Dictionary<string, string> {
+                {"Body", context.State.Body.ToString()}, 
+                {"Subject", context.State.Subject.ToString()}
+            }; 
 
             if (recipient == "owner") {
                 var content = context.Tokens["Content"] as IContent;
@@ -95,7 +95,7 @@ namespace Orchard.Workflows.Activities.Mail {
                 _messageManager.Send(SplitEmail(email), MessageType, "email", properties);
             }
 
-            return T("Sent");
+            yield return T("Sent");
         }
 
         private static IEnumerable<string> SplitEmail(string commaSeparated) {

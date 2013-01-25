@@ -7,7 +7,7 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class IsInRoleActivity : BaseActivity {
+    public class IsInRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public IsInRoleActivity(IWorkContextAccessor workContextAccessor) {
@@ -41,13 +41,13 @@ namespace Orchard.Workflows.Activities {
             return true;
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
 
             if (UserIsInRole(context)) {
-                return T("Yes");
+                yield return T("Yes");
             }
             
-            return T("No");
+            yield return T("No");
         }
 
         private bool UserIsInRole(ActivityContext context) {

@@ -6,7 +6,7 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Roles.Services;
 
-namespace Orchard.Workflows.Providers {
+namespace Orchard.Workflows.Forms {
     public class SelectRolesForms : IFormProvider {
         private readonly IRoleService _roleService;
         protected dynamic Shape { get; set; }

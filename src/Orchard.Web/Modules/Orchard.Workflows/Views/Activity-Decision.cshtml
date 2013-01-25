@@ -2,10 +2,9 @@
 
 @{
     string name = Model.Name;
-    bool blocking = Model.IsBlocking;
 }
 
-<div class="@blocking">
+<div>
     <div class="diamond"></div>
     @*@name.CamelFriendly()*@
 </div>

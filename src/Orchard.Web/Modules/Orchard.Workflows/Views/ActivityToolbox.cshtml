@@ -32,7 +32,7 @@
                 outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "'" + HttpUtility.JavaScriptStringEncode(x.Text) + "'").ToArray()))],
                 category: '@HttpUtility.JavaScriptStringEncode(activity.Category.Text)',
                 description: '@HttpUtility.JavaScriptStringEncode(activity.Description.Text)',
-                isBlocking: @(activity.IsBlocking ? "true" : "false"),
+                IsEvent: @(activity.IsEvent ? "true" : "false"),
                 hasForm: @(!String.IsNullOrWhiteSpace(activity.Form) ? "true" : "false")
             },</text> 
                            }

@@ -3,7 +3,7 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Workflows.Activities.Mail {
+namespace Orchard.Workflows.Forms {
 
     public class MailForms : IFormProvider {
         protected dynamic Shape { get; set; }

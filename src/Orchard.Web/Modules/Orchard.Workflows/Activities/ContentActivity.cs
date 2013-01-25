@@ -7,9 +7,13 @@ using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public abstract class ContentActivity : BlockingActivity {
+    public abstract class ContentActivity : Event {
 
         public Localizer T { get; set; }
+
+        public override bool CanStartWorkflow {
+            get { return true; }
+        }
 
         public override bool CanExecute(ActivityContext context) {
             try {
@@ -40,8 +44,8 @@ namespace Orchard.Workflows.Activities {
             return new[] { T("Done") };
         }
 
-        public override LocalizedString Execute(ActivityContext context) {
-            return T("Done");
+        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+            yield return T("Done");
         }
 
         public override string Form {
@@ -59,7 +63,6 @@ namespace Orchard.Workflows.Activities {
         public override string Name {
             get { return "ContentCreated"; }
         }
-
 
         public override LocalizedString Description {
             get { return T("Content is created."); }
@@ -92,7 +95,6 @@ namespace Orchard.Workflows.Activities {
         public override string Name {
             get { return "ContentRemoved"; }
         }
-
 
         public override LocalizedString Description {
             get { return T("Content is  removed."); }

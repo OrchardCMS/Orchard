@@ -6,7 +6,7 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.Workflows.Providers {
+namespace Orchard.Workflows.Forms {
     public class ContentForms : IFormProvider {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         protected dynamic Shape { get; set; }

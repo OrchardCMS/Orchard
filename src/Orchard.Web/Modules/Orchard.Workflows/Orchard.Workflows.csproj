@@ -71,6 +71,8 @@
     <Content Include="Scripts\jquery.jsPlumb-1.3.16-all-min.js" />
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Styles\workflows-activity-timer.css" />
+    <Content Include="Styles\workflows-activity-branch.css" />
     <Content Include="Styles\orchard-workflows-admin.css" />
     <Content Include="Styles\admin-usertask.css" />
     <Content Include="Styles\workflows-activity-isinrole.css" />
@@ -114,9 +116,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\ContentActivity.cs" />
+    <Compile Include="Activities\BranchActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
-    <Compile Include="Activities\Mail\MailActivity.cs" />
-    <Compile Include="Activities\Mail\MailForms.cs" />
+    <Compile Include="Activities\MailActivity.cs" />
+    <Compile Include="Activities\TimerActivity.cs" />
+    <Compile Include="Forms\TimerForms.cs" />
+    <Compile Include="Forms\BranchForms.cs" />
+    <Compile Include="Forms\MailForms.cs" />
     <Compile Include="Activities\PublishActivity.cs" />
     <Compile Include="Activities\UserTaskActivity.cs" />
     <Compile Include="Activities\DecisionActivity.cs" />
@@ -138,12 +144,10 @@
     <Compile Include="Models\WorkflowRecord.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\WorkflowDefinitionRecord.cs" />
-    <Compile Include="Providers\ContentActivityProvider.cs" />
-    <Compile Include="Providers\ContentActivityForms.cs" />
-    <Compile Include="Providers\SelectRolesForms.cs" />
-    <Compile Include="Providers\UserTaskForms.cs" />
-    <Compile Include="Providers\NotificationActivityForms.cs" />
-    <Compile Include="Providers\NotificationActivityProvider.cs" />
+    <Compile Include="Forms\ContentActivityForms.cs" />
+    <Compile Include="Forms\SelectRolesForms.cs" />
+    <Compile Include="Forms\UserTaskForms.cs" />
+    <Compile Include="Forms\NotificationActivityForms.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\BaseActivity.cs" />
     <Compile Include="Services\BlockingActivity.cs" />
@@ -168,9 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Activity-ContentCreated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity.cshtml" />
@@ -204,6 +205,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-SendEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Branch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Timer.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
