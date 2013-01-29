@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -14,15 +14,15 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override bool CanExecute(ActivityContext context) {
+        public override bool CanExecute(WorkflowContext context) {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return GetBranches(context).Select(x => T(x));
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             return GetBranches(context).Select(x => T(x));
         }
 
@@ -44,7 +44,7 @@ namespace Orchard.Workflows.Activities {
             }
         }
 
-        private IEnumerable<string> GetBranches(ActivityContext context) {
+        private IEnumerable<string> GetBranches(WorkflowContext context) {
             if (context.State == null) {
                 return Enumerable.Empty<string>();
             }

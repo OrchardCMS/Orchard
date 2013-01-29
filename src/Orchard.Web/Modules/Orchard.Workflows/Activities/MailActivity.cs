@@ -8,7 +8,7 @@ using Orchard.Messaging.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -31,7 +31,7 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return new[] { T("Sent") };
         }
 
@@ -54,7 +54,7 @@ namespace Orchard.Workflows.Activities {
             get { return T("Sends an e-mail to a specific user."); }
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             string recipient = context.State.Recipient;
 
             var properties = new Dictionary<string, string> {

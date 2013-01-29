@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -35,11 +35,11 @@ namespace Orchard.Workflows.Activities {
             get { return "ActivityNotify"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             yield return T("Done");
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             string notification = context.State.Notification;
             string message = context.State.Message;
 

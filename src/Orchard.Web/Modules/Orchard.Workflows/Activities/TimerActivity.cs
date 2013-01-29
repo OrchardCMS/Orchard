@@ -8,19 +8,14 @@ using Orchard.Localization;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Workflows.Models;
-using Orchard.Workflows.Models.Descriptors;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
     public class TimerActivity : Event {
         private readonly IClock _clock;
-        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public TimerActivity(
-            IClock clock,
-            IWorkContextAccessor workContextAccessor) {
+        public TimerActivity(IClock clock) {
             _clock = clock;
-            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -42,26 +37,26 @@ namespace Orchard.Workflows.Activities {
             get { return "ActivityTimer"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             yield return T("Done");
         }
 
-        public override bool CanExecute(ActivityContext context) {
+        public override bool CanExecute(WorkflowContext context) {
 
             return _clock.UtcNow > When(context);
         }
 
-        public override void Touch(dynamic workflowState) {
-            workflowState.TimerActivity_StartedUtc = _clock.UtcNow;
+        public override void OnWorkflowStarted(WorkflowContext context) {
+            context.WorkflowState.TimerActivity_StartedUtc = _clock.UtcNow;
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             if(_clock.UtcNow > When(context)) {
                 yield return T("Done");
             }
         }
 
-        public static DateTime When(ActivityContext context) {
+        public static DateTime When(WorkflowContext context) {
             try {
                 int amount = context.State.Amount;
                 string type = context.State.Unity;
@@ -122,10 +117,10 @@ namespace Orchard.Workflows.Activities {
                 var contentItem = _contentManager.Get(x.ContentItemRecord.Id, VersionOptions.Latest);
                 var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
                 var workflowState = FormParametersHelper.FromJsonString(x.WorkflowRecord.State);
-                return _clock.UtcNow > TimerActivity.When(new ActivityContext {
+                return _clock.UtcNow > TimerActivity.When(new WorkflowContext {
                     State = state, 
                     WorkflowState = workflowState, 
-                    Content = contentItem
+                    Content = contentItem,
                 });
             });
 

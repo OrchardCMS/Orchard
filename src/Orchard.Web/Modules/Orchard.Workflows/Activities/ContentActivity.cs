@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -15,7 +15,7 @@ namespace Orchard.Workflows.Activities {
             get { return true; }
         }
 
-        public override bool CanExecute(ActivityContext context) {
+        public override bool CanExecute(WorkflowContext context) {
             try {
 
                 string contentTypesState = context.State.ContentTypes;
@@ -40,11 +40,11 @@ namespace Orchard.Workflows.Activities {
             }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return new[] { T("Done") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             yield return T("Done");
         }
 

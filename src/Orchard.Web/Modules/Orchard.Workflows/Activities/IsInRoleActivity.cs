@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Localization;
 using Orchard.Security;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -33,15 +33,15 @@ namespace Orchard.Workflows.Activities {
             get { return "SelectRoles"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return new[] {T("Yes"), T("No")};
         }
 
-        public override bool CanExecute(ActivityContext context) {
+        public override bool CanExecute(WorkflowContext context) {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
 
             if (UserIsInRole(context)) {
                 yield return T("Yes");
@@ -50,7 +50,7 @@ namespace Orchard.Workflows.Activities {
             yield return T("No");
         }
 
-        private bool UserIsInRole(ActivityContext context) {
+        private bool UserIsInRole(WorkflowContext context) {
 
             // checking if user is in an accepted role
             var workContext = _workContextAccessor.GetContext();
@@ -78,7 +78,7 @@ namespace Orchard.Workflows.Activities {
             return isInRole;
         }
 
-        private IEnumerable<string> GetRoles(ActivityContext context) {
+        private IEnumerable<string> GetRoles(WorkflowContext context) {
             if (context.State == null) {
                 return Enumerable.Empty<string>();
             }

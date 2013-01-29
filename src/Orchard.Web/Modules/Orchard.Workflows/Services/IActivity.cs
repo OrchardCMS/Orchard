@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Localization;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 
 namespace Orchard.Workflows.Services {
     public interface IActivity : IDependency {
@@ -15,23 +15,49 @@ namespace Orchard.Workflows.Services {
         /// <summary>
         /// List of possible outcomes when the activity is executed.
         /// </summary>
-        IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context);
+        IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context);
 
         /// <summary>
         /// Whether the activity can transition to the next outcome. Can prevent the activity from being transitioned
         /// because a condition is not valid.
         /// </summary>
-        bool CanExecute(ActivityContext context);
+        bool CanExecute(WorkflowContext context);
 
         /// <summary>
         /// Executes the current activity
         /// </summary>
         /// <returns>The names of the resulting outcomes.</returns>
-        IEnumerable<LocalizedString> Execute(ActivityContext context);
+        IEnumerable<LocalizedString> Execute(WorkflowContext context);
 
         /// <summary>
-        /// Called on blocking activities when they are reached
+        /// Called on each activity when a workflow is about to start
         /// </summary>
-        void Touch(dynamic workflowState);
+        void OnWorkflowStarting(WorkflowContext context, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Called on each activity when a workflow has started
+        /// </summary>
+        void OnWorkflowStarted(WorkflowContext context);
+
+        /// <summary>
+        /// Called on each activity when a workflow is about to be resumed
+        /// </summary>
+        void OnWorkflowResuming(WorkflowContext context, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Called on each activity when a workflow is resumed
+        /// </summary>
+        void OnWorkflowResumed(WorkflowContext context);
+
+        /// <summary>
+        /// Called on each activity when an activity is about to be executed
+        /// </summary>
+        void OnActivityExecuting(WorkflowContext context, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Called on each activity when an activity has been executed
+        /// </summary>
+        void OnActivityExecuted(WorkflowContext context);
+
     }
 }

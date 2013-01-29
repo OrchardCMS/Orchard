@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Localization;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -24,11 +24,11 @@ namespace Orchard.Workflows.Activities {
             get { return T("Evaluates an expression.");  }
         }
         
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return new[] { T("True"), T("False") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             yield return T("True");
         }
     }

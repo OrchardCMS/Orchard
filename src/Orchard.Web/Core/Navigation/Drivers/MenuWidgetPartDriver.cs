@@ -79,7 +79,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
                                              
                 dynamic menuShape = shapeHelper.Menu();
-
+                
                 if (part.Breadcrumb && selectedPath != null) {
                     menuItems = selectedPath;
                     foreach (var menuItem in menuItems) {
@@ -160,9 +160,9 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
                 }
 
-
                 menuShape.MenuName(menuName);
                 menuShape.ContentItem(menu);
+
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);

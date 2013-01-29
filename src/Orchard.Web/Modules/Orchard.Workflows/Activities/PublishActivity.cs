@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Workflows.Models.Descriptors;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
@@ -14,15 +14,15 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override bool CanExecute(ActivityContext context) {
+        public override bool CanExecute(WorkflowContext context) {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(ActivityContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
             return new[] { T("Published") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(ActivityContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
             _contentManager.Publish(context.Content.ContentItem);
             yield return T("Published");
         }
