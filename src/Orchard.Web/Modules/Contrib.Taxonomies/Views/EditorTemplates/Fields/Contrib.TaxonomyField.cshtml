@@ -1,0 +1,38 @@
+﻿@model Contrib.Taxonomies.ViewModels.TaxonomyFieldViewModel
+@using Contrib.Taxonomies.Helpers;
+@using Orchard.Utility.Extensions;
+
+@{
+    Style.Include("admin-taxonomy.css");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("admin-taxonomy-expando.js").AtFoot();
+    int termIndex = 0, ti;
+}
+
+<fieldset>
+    <legend>@Model.Name.CamelFriendly()</legend>
+    <div class="expando">
+        @if (!String.IsNullOrWhiteSpace(Model.Settings.Hint)) {
+        <span class="hint">@Model.Settings.Hint</span>
+        }
+        <ul>
+            @foreach (var entry in Model.Terms) {
+                ti = termIndex;
+            <li>
+                @* Tabs for levels *@ @for ( var i = 1; i <= entry.GetLevels(); i++ ) { <span class="gap">&nbsp;</span> }
+                @{
+                var disabled = !entry.Selectable || (Model.Settings.LeavesOnly && Model.Terms.Any(t => t.Path.Contains(entry.Path + entry.Id)));
+                    if(Model.Settings.SingleChoice) {
+                        <input @if(disabled) { <text>disabled="disabled"</text> } type="radio" value="@Model.Terms[ti].Id" @if(entry.Id == Model.SingleTermId) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.SingleTermId)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)"/> 
+                    } else {            
+                    <input @if(disabled) { <text>disabled="disabled"</text> } type="checkbox" value="true" @if(entry.IsChecked) { <text>checked="checked"</text> } name="@Html.FieldNameFor(m => m.Terms[ti].IsChecked)" id="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)"/> 
+                    }
+                }
+                @Html.HiddenFor(m => m.Terms[ti].Id)
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Terms[ti].IsChecked)">@entry.Name</label>
+            </li>
+                termIndex++;
+            }
+        </ul>
+    </div>
+</fieldset>

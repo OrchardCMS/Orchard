@@ -1,0 +1,29 @@
+﻿<Placement>
+  <!-- Location of field edition -->
+  <Place Fields_Contrib_TaxonomyField_Edit="Content:19"/>
+  
+  <!-- Display terms in front-end summaries -->
+  <Match DisplayType="Summary">
+    <Place Fields_Contrib_TaxonomyField="Content:after"/>
+  </Match>
+
+  <!-- Display terms in content item details -->
+  <Match DisplayType="Detail">
+    <Place Fields_Contrib_TaxonomyField="Content:5"/>
+  </Match>
+
+  <!-- Display terms in admin summaries -->
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_Contrib_TaxonomyField="Content:5"/>
+  </Match>
+  
+  <!-- Display in admin -->
+  <Place Parts_Taxonomies_Term_Fields="Content:2"/>
+  
+  <!-- Widget -->
+  <Place Parts_Taxonomies_Menu_Edit="Content:5"/>
+  <Place Parts_Taxonomies_TaxonomyMenuItem_Edit="Content:5"/>
+  <Place Parts_Taxonomies_Menu="Content"/>
+  <Place Parts_TermWidget_List="Content"/>
+  <Place Parts_Taxonomy_TermWidget_Edit ="Content:5" />
+</Placement>

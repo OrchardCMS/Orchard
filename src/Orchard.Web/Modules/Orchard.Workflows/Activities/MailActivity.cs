@@ -31,7 +31,7 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             return new[] { T("Sent") };
         }
 
@@ -54,16 +54,16 @@ namespace Orchard.Workflows.Activities {
             get { return T("Sends an e-mail to a specific user."); }
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
-            string recipient = context.State.Recipient;
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            string recipient = activityContext.GetState<string>("Recipient");
 
             var properties = new Dictionary<string, string> {
-                {"Body", context.State.Body.ToString()}, 
-                {"Subject", context.State.Subject.ToString()}
+                {"Body", activityContext.GetState<string>("Body")}, 
+                {"Subject", activityContext.GetState<string>("Subject")}
             }; 
 
             if (recipient == "owner") {
-                var content = context.Tokens["Content"] as IContent;
+                var content = workflowContext.Content;
                 if (content.Has<CommonPart>()) {
                     var owner = content.As<CommonPart>().Owner;
                     if (owner != null && owner.ContentItem != null && owner.ContentItem.Record != null) {

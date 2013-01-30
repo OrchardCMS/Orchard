@@ -1,0 +1,76 @@
+﻿@model Contrib.Taxonomies.ViewModels.TermWidgetViewModel
+@{
+    Script.Require("jQuery");
+}
+
+<fieldset>
+    @Html.LabelFor(m => m.SelectedTaxonomyId, T("Taxonomy"))
+    @Html.DropDownListFor(m => m.SelectedTaxonomyId, Model.AvailableTaxonomies)
+	<span class="hint">@T("Select a taxonomy.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.SelectedTermId, T("Term"))
+    <select id="@Html.FieldIdFor(m => m.SelectedTermId)" name="@Html.FieldNameFor(m => m.SelectedTermId)">
+        @Html.SelectOption(-1, false, T("- None -").ToString())
+        @{Html.RenderAction("RenderTermSelect", "TermAdmin", new { area = "Contrib.Taxonomies", taxonomyId = Model.SelectedTaxonomyId, selectedTermId = Model.SelectedTermId });}
+	</select>
+    <span class="hint">@T("Select the term whose content items will be displayed.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.FieldName, T("Field"))
+    @Html.TextBoxFor(m => m.FieldName, new { @class = "text" })
+	<span class="hint">@T("Optional. You can specify which field name to use if several terms references are defined on the same content type.")</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Count, T("Number of items to display"))
+    @Html.TextBoxFor(m => m.Count, new { @class = "text-small"})
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.OrderBy, T("Order By"))
+        <select id="@Html.FieldIdFor(m => m.OrderBy)" name="@Html.FieldNameFor(m => m.OrderBy)">
+            @Html.SelectOption(Model.OrderBy, "CreatedUtc", T("Recently created").ToString())
+            @Html.SelectOption(Model.OrderBy, "PublishedUtc", T("Recently published").ToString())
+            @Html.SelectOption(Model.OrderBy, "ModifiedUtc", T("Recently modified").ToString())
+        </select>
+    </div>
+</fieldset>
+
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.Part.ContentType, T("Content Type"))
+        <select id="@Html.FieldIdFor(m => m.Part.ContentType)" name="@Html.FieldNameFor(m => m.Part.ContentType)">
+        @Html.SelectOption(Model.Part.ContentType, String.Empty, T("- Any -").Text)
+        @foreach(var contentType in Model.ContentTypeNames) {
+            @Html.SelectOption(Model.Part.ContentType, contentType, contentType)
+        }
+        </select>
+        <span class="hint">@T("Select which Content Type you want to display")</span>
+    </div>
+</fieldset>
+
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $('#@Html.FieldIdFor(m => m.SelectedTaxonomyId)').change(function () {
+            var self = $(this);
+            var id = self.find("option:selected").attr("value");
+            // do nothing if no term
+            if(!id) return;
+
+            $.get(
+                "@Url.Action("RenderTermSelect", "TermAdmin", new { area = "Contrib.Taxonomies" })", { taxonomyId : id }, function (data) {
+                    $('#@Html.FieldIdFor(m => m.SelectedTermId) option[value != -1]').remove();
+                    $('#@Html.FieldIdFor(m => m.SelectedTermId)').append(data);
+            });
+        });
+    })
+//]]>
+</script>
+}

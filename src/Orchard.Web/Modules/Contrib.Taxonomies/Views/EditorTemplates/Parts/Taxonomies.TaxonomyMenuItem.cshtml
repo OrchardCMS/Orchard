@@ -1,0 +1,13 @@
+﻿@model Contrib.Taxonomies.Models.TaxonomyMenuItemPart
+@using Orchard.Core.Navigation.Models;
+
+<fieldset>
+    @Html.EditorFor(m => m.RenderMenuItem)
+    <label for="@Html.FieldIdFor(m => m.RenderMenuItem)" class="forcheckbox">@T("Show on main menu")</label>
+    <div data-controllerid="@Html.FieldIdFor(m => m.RenderMenuItem)" class="">
+        <label for="@Html.FieldIdFor(m => m.Name)">@T("Menu text")</label>
+        @Html.TextBoxFor(m => m.Name, new { @class = "text-box single-line" })
+        <label for="@Html.FieldIdFor(m => m.Position)">@T("Position")</label>
+        @Html.TextBoxFor(m => m.Position, new { @class = "text-box single-line" })
+    </div>
+</fieldset>

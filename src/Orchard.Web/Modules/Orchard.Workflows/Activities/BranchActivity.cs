@@ -14,16 +14,16 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override bool CanExecute(WorkflowContext context) {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
-            return GetBranches(context).Select(x => T(x));
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+            return GetBranches(activityContext).Select(x => T(x));
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
-            return GetBranches(context).Select(x => T(x));
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            return GetBranches(activityContext).Select(x => T(x));
         }
 
         public override string Name {
@@ -35,7 +35,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Splits the workflow on two different branches."); }
+            get { return T("Splits the workflow on different branches."); }
         }
 
         public override string Form {
@@ -44,18 +44,14 @@ namespace Orchard.Workflows.Activities {
             }
         }
 
-        private IEnumerable<string> GetBranches(WorkflowContext context) {
-            if (context.State == null) {
-                return Enumerable.Empty<string>();
-            }
-
-            string branches = context.State.Branches;
+        private IEnumerable<string> GetBranches(ActivityContext context) {
+            var branches = context.GetState<string>("Branches");
 
             if (String.IsNullOrEmpty(branches)) {
                 return Enumerable.Empty<string>();
             }
 
-            return branches.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            return branches.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
         }
     }
 }

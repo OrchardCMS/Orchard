@@ -1,0 +1,6 @@
+@model Contrib.Taxonomies.ViewModels.SelectTermViewModel
+@using Contrib.Taxonomies.Helpers;
+
+@foreach (var term in Model.Terms) {
+    <option @if (term.Id == Model.SelectedTermId) { <text>selected="selected"</text> }  value="@term.Id">@for (var i = 1; i <= term.GetLevels(); i++) { <span class="gap">&nbsp;</span> }@term.Name</option>
+}

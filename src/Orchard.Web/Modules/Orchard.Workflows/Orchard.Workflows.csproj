@@ -117,6 +117,8 @@
   <ItemGroup>
     <Compile Include="Activities\ContentActivity.cs" />
     <Compile Include="Activities\BranchActivity.cs" />
+    <Compile Include="Activities\DeleteActivity.cs" />
+    <Compile Include="Activities\ExclusiveBranchActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
     <Compile Include="Activities\MailActivity.cs" />
     <Compile Include="Activities\TimerActivity.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="Models\ActivityState.cs" />
     <Compile Include="Models\AwaitingActivityRecord.cs" />
     <Compile Include="Models\CancellationToken.cs" />
+    <Compile Include="Models\ActivityContext.cs" />
     <Compile Include="Models\WorkflowContext.cs" />
     <Compile Include="Models\ActivityRecord.cs" />
     <Compile Include="Models\TransitionRecord.cs" />

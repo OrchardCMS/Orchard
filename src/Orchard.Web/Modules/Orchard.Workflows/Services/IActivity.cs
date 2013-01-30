@@ -15,19 +15,19 @@ namespace Orchard.Workflows.Services {
         /// <summary>
         /// List of possible outcomes when the activity is executed.
         /// </summary>
-        IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context);
+        IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext);
 
         /// <summary>
         /// Whether the activity can transition to the next outcome. Can prevent the activity from being transitioned
         /// because a condition is not valid.
         /// </summary>
-        bool CanExecute(WorkflowContext context);
+        bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext);
 
         /// <summary>
         /// Executes the current activity
         /// </summary>
         /// <returns>The names of the resulting outcomes.</returns>
-        IEnumerable<LocalizedString> Execute(WorkflowContext context);
+        IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext);
 
         /// <summary>
         /// Called on each activity when a workflow is about to start
@@ -52,12 +52,12 @@ namespace Orchard.Workflows.Services {
         /// <summary>
         /// Called on each activity when an activity is about to be executed
         /// </summary>
-        void OnActivityExecuting(WorkflowContext context, CancellationToken cancellationToken);
+        void OnActivityExecuting(WorkflowContext workflowContext, ActivityContext activityContext, CancellationToken cancellationToken);
 
         /// <summary>
         /// Called on each activity when an activity has been executed
         /// </summary>
-        void OnActivityExecuted(WorkflowContext context);
+        void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext);
 
     }
 }

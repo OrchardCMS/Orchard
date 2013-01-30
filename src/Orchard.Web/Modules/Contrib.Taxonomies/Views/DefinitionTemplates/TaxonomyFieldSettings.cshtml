@@ -1,0 +1,27 @@
+﻿@model Contrib.Taxonomies.Settings.TaxonomyFieldSettings
+
+<fieldset>
+    <label>@T("Select a taxonomy")</label>  
+    <select id="@Html.FieldIdFor(m => m.Taxonomy)" name="@Html.FieldNameFor(m => m.Taxonomy)">
+        @Html.SelectOption(-1, false, T("Choose a taxonomy ...").ToString())
+        @foreach ( var taxonomy in Model.Taxonomies.OrderBy(t => t.Name) ) {
+            @Html.SelectOption(taxonomy.Name, Model.Taxonomy == taxonomy.Name, taxonomy.Name)
+        }
+    </select>
+    @Html.ValidationMessageFor(m => m.Taxonomy)
+</fieldset>
+
+<fieldset>
+    <label>@T("Restrictions")</label>  
+    @Html.CheckBoxFor(m => m.LeavesOnly) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LeavesOnly)">@T("Restrict selectable elements to leaves only")</label>  
+    <br />
+    @Html.CheckBoxFor(m => m.SingleChoice) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SingleChoice)">@T("Allow only one term to be selected")</label>  
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
+    @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+	<span class="hint">@T("The help text is written under the field when authors are editing the content item.")</span>
+    @Html.ValidationMessageFor(m => m.Hint)
+</fieldset>
+

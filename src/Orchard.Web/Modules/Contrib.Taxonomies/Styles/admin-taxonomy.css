@@ -1,0 +1,21 @@
+﻿.gap 
+{
+    padding:1.5ex;
+}
+
+div.taxonomy-widget
+{
+    padding: 0.5em;
+    background-color:rgb(246, 246, 242);
+}
+
+div.taxonomy-widget ul
+{
+    margin-bottom:0;
+    list-style-type:circle;
+}
+
+div.taxonomy-widget ul li
+{
+    padding-top:0.5em;
+}

@@ -14,16 +14,16 @@ namespace Orchard.Workflows.Activities {
 
         public Localizer T { get; set; }
 
-        public override bool CanExecute(WorkflowContext context) {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             return true;
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             return new[] { T("Published") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
-            _contentManager.Publish(context.Content.ContentItem);
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            _contentManager.Publish(workflowContext.Content.ContentItem);
             yield return T("Published");
         }
 
@@ -36,7 +36,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Published the content item."); }
+            get { return T("Publish the content item."); }
         }
     }
 }

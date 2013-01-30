@@ -33,24 +33,24 @@ namespace Orchard.Workflows.Activities {
             get { return "ActivityUserTask"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
-            foreach (var action in GetActions(context)) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
+            foreach (var action in GetActions(workflowContext)) {
                 yield return T(action);
             }
         }
 
-        public override bool CanExecute(WorkflowContext context) {
-            return ActionIsValid(context) && UserIsInRole(context);
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            return ActionIsValid(workflowContext) && UserIsInRole(activityContext);
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
 
-            if (ActionIsValid(context) && UserIsInRole(context)) {
-                yield return T(context.Tokens["UserTask.Action"].ToString());
+            if (ActionIsValid(workflowContext) && UserIsInRole(activityContext)) {
+                yield return T(workflowContext.Tokens["UserTask.Action"].ToString());
             }
         }
 
-        private bool UserIsInRole(WorkflowContext context) {
+        private bool UserIsInRole(ActivityContext context) {
 
             // checking if user is in an accepted role
             var workContext = _workContextAccessor.GetContext();
@@ -91,12 +91,9 @@ namespace Orchard.Workflows.Activities {
             return isValidAction;    
         }
 
-        private IEnumerable<string> GetRoles(WorkflowContext context) {
-            if (context.State == null) {
-                return Enumerable.Empty<string>();
-            }
+        private IEnumerable<string> GetRoles(ActivityContext context) {
 
-            string roles = context.State.Roles;
+            string roles = context.GetState<string>("Roles");
 
             if (String.IsNullOrEmpty(roles)) {
                 return Enumerable.Empty<string>();
@@ -107,11 +104,7 @@ namespace Orchard.Workflows.Activities {
 
         private IEnumerable<string> GetActions(WorkflowContext context) {
 
-            if (context.State == null) {
-                return Enumerable.Empty<string>();
-            }
-
-            string actions = context.State.Actions;
+            string actions = context.GetState<string>("Actions");
 
             if (String.IsNullOrEmpty(actions)) {
                 return Enumerable.Empty<string>();

@@ -23,12 +23,12 @@ namespace Orchard.Workflows.Activities {
         public override LocalizedString Description {
             get { return T("Evaluates an expression.");  }
         }
-        
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             return new[] { T("True"), T("False") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             yield return T("True");
         }
     }

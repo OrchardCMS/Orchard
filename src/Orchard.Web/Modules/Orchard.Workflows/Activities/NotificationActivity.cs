@@ -35,15 +35,13 @@ namespace Orchard.Workflows.Activities {
             get { return "ActivityNotify"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             yield return T("Done");
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
-            string notification = context.State.Notification;
-            string message = context.State.Message;
-
-            message = _tokenizer.Replace(message, context.Tokens);
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            var notification = activityContext.GetState<string>("Notification");
+            var message = activityContext.GetState<string>("Message");
 
             var notificationType = (NotifyType)Enum.Parse(typeof(NotifyType), notification);
             _notifier.Add(notificationType, T(message));

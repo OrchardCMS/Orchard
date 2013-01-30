@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.Forms.Services;
 using Orchard.Localization;
-using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Models {
     public class WorkflowContext {
-        public WorkflowContext() {
-            Tokens = new Dictionary<string, object>();
-        }
+
+        private dynamic _workflowState;
+        private WorkflowRecord _workflowRecord;
 
         /// <summary>
         /// If set, represents the subject of the current workflow
@@ -17,18 +16,58 @@ namespace Orchard.Workflows.Models {
         public IContent Content { get; set; }
 
         public IDictionary<string, object> Tokens { get; set; }
-        public dynamic State { get; set; }
-        public dynamic WorkflowState { get; set; }
 
-        public IActivity Activity { get; set; }
-        public ActivityRecord Record { get; set; }
+        private dynamic State {
+            get { return _workflowState ?? (_workflowState = FormParametersHelper.FromJsonString(Record.State)); }
+        }
 
-        /// <summary>
-        /// Schedules a specific 
-        /// </summary>
-        public Action<ActivityRecord> Schedule { get; set; }
+        public WorkflowRecord Record {
+            get { return _workflowRecord; }
+            set {
+                _workflowRecord = value;
+                _workflowState = null;
+            }
+        }
+
+        public void SetState<T>(string key, T value) {
+            State[key] = value;
+            SerializeState();
+        }
+
+        public T GetState<T>(string key) {
+            return (T)State[key];
+        }
+
+        public object GetState(string key) {
+            return GetState<object>(key);
+        }
+
+        public void SetStateFor<T>(ActivityRecord record, string key, T value) {
+            SetState(KeyFor(record, key), value);
+        }
+
+        public bool HasStateFor(ActivityRecord record, string key) {
+            return GetState(KeyFor(record, key)) != null;
+        }
+
+        public T GetStateFor<T>(ActivityRecord record, string key) {
+            return GetState<T>(KeyFor(record, key));
+        }
+
+        public object GetStateFor(ActivityRecord record, string key) {
+            return GetStateFor<object>(record, key);
+        }
+
+        private void SerializeState() {
+            Record.State = FormParametersHelper.ToJsonString(State);
+        }
+
+        private string KeyFor(ActivityRecord record, string key) {
+            return "@" + record.Id + "_" + key;
+        }
+
         public IEnumerable<TransitionRecord> GetInboundTransitions(ActivityRecord activityRecord) {
-            return Record.WorkflowDefinitionRecord
+            return _workflowRecord.WorkflowDefinitionRecord
                 .TransitionRecords
                 .Where(transition => 
                     transition.DestinationActivityRecord == activityRecord
@@ -36,7 +75,7 @@ namespace Orchard.Workflows.Models {
         }
 
         public IEnumerable<TransitionRecord> GetOutboundTransitions(ActivityRecord activityRecord) {
-            return Record.WorkflowDefinitionRecord
+            return _workflowRecord.WorkflowDefinitionRecord
                 .TransitionRecords
                 .Where(transition => 
                     transition.SourceActivityRecord == activityRecord
@@ -44,7 +83,7 @@ namespace Orchard.Workflows.Models {
         }
 
         public IEnumerable<TransitionRecord> GetOutboundTransitions(ActivityRecord activityRecord, LocalizedString outcome) {
-            return Record.WorkflowDefinitionRecord
+            return _workflowRecord.WorkflowDefinitionRecord
                 .TransitionRecords
                 .Where(transition =>
                     transition.SourceActivityRecord == activityRecord 

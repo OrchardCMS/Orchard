@@ -1,0 +1,56 @@
+﻿@model TaxonomyAdminIndexViewModel
+@using Contrib.Taxonomies.ViewModels;
+
+@{
+    Layout.Title = T("Manage Taxonomies").ToString();
+
+    int taxonomyIndex = 0, ti;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+	@Html.ValidationSummary()
+	<fieldset class="bulk-actions">
+		<label for="publishActions">@T("Actions:")</label>
+		<select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
+			@Html.SelectOption(Model.BulkAction, TaxonomiesAdminIndexBulkAction.None, T("Choose action...").ToString())
+			@Html.SelectOption(Model.BulkAction, TaxonomiesAdminIndexBulkAction.Delete, T("Remove").ToString())
+		</select>
+		<input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+	</fieldset>
+	<div class="manage">@Html.ActionLink(T("Add a taxonomy").Text, "Create", new { Area = "Contents", Id = "Taxonomy", ReturnUrl = Request.RawUrl }, new { @class = "button primaryAction" })</div>
+	<fieldset>
+		<table class="items" summary="@T("This is a table of the taxonomies in your application")">
+			<colgroup>
+				<col id="Col1" />
+				<col id="Col2" />
+				<col id="Col3" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th scope="col">&nbsp;&darr;</th>
+					<th scope="col">@T("Name")</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			@foreach (var taxonomyEntry in Model.Taxonomies) {
+       ti = taxonomyIndex;
+			<tr>
+				<td>
+					<input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Taxonomy.Id" name="@Html.NameOf(m => m.Taxonomies[ti].Taxonomy.Id)"/>
+					<input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"/>
+				</td>
+				<td>
+					@Html.ActionLink(taxonomyEntry.Taxonomy.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { })
+				</td>
+				<td>
+					@Html.ItemEditLink(T("Edit").Text, taxonomyEntry.Taxonomy) |
+					@Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { }) |
+					@Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Taxonomy.Id }, new object { }) |
+					@Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Taxonomy.Id }, new object { })				
+				</td>
+			</tr>
+       taxonomyIndex++;
+   }
+		</table>
+	</fieldset>
+}

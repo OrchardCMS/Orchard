@@ -1,0 +1,9 @@
+﻿@{
+    IEnumerable<object> contentItems = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("term-content-items");
+}
+@Display(Model.ContentItems)
+@if (contentItems == null || contentItems.Count() < 1) {
+<p>@T("There is no content associated to this term.")</p>
+}

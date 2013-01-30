@@ -21,13 +21,13 @@ namespace Orchard.Workflows.Services {
             get { return false; }
         }
 
-        public abstract IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context);
-        
-        public virtual bool CanExecute(WorkflowContext context) {
+        public abstract IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext);
+
+        public virtual bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             return true;
         }
 
-        public abstract IEnumerable<LocalizedString> Execute(WorkflowContext context);
+        public abstract IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext);
         
         public virtual void OnWorkflowStarting(WorkflowContext context, CancellationToken cancellationToken) {
         }
@@ -41,10 +41,10 @@ namespace Orchard.Workflows.Services {
         public virtual void OnWorkflowResumed(WorkflowContext context) {
         }
 
-        public virtual void OnActivityExecuting(WorkflowContext context, CancellationToken cancellationToken) {
+        public virtual void OnActivityExecuting(WorkflowContext workflowContext, ActivityContext activityContext, CancellationToken cancellationToken) {
         }
 
-        public virtual void OnActivityExecuted(WorkflowContext context) {
+        public virtual void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext) {
         }
     }
 }

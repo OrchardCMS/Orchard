@@ -37,31 +37,38 @@ namespace Orchard.Workflows.Activities {
             get { return "ActivityTimer"; }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             yield return T("Done");
         }
 
-        public override bool CanExecute(WorkflowContext context) {
-
-            return _clock.UtcNow > When(context);
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            return IsExpired(workflowContext, activityContext);
         }
 
-        public override void OnWorkflowStarted(WorkflowContext context) {
-            context.WorkflowState.TimerActivity_StartedUtc = _clock.UtcNow;
-        }
-
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
-            if(_clock.UtcNow > When(context)) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
+            if(IsExpired(workflowContext, activityContext)) {
                 yield return T("Done");
             }
         }
 
-        public static DateTime When(WorkflowContext context) {
+        private bool IsExpired(WorkflowContext workflowContext, ActivityContext activityContext) {
+            DateTime started;
+
+            if (!workflowContext.HasStateFor(activityContext.Record, "StartedUtc")) {
+                workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started = _clock.UtcNow);
+            }
+            else {
+                started = workflowContext.GetStateFor<DateTime>(activityContext.Record, "StartedUtc");
+            }
+
+            var amount = activityContext.GetState<int>("Amount");
+            var type = activityContext.GetState<string>("Type");
+
+            return _clock.UtcNow > When(started, amount, type);
+        }
+
+        public static DateTime When(DateTime started, int amount, string type) {
             try {
-                int amount = context.State.Amount;
-                string type = context.State.Unity;
-                
-                DateTime started = context.WorkflowState.TimerActivity_StartedUtc;
 
                 var when = started;
 
@@ -95,17 +102,14 @@ namespace Orchard.Workflows.Activities {
     }
 
     public class TimerBackgroundTask : IBackgroundTask {
-        private readonly IClock _clock;
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
         private readonly IRepository<AwaitingActivityRecord> _awaitingActivityRepository;
 
         public TimerBackgroundTask(
-            IClock clock,
             IContentManager contentManager,
             IWorkflowManager workflowManager,
             IRepository<AwaitingActivityRecord> awaitingActivityRepository) {
-            _clock = clock;
             _contentManager = contentManager;
             _workflowManager = workflowManager;
             _awaitingActivityRepository = awaitingActivityRepository;
@@ -113,20 +117,15 @@ namespace Orchard.Workflows.Activities {
 
         public void Sweep() {
             var awaiting = _awaitingActivityRepository.Table.Where(x => x.ActivityRecord.Name == "Timer").ToList();
-            var actions = awaiting.Where(x => {
-                var contentItem = _contentManager.Get(x.ContentItemRecord.Id, VersionOptions.Latest);
-                var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-                var workflowState = FormParametersHelper.FromJsonString(x.WorkflowRecord.State);
-                return _clock.UtcNow > TimerActivity.When(new WorkflowContext {
-                    State = state, 
-                    WorkflowState = workflowState, 
-                    Content = contentItem,
-                });
-            });
-
-            foreach (var action in actions) {
+            
+            
+            foreach (var action in awaiting) {
+                var tokens = new Dictionary<string, object> { { "Content", _contentManager.Get(action.ContentItemRecord.Id, VersionOptions.Latest) } };
                 var contentItem = _contentManager.Get(action.ContentItemRecord.Id, VersionOptions.Latest);
-                _workflowManager.TriggerEvent("Timer", contentItem, () => new Dictionary<string, object> { { "Content", contentItem } });
+                var workflowState = FormParametersHelper.FromJsonString(action.WorkflowRecord.State);
+                workflowState.TimerActivity_StartedUtc = null;
+                action.WorkflowRecord.State = FormParametersHelper.ToJsonString(workflowState);
+                _workflowManager.TriggerEvent("Timer", contentItem, () => tokens);
             }
         }
     }

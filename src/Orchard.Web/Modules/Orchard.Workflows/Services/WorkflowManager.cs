@@ -75,23 +75,19 @@ namespace Orchard.Workflows.Services {
                 return;
             }
 
+            var workflowContext = new WorkflowContext {
+                Content = target,
+                Tokens = tokens
+            };
+
             // evaluate processing condition
             awaitingActivities = awaitingActivities.Where(a => {
-                var formatted = JsonConvert.DeserializeXNode(a.ActivityRecord.State, "Root").ToString();
-                var tokenized = _tokenizer.Replace(formatted, tokens);
-                var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
-                var state = FormParametersHelper.FromJsonString(serialized);
-                var workflowState = FormParametersHelper.FromJsonString(a.WorkflowRecord.State);
-                var context = new WorkflowContext {
-                    Tokens = tokens, 
-                    State = state.Root, 
-                    WorkflowState = workflowState, 
-                    Content = target,
-                };
+                
+                var activityContext = CreateActivityContext(a.ActivityRecord, tokens);
 
                 // check the condition
                 try {
-                    return activity.CanExecute(context);
+                    return activity.CanExecute(workflowContext, activityContext);
                 }
                 catch (Exception e) {
                     Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
@@ -101,21 +97,12 @@ namespace Orchard.Workflows.Services {
 
             // evaluate processing condition
             startedWorkflows = startedWorkflows.Where(a => {
-                var formatted = JsonConvert.DeserializeXNode(a.State, "Root").ToString();
-                var tokenized = _tokenizer.Replace(formatted, tokens);
-                var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
-                var state = FormParametersHelper.FromJsonString(serialized);
-                var workflowState = FormParametersHelper.FromJsonString("{}");
-                var context = new WorkflowContext {
-                    Tokens = tokens, 
-                    State = state.Root, 
-                    WorkflowState = workflowState, 
-                    Content = target,
-                };
+
+                var activityContext = CreateActivityContext(a, tokens);
 
                 // check the condition
                 try {
-                    return activity.CanExecute(context);
+                    return activity.CanExecute(workflowContext, activityContext);
                 }
                 catch (Exception e) {
                     Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
@@ -135,38 +122,36 @@ namespace Orchard.Workflows.Services {
 
             // resume halted workflows
             foreach (var awaitingActivityRecord in awaitingActivities) {
-                var context = new WorkflowContext {
-                    Activity = _activitiesManager.GetActivityByName(awaitingActivityRecord.ActivityRecord.Name),
-                    Content = target,
-                    Record = awaitingActivityRecord.ActivityRecord,
-                    Tokens = tokens,
-                    State = FormParametersHelper.FromJsonString(awaitingActivityRecord.ActivityRecord.State),
-                    WorkflowState = FormParametersHelper.FromJsonString(awaitingActivityRecord.WorkflowRecord.State)
-                };
-
-                ResumeWorkflow(awaitingActivityRecord, context);
+                ResumeWorkflow(awaitingActivityRecord, workflowContext, tokens);
             }
 
             // start new workflows
             foreach (var activityRecord in startedWorkflows) {
-                var context = new WorkflowContext {
-                    Activity = _activitiesManager.GetActivityByName(activityRecord.Name),
-                    Content = target,
-                    Record = activityRecord,
-                    Tokens = tokens,
-                    State = FormParametersHelper.FromJsonString(activityRecord.State),
-                    WorkflowState = FormParametersHelper.FromJsonString("{}")
-                };
-
-                StartWorkflow(context);
+                StartWorkflow(workflowContext, activityRecord, tokens);
             }
         }
 
-        private void StartWorkflow(WorkflowContext context) {
+        private ActivityContext CreateActivityContext(ActivityRecord activityRecord, IDictionary<string, object> tokens) {
+            return new ActivityContext {
+                Record = activityRecord,
+                Activity = _activitiesManager.GetActivityByName(activityRecord.Name),
+                State = new Lazy<dynamic>(() => GetSate(activityRecord.State, tokens))
+            };
+        }
+
+        private void StartWorkflow(WorkflowContext workflowContext, ActivityRecord activityRecord, IDictionary<string, object> tokens) {
+
+            // workflow halted, create a workflow state
+            var workflow = new WorkflowRecord {
+                WorkflowDefinitionRecord = workflowContext.Record.WorkflowDefinitionRecord,
+                State = FormParametersHelper.ToJsonString("{}")
+            };
+
+            workflowContext.Record = workflow;
 
             // signal every activity that the workflow is about to start
             var cancellationToken = new CancellationToken();
-            InvokeActivities(context.Record.WorkflowDefinitionRecord, context, ctx => ctx.Activity.OnWorkflowStarting(ctx, cancellationToken));
+            InvokeActivities(activity => activity.OnWorkflowStarting(workflowContext, cancellationToken));
 
             if (cancellationToken.IsCancelled) {
                 // workflow is aborted
@@ -174,9 +159,9 @@ namespace Orchard.Workflows.Services {
             }
 
             // signal every activity that the workflow is has started
-            InvokeActivities(context.Record.WorkflowDefinitionRecord, context, ctx => ctx.Activity.OnWorkflowStarted(ctx));
-
-            var blockedOn = ExecuteWorkflow(context).ToList();
+            InvokeActivities(activity => activity.OnWorkflowStarted(workflowContext));
+            
+            var blockedOn = ExecuteWorkflow(workflowContext, activityRecord, tokens).ToList();
 
             // is the workflow halted on a blocking activity ?
             if (!blockedOn.Any()) {
@@ -184,26 +169,21 @@ namespace Orchard.Workflows.Services {
             }
             else {
                 // workflow halted, create a workflow state
-                var workflow = new WorkflowRecord {
-                    WorkflowDefinitionRecord = context.Record.WorkflowDefinitionRecord,
-                    State = FormParametersHelper.ToJsonString(context.WorkflowState)
-                };
-
                 _workflowRepository.Create(workflow);
 
                 foreach (var blocking in blockedOn) {
                     workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
-                        ContentItemRecord = context.Content.ContentItem.Record
+                        ContentItemRecord = workflowContext.Content.ContentItem.Record
                     });
                 }
             }
         }
 
-        private void ResumeWorkflow(AwaitingActivityRecord awaitingActivityRecord, WorkflowContext context) {
+        private void ResumeWorkflow(AwaitingActivityRecord awaitingActivityRecord, WorkflowContext workflowContext, IDictionary<string, object> tokens) {
             // signal every activity that the workflow is about to be resumed
             var cancellationToken = new CancellationToken();
-            InvokeActivities(context.Record.WorkflowDefinitionRecord, context, ctx => ctx.Activity.OnWorkflowResuming(ctx, cancellationToken));
+            InvokeActivities(activity => activity.OnWorkflowResuming(workflowContext, cancellationToken));
 
             if (cancellationToken.IsCancelled) {
                 // workflow is aborted
@@ -211,9 +191,12 @@ namespace Orchard.Workflows.Services {
             }
 
             // signal every activity that the workflow is resumed
-            InvokeActivities(context.Record.WorkflowDefinitionRecord, context, ctx => ctx.Activity.OnWorkflowResumed(ctx));
+            InvokeActivities(activity => activity.OnWorkflowResumed(workflowContext));
 
-            var blockedOn = ExecuteWorkflow(context).ToList();
+            var workflow = awaitingActivityRecord.WorkflowRecord;
+            workflowContext.Record = workflow;
+
+            var blockedOn = ExecuteWorkflow(workflowContext, awaitingActivityRecord.ActivityRecord, tokens).ToList();
 
             // is the workflow halted on a blocking activity ?
             if (!blockedOn.Any()) {
@@ -221,25 +204,19 @@ namespace Orchard.Workflows.Services {
                 _workflowRepository.Delete(awaitingActivityRecord.WorkflowRecord);
             }
             else {
-                // remove all previous awaiting activities
-                var workflow = awaitingActivityRecord.WorkflowRecord;
-                workflow.State = FormParametersHelper.ToJsonString(context.WorkflowState);
-                workflow.AwaitingActivities.Clear();
-
                 // add the new ones
                 foreach (var blocking in blockedOn) {
                     workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
-                        ContentItemRecord = context.Content.ContentItem.Record
+                        ContentItemRecord = workflowContext.Content.ContentItem.Record
                     });
                 }
             }
         }
 
-        public IEnumerable<ActivityRecord> ExecuteWorkflow(WorkflowContext context) {
+        public IEnumerable<ActivityRecord> ExecuteWorkflow(WorkflowContext workflowContext, ActivityRecord activityRecord, IDictionary<string, object> tokens) {
             var firstPass = true;
             var scheduled = new Stack<ActivityRecord>();
-            var activityRecord = context.Record;
 
             scheduled.Push(activityRecord);
 
@@ -249,11 +226,12 @@ namespace Orchard.Workflows.Services {
                 
                 activityRecord = scheduled.Pop();
 
+                var activityContext = CreateActivityContext(activityRecord, tokens);
+                
                 // while there is an activity to process
-                var activity = _activitiesManager.GetActivityByName(activityRecord.Name);
 
                 if (!firstPass){
-                    if(activity.IsEvent) {
+                    if (activityContext.Activity.IsEvent) {
                         blocking.Add(activityRecord);
                         continue;
                     }
@@ -262,12 +240,12 @@ namespace Orchard.Workflows.Services {
                     firstPass = false;    
                 }
 
-                var outcomes = activity.Execute(context);
+                var outcomes = activityContext.Activity.Execute(workflowContext, activityContext);
 
                 if (outcomes != null) {
                     foreach (var outcome in outcomes) {
                         // look for next activity in the graph
-                        var transition = context.Record.WorkflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
+                        var transition = workflowContext.Record.WorkflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
 
                         if (transition != null) {
                             scheduled.Push(transition.DestinationActivityRecord);
@@ -283,12 +261,21 @@ namespace Orchard.Workflows.Services {
         /// <summary>
         /// Executes a specific action on all the activities of a workflow, using a specific context
         /// </summary>
-        private void InvokeActivities(WorkflowDefinitionRecord workflowDefinitionRecord, WorkflowContext context, Action<WorkflowContext> action) {
-            foreach (var item in workflowDefinitionRecord.ActivityRecords) {
-                context.Activity = _activitiesManager.GetActivityByName(item.Name);
-                context.Record = item;
-                action(context);
+        private void InvokeActivities(Action<IActivity> action) {
+            foreach (var activity in _activitiesManager.GetActivities()) {
+                action(activity);
             }
+        }
+
+        private dynamic GetSate(string state, IDictionary<string, object> tokens) {
+            if (!String.IsNullOrWhiteSpace(state)) {
+                var formatted = JsonConvert.DeserializeXNode(state, "Root").ToString();
+                var tokenized = _tokenizer.Replace(formatted, tokens);
+                var serialized = String.IsNullOrEmpty(tokenized) ? "{}" : JsonConvert.SerializeXNode(XElement.Parse(tokenized));
+                return FormParametersHelper.FromJsonString(serialized).Root;
+            }
+
+            return FormParametersHelper.FromJsonString("{}");
         }
     }
 }

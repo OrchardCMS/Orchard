@@ -1,0 +1,71 @@
+﻿@model Contrib.Taxonomies.ViewModels.ImportViewModel
+@{
+    Layout.Title = T("Import Terms for {0}", Model.Taxonomy.Name).Text;
+}
+
+@using(Html.BeginFormAntiForgeryPost()) {
+	@Html.ValidationSummary()
+	<fieldset>
+		<input type="hidden" value="@Model.Taxonomy.Id" name="id"/>
+		<textarea rows="25" cols="80" onkeydown="return interceptTabs(event, this);" name="terms">@Model.Terms</textarea>
+		<span class="hint">@T("One term per line, followed by a semi-colon and the slug")</span>
+		<span class="hint">@T("Hierarchies are defined using tabs (handled in this editor zone)")</span>
+		<span class="hint">@T("e.g,")</span>
+		<span class="hint">&nbsp;&nbsp;@T("Red; red")</span>
+		<span class="hint">&nbsp;&nbsp;@T("Blue; blue")</span>
+		<span class="hint">&nbsp;&nbsp;&nbsp;&nbsp;@T("Light Blue; light-blue")</span>
+	</fieldset>
+
+	<input class="button" type="submit" value="@T("Import")" />
+}
+
+@using(Script.Foot()){
+<script type="text/javascript">
+//<![CDATA[
+
+function insertAtCursor(myField, myValue)
+    {
+    //IE support
+    if (document.selection) {
+        myField.focus();
+        sel = document.selection.createRange();
+        sel.text = myValue;
+        }
+    
+    //MOZILLA/NETSCAPE support
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        restoreTop = myField.scrollTop;
+        
+        myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+        
+        myField.selectionStart = startPos + myValue.length; 
+        myField.selectionEnd = startPos + myValue.length;
+        
+        if (restoreTop>0)
+            {
+            myField.scrollTop = restoreTop;
+            }
+        } 
+    else {
+        myField.value += myValue;
+        }
+    } 
+
+function interceptTabs(evt, control)
+    {
+    key = evt.keyCode ? evt.keyCode : evt.which ? evt.which : evt.charCode;
+    if (key==9)
+        {
+        insertAtCursor(control, '\t');
+        return false; 
+        }
+    else
+        {
+        return key;
+        }
+    } 
+//]]>
+</script>
+}

@@ -1,0 +1,15 @@
+﻿@* 
+    ContentPart: TermWidgetPart
+    ContentItems: List
+*@
+
+@{
+    IEnumerable<object> contentItems = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("term-widget");
+}
+
+@Display(Model.ContentItems)
+@if (contentItems == null || contentItems.Count() == 0) {
+<p>@T("There are no items for this term.")</p>
+}

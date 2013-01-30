@@ -1,0 +1,15 @@
+﻿@*
+	Called when displaying a list of content items associated to a specific term.
+	Available objects: 
+		Model.Term
+		Model.Taxonomy
+		Model.List
+*@
+
+@{
+    Model.List.Classes.Add("content-items");
+}
+
+<h1 class="page-title">@T("Contents associated with {0}", Html.Encode(Model.Term.Name))</h1>
+@Display(Model.List)
+@Display(Model.Pager)

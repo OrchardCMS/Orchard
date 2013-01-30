@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -15,10 +14,10 @@ namespace Orchard.Workflows.Activities {
             get { return true; }
         }
 
-        public override bool CanExecute(WorkflowContext context) {
+        public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             try {
 
-                string contentTypesState = context.State.ContentTypes;
+                var contentTypesState = activityContext.GetState<string>("ContentTypes");
 
                 // "" means 'any'
                 if (String.IsNullOrEmpty(contentTypesState)) {
@@ -27,7 +26,7 @@ namespace Orchard.Workflows.Activities {
 
                 string[] contentTypes = contentTypesState.Split(',');
 
-                var content = context.Tokens["Content"] as IContent;
+                var content = workflowContext.Content;
 
                 if (content == null) {
                     return false;
@@ -40,11 +39,11 @@ namespace Orchard.Workflows.Activities {
             }
         }
 
-        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
             return new[] { T("Done") };
         }
 
-        public override IEnumerable<LocalizedString> Execute(WorkflowContext context) {
+        public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             yield return T("Done");
         }
 

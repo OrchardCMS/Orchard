@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E649EA64-D213-461B-87F7-D67035801443}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Contrib.Taxonomies</RootNamespace>
+    <AssemblyName>Contrib.Taxonomies</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
+    <Reference Include="NHibernate.Linq, Version=1.1.0.1001, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TermAdminController.cs" />
+    <Compile Include="Drivers\TermsPartDriver.cs" />
+    <Compile Include="Drivers\TaxonomyMenuItemPartDriver.cs" />
+    <Compile Include="Drivers\TaxonomyPartDriver.cs" />
+    <Compile Include="Drivers\TaxonomyMenuPartDriver.cs" />
+    <Compile Include="Drivers\TermWidgetPartDriver.cs" />
+    <Compile Include="Handlers\TaxonomyMenuItemPartHandler.cs" />
+    <Compile Include="Handlers\TaxonomyPartHandler.cs" />
+    <Compile Include="Handlers\TaxonomyMenuPartHandler.cs" />
+    <Compile Include="Handlers\TermsPartHandler.cs" />
+    <Compile Include="Handlers\TermWidgetPartHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Drivers\TermPartDriver.cs" />
+    <Compile Include="Drivers\TaxonomyFieldDriver.cs" />
+    <Compile Include="Handlers\TermPartHandler.cs" />
+    <Compile Include="Helpers\PathExtensions.cs" />
+    <Compile Include="Helpers\PredicateBuilder.cs" />
+    <Compile Include="Models\TaxonomyMenuItemPart.cs" />
+    <Compile Include="Models\TaxonomyMenuItemPartRecord.cs" />
+    <Compile Include="Models\TaxonomyPartRecord.cs" />
+    <Compile Include="Models\TermPart.cs" />
+    <Compile Include="Models\TermPartRecord.cs" />
+    <Compile Include="Models\TaxonomyPart.cs" />
+    <Compile Include="Models\TermContentItem.cs" />
+    <Compile Include="Models\TaxonomyMenuPart.cs" />
+    <Compile Include="Models\TaxonomyMenuPartRecord.cs" />
+    <Compile Include="Models\TermsPart.cs" />
+    <Compile Include="Models\TermsPartRecord.cs" />
+    <Compile Include="Models\TermWidgetPart.cs" />
+    <Compile Include="Models\TermWidgetPartRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Projections\TermsFilter.cs" />
+    <Compile Include="Projections\TermsFilterForms.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Fields\TaxonomyField.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Routing\ITermPathConstraint.cs" />
+    <Compile Include="Routing\TermPathConstraint.cs" />
+    <Compile Include="Routing\TermPathConstraintUpdator.cs" />
+    <Compile Include="Routing\ITaxonomySlugConstraint.cs" />
+    <Compile Include="Routing\TaxonomySlugConstraint.cs" />
+    <Compile Include="Routing\TaxonomySlugConstraintUpdator.cs" />
+    <Compile Include="Services\ITaxonomyService.cs" />
+    <Compile Include="Services\TaxonomyNavigationProvider.cs" />
+    <Compile Include="Services\TaxonomyService.cs" />
+    <Compile Include="Settings\TaxonomyFieldEditorEvents.cs" />
+    <Compile Include="Settings\TaxonomyFieldSettings.cs" />
+    <Compile Include="Shapes.cs" />
+    <Compile Include="StandardQueries\TermFeedQuery.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\TermWidgetViewModel.cs" />
+    <Compile Include="ViewModels\MoveTermViewModel.cs" />
+    <Compile Include="ViewModels\SelectTermViewModel.cs" />
+    <Compile Include="ViewModels\TaxonomyFieldViewModel.cs" />
+    <Compile Include="ViewModels\TermAdminIndexViewModel.cs" />
+    <Compile Include="ViewModels\TaxonomyAdminIndexViewModel.cs" />
+    <Compile Include="ViewModels\TaxonomyMenuViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\admin-taxonomy-expando.js" />
+    <Content Include="Views\Admin\Import.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\admin-taxonomy.css" />
+    <Content Include="Module.txt" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\DefinitionTemplates\TaxonomyFieldSettings.cshtml" />
+    <Content Include="Views\Fields\Contrib.TaxonomyField.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Taxonomies.Term.Fields.cshtml" />
+    <Content Include="Views\Items\Taxonomy.List.cshtml" />
+    <Content Include="Views\Items\Content-Term.Edit.cshtml" />
+    <Content Include="Views\TermAdmin\Create.cshtml" />
+    <Content Include="Views\TermAdmin\Edit.cshtml" />
+    <Content Include="Views\TermAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\EditorTemplates\Fields\Contrib.TaxonomyField.cshtml" />
+    <Content Include="Views\Items\Taxonomies.Term.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Taxonomies.Menu.cshtml" />
+    <Content Include="Views\Parts\Taxonomies.Menu.cshtml" />
+    <Content Include="Views\TermAdmin\RenderTermSelect.cshtml" />
+    <Content Include="Views\TermAdmin\MoveTerm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Taxonomies.TermContentItems.List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TermAdmin\SelectTerm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Taxonomies.TermWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\TermWidget.List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Taxonomies.TaxonomyMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>2078</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
