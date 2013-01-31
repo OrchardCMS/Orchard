@@ -9,6 +9,10 @@ namespace Orchard.Workflows.Models {
         public Lazy<dynamic> State { private get; set; }
         
         public T GetState<T>(string key) {
+            if (State == null || State.Value == null) {
+                return default(T);
+            }
+
             return State.Value[key];
         }
     }

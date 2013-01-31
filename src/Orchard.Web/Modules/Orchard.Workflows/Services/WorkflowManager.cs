@@ -143,7 +143,7 @@ namespace Orchard.Workflows.Services {
 
             // workflow halted, create a workflow state
             var workflow = new WorkflowRecord {
-                WorkflowDefinitionRecord = workflowContext.Record.WorkflowDefinitionRecord,
+                WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
                 State = FormParametersHelper.ToJsonString("{}")
             };
 

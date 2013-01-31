@@ -35,6 +35,10 @@ namespace Orchard.Workflows.Models {
         }
 
         public T GetState<T>(string key) {
+            if (State == null) {
+                return default(T);
+            }
+
             return (T)State[key];
         }
 

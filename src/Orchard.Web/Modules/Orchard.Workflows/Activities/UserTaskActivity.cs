@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Roles.Models;
+using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -9,9 +12,13 @@ using Orchard.Workflows.Services;
 namespace Orchard.Workflows.Activities {
     public class UserTaskActivity : Event {
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IRoleService _roleService;
 
-        public UserTaskActivity(IWorkContextAccessor workContextAccessor) {
+        public UserTaskActivity(
+            IWorkContextAccessor workContextAccessor,
+            IRoleService roleService) {
             _workContextAccessor = workContextAccessor;
+            _roleService = roleService;
             T = NullLocalizer.Instance;
         }
 
@@ -34,18 +41,18 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            foreach (var action in GetActions(workflowContext)) {
+            foreach (var action in GetActions(activityContext)) {
                 yield return T(action);
             }
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return ActionIsValid(workflowContext) && UserIsInRole(activityContext);
+            return ActionIsValid(workflowContext, activityContext) && UserIsInRole(activityContext);
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
 
-            if (ActionIsValid(workflowContext) && UserIsInRole(activityContext)) {
+            if (ActionIsValid(workflowContext, activityContext) && UserIsInRole(activityContext)) {
                 yield return T(workflowContext.Tokens["UserTask.Action"].ToString());
             }
         }
@@ -67,10 +74,9 @@ namespace Orchard.Workflows.Activities {
                 isInRole = roles.Contains("Anonymous");
             }
             else {
-                dynamic dynUser = user.ContentItem;
 
-                if (dynUser.UserRolesPart != null) {
-                    IEnumerable<string> userRoles = dynUser.UserRolesPart.Roles;
+                if (user.ContentItem.Has(typeof(UserRolesPart))) {
+                    IEnumerable<string> userRoles = user.ContentItem.As<UserRolesPart>().Roles;
                     isInRole = userRoles.Any(roles.Contains);
                 }
             }
@@ -78,14 +84,14 @@ namespace Orchard.Workflows.Activities {
             return isInRole;
         }
 
-        private bool ActionIsValid(WorkflowContext context) {
+        private bool ActionIsValid(WorkflowContext workflowContext, ActivityContext activityContext) {
             
             // checking if user has triggered an accepted action
 
             // triggered action
-            var userAction = context.Tokens["UserTask.Action"];
+            var userAction = workflowContext.Tokens["UserTask.Action"];
 
-            var actions = GetActions(context);
+            var actions = GetActions(activityContext);
             bool isValidAction = actions.Contains(userAction);
 
             return isValidAction;    
@@ -102,7 +108,7 @@ namespace Orchard.Workflows.Activities {
             return roles.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
         }
 
-        private IEnumerable<string> GetActions(WorkflowContext context) {
+        private IEnumerable<string> GetActions(ActivityContext context) {
 
             string actions = context.GetState<string>("Actions");
 
