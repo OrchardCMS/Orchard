@@ -1,8 +1,17 @@
 ﻿using System.Linq;
+using Orchard.Localization;
 using Orchard.Workflows.Models;
 
 namespace Orchard.Workflows.Activities {
     public class ExclusiveBranchActivity : BranchActivity {
+        public override string Name {
+            get { return "ExclusiveBranch"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("Splits the workflow on different branches, activating the first event to occur."); }
+        }
+
         public override void OnActivityExecuted(WorkflowContext workflowContext, ActivityContext activityContext) {
 
             // for blocking activities only
@@ -16,7 +25,7 @@ namespace Orchard.Workflows.Activities {
 
             // if a direct target of a Branch Activity is executed, then suppress all other direct waiting activities
             var parentBranchActivities = inboundActivities
-                .Where(x => x.SourceActivityRecord.Name == typeof(ExclusiveBranchActivity).Name)
+                .Where(x => x.SourceActivityRecord.Name == this.Name)
                 .Select(x => x.SourceActivityRecord)
                 .ToList();
 

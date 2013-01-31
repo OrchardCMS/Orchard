@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Activities\ContentActivity.cs" />
     <Compile Include="Activities\BranchActivity.cs" />
+    <Compile Include="Activities\MergeBranchActivity.cs" />
     <Compile Include="Activities\DeleteActivity.cs" />
     <Compile Include="Activities\ExclusiveBranchActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
@@ -211,6 +212,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-Timer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-ExclusiveBranch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-MergeBranch.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

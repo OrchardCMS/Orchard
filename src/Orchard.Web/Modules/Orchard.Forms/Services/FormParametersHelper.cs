@@ -69,7 +69,7 @@ namespace Orchard.Forms.Services {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<dynamic>(state);
+            return JObject.Parse(state);
         }
 
         public static string ToJsonString(FormCollection formCollection) {

@@ -6,6 +6,7 @@ using Orchard.Data;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Mvc;
+using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Activities;
 using Orchard.Workflows.Models;
@@ -47,16 +48,7 @@ namespace Orchard.Workflows.Drivers {
                     var user = workContext.CurrentUser;
 
                     var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
-                    var actions = awaiting.Where(x => {
-                        var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-                        string rolesState = state.Roles ?? "";
-                        var roles = rolesState.Split(',').Select(role => role.Trim());
-                        return UserTaskActivity.UserIsInRole(user, roles);
-                    }).SelectMany(x => {
-                        var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-                        string actionState = state.Actions ?? "";
-                        return actionState.Split(',').Select(action => action.Trim());
-                    }).ToList();
+                    var actions = awaiting.Where(x => UserIsInRole(x, user)).SelectMany(ListAction).ToList();
 
                     return shapeHelper.UserTask_ActionButton().Actions(actions);
                 })
@@ -65,6 +57,26 @@ namespace Orchard.Workflows.Drivers {
             //if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {}
 
             return Combined(results.ToArray());
+        }
+
+        // returns all the actions associated with a specific state
+        private static IEnumerable<string> ListAction(AwaitingActivityRecord x) {
+            var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
+            string actionState = state.Actions ?? "";
+            return actionState.Split(',').Select(action => action.Trim());
+        }
+
+        // whether a user is in an accepted role for this state
+        private static bool UserIsInRole(AwaitingActivityRecord x, IUser user) {
+            var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
+            string rolesState = state.Roles ?? "";
+
+            // "Any" if string is empty
+            if (string.IsNullOrWhiteSpace(rolesState)) {
+                return true;
+            }
+            var roles = rolesState.Split(',').Select(role => role.Trim());
+            return UserTaskActivity.UserIsInRole(user, roles);
         }
 
         protected override DriverResult Editor(ContentPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -76,16 +88,7 @@ namespace Orchard.Workflows.Drivers {
                 var user = Services.WorkContext.CurrentUser;
 
                 var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
-                var actions = awaiting.Where(x => {
-                    var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-                    string rolesState = state.Roles ?? "";
-                    var roles = rolesState.Split(',').Select(role => role.Trim());
-                    return UserTaskActivity.UserIsInRole(user, roles);
-                }).SelectMany(x => {
-                    var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-                    string actionState = state.Actions ?? "";
-                    return actionState.Split(',').Select(action => action.Trim());
-                }).ToList();
+                var actions = awaiting.Where(x => UserIsInRole(x, user)).SelectMany(ListAction).ToList();
 
                 if (!actions.Contains(name)) {
                     Services.Notifier.Error(T("Not authorized to trigger {0}.", name));

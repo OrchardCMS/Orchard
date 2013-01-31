@@ -62,7 +62,11 @@ namespace Orchard.Workflows.Activities {
             // checking if user is in an accepted role
             var workContext = _workContextAccessor.GetContext();
             var user = workContext.CurrentUser;
-            var roles = GetRoles(context);
+            var roles = GetRoles(context).ToArray();
+
+            if (!roles.Any()) {
+                return true;
+            }
 
             return UserIsInRole(user, roles);
         }

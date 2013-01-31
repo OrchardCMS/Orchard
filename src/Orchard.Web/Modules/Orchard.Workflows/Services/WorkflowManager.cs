@@ -115,11 +115,6 @@ namespace Orchard.Workflows.Services {
                 return;
             }
 
-            // load workflow definitions too for eager loading
-            _workflowDefinitionRepository.Table
-                .Where(x => x.Enabled && x.ActivityRecords.Any(e => e.Name == name))
-                .ToList();
-
             // resume halted workflows
             foreach (var awaitingActivityRecord in awaitingActivities) {
                 ResumeWorkflow(awaitingActivityRecord, workflowContext, tokens);
@@ -144,7 +139,7 @@ namespace Orchard.Workflows.Services {
             // workflow halted, create a workflow state
             var workflow = new WorkflowRecord {
                 WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
-                State = FormParametersHelper.ToJsonString("{}")
+                State = "{}"
             };
 
             workflowContext.Record = workflow;
@@ -196,10 +191,12 @@ namespace Orchard.Workflows.Services {
             var workflow = awaitingActivityRecord.WorkflowRecord;
             workflowContext.Record = workflow;
 
+            workflow.AwaitingActivities.Remove(awaitingActivityRecord);
+
             var blockedOn = ExecuteWorkflow(workflowContext, awaitingActivityRecord.ActivityRecord, tokens).ToList();
 
-            // is the workflow halted on a blocking activity ?
-            if (!blockedOn.Any()) {
+            // is the workflow halted on a blocking activity, and there is no more awaiting activities
+            if (!blockedOn.Any() && !workflow.AwaitingActivities.Any()) {
                 // no, delete the workflow
                 _workflowRepository.Delete(awaitingActivityRecord.WorkflowRecord);
             }
@@ -240,16 +237,26 @@ namespace Orchard.Workflows.Services {
                     firstPass = false;    
                 }
 
-                var outcomes = activityContext.Activity.Execute(workflowContext, activityContext);
+                // signal every activity that the activity is about to be executed
+                var cancellationToken = new CancellationToken();
+                InvokeActivities(activity => activity.OnActivityExecuting(workflowContext, activityContext, cancellationToken));
 
-                if (outcomes != null) {
-                    foreach (var outcome in outcomes) {
-                        // look for next activity in the graph
-                        var transition = workflowContext.Record.WorkflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
+                if (cancellationToken.IsCancelled) {
+                    // activity is aborted
+                    continue;
+                }
 
-                        if (transition != null) {
-                            scheduled.Push(transition.DestinationActivityRecord);
-                        }
+                var outcomes = activityContext.Activity.Execute(workflowContext, activityContext).ToList();
+
+                // signal every activity that the activity is executed
+                InvokeActivities(activity => activity.OnActivityExecuted(workflowContext, activityContext));
+
+                foreach (var outcome in outcomes) {
+                    // look for next activity in the graph
+                    var transition = workflowContext.Record.WorkflowDefinitionRecord.TransitionRecords.FirstOrDefault(x => x.SourceActivityRecord == activityRecord && x.SourceEndpoint == outcome.TextHint);
+
+                    if (transition != null) {
+                        scheduled.Push(transition.DestinationActivityRecord);
                     }
                 }
             }
