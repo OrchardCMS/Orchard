@@ -71,10 +71,11 @@
 
     
     // create a new activity node on the editor
-    $('.activity-toolbox-item').on('click', function () {
-        var self = $(this);
-        var activityName = self.data('activity-name');
+    $('.activity-toolbox-item').draggable({ helper: 'clone' });
+    $('.activity-editor').droppable({ drop: function(event, ui) {
+        var activityName = ui.draggable.data('activity-name');
         createActivity(activityName);
+        }
     });
 
     var renderActivity = function (clientId, name, state, start, top, left) {

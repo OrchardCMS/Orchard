@@ -5,38 +5,38 @@
 @{
     Layout.Title = @T("Edit Workflow");
     Style.Require("WorkflowsAdmin");
+    Style.Require("WorkflowsActivities");
     Script.Require("jQueryUI");
     Style.Require("jQueryUI_Orchard");
     Script.Include("jquery.jsPlumb-1.3.16-all-min.js");
     
-    //        var editorShape = ((IShapeFactory)New).Create(activity.Name + "_Editor");
-}
-
-@Display.ActivityToolbox(Model)
-@{
     Script.Include("orchard-workflows.js").AtFoot();
     Script.Include("orchard-workflows-serialize.js").AtFoot();
 }
 
+
 @using (Html.BeginFormAntiForgeryPost("Edit")) {
     @Html.ValidationSummary()
 
-    <div id="activity-editor">
-        <div id="activity-toolbar">
-            <div id="activity-toolbar-start">
-                <input type="checkbox" id="activity-toolbar-start-checkbox"/>
-                <label for="activity-toolbar-start-checkbox" title="@T("Starts workflow")"></label>
-            </div>
-            <div id="activity-toolbar-edit">
-                <label title="@T("Edit")"></label>
-            </div>
-            <div id="activity-toolbar-delete">
-                <label title="@T("Remove")"></label>
+    <div id="workflow-container">
+        @Display.ActivityToolbox(Model)
+
+        <div id="activity-editor">
+            <div id="activity-toolbar">
+                <div id="activity-toolbar-start">
+                    <input type="checkbox" id="activity-toolbar-start-checkbox"/>
+                    <label for="activity-toolbar-start-checkbox" title="@T("Starts workflow")"></label>
+                </div>
+                <div id="activity-toolbar-edit">
+                    <label title="@T("Edit")"></label>
+                </div>
+                <div id="activity-toolbar-delete">
+                    <label title="@T("Remove")"></label>
+                </div>
             </div>
         </div>
-    </div>
 
-    
+    </div>
     using (Script.Head()) {
 <script type="text/javascript">
     //<![CDATA[
