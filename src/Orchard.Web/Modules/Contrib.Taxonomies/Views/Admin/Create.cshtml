@@ -1,8 +1,0 @@
-﻿@{
-    Layout.Title = T("Create New Taxonomy").Text;
-}
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
-    @Display(Model)
-}
