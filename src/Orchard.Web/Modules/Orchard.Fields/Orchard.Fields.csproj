@@ -72,6 +72,10 @@
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\MediaGalleryFieldDriver.cs" />
+    <Compile Include="Drivers\MediaPickerFieldDriver.cs" />
+    <Compile Include="Fields\MediaGalleryField.cs" />
+    <Compile Include="Handlers\MediaGalleryFieldHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -114,7 +118,6 @@
   <ItemGroup>
     <Compile Include="Drivers\BooleanFieldDriver.cs" />
     <Compile Include="Drivers\InputFieldDriver.cs" />
-    <Compile Include="Drivers\MediaPickerFieldDriver.cs" />
     <Compile Include="Drivers\NumericFieldDriver.cs" />
     <Compile Include="Drivers\DateTimeFieldDriver.cs" />
     <Compile Include="Drivers\EnumerationFieldDriver.cs" />
@@ -128,6 +131,8 @@
     <Compile Include="Fields\LinkField.cs" />
     <Compile Include="Settings\BooleanFieldEditorEvents.cs" />
     <Compile Include="Settings\BooleanFieldSettings.cs" />
+    <Compile Include="Settings\MediaGalleryFieldEditorEvents.cs" />
+    <Compile Include="Settings\MediaGalleryFieldSettings.cs" />
     <Compile Include="Settings\InputFieldEditorEvents.cs" />
     <Compile Include="Settings\InputFieldSettings.cs" />
     <Compile Include="Settings\MediaPickerFieldEditorEvents.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="Settings\EnumerationFieldEditorEvents.cs" />
     <Compile Include="Settings\EnumerationFieldSettings.cs" />
     <Compile Include="Tokens\FieldTokens.cs" />
+    <Compile Include="ViewModels\MediaGalleryFieldViewModel.cs" />
     <Compile Include="ViewModels\NumericFieldViewModel.cs" />
     <Compile Include="ViewModels\DateTimeFieldViewModel.cs" />
   </ItemGroup>
@@ -159,6 +165,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields\Input.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaGalleryFieldSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\MediaGallery.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaGallery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaGallery.SummaryAdmin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
