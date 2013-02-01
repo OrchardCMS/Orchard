@@ -262,6 +262,7 @@
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
+    <Compile Include="Services\JsonConverterTests.cs" />
     <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
