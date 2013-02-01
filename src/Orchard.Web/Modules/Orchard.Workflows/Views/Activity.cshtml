@@ -6,7 +6,7 @@
     string canStartClass = Model.CanStartWorkflow ? "canStart" : null;
 }
 
-<div class="@isEventClass @canStartClass">
-    @name.CamelFriendly()
+<div class="@isEventClass @canStartClass activity-@name.HtmlClassify()" title="@Model.Description">
+    <div>@name.CamelFriendly()</div>
 </div>
 

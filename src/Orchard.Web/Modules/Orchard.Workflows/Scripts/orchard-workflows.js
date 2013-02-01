@@ -63,18 +63,17 @@
 
     });
 
-
     // instanciates a new workflow widget in the editor
-    var createActivity = function (activityName) {
-        renderActivity(null, activityName, {}, false, 10, 10);
+    var createActivity = function (activityName, top, left) {
+        return renderActivity(null, activityName, {}, false, top, left);
     };
 
     
     // create a new activity node on the editor
     $('.activity-toolbox-item').draggable({ helper: 'clone' });
-    $('.activity-editor').droppable({ drop: function(event, ui) {
+    $('#activity-editor').droppable({ drop: function(event, ui) {
         var activityName = ui.draggable.data('activity-name');
-        createActivity(activityName);
+        createActivity(activityName, event.pageY, event.pageX);
         }
     });
 

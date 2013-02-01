@@ -11,6 +11,7 @@ namespace Orchard.Workflows {
             builder.Add().DefineStyle("WorkflowsActivities-ContentPublished").SetUrl("workflows-activity-contentpublished.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-ContentRemoved").SetUrl("workflows-activity-contentremoved.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-ContentVersioned").SetUrl("workflows-activity-contentversioned.css").SetDependencies("WorkflowsAdmin");
+            builder.Add().DefineStyle("WorkflowsActivities-Delete-Publish").SetUrl("workflows-activity-delete-publish.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-Decision").SetUrl("workflows-activity-decision.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-IsInRole").SetUrl("workflows-activity-isinrole.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-Notify").SetUrl("workflows-activity-notify.css").SetDependencies("WorkflowsAdmin");
@@ -25,6 +26,7 @@ namespace Orchard.Workflows {
                 "WorkflowsActivities-ContentPublished",
                 "WorkflowsActivities-ContentRemoved",
                 "WorkflowsActivities-ContentVersioned",
+                "WorkflowsActivities-Delete-Publish",
                 "WorkflowsActivities-Decision",
                 "WorkflowsActivities-IsInRole",
                 "WorkflowsActivities-Notify",

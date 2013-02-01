@@ -13,6 +13,7 @@
     -moz-opacity: 0.8;
     opacity: 0.8;
     filter: alpha(opacity=80);
+    white-space: nowrap;
 }
 
     .activity:hover, .dragHover {
@@ -23,6 +24,12 @@
     }
 
 .event {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAATCAYAAACk9eypAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAANNJREFUOE+VkbENhDAMRcOtRElDRRsxB5MwAxNQ0yAGYAJqWiagASFfbMmRHXzcXfGk+Nvf+UocAPzDyxIfMcUnZJF94WYg0ziOkOc50TQNHMehZlQRyLqui4a+74Ok+jrSeZ5TXdc0XJYl7Psu+4Qssm3boKoqMrRtGyRwqHnvo1kZZH4JmxFpcDI/UxQFrOsa2okh5HecH19nGAY6y+1IPKTgbel2RA0xfNsv/0Dwa83zHErdUwWzLIu5HbkJCOa3tiM34bouMljbEVN8whQ/A+4NnH6HdIESjBQAAAAASUVORK5CYII=');
+    background-position: top left;
+    background-repeat: no-repeat;
+}
+
+.activity-toolbox-item.event {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAATCAYAAACk9eypAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAANNJREFUOE+VkbENhDAMRcOtRElDRRsxB5MwAxNQ0yAGYAJqWiagASFfbMmRHXzcXfGk+Nvf+UocAPzDyxIfMcUnZJF94WYg0ziOkOc50TQNHMehZlQRyLqui4a+74Ok+jrSeZ5TXdc0XJYl7Psu+4Qssm3boKoqMrRtGyRwqHnvo1kZZH4JmxFpcDI/UxQFrOsa2okh5HecH19nGAY6y+1IPKTgbel2RA0xfNsv/0Dwa83zHErdUwWzLIu5HbkJCOa3tiM34bouMljbEVN8whQ/A+4NnH6HdIESjBQAAAAASUVORK5CYII=');
     background-position: top left;
     background-repeat: no-repeat;
@@ -81,29 +88,41 @@
 }
 
 #workflow-container {
-    width:auto;
-    margin:0 auto;
-    background:#99c;
+}
+
+#editor-wrapper {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+#workflow-footer {
+    clear: left;
 }
 
 #activity-editor {
-    position: relative;
-    float:left;
-    min-height: 500px; /* real browsers */
-    height: auto !important; /* real browsers */
+    display: block;
+    padding: 0;
+    margin: 0;
+    min-height: 600px;
+    overflow:auto;
+    margin-right: 302px; /* width + borders */
 }
 
 /* toolbox */
 
 #activity-toolbox {
-    padding: 0 5px;
-    width: 300px;
-    height: 500px;
+    display: block;
+    padding: 0;
+    margin: 0;
+    height: 600px;
     overflow-y: scroll;
-    overflow-x: hidden;
     border: 1px solid #E4E5E6;
     background-color: #F3F4F5;
-    float: right;
+    float:left;
+
+    width: 300px;
+    margin-left: -302px; /* width + borders */
 }
 
     #activity-toolbox .activity-toolbox-item {

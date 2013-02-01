@@ -28,7 +28,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override string Name {
-            get { return "Deleted"; }
+            get { return "Delete"; }
         }
 
         public override LocalizedString Category {

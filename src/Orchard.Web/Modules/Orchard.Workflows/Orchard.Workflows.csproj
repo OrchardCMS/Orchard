@@ -71,6 +71,7 @@
     <Content Include="Scripts\jquery.jsPlumb-1.3.16-all-min.js" />
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Styles\workflows-activity-delete-publish.css" />
     <Content Include="Styles\workflows-activity-timer.css" />
     <Content Include="Styles\workflows-activity-branch.css" />
     <Content Include="Styles\orchard-workflows-admin.css" />
@@ -218,6 +219,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-MergeBranch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Publish.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

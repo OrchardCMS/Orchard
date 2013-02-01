@@ -19,23 +19,26 @@
     @Html.ValidationSummary()
 
     <div id="workflow-container">
-        @Display.ActivityToolbox(Model)
-
-        <div id="activity-editor">
-            <div id="activity-toolbar">
-                <div id="activity-toolbar-start">
-                    <input type="checkbox" id="activity-toolbar-start-checkbox"/>
-                    <label for="activity-toolbar-start-checkbox" title="@T("Starts workflow")"></label>
-                </div>
-                <div id="activity-toolbar-edit">
-                    <label title="@T("Edit")"></label>
-                </div>
-                <div id="activity-toolbar-delete">
-                    <label title="@T("Remove")"></label>
+        <div id="editor-wrapper">
+            <div id="activity-editor">
+                <div id="activity-toolbar">
+                    <div id="activity-toolbar-start">
+                        <input type="checkbox" id="activity-toolbar-start-checkbox"/>
+                        <label for="activity-toolbar-start-checkbox" title="@T("Starts workflow")"></label>
+                    </div>
+                    <div id="activity-toolbar-edit">
+                        <label title="@T("Edit")"></label>
+                    </div>
+                    <div id="activity-toolbar-delete">
+                        <label title="@T("Remove")"></label>
+                    </div>
                 </div>
             </div>
         </div>
-
+        <div id="activity-toolbox">
+            @Display.ActivityToolbox(Model)
+        </div>
+        <div id="workflow-footer"></div>
     </div>
     using (Script.Head()) {
 <script type="text/javascript">

@@ -4,10 +4,6 @@
     string name = Model.Name;
 }
 
-<div title="@Model.State.Message">
-    @name.CamelFriendly() 
-    @if (Model.State.Notification != null) {
-        @:- @Model.State.Notification
-    }
-    
+<div class="activity-notify" title="@Model.State.Notification: @Model.State.Message">
+    <div>@name.CamelFriendly()</div>
 </div>

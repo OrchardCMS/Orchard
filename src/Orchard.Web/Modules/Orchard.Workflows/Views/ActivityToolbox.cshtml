@@ -6,18 +6,16 @@
     IList<IActivity> allActivities = Model.AllActivities;
 }
 <!-- List of available activities -->
-<div id="activity-toolbox">
-    <ul>
-        @foreach (var activity in allActivities) {
-            <li class="activity-toolbox-item @(activity.IsEvent ? "event" : null) toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
-                <div>
-                    <h2>@activity.Name.CamelFriendly()</h2>
-                    <span class="hint">@activity.Description</span>
-                </div>
-            </li>
-        }   
-    </ul> 
-</div>
+<ul>
+    @foreach (var activity in allActivities) {
+        <li class="activity-toolbox-item @(activity.IsEvent ? "event" : null) toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
+            <div>
+                <h2>@activity.Name.CamelFriendly()</h2>
+                <span class="hint">@activity.Description</span>
+            </div>
+        </li>
+    }   
+</ul> 
 
 @* Render script to initialize a new jsplumb shape in the form of activities['activity-name'].create() *@
 @using (Script.Foot()) {
