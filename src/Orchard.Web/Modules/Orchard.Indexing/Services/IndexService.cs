@@ -38,7 +38,7 @@ namespace Orchard.Indexing.Services
                 UpdateIndex(indexName);
             }
             else {
-                Services.Notifier.Warning(T("The index {0} could no ben rebuilt. It might already be in use, please try again later.", indexName));
+                Services.Notifier.Warning(T("The index {0} could not be rebuilt. It might already be in use, please try again later.", indexName));
             }
         }
 
