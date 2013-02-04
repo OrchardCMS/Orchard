@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Orchard.Data.Bags;
 
 namespace Orchard.Forms.Services {
     public static class FormParametersHelper {

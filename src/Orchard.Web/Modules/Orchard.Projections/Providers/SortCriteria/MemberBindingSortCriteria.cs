@@ -42,14 +42,14 @@ namespace Orchard.Projections.Providers.SortCriteria {
 
         public void ApplyFilter(SortCriterionContext context, PropertyInfo property) {
 
-            bool ascending = Convert.ToBoolean(context.State.Sort);
+            bool ascending = Boolean.Parse(Convert.ToString(context.State.Sort));
             context.Query = ascending
                 ? context.Query.OrderBy(alias => alias.ContentPartRecord(property.DeclaringType), x => x.Asc(property.Name))
                 : context.Query.OrderBy(alias => alias.ContentPartRecord(property.DeclaringType), x => x.Desc(property.Name));
         }
 
         public LocalizedString DisplaySortCriterion(SortCriterionContext context, string propertyName) {
-            bool ascending = Convert.ToBoolean(context.State.Sort);
+            bool ascending = Boolean.Parse(Convert.ToString(context.State.Sort));
 
             if (ascending) {
                 return T("Ordered by {0}, ascending", propertyName);

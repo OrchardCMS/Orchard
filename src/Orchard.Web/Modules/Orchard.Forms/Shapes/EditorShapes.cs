@@ -350,7 +350,7 @@ namespace Orchard.Forms.Shapes {
 
             Output.WriteLine(select.ToString(TagRenderMode.StartTag));
 
-            string selectedValue = Convert.ToString(Shape.Value);
+            string selectedValue = Convert.ToString(Shape.Value) ?? "";
             var selectedValues = selectedValue.Split(new[] { ',' });
 
             foreach (var item in Items) {

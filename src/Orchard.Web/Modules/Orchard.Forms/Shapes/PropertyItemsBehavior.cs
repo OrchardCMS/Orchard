@@ -4,7 +4,7 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Forms.Shapes {
-    public class PropertiesAreItems : Composite {
+    public class PropertiesAreItems : Shape {
         public override bool TrySetMember(System.Dynamic.SetMemberBinder binder, object value) {
             Patch(this, binder.Name, value);
             return base.TrySetMember(binder, value);
