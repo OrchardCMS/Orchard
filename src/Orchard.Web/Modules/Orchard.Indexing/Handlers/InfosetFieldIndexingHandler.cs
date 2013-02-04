@@ -54,6 +54,7 @@ namespace Orchard.Indexing.Handlers {
                                     var indexName = String.Format("{0}-{1}", infosetPart.TypeDefinition.Name.ToLower(), field.Name.ToLower());
 
                                     TypeCode typeCode = Type.GetTypeCode(storageType);
+                                    
                                     switch (typeCode)
                                     {
                                         case TypeCode.Empty:
@@ -61,7 +62,7 @@ namespace Orchard.Indexing.Handlers {
                                         case TypeCode.DBNull:
                                         case TypeCode.String:
                                         case TypeCode.Char:
-                                            context.DocumentIndex.Add(indexName, fieldValue.ToString()).RemoveTags().Analyze();
+                                            context.DocumentIndex.Add(indexName, Convert.ToString(fieldValue)).RemoveTags().Analyze();
                                             break;
                                         case TypeCode.Boolean:
                                             context.DocumentIndex.Add(indexName, Convert.ToBoolean(fieldValue));
