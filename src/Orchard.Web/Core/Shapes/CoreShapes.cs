@@ -48,7 +48,7 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe("Layout")
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(() => creating.New.Zone(), null)))
+                .OnCreating(creating => creating.Create = () => new ZoneHolding(() => creating.New.Zone()))
                 .OnCreated(created => {
                     var layout = created.Shape;
                     
@@ -68,7 +68,7 @@ namespace Orchard.Core.Shapes {
             // They have class="zone zone-{name}"
             // and the template can be specialized with "Zone-{Name}" base file name
             builder.Describe("Zone")
-                .OnCreating(creating => creating.BaseType = typeof(Zone))
+                .OnCreating(creating => creating.Create = () => new Zone())
                 .OnDisplaying(displaying => {
                     var zone = displaying.Shape;
                     string zoneName = zone.ZoneName;

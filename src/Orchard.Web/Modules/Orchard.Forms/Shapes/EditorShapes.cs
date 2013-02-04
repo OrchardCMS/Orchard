@@ -26,8 +26,8 @@ namespace Orchard.Forms.Shapes {
             builder.Describe("Input").Configure(descriptor => descriptor.Wrappers.Add("InputWrapper"));
             builder.Describe("SelectList").Configure(descriptor => descriptor.Wrappers.Add("InputWrapper"));
             builder.Describe("Textarea").Configure(descriptor => descriptor.Wrappers.Add("InputWrapper"));
-            builder.Describe("Form").OnCreating(ctx => ctx.Behaviors.Add(new PropertiesAreItems()));
-            builder.Describe("Fieldset").OnCreating(ctx => ctx.Behaviors.Add(new PropertiesAreItems()));
+            builder.Describe("Form").OnCreating(ctx => ctx.Create = () => new PropertiesAreItems());
+            builder.Describe("Fieldset").OnCreating(ctx => ctx.Create = () => new PropertiesAreItems());
         }
 
         [Shape]
