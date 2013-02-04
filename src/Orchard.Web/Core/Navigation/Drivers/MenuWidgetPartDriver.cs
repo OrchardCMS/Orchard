@@ -162,7 +162,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
 
                 menuShape.MenuName(menuName);
-                menuShape.Content(menu);
+                menuShape.ContentItem(menu);
                 NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
 
                 return shapeHelper.Parts_MenuWidget(Menu: menuShape);
