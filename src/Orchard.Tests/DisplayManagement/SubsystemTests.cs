@@ -79,12 +79,14 @@ namespace Orchard.Tests.DisplayManagement {
             dynamic shapeHelperFactory = _container.Resolve<IShapeFactory>();
 
             var result1 = displayHelperFactory.Something();
-            var result2 = ((DisplayHelper)displayHelperFactory).ShapeExecute((Shape)shapeHelperFactory.Pager());
+            var result2 = ((DisplayHelper)displayHelperFactory).ShapeExecute(shapeHelperFactory.Pager());
+            var result3 = ((DisplayHelper)displayHelperFactory).ShapeExecute((Shape)shapeHelperFactory.Pager());
 
             displayHelperFactory(shapeHelperFactory.Pager());
 
             Assert.That(result1.ToString(), Is.EqualTo("<br/>"));
             Assert.That(result2.ToString(), Is.EqualTo("<div>hello</div>"));
+            Assert.That(result3.ToString(), Is.EqualTo("<div>hello</div>"));
         }
     }
 }

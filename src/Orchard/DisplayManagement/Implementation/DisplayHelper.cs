@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {
 
@@ -69,6 +70,11 @@ namespace Orchard.DisplayManagement.Implementation {
         private object ShapeTypeExecute(string name, INamedEnumerable<object> parameters) {
             var shape = _shapeFactory.Create(name, parameters);
             return ShapeExecute(shape);
+        }
+
+        public object ShapeExecute(Shape shape) {
+            // disambiguates the call to ShapeExecute(object) as Shape also implements IEnumerable
+            return ShapeExecute((object) shape);
         }
 
         public object ShapeExecute(object shape) {
