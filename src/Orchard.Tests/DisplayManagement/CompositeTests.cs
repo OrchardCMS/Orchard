@@ -52,6 +52,7 @@ namespace Orchard.Tests.DisplayManagement {
             Assert.That(foo.Bar, Is.EqualTo("bar"));
             Assert.That(foo.Bar == null, Is.False);
         }
+
     }
 
     public class Animal : Composite {

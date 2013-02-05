@@ -71,10 +71,14 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void NoneEmptyZonesShouldBeNull() {
+        public void NoneEmptyZonesShouldNotBeNull() {
             Func<dynamic> factory = () => new Shape();
 
             dynamic foo = new ZoneHolding(factory);
+
+            Assert.That(foo.Header == null, Is.True);
+            Assert.That(foo.Header != null, Is.False);
+
             foo.Header.Add("blah");
 
             Assert.That(foo.Header == null, Is.False);

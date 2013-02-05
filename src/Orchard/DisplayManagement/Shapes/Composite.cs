@@ -12,7 +12,7 @@ namespace Orchard.DisplayManagement.Shapes {
             return TryGetMemberImpl(binder.Name, out result);
         }
 
-        protected bool TryGetMemberImpl(string name, out object result) {
+        protected virtual bool TryGetMemberImpl(string name, out object result) {
             if (_props.Contains(name)) {
                 result = _props[name];
                 return true;
@@ -94,14 +94,22 @@ namespace Orchard.DisplayManagement.Shapes {
             return true;
         }
 
+        public static bool operator ==(Composite a, Nil b) {
+            return ReferenceEquals(a, b) || null == a;
+        }
+
+        public static bool operator !=(Composite a, Nil b) {
+            return !(a == b);
+        }
+
         public IDictionary Properties {
             get { return _props; }
         }
     }
 
     public class Nil : DynamicObject {
-        static readonly object Singleton = new Nil();
-        public static object Instance { get { return Singleton; } }
+        static readonly Nil Singleton = new Nil();
+        public static Nil Instance { get { return Singleton; } }
 
         private Nil() {
         }
@@ -116,22 +124,60 @@ namespace Orchard.DisplayManagement.Shapes {
             return true;
         }
 
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result) {
+            result = Nil.Instance;
+            return true;
+        }
+
+
         public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result) {
             switch (binder.Operation) {
                 case ExpressionType.Equal:
-                    result = ReferenceEquals(arg, Nil.Instance) || arg == null;
+                    result = ReferenceEquals(arg, Nil.Instance) || (object)arg == null;
                     return true;
                 case ExpressionType.NotEqual:
-                    result = !ReferenceEquals(arg, Nil.Instance) && arg != null;
+                    result = !ReferenceEquals(arg, Nil.Instance) && (object)arg != null;
                     return true;
             }
 
             return base.TryBinaryOperation(binder, arg, out result);
         }
 
+        public static bool operator ==(Nil a, Nil b) {
+            return true;
+        }
+
+        public static bool operator !=(Nil a, Nil b) {
+            return false;
+        }
+
+        public static bool operator ==(Nil a, object b) {
+            return ReferenceEquals(a, b) || (object)b == null;
+        }
+
+        public static bool operator !=(Nil a, object b) {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj) {
+            if (obj == null) {
+                return true;
+            }
+
+            return ReferenceEquals(obj, Nil.Instance);
+        }
+
+        public override int GetHashCode() {
+            return 0;
+        }
+
         public override bool TryConvert(ConvertBinder binder, out object result) {
             result = null;
             return true;
+        }
+
+        public override string ToString() {
+            return string.Empty;
         }
     }
 }
