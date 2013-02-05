@@ -217,6 +217,7 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
     <Compile Include="DisplayManagement\CompositeTests.cs" />
+    <Compile Include="DisplayManagement\NilTests.cs" />
     <Compile Include="DisplayManagement\ZoneHoldingTests.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />

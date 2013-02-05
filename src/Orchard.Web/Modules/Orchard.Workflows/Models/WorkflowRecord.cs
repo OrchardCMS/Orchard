@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
 namespace Orchard.Workflows.Models {
@@ -24,6 +25,11 @@ namespace Orchard.Workflows.Models {
         /// </summary>
         [CascadeAllDeleteOrphan]
         public virtual IList<AwaitingActivityRecord> AwaitingActivities { get; set; }
+
+        /// <summary>
+        /// The associated content item
+        /// </summary>
+        public virtual ContentItemRecord ContentItemRecord { get; set; }
 
         /// <summary>
         /// Parent <see cref="WorkflowDefinitionRecord"/>

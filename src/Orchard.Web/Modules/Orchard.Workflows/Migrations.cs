@@ -19,7 +19,8 @@ namespace Orchard.Workflows {
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("State", column => column.Unlimited())
                 .Column<int>("WorkflowDefinitionRecord_id")
-			);
+                .Column<int>("ContentItemRecord_id")
+            );
 
 			// Creating table WorkflowDefinitionRecord
 			SchemaBuilder.CreateTable("WorkflowDefinitionRecord", table => table
@@ -32,7 +33,6 @@ namespace Orchard.Workflows {
 			SchemaBuilder.CreateTable("AwaitingActivityRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("ActivityRecord_id")
-                .Column<int>("ContentItemRecord_id")
                 .Column<int>("WorkflowRecord_id")
             );
 

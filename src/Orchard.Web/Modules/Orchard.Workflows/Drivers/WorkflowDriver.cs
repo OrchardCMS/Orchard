@@ -7,13 +7,13 @@ using Orchard.Workflows.Models;
 
 namespace Orchard.Workflows.Drivers {
     public class WorkflowDriver : ContentPartDriver<CommonPart> {
-        private readonly IRepository<AwaitingActivityRecord> _awaitingActivityRepository;
+        private readonly IRepository<WorkflowRecord> _workflowRepository;
 
         public WorkflowDriver(
             IOrchardServices services,
-            IRepository<AwaitingActivityRecord> awaitingActivityRepository
+            IRepository<WorkflowRecord> workflowRepository
             ) {
-            _awaitingActivityRepository = awaitingActivityRepository;
+                _workflowRepository = workflowRepository;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -27,8 +27,8 @@ namespace Orchard.Workflows.Drivers {
 
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Workflow_SummaryAdmin", () => {
-                var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record).ToList();
-                return shapeHelper.Parts_Workflow_SummaryAdmin().Activities(awaiting.Select(x => x.ActivityRecord));
+                var workflows = _workflowRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record).ToList();
+                return shapeHelper.Parts_Workflow_SummaryAdmin().Workflows(workflows);
             });
         }
     }

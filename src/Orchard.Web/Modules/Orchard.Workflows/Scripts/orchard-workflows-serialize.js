@@ -64,7 +64,7 @@ var loadActivities = function (localId) {
     // activities        
     for (var i = 0; i < workflow.Activities.length; i++) {
         var activity = workflow.Activities[i];
-        renderActivity(activity.ClientId, activity.Name, activity.State, activity.Start, activity.Top, activity.Left);
+        renderActivity(activity.ClientId, activity.Id, activity.Name, activity.State, activity.Start, activity.Top, activity.Left);
     }
 
     // connections

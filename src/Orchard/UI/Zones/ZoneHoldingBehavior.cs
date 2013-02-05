@@ -38,7 +38,7 @@ namespace Orchard.UI.Zones {
         public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
             var name = binder.Name;
 
-            if (!base.TryGetMember(binder, out result) || ((dynamic)result) == null) {
+            if (!base.TryGetMember(binder, out result) || (null == result)) {
                 // substitute nil results with a robot that turns adds a zone on
                 // the parent when .Add is invoked
                 result = new ZoneOnDemand(_zoneFactory, this, name);
@@ -67,7 +67,7 @@ namespace Orchard.UI.Zones {
             return TryGetMemberImpl(binder.Name, out result);
         }
 
-        private bool TryGetMemberImpl(string name, out object result) {
+        protected override bool TryGetMemberImpl(string name, out object result) {
 
             var parentMember = ((dynamic)_parent)[name];
             if (parentMember == null) {
@@ -139,18 +139,18 @@ namespace Orchard.UI.Zones {
         }
 
         public override bool TryConvert(System.Dynamic.ConvertBinder binder, out object result) {
-            result = null;
+            result = Nil.Instance;
             return true;
         }
 
-        public static bool operator ==(ZoneOnDemand expr, object arg) {
+        public static bool operator ==(ZoneOnDemand a, object b) {
             // if ZoneOnDemand is compared to null it must return true
-            return arg == null || ReferenceEquals(arg, Nil.Instance);
+            return b == null || ReferenceEquals(b, Nil.Instance);
         }
 
-        public static bool operator !=(ZoneOnDemand expr, object arg) {
+        public static bool operator !=(ZoneOnDemand a, object b) {
             // if ZoneOnDemand is compared to null it must return true
-            return arg != null && !ReferenceEquals(arg, Nil.Instance);
+            return !(a == b);
         }
 
         public override bool Equals(object obj) {

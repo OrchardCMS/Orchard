@@ -77,7 +77,7 @@
         }
     });
 
-    var renderActivity = function (clientId, name, state, start, top, left) {
+    var renderActivity = function (clientId, id, name, state, start, top, left) {
 
         $.ajax({
             type: 'POST',
@@ -93,6 +93,10 @@
 
                 dom.addClass('activity');
                 
+                if ($.inArray(id, awaitingRecords) != -1) {
+                    dom.addClass('awaiting');
+                }
+                    
                 if (start) {
                     dom.addClass('start');
                 }

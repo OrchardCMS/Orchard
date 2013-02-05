@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.ViewModels {
@@ -8,6 +9,7 @@ namespace Orchard.Workflows.ViewModels {
         public bool IsLocal { get; set; }
         public IEnumerable<IActivity> AllActivities { get; set; }
         public WorkflowDefinitionViewModel WorkflowDefinition { get; set; }
+        public WorkflowRecord Workflow { get; set; } 
     }
 
     public class UpdatedActivityModel {

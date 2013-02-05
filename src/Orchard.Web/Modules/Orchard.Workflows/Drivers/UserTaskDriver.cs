@@ -47,7 +47,7 @@ namespace Orchard.Workflows.Drivers {
                     var workContext = _workContextAccessor.GetContext();
                     var user = workContext.CurrentUser;
 
-                    var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
+                    var awaiting = _awaitingActivityRepository.Table.Where(x => x.WorkflowRecord.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
                     var actions = awaiting.Where(x => UserIsInRole(x, user)).SelectMany(ListAction).ToList();
 
                     return shapeHelper.UserTask_ActionButton().Actions(actions);
@@ -87,7 +87,7 @@ namespace Orchard.Workflows.Drivers {
 
                 var user = Services.WorkContext.CurrentUser;
 
-                var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
+                var awaiting = _awaitingActivityRepository.Table.Where(x => x.WorkflowRecord.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
                 var actions = awaiting.Where(x => UserIsInRole(x, user)).SelectMany(ListAction).ToList();
 
                 if (!actions.Contains(name)) {
