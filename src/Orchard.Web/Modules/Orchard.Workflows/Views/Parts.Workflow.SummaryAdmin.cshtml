@@ -1,0 +1,10 @@
+﻿@{
+    IEnumerable<Orchard.Workflows.Models.ActivityRecord> activities = Model.Activities;
+    var count = activities.Count();
+}
+
+@if (count > 0) {
+    <div>
+        @T("{0} active workflow(s)", count)
+    </div>
+}

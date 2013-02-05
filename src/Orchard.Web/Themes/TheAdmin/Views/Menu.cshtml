@@ -30,7 +30,11 @@
             : null;
 
         IHtmlString sectionHeaderMarkup;
-        if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
+        if (firstOfTheSecond != null 
+            && firstLevelMenuItem.LinkToFirstChild 
+            && (
+                firstOfTheSecond.RouteValues != null 
+                || HasText(firstOfTheSecond.Url))) {
             sectionHeaderMarkup = HasText(itemId)
                 ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName, id = itemId })
                 : Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName });
@@ -72,7 +76,7 @@
                 <ul class="menuItems">
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
                     string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
-                    var firstOfTheThird = ((IEnumerable<dynamic>)secondLevelMenuItem).FirstOrDefault();
+                    var firstOfTheThird = ((IEnumerable<dynamic>)secondLevelMenuItem.Items).FirstOrDefault();
 
                     var secondLevelItemClassName = HasText(secondLevelTextHint)
                         ? "subnavicon-" + secondLevelTextHint.HtmlClassify()

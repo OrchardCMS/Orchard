@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ClaySharp;
-using ClaySharp.Implementation;
+﻿using System;
 
 namespace Orchard.DisplayManagement {
     /// <summary>
@@ -9,7 +7,7 @@ namespace Orchard.DisplayManagement {
     /// </summary>
     public interface IShapeFactory : IDependency {
         IShape Create(string shapeType, INamedEnumerable<object> parameters);
-        IShape Create(string shapeType, INamedEnumerable<object> parameters, IEnumerable<IClayBehavior> behaviors);
+        IShape Create(string shapeType, INamedEnumerable<object> parameters, Func<dynamic> createShape);
     }
 
     public static class ShapeFactoryExtensions {

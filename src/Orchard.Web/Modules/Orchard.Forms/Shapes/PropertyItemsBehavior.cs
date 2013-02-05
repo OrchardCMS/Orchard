@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.DisplayManagement;
-using ClaySharp;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Forms.Shapes {
-    public class PropertiesAreItems : ClayBehavior {
-        public override object SetMember(Func<object> proceed, dynamic self, string name, object value) {
-            Patch(self, name, value);
-            return proceed();
+    public class PropertiesAreItems : Shape {
+        public override bool TrySetMember(System.Dynamic.SetMemberBinder binder, object value) {
+            Patch(this, binder.Name, value);
+            return base.TrySetMember(binder, value);
         }
 
-        public override object SetIndex(Func<object> proceed, dynamic self, IEnumerable<object> keys, object value) {
-            if (keys.Count() == 1 && keys.All(k => k is string))
-                Patch(self, System.Convert.ToString(keys.Single()), value);
-            return proceed();
+        public override bool TrySetIndex(System.Dynamic.SetIndexBinder binder, object[] indexes, object value) {
+            if (indexes.Count() == 1 && indexes.All(k => k is string))
+                Patch(this, System.Convert.ToString(indexes.Single()), value);
+            return base.TrySetIndex(binder, indexes, value);
         }
 
-        public override object InvokeMember(Func<object> proceed, dynamic self, string name, INamedEnumerable<object> args) {
-            if (args.Count() == 1 && args.Named.Count() == 0)
-                Patch(self, name, args.Single());
-            return proceed();
+        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result) {
+            var arguments = Arguments.From(args, binder.CallInfo.ArgumentNames);
+            if (args.Count() == 1 && !arguments.Named.Any())
+                Patch(this, binder.Name, args.Single());
+            return base.TryInvokeMember(binder, args, out result);
         }
 
         readonly IDictionary<string, object> _assigned = new Dictionary<string, object>();

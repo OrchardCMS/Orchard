@@ -71,11 +71,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
@@ -157,8 +152,6 @@
     <Compile Include="ContentManagement\Aspects\ITitleAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
-    <Compile Include="ContentManagement\ContentItemBehavior.cs" />
-    <Compile Include="ContentManagement\ContentPartBehavior.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
@@ -172,11 +165,19 @@
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
-    <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
+    <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="DisplayManagement\Arguments.cs" />
+    <Compile Include="Data\Bags\SConvert.cs" />
+    <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
+    <Compile Include="Data\Bags\Serialization\XmlSettingsSerializer.cs" />
+    <Compile Include="Data\Bags\SItem.cs" />
+    <Compile Include="Data\Bags\SObject.cs" />
+    <Compile Include="Data\Bags\StateValueProvider.cs" />
+    <Compile Include="Data\Bags\SValue.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
     <Compile Include="Data\Conventions\CacheConvention.cs" />
     <Compile Include="Data\DefaultDatabaseCacheConfiguration.cs" />
@@ -196,6 +197,8 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeTableLocator.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
+    <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
@@ -273,6 +276,8 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Services\Clock.cs" />
+    <Compile Include="Services\DefaultJsonConverter.cs" />
+    <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />

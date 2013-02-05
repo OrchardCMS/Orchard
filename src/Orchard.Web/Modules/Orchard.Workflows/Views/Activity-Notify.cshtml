@@ -1,0 +1,9 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+    string name = Model.Name;
+}
+
+<div class="activity-notify" title="@Model.State.Notification: @Model.State.Message">
+    <div>@name.CamelFriendly()</div>
+</div>

@@ -37,7 +37,43 @@ namespace Orchard.Tests.DisplayManagement {
         [Test]
         public void CreateShapeWithNamedArguments() {
             var factory = _container.Resolve<IShapeFactory>();
-            var foo = factory.Create("Foo", ArgsUtility.Named(new { one = 1, two = "dos" }));
+            dynamic foo = factory.Create("Foo", ArgsUtility.Named(new { one = 1, two = "dos" }));
+            Assert.That(foo.one, Is.EqualTo(1));
+            Assert.That(foo.two, Is.EqualTo("dos"));
         }
+
+        [Test]
+        public void CallSyntax() {
+            dynamic factory = _container.Resolve<IShapeFactory>();
+            var foo = factory.Foo();
+            ShapeMetadata metadata = foo.Metadata;
+            Assert.That(metadata.Type, Is.EqualTo("Foo"));
+        }
+
+        [Test]
+        public void CallInitializer() {
+            dynamic factory = _container.Resolve<IShapeFactory>();
+            var bar = new {One = 1, Two = "two"};
+            var foo = factory.Foo(bar);
+
+            Assert.That(foo.One, Is.EqualTo(1));
+            Assert.That(foo.Two, Is.EqualTo("two"));
+        }
+
+        [Test]
+        public void CallInitializerWithBaseType() {
+            dynamic factory = _container.Resolve<IShapeFactory>();
+            var bar = new { One = 1, Two = "two" };
+            var foo = factory.Foo(typeof(MyShape), bar);
+
+            Assert.That(foo, Is.InstanceOf<MyShape>());
+            Assert.That(foo.One, Is.EqualTo(1));
+            Assert.That(foo.Two, Is.EqualTo("two"));
+        }
+
+        public class MyShape : Shape {
+            public string Kind { get; set; }
+        }
+
     }
 }

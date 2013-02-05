@@ -1,0 +1,13 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+    string name = Model.Name;
+    string branches = Model.State.Branches;
+    var outcomes = String.Join(",", branches == null ? new string[0] : branches.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => "'" + x.Trim() + "'").ToArray());
+}
+
+<div data-outcomes="@outcomes">
+    <div class="branch" ></div>
+    @*@name.CamelFriendly()*@
+</div>
+

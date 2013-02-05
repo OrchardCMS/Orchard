@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,7 +46,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -139,7 +142,6 @@
     <Compile Include="Providers\ScheduleActions.cs" />
     <Compile Include="Providers\NotificationForms.cs" />
     <Compile Include="Providers\NotificationActions.cs" />
-    <Compile Include="Services\FormParametersHelper.cs" />
     <Compile Include="Services\RulesServices.cs" />
     <Compile Include="Services\IActionProvider.cs" />
     <Compile Include="Services\IEventProvider.cs" />
