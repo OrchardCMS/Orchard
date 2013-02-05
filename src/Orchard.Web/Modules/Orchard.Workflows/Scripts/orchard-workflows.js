@@ -65,7 +65,7 @@
 
     // instanciates a new workflow widget in the editor
     var createActivity = function (activityName, top, left) {
-        return renderActivity(null, activityName, {}, false, top, left);
+        return renderActivity(null, -1, activityName, {}, false, top, left);
     };
 
     
