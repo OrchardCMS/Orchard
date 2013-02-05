@@ -120,8 +120,8 @@ namespace Orchard.Workflows.Activities {
             
             
             foreach (var action in awaiting) {
-                var tokens = new Dictionary<string, object> { { "Content", _contentManager.Get(action.ContentItemRecord.Id, VersionOptions.Latest) } };
-                var contentItem = _contentManager.Get(action.ContentItemRecord.Id, VersionOptions.Latest);
+                var tokens = new Dictionary<string, object> { { "Content", _contentManager.Get(action.WorkflowRecord.ContentItemRecord.Id, VersionOptions.Latest) } };
+                var contentItem = _contentManager.Get(action.WorkflowRecord.ContentItemRecord.Id, VersionOptions.Latest);
                 var workflowState = FormParametersHelper.FromJsonString(action.WorkflowRecord.State);
                 workflowState.TimerActivity_StartedUtc = null;
                 action.WorkflowRecord.State = FormParametersHelper.ToJsonString(workflowState);

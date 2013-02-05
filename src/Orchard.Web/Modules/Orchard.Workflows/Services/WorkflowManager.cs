@@ -66,7 +66,7 @@ namespace Orchard.Workflows.Services {
             // it's important to return activities at this point as a workflow could be awaiting 
             // on several ones. When an activity is restarted, all the other ones of the same workflow are cancelled.
             awaitingActivities.AddRange(_awaitingActivityRepository.Table.Where(
-                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && x.ContentItemRecord == target.ContentItem.Record
+                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && x.WorkflowRecord.ContentItemRecord == target.ContentItem.Record
                 ).ToList()
             );
 
@@ -139,7 +139,8 @@ namespace Orchard.Workflows.Services {
             // workflow halted, create a workflow state
             var workflow = new WorkflowRecord {
                 WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
-                State = "{}"
+                State = "{}",
+                ContentItemRecord = workflowContext.Content.ContentItem.Record
             };
 
             workflowContext.Record = workflow;
@@ -169,7 +170,6 @@ namespace Orchard.Workflows.Services {
                 foreach (var blocking in blockedOn) {
                     workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
-                        ContentItemRecord = workflowContext.Content.ContentItem.Record
                     });
                 }
             }
@@ -205,7 +205,6 @@ namespace Orchard.Workflows.Services {
                 foreach (var blocking in blockedOn) {
                     workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
-                        ContentItemRecord = workflowContext.Content.ContentItem.Record
                     });
                 }
             }

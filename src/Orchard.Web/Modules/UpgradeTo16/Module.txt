@@ -5,6 +5,7 @@ Website: http://orchardproject.net
 Version: 1.6
 OrchardVersion: 1.6
 Description: Description for the module
+Category: Developer
 Features:
     UpgradeTo16:
         Description: Description for feature UpgradeTo16.

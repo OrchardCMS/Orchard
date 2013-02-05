@@ -25,6 +25,7 @@ namespace Orchard.Workflows.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly ISiteService _siteService;
         private readonly IRepository<WorkflowDefinitionRecord> _workflowDefinitionRecords;
+        private readonly IRepository<WorkflowRecord> _workflowRecords;
         private readonly IActivitiesManager _activitiesManager;
         private readonly IFormManager _formManager;
 
@@ -33,11 +34,13 @@ namespace Orchard.Workflows.Controllers {
             IShapeFactory shapeFactory,
             ISiteService siteService,
             IRepository<WorkflowDefinitionRecord> workflowDefinitionRecords,
+            IRepository<WorkflowRecord> workflowRecords,
             IActivitiesManager activitiesManager,
             IFormManager formManager
             ) {
             _siteService = siteService;
             _workflowDefinitionRecords = workflowDefinitionRecords;
+            _workflowRecords = workflowRecords;
             _activitiesManager = activitiesManager;
             _formManager = formManager;
             Services = services;
@@ -105,6 +108,25 @@ namespace Orchard.Workflows.Controllers {
             pagerShape.RouteData(routeData);
 
             return View(model);
+        }
+
+        public ActionResult List(int id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list workflows")))
+                return new HttpUnauthorizedResult();
+
+            var contentItem = Services.ContentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null) {
+                return HttpNotFound();
+            }
+
+            var workflows = _workflowRecords.Table.Where(x => x.ContentItemRecord == contentItem.Record).ToList();
+
+            var viewModel = New.ViewModel(
+                ContentItem: contentItem,
+                Workflows: workflows
+                );
+            return View(viewModel);
         }
 
         public ActionResult Create() {
@@ -268,11 +290,14 @@ namespace Orchard.Workflows.Controllers {
                 return HttpNotFound();
             }
 
-            IShape shape = New.Activity(activity);
+            dynamic shape = New.Activity(activity);
 
             if (model.State != null) {
-                var dynamicState = FormParametersHelper.ToDynamic(FormParametersHelper.ToString(model.State));
-                ((dynamic)shape).State(dynamicState);
+                var state = FormParametersHelper.ToDynamic(FormParametersHelper.ToString(model.State));
+                shape.State(state);
+            }
+            else {
+                shape.State(FormParametersHelper.FromJsonString("{}"));
             }
 
             shape.Metadata.Alternates.Add("Activity__" + activity.Name);

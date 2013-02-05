@@ -71,6 +71,7 @@
     <Content Include="Scripts\jquery.jsPlumb-1.3.16-all-min.js" />
     <Content Include="Scripts\orchard-workflows-serialize.js" />
     <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Styles\images\cog.png" />
     <Content Include="Styles\workflows-activity-delete-publish.css" />
     <Content Include="Styles\workflows-activity-timer.css" />
     <Content Include="Styles\workflows-activity-branch.css" />
@@ -203,7 +204,7 @@
     <Content Include="Views\Activity-IsInRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Styles\images\" />
+    <Content Include="Views\Admin\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-SendEmail.cshtml" />
