@@ -11,7 +11,7 @@ namespace Orchard.Workflows.Services {
         }
 
         public IEnumerable<IActivity> GetActivities() {
-            return _activities.ToReadOnlyCollection();
+            return _activities.OrderBy(x => x.Name).ToReadOnlyCollection();
         }
 
         public IActivity GetActivityByName(string name) {
