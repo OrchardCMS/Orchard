@@ -10,6 +10,6 @@ Category: Content
 Features:
     Orchard.Alias.UI:
 		Name: Alias UI
-        Description: Admin user interace for Orchard.Alias.
+        Description: Admin user interface for Orchard.Alias.
 		Dependencies: Orchard.Alias
 		Category: Content
