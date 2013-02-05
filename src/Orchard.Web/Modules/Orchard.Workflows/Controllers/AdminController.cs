@@ -10,6 +10,7 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using System;
@@ -126,6 +127,7 @@ namespace Orchard.Workflows.Controllers {
                 ContentItem: contentItem,
                 Workflows: workflows
                 );
+
             return View(viewModel);
         }
 
@@ -150,19 +152,21 @@ namespace Orchard.Workflows.Controllers {
             return RedirectToAction("Edit", new { workflowDefinitionRecord.Id });
         }
 
-        public ActionResult Edit(int id, string localId) {
+        public ActionResult Edit(int id, string localId, int? workflowId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
                 return new HttpUnauthorizedResult();
 
             // convert the workflow definition into its view model
             var workflowDefinitionRecord = _workflowDefinitionRecords.Get(id);
             var workflowDefinitionViewModel = CreateWorkflowDefinitionViewModel(workflowDefinitionRecord);
-            
+            var workflow = workflowId.HasValue ? _workflowRecords.Get(workflowId.Value) : null;
+
             var viewModel = new AdminEditViewModel {
                 LocalId = String.IsNullOrEmpty(localId) ? Guid.NewGuid().ToString() : localId,
                 IsLocal = !String.IsNullOrEmpty(localId),
                 WorkflowDefinition = workflowDefinitionViewModel,
-                AllActivities = _activitiesManager.GetActivities()
+                AllActivities = _activitiesManager.GetActivities(),
+                Workflow = workflow
             };
 
             return View(viewModel);
@@ -183,6 +187,21 @@ namespace Orchard.Workflows.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public ActionResult DeleteWorkflow(int id, string returnUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
+                return new HttpUnauthorizedResult();
+
+            var workflow = _workflowRecords.Get(id);
+
+            if (workflow != null) {
+                _workflowRecords.Delete(workflow);
+                Services.Notifier.Information(T("Workflow deleted"));
+            }
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+        }
+
         private WorkflowDefinitionViewModel CreateWorkflowDefinitionViewModel(WorkflowDefinitionRecord workflowDefinitionRecord) {
             if (workflowDefinitionRecord == null) {
                 throw new ArgumentNullException("workflowDefinitionRecord");
@@ -196,6 +215,7 @@ namespace Orchard.Workflows.Controllers {
             workflow.Activities = new JArray(workflowDefinitionRecord.ActivityRecords.Select(x => {
                 dynamic activity = new JObject();
                 activity.Name = x.Name;
+                activity.Id = x.Id;
                 activity.ClientId = x.Name + "_" + x.Id;
                 activity.Left = x.X;
                 activity.Top = x.Y;

@@ -27,7 +27,7 @@ namespace Orchard.Workflows.Drivers {
 
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Workflow_SummaryAdmin", () => {
-                var workflows = _workflowRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record).Distinct().ToList();
+                var workflows = _workflowRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record).ToList();
                 return shapeHelper.Parts_Workflow_SummaryAdmin().Workflows(workflows);
             });
         }

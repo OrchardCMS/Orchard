@@ -12,6 +12,10 @@
                 <th scope="col" class="actions">&nbsp;</th>
             </tr>
         </thead>
+        @if (Model.Workflows.Count == 0) {
+            @T("No workflows associated with this content item.")
+        }
+
         @foreach (WorkflowRecord workflow in Model.Workflows) { 
             <tr>
                 <td>
@@ -28,8 +32,8 @@
                     &nbsp;
                 </td>
                 <td>
-                    @*@Html.ActionLink(T("Edit").ToString(), "EditWorkflow", new { id = workflow.Id })*@ |
-                    @*@Html.ActionLink(T("Delete").ToString(), "DeleteWorkflow", new { id = workflow.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })*@
+                    @Html.ActionLink(T("Status").ToString(), "Edit", new { id = workflow.WorkflowDefinitionRecord.Id, workflowId = workflow.Id, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl }) |
+                    @Html.ActionLink(T("Delete").ToString(), "DeleteWorkflow", new { id = workflow.Id }, new { itemprop = "RemoveUrl UnsafeUrl", ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })
                 </td>
             </tr>
         }

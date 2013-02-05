@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div id="activity-toolbox">
+        <div id="activity-toolbox" @if(Model.Workflow != null) { <text>style="visibility:hidden"</text>}>
             @Display.ActivityToolbox(Model)
         </div>
         <div id="workflow-footer"></div>
@@ -49,21 +49,22 @@
     var localId = '@HttpUtility.JavaScriptStringEncode(Model.LocalId)';
     var updatedActivityClientId = null;
     var updatedActivityState = null;
+    var awaitingRecords = [];
     
     @if (TempData.ContainsKey("UpdatedViewModel")) {
         var model = TempData["UpdatedViewModel"] as UpdatedActivityModel;
         if (model != null) {
-            <text>
-    updatedActivityClientId = '@(model.ClientId)';
-    updatedActivityState = '@Html.Raw(HttpUtility.JavaScriptStringEncode(FormParametersHelper.ToJsonString(model.Data)))';
-            </text>
+            @: updatedActivityClientId = '@(model.ClientId)';
+            @: updatedActivityState = '@Html.Raw(HttpUtility.JavaScriptStringEncode(FormParametersHelper.ToJsonString(model.Data)))';
         }
     }
     else if (!Model.IsLocal) {
-        <text>
-    var state = @Html.Raw(Model.WorkflowDefinition.JsonData);
-    sessionStorage.setItem(localId, JSON.stringify(state));
-        </text>
+        @: var state = @Html.Raw(Model.WorkflowDefinition.JsonData);
+        @: sessionStorage.setItem(localId, JSON.stringify(state));
+    }
+    
+    @if (Model.Workflow != null) {
+        @: awaitingRecords = [@String.Join(",", Model.Workflow.AwaitingActivities.Select(x => x.ActivityRecord.Id.ToString()).ToArray())];
     }
     
     //]]>
@@ -89,8 +90,12 @@
 </script>
     }
 
-<fieldset>
-    <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-    @Html.ActionLink(T("Cancel").Text, "Index", "Admin", new { area = "Orchard.Workflows" }, new { @class = "primaryAction button" })
-</fieldset>
+    <fieldset>
+        @* Can only save if not debugging a workflow *@
+        @if (Model.Workflow == null) {
+            <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>    
+        }
+        
+        @Html.ActionLink(T("Close").Text, "Index", "Admin", new { area = "Orchard.Workflows" }, new { @class = "primaryAction button" })
+    </fieldset>
 }
