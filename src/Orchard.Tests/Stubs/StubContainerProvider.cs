@@ -12,7 +12,7 @@ namespace Orchard.Tests.Stubs {
             RequestLifetime.Dispose();
         }
 
-        public IContainer ApplicationContainer { get; set; }
+        public ILifetimeScope ApplicationContainer { get; set; }
 
         public ILifetimeScope RequestLifetime { get; set; }
     }

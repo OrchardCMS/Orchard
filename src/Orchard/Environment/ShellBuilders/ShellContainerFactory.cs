@@ -123,13 +123,13 @@ namespace Orchard.Environment.ShellBuilders {
                     // Register code-only registrations specific to a shell
                     _shellContainerRegistrations.Registrations(builder);
 
-                    var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
-                    if (File.Exists(optionalShellConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellConfig));
+                    //var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
+                    //if (File.Exists(optionalShellConfig))
+                    //    builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellConfig));
 
-                    var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
-                    if (File.Exists(optionalShellByNameConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellByNameConfig));
+                    //var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
+                    //if (File.Exists(optionalShellByNameConfig))
+                    //    builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellByNameConfig));
                 });
         }
 

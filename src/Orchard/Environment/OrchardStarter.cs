@@ -119,13 +119,13 @@ namespace Orchard.Environment {
             registrations(builder);
 
 
-            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
-            if (autofacSection != null)
-                builder.RegisterModule(new ConfigurationSettingsReader());
+            //var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
+            //if (autofacSection != null)
+            //    builder.RegisterModule(new ConfigurationSettingsReader());
 
             var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Host.config");
             if (File.Exists(optionalHostConfig))
-                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
+                builder.RegisterModule(new ConfigurationSettingsReader(optionalHostConfig));
 
             var optionalComponentsConfig = HostingEnvironment.MapPath("~/Config/HostComponents.config");
             if (File.Exists(optionalComponentsConfig))
