@@ -8,7 +8,7 @@
 <!-- List of available activities -->
 <ul>
     @foreach (var activity in allActivities) {
-        <li class="activity-toolbox-item @(activity.IsEvent ? "event" : null) toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
+        <li class="activity-toolbox-item toolbox-@(activity.IsEvent ? "event" : "task") toolbox-@activity.Name.HtmlClassify()" data-activity-name="@activity.Name" title="@activity.Description">
             <div>
                 <h2>@activity.Name.CamelFriendly()</h2>
                 <span class="hint">@activity.Description</span>
