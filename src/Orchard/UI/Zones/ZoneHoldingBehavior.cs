@@ -139,7 +139,16 @@ namespace Orchard.UI.Zones {
         }
 
         public override bool TryConvert(System.Dynamic.ConvertBinder binder, out object result) {
-            result = Nil.Instance;
+            if (binder.ReturnType == typeof (string)) {
+                result = null;
+            }
+            else if (binder.ReturnType.IsValueType) {
+                result = Activator.CreateInstance(binder.ReturnType);
+            }
+            else {
+                result = null;
+            }
+
             return true;
         }
 

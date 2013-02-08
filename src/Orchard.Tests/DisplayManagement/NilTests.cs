@@ -37,5 +37,11 @@ namespace Orchard.Tests.DisplayManagement {
             dynamic nil = Nil.Instance;
             Assert.That(nil.Foo.Bar.ToString(), Is.EqualTo(""));
         }
+
+        [Test]
+        public void ConvertingToStringShouldReturnNullString() {
+            dynamic nil = Nil.Instance;
+            Assert.That((string)nil == null, Is.True);
+        }
     }
 }
