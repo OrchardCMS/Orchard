@@ -6,14 +6,9 @@ namespace Orchard.DisplayManagement {
     /// This may be used directly, or through the IShapeHelperFactory.
     /// </summary>
     public interface IShapeFactory : IDependency {
+        IShape Create(string shapeType);
         IShape Create(string shapeType, INamedEnumerable<object> parameters);
         IShape Create(string shapeType, INamedEnumerable<object> parameters, Func<dynamic> createShape);
-    }
-
-    public static class ShapeFactoryExtensions {
-        public static IShape Create(this IShapeFactory factory, string shapeType) {
-            return factory.Create(shapeType, Arguments.Empty());
-        }
     }
 }
 

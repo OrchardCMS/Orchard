@@ -23,6 +23,10 @@ namespace Orchard.DisplayManagement.Implementation {
             return true;
         }
 
+        public IShape Create(string shapeType) {
+            return Create(shapeType, Arguments.Empty(), () => new Shape());
+        }
+
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
             return Create(shapeType, parameters, () => new Shape());
         }
