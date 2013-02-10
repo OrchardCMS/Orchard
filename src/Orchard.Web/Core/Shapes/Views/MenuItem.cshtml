@@ -6,11 +6,10 @@
 if (!HasText(Model.Text)) {
     @DisplayChildren(Model)
 } else {
-    string requestUrl = Request.Path.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-    string modelUrl = Model.Href.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-    if (requestUrl == modelUrl || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/"))) { 
-	    Model.Classes.Add("current");
-    }
+    if((bool)Model.Selected) {
+        Model.Classes.Add("current");
+    }	    
+    
     if(items.Any()) {
         Model.Classes.Add("dropdown");
     }

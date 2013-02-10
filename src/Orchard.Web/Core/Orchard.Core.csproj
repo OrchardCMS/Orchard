@@ -135,11 +135,13 @@
     <Compile Include="Navigation\Drivers\NavigationPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
     <Compile Include="Navigation\Handlers\ContentMenuItemPartHandler.cs" />
     <Compile Include="Navigation\Handlers\NavigationPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
+    <Compile Include="Navigation\Handlers\ShapeMenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
     <Compile Include="Navigation\Models\ContentMenuItemPartRecord.cs" />
@@ -147,6 +149,8 @@
     <Compile Include="Navigation\Models\NavigationPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
+    <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
+    <Compile Include="Navigation\Models\ShapeMenuItemPartRecord.cs" />
     <Compile Include="Navigation\Security\ContentMenuItemAuthorizationEventHandler.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
@@ -555,6 +559,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.ShapeMenuItemPart.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\MenuItemLink-ShapeMenuItem.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
