@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -6,6 +7,7 @@ using Lucene.Models;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using Orchard.Indexing;
 using Orchard.Logging;
 using Lucene.Net.Documents;
@@ -353,6 +355,30 @@ namespace Lucene.Services {
                 searcher.Close();
             }
 
+        }
+
+        public ISearchBits GetBits() {
+            var query = CreateQuery();
+            IndexSearcher searcher;
+
+            try {
+                searcher = new IndexSearcher(_directory, true);
+            }
+            catch {
+                // index might not exist if it has been rebuilt
+                Logger.Information("Attempt to read a none existing index");
+                return null;
+            }
+
+            try {
+                var filter = new QueryWrapperFilter(query);
+                var bits = filter.GetDocIdSet(searcher.GetIndexReader());
+                var disi = new OpenBitSetDISI(bits.Iterator(), searcher.MaxDoc());
+                return new SearchBits(disi);
+            }
+            finally {
+                searcher.Close();
+            }
         }
 
         public ISearchHit Get(int documentId) {

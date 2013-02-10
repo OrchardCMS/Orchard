@@ -57,6 +57,7 @@ namespace Orchard.Indexing {
         ISearchBuilder Slice(int skip, int count);
         IEnumerable<ISearchHit> Search();
         ISearchHit Get(int documentId);
+        ISearchBits GetBits();
         int Count();
 
     }
