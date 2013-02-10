@@ -9,5 +9,6 @@ namespace Orchard.ContentPicker.ViewModels {
         public ICollection<ContentItem> ContentItems { get; set; }
         public string SelectedIds { get; set; }
         public ContentPickerField Field { get; set; }
+        public ContentPart Part { get; set; }
     }
 }

@@ -5,13 +5,15 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.ContentPicker.Settings {
+namespace Orchard.Search.Settings {
+    [OrchardFeature("Orchard.Search.ContentPicker")]
     public class ContentPickerFieldEditorEvents : ContentDefinitionEditorEventsBase {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             if (definition.FieldDefinition.Name == "ContentPickerField") {
-                var model = definition.Settings.GetModel<ContentPickerFieldSettings>();
+                var model = definition.Settings.GetModel<ContentPickerSearchFieldSettings>();
                 yield return DefinitionTemplate(model);
             }
         }
@@ -21,13 +23,10 @@ namespace Orchard.ContentPicker.Settings {
                 yield break;
             }
 
-            var model = new ContentPickerFieldSettings();
-            if (updateModel.TryUpdateModel(model, "ContentPickerFieldSettings", null, null)) {
-                builder.WithSetting("ContentPickerFieldSettings.Hint", model.Hint);
-                builder.WithSetting("ContentPickerFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
-                builder.WithSetting("ContentPickerFieldSettings.Multiple", model.Multiple.ToString(CultureInfo.InvariantCulture));
-                builder.WithSetting("ContentPickerFieldSettings.ShowContentTab", model.ShowContentTab.ToString(CultureInfo.InvariantCulture));
-                builder.WithSetting("ContentPickerFieldSettings.DisplayedContentTypes", model.DisplayedContentTypes);
+            var model = new ContentPickerSearchFieldSettings();
+            if (updateModel.TryUpdateModel(model, "ContentPickerSearchFieldSettings", null, null)) {
+                builder.WithSetting("ContentPickerSearchFieldSettings.ShowSearchTab", model.ShowSearchTab.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("ContentPickerSearchFieldSettings.DisplayedContentTypes", model.DisplayedContentTypes);
             }
 
             yield return DefinitionTemplate(model);
