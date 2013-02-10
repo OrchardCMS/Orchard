@@ -15,7 +15,7 @@ namespace Orchard.Core.Contents {
                         // Alternates in order of specificity. 
                         // Display type > content type > specific content > display type for a content type > display type for specific content
 
-                        // Content__[DisplayType] e.g. Content.Summary
+                        // Content__[DisplayType] e.g. Content-Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + EncodeAlternateElement(displaying.ShapeMetadata.DisplayType));
 
                         // Content__[ContentType] e.g. Content-BlogPost
@@ -24,10 +24,10 @@ namespace Orchard.Core.Contents {
                         // Content__[Id] e.g. Content-42
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
 
-                        // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
+                        // Content_[DisplayType]__[ContentType] e.g. Content.Summary-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + EncodeAlternateElement(contentItem.ContentType));
 
-                        // Content_[DisplayType]__[Id] e.g. Content-42.Summary
+                        // Content_[DisplayType]__[Id] e.g. Content.Summary-42
                         displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
                     }
                 });
