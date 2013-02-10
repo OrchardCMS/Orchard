@@ -63,13 +63,14 @@ namespace Orchard.Projections.Drivers {
             var pageKey = String.IsNullOrWhiteSpace(part.Record.PagerSuffix) ? "page" : "page-" + part.Record.PagerSuffix;
             var page = 0;
 
-            if(queryString.AllKeys.Contains(pageKey)) {
+            // default page size
+            int pageSize = part.Record.Items;
+
+            // don't try to page if not necessary
+            if (part.Record.DisplayPager && queryString.AllKeys.Contains(pageKey)) {
                 Int32.TryParse(queryString[pageKey], out page);
             }
 
-            // default page size
-            int pageSize = part.Record.Items;
-            
             // if 0, then assume "All"
             if (pageSize == 0) {
                 pageSize = Int32.MaxValue;

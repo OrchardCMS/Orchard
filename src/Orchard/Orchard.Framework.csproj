@@ -238,6 +238,7 @@
     <Compile Include="FileSystems\LockFile\LockFile.cs" />
     <Compile Include="FileSystems\LockFile\DefaultLockFileManager.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
+    <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />

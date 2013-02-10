@@ -87,7 +87,9 @@
                     refreshIds();
                     $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
                 },
-                baseUrl: '@Url.Content("~/")'
+                baseUrl: '@Url.Content("~/")',
+                part: '@HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name)',
+                field: '@HttpUtility.JavaScriptStringEncode(Model.Field.PartFieldDefinition.Name)'
             });
         });
 

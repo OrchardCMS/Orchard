@@ -639,5 +639,24 @@ namespace Orchard.Tests.Modules.Indexing {
                 .WithField("field3", 3).Mandatory().AsFilter()
                 .Count(), Is.EqualTo(1));
         }
+
+        [Test]
+        public void ShouldReturnFacetedResults() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "michael has a cousin named michel").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "speak inside the mic").Analyze());
+            _provider.Store("default", _provider.New(4).Add("body", "a dog is pursuing a cat").Analyze());
+            _provider.Store("default", _provider.New(5).Add("body", "michael speaks to elephants").Analyze());
+
+            var michael = SearchBuilder.WithField("body", "michael").GetBits();
+            var speak = SearchBuilder.WithField("body", "speak").GetBits();
+            Assert.That(michael.Count(), Is.EqualTo(3));
+            Assert.That(speak.Count(), Is.EqualTo(2));
+
+            Assert.That(speak.And(michael).Count(), Is.EqualTo(1));
+            Assert.That(speak.Or(michael).Count(), Is.EqualTo(4));
+            Assert.That(speak.Xor(michael).Count(), Is.EqualTo(3));
+        }
     }
 }

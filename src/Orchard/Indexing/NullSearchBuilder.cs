@@ -127,6 +127,11 @@ namespace Orchard.Indexing {
         public ISearchHit Get(int documentId) {
             return null;
         }
+
+        public ISearchBits GetBits() {
+            throw new NotImplementedException();
+        }
+
         public int Count() {
             return 0;
         }
