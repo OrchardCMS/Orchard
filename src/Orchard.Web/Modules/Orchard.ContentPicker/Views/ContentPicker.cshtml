@@ -72,6 +72,16 @@
             link = link + "?callback=" + query("callback");
             self.attr("href", link);
         }
+        
+        if (url.length == 1 || query("part", "?" + url[1]).length == 0) {
+            link = link + "&part=" + query("part");
+            self.attr("href", link);
+        }
+
+        if (url.length == 1 || query("field", "?" + url[1]).length == 0) {
+            link = link + "&field=" + query("field");
+            self.attr("href", link);
+        }
     });
     
     // get a querystring value

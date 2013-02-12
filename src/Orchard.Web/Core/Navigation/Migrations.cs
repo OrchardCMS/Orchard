@@ -93,7 +93,22 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("Stereotype", "MenuItem")
                 );
 
-            return 3;
+            SchemaBuilder.CreateTable("ShapeMenuItemPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<string>("ShapeType")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem",
+                cfg => cfg
+                    .WithPart("ShapeMenuItemPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Shape Link")
+                    .WithSetting("Description", "Injects menu items from a Shape")
+                    .WithSetting("Stereotype", "MenuItem")
+                );
+
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -176,6 +191,25 @@ namespace Orchard.Core.Navigation {
                 );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.CreateTable("ShapeMenuItemPartRecord",
+                table => table.ContentPartRecord()
+                    .Column<string>("ShapeType")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("ShapeMenuItem",
+                cfg => cfg
+                    .WithPart("ShapeMenuItemPart")
+                    .WithPart("MenuPart")
+                    .WithPart("CommonPart")
+                    .DisplayedAs("Shape Link")
+                    .WithSetting("Description", "Injects menu items from a Shape")
+                    .WithSetting("Stereotype", "MenuItem")
+                );
+
+            return 4;
         }
     }
 }
