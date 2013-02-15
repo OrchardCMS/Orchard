@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
@@ -20,7 +19,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IFeedManager _feedManager;
         private readonly ISiteService _siteService;
 
@@ -28,14 +26,12 @@ namespace Orchard.Blogs.Controllers {
             IOrchardServices services, 
             IBlogService blogService,
             IBlogPostService blogPostService,
-            IBlogPathConstraint blogPathConstraint,
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
             ISiteService siteService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _blogPathConstraint = blogPathConstraint;
             _feedManager = feedManager;
             _siteService = siteService;
             Logger = NullLogger.Instance;
