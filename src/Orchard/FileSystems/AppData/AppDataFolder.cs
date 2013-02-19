@@ -137,7 +137,7 @@ namespace Orchard.FileSystems.AppData {
 
             var destinationFileName = CombineToPhysicalPath(destinationPath);
             MakeDestinationFileNameAvailable(destinationFileName);
-            File.Copy(sourceFileName, destinationFileName);
+            File.Copy(sourceFileName, destinationFileName, true);
         }
 
         public void DeleteFile(string path) {
