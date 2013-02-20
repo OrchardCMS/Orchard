@@ -61,7 +61,7 @@ namespace Orchard.Search.Controllers {
                 }
 
                 if (!_indexManager.HasIndexProvider()) {
-                    return HttpNotFound();
+                    return View("NoIndex");
                 }
 
                 var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search");
