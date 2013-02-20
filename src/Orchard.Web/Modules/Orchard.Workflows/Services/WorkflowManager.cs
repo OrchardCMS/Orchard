@@ -17,7 +17,6 @@ namespace Orchard.Workflows.Services {
         private readonly IRepository<ActivityRecord> _activityRepository;
         private readonly IRepository<WorkflowRecord> _workflowRepository;
         private readonly IRepository<AwaitingActivityRecord> _awaitingActivityRepository;
-        private readonly IRepository<WorkflowDefinitionRecord> _workflowDefinitionRepository;
         private readonly ITokenizer _tokenizer;
 
         public WorkflowManager(
@@ -25,13 +24,11 @@ namespace Orchard.Workflows.Services {
             IRepository<ActivityRecord> activityRepository,
             IRepository<WorkflowRecord> workflowRepository,
             IRepository<AwaitingActivityRecord> awaitingActivityRepository,
-            IRepository<WorkflowDefinitionRecord> workflowDefinitionRepository,
             ITokenizer tokenizer) {
             _activitiesManager = activitiesManager;
             _activityRepository = activityRepository;
             _workflowRepository = workflowRepository;
             _awaitingActivityRepository = awaitingActivityRepository;
-            _workflowDefinitionRepository = workflowDefinitionRepository;
             _tokenizer = tokenizer;
 
             Logger = NullLogger.Instance;
@@ -75,41 +72,6 @@ namespace Orchard.Workflows.Services {
                 return;
             }
 
-            var workflowContext = new WorkflowContext {
-                Content = target,
-                Tokens = tokens
-            };
-
-            // evaluate processing condition
-            awaitingActivities = awaitingActivities.Where(a => {
-                
-                var activityContext = CreateActivityContext(a.ActivityRecord, tokens);
-
-                // check the condition
-                try {
-                    return activity.CanExecute(workflowContext, activityContext);
-                }
-                catch (Exception e) {
-                    Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
-                    return false;
-                }
-            }).ToList();
-
-            // evaluate processing condition
-            startedWorkflows = startedWorkflows.Where(a => {
-
-                var activityContext = CreateActivityContext(a, tokens);
-
-                // check the condition
-                try {
-                    return activity.CanExecute(workflowContext, activityContext);
-                }
-                catch (Exception e) {
-                    Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
-                    return false;
-                }
-            }).ToList();
-
             // if no activity record is matching the event, do nothing
             if (!startedWorkflows.Any() && !awaitingActivities.Any()) {
                 return;
@@ -117,11 +79,57 @@ namespace Orchard.Workflows.Services {
 
             // resume halted workflows
             foreach (var awaitingActivityRecord in awaitingActivities) {
+                var workflowContext = new WorkflowContext {
+                    Content = target,
+                    Tokens = tokens,
+                    Record = awaitingActivityRecord.WorkflowRecord
+                };
+
+                var activityContext = CreateActivityContext(awaitingActivityRecord.ActivityRecord, tokens);
+
+                // check the condition
+                try {
+                    if (!activity.CanExecute(workflowContext, activityContext)) {
+                        continue;
+                    }
+                }
+                catch (Exception e) {
+                    Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
+                    continue;
+                }
+
                 ResumeWorkflow(awaitingActivityRecord, workflowContext, tokens);
             }
 
             // start new workflows
             foreach (var activityRecord in startedWorkflows) {
+
+                var workflowContext = new WorkflowContext {
+                    Content = target,
+                    Tokens = tokens,
+                };
+
+                var workflowRecord = new WorkflowRecord {
+                    WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
+                    State = "{}",
+                    ContentItemRecord = workflowContext.Content.ContentItem.Record
+                };
+
+                workflowContext.Record = workflowRecord;
+
+                var activityContext = CreateActivityContext(activityRecord, tokens);
+
+                // check the condition
+                try {
+                    if(!activity.CanExecute(workflowContext, activityContext)) {
+                        continue;
+                    }
+                }
+                catch (Exception e) {
+                    Logger.Error("Error while evaluating an activity condition on {0}: {1}", name, e.ToString());
+                    continue;
+                }
+
                 StartWorkflow(workflowContext, activityRecord, tokens);
             }
         }
@@ -135,16 +143,7 @@ namespace Orchard.Workflows.Services {
         }
 
         private void StartWorkflow(WorkflowContext workflowContext, ActivityRecord activityRecord, IDictionary<string, object> tokens) {
-
-            // workflow halted, create a workflow state
-            var workflow = new WorkflowRecord {
-                WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
-                State = "{}",
-                ContentItemRecord = workflowContext.Content.ContentItem.Record
-            };
-
-            workflowContext.Record = workflow;
-
+            
             // signal every activity that the workflow is about to start
             var cancellationToken = new CancellationToken();
             InvokeActivities(activity => activity.OnWorkflowStarting(workflowContext, cancellationToken));
@@ -165,11 +164,12 @@ namespace Orchard.Workflows.Services {
             }
             else {
                 // workflow halted, create a workflow state
-                _workflowRepository.Create(workflow);
+                _workflowRepository.Create(workflowContext.Record);
 
                 foreach (var blocking in blockedOn) {
-                    workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
+                    workflowContext.Record.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
+                        WorkflowRecord = workflowContext.Record
                     });
                 }
             }

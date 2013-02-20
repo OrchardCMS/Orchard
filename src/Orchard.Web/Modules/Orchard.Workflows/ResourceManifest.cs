@@ -19,8 +19,9 @@ namespace Orchard.Workflows {
             builder.Add().DefineStyle("WorkflowsActivities-SendEmail").SetUrl("workflows-activity-sendemail.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-Timer").SetUrl("workflows-activity-timer.css").SetDependencies("WorkflowsAdmin");
             builder.Add().DefineStyle("WorkflowsActivities-UserTask").SetUrl("workflows-activity-usertask.css").SetDependencies("WorkflowsAdmin");
-            
-            builder.Add().DefineStyle("WorkflowsActivities").SetDependencies(
+
+            builder.Add().DefineStyle("WorkflowsActivities").SetUrl("workflows-activity.css")
+                .SetDependencies(
                 "WorkflowsActivities-Branch",
                 "WorkflowsActivities-ContentCreate",
                 "WorkflowsActivities-ContentPublished",
