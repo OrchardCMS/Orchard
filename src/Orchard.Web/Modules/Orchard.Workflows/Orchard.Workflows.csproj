@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="Activities\ContentActivity.cs" />
     <Compile Include="Activities\BranchActivity.cs" />
+    <Compile Include="Activities\AssignRoleActivity.cs" />
     <Compile Include="Activities\MergeBranchActivity.cs" />
     <Compile Include="Activities\DeleteActivity.cs" />
     <Compile Include="Activities\ExclusiveBranchActivity.cs" />
