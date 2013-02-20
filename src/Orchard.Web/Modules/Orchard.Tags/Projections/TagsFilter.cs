@@ -31,7 +31,8 @@ namespace Orchard.Tags.Projections {
         }
 
         public void ApplyFilter(dynamic context) {
-            string tags = Convert.ToString(context.State.TagIds);
+            var tags = (string)context.State.TagIds;
+
             if (!String.IsNullOrEmpty(tags)) {
                 var ids = tags.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
 
