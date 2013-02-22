@@ -99,35 +99,17 @@ namespace Orchard.Core.Navigation.Services {
         /// Updates the items by checking for permissions
         /// </summary>
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu) {
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-
-            foreach (var item in items) {
-                if (
-                    // debug flag is on
-                    hasDebugShowAllMenuItems ||
-
-                    // a content item is linked and the user can view it
-                    item.Content != null && item.Permissions.Concat(new[] { Contents.Permissions.ViewContent }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
-
-                    // it's the admin menu and permissions are effective
-                    isAdminMenu && (!item.Permissions.Any() || item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) ) {
-
-                    yield return new MenuItem {
-                        Items = Reduce(item.Items, isAdminMenu),
-                        Permissions = item.Permissions,
-                        Position = item.Position,
-                        RouteValues = item.RouteValues,
-                        LocalNav = item.LocalNav,
-                        Culture = item.Culture,
-                        Text = item.Text,
-                        IdHint = item.IdHint,
-                        Classes = item.Classes,
-                        Url = item.Url,
-                        LinkToFirstChild = item.LinkToFirstChild,
-                        Href = item.Href,
-                        Content = item.Content
-                    };
-                }
+            foreach (var item in items.Where(item => 
+                !item.Permissions.Any() ||
+                // debug flag is on
+                _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null) ||
+                // a content item is linked and the user can view it
+                (item.Content != null && item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
+                // it's the admin menu and permissions are effective
+                isAdminMenu && item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null)))))
+            {
+                item.Items = Reduce(item.Items, isAdminMenu);
+                yield return item;
             }
         }
 
