@@ -51,11 +51,22 @@ namespace Orchard.ContentPicker.Controllers {
 
             if (contentPickerMenuItem.Items.All(x => x.Text.ToString() != T("Recent Content").Text)) {
                 // the default tab should not be displayed, redirect to the next one
+                var root = menuItems.FirstOrDefault();
+                if (root == null) {
+                    return HttpNotFound();
+                }
 
-                var routeData = new RouteValueDictionary(menuItems.First().RouteValues);
+                var firstChild = root.Items.First();
+                if (firstChild == null) {
+                    return HttpNotFound();
+                }
+
+                var routeData = new RouteValueDictionary(firstChild.RouteValues);
                 var queryString = Request.QueryString;
                 foreach (var key in queryString.AllKeys) {
-                    routeData[key] = queryString[key];
+                    if (!String.IsNullOrEmpty(key)) {
+                        routeData[key] = queryString[key];
+                    }
                 }
 
                 return RedirectToRoute(routeData);

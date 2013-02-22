@@ -4,7 +4,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Roles.Models;
-using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -12,13 +11,9 @@ using Orchard.Workflows.Services;
 namespace Orchard.Workflows.Activities {
     public class UserTaskActivity : Event {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IRoleService _roleService;
 
-        public UserTaskActivity(
-            IWorkContextAccessor workContextAccessor,
-            IRoleService roleService) {
+        public UserTaskActivity(IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
-            _roleService = roleService;
             T = NullLocalizer.Instance;
         }
 
@@ -41,9 +36,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            foreach (var action in GetActions(activityContext)) {
-                yield return T(action);
-            }
+            return GetActions(activityContext).Select(action => T(action));
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -103,24 +96,24 @@ namespace Orchard.Workflows.Activities {
 
         private IEnumerable<string> GetRoles(ActivityContext context) {
 
-            string roles = context.GetState<string>("Roles");
+            var roles = context.GetState<string>("Roles");
 
             if (String.IsNullOrEmpty(roles)) {
                 return Enumerable.Empty<string>();
             }
 
-            return roles.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            return roles.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
         }
 
         private IEnumerable<string> GetActions(ActivityContext context) {
 
-            string actions = context.GetState<string>("Actions");
+            var actions = context.GetState<string>("Actions");
 
             if (String.IsNullOrEmpty(actions)) {
                 return Enumerable.Empty<string>();
             }
 
-            return actions.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            return actions.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
             
         }
     }

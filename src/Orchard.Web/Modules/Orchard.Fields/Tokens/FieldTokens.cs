@@ -2,7 +2,6 @@
 using Orchard.Events;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
-using Orchard.Services;
 using Orchard.Core.Shapes.Localization;
 using System.Globalization;
 
@@ -14,23 +13,18 @@ namespace Orchard.Fields.Tokens {
 
     public class FieldTokens : ITokenProvider {
 
-        private readonly IClock _clock;
         private readonly IDateTimeLocalization _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly Lazy<TimeZoneInfo> _timeZone;
 
 
         public FieldTokens(
-            IClock clock, 
             IDateTimeLocalization dateTimeLocalization, 
             IWorkContextAccessor workContextAccessor) {
-            _clock = clock;
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
 
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
-            _timeZone = new Lazy<TimeZoneInfo>(() => _workContextAccessor.GetContext().CurrentTimeZone);
 
             T = NullLocalizer.Instance;
         }

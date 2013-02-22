@@ -43,7 +43,11 @@ namespace Orchard.Workflows.Models {
         }
 
         public object GetState(string key) {
-            return GetState<object>(key);
+            if (State == null) {
+                return null;
+            }
+
+            return State[key];
         }
 
         public void SetStateFor<T>(ActivityRecord record, string key, T value) {
