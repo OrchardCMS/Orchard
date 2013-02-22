@@ -227,6 +227,7 @@
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="Events\DelegateHelper.cs" />
     <Compile Include="Exceptions\DefaultExceptionPolicy.cs" />
     <Compile Include="Exceptions\ExceptionExtensions.cs" />
     <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />

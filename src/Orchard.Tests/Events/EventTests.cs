@@ -20,8 +20,15 @@ namespace Orchard.Tests.Events {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>();
             builder.RegisterType<StubExceptionPolicy>().As<IExceptionPolicy>();
-            builder.RegisterType<StubEventHandler2>().As<IEventHandler>();
-            builder.RegisterInstance(_eventHandler).As<IEventHandler>();
+
+            builder.RegisterType<StubEventHandler2>()
+                .Named(typeof(ITestEventHandler).Name.ToLowerInvariant(), typeof(IEventHandler))
+                .Named(typeof(IEventHandler).Name.ToLowerInvariant(), typeof(IEventHandler))
+                .WithMetadata("Interfaces", typeof(StubEventHandler2).GetInterfaces().ToLookup(i => i.Name, StringComparer.OrdinalIgnoreCase));
+            builder.RegisterInstance(_eventHandler)
+                .Named(typeof(ITestEventHandler).Name.ToLowerInvariant(), typeof(IEventHandler))
+                .Named(typeof(IEventHandler).Name.ToLowerInvariant(), typeof(IEventHandler))
+                .WithMetadata("Interfaces", typeof(StubEventHandler).GetInterfaces().ToLookup(i => i.Name, StringComparer.OrdinalIgnoreCase));
 
             _container = builder.Build();
             _eventBus = _container.Resolve<IEventBus>();

@@ -81,7 +81,13 @@ namespace Orchard.Environment.ShellBuilders {
                         }
 
                         if (typeof(IEventHandler).IsAssignableFrom(item.Type)) {
-                            registration = registration.As(typeof(IEventHandler));
+                            var interfaces = item.Type.GetInterfaces();
+                            foreach (var interfaceType in interfaces) {
+                                // Register named instance for each interface, for efficient filtering withing event bus
+                                registration = registration.Named(interfaceType.Name.ToLowerInvariant(), typeof (IEventHandler));
+                            }
+                            // Keep interfaces in metadata for performance
+                            registration = registration.WithMetadata("Interfaces", interfaces.ToLookup(i => i.Name, StringComparer.OrdinalIgnoreCase));
                         }
 
                         foreach (var parameter in item.Parameters) {
