@@ -85,14 +85,11 @@ namespace Orchard.Environment.ShellBuilders {
                             foreach (var interfaceType in interfaces) {
 
                                 // register named instance for each interface, for efficient filtering inside event bus
-                                // IEventHandler subclasses onnly
-                                if (interfaceType.IsSubclassOf(typeof(IEventHandler)) && interfaceType != typeof(IEventHandler)) {
-                                    registration = registration.Named(interfaceType.Name, typeof(IEventHandler));
+                                // IEventHandler derived classes only
+                                if (interfaceType.GetInterface(typeof (IEventHandler).Name) != null) {
+                                    registration = registration.Named(interfaceType.Name, typeof (IEventHandler));
                                 }
                             }
-
-                            // keep mapping between interface name and actual type
-                            registration = registration.WithMetadata("Interfaces", interfaces.ToDictionary(i => i.Name));
                         }
 
                         foreach (var parameter in item.Parameters) {

@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac.Features.Indexed;
-using Autofac.Features.Metadata;
 using Orchard.Exceptions;
 using Orchard.Localization;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
-        private readonly IIndex<string, IEnumerable<Meta<IEventHandler>>> _eventHandlers;
+        private readonly IIndex<string, IEnumerable<IEventHandler>> _eventHandlers;
         private readonly IExceptionPolicy _exceptionPolicy;
         private static readonly ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>> _delegateCache = new ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>>();
 
-        public DefaultOrchardEventBus(IIndex<string, IEnumerable<Meta<IEventHandler>>> eventHandlers, IExceptionPolicy exceptionPolicy) {
+        public DefaultOrchardEventBus(IIndex<string, IEnumerable<IEventHandler>> eventHandlers, IExceptionPolicy exceptionPolicy) {
             _eventHandlers = eventHandlers;
             _exceptionPolicy = exceptionPolicy;
             T = NullLocalizer.Instance;
@@ -49,7 +48,7 @@ namespace Orchard.Events {
             }
         }
 
-        private bool TryNotifyHandler(Meta<IEventHandler> eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
+        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
             try {
                 return TryInvoke(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue);
             }
@@ -63,11 +62,9 @@ namespace Orchard.Events {
             }
         }
 
-        private static bool TryInvoke(Meta<IEventHandler> eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            var interfaces = (IDictionary<string, Type>)eventHandler.Metadata["Interfaces"];
-            var matchingInterface = interfaces.Count == 1 ? interfaces.First().Value : interfaces[interfaceName];
-
-            return TryInvokeMethod(eventHandler.Value, matchingInterface, messageName, interfaceName, methodName, arguments, out returnValue);
+        private static bool TryInvoke(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
+            var matchingInterface = eventHandler.GetType().GetInterface(interfaceName);
+            return TryInvokeMethod(eventHandler, matchingInterface, messageName, interfaceName, methodName, arguments, out returnValue);
         }
 
         private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
