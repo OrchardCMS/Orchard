@@ -37,7 +37,7 @@ namespace Orchard.Events {
             string interfaceName = parameters[0];
             string methodName = parameters[1];
 
-            var eventHandlers = _eventHandlers[interfaceName.ToLowerInvariant()];
+            var eventHandlers = _eventHandlers[interfaceName];
             foreach (var eventHandler in eventHandlers) {
                 IEnumerable returnValue;
                 if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue)) {
@@ -74,7 +74,7 @@ namespace Orchard.Events {
         }
 
         private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            var key = String.Concat(eventHandler.GetType().FullName + "_" + interfaceType.Name, "_", methodName, "_", String.Join("_", arguments.Keys));
+            var key = eventHandler.GetType().FullName + "_" + interfaceType.Name + "_" + methodName + "_" + String.Join("_", arguments.Keys);
             var cachedDelegate = _delegateCache.GetOrAdd(key, k => {
                 var method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
                 return method != null 
