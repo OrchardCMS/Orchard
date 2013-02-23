@@ -134,12 +134,10 @@
     <Content Include="Config\Sample.HostComponents.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Media\web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Media\OrchardLogo.png" />
     <Content Include="Refresh.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -168,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -184,14 +183,14 @@
     <CopyAllFilesToSingleFolderForMsdeployDependsOn>
       CustomCollectFiles;
       $(CopyAllFilesToSingleFolderForMsdeployDependsOn);
-      </CopyAllFilesToSingleFolderForMsdeployDependsOn>
+		</CopyAllFilesToSingleFolderForMsdeployDependsOn>
   </PropertyGroup>
   <Target Name="CustomCollectFiles">
     <ItemGroup>
       <Orchard-Web-Bins Include="bin\*" />
       <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
       <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />
-      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*" Exclude="**\obj\**;**\bin\*.xml;**\.hgignore;**\.hgtags;**\.hg\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;" />
+      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*;Config\**\*" Exclude="**\obj\**;**\bin\*.xml;**\.hgignore;**\.hgtags;**\.hg\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;App_Data\Dependencies\*;App_Data\Logs\*" />
       <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
         <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
       </FilesForPackagingFromProject>
@@ -212,6 +211,30 @@
     </ItemGroup>
     <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Import Project="$(ProjectDir)..\..\lib\msbuild\MSBuild.Community.Tasks.Targets" />
+  <UsingTask AssemblyFile="$(ProjectDir)\..\Tools\MSBuild.Orchard.Tasks\bin\Release\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
+  <Target Name="ProcessConfigurationFiles" AfterTargets="CopyAllFilesToSingleFolderForMsdeploy">
+    <PropertyGroup>
+      <PackageTmp>$(ProjectDir)obj\Release\Package\PackageTmp</PackageTmp>
+    </PropertyGroup>
+    <!-- extra processing of the staged config files -->
+    <XmlUpdate XmlFileName="$(PackageTmp)\web.config" XPath="/configuration/system.web/compilation/@debug" Value="false" />
+    <XmlDelete XmlFileName="$(PackageTmp)\web.config" XPath="/configuration/system.web/trust" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\web.config" XPath="/configuration/system.web/machineKey/@validationKey" Value="AutoGenerate" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\web.config" XPath="/configuration/system.web/machineKey/@decryptionKey" Value="AutoGenerate" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/appender/immediateFlush/@value" Value="false" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger/priority/@value" Value="ERROR" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/root/priority/@value" Value="ERROR" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/appender[@name='debug-file']" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/appender[@name='debugger']" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/appender[@name='error-file']/filter" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard.Localization']" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard']" />
+    <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/root/appender-ref[@ref='debug-file']" />
+    <!-- disable dynamic compilation loader -->
+    <Copy SourceFiles="$(PackageTmp)\Config\Sample.HostComponents.config" DestinationFiles="$(PackageTmp)\Config\HostComponents.config" />
+    <XmlUpdate XmlFileName="$(PackageTmp)\Config\HostComponents.config" XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value" Value="true" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
