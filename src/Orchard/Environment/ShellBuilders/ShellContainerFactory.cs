@@ -66,12 +66,12 @@ namespace Orchard.Environment.ShellBuilders {
                             .InstancePerLifetimeScope();
 
                         foreach (var interfaceType in item.Type.GetInterfaces()
-                            .Where(itf => typeof(IDependency).IsAssignableFrom(itf) 
+                            .Where(itf => typeof(IDependency).IsAssignableFrom(itf)
                                       && !typeof(IEventHandler).IsAssignableFrom(itf))) {
                             registration = registration.As(interfaceType);
                             if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("shell");
-                            } 
+                            }
                             else if (typeof(IUnitOfWorkDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("work");
                             }
@@ -83,11 +83,16 @@ namespace Orchard.Environment.ShellBuilders {
                         if (typeof(IEventHandler).IsAssignableFrom(item.Type)) {
                             var interfaces = item.Type.GetInterfaces();
                             foreach (var interfaceType in interfaces) {
-                                // Register named instance for each interface, for efficient filtering inside event bus
-                                registration = registration.Named(interfaceType.Name, typeof (IEventHandler));
+
+                                // register named instance for each interface, for efficient filtering inside event bus
+                                // IEventHandler subclasses onnly
+                                if (interfaceType.IsSubclassOf(typeof(IEventHandler)) && interfaceType != typeof(IEventHandler)) {
+                                    registration = registration.Named(interfaceType.Name, typeof(IEventHandler));
+                                }
                             }
-                            // Keep interfaces in metadata for performance
-                            registration = registration.WithMetadata("Interfaces", interfaces.ToLookup(i => i.Name));
+
+                            // keep mapping between interface name and actual type
+                            registration = registration.WithMetadata("Interfaces", interfaces.ToDictionary(i => i.Name));
                         }
 
                         foreach (var parameter in item.Parameters) {

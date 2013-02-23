@@ -15,8 +15,7 @@ namespace Orchard.Events {
         private readonly IExceptionPolicy _exceptionPolicy;
         private static readonly ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>> _delegateCache = new ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>>();
 
-        public DefaultOrchardEventBus(IIndex<string, IEnumerable<Meta<IEventHandler>>> eventHandlers, IExceptionPolicy exceptionPolicy)
-        {
+        public DefaultOrchardEventBus(IIndex<string, IEnumerable<Meta<IEventHandler>>> eventHandlers, IExceptionPolicy exceptionPolicy) {
             _eventHandlers = eventHandlers;
             _exceptionPolicy = exceptionPolicy;
             T = NullLocalizer.Instance;
@@ -52,7 +51,7 @@ namespace Orchard.Events {
 
         private bool TryNotifyHandler(Meta<IEventHandler> eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
             try {
-                return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
+                return TryInvoke(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue);
             }
             catch (Exception exception) {
                 if (!_exceptionPolicy.HandleException(this, exception)) {
@@ -64,21 +63,19 @@ namespace Orchard.Events {
             }
         }
 
-        private static bool TryInvoke(Meta<IEventHandler> eventHandler, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            var matchingInterfaces = ((ILookup<string, Type>)eventHandler.Metadata["Interfaces"])[interfaceName];
-            foreach (var interfaceType in matchingInterfaces) {
-                return TryInvokeMethod(eventHandler.Value, interfaceType, methodName, arguments, out returnValue);
-            }
-            returnValue = null;
-            return false;
+        private static bool TryInvoke(Meta<IEventHandler> eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
+            var interfaces = (IDictionary<string, Type>)eventHandler.Metadata["Interfaces"];
+            var matchingInterface = interfaces.Count == 1 ? interfaces.First().Value : interfaces[interfaceName];
+
+            return TryInvokeMethod(eventHandler.Value, matchingInterface, messageName, interfaceName, methodName, arguments, out returnValue);
         }
 
-        private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            var key = eventHandler.GetType().FullName + "_" + interfaceType.Name + "_" + methodName + "_" + String.Join("_", arguments.Keys);
+        private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
+            var key = eventHandler.GetType().FullName + "_" + messageName + "_" + String.Join("_", arguments.Keys);
             var cachedDelegate = _delegateCache.GetOrAdd(key, k => {
                 var method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
-                return method != null 
-                    ? Tuple.Create(method.GetParameters(), DelegateHelper.CreateDelegate<IEventHandler>(interfaceType, method))
+                return method != null
+                    ? Tuple.Create(method.GetParameters(), DelegateHelper.CreateDelegate<IEventHandler>(eventHandler.GetType(), method))
                     : null;
             });
 
@@ -89,9 +86,9 @@ namespace Orchard.Events {
                 returnValue = result as IEnumerable;
                 if (returnValue == null && result != null)
                     returnValue = new[] { result };
-                return true;    
+                return true;
             }
-            
+
             returnValue = null;
             return false;
         }
@@ -113,6 +110,11 @@ namespace Orchard.Events {
                 else {
                     candidates.Remove(method);
                 }
+            }
+
+            // treating common case separately
+            if (candidates.Count == 1) {
+                return candidates[0];
             }
 
             if (candidates.Count != 0) {
