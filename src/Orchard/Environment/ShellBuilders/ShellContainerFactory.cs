@@ -87,7 +87,7 @@ namespace Orchard.Environment.ShellBuilders {
                                 // register named instance for each interface, for efficient filtering inside event bus
                                 // IEventHandler derived classes only
                                 if (interfaceType.GetInterface(typeof (IEventHandler).Name) != null) {
-                                    registration = registration.Named(interfaceType.Name, typeof (IEventHandler));
+                                    registration = registration.Named<IEventHandler>(interfaceType.Name);
                                 }
                             }
                         }
