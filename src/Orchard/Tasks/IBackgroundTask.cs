@@ -1,7 +1,5 @@
-﻿using Orchard.Events;
-
-namespace Orchard.Tasks {
-    public interface IBackgroundTask : IEventHandler {
+﻿namespace Orchard.Tasks {
+    public interface IBackgroundTask : IDependency {
         void Sweep();
     }
 }
