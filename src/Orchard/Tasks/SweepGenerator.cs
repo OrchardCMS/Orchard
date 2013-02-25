@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Timers;
-using Orchard.Data;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
@@ -61,9 +60,6 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                var transactionManager = scope.Resolve<ITransactionManager>();
-                transactionManager.Demand();
-
                 // resolve the manager and invoke it
                 var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();

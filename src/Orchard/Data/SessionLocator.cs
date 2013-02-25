@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections;
+using System.Data;
 using NHibernate;
 using NHibernate.SqlCommand;
 using NHibernate.Type;
 using Orchard.Logging;
 
 namespace Orchard.Data {
-    public class SessionLocator : ISessionLocator {
+    public class SessionLocator : ISessionLocator, ITransactionManager, IDisposable {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
-        private readonly ITransactionManager _transactionManager;
         private ISession _session;
+        private ITransaction _transaction;
+        private bool _cancelled;
 
-        public SessionLocator(
-            ISessionFactoryHolder sessionFactoryHolder,
-            ITransactionManager transactionManager) {
+        public SessionLocator(ISessionFactoryHolder sessionFactoryHolder) {
             _sessionFactoryHolder = sessionFactoryHolder;
-            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
@@ -24,16 +23,74 @@ namespace Orchard.Data {
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);
 
-            if (_session == null) {
+            ((ITransactionManager)this).Demand();
 
-                var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
-
-                _transactionManager.Demand();
-
-                Logger.Information("Openning database session");
-                _session = sessionFactory.OpenSession(new SessionInterceptor());
-            }
             return _session;
+        }
+
+        void ITransactionManager.Demand() {
+            EnsureSession();
+
+            if (_transaction == null) {
+                Logger.Debug("Creating transaction on Demand");
+                _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+            }
+        }
+
+        void ITransactionManager.RequireNew() {
+            EnsureSession();
+
+            if (_cancelled) {
+                _transaction.Rollback();
+                _transaction.Dispose();
+                _transaction = null;
+            }
+            else {
+                if (_transaction != null) {
+                    _transaction.Commit();
+                }
+            }
+
+            Logger.Debug("Creating transaction on RequireNew");
+            _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+        }
+
+        void ITransactionManager.Cancel() {
+            Logger.Debug("Transaction cancelled flag set");
+
+            if (_transaction != null && !_transaction.WasRolledBack) {
+                _transaction.Rollback();
+            }
+
+            _cancelled = true;
+        }
+
+        void IDisposable.Dispose() {
+            if (_transaction != null) {
+                if (!_cancelled) {
+                    Logger.Debug("Marking transaction as complete");
+                    _transaction.Commit();
+                }
+                else {
+                    Logger.Debug("Reverting operations from transaction");
+                    _transaction.Rollback();
+                }
+
+                _transaction.Dispose();
+                Logger.Debug("Transaction disposed");
+
+                _cancelled = false;
+            }
+        }
+
+        private void EnsureSession() {
+            if (_session != null) {
+                return;
+            }
+
+            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
+            Logger.Information("Openning database session");
+            _session = sessionFactory.OpenSession(new SessionInterceptor());
         }
 
         class SessionInterceptor : IInterceptor {

@@ -84,7 +84,7 @@ namespace Orchard.Tests.ContentManagement {
             _manager = _container.Resolve<IContentManager>();
         }
 
-        public class TestSessionLocator : ISessionLocator {
+        public class TestSessionLocator : ISessionLocator, ITransactionManager {
             private readonly ISession _session;
 
             public TestSessionLocator(ISession session) {
@@ -93,6 +93,15 @@ namespace Orchard.Tests.ContentManagement {
 
             public ISession For(Type entityType) {
                 return _session;
+            }
+
+            public void Demand() {
+            }
+
+            public void RequireNew() {
+            }
+
+            public void Cancel() {
             }
         }
 

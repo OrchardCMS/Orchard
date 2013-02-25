@@ -27,6 +27,7 @@ using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Security.Providers;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
@@ -65,7 +66,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
-            builder.RegisterType<TransactionManager>().As<ITransactionManager>();
+
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();

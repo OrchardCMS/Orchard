@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Transactions;
 using JetBrains.Annotations;
 using Orchard.Data;
-using Orchard.Events;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
@@ -15,26 +12,28 @@ namespace Orchard.Tasks {
 
     [UsedImplicitly]
     public class BackgroundService : IBackgroundService {
-        private readonly IEnumerable<IEventHandler> _tasks;
+        private readonly IEnumerable<IBackgroundTask> _tasks;
+        private readonly ITransactionManager _transactionManager;
 
-        public BackgroundService(IEnumerable<IEventHandler> tasks) {
+        public BackgroundService(IEnumerable<IBackgroundTask> tasks, ITransactionManager transactionManager) {
             _tasks = tasks;
+            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            foreach(var task in _tasks.OfType<IBackgroundTask>()) {
-                using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew)) {
-                    try {
-                        task.Sweep();
-                        scope.Complete();
-                    }
-                    catch (Exception e) {
-                        Logger.Error(e, "Error while processing background task");
-                    }
+            foreach(var task in _tasks) {
+                try {
+                    _transactionManager.RequireNew();
+                    task.Sweep();
                 }
+                catch (Exception e) {
+                    _transactionManager.Cancel();
+                    Logger.Error(e, "Error while processing background task");
+                }
+                
             }
         }
     }
