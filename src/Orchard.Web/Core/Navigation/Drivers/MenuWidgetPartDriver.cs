@@ -79,9 +79,9 @@ namespace Orchard.Core.Navigation.Drivers {
                 var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
                                              
                 dynamic menuShape = shapeHelper.Menu();
-                
-                if (part.Breadcrumb && selectedPath != null) {
-                    menuItems = selectedPath;
+
+                if (part.Breadcrumb) {
+                    menuItems = selectedPath ?? new Stack<MenuItem>();
                     foreach (var menuItem in menuItems) {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
                     }
@@ -119,10 +119,16 @@ namespace Orchard.Core.Navigation.Drivers {
                 else {
                     IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
 
-                    if (part.StartLevel > 1 && selectedPath != null) {
-                        // the selected path will return the whole selected hierarchy
-                        // intersecting will return the root selected menu item
-                        topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
+                    if (part.StartLevel > 1) {
+                        if (selectedPath != null) {
+                            // the selected path will return the whole selected hierarchy
+                            // intersecting will return the root selected menu item
+                            topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
+                        }
+                        else {
+                            topLevelItems = new List<MenuItem>();
+                            menuItems = topLevelItems;
+                        }
                     }
 
                     if (topLevelItems.Any()) {
