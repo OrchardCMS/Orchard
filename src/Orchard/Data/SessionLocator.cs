@@ -57,11 +57,6 @@ namespace Orchard.Data {
 
         void ITransactionManager.Cancel() {
             Logger.Debug("Transaction cancelled flag set");
-
-            if (_transaction != null && !_transaction.WasRolledBack) {
-                _transaction.Rollback();
-            }
-
             _cancelled = true;
         }
 
