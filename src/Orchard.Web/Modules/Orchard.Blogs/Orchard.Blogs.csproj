@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -89,6 +93,7 @@
     <Compile Include="Routing\IRsdConstraint.cs" />
     <Compile Include="Routing\IBlogPathConstraint.cs" />
     <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
+    <Compile Include="Services\ArchiveService.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\BlogPart.cs" />
@@ -99,6 +104,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
+    <Compile Include="Services\IArchiveService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
