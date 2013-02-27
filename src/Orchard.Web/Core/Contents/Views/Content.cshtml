@@ -5,6 +5,7 @@
     }
     
     var contentTypeClassName = ((string)Model.ContentItem.ContentType).HtmlClassify();
+    Html.AddPageClassNames("display-" + contentTypeClassName);
 }
 <article class="content-item @contentTypeClassName">
     <header>

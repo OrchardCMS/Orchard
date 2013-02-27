@@ -1,4 +1,10 @@
-﻿<div class="edit-item">
+﻿@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
+@{
+    ContentItem contentItem = Model.ContentItem;
+    Html.AddPageClassNames("edit-" + contentItem.ContentType.HtmlClassify());
+}
+<div class="edit-item">
     <div class="edit-item-primary">
         @if (Model.Content != null) {
             <div class="edit-item-content">
