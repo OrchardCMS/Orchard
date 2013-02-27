@@ -140,6 +140,18 @@ Lucene.net
 Website:      http://incubator.apache.org/projects/lucene.net.html
 Copyright:    Copyright (c) 2009 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
+
+Mono Class Library
+-----
+Website:      http://www.mono-project.com/The_Class_Library
+Copyright:    Xamarin
+License:      MIT
+
+Moq
+-----
+Website:      http://code.google.com/p/moq/
+Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+License:      New BSD
  
 MySQL Connectors
 -----
@@ -147,12 +159,6 @@ Copyright:    Copyright (c) 2004, 2011, Oracle and/or its affiliates
 License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracle’s Free and Open Source Software ("FOSS") License Exception
 
 In order to comply with Section 2(a) of the FOSS License Exception, Outercurve Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
-
-Moq
------
-Website:      http://code.google.com/p/moq/
-Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
-License:      New BSD
 
 NHibernate, NHibernate Linq
 -----
