@@ -30,6 +30,8 @@ namespace Orchard.AntiSpam.Drivers {
             if (part.Settings.GetModel<SpamFilterPartSettings>().DeleteSpam) {
                 updater.AddModelError("Spam", T("Spam detected."));
             }
+
+            return Editor(part, shapeHelper);
         }
 
         protected override DriverResult Display(SpamFilterPart part, string displayType, dynamic shapeHelper) {
