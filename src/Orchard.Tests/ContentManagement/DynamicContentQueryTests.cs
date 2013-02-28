@@ -16,6 +16,7 @@ using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -62,6 +63,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();

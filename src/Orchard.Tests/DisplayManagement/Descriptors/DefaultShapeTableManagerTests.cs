@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -11,6 +12,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
@@ -57,6 +59,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 .As<TestShapeProvider>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 

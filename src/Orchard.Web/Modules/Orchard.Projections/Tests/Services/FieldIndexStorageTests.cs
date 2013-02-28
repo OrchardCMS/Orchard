@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -23,6 +24,7 @@ using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Tests;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Projections.Tests.Services {
     public class FieldIndexStorageTests : DatabaseEnabledTestsBase {
@@ -47,6 +49,7 @@ namespace Orchard.Projections.Tests.Services {
             // ContentDefinitionManager
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();

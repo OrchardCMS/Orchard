@@ -22,6 +22,7 @@ using Orchard.Security;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Core.Tests.Body {
     [TestFixture]
@@ -46,6 +47,8 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
+
         }
 
         [Test]

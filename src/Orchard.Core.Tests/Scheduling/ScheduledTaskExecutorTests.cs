@@ -17,6 +17,7 @@ using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -45,6 +46,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 

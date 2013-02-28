@@ -23,6 +23,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.Modules.Comments.Services {
     [TestFixture]
@@ -49,6 +50,7 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterType<CommentPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }

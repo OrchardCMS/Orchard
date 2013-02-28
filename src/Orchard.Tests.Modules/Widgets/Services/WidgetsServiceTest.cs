@@ -21,6 +21,7 @@ using Orchard.Environment.Features;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
@@ -103,6 +104,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
         }

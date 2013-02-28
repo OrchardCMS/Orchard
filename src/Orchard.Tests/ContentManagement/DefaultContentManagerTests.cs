@@ -21,6 +21,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement;
 using System.Collections.Generic;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -71,6 +72,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
