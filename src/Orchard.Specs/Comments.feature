@@ -21,7 +21,7 @@ Scenario: HTML markup in any given comment is encoded
         And I go to "my-blog/my-post"
         And I fill in
             | name | value |
-            | CommentText | This is<br id="bad-br" />a <a href="#">link</a>. |
+            | Comments.CommentText | This is<br id="bad-br" />a <a href="#">link</a>. |
         And I hit "Submit Comment"
         And I am redirected
         # because the ToUrlString extension method breaks in this specific (test) environment, the returnUrl is broken...
@@ -34,8 +34,8 @@ Scenario: HTML markup in any given comment is encoded
         And I go to "my-blog/my-post"
         And I fill in
             | name | value |
-            | Name | Some One |
-            | CommentText | This is<br id="bad-anon-br" />a <a href="#">link</a>. |
+            | Comments.Author | Some One |
+            | Comments.CommentText | This is<br id="bad-anon-br" />a <a href="#">link</a>. |
         And I hit "Submit Comment"
         And I am redirected
         # because the ToUrlString extension method breaks in this specific (test) environment, the returnUrl is broken...
