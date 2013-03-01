@@ -1,14 +1,13 @@
 ﻿@using Orchard.Comments.Models
 @{
     CommentsPart commentsPart = Model.ContentPart;
+    
+    // add 'comments' class on the list container
+    Model.List.Classes.Add("comments");
 }
 
-@if (Model.CommentCount > 0) {
-    <div id="comments">
-        <h2 class="comment-count">@T.Plural("1 Comment", "{0} Comments", (int)Model.CommentCount)</h2>
-        @Display.ListOfComments(CommentShapes: Model.CommentShapes)
-    </div>
-}
+<h2 class="comment-count">@T.Plural("No Comments", "1 Comment", "{0} Comments", (int)Model.CommentCount)</h2>
+@Display(Model.List)
 
 @* render reply button if threaded comments enabled *@
 @if(commentsPart.ThreadedComments) {

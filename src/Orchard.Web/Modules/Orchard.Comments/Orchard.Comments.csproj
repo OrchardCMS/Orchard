@@ -153,14 +153,13 @@
     <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Comment.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
-    <Content Include="Views\ListOfComments.cshtml" />
     <Content Include="Views\CommentReplyButton.cshtml" />
     <Content Include="Views\DefinitionTemplates\CommentsPartSettingsViewModel.cshtml" />
     <Content Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Comment.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

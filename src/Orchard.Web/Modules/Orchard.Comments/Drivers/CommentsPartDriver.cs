@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -6,21 +7,22 @@ using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
+using Orchard.Services;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         public CommentsPartDriver(
             ICommentService commentService,
             IContentManager contentManager,
-            IWorkContextAccessor workContextAccessor) {
+            IEnumerable<IHtmlFilter> htmlFilters) {
             _commentService = commentService;
             _contentManager = contentManager;
-            _workContextAccessor = workContextAccessor;
+            _htmlFilters = htmlFilters;
         }
 
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
@@ -28,36 +30,39 @@ namespace Orchard.Comments.Drivers {
                 return null;
 
             var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
-            Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
-            Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
+            var pendingCount = new Lazy<int>(() => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count());
+            var approvedCount = new Lazy<int>(() => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count());
 
             return Combined(
                 ContentShape("Parts_ListOfComments",
                     () => {
+                        var settings = part.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+
                         // create a hierarchy of shapes
-                        var commentShapes = new List<dynamic>();
-                        var index = new Dictionary<int, dynamic>();
+                        var firstLevelShapes = new List<dynamic>();
+                        var allShapes = new Dictionary<int, dynamic>();
+                        var comments = commentsForCommentedContent.OrderBy(x => x.Position).List().ToList();
+                        
+                        foreach (var item in comments) {
+                            var formatted = _htmlFilters.Where(x => x.GetType().Name.Equals(settings.HtmlFilter, StringComparison.OrdinalIgnoreCase)).Aggregate(item.CommentText, (text, filter) => filter.ProcessContent(text));
+                            var shape = shapeHelper.Parts_Comment(FormattedText: formatted, ContentPart: item, ContentItem: item.ContentItem);
 
-                        foreach (var item in part.Comments) {
-                            var shape = _contentManager.BuildDisplay(item.ContentItem, "Summary");
-                            index.Add(item.Id, shape);
+                            allShapes.Add(item.Id, shape);
+                        }
 
-                            if (!item.RepliedOn.HasValue) {
-                                commentShapes.Add(shape);
+                        foreach (var item in comments) {
+                            var shape = allShapes[item.Id];
+                            if (item.RepliedOn.HasValue) {
+                                allShapes[item.RepliedOn.Value].Add(shape);
                             }
                             else {
-                                if (index.ContainsKey(item.RepliedOn.Value)) {
-                                    var parent = index[item.RepliedOn.Value];
-                                    if (parent.CommentShapes == null) {
-                                        parent.CommentShapes = new List<dynamic>();
-                                    }
-
-                                    parent.CommentShapes.Add(shape);
-                                }
+                                firstLevelShapes.Add(shape);
                             }
                         }
 
-                        return shapeHelper.Parts_ListOfComments(CommentShapes: commentShapes, CommentCount: approvedCount());
+                        var list = shapeHelper.List(Items: firstLevelShapes);
+
+                        return shapeHelper.Parts_ListOfComments(List: list, CommentCount: approvedCount.Value);
                     }),
                 ContentShape("Parts_CommentForm",
                     () => {
@@ -69,9 +74,9 @@ namespace Orchard.Comments.Drivers {
                         return shapeHelper.Parts_CommentForm(EditorShape: editorShape);
                     }),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount.Value, PendingCount: pendingCount.Value)),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount(), PendingCount: pendingCount()))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount.Value, PendingCount: pendingCount.Value))
             );
         }
 

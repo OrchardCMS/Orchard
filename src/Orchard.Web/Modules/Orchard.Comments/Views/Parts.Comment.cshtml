@@ -2,18 +2,26 @@
 @using Orchard.ContentManagement
 
 @{
-    var comment = (CommentPart) Model.ContentPart;
-}
+    CommentPart comment = Model.ContentPart;
+    CommentsPart comments = comment.CommentedOnContentItem.As<CommentsPart>();
 
-<header>
-    <h4>
-        <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
-        <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
-        @if (comment.CommentedOnContentItem.As<CommentsPart>().ThreadedComments) {
+    var children = New.List(Items: Model.Items);
+    children.Classes.Add("comments");
+}
+<article class="comment comment-@comment.Id">
+    <header>
+        <h4>
+            <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
+            <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
+            @if (comments.ThreadedComments) {
             <span class="reply">@Display.CommentReplyButton(ContentPart: comment)</span>
-        }
-    </h4>
-</header>
-<p class="text">@Html.Raw(Convert.ToString(Model.FormattedText))</p>
+            }
+        </h4>
+    </header>
+    <p class="text">@Html.Raw(Convert.ToString(Model.FormattedText))</p>
+    
+    @Display(children)
+
+</article>
 
 
