@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Autoroute.Models;
@@ -61,7 +62,7 @@ namespace Orchard.Autoroute.Handlers {
 
                 // regenerate the alias for the previous home page
                 var currentHomePages = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>().Where(x => x.DisplayAlias == "").List();
-                foreach (var current in currentHomePages) {
+                foreach (var current in currentHomePages.Where(x => x.Id != part.Id)) {
                     if (current != null) {
                         current.CustomPattern = String.Empty; // force the regeneration
                         current.DisplayAlias = _autorouteService.Value.GenerateAlias(current);
