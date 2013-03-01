@@ -24,15 +24,15 @@ namespace Orchard.Comments.Handlers {
             });
 
             OnLoading<CommentsPart>((context, comments) => {
-                comments.CommentsField.Loader(list => contentManager
-                    .Query<CommentPart, CommentPartRecord>()
-                    .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Approved)
+                comments.CommentsField.Loader(list =>
+                    commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
+                    .Where(x => x.Status == CommentStatus.Approved)
                     .OrderBy(x => x.Position)
                     .List().ToList());
 
-                comments.PendingCommentsField.Loader(list => contentManager
-                    .Query<CommentPart, CommentPartRecord>()
-                    .Where(x => x.CommentsPartRecord == context.ContentItem.As<CommentsPart>().Record && x.Status == CommentStatus.Pending)
+                comments.PendingCommentsField.Loader(list => 
+                    commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
+                    .Where(x => x.Status == CommentStatus.Pending)
                     .List().ToList());
             });
 

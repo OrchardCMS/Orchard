@@ -48,7 +48,6 @@ namespace Orchard.Comments.Drivers {
             });
             
             return Combined(
-                ContentShape("Parts_Comment", () => shapeHelper.Parts_Comment(FormattedText: formattedText.Value)),
                 ContentShape("Parts_Comment_SummaryAdmin", () => shapeHelper.Parts_Comment_SummaryAdmin(FormattedText: formattedText.Value))
                 );
         }

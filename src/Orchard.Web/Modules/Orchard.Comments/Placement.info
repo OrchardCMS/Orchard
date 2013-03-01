@@ -22,12 +22,6 @@
     <Place Parts_CommentForm="Content:10.3" />
   </Match>
 
-  <Match ContentType="Comment" DisplayType="Summary">
-    <Place  Parts_Common_Metadata_Summary="-" 
-            Parts_Comment="Content:10"
-    />
-  </Match>
-
   <Match DisplayType="Summary">
     <Place Parts_Comments_Count="Meta:5" />
   </Match>
