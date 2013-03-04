@@ -56,9 +56,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
                 var menuName = menu.As<TitlePart>().Title.HtmlClassify();
                 var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-
-                IEnumerable<MenuItem> menuItems = _navigationManager.BuildMenu(menu);
-
+                var menuItems = _navigationManager.BuildMenu(menu);
                 var localized = new List<MenuItem>();
                 foreach(var menuItem in menuItems) {
                     // if there is no associated content, it as culture neutral
@@ -75,10 +73,8 @@ namespace Orchard.Core.Navigation.Drivers {
                 menuItems = localized;
 
                 var routeData = _workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData;
-
-                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
-                                             
-                dynamic menuShape = shapeHelper.Menu();
+                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);                            
+                var menuShape = shapeHelper.Menu();
 
                 if (part.Breadcrumb) {
                     menuItems = selectedPath ?? new Stack<MenuItem>();
@@ -113,57 +109,41 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     menuItems = result;
-
                     menuShape = shapeHelper.Breadcrumb();
                 }
                 else {
-                    IEnumerable<MenuItem> topLevelItems = menuItems.ToList();
+                    var topLevelItems = menuItems.ToList();
 
-                    if (part.StartLevel > 1) {
+                    // apply start level by pushing children as top level items. When the start level is
+                    // greater than 1 (ie. below the top level), only menu items along the selected path
+                    // will be displayed.
+                    for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
+                        var temp = new List<MenuItem>();
                         if (selectedPath != null) {
-                            // the selected path will return the whole selected hierarchy
-                            // intersecting will return the root selected menu item
                             topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
-                        }
-                        else {
-                            topLevelItems = new List<MenuItem>();
-                            menuItems = topLevelItems;
-                        }
-                    }
-
-                    if (topLevelItems.Any()) {
-                        // apply start level by pushing childrens as top level items
-                        int i = 0;
-                        for (; i < part.StartLevel - 1; i++) {
-                            var temp = new List<MenuItem>();
                             foreach (var menuItem in topLevelItems) {
                                 temp.AddRange(menuItem.Items);
                             }
-                            topLevelItems = temp;
                         }
-
-                        // apply display level ?
-                        if(part.Levels > 0) {
-                            var current = topLevelItems.ToList();
-                            for (int j=1; j < part.Levels; j++ ) {
-                                var temp = new List<MenuItem>();
-                                foreach (var menuItem in current) {
-                                    temp.AddRange(menuItem.Items);
-                                }
-                                current = temp;
-                            }
-
-                            topLevelItems = current;
-
-                            // cut the sub-levels of any selected menu item
-                            foreach (var menuItem in topLevelItems) {
-                                menuItem.Items = Enumerable.Empty<MenuItem>();
-                            }                
-
-                        }
-
-                        menuItems = topLevelItems;
+                        topLevelItems = temp;                        
                     }
+
+                    // limit the number of levels to display (down from and including the start level)
+                    if(part.Levels > 0) {
+                        var current = topLevelItems.ToList();
+                        for (var i = 1; current.Any() && i < part.Levels; i++ ) {
+                            var temp = new List<MenuItem>();
+                            foreach (var menuItem in current) {
+                                temp.AddRange(menuItem.Items);
+                            }
+                            current = temp;
+                        }
+                        // cut the sub-levels beneath any menu items that are at the lowest level being displayed
+                        foreach (var menuItem in current) {
+                            menuItem.Items = Enumerable.Empty<MenuItem>();
+                        }                
+                    }
+                    menuItems = topLevelItems;
                 }
 
                 menuShape.MenuName(menuName);
