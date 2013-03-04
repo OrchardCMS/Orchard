@@ -112,9 +112,7 @@
     <Compile Include="Models\FilterRecord.cs" />
     <Compile Include="Models\ImageProfilePart.cs" />
     <Compile Include="Models\ImageProfilePartRecord.cs" />
-    <None Include="Providers\Filters\ConstrainFilter.cs" />
-    <None Include="Providers\Filters\CropFilter.cs" />
-    <None Include="Providers\Filters\ImageFormatFilter.cs" />
+    <Compile Include="Providers\Filters\FormatFilter.cs" />
     <Compile Include="Providers\Filters\ResizeFilter.cs" />
     <Compile Include="Services\IImageFilterProvider.cs" />
     <Compile Include="Services\IImageProcessingFileNameProvider.cs" />

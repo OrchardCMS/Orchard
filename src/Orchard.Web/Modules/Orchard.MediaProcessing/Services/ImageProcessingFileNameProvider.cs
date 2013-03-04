@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Orchard.Caching;
-using Orchard.Data;
 using Orchard.MediaProcessing.Models;
 
 namespace Orchard.MediaProcessing.Services {

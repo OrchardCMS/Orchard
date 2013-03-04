@@ -35,7 +35,8 @@ namespace Orchard.MediaProcessing.Shapes {
         [Shape]
         public void ImageUrl(dynamic Display, TextWriter Output, string Profile, string Path) {
             var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
-            if (string.IsNullOrEmpty(filePath) || _storageProvider.Value.GetFile(filePath) == null) {
+            // todo: regenerate the file if the profile is newer, by getting IStorageFile.
+            if (string.IsNullOrEmpty(filePath) || !_storageProvider.Value.FileExists(filePath)) {
                 try {
                     var profilePart = _profileService.Value.GetImageProfileByName(Profile);
                     if (profilePart == null)
@@ -58,10 +59,12 @@ namespace Orchard.MediaProcessing.Shapes {
                         var newFile = _storageProvider.Value.OpenOrCreate(filterContext.FilePath);
                         using (var imageStream = newFile.OpenWrite()) {
                             using (var sw = new BinaryWriter(imageStream)) {
-                                filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                if (filterContext.Media.CanSeek) {
+                                    filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                }
                                 using (var sr = new BinaryReader(filterContext.Media)) {
                                     int count;
-                                    var buffer = new byte[1024];
+                                    var buffer = new byte[8192];
                                     while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
                                         sw.Write(buffer, 0, count);                                            
                                     }

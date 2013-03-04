@@ -70,7 +70,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path within the storage provider.</param>
         /// <returns>True if the file exists; False otherwise.</returns>
         public bool FileExists(string path) {
-            return new FileInfo(MapStorage(path)).Exists;
+            return File.Exists(MapStorage(path));
         }
 
         /// <summary>
