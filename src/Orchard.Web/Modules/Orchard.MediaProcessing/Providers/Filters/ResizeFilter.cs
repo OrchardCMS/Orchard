@@ -8,6 +8,7 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Providers.Filters {
     public class ResizeFilter : IImageFilterProvider {
@@ -65,7 +66,6 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                 else {
                     settings.PaddingColor = Color.FromName(padcolor);
                 }
-                
             }
 
             var result = new MemoryStream();
@@ -77,7 +77,15 @@ namespace Orchard.MediaProcessing.Providers.Filters {
         }
 
         public LocalizedString DisplayFilter(FilterContext context) {
-            return T((string)context.State.Mode + " to {0}px high x {1}px wide", context.State.Height, context.State.Width);
+            string mode = context.State.Mode;
+
+            switch (mode) {
+                case "pad": return T("Pad to {0}x{1}", context.State.Height, context.State.Width);
+                case "crop": return T("Crop to {0}x{1}", context.State.Height, context.State.Width);
+                case "stretch": return T("Stretch to {0}x{1}", context.State.Height, context.State.Width);
+                default: return T("Resize to {0}x{1}", context.State.Height, context.State.Width); 
+
+            } 
         }
     }
 

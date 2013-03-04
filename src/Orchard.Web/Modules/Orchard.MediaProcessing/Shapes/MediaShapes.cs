@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment;
 using Orchard.FileSystems.Media;
@@ -11,6 +13,7 @@ using Orchard.Logging;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Media;
 using Orchard.MediaProcessing.Services;
+using Orchard.Tokens;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Shapes {
@@ -20,20 +23,28 @@ namespace Orchard.MediaProcessing.Shapes {
         private readonly Work<IImageProfileService> _profileService;
         private readonly Work<IImageProcessingManager> _processingManager;
         private readonly Work<IOrchardServices> _services;
+        private readonly Work<ITokenizer> _tokenizer;
 
-        public MediaShapes(Work<IStorageProvider> storageProvider, Work<IImageProcessingFileNameProvider> fileNameProvider, Work<IImageProfileService> profileService, Work<IImageProcessingManager> processingManager, Work<IOrchardServices> services) {
+        public MediaShapes(
+            Work<IStorageProvider> storageProvider, 
+            Work<IImageProcessingFileNameProvider> fileNameProvider, 
+            Work<IImageProfileService> profileService, 
+            Work<IImageProcessingManager> processingManager, 
+            Work<IOrchardServices> services,
+            Work<ITokenizer> tokenizer) {
             _storageProvider = storageProvider;
             _fileNameProvider = fileNameProvider;
             _profileService = profileService;
             _processingManager = processingManager;
             _services = services;
+            _tokenizer = tokenizer;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         [Shape]
-        public void ImageUrl(dynamic Display, TextWriter Output, string Profile, string Path) {
+        public void ImageUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem) {
             var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
             // todo: regenerate the file if the profile is newer, by getting IStorageFile.
             if (string.IsNullOrEmpty(filePath) || !_storageProvider.Value.FileExists(filePath)) {
@@ -44,11 +55,20 @@ namespace Orchard.MediaProcessing.Shapes {
 
                     var image = GetImage(Path);
                     var filterContext = new FilterContext {Media = image, Format = new FileInfo(Path).Extension, FilePath = _storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))};
+
+                    var tokens = new Dictionary<string, object>();
+                    // if a content item is provided, use it while tokenizing
+                    if (ContentItem != null) {
+                        tokens.Add("Content", ContentItem);
+                    }
+
                     foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
                         var descriptor = _processingManager.Value.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
                         if (descriptor == null)
                             continue;
-                        filterContext.State = FormParametersHelper.ToDynamic(filter.State);
+
+                        var tokenized = _tokenizer.Value.Replace(filter.State, tokens);
+                        filterContext.State = FormParametersHelper.ToDynamic(tokenized);
                         descriptor.Filter(filterContext);
                     }
 
