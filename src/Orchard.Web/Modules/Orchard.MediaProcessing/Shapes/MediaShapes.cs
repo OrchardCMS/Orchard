@@ -44,7 +44,7 @@ namespace Orchard.MediaProcessing.Shapes {
         public ILogger Logger { get; set; }
 
         [Shape]
-        public void ImageUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem) {
+        public void MediaUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem) {
             var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
             // todo: regenerate the file if the profile is newer, by getting IStorageFile.
             if (string.IsNullOrEmpty(filePath) || !_storageProvider.Value.FileExists(filePath)) {
