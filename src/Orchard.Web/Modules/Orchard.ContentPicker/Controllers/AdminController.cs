@@ -87,7 +87,7 @@ namespace Orchard.ContentPicker.Controllers {
                 var rawTypes = settings.DisplayedContentTypes.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
                 contentTypes = _contentDefinitionManager
                     .ListTypeDefinitions()
-                    .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)))
+                    .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)) || rawTypes.Contains(x.Name))
                     .ToArray();
             }
             else {
