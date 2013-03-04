@@ -25,28 +25,28 @@ namespace Orchard.MediaProcessing.Providers.Filters {
 
         public void ApplyFilter(FilterContext context) {
             var newHeight = int.Parse(context.State.Height);
-            newHeight = newHeight > 0 ? newHeight : context.Image.Height;
-            var heightFactor = (float) context.Image.Height/newHeight;
+            newHeight = newHeight > 0 ? newHeight : context.Media.Height;
+            var heightFactor = (float) context.Media.Height/newHeight;
 
             var newWidth = int.Parse(context.State.Width);
-            newWidth = newWidth > 0 ? newWidth : context.Image.Width;
-            var widthFactor = context.Image.Width/newWidth;
+            newWidth = newWidth > 0 ? newWidth : context.Media.Width;
+            var widthFactor = context.Media.Width/newWidth;
 
             if (widthFactor != heightFactor) {
                 if (widthFactor > heightFactor) {
-                    newHeight = Convert.ToInt32(context.Image.Height/widthFactor);
+                    newHeight = Convert.ToInt32(context.Media.Height/widthFactor);
                 }
                 else {
-                    newWidth = Convert.ToInt32(context.Image.Width/heightFactor);
+                    newWidth = Convert.ToInt32(context.Media.Width/heightFactor);
                 }
             }
 
             var newImage = new Bitmap(newWidth, newHeight);
             using (var graphics = Graphics.FromImage(newImage)) {
-                graphics.DrawImage(context.Image, 0, 0, new Rectangle(0, 0, newWidth, newHeight), GraphicsUnit.Pixel);
+                graphics.DrawImage(context.Media, 0, 0, new Rectangle(0, 0, newWidth, newHeight), GraphicsUnit.Pixel);
             }
 
-            context.Image = newImage;
+            context.Media = newImage;
         }
 
         public LocalizedString DisplayFilter(FilterContext context) {

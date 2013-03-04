@@ -1,6 +1,6 @@
 ﻿Name: Media Processing
 AntiForgery: enabled
-Author: The Orchard Team
+Author: John Murdock, Sébastien Ros
 Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.0

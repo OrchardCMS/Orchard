@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Environment;
 using Orchard.FileSystems.Media;
@@ -13,7 +11,6 @@ using Orchard.Logging;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Media;
 using Orchard.MediaProcessing.Services;
-using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Shapes {
@@ -38,14 +35,14 @@ namespace Orchard.MediaProcessing.Shapes {
         [Shape]
         public void ImageUrl(dynamic Display, TextWriter Output, string Profile, string Path) {
             var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
-            if (string.IsNullOrEmpty(filePath)) {
+            if (string.IsNullOrEmpty(filePath) || _storageProvider.Value.GetFile(filePath) == null) {
                 try {
                     var profilePart = _profileService.Value.GetImageProfileByName(Profile);
                     if (profilePart == null)
                         return;
 
                     var image = GetImage(Path);
-                    var filterContext = new FilterContext {Image = image, ImageFormat = image.RawFormat, FilePath = _storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))};
+                    var filterContext = new FilterContext {Media = image, Format = new FileInfo(Path).Extension, FilePath = _storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))};
                     foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
                         var descriptor = _processingManager.Value.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
                         if (descriptor == null)
@@ -60,9 +57,20 @@ namespace Orchard.MediaProcessing.Shapes {
                         _storageProvider.Value.TryCreateFolder(profilePart.Name);
                         var newFile = _storageProvider.Value.OpenOrCreate(filterContext.FilePath);
                         using (var imageStream = newFile.OpenWrite()) {
-                            filterContext.Image.Save(imageStream, filterContext.ImageFormat);
+                            using (var sw = new BinaryWriter(imageStream)) {
+                                filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                using (var sr = new BinaryReader(filterContext.Media)) {
+                                    int count;
+                                    var buffer = new byte[1024];
+                                    while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
+                                        sw.Write(buffer, 0, count);                                            
+                                    }
+                                }
+                            }
                         }
                     }
+
+                    filterContext.Media.Dispose();
                     filePath = filterContext.FilePath;
                 }
                 catch (Exception ex) {
@@ -74,20 +82,20 @@ namespace Orchard.MediaProcessing.Shapes {
         }
 
         // TODO: Update this method once the storage provider has been updated
-        private Image GetImage(string path) {
+        private Stream GetImage(string path) {
             // http://blob.storage-provider.net/my-image.jpg
             if (Uri.IsWellFormedUriString(path, UriKind.Absolute)) {
                 var webClient = new WebClient();
-                return new Bitmap(webClient.OpenRead(new Uri(path)));
+                return webClient.OpenRead(new Uri(path));
             }
             // ~/Media/Default/images/my-image.jpg
             if (VirtualPathUtility.IsAppRelative(path)) {
                 var webClient = new WebClient();
-                return new Bitmap(webClient.OpenRead(new Uri(_services.Value.WorkContext.HttpContext.Request.Url, VirtualPathUtility.ToAbsolute(path))));
+                return webClient.OpenRead(new Uri(_services.Value.WorkContext.HttpContext.Request.Url, VirtualPathUtility.ToAbsolute(path)));
             }
             // images/my-image.jpg
             var file = _storageProvider.Value.GetFile(path);
-            return new Bitmap(file.OpenRead());
+            return file.OpenRead();
         }
 
         private static string CreateDefaultFileName(string path) {

@@ -46,6 +46,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ImageResizer">
+      <HintPath>..\..\..\..\lib\imageresizer\ImageResizer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -108,8 +112,9 @@
     <Compile Include="Models\FilterRecord.cs" />
     <Compile Include="Models\ImageProfilePart.cs" />
     <Compile Include="Models\ImageProfilePartRecord.cs" />
-    <Compile Include="Providers\Filters\CropFilter.cs" />
-    <Compile Include="Providers\Filters\ImageFormatFilter.cs" />
+    <None Include="Providers\Filters\ConstrainFilter.cs" />
+    <None Include="Providers\Filters\CropFilter.cs" />
+    <None Include="Providers\Filters\ImageFormatFilter.cs" />
     <Compile Include="Providers\Filters\ResizeFilter.cs" />
     <Compile Include="Services\IImageFilterProvider.cs" />
     <Compile Include="Services\IImageProcessingFileNameProvider.cs" />

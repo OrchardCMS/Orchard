@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
+using ImageResizer;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
@@ -17,7 +19,7 @@ namespace Orchard.MediaProcessing.Providers.Filters {
 
         public void Describe(DescribeFilterContext describe) {
             describe.For("Transform", T("Transform"), T("Transform"))
-                .Element("Resize", T("Resize"), T("Resizes to a fixed height and width"),
+                .Element("Resize", T("Resize"), T("Resizes using predefined height or width."),
                          ApplyFilter,
                          DisplayFilter,
                          "ResizeFilter"
@@ -25,32 +27,18 @@ namespace Orchard.MediaProcessing.Providers.Filters {
         }
 
         public void ApplyFilter(FilterContext context) {
-            var newHeight = int.Parse((string)context.State.Height);
-            newHeight = newHeight > 0 ? newHeight : context.Image.Height;
-            var heightFactor = (float) context.Image.Height/newHeight;
+            int witdh = context.State.Width;
+            int height = context.State.Height;
 
-            var newWidth = int.Parse((string)context.State.Width);
-            newWidth = newWidth > 0 ? newWidth : context.Image.Width;
-            var widthFactor = context.Image.Width/newWidth;
+            var settings = new ResizeSettings {
+                Mode = FitMode.Max,
+                Height = height,
+                Width = witdh
+            };
 
-            if (widthFactor != heightFactor) {
-                if (widthFactor > heightFactor) {
-                    newHeight = Convert.ToInt32(context.Image.Height/widthFactor);
-                }
-                else {
-                    newWidth = Convert.ToInt32(context.Image.Width/heightFactor);
-                }
-            }
-
-            var newImage = new Bitmap(newWidth, newHeight);
-            using (var graphics = Graphics.FromImage(newImage)) {
-                graphics.CompositingQuality = CompositingQuality.HighSpeed;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.DrawImage(context.Image, 0, 0, newWidth, newHeight);
-            }
-
-            context.Image = newImage;
+            var result = new MemoryStream();
+            ImageBuilder.Current.Build(context.Media, result, settings);
+            context.Media = result;
         }
 
         public LocalizedString DisplayFilter(FilterContext context) {
@@ -73,16 +61,17 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                 shape => {
                     var f = Shape.Form(
                         Id: "ImageResizeFilter",
-                        _Height: Shape.Textbox(
-                            Id: "height", Name: "Height",
-                            Title: T("Height"),
-                            Description: T("The height in pixels, 0 to allow any value."),
-                            Classes: new[] {"text-small"}),
                         _Width: Shape.Textbox(
                             Id: "width", Name: "Width",
                             Title: T("Width"),
                             Description: T("The width in pixels, 0 to allow any value."),
-                            Classes: new[] {"text-small"}));
+                            Classes: new[] {"text-small"}),
+                        _Height: Shape.Textbox(
+                            Id: "height", Name: "Height",
+                            Title: T("Height"),
+                            Description: T("The height in pixels, 0 to allow any value."),
+                            Classes: new[] {"text-small"})
+                            );
                     return f;
                 };
 

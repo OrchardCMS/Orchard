@@ -26,8 +26,8 @@ namespace Orchard.MediaProcessing.Providers.Filters {
         }
 
         public void ApplyFilter(FilterContext context) {
-            context.ImageFormat = ImageFormatConverter.ToImageFormat((ImageFormats)Enum.Parse(typeof (ImageFormats), (string)context.State.ImageFormat));
-            context.FilePath = Path.ChangeExtension(context.FilePath, context.ImageFormat.ToString().ToLower());
+            context.Format = ImageFormatConverter.ToImageFormat((ImageFormats)Enum.Parse(typeof (ImageFormats), (string)context.State.ImageFormat));
+            context.FilePath = Path.ChangeExtension(context.FilePath, context.Format.ToString().ToLower());
         }
 
         public LocalizedString DisplayFilter(FilterContext context) {
