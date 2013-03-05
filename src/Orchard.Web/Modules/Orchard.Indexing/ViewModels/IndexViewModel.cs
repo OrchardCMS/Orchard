@@ -1,7 +1,9 @@
-﻿using Orchard.Indexing.Services;
+﻿using System.Collections.Generic;
+using Orchard.Indexing.Services;
 
 namespace Orchard.Indexing.ViewModels {
     public class IndexViewModel {
-        public IndexEntry IndexEntry { get; set;}
+        public IIndexProvider IndexProvider { get; set; }
+        public IEnumerable<IndexEntry> IndexEntries { get; set;}
     }
 }

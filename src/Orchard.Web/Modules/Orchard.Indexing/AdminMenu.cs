@@ -9,7 +9,7 @@ namespace Orchard.Indexing {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Settings"),
-                menu => menu.Add(T("Search Index"), "5", item => item.Action("Index", "Admin", new {area = "Orchard.Indexing"})
+                menu => menu.Add(T("Indexes"), "5", item => item.Action("Index", "Admin", new {area = "Orchard.Indexing"})
                         .Permission(StandardPermissions.SiteOwner)));
         }
     }

@@ -4,7 +4,8 @@ namespace Orchard.Indexing.Services {
     public enum IndexingStatus {
         Rebuilding,
         Updating,
-        Idle
+        Idle,
+        Unavailable
     }
     public interface IIndexStatisticsProvider : IDependency {
         DateTime GetLastIndexedUtc(string indexName);

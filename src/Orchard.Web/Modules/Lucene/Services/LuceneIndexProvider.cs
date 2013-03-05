@@ -80,6 +80,10 @@ namespace Lucene.Services {
             return new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName))).Exists;
         }
 
+        public IEnumerable<string> List() {
+            return _appDataFolder.ListDirectories(_basePath).Select(Path.GetFileNameWithoutExtension);
+        }
+
         public bool IsEmpty(string indexName) {
             if ( !Exists(indexName) ) {
                 return true;
@@ -131,7 +135,7 @@ namespace Lucene.Services {
         }
 
         public void Store(string indexName, IEnumerable<LuceneDocumentIndex> indexDocuments) {
-            if (indexDocuments.AsQueryable().Count() == 0) {
+            if (!indexDocuments.Any()) {
                 return;
             }
 

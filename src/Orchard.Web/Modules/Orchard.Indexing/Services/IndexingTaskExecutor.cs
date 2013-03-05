@@ -58,6 +58,17 @@ namespace Orchard.Indexing.Services {
 
         public ILogger Logger { get; set; }
 
+        public bool RebuildIndex(string indexName) {
+
+            if (DeleteIndex(indexName)) {
+                var searchProvider = _indexManager.GetSearchIndexProvider();
+                searchProvider.CreateIndex(indexName);
+                return true;
+            }
+
+            return false;
+        }
+
         public bool DeleteIndex(string indexName) {
             ILockFile lockFile = null;
             var settingsFilename = GetSettingsFileName(indexName);

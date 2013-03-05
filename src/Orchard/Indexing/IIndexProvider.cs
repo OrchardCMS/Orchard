@@ -13,6 +13,11 @@ namespace Orchard.Indexing {
         bool Exists(string name);
 
         /// <summary>
+        /// Lists all existing indexes
+        /// </summary>
+        IEnumerable<string> List();
+
+        /// <summary>
         /// Deletes an existing index
         /// </summary>
         void DeleteIndex(string name);

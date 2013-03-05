@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -45,16 +46,30 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider = _container.Resolve<IIndexProvider>();
         }
 
-        private string[] Indexes() {
-            return new DirectoryInfo(Path.Combine(_basePath, "Sites", "My Site", "Indexes")).GetDirectories().Select(d => d.Name).ToArray();
+        private IEnumerable<string> Indexes() {
+            return _provider.List();
         }
 
         [Test]
         public void IndexProviderShouldCreateNewIndex() {
-            Assert.That(Indexes().Length, Is.EqualTo(0));
+            Assert.That(Indexes().Count(), Is.EqualTo(0));
 
             _provider.CreateIndex("default");
-            Assert.That(Indexes().Length, Is.EqualTo(1));
+            Assert.That(Indexes().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void IndexProviderShouldCreateMultipleIndexesAndListThem() {
+            Assert.That(Indexes().Count(), Is.EqualTo(0));
+
+            _provider.CreateIndex("default");
+            _provider.CreateIndex("search");
+            _provider.CreateIndex("admin");
+
+            Assert.That(Indexes().Count(), Is.EqualTo(3));
+            Assert.That(Indexes().Contains("default"));
+            Assert.That(Indexes().Contains("search"));
+            Assert.That(Indexes().Contains("admin"));
         }
 
         [Test]
@@ -69,25 +84,25 @@ namespace Orchard.Tests.Modules.Indexing {
 
         [Test]
         public void IndexProviderShouldDeleteExistingIndex() {
-            Assert.That(Indexes().Length, Is.EqualTo(0));
+            Assert.That(Indexes().Count(), Is.EqualTo(0));
 
             _provider.CreateIndex("default");
-            Assert.That(Indexes().Length, Is.EqualTo(1));
+            Assert.That(Indexes().Count(), Is.EqualTo(1));
 
             _provider.DeleteIndex("default");
-            Assert.That(Indexes().Length, Is.EqualTo(0));
+            Assert.That(Indexes().Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void IndexProviderShouldListExistingIndexes() {
-            Assert.That(Indexes().Length, Is.EqualTo(0));
+            Assert.That(Indexes().Count(), Is.EqualTo(0));
             
             _provider.CreateIndex("default");
-            Assert.That(Indexes().Length, Is.EqualTo(1));
-            Assert.That(Indexes()[0], Is.EqualTo("default"));
+            Assert.That(Indexes().Count(), Is.EqualTo(1));
+            Assert.That(Indexes().ElementAt(0), Is.EqualTo("default"));
 
             _provider.CreateIndex("foo");
-            Assert.That(Indexes().Length, Is.EqualTo(2));
+            Assert.That(Indexes().Count(), Is.EqualTo(2));
         }
 
         [Test]

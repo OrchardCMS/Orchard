@@ -9,18 +9,26 @@ namespace Orchard.Indexing.Services {
     [UsedImplicitly]
     public class IndexingBackgroundTask : IBackgroundTask {
         private readonly IIndexNotifierHandler _indexNotifierHandler;
-        private const string SearchIndexName = "Search";
+        private readonly IIndexManager _indexManager;
 
         public IndexingBackgroundTask(
-            IIndexNotifierHandler indexNotifierHandler) {
+            IIndexNotifierHandler indexNotifierHandler,
+            IIndexManager indexManager) {
             _indexNotifierHandler = indexNotifierHandler;
+            _indexManager = indexManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            _indexNotifierHandler.UpdateIndex(SearchIndexName);
+            if (!_indexManager.HasIndexProvider()) {
+                return;
+            }
+
+            foreach (var index in _indexManager.GetSearchIndexProvider().List()) {
+                _indexNotifierHandler.UpdateIndex(index);
+            }
         }
     }
 }

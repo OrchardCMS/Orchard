@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using Orchard.Validation;
 
 namespace Orchard.Indexing.Services
 {
@@ -28,12 +29,14 @@ namespace Orchard.Indexing.Services
         public Localizer T { get; set; }
 
         public void RebuildIndex(string indexName) {
+            Argument.ThrowIfNullOrEmpty(indexName, "indexName");
+
             if (!_indexManager.HasIndexProvider()) {
-                Services.Notifier.Warning(T("There is no search index to rebuild."));
+                Services.Notifier.Warning(T("There is no index to rebuild."));
                 return;
             }
 
-            if(_indexingTaskExecutor.DeleteIndex(indexName)) {
+            if(_indexingTaskExecutor.RebuildIndex(indexName)) {
                 Services.Notifier.Information(T("The index {0} has been rebuilt.", indexName));
                 UpdateIndex(indexName);
             }
@@ -42,7 +45,24 @@ namespace Orchard.Indexing.Services
             }
         }
 
+        public void DeleteIndex(string indexName) {
+            Argument.ThrowIfNullOrEmpty(indexName, "indexName");
+
+            if (!_indexManager.HasIndexProvider()) {
+                Services.Notifier.Warning(T("There is no index to delete."));
+                return;
+            }
+
+            if (_indexingTaskExecutor.DeleteIndex(indexName)) {
+                Services.Notifier.Information(T("The index {0} has been deleted.", indexName));
+            }
+            else {
+                Services.Notifier.Warning(T("The index {0} could not be deleted. It might already be in use, please try again later.", indexName));
+            }
+        }
+
         public void UpdateIndex(string indexName) {
+            Argument.ThrowIfNullOrEmpty(indexName, "indexName");
             
             foreach(var handler in _indexNotifierHandlers) {
                 handler.UpdateIndex(indexName);
@@ -52,6 +72,8 @@ namespace Orchard.Indexing.Services
         }
 
         IndexEntry IIndexingService.GetIndexEntry(string indexName) {
+            Argument.ThrowIfNullOrEmpty(indexName, "indexName");
+
             var provider = _indexManager.GetSearchIndexProvider();
             if (provider == null)
                 return null;
