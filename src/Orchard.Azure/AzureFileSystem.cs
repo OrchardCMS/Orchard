@@ -103,7 +103,7 @@ namespace Orchard.Azure {
 
         public bool FolderExists(string path) {
             using (new HttpContextWeaver()) {
-                return Container.BlobExists(String.Concat(_root, path));
+                return Container.DirectoryExists(String.Concat(_root, path));
             }
         }
 
