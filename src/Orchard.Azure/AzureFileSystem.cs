@@ -101,6 +101,12 @@ namespace Orchard.Azure {
             }
         }
 
+        public bool FolderExists(string path) {
+            using (new HttpContextWeaver()) {
+                return Container.BlobExists(String.Concat(_root, path));
+            }
+        }
+
         public IEnumerable<IStorageFile> ListFiles(string path) {
             path = path ?? String.Empty;
             

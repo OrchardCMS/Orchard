@@ -12,7 +12,6 @@ namespace Orchard.Azure.FileSystems.Media {
 
         public AzureBlobStorageProvider(ShellSettings shellSettings, CloudStorageAccount storageAccount) : base("media", shellSettings.Name, false, storageAccount) { }
 
-
         public bool TrySaveStream(string path, Stream inputStream) {
             try {
                 SaveStream(path, inputStream);
