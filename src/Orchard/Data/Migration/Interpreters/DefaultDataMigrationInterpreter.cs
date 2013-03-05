@@ -337,16 +337,14 @@ namespace Orchard.Data.Migration.Interpreters {
         private void RunPendingStatements() {
 
             var session = _sessionLocator.For(typeof(ContentItemRecord));
-            var connection = session.Connection;
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
                     Logger.Debug(sqlStatement);
-                    using (var command = connection.CreateCommand()) {
-                        command.CommandText = sqlStatement;
-                        command.ExecuteNonQuery();
-                    }
 
+                    var query = session.CreateSQLQuery(sqlStatement);
+                    query.ExecuteUpdate();
+                 
                     _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
