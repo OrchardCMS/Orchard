@@ -14,6 +14,8 @@ using Orchard.Modules.Events;
 using Orchard.Modules.Models;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
+using Orchard.Recipes.Models;
+using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
@@ -28,6 +30,8 @@ namespace Orchard.Modules.Controllers {
         private readonly IReportsCoordinator _reportsCoordinator;
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
+        private readonly IRecipeHarvester _recipeHarvester;
+        private readonly IRecipeManager _recipeManager;
         private readonly ShellDescriptor _shellDescriptor;
 
         public AdminController(
@@ -38,6 +42,8 @@ namespace Orchard.Modules.Controllers {
             IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
+            IRecipeHarvester recipeHarvester,
+            IRecipeManager recipeManager,
             ShellDescriptor shellDescriptor,
             IShapeFactory shapeFactory)
         {
@@ -48,6 +54,8 @@ namespace Orchard.Modules.Controllers {
             _reportsCoordinator = reportsCoordinator;
             _extensionManager = extensionManager;
             _featureManager = featureManager;
+            _recipeHarvester = recipeHarvester;
+            _recipeManager = recipeManager;
             _shellDescriptor = shellDescriptor;
             Shape = shapeFactory;
 
@@ -97,6 +105,59 @@ namespace Orchard.Modules.Controllers {
             });
         }
 
+        public ActionResult Recipes() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
+                return new HttpUnauthorizedResult();
+
+            IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
+                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
+                .OrderBy(extensionDescriptor => extensionDescriptor.Name)
+                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
+
+            var viewModel = new RecipesViewModel();
+
+            if (_recipeHarvester != null) {
+                viewModel.Modules = modules.Select(x => new ModuleRecipesViewModel {
+                    Module = x,
+                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).ToList()
+                })
+                .Where(x => x.Recipes.Any());
+            }
+
+            return View(viewModel);
+
+        }
+
+        [HttpPost, ActionName("Recipes")]
+        public ActionResult RecipesPOST(string moduleId, string name) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
+                return new HttpUnauthorizedResult();
+
+            ModuleEntry module = _extensionManager.AvailableExtensions()
+                .Where(extensionDescriptor => extensionDescriptor.Id == moduleId)
+                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor }).FirstOrDefault();
+
+            if (module == null) {
+                return HttpNotFound();
+            }
+
+            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => x.Name == name);
+
+            if (recipe == null) {
+                return HttpNotFound();
+            }
+
+            try {
+                _recipeManager.Execute(recipe);
+            }
+            catch(Exception e) {
+                Logger.Error(e, "Error while executing recipe {0} in {1}", moduleId, name);
+                Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
+            }
+
+            return RedirectToAction("Recipes");
+
+        }
         public ActionResult Features() {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
