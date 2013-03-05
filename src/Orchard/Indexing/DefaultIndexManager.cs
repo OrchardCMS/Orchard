@@ -13,11 +13,11 @@ namespace Orchard.Indexing {
         #region IIndexManager Members
 
         public bool HasIndexProvider() {
-            return _indexProviders.AsQueryable().Count() > 0;
+            return _indexProviders.Any();
         }
 
         public IIndexProvider GetSearchIndexProvider() {
-            return _indexProviders.AsQueryable().FirstOrDefault();
+            return _indexProviders.FirstOrDefault();
         }
 
         #endregion

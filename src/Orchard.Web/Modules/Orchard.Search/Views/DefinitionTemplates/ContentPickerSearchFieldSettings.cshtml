@@ -1,4 +1,9 @@
-﻿@model Orchard.Search.Settings.ContentPickerSearchFieldSettings
+﻿@using Orchard.Indexing
+@model Orchard.Search.Settings.ContentPickerSearchFieldSettings
+@{
+    var indexManager = WorkContext.Resolve<IIndexManager>();
+    var indexProvider = indexManager.GetSearchIndexProvider();
+}
 
 <fieldset>
     <div>
@@ -7,6 +12,16 @@
     </div>
 </fieldset>
 <fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SearchIndex)">@T("Search index")</label>
+        <select name="@Html.FieldNameFor(m => m.SearchIndex)" >
+            @foreach (string index in indexProvider.List()) {
+                @Html.SelectOption(Model.SearchIndex, index, index) 
+            }    
+        </select>
+        <span class="hint">@T("The index to use when displaying this tab.")</span>
+    </div>
+
     <div>
         <label for="@Html.FieldIdFor(m => m.DisplayedContentTypes)">@T("Content Types and Parts")</label>
         @Html.TextBoxFor(m => m.DisplayedContentTypes) 

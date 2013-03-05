@@ -26,6 +26,7 @@ namespace Orchard.Search.Settings {
             var model = new ContentPickerSearchFieldSettings();
             if (updateModel.TryUpdateModel(model, "ContentPickerSearchFieldSettings", null, null)) {
                 builder.WithSetting("ContentPickerSearchFieldSettings.ShowSearchTab", model.ShowSearchTab.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("ContentPickerSearchFieldSettings.SearchIndex", model.SearchIndex);
                 builder.WithSetting("ContentPickerSearchFieldSettings.DisplayedContentTypes", model.DisplayedContentTypes);
             }
 

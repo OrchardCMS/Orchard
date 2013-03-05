@@ -18,13 +18,13 @@
 
   <Metadata>
     <Types>
-      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <TagsPart />
         <LocalizationPart />
         <TitlePart/>
         <AutoroutePart />
       </Page>
-      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />

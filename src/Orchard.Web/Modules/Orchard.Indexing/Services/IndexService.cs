@@ -68,7 +68,7 @@ namespace Orchard.Indexing.Services
                 handler.UpdateIndex(indexName);
             }
 
-            Services.Notifier.Information(T("The search index has been updated."));
+            Services.Notifier.Information(T("The index {0} has been updated.", indexName));
         }
 
         IndexEntry IIndexingService.GetIndexEntry(string indexName) {

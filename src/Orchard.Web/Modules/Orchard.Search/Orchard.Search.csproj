@@ -47,6 +47,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -56,6 +57,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SearchCommands.cs" />
     <Compile Include="ContentPickerNavigationProvider.cs" />
     <Compile Include="Controllers\ContentPickerController.cs" />
     <Compile Include="ContentAdminMenu.cs" />
@@ -87,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Recipes\Search.recipe.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Styles\orchard-search-admin.css" />
     <Content Include="Styles\orchard-search-search.css" />
     <Content Include="Views\Web.config" />

@@ -21,18 +21,18 @@ namespace Orchard.Search.Services {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        ISearchBuilder Search() {
+        ISearchBuilder Search(string index) {
             return _indexManager.HasIndexProvider()
-                ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search")
+                ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder(index)
                 : new NullSearchBuilder();
         }
 
-        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string[] searchFields, Func<ISearchHit, T> shapeResult) {
+        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string index, string[] searchFields, Func<ISearchHit, T> shapeResult) {
 
             if (string.IsNullOrWhiteSpace(query))
                 return new PageOfItems<T>(Enumerable.Empty<T>());
 
-            var searchBuilder = Search().Parse(searchFields, query);
+            var searchBuilder = Search(index).Parse(searchFields, query);
 
             if (filterCulture) {
                 var culture = _cultureManager.GetSiteCulture();

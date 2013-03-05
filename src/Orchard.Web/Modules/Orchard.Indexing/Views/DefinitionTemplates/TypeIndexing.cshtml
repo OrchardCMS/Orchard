@@ -1,7 +1,21 @@
-﻿@model Orchard.Indexing.Settings.TypeIndexing
+﻿@using Orchard.Indexing
+@using Orchard.Utility.Extensions
+@model Orchard.Indexing.Settings.TypeIndexing
+@{
+    var indexProvider = WorkContext.Resolve<IIndexManager>().GetSearchIndexProvider();
+    
+}
 
-<fieldset>
-    @Html.EditorFor(m=>m.Included)
-    <label for="@Html.FieldIdFor(m => m.Included)" class="forcheckbox">@T("Index this content type for search")</label>
-    @Html.ValidationMessageFor(m=>m.Included)
-</fieldset>
+@if (indexProvider != null) {
+    <fieldset>
+        <legend>@T("Index this content type in:")</legend>
+        @{ var i = 0;}
+        @foreach (var index in indexProvider.List()) {
+        <div>
+            <input type="checkbox" value="@index" class="check-box" id="@Html.FieldIdFor(m => m.List[i])" name="@Html.FieldNameFor(m => m.List)" checked="@(Model.List.Contains(index))"/>
+            <label for="@Html.FieldIdFor(m => m.List[i])" class="forcheckbox">@index</label>
+        </div>
+        i++;
+        }
+    </fieldset>
+}

@@ -166,6 +166,13 @@ namespace Orchard.Indexing.Services {
 
                 foreach (var item in contentItems) {
                     try {
+
+                        // skip items from types which are not indexed
+                        var settings = GetTypeIndexingSettings(item);
+                        if (!settings.Indexes.Contains(indexName)) {
+                            continue;
+                        }
+
                         IDocumentIndex documentIndex = ExtractDocumentIndex(item);
 
                         if (documentIndex != null && documentIndex.IsDirty) {
@@ -195,8 +202,17 @@ namespace Orchard.Indexing.Services {
 
                 foreach (var item in indexingTasks) {
                     try {
+
+                        IDocumentIndex documentIndex = null;
+
                         // item.ContentItem can be null if the content item has been deleted
-                        IDocumentIndex documentIndex = ExtractDocumentIndex(item.ContentItem);
+                        if (item.ContentItem != null) {
+                            // skip items from types which are not indexed
+                            var settings = GetTypeIndexingSettings(item.ContentItem);
+                            if (!settings.Indexes.Contains(indexName)) {
+                                documentIndex = ExtractDocumentIndex(item.ContentItem);
+                            }
+                        }
 
                         if (documentIndex == null || item.Delete) {
                             deleteFromIndex.Add(item.Id);
@@ -284,12 +300,6 @@ namespace Orchard.Indexing.Services {
                 return null;
             }
 
-            // skip items from types which are not indexed
-            var settings = GetTypeIndexingSettings(contentItem);
-            if (!settings.Included) {
-                return null;
-            }
-
             var documentIndex = _indexProvider.New(contentItem.Id);
 
             // call all handlers to add content to index
@@ -301,7 +311,7 @@ namespace Orchard.Indexing.Services {
             if (contentItem == null ||
                 contentItem.TypeDefinition == null ||
                 contentItem.TypeDefinition.Settings == null) {
-                return new TypeIndexing {Included = false};
+                return new TypeIndexing {Indexes = ""};
             }
             return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
         }
