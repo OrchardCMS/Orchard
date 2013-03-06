@@ -9,9 +9,11 @@ using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Security;
 using Orchard.Services;
 using Orchard.Localization;
 using Orchard.Comments.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
@@ -19,7 +21,9 @@ namespace Orchard.Comments.Drivers {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IClock _clock;
+        private readonly ICommentService _commentService;
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IOrchardServices _orchardServices;
 
         protected override string Prefix { get { return "Comments"; } }
 
@@ -30,11 +34,14 @@ namespace Orchard.Comments.Drivers {
             IWorkContextAccessor workContextAccessor,
             IClock clock,
             ICommentService commentService,
-            IEnumerable<IHtmlFilter> htmlFilters) {
+            IEnumerable<IHtmlFilter> htmlFilters,
+            IOrchardServices orchardServices) {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _clock = clock;
+            _commentService = commentService;
             _htmlFilters = htmlFilters;
+            _orchardServices = orchardServices;
 
             T = NullLocalizer.Instance;
         }
@@ -68,6 +75,34 @@ namespace Orchard.Comments.Drivers {
         protected override DriverResult Editor(CommentPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             var workContext = _workContextAccessor.GetContext();
+
+
+            // applying moderate/approve actions
+            var httpContext = workContext.HttpContext;
+            var name = httpContext.Request.Form["submit.Save"];
+            if (!string.IsNullOrEmpty(name) && String.Equals(name, "moderate", StringComparison.OrdinalIgnoreCase)) {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment"))) {
+                    _commentService.UnapproveComment(part.Id);
+                    _orchardServices.Notifier.Information(T("Comment successfully moderated."));
+                    return Editor(part, shapeHelper);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(name) && String.Equals(name, "approve", StringComparison.OrdinalIgnoreCase)) {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't approve comment"))) {
+                    _commentService.ApproveComment(part.Id);
+                    _orchardServices.Notifier.Information(T("Comment approved."));
+                    return Editor(part, shapeHelper);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(name) && String.Equals(name, "delete", StringComparison.OrdinalIgnoreCase)) {
+                if (_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment"))) {
+                    _commentService.DeleteComment(part.Id);
+                    _orchardServices.Notifier.Information(T("Comment successfully deleted."));
+                    return Editor(part, shapeHelper);
+                }
+            }
 
             part.CommentDateUtc = _clock.UtcNow;
 
