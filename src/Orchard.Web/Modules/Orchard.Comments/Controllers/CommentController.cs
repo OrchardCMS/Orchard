@@ -123,6 +123,36 @@ namespace Orchard.Comments.Controllers {
             return this.RedirectLocal(returnUrl, "~/");
         }
 
+        public ActionResult Approve(string nonce) {
+            int id;
+            if (_commentService.DecryptNonce(nonce, out id)) {
+                _commentService.ApproveComment(id);
+            }
+
+            Services.Notifier.Information(T("Comment approved successfully"));
+            return Redirect("~/");
+        }
+
+        public ActionResult Delete(string nonce) {
+            int id;
+            if (_commentService.DecryptNonce(nonce, out id)) {
+                _commentService.DeleteComment(id);
+            }
+
+            Services.Notifier.Information(T("Comment deleted successfully"));
+            return Redirect("~/");
+        }
+
+        public ActionResult Moderate(string nonce) {
+            int id;
+            if (_commentService.DecryptNonce(nonce, out id)) {
+                _commentService.UnapproveComment(id);
+            }
+
+            Services.Notifier.Information(T("Comment moderated successfully"));
+            return Redirect("~/");
+        }
+
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }

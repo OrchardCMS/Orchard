@@ -1,3 +1,4 @@
+using System;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 
@@ -16,5 +17,7 @@ namespace Orchard.Comments.Services {
         bool CommentsDisabledForCommentedContent(int id);
         void DisableCommentsForCommentedContent(int id);
         void EnableCommentsForCommentedContent(int id);
+        bool DecryptNonce(string nonce, out int id);
+        string CreateNonce(CommentPart comment, TimeSpan delay);
     }
 }

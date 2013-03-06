@@ -1,15 +1,28 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Globalization;
+using System.Text;
+using System.Xml.Linq;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Security;
+using Orchard.Services;
 
 namespace Orchard.Comments.Services {
     [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IOrchardServices _orchardServices;
+        private readonly IClock _clock;
+        private readonly IEncryptionService _encryptionService;
 
-        public CommentService(IOrchardServices orchardServices) {
+        public CommentService(
+            IOrchardServices orchardServices, 
+            IClock clock, 
+            IEncryptionService encryptionService) {
             _orchardServices = orchardServices;
+            _clock = clock;
+            _encryptionService = encryptionService;
             Logger = NullLogger.Instance;
         }
 
@@ -64,7 +77,7 @@ namespace Orchard.Comments.Services {
         }
 
         public void DeleteComment(int commentId) {
-            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(commentId));
+            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get<CommentPart>(commentId).ContentItem);
         }
 
         public bool CommentsDisabledForCommentedContent(int id) {
@@ -79,6 +92,28 @@ namespace Orchard.Comments.Services {
             _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = true;
         }
 
+        public string CreateNonce(CommentPart comment, TimeSpan delay) {
+            var challengeToken = new XElement("n", new XAttribute("c", comment.Id), new XAttribute("v", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
+            var data = Encoding.UTF8.GetBytes(challengeToken);
+            return Convert.ToBase64String(_encryptionService.Encode(data));
+        }
+
+        public bool DecryptNonce(string nonce, out int id) {
+            id = 0;
+
+            try {
+                var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
+                var xml = Encoding.UTF8.GetString(data);
+                var element = XElement.Parse(xml);
+                id = Convert.ToInt32(element.Attribute("c").Value);
+                var validateByUtc = DateTime.Parse(element.Attribute("v").Value, CultureInfo.InvariantCulture);
+                return _clock.UtcNow <= validateByUtc;
+            }
+            catch {
+                return false;
+            }
+
+        }
         private CommentPart GetCommentWithQueryHints(int id) {
             return _orchardServices.ContentManager.Get<CommentPart>(id, VersionOptions.Latest, new QueryHints().ExpandParts<CommentPart>());
         }
