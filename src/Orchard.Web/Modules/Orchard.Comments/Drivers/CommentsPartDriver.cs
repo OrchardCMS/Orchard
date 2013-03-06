@@ -41,7 +41,7 @@ namespace Orchard.Comments.Drivers {
                         // create a hierarchy of shapes
                         var firstLevelShapes = new List<dynamic>();
                         var allShapes = new Dictionary<int, dynamic>();
-                        var comments = commentsForCommentedContent.OrderBy(x => x.Position).List().ToList();
+                        var comments = commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).OrderBy(x => x.Position).List().ToList();
                         
                         foreach (var item in comments) {
                             var formatted = _htmlFilters.Where(x => x.GetType().Name.Equals(settings.HtmlFilter, StringComparison.OrdinalIgnoreCase)).Aggregate(item.CommentText, (text, filter) => filter.ProcessContent(text));

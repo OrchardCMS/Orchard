@@ -159,6 +159,90 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Moderated comments are not displayed")]
+        public virtual void ModeratedCommentsAreNotDisplayed()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Moderated comments are not displayed", ((string[])(null)));
+#line 46
+this.ScenarioSetup(scenarioInfo);
+#line 47
+    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 48
+    testRunner.When("I go to \"admin/blogs/create\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table5.AddRow(new string[] {
+                        "Title.Title",
+                        "My Blog"});
+#line 49
+        testRunner.And("I fill in", ((string)(null)), table5, "And ");
+#line 52
+        testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 53
+        testRunner.And("I go to \"admin/blogs\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 54
+        testRunner.And("I follow \"My Blog\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 55
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table6.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post"});
+            table6.AddRow(new string[] {
+                        "Body.Text",
+                        "Hi there."});
+#line 56
+        testRunner.And("I fill in", ((string)(null)), table6, "And ");
+#line 60
+        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 61
+  testRunner.And("I go to \"admin/settings/comments\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table7.AddRow(new string[] {
+                        "CommentSettings.ModerateComments",
+                        "true"});
+#line 62
+  testRunner.And("I fill in", ((string)(null)), table7, "And ");
+#line 65
+  testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 66
+  testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 67
+ testRunner.Then("I should see \"Settings updated\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 68
+ testRunner.When("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table8.AddRow(new string[] {
+                        "Comments.CommentText",
+                        "This is a moderated comment."});
+#line 69
+        testRunner.And("I fill in", ((string)(null)), table8, "And ");
+#line 72
+        testRunner.And("I hit \"Submit Comment\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 73
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 75
+        testRunner.And("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 76
+    testRunner.Then("I should see \"Hi there\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 77
+        testRunner.And("I should not see \"This is a moderated comment\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
