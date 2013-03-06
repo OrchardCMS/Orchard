@@ -33,9 +33,9 @@ namespace Orchard.Comments.Controllers {
 
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
-            Services.ContentManager.Create(comment);
-
             if (ModelState.IsValid) {
+                Services.ContentManager.Create(comment);
+
                 var commentPart = comment.As<CommentPart>();
 
                 // ensure the comments are not closed on the container, as the html could have been tampered manually
