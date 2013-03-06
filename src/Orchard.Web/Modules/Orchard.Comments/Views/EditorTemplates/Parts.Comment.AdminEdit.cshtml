@@ -32,7 +32,7 @@
 </fieldset>
 
 <fieldset>
-    <button class="primaryAction" type="submit" name="submit.Save" >@T("Save")</button>
+    <button class="primaryAction" type="submit" name="submit.Save" value="save" >@T("Save")</button>
     <button class="primaryAction" type="submit" name="submit.Save" value="delete" itemprop="RemoveUrl">@T("Delete")</button>
     @if (Model.Status == CommentStatus.Approved) {
         <button class="primaryAction" type="submit" name="submit.Save" value="moderate">@T("Moderate")</button>

@@ -104,6 +104,12 @@ namespace Orchard.Comments.Drivers {
                 }
             }
 
+            // if editing from the admin, don't update the owner or the status
+            if (!string.IsNullOrEmpty(name) && String.Equals(name, "save", StringComparison.OrdinalIgnoreCase)) {
+                _orchardServices.Notifier.Information(T("Comment saved."));
+                return Editor(part, shapeHelper);
+            }
+
             part.CommentDateUtc = _clock.UtcNow;
 
             if (!String.IsNullOrEmpty(part.SiteName) && !part.SiteName.StartsWith("http://") && !part.SiteName.StartsWith("https://")) {
@@ -121,10 +127,19 @@ namespace Orchard.Comments.Drivers {
             part.Status = moderateComments ? CommentStatus.Pending : CommentStatus.Approved;
 
             var commentedOn = _contentManager.Get<ICommonPart>(part.CommentedOn);
+
+            // prevent users from commenting on a closed thread by hijacking the commentedOn property
+            var commentsPart = commentedOn.As<CommentsPart>();
+            if (!commentsPart.CommentsActive) {
+                _orchardServices.TransactionManager.Cancel();
+                return Editor(part, shapeHelper);
+            }
+
             if (commentedOn != null && commentedOn.Container != null) {
                 part.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
             }
-            commentedOn.As<CommentsPart>().Record.CommentPartRecords.Add(part.Record);
+
+            commentsPart.Record.CommentPartRecords.Add(part.Record);
 
             return Editor(part, shapeHelper);
         }
