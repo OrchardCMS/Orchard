@@ -201,6 +201,7 @@
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\AutofacUtil\ConfigurationSettingsReaderConstants.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />

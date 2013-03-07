@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Compilers;
@@ -119,9 +120,9 @@ namespace Orchard.Environment {
             registrations(builder);
 
 
-            //var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
-            //if (autofacSection != null)
-            //    builder.RegisterModule(new ConfigurationSettingsReader());
+            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReaderConstants.DefaultSectionName);
+            if (autofacSection != null)
+                builder.RegisterModule(new ConfigurationSettingsReader());
 
             var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Host.config");
             if (File.Exists(optionalHostConfig))

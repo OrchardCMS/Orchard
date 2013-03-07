@@ -9,6 +9,7 @@ using Autofac.Builder;
 using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Features.Indexed;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
@@ -123,13 +124,13 @@ namespace Orchard.Environment.ShellBuilders {
                     // Register code-only registrations specific to a shell
                     _shellContainerRegistrations.Registrations(builder);
 
-                    //var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
-                    //if (File.Exists(optionalShellConfig))
-                    //    builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellConfig));
+                    var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
+                    if (File.Exists(optionalShellConfig))
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellConfig));
 
-                    //var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
-                    //if (File.Exists(optionalShellByNameConfig))
-                    //    builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellByNameConfig));
+                    var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
+                    if (File.Exists(optionalShellByNameConfig))
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellByNameConfig));
                 });
         }
 
