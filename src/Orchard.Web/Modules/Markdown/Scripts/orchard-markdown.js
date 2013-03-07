@@ -1,18 +1,18 @@
-(function () {
+(function() {
     var marker = '<!-- markdown -->';
     var converter = Markdown.getSanitizingConverter();
 
     var editors = $('.wmd-input');
 
-    editors.each(function () {
+    editors.each(function() {
 
         var idPostfix = $(this).attr('id').substr('wmd-input'.length);
 
         var editor = new Markdown.Editor(converter, idPostfix, {
-            handler: function () { window.open("http://daringfireball.net/projects/markdown/syntax"); }
+            handler: function() { window.open("http://daringfireball.net/projects/markdown/syntax"); }
         });
 
-        editor.hooks.set("insertImageDialog", function (callback) {
+        editor.hooks.set("insertImageDialog", function(callback) {
             // see if there's an image selected that they intend on editing
             var wmd = $('#wmd-input' + idPostfix);
 
@@ -37,7 +37,7 @@
             wmd.trigger("orchard-admin-pickimage-open", {
                 img: editImage,
                 uploadMediaPath: wmd.data("mediapicker-uploadpath"),
-                callback: function (data) {
+                callback: function(data) {
                     callback(data.img.src);
                 }
             });
@@ -47,7 +47,17 @@
         editor.run();
     });
 
+    var resizableSelector = ".wmd-input,.wmd-preview",
+        resizeInnerElements = function (el, size) {
+            if (size > 120) {
+                el.height(size - 20);
+            }
+        };
+    resizeInnerElements($(resizableSelector), 400);
 
-
-    $('.grippie').TextAreaResizer();
+    $(".has-grip").TextAreaResizer(function(size, resizing) {
+        resizing.find(resizableSelector).each(function() { resizeInnerElements($(this), size - 18); });
+    }, {
+        resizeWrapper: true
+    });
 })();
