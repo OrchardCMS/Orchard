@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Autofac.Integration.SignalR</name>
+    </assembly>
+    <members>
+        <member name="T:Autofac.Integration.SignalR.AutofacDependencyResolver">
+            <summary>
+            Autofac implementation of the <see cref="T:Microsoft.AspNet.SignalR.IDependencyResolver"/> interface.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.SignalR.AutofacDependencyResolver.#ctor(Autofac.ILifetimeScope)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.SignalR.AutofacDependencyResolver"/> class.
+            </summary>
+            <param name="lifetimeScope">The lifetime scope that services will be resolved from.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="lifetimeScope"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:Autofac.Integration.SignalR.AutofacDependencyResolver.GetService(System.Type)">
+            <summary>
+            Get a single instance of a service.
+            </summary>
+            <param name="serviceType">Type of the service.</param>
+            <returns>The single instance if resolved; otherwise, <c>null</c>.</returns>
+        </member>
+        <member name="M:Autofac.Integration.SignalR.AutofacDependencyResolver.GetServices(System.Type)">
+            <summary>
+            Gets all available instances of a services.
+            </summary>
+            <param name="serviceType">Type of the service.</param>
+            <returns>The list of instances if any were resolved; otherwise, an empty list.</returns>
+        </member>
+        <member name="M:Autofac.Integration.SignalR.AutofacDependencyResolver.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
+            <summary>
+            Retrieve registrations for an unregistered service, to be used by the container.
+            </summary>
+            <param name="service">The service that was requested.</param>
+            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
+            <returns>Registrations providing the service.</returns>
+        </member>
+        <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.Current">
+            <summary>
+            Gets the Autofac implementation of the dependency resolver.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.LifetimeScope">
+            <summary>
+            Gets the <see cref="T:Autofac.ILifetimeScope"/> that was provided to the constructor.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.IsAdapterForIndividualComponents">
+            <summary>
+            Gets whether the registrations provided by this source are 1:1 adapters on top
+            of other components (I.e. like Meta, Func or Owned.)
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.SignalR.RegistrationExtensions">
+            <summary>
+            Extends <see cref="T:Autofac.ContainerBuilder"/> with methods to support ASP.NET SignalR.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.SignalR.RegistrationExtensions.RegisterHubs(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Register types that implement <see cref="T:Microsoft.AspNet.SignalR.Hubs.IHub"/> in the provided assemblies.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="controllerAssemblies">Assemblies to scan for controllers.</param>
+            <returns>Registration builder allowing the controller components to be customised.</returns>
+        </member>
+    </members>
+</doc>
