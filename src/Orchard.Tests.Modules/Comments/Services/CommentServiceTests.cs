@@ -21,6 +21,9 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Security.Providers;
+using Orchard.Services;
+using Orchard.Tests.Modules.Users;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -50,6 +53,10 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterType<CommentPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
+
+            builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
