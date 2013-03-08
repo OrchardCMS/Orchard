@@ -33,3 +33,4 @@ src/Orchard.Web/Orchard.Web.Publish.xml
 glob:src/TestResults/*
 glob:TestResults.xml
 */TestResults/*
+glob:src/Orchard.Web/Properties/PublishProfiles
