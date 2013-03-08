@@ -126,7 +126,7 @@ namespace Orchard.Environment {
 
             var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Host.config");
             if (File.Exists(optionalHostConfig))
-                builder.RegisterModule(new ConfigurationSettingsReader(optionalHostConfig));
+                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalHostConfig));
 
             var optionalComponentsConfig = HostingEnvironment.MapPath("~/Config/HostComponents.config");
             if (File.Exists(optionalComponentsConfig))
