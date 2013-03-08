@@ -32,6 +32,15 @@
     line-height: 1.2;
 }
 
+#main .wmd-editor-box textarea.wmd-input {
+    display:block;
+    margin-bottom: 0;
+    width: 97%;
+    min-width: 400px;
+    height: 80%;
+    resize: horizontal;
+}
+
 .wmd-box {
     display: table;
     position: relative;
@@ -102,6 +111,11 @@
     padding: 0;
 }
 
+.wmd-prompt-dialog {
+border: solid 1px #ccc;
+background-color: white;
+}
+
 /* Grippie */
 
 div.grippie {
@@ -113,12 +127,4 @@ div.grippie {
     height:9px;
     margin-top: 9px;
     overflow:hidden;
-}
-
-#main .wmd-editor-box textarea.wmd-input {
-    display:block;
-    margin-bottom: 0;
-    width: 97%;
-    height: 80%;
-    resize: horizontal;
 }
