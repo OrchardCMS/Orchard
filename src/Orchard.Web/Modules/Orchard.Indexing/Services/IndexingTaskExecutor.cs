@@ -169,7 +169,7 @@ namespace Orchard.Indexing.Services {
 
                         // skip items from types which are not indexed
                         var settings = GetTypeIndexingSettings(item);
-                        if (!settings.Indexes.Contains(indexName)) {
+                        if (!settings.List.Contains(indexName)) {
                             continue;
                         }
 
@@ -209,7 +209,7 @@ namespace Orchard.Indexing.Services {
                         if (item.ContentItem != null) {
                             // skip items from types which are not indexed
                             var settings = GetTypeIndexingSettings(item.ContentItem);
-                            if (settings.Indexes.Contains(indexName)) {
+                            if (settings.List.Contains(indexName)) {
                                 documentIndex = ExtractDocumentIndex(item.ContentItem);
                             }
                         }
