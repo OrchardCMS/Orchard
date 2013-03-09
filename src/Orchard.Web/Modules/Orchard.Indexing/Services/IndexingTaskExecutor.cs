@@ -169,14 +169,12 @@ namespace Orchard.Indexing.Services {
 
                         // skip items from types which are not indexed
                         var settings = GetTypeIndexingSettings(item);
-                        if (!settings.List.Contains(indexName)) {
-                            continue;
-                        }
+                        if (settings.List.Contains(indexName)) {
+                            IDocumentIndex documentIndex = ExtractDocumentIndex(item);
 
-                        IDocumentIndex documentIndex = ExtractDocumentIndex(item);
-
-                        if (documentIndex != null && documentIndex.IsDirty) {
-                            addToIndex.Add(documentIndex);
+                            if (documentIndex != null && documentIndex.IsDirty) {
+                                addToIndex.Add(documentIndex);
+                            }
                         }
 
                         indexSettings.LastContentId = item.VersionRecord.Id;
