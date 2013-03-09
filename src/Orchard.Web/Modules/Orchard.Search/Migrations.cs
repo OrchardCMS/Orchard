@@ -1,8 +1,16 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System.Linq;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Search.Models;
 
 namespace Orchard.Search {
     public class SearchDataMigration : DataMigrationImpl {
+        private readonly IRepository<SearchSettingsPartRecord> _searchSettingsPartRecordRepository;
+
+        public SearchDataMigration(IRepository<SearchSettingsPartRecord> searchSettingsPartRecordRepository) {
+            _searchSettingsPartRecordRepository = searchSettingsPartRecordRepository;
+        }
 
         public int Create() {
 
@@ -28,6 +36,11 @@ namespace Orchard.Search {
             SchemaBuilder.AlterTable("SearchSettingsPartRecord", table => table
                 .AddColumn<string>("SearchIndex")
             );
+
+            var settings = _searchSettingsPartRecordRepository.Table.FirstOrDefault();
+            if (settings != null) {
+                settings.SearchIndex = "Search";
+            }
 
             return 2;
         }
