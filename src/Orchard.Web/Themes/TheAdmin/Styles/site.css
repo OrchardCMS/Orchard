@@ -899,6 +899,7 @@ table.items td .add
 ----------------------------------------------------------*/
 .contentItems {
     border:1px solid #eaeaea;
+    border-bottom: none;
     background:#FFF;
     clear:both;
     margin:1em 0;

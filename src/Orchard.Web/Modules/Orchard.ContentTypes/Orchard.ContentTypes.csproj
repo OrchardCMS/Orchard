@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\admin-contenttypes.js" />
     <Content Include="Styles\Images\menu.contenttypes.png" />
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Styles\menu.contenttypes-admin.css" />
@@ -156,6 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\ContentPartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

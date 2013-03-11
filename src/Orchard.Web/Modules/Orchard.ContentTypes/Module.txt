@@ -5,6 +5,6 @@ Website: http://orchardproject.net
 Version: 1.6
 OrchardVersion: 1.5
 Description: ContentTypes modules enables the creation and alteration of content types not based on code.
-Dependencies: Contents
+Dependencies: Contents, jQuery
 Category: Content
 
