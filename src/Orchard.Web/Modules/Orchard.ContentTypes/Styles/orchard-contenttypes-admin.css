@@ -66,6 +66,12 @@
     margin:0 0 0 15px;
     padding-left:0;
 }
+
+.manage-part .description {
+    color: #333;
+    font-size: 0.8em;
+}
+
 .manage-part .settings {
     overflow:auto;
 }
@@ -109,6 +115,13 @@ fieldset.action {
 .manage-part dd dd {
     float:left;
     padding-left:.5em;
+}
+
+.available-parts .part.hint {
+    display: block;
+    margin-left: 29px;
+    line-height: 16px;
+    margin-bottom: 2px;
 }
 
 

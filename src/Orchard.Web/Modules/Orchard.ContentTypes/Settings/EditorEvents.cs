@@ -48,6 +48,7 @@ namespace Orchard.ContentTypes.Settings {
             var model = new ContentPartSettings();
             updateModel.TryUpdateModel(model, "ContentPartSettings", null, null);
             builder.Attachable(model.Attachable);
+            builder.Description(model.Description);
             yield return DefinitionTemplate(model);
         }
     }
