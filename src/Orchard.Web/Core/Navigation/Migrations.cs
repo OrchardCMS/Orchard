@@ -6,8 +6,13 @@ namespace Orchard.Core.Navigation {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
-            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Provides an easy way to create a ContentMenuItem from the content editor."));
+
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder
+                .Attachable()
+                .WithDescription("Allows the management of Content Menu Items associated with a Content Item."));
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("NavigationPart"));
             
             SchemaBuilder.CreateTable("MenuItemPartRecord", 
@@ -75,7 +80,9 @@ namespace Orchard.Core.Navigation {
                 .WithSetting("Stereotype", "MenuItem")
                 );
             
-            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Adds a menu item to the Admin menu that links to this content item."));
 
             SchemaBuilder.CreateTable("ContentMenuItemPartRecord",
                 table => table
@@ -210,6 +217,20 @@ namespace Orchard.Core.Navigation {
                 );
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder
+                .WithDescription("Provides an easy way to create a ContentMenuItem from the content editor."));
+
+            ContentDefinitionManager.AlterPartDefinition("NavigationPart", builder => builder
+                .WithDescription("Allows the management of Content Menu Items associated with a Content Item."));
+
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder
+                .Attachable()
+                .WithDescription("Adds a menu item to the Admin menu that links to this content item."));
+
+            return 5;
         }
     }
 }

@@ -43,6 +43,12 @@ namespace Orchard.Comments {
                 .Column<bool>("ThreadedComments")
                 );
 
+            ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
+                .WithDescription("Used by the Comment content type."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsContainerPart", part => part
+                .WithDescription("Adds support to a content type to contain comments."));
+
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("CommentPart")
@@ -58,9 +64,11 @@ namespace Orchard.Comments {
                    .WithPart("CommentsContainerPart")
                 );
 
-            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder
+                .Attachable()
+                .WithDescription("Allows content items to be commented on."));
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -127,6 +135,19 @@ namespace Orchard.Comments {
             }
             
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
+                .WithDescription("Used by the Comment content type."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsContainerPart", part => part
+                .WithDescription("Adds support to a content type to contain comments."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder
+                .WithDescription("Allows content items to be commented on."));
+
+            return 5;
         }
     }
 }

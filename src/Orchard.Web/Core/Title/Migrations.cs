@@ -12,9 +12,17 @@ namespace Orchard.Core.Title {
                     .Column<string>("Title", column => column.WithLength(1024))
                 );
 
-            ContentDefinitionManager.AlterPartDefinition("TitlePart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("TitlePart", builder => builder
+                .Attachable()
+                .WithDescription("Provides a Title for your content item."));
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("TitlePart", builder => builder
+                .WithDescription("Provides a Title for your content item."));
+            return 2;
         }
     }
 }

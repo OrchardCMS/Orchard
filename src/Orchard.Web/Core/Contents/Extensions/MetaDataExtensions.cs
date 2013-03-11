@@ -15,7 +15,7 @@ namespace Orchard.Core.Contents.Extensions {
             return builder.WithSetting("ContentPartSettings.Attachable", attachable.ToString());
         }
 
-        public static ContentPartDefinitionBuilder Description(this ContentPartDefinitionBuilder builder, string description) {
+        public static ContentPartDefinitionBuilder WithDescription(this ContentPartDefinitionBuilder builder, string description) {
             return builder.WithSetting("ContentPartSettings.Description", description);
         }
     }

@@ -46,11 +46,19 @@ namespace Orchard.Core.Containers {
                     .WithPart("ContainerWidgetPart")
                     .WithSetting("Stereotype", "Widget"));
 
-            ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterPartDefinition("CustomPropertiesPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder
+                .Attachable()
+                .WithDescription("Turns your content item into a container that is capable of containing content items that have the ContainablePart attached."));
+
+            ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder
+                .Attachable()
+                .WithDescription("Allows your content item to be contained by a content item that has the ContainerPart attached"));
+
+            ContentDefinitionManager.AlterPartDefinition("CustomPropertiesPart", builder => builder
+                .Attachable()
+                .WithDescription("Adds 3 custom properties to your content item."));
  
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -68,6 +76,18 @@ namespace Orchard.Core.Containers {
                     .Column<int>("Weight"));
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder
+                .WithDescription("Turns your content item into a container that is capable of containing content items that have the ContainablePart attached."));
+
+            ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder
+                .WithDescription("Allows your content item to be contained by a content item that has the ContainerPart attached"));
+
+            ContentDefinitionManager.AlterPartDefinition("CustomPropertiesPart", builder => builder
+                .WithDescription("Adds 3 custom properties to your content item."));
+            return 4;
         }
     }
 }

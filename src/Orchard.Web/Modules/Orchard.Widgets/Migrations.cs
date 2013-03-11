@@ -24,6 +24,10 @@ namespace Orchard.Widgets {
                     .Column<string>("Name")
                 );
 
+            ContentDefinitionManager.AlterPartDefinition("WidgetPart", part => part
+                .Attachable()
+                .WithDescription("Turns a content type into a Widget. Note: you need to set the stereotype to \"Widget\" as well."));
+
             ContentDefinitionManager.AlterTypeDefinition("Layer",
                cfg => cfg
                    .WithPart("LayerPart")
@@ -39,7 +43,7 @@ namespace Orchard.Widgets {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 3;
+            return 5;
         }
         
         public int UpdateFrom1() {
@@ -56,11 +60,16 @@ namespace Orchard.Widgets {
             return 3;
         }
 
-        public int UpdateFrom3()
-        {
+        public int UpdateFrom3() {
             ContentDefinitionManager.AlterPartDefinition("WidgetPart", builder => builder.Attachable());
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("WidgetPart", part => part
+                .WithDescription("Turns a content type into a Widget. Note: you need to set the stereotype to \"Widget\" as well."));
+            return 5;
         }
     }
 }
