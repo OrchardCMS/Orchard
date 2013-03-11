@@ -3,6 +3,14 @@
     border-bottom:1px solid #ccc;
 }
 
+.orchard-contenttypes .summary .properties h3 {
+    display: inline;
+}
+
+.orchard-contenttypes .summary .properties .stereotype {
+    color: #7c7c7c;
+}
+
 #main .properties p {
     margin:0;
 }
@@ -68,7 +76,7 @@
 }
 
 .manage-part .description {
-    color: #333;
+    color: #7c7c7c;
     font-size: 0.8em;
 }
 

@@ -64,8 +64,11 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Services\ContentTypePlacementStrategy.cs" />
+    <Compile Include="Services\DefaultStereotypesProvider.cs" />
     <Compile Include="Services\IPlacementService.cs" />
+    <Compile Include="Services\IStereotypesProvider.cs" />
     <Compile Include="Services\PlacementService.cs" />
+    <Compile Include="Services\StereotypeService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="Settings\PlacementSettings.cs" />
     <Compile Include="ViewModels\AddPartsViewModel.cs" />
@@ -93,7 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\Images\menu.contenttypes.png" />
     <Content Include="Styles\Images\move.gif" />
+    <Content Include="Styles\menu.contenttypes-admin.css" />
     <Content Include="Styles\orchard-contenttypes-admin.css" />
     <Content Include="Views\Admin\AddFieldTo.cshtml" />
     <Content Include="Views\Admin\AddPartsTo.cshtml" />

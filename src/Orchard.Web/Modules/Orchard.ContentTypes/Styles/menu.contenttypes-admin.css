@@ -1,0 +1,6 @@
+﻿.navicon-content-schema {
+background-image:url(images/menu.contenttypes.png) !important;
+}
+.navicon-content-schema:hover {
+background-position:0 -30px !important;
+}
