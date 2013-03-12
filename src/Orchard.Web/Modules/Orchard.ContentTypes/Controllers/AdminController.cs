@@ -250,7 +250,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             Services.Notifier.Information(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
 
-            return RedirectToAction("List");
+            return RedirectToAction("Edit", new { id });
         }
 
         [HttpPost, ActionName("Edit")]
