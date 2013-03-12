@@ -1,0 +1,11 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    var terms = (IEnumerable<Orchard.Taxonomies.Models.TermPart>)Model.Terms;
+    string name = @Model.ContentField.DisplayName;
+}
+@if (Model.Terms.Count > 0) {
+<p class="taxonomy-field">
+    <span class="name">@name.CamelFriendly():</span> 
+    @(new HtmlString( string.Join(", ", terms.Select(t => Html.ItemDisplayLink(t.Name, t.ContentItem ).ToString()).ToArray()) ))
+</p>
+}

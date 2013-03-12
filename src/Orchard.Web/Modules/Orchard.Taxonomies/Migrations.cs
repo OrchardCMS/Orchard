@@ -1,0 +1,65 @@
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
+
+namespace Orchard.Taxonomies {
+    public class Migrations : DataMigrationImpl {
+
+        public int Create() {
+            SchemaBuilder.CreateTable("TaxonomyPartRecord", table => table
+                .ContentPartRecord()
+                .Column<string>("TermTypeName", column => column.WithLength(255))
+                .Column<bool>("IsInternal")
+            );
+
+            SchemaBuilder.CreateTable("TermPartRecord", table => table
+                .ContentPartRecord()
+                .Column<string>("Path", column => column.WithLength(255))
+                .Column<int>("TaxonomyId")
+                .Column<int>("Count")
+                .Column<int>("Weight")
+                .Column<bool>("Selectable")
+            );
+
+            SchemaBuilder.CreateTable("TermContentItem", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("Field", column => column.WithLength(50))
+                .Column<int>("TermRecord_id")
+                .Column<int>("TermsPartRecord_id")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("Taxonomy", cfg => cfg
+                .WithPart("TaxonomyPart")
+                .WithPart("CommonPart")
+                .WithPart("TitlePart")
+                .WithPart("AutoroutePart", builder => builder
+                .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-taxonomy'}]")
+                .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+            );
+
+            SchemaBuilder.CreateTable("TermsPartRecord", table => table
+                .ContentPartRecord()
+            );
+
+            SchemaBuilder.CreateTable("TermWidgetPartRecord", table => table
+                .ContentPartRecord()
+                .Column<int>("TaxonomyPartRecord_id")
+                .Column<int>("TermPartRecord_id")
+                .Column<int>("Count")
+                .Column<string>("OrderBy")
+                .Column<string>("FieldName")
+                .Column<string>("ContentType", c => c.Nullable())
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("TermWidget", cfg => cfg
+                .WithPart("TermWidgetPart")
+                .WithPart("CommonPart")
+                .WithPart("WidgetPart")
+                .WithSetting("Stereotype", "Widget")
+            );
+
+            return 1;
+        }
+    }
+}
