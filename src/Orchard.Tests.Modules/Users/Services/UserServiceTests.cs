@@ -112,6 +112,12 @@ namespace Orchard.Tests.Modules.Users.Services {
             _userService = _container.Resolve<IUserService>();
         }
 
+        [TearDown]
+        public void TearDown() {
+            _session.Transaction.Commit();
+            _session.Transaction.Dispose();
+        }
+
         [Test]
         public void NonceShouldBeDecryptable() {
             var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true));
