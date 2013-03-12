@@ -61,7 +61,6 @@ namespace UpgradeTo16.Controllers {
 
                 foreach (var contentType in contentTypesToMigrate) {
 
-                    _orchardServices.ContentManager.Flush();
                     _orchardServices.ContentManager.Clear();
 
                     var count = 0;
@@ -87,7 +86,6 @@ namespace UpgradeTo16.Controllers {
                             count++;
                         }
 
-                        _orchardServices.ContentManager.Flush();
                         _orchardServices.ContentManager.Clear();
 
                     } while (contents.Any());

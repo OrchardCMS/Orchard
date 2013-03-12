@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Orchard.Commands;
+﻿using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
-using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Navigation.Commands {
     public class MenuCommands : DefaultOrchardCommandHandler {
@@ -32,7 +30,6 @@ namespace Orchard.Core.Navigation.Commands {
         [OrchardSwitches("MenuPosition,MenuText,Url,MenuName")]
         public void Create() {
             // flushes before doing a query in case a previous command created the menu
-            _contentManager.Flush();
 
             var menu = _menuService.GetMenu(MenuName);
 

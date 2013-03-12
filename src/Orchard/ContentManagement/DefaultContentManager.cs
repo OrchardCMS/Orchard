@@ -660,10 +660,6 @@ namespace Orchard.ContentManagement {
             return context.Data;
         }
 
-        public void Flush() {
-            _contentItemRepository.Flush();
-        }
-
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
             var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
             if (contentTypeRecord == null) {

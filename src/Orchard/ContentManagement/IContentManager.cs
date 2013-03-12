@@ -10,7 +10,6 @@ namespace Orchard.ContentManagement {
     public interface IContentManager : IDependency {
         IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions();
 
-
         /// <summary>
         /// Instantiates a new content item with the specified type
         /// </summary>
@@ -73,11 +72,6 @@ namespace Orchard.ContentManagement {
         XElement Export(ContentItem contentItem);
         void Import(XElement element, ImportContentSession importContentSession);
 
-        /// <summary>
-        /// Flushes all pending content items to the persistance layer
-        /// </summary>
-        void Flush();
-        
         /// <summary>
         /// Clears the current referenced content items
         /// </summary>

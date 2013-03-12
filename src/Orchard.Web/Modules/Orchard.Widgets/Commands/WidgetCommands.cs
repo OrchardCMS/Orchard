@@ -104,9 +104,6 @@ namespace Orchard.Widgets.Commands {
             widget.RenderTitle = RenderTitle;
 
             if(widget.Has<MenuWidgetPart>() && !String.IsNullOrWhiteSpace(MenuName)) {
-                // flushes before doing a query in case a previous command created the menu
-                _contentManager.Flush();
-
                 var menu = _menuService.GetMenu(MenuName);
                 
                 if(menu != null) {

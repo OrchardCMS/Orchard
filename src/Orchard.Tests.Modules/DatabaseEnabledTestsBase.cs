@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Orchard.Tests.Modules {
     public abstract class DatabaseEnabledTestsBase {
 
         protected IContainer _container;
+        protected ITransaction _transaction;
 
         protected ISession _session;
         protected string _databaseFilePath;
@@ -36,6 +38,8 @@ namespace Orchard.Tests.Modules {
             _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, DatabaseTypes.ToArray());
             _session = _sessionFactory.OpenSession();
+            _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+
             _clock = new StubClock();
 
             var builder = new ContainerBuilder();
@@ -45,12 +49,15 @@ namespace Orchard.Tests.Modules {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             Register(builder);
             _container = builder.Build();
+
         }
 
         [TearDown]
         public void Cleanup() {
             if(_container != null)
                 _container.Dispose();
+
+            _transaction.Commit();
 
             if(_session != null)
                 _session.Close();
@@ -66,8 +73,9 @@ namespace Orchard.Tests.Modules {
 
         protected void ClearSession() {
             Trace.WriteLine("Flush and clear session");
-            _session.Flush();
+            _transaction.Commit();
             _session.Clear();
+            _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
             Trace.WriteLine("Flushed and cleared session");
         }
     }

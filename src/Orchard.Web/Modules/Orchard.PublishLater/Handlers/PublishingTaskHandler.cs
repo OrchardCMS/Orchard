@@ -25,7 +25,6 @@ namespace Orchard.PublishLater.Handlers {
                     context.Task.ScheduledUtc);
 
                 _contentManager.Publish(context.Task.ContentItem);
-                _orchardServices.ContentManager.Flush();
             }
         }
     }

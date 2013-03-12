@@ -69,8 +69,6 @@ namespace Orchard.Pages.Commands {
         [CommandHelp("page create [/Slug:<slug>] /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/MenuName:<name>] [/MenuText:<menu text>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
         [OrchardSwitches("Slug,Title,Path,Text,Owner,MenuText,Homepage,MenuName,Publish,UseWelcomeText")]
         public void Create() {
-            _contentManager.Flush();
-
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }

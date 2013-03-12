@@ -74,7 +74,6 @@ namespace Orchard.ContentManagement {
                             }
                         }
 
-                    _contentManager.Flush();
                     _contentManager.Clear();
                 }
             }

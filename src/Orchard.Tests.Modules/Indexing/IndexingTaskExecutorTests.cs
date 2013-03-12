@@ -211,7 +211,6 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Unpublish(content.ContentItem);
-            _contentManager.Flush();
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
@@ -231,7 +230,6 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Remove(content.ContentItem);
-            _contentManager.Flush();
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));

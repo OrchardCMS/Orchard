@@ -91,7 +91,6 @@ namespace UpgradeTo16.Controllers {
                                         .WithPart("TitlePart"));
 
                     // force the first object to be reloaded in order to get a valid AutoroutePart
-                    _orchardServices.ContentManager.Flush();
                     _orchardServices.ContentManager.Clear();
 
                     var count = 0;
@@ -152,7 +151,6 @@ namespace UpgradeTo16.Controllers {
                             count++;
                         }
 
-                        _orchardServices.ContentManager.Flush();
                         _orchardServices.ContentManager.Clear();
 
                     } while (contents.Any());

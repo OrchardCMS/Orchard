@@ -179,7 +179,6 @@ namespace Orchard.Projections.Tests.Services {
             Set("double2", (double)-123456.123456);
 
             _contentManager.Publish(_contentItem);
-            _contentManager.Flush();
 
             Assert.That(Get<string>("string"), Is.EqualTo("one"));
             Assert.That(Get<int>("int1"), Is.EqualTo(int.MaxValue));
@@ -201,7 +200,6 @@ namespace Orchard.Projections.Tests.Services {
             Set("string", new string('x', 8000));
 
             _contentManager.Publish(_contentItem);
-            _contentManager.Flush();
 
             Assert.That(Get<string>("string"), Is.EqualTo(new String('x', 4000)));
         }

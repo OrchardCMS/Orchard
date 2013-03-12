@@ -356,7 +356,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
-            Services.ContentManager.Flush();
+
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
@@ -372,7 +372,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);
-            Services.ContentManager.Flush();
+
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));

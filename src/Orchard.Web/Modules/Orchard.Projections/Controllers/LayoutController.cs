@@ -117,8 +117,6 @@ namespace Orchard.Projections.Controllers {
                 layoutRecord.Display = model.Display;
                 layoutRecord.DisplayType = model.DisplayType;
 
-                Services.ContentManager.Flush();
-
                 Services.Notifier.Information(T("Layout Created"));
 
                 return RedirectToAction("Edit", new { id = layoutRecord.Id });
@@ -213,8 +211,6 @@ namespace Orchard.Projections.Controllers {
                 layoutRecord.DisplayType = model.DisplayType;
                 layoutRecord.GroupProperty = layoutRecord.Properties.FirstOrDefault(x => x.Id == model.GroupPropertyId);
 
-                Services.ContentManager.Flush();
-                
                 Services.Notifier.Information(T("Layout Saved"));
 
                 return RedirectToAction("Edit", layoutRecord.Id);

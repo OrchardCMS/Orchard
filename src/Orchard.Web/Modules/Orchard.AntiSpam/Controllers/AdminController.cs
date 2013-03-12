@@ -130,7 +130,6 @@ namespace Orchard.AntiSpam.Controllers {
                     break;
             }
 
-            Services.ContentManager.Flush();
 
             return Index(options, new PagerParameters());
         }
