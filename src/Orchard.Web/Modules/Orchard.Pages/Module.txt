@@ -6,5 +6,5 @@ Version: 1.6
 OrchardVersion: 1.5
 Description: Introduces a preconfigured page content type.
 FeatureDescription: A basic page content type.
-Dependencies: Contents
+Dependencies: Contents, Orchard.ContentPicker
 Category: Content

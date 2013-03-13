@@ -1,10 +1,11 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentPicker.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Core.Navigation.Handlers {
+namespace Orchard.ContentPicker.Handlers {
     [UsedImplicitly]
     public class ContentMenuItemPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;

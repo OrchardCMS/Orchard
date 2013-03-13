@@ -132,26 +132,19 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
-    <Compile Include="Navigation\Drivers\NavigationPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
-    <Compile Include="Navigation\Handlers\ContentMenuItemPartHandler.cs" />
-    <Compile Include="Navigation\Handlers\NavigationPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
     <Compile Include="Navigation\Handlers\ShapeMenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
-    <Compile Include="Navigation\Models\ContentMenuItemPartRecord.cs" />
-    <Compile Include="Navigation\Models\ContentMenuItemPart.cs" />
-    <Compile Include="Navigation\Models\NavigationPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPartRecord.cs" />
-    <Compile Include="Navigation\Security\ContentMenuItemAuthorizationEventHandler.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
@@ -160,8 +153,6 @@
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
-    <Compile Include="Navigation\ViewModels\ContentMenuItemEditViewModel.cs" />
-    <Compile Include="Navigation\ViewModels\NavigationPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
@@ -205,7 +196,6 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
-    <Compile Include="Navigation\Drivers\ContentMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\MenuPart.cs" />
     <Compile Include="Navigation\Drivers\MenuPartDriver.cs" />
@@ -541,15 +531,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\MenuItemLink-HtmlMenuItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\EditorTemplates\Parts.ContentMenuItem.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\MenuItemLink-ContentMenuItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\Content-Menu.Edit.cshtml" />

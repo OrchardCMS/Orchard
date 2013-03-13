@@ -1,4 +1,4 @@
-﻿@model Orchard.Core.Navigation.ViewModels.ContentMenuItemEditViewModel
+﻿@model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
 @{
     Script.Require("ContentPicker").AtFoot();
     var title = Model.Part.Content == null ? new HtmlString(T("Empty").Text) : Html.ItemDisplayText(Model.Part.Content);

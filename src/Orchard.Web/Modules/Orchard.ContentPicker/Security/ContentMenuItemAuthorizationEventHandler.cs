@@ -1,13 +1,8 @@
-﻿        using System;
-using System.Collections.Generic;
-using System.Linq;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
-        using Orchard.Core.Navigation.Models;
-        using Orchard.Security;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentPicker.Models;
+using Orchard.Security;
 
-namespace Orchard.Core.Navigation.Security {
+namespace Orchard.ContentPicker.Security {
     public class ContentMenuItemAuthorizationEventHandler : IAuthorizationServiceEventHandler{
         private readonly IAuthorizationService _authorizationService;
 

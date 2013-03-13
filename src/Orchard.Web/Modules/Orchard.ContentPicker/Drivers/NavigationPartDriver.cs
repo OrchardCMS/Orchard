@@ -1,5 +1,8 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentPicker.Models;
+using Orchard.ContentPicker.ViewModels;
+using Orchard.Core.Navigation;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
@@ -8,7 +11,7 @@ using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 
-namespace Orchard.Core.Navigation.Drivers {
+namespace Orchard.ContentPicker.Drivers {
     
     public class NavigationPartDriver : ContentPartDriver<NavigationPart> {
         private readonly IAuthorizationService _authorizationService;

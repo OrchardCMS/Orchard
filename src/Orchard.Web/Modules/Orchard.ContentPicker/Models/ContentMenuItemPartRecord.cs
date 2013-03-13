@@ -1,6 +1,6 @@
 ﻿using Orchard.ContentManagement.Records;
 
-namespace Orchard.Core.Navigation.Models {
+namespace Orchard.ContentPicker.Models {
     public class ContentMenuItemPartRecord : ContentPartRecord {
         public virtual ContentItemRecord ContentMenuItemRecord { get; set; }
     }

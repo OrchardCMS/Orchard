@@ -2,12 +2,15 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentPicker.Models;
+using Orchard.ContentPicker.ViewModels;
+using Orchard.Core.Navigation;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
 
-namespace Orchard.Core.Navigation.Drivers {
+namespace Orchard.ContentPicker.Drivers {
     [UsedImplicitly]
     public class ContentMenuItemPartDriver : ContentPartDriver<ContentMenuItemPart> {
         private readonly IContentManager _contentManager;

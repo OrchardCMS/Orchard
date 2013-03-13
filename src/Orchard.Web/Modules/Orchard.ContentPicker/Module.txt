@@ -8,5 +8,5 @@ Description: UI for selecting Content Items.
 Features:
     Orchard.ContentPicker:
         Description: UI for selecting Content Items.
-		Dependencies: Contents
+		Dependencies: Contents, Navigation
 		Category: Input Editor

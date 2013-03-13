@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 
-namespace Orchard.Core.Navigation.Models {
+namespace Orchard.ContentPicker.Models {
     public class ContentMenuItemPart : ContentPart<ContentMenuItemPartRecord> {
 
         public readonly LazyField<ContentItem> _content = new LazyField<ContentItem>();
