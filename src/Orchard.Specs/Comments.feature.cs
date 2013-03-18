@@ -220,25 +220,30 @@ this.ScenarioSetup(scenarioInfo);
 #line 67
  testRunner.Then("I should see \"Settings updated\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 68
- testRunner.When("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I go to \"users/account/logoff\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 69
+  testRunner.And("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table8.AddRow(new string[] {
+                        "Comments.Author",
+                        "Bill"});
+            table8.AddRow(new string[] {
                         "Comments.CommentText",
                         "This is a moderated comment."});
-#line 69
+#line 70
         testRunner.And("I fill in", ((string)(null)), table8, "And ");
-#line 72
+#line 74
         testRunner.And("I hit \"Submit Comment\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 73
-        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 75
-        testRunner.And("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 76
-    testRunner.Then("I should see \"Hi there\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I am redirected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 77
+        testRunner.And("I go to \"my-blog/my-post\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 78
+    testRunner.Then("I should see \"Hi there\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 79
         testRunner.And("I should not see \"This is a moderated comment\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

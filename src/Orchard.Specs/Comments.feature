@@ -65,9 +65,11 @@ Scenario: Moderated comments are not displayed
 		And I hit "Save"
 		And I am redirected
 	Then I should see "Settings updated"
-	When I go to "my-blog/my-post"
+	When I go to "users/account/logoff"
+		And I go to "my-blog/my-post"
         And I fill in
             | name | value |
+            | Comments.Author | Bill |
             | Comments.CommentText | This is a moderated comment. |
         And I hit "Submit Comment"
         And I am redirected
