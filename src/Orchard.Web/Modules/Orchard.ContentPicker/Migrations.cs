@@ -52,7 +52,7 @@ namespace Orchard.ContentPicker {
             var tablePrefix = String.IsNullOrEmpty(_shellSettings.DataTablePrefix) ? "" : _shellSettings.DataTablePrefix + "_";
 
             try {
-                if (null != session.CreateSQLQuery("SELECT COUNT FROM " + tablePrefix + "Navigation_ContentMenuItemPartRecord").UniqueResult()) {
+                if (null != session.CreateSQLQuery("SELECT COUNT(*) FROM " + tablePrefix + "Navigation_ContentMenuItemPartRecord").UniqueResult()) {
                     // if no exception is thrown, we need to upgrade previous data
                     var records = session.CreateSQLQuery("SELECT * FROM " + tablePrefix + "Navigation_ContentMenuItemPartRecord").List();
 
