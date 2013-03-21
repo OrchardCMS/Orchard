@@ -9,7 +9,7 @@ namespace Orchard.ContentTypes {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("contenttypes");
-            builder.Add(T("Content Schema"), "1.4.1", menu => {
+            builder.Add(T("Content Definition"), "1.4.1", menu => {
                 menu.LinkToFirstChild(true);
 
                 menu.Add(T("Content Types"), "1", item => item.Action("Index", "Admin", new { area = "Orchard.ContentTypes" }).LocalNav());
