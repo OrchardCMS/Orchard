@@ -138,7 +138,7 @@ namespace Orchard.Workflows.Services {
             return new ActivityContext {
                 Record = activityRecord,
                 Activity = _activitiesManager.GetActivityByName(activityRecord.Name),
-                State = new Lazy<dynamic>(() => GetSate(activityRecord.State, tokens))
+                State = new Lazy<dynamic>(() => GetState(activityRecord.State, tokens))
             };
         }
 
@@ -273,7 +273,7 @@ namespace Orchard.Workflows.Services {
             }
         }
 
-        private dynamic GetSate(string state, IDictionary<string, object> tokens) {
+        private dynamic GetState(string state, IDictionary<string, object> tokens) {
             if (!String.IsNullOrWhiteSpace(state)) {
                 var formatted = JsonConvert.DeserializeXNode(state, "Root").ToString();
                 var tokenized = _tokenizer.Replace(formatted, tokens);

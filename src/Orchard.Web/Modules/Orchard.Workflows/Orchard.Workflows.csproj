@@ -145,7 +145,6 @@
     <Compile Include="Drivers\WorkflowDriver.cs" />
     <Compile Include="Handlers\ContentHandler.cs" />
     <Compile Include="Handlers\WorkflowHandler.cs" />
-    <Compile Include="Models\ActivityState.cs" />
     <Compile Include="Models\AwaitingActivityRecord.cs" />
     <Compile Include="Models\CancellationToken.cs" />
     <Compile Include="Models\ActivityContext.cs" />
