@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using Autofac;
@@ -100,7 +101,7 @@ namespace Orchard.Tests.ContentManagement {
             public void Demand() {
             }
 
-            public void RequireNew() {
+            public void RequireNew(IsolationLevel level) {
             }
 
             public void Cancel() {
