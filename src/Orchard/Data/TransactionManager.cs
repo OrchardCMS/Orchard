@@ -5,7 +5,8 @@ using Orchard.Mvc.Filters;
 namespace Orchard.Data {
     public interface ITransactionManager : IDependency {
         void Demand();
-        void RequireNew(IsolationLevel level = IsolationLevel.ReadCommitted);
+        void RequireNew();
+        void RequireNew(IsolationLevel level);
         void Cancel();
     }
 

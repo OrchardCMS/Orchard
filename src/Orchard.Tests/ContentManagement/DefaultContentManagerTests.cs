@@ -101,6 +101,9 @@ namespace Orchard.Tests.ContentManagement {
             public void Demand() {
             }
 
+            public void RequireNew() {
+            }
+
             public void RequireNew(IsolationLevel level) {
             }
 
