@@ -143,7 +143,7 @@
     <Content Include="Styles\images\ui-icons_454545_256x240.png" />
     <Content Include="Styles\images\ui-icons_888888_256x240.png" />
     <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Styles\jquery-ui-1.8.23.custom.css" />
+    <Content Include="Styles\jquery-ui-1.9.2.custom.css" />
     <Content Include="Styles\jquery-ui-timepicker-addon.css" />
     <Content Include="Styles\ui.datepicker.css" />
   </ItemGroup>
