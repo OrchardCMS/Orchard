@@ -514,6 +514,18 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public bool HasResolverForIdentity(ContentIdentity contentIdentity) {
+            var context = new RegisterIdentityResolverContext();
+            Handlers.Invoke(handler => handler.RegisterIdentityResolver(context), Logger);
+            return context.HasResolverForIdentity(contentIdentity);
+        }
+
+        public ContentItem ResolveIdentity(ContentIdentity contentIdentity) {
+            var context = new RegisterIdentityResolverContext();
+            Handlers.Invoke(handler => handler.RegisterIdentityResolver(context), Logger);
+            return context.ResolveIdentity(contentIdentity);
+        }
+
         public ContentItemMetadata GetItemMetadata(IContent content) {
             var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
@@ -593,7 +605,7 @@ namespace Orchard.ContentManagement {
             var identity = elementId.Value;
             var status = element.Attribute("Status");
 
-            var item = importContentSession.Get(identity, XmlConvert.DecodeName(element.Name.LocalName));
+            var item = importContentSession.Get(identity, VersionOptions.DraftRequired, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
@@ -625,7 +637,7 @@ namespace Orchard.ContentManagement {
                 contentHandler.Imported(context);
             }
 
-            var savedItem = Get(item.Id, VersionOptions.DraftRequired);
+            var savedItem = Get(item.Id, VersionOptions.Latest);
 
             // the item has been pre-created in the first pass of the import, create it in db
             if(savedItem == null) {

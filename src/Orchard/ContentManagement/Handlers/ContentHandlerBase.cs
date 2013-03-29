@@ -24,6 +24,7 @@
         public virtual void Exporting(ExportContentContext context) {}
         public virtual void Exported(ExportContentContext context) {}
 
+        public virtual void RegisterIdentityResolver(RegisterIdentityResolverContext context) { }
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) {}
         public virtual void BuildDisplay(BuildDisplayContext context) {}
         public virtual void BuildEditor(BuildEditorContext context) {}

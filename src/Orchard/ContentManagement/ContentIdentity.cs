@@ -6,6 +6,8 @@ using System.Text;
 namespace Orchard.ContentManagement {
     public class ContentIdentity {
         private readonly Dictionary<string, string> _dictionary;
+        private int _currentIdentityPriority = int.MinValue; //initialise to lowest possible priority
+        private string _encodedIdentity = null;
 
         public ContentIdentity() {
             _dictionary = new Dictionary<string, string>();
@@ -18,19 +20,33 @@ namespace Orchard.ContentManagement {
                 foreach (var identityEntry in identityEntries) {
                     var keyValuePair = GetIdentityKeyValue(identityEntry);
                     if (keyValuePair != null) {
-                        _dictionary.Add(keyValuePair.Value.Key, UnencodeIdentityValue(keyValuePair.Value.Value));
+                        Add(keyValuePair.Value.Key, UnencodeIdentityValue(keyValuePair.Value.Value));
                     }
                 }
             }
         }
 
         public void Add(string name, string value) {
+            Add(name, value, 0/*default priority*/);
+        }
+
+        public void Add(string name, string value, int priority) {
+            if (priority < _currentIdentityPriority)
+                return; //lower priority, so ignore
+            if (priority > _currentIdentityPriority)
+                _dictionary.Clear(); //higher, so override and delete existing
+
+            //save the current highest priority
+            _currentIdentityPriority = priority;
+
+            //if equal or higher priority add to identity collection
             if (_dictionary.ContainsKey(name)) {
                 _dictionary[name] = value;
             }
-            else {            
-                _dictionary.Add(name, value);                
+            else {
+                _dictionary.Add(name, value);
             }
+            _encodedIdentity = null;
         }
 
         public string Get(string name) {
@@ -38,12 +54,16 @@ namespace Orchard.ContentManagement {
         }
 
         public override string ToString() {
+            if (_encodedIdentity != null)
+                return _encodedIdentity;
+
             var stringBuilder = new StringBuilder();
-            foreach (var key in _dictionary.Keys) {
+            foreach (var key in _dictionary.Keys.OrderBy(key => key)) {
                 var escapedIdentity = EncodeIdentityValue(_dictionary[key]);
                 stringBuilder.Append("/" + key + "=" + escapedIdentity);
             }
-            return stringBuilder.ToString();
+            _encodedIdentity = stringBuilder.ToString();
+            return _encodedIdentity;
         }
 
         private static string EncodeIdentityValue(string identityValue) {
@@ -141,14 +161,11 @@ namespace Orchard.ContentManagement {
 
         public class ContentIdentityEqualityComparer : IEqualityComparer<ContentIdentity> {
             public bool Equals(ContentIdentity contentIdentity1, ContentIdentity contentIdentity2) {
-                if (contentIdentity1._dictionary.Keys.Count != contentIdentity2._dictionary.Keys.Count)
-                    return false;
-
-                return contentIdentity1._dictionary.OrderBy(kvp => kvp.Key).SequenceEqual(contentIdentity2._dictionary.OrderBy(kvp => kvp.Key));
+                return contentIdentity1.ToString().Equals(contentIdentity2.ToString());
             }
 
             public int GetHashCode(ContentIdentity contentIdentity) {
-                return contentIdentity._dictionary.OrderBy(kvp => kvp.Key).ToString().GetHashCode();
+                return contentIdentity.ToString().GetHashCode();
             }
         }
 

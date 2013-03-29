@@ -24,6 +24,7 @@
         void Exporting(ExportContentContext context);
         void Exported(ExportContentContext context);
 
+        void RegisterIdentityResolver(RegisterIdentityResolverContext context);
         void GetContentItemMetadata(GetContentItemMetadataContext context);
         void BuildDisplay(BuildDisplayContext context);
         void BuildEditor(BuildEditorContext context);

@@ -7,6 +7,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
+using Orchard.Recipes.Services;
 using Orchard.UI.Notify;
 using Orchard.ImportExport.Models;
 
@@ -15,16 +16,19 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICustomExportStep _customExportStep;
+        private readonly IRecipeJournal _recipeJournal;
 
         public AdminController(
             IOrchardServices services, 
             IImportExportService importExportService, 
             IContentDefinitionManager contentDefinitionManager,
-            ICustomExportStep customExportStep
+            ICustomExportStep customExportStep,
+            IRecipeJournal recipeJournal
             ) {
             _importExportService = importExportService;
             _contentDefinitionManager = contentDefinitionManager;
             _customExportStep = customExportStep;
+            _recipeJournal = recipeJournal;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -49,11 +53,17 @@ namespace Orchard.ImportExport.Controllers {
             }
 
             if (ModelState.IsValid) {
-                _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
+                var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
                 Services.Notifier.Information(T("Your recipe has been imported."));
-            }
 
-            return RedirectToAction("Import");
+                return RedirectToAction("ImportResult", new { ExecutionId = executionId });
+            }
+            return View(new ImportViewModel());
+        }
+
+        public ActionResult ImportResult(string executionId) {
+            var journal = _recipeJournal.GetRecipeJournal(executionId);
+            return View(journal);
         }
 
         public ActionResult Export() {

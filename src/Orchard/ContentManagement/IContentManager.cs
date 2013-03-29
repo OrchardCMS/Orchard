@@ -89,6 +89,8 @@ namespace Orchard.ContentManagement {
         GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
         GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 
+        bool HasResolverForIdentity(ContentIdentity contentIdentity);
+        ContentItem ResolveIdentity(ContentIdentity contentIdentity);
 
         /// <summary>
         /// Builds the display shape of the specified content item
