@@ -121,7 +121,7 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Exporting(ContentPart part, Fields.DateTimeField field, ExportContentContext context) {
-            context.Element(GetPrefix(field, part)).SetAttributeValue("DateTime", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
+            context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
         }
 
         protected override void Describe(DescribeMembersContext context) {
