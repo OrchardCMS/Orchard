@@ -10,12 +10,12 @@
         }
     });
 
-    $("#img-cancel, #lib-cancel").live("click", function () { window.close(); });
+    $(document).on("click", "#img-cancel, #lib-cancel", function () { window.close(); });
     // when url changes, set the preview and loader src
-    $("#img-src").live("change", function () {
+    $(document).on("change", "#img-src", function () {
         selectImage(getIdPrefix(this), this.value);
     });
-    $(".media-item").live("click", function () {
+    $(document).on("click", ".media-item", function () {
         if (selectedItem) {
             selectedItem.removeClass("selected");
         }
@@ -24,15 +24,15 @@
         selectImage("#lib-", selectedItem.attr("data-imgsrc"));
     });
     // maintain aspect ratio when width or height is changed
-    $("#img-width, #lib-width").live("change", fixAspectHeight);
-    $("#img-height, #lib-height").live("change", fixAspectWidth);
+    $(document).on("change", "#img-width, #lib-width", fixAspectHeight);
+    $(document).on("change", "#img-height, #lib-height", fixAspectWidth);
 
-    $("#img-insert, #lib-insert").live("click", function () {
+    $(document).on("click", "#img-insert, #lib-insert", function () {
         if ($(this).hasClass("disabled")) return;
         publishInsertEvent(this);
     });
 
-    $(".media-filename").live("click", function (ev) {
+    $(document).on("click", ".media-filename", function (ev) {
         // when clicking on a filename in the gallery view,
         // we interrupt the normal operation and write a <img>
         // tag into a new window to ensure the image displays in
@@ -44,7 +44,7 @@
         w.document.write("<!DOCTYPE html><html><head><title>" + src + "</title></head><body><img src=\"" + src + "\" alt=\"\" /></body></html>");
     });
 
-    $("#createFolder").live("click", function () {
+    $(document).on("click", "#createFolder", function () {
         if ($(this).hasClass("disabled")) return;
         $.post("MediaPicker/CreateFolder", { path: query("mediaPath") || "", folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
             function (response) {
@@ -59,7 +59,7 @@
             });
     });
 
-    $("#folderName").live("propertychange keyup input paste", function () {
+    $(document).on("propertychange keyup input paste", "#folderName", function () {
         var empty = ($("#folderName").val() == "");
         $("#createFolder").attr("disabled", empty).toggleClass("disabled", empty);
     });

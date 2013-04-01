@@ -113,13 +113,13 @@
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
                     }
                 })
-                .live("focus", function () {
+                .on("focus", function () {
                     var _this = $(this);
                     if (_this.val() === _this.attr("placeholder")) {
                         _this.val("").removeClass("placeholderd");
                     }
                 })
-                .live("blur", function () {
+                .on("blur", function () {
                     var _this = $(this);
                     if (_this.val() === "") {
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
@@ -127,7 +127,7 @@
                 });
 
             //make sure the placeholder value is not taken as the input value when submitting forms
-            $("form").live("submit", function () {
+            $("form").on("submit", function () {
                 $(":input[placeholder].placeholderd").val("");
             });
 

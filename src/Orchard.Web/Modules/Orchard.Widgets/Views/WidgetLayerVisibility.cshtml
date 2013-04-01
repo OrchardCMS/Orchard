@@ -49,8 +49,7 @@
 
             visContainer.append(layer);
         }
-
-        $("#widgets-layer-visibility .widgets-other-layer").live("click", function() {
+        $(document).on("click", "#widgets-layer-visibility .widgets-other-layer", function() {
             var _this = $(this);
             _this.toggleClass("off");
             if (_this.hasClass("off")) {
@@ -60,10 +59,10 @@
                 _this.data("widgets").show();
             }
         });
-        $("#widgets-layer-visibility .widgets-other-layer").live("hover", function() {
+        $(document).on("hover", "#widgets-layer-visibility .widgets-other-layer", function() {
             $(this).data("widgets").toggleClass("on");
         });
-        $("#widgets-zones .widgets-other-layer").live("hover", function() {
+        $(document).on("hover", "#widgets-zones .widgets-other-layer", function() {   
             var layer = $(this).data("widgets-vis-control");
             layer.toggleClass("on");
             layer.data("widgets").toggleClass("on");

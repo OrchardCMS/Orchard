@@ -93,7 +93,7 @@
             });
         });
 
-        $('#content-picker-@Html.FieldIdFor(m => m.Field.Ids) .content-picker-remove').live("click", function() {
+        $(document).on("click",'#content-picker-@Html.FieldIdFor(m => m.Field.Ids) .content-picker-remove',function() {
             $(this).closest('tr').remove();
             refreshIds();
             $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
