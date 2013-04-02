@@ -9,7 +9,7 @@
 
   <!-- Display terms in content item details -->
   <Match DisplayType="Detail">
-    <Place Fields_Contrib_TaxonomyField="Content:5"/>
+    <Place Fields_TaxonomyField="Content:5"/>
   </Match>
 
   <!-- Display terms in admin summaries -->
