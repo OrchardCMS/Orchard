@@ -12,6 +12,7 @@ namespace Orchard.CustomForms {
     public class Permissions : IPermissionProvider {
         private static readonly Permission SubmitAnyForm = new Permission { Description = "Submit any forms", Name = "Submit" };
         private static readonly Permission SubmitForm = new Permission { Description = "Submit {0} forms", Name = "Submit_{0}", ImpliedBy = new[] { SubmitAnyForm } };
+        public static readonly Permission ManageForms = new Permission { Description = "Manage custom forms", Name = "ManageForms" };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
@@ -37,13 +38,14 @@ namespace Orchard.CustomForms {
             }
 
             yield return SubmitAnyForm;
+            yield return ManageForms;
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] { SubmitAnyForm }
+                    Permissions = new[] { SubmitAnyForm, ManageForms }
                 },
                 new PermissionStereotype {
                     Name = "Editor",
