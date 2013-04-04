@@ -10,7 +10,9 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
+using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Tests.Logging;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.State {
@@ -25,6 +27,9 @@ namespace Orchard.Tests.Environment.State {
             builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>();
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterModule(new LoggingModule());
+            var stubFactory = new LoggingModuleTests.StubFactory();
+            builder.RegisterInstance(stubFactory).As<ILoggerFactory>();
             builder.RegisterAutoMocking();
             _container = builder.Build();
 
