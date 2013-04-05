@@ -11,7 +11,7 @@ namespace Markdown.Services {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            var markdown = new MarkdownSharp.Markdown(new MarkdownOptions { AutoNewLines = true });
+            var markdown = new MarkdownSharp.Markdown(new MarkdownOptions { AutoNewLines = false });
             return markdown.Transform(text);
         }
     }
