@@ -8,9 +8,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
-using Orchard.Logging;
 using Orchard.Mvc;
-using Orchard.Tests.Logging;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
@@ -24,10 +22,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
-            builder.RegisterModule(new LoggingModule());
-            var stubFactory = new LoggingModuleTests.StubFactory();
-            builder.RegisterInstance(stubFactory).As<ILoggerFactory>();
-            builder.RegisterAutoMocking(MockBehavior.Strict);
+            builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
             _container = builder.Build();
         }
 

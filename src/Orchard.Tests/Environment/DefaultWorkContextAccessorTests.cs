@@ -2,9 +2,7 @@
 using Autofac;
 using NUnit.Framework;
 using Orchard.Environment;
-using Orchard.Logging;
 using Orchard.Mvc;
-using Orchard.Tests.Logging;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
@@ -22,9 +20,6 @@ namespace Orchard.Tests.Environment {
         protected override void Register(ContainerBuilder builder) {
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
-            builder.RegisterModule(new LoggingModule());
-            var stubFactory = new LoggingModuleTests.StubFactory();
-            builder.RegisterInstance(stubFactory).As<ILoggerFactory>();
             builder.RegisterAutoMocking();
         }
 

@@ -10,10 +10,8 @@ using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
-using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Routes;
-using Orchard.Tests.Logging;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
@@ -44,9 +42,7 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.RegisterType<StubCacheManager>().As<ICacheManager>();
             rootBuilder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             rootBuilder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
-            rootBuilder.RegisterModule(new LoggingModule());
-            var stubFactory = new LoggingModuleTests.StubFactory();
-            rootBuilder.RegisterInstance(stubFactory).As<ILoggerFactory>();
+
             _rootContainer = rootBuilder.Build();
 
             _containerA = _rootContainer.BeginLifetimeScope(
