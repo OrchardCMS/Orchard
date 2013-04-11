@@ -151,10 +151,10 @@ namespace Orchard.Indexing.Services {
 
                 // load all content items
                 var contentItems = _contentRepository
-                    .Fetch(
-                        versionRecord => versionRecord.Published && versionRecord.Id > indexSettings.LastContentId,
-                        order => order.Asc(versionRecord => versionRecord.Id))
+                    .Table.Where(versionRecord => versionRecord.Published && versionRecord.Id > indexSettings.LastContentId)
+                    .OrderBy(versionRecord => versionRecord.Id)
                     .Take(ContentItemsPerLoop)
+                    .ToList()
                     .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
                     .Distinct()
                     .ToList();
@@ -190,9 +190,10 @@ namespace Orchard.Indexing.Services {
                 _indexingStatus = IndexingStatus.Updating;
 
                 var indexingTasks = _taskRepository
-                    .Fetch(x => x.Id > indexSettings.LastIndexedId)
+                    .Table.Where(x => x.Id > indexSettings.LastIndexedId)
                     .OrderBy(x => x.Id)
                     .Take(ContentItemsPerLoop)
+                    .ToList()
                     .GroupBy(x => x.ContentItemRecord.Id)
                     .Select(group => new {TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
                     .OrderBy(x => x.TaskId)
