@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -13,12 +12,10 @@ namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
         public IOrchardServices Services { get; set; }
         private readonly ICommentService _commentService;
-        private readonly INotifier _notifier;
 
-        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier) {
+        public CommentController(IOrchardServices services, ICommentService commentService) {
             Services = services;
             _commentService = commentService;
-            _notifier = notifier;
             T = NullLocalizer.Instance;
         }
 
@@ -32,6 +29,22 @@ namespace Orchard.Comments.Controllers {
             var viewModel = new CommentsCreateViewModel();
 
             TryUpdateModel(viewModel);
+
+            if (!ModelState.IsValidField("Name")) {
+                Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("Email")) {
+                Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("Site")) {
+                Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("CommentText")) {
+                Services.Notifier.Error(T("Comment is mandatory"));
+            }
             
             var context = new CreateCommentContext {
                 Author = viewModel.Name,
@@ -40,7 +53,6 @@ namespace Orchard.Comments.Controllers {
                 SiteName = viewModel.SiteName,
                 CommentedOn = viewModel.CommentedOn
             };
-
 
             if (ModelState.IsValid) {
                 if (!String.IsNullOrEmpty(context.SiteName) && !context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
@@ -60,12 +72,6 @@ namespace Orchard.Comments.Controllers {
                 }
             }
             else {
-                foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select( e=> e.ErrorMessage)) {
-                    _notifier.Error(T(error));
-                }
-            }
-
-            if(!ModelState.IsValid) {
                 TempData["CreateCommentContext.Name"] = context.Author;
                 TempData["CreateCommentContext.CommentText"] = context.CommentText;
                 TempData["CreateCommentContext.Email"] = context.Email;
