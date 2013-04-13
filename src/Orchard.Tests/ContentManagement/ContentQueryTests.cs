@@ -18,6 +18,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Tests.Stubs;
 using NHibernate.Impl;
 using Orchard.UI.PageClass;
+using System.Collections.Generic;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -64,7 +65,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
@@ -84,12 +85,17 @@ namespace Orchard.Tests.ContentManagement {
 
         }
 
-        private void AddSampleData() {
-            _manager.Create<AlphaPart>("alpha", init => { });
-            _manager.Create<BetaPart>("beta", init => { });
-            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "the frap value"; });
-            _manager.Create<DeltaPart>("delta", init => { init.Record.Quux = "the quux value"; });
+        private List<IContent> AddSampleData() {
+            var items = new List<IContent> {
+                _manager.Create<AlphaPart>("alpha", init => { }),
+                _manager.Create<BetaPart>("beta", init => { }),
+                _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "the frap value"; }),
+                _manager.Create<DeltaPart>("delta", init => { init.Record.Quux = "the quux value"; })
+            };
+
             _session.Flush();
+
+            return items;
         }
 
         [Test]
@@ -159,6 +165,66 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(gammaDelta.Count(x => x.Has<BetaPart>()), Is.EqualTo(0));
             Assert.That(gammaDelta.Count(x => x.Has<GammaPart>()), Is.EqualTo(1));
             Assert.That(gammaDelta.Count(x => x.Has<DeltaPart>()), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void NoItemIsReturnedIfNoItemsSpecified() {
+            AddSampleData();
+
+            var items = _manager.Query().ForContentItems(new int[] { }).List();
+
+            Assert.That(items.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ItemsSpecifiedAreReturnedWhenSpecified() {
+            var samples = AddSampleData();
+
+
+            var betaGamma = _manager.Query().ForContentItems(new int[] { samples[1].ContentItem.Id, samples[2].ContentItem.Id }).List();
+
+            Assert.That(betaGamma.Count(), Is.EqualTo(2));
+            Assert.That(betaGamma.Count(x => x.Has<AlphaPart>()), Is.EqualTo(0));
+            Assert.That(betaGamma.Count(x => x.Has<BetaPart>()), Is.EqualTo(1));
+            Assert.That(betaGamma.Count(x => x.Has<GammaPart>()), Is.EqualTo(1));
+            Assert.That(betaGamma.Count(x => x.Has<DeltaPart>()), Is.EqualTo(0));
+
+            var alphaDelta = _manager.Query()
+                .ForContentItems(new int[] { samples[0].ContentItem.Id, samples[3].ContentItem.Id })
+                .List();
+
+            Assert.That(alphaDelta.Count(), Is.EqualTo(2));
+            Assert.That(alphaDelta.Count(x => x.Has<AlphaPart>()), Is.EqualTo(1));
+            Assert.That(alphaDelta.Count(x => x.Has<BetaPart>()), Is.EqualTo(0));
+            Assert.That(alphaDelta.Count(x => x.Has<GammaPart>()), Is.EqualTo(0));
+            Assert.That(alphaDelta.Count(x => x.Has<DeltaPart>()), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ItemsSpecifiedCanBeFiltered() {
+            AddSampleData();
+            var oneId = _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; }).ContentItem.Id;
+            var twoId = _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; }).ContentItem.Id;
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            var fourId = _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; }).ContentItem.Id;
+            _session.Flush();
+
+
+            var two = _manager.Query()
+                .ForContentItems(new int[] { oneId, twoId, fourId })
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .List();
+
+            Assert.That(two.Count(), Is.EqualTo(1));
+            Assert.That(two.Count(x => x.Has<GammaPart>()), Is.EqualTo(1));
+            Assert.That(two.Count(x => x.Get<GammaPart>().Record.Frap == "two"), Is.EqualTo(1));
+
+            var none = _manager.Query()
+                .ForContentItems(new int[] { oneId, twoId, fourId })
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .List();
+
+            Assert.That(none.Count(), Is.EqualTo(0));
         }
 
         [Test]
