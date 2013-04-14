@@ -117,7 +117,7 @@
         $(".no-terms", $wrapper).hide();
     };
 
-    $("fieldset.taxonomy-wrapper .expando input[data-term]:enabled").live("change", function (e) {
+    $("fieldset.taxonomy-wrapper .expando").on("change", "input[data-term]:enabled", function(e) {
         var $checkbox = $(this);
         var term = $checkbox.data("term");
         var $wrapper = $checkbox.parents("fieldset.taxonomy-wrapper:first");
