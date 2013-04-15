@@ -12,6 +12,7 @@ namespace Orchard.Comments.Models {
         public LazyField<ContentItem> CommentedOnContentItemField { get { return _commentedOnContentItem; } }
         public LazyField<ContentItemMetadata> CommentedOnContentItemMetadataField { get { return _commentedOnContentItemMetadata; } }
 
+        [StringLength(255)]
         public string Author {
             get { return Record.Author; }
             set { Record.Author = value; }
@@ -19,7 +20,7 @@ namespace Orchard.Comments.Models {
 
         [StringLength(245)]
         [DisplayName("Site")]
-        [RegularExpression(@"^(http(s)?://)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}[\S]+$", ErrorMessage = "Invalid url")]
+        [RegularExpression(@"^(http(s)?://)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}[\S]+$")]
         public string SiteName {
             get { return Record.SiteName; }
             set { Record.SiteName = value; }
@@ -30,8 +31,7 @@ namespace Orchard.Comments.Models {
             set { Record.UserName = value; }
         }
 
-        [RegularExpression(@"^[^@\s]+@[^@\s]+$", ErrorMessage = "Invalid Email")]
-        [StringLength(255)]
+        [RegularExpression(@"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$")]
         public string Email {
             get { return Record.Email; }
             set { Record.Email = value; }

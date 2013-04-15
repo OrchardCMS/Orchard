@@ -33,6 +33,23 @@ namespace Orchard.Comments.Controllers {
 
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
+
+            if (!ModelState.IsValidField("Author")) {
+                Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("Email")) {
+                Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("Site")) {
+                Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
+            }
+
+            if (!ModelState.IsValidField("CommentText")) {
+                Services.Notifier.Error(T("Comment is mandatory"));
+            }
+
             if (ModelState.IsValid) {
                 Services.ContentManager.Create(comment);
 
@@ -108,10 +125,6 @@ namespace Orchard.Comments.Controllers {
             }
             else {
                 Services.TransactionManager.Cancel();
-
-                foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
-                    _notifier.Error(T(error));
-                }
 
                 TempData["Comments.InvalidCommentEditorShape"] = editorShape;
                 var commentPart = comment.As<CommentPart>(); 

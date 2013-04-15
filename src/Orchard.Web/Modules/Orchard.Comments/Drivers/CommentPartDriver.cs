@@ -121,8 +121,6 @@ namespace Orchard.Comments.Drivers {
 
             if (currentUser != null) part.Author = currentUser.UserName;
 
-            if (String.IsNullOrEmpty(part.Author)) updater.AddModelError("NameMissing", T("You didn't specify your name."));
-
             var moderateComments = workContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments;
             part.Status = moderateComments ? CommentStatus.Pending : CommentStatus.Approved;
 
