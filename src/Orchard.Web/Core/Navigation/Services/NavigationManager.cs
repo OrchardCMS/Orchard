@@ -192,12 +192,14 @@ namespace Orchard.Core.Navigation.Services {
             var index = new Dictionary<string, MenuItem>();
 
             foreach (var item in items) {
-                MenuItem parent = null;
+                MenuItem parent;
                 var parentPosition = String.Empty;
 
-                var lastSegment = item.Position.LastIndexOf('.');
+                var position = item.Position ?? String.Empty;
+
+                var lastSegment = position.LastIndexOf('.');
                 if (lastSegment != -1) {
-                    parentPosition = item.Position.Substring(0, lastSegment);
+                    parentPosition = position.Substring(0, lastSegment);
                 }
 
                 if (index.TryGetValue(parentPosition, out parent)) {
@@ -207,9 +209,9 @@ namespace Orchard.Core.Navigation.Services {
                     result.Add(item);
                 }
 
-                if (!index.ContainsKey(item.Position)) {
+                if (!index.ContainsKey(position)) {
                     // prevent invalid positions
-                    index.Add(item.Position, item);    
+                    index.Add(position, item);    
                 }
             }
 
