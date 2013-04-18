@@ -103,7 +103,7 @@
         });
 
         // editing an item
-        $(".media-gallery-edit").live("click", function() {
+        $(".items.media-gallery").on("click", ".media-gallery-edit", function() {
             var img = extractModel($(this).parent());
             if (img.Url && img.Url.length > 2 && img.Url.substr(0, 2) == "~/") {
                 img.Url = '@Url.Content("~/")' + img.Url.substr(2);
@@ -144,7 +144,7 @@
             });
         });
         
-        $('#media-gallery-@descriminator .media-gallery-remove').live("click", function() {
+        $('#media-gallery-@descriminator').on("click", ".media-gallery-remove", function() {
             $(this).closest('tr').remove();
             refreshIds();
             $('#save-message-@descriminator').show();
