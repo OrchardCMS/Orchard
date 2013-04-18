@@ -105,7 +105,7 @@ namespace Orchard.Autoroute.Drivers {
                 // but instead keep the value
 
                 // if home page is requested, use "/" to have the handler create a homepage alias
-                if(_authorizer.Authorize(Permissions.SetHomePage) && viewModel.PromoteToHomePage) {
+                if(viewModel.PromoteToHomePage) {
                     part.DisplayAlias = "/";
                 }
             }
