@@ -1,23 +1,21 @@
-﻿@using Orchard.Fields.Fields
-@using Orchard.Utility.Extensions;
+﻿@using Orchard.Utility.Extensions;
 
 @{
     var field = (MediaGalleryField) Model.ContentField;
-    string name = field.DisplayName;
-    var contentItems = field.ContentItems;
+    var name = field.DisplayName;
+    var items = field.Items;
 }
-<p class="content-picker-field content-picker-field-@name.HtmlClassify()">
+<p class="media-gallery-field media-gallery-field-@name.HtmlClassify()">
     <span class="name">@name:</span>
-    @if(contentItems.Any()) {
-        foreach(var contentItem in contentItems) {
-            <span class="value">@Html.ItemDisplayLink(contentItem)</span>
-            if(contentItem != contentItems.Last()) {
-                <span>,</span>
+    @if (items.Any()) {
+        foreach (var item in items) {
+        <span class="value"><a href="@Url.Content(item.Url)">@item.Url</a></span>
+            if(item != items.Last()) {
+        <span>,</span>
             }
         }
     }
     else {
-        <span class="value">@T("No content items.")</span>
+        <span class="value">@T("No media.")</span>
     }
 </p>
-
