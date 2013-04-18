@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.MediaProcessing.Models;
 using Orchard.MediaProcessing.Services;
+using Orchard.MediaProcessing.ViewModels;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Drivers {
@@ -32,21 +33,34 @@ namespace Orchard.MediaProcessing.Drivers {
         }
 
         protected override DriverResult Editor(ImageProfilePart part, dynamic shapeHelper) {
+            var viewModel = new ImageProfileViewModel {
+                Name = part.Name
+            };
             return ContentShape("Parts_MediaProcessing_ImageProfile_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(ImageProfilePart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentName = part.Name;
-            updater.TryUpdateModel(part, Prefix, null, null);
-            if (String.IsNullOrWhiteSpace(part.Name)) {
+            var viewModel = new ImageProfileViewModel();
+            
+            // It would be nice if IUpdateModel provided access to the IsValid property of the Controller, instead of having to track a local flag.
+            var isValid = updater.TryUpdateModel(viewModel, Prefix, null, null);
+            if (String.IsNullOrWhiteSpace(viewModel.Name)) {
                 updater.AddModelError("Name", T("The Name can't be empty."));
+                isValid = false;
             }
-            if (currentName != part.Name && _imageProfileService.GetImageProfileByName(part.Name) != null) {
+            if (currentName != viewModel.Name && _imageProfileService.GetImageProfileByName(viewModel.Name) != null) {
                 updater.AddModelError("Name", T("A profile with the same Name already exists."));
+                isValid = false;
             }
-            if (part.Name != part.Name.ToSafeName()) {
+            if (viewModel.Name != viewModel.Name.ToSafeName()) {
                 updater.AddModelError("Name", T("The Name can only contain letters and numbers without spaces"));
+                isValid = false;
+            }
+
+            if (isValid) {
+                part.Name = viewModel.Name;
             }
 
             return Editor(part, shapeHelper);
