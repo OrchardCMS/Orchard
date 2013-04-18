@@ -21,12 +21,13 @@ namespace Orchard.MediaProcessing.Services {
             if (!fileNames.TryGetValue(path, out fileName)) {
                 var profilePart = _imageProfileService.GetImageProfileByName(profile);
                 if (profilePart != null) {
-                    var fileNameRecord = profilePart.FileNames.FirstOrDefault(f => f.Path == path);
-                    if (fileNameRecord == null) {
-                        return null;
+                    
+                    foreach (var fileNameRecord in profilePart.FileNames) {
+                        fileNames.Add(path, fileNameRecord.FileName);    
                     }
-                    fileNames.Add(path, fileNameRecord.FileName);
-                    return fileNameRecord.FileName;
+
+                    // now the cache has been initialized, call the same method again
+                    return GetFileName(profile, path);
                 }
             }
             return fileName;
@@ -40,15 +41,19 @@ namespace Orchard.MediaProcessing.Services {
             }
             fileNames[path] = fileName;
             var profilePart = _imageProfileService.GetImageProfileByName(profile);
-            var fileNameRecord = profilePart.FileNames.FirstOrDefault(f => f.Path == path);
-            if (fileNameRecord == null) {
-                fileNameRecord = new FileNameRecord {
-                    Path = path,
-                    ImageProfilePartRecord = profilePart.Record
-                };
-                profilePart.FileNames.Add(fileNameRecord);
+
+            // profile might not exist in the db if its a dynamic profile
+            if (profilePart != null) {
+                var fileNameRecord = profilePart.FileNames.FirstOrDefault(f => f.Path == path);
+                if (fileNameRecord == null) {
+                    fileNameRecord = new FileNameRecord {
+                        Path = path,
+                        ImageProfilePartRecord = profilePart.Record
+                    };
+                    profilePart.FileNames.Add(fileNameRecord);
+                }
+                fileNameRecord.FileName = fileName;
             }
-            fileNameRecord.FileName = fileName;
         }
 
         private Dictionary<string, string> GetFileNames(string profile) {

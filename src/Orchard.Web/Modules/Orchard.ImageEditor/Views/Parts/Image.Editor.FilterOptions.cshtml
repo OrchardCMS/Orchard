@@ -1,0 +1,63 @@
+﻿@using Orchard.ImageEditor.Models
+@{
+    ImageEditorPart imageEditorPart = Model.ContentPart;
+}
+
+<div id="filters-options" style="display: none">
+    <fieldset class="filters">
+        <div class="filter">
+            <span>@T("brightness")</span>
+            <div class="slider" data-filter="brightness" data-min="-100" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("saturation")</span>
+            <div class="slider" data-filter="saturation" data-min="-100" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("exposure")</span>
+            <div class="slider" data-filter="exposure" data-min="-100" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("sepia")</span>
+            <div class="slider" data-filter="sepia" data-min="0" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("noise")</span>
+            <div class="slider" data-filter="noise" data-min="0" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("contrast")</span>
+            <div class="slider" data-filter="contrast" data-min="-100" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("vibrance")</span>
+            <div class="slider" data-filter="vibrance" data-min="-100" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("hue")</span>
+            <div class="slider" data-filter="hue" data-min="0" data-max="100"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("gamma")</span>
+            <div class="slider" data-filter="gamma" data-min="0" data-max="10" data-step="0.1"></div>
+            <input class="text small" />
+        </div>
+        <div class="filter">
+            <span>@T("clip")</span>
+            <div class="slider" data-filter="clip" data-min="0" data-max="100"></div>
+            <input class="text small" />
+        </div>
+    </fieldset>
+
+    <button id="filters-apply">@T("Apply")</button>
+    <button id="filters-cancel">@T("Cancel")</button>
+</div>
+

@@ -1,0 +1,12 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@model dynamic
+           
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var media = contentItem.As<MediaPart>();
+    var video = contentItem.As<VideoPart>();
+}
+
+@* Don't render the video tag as thumbnails or the whole file is downloaded automatically by browsers *@
+<div/>

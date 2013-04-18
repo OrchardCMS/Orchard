@@ -1,0 +1,18 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaLibraryPickerField) Model.ContentField;
+    string name = field.DisplayName;
+    var contentItems = field.ContentItems;
+}
+<section class="media-library-picker-field media-library-picker-field-@name.HtmlClassify()">
+    <h3>@name</h3>
+    @foreach(var contentItem in contentItems) {
+    <div>
+        @Display(BuildDisplay(contentItem, "Summary"))
+    </div>
+    }
+</section>
+

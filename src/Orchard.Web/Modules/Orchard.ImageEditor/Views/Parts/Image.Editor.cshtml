@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    ImagePart imagePart = Model.ContentPart;
+}           
+
+@Html.ActionLink(T("Edit").Text, "Index", "Admin", new { id = imagePart.Id, area = "Orchard.ImageEditor" }, new {})
+

@@ -101,14 +101,14 @@ namespace Orchard.Mvc.Html {
                 metadata.AdminRouteValues.Merge(additionalRouteValues));
         }
 
-        public static string ItemEditUrl(this UrlHelper urlHelper, IContent content) {
+        public static string ItemEditUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayRouteValues == null)
                 return null;
 
             return urlHelper.Action(
                 Convert.ToString(metadata.EditorRouteValues["action"]),
-                metadata.EditorRouteValues);
+                metadata.EditorRouteValues.Merge(additionalRouteValues ?? new {}));
         }
 
         private static string NonNullOrEmpty(params string[] values) {

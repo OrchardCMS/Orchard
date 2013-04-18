@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -51,7 +52,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to be mapped.</param>
         /// <returns>The relative path combined with the public path in an URL friendly format ('/' character for directory separator).</returns>
         private string MapPublic(string path) {
-            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/');
+            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/').Replace(" ", "%20");
         }
 
         private static string Fix(string path) {
@@ -80,6 +81,19 @@ namespace Orchard.FileSystems.Media {
         /// <returns>The public URL.</returns>
         public string GetPublicUrl(string path) {
             return MapPublic(path);
+        }
+
+        /// <summary>
+        /// Retrieves the local path for a given url within the storage provider.
+        /// </summary>
+        /// <param name="url">The public url of the media.</param>
+        /// <returns>The local path.</returns>
+        public string GetLocalPath(string url) {
+            if (!url.StartsWith(_publicPath)) {
+                return url;
+            }
+
+            return Combine("", url.Substring(_publicPath.Length).Replace("%20", " "));
         }
 
         /// <summary>

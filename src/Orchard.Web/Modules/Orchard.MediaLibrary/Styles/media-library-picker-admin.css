@@ -1,0 +1,51 @@
+﻿table.media-library-picker tr td:nth-child(1) {
+	background: url(images/move.gif) no-repeat 12px 14px;
+    cursor: move;
+}
+
+.media-library-picker-message {
+    display: none;
+}
+
+.ui-sortable-helper .media-library-picker-remove {
+    /*display: none;*/
+}
+
+.media-library-picker-item img {
+    width: 120px;
+    height: 120px;
+}
+
+.media-library-picker ul li {
+    float: left;
+    position: relative;
+    margin-right: 4px;
+}
+
+.media-library-picker {
+    margin-bottom: 10px;
+}
+
+    .media-library-picker:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+.overlay {
+    position: absolute;
+    top: 70px;
+    bottom: 32px;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: right;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.overlay h3 {
+    padding-right:5px;
+    font-size: 12px;
+}

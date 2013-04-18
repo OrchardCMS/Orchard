@@ -65,6 +65,14 @@ namespace Orchard.jQuery {
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.9.2.custom.css").SetVersion("1.9.2");
             manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
             manifest.DefineStyle("jQueryUI_TimePicker").SetUrl("jquery-ui-timepicker-addon.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.0.5");
+
+            // jQuery File Upload
+            manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.6.1").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("1.6.1").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
+
+            // jquer Color Box
+            manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.4.10").SetDependencies("jQuery");
+            manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.4.10");
         }
     }
 }

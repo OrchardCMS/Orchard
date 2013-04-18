@@ -19,6 +19,13 @@ namespace Orchard.FileSystems.Media {
         string GetPublicUrl(string path);
 
         /// <summary>
+        /// Retrieves the local path for a given url within the storage provider.
+        /// </summary>
+        /// <param name="url">The public url of the media.</param>
+        /// <returns>The local path.</returns>
+        string GetLocalPath(string url);
+
+        /// <summary>
         /// Retrieves a file within the storage provider.
         /// </summary>
         /// <param name="path">The relative path to the file within the storage provider.</param>

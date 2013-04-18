@@ -53,6 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\colorbox.css" />
+    <Content Include="Styles\images\colorbox\border.png" />
+    <Content Include="Styles\images\colorbox\controls.png" />
+    <Content Include="Styles\images\colorbox\loading.gif" />
+    <Content Include="Styles\images\colorbox\loading_background.png" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-migrate-1.1.1.js" />
@@ -61,6 +66,16 @@
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.colorbox-min.js" />
+    <Content Include="Scripts\jquery.colorbox.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.fileupload.min.js">
+      <DependentUpon>jquery.fileupload.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery.iframe-transport.min.js">
+      <DependentUpon>jquery.iframe-transport.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.ui.accordion.js" />
     <Content Include="Scripts\jquery.ui.accordion.min.js" />
     <Content Include="Scripts\jquery.ui.autocomplete.js" />

@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        
+        @{
+            Style.Include("orchard-imageeditor-admin.css");
+            // copy the resulting HTML so that resources can be registered before the
+            // header is rendered
+            var content = Display(Model);
+        }
+        
+        @Display.Metas()
+        @Display.HeadScripts()
+        @Display.HeadLinks()
+        @Display.StyleSheetLinks()
+    </head>
+    <body>
+        <div id="content">
+            @content
+        </div>
+
+        @Display.FootScripts()
+    </body>
+</html>

@@ -271,6 +271,11 @@ namespace Orchard.Tests.Modules.Media.Services {
             public void SaveStream(string path, Stream inputStream) {
                 SavedStreams.Add(path);
             }
+
+
+            public string GetLocalPath(string url) {
+                throw new NotImplementedException();
+            }
         }
 
         private class StubStorageFolder : IStorageFolder {

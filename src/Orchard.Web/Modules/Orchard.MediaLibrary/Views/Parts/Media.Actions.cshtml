@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Core.Contents;
+@using Orchard.Utility.Extensions
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+        @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+            @Html.Link(T("Edit").Text, Url.ItemEditUrl(contentItem, new {returnUrl}), new {@class = "button"})
+        }
+

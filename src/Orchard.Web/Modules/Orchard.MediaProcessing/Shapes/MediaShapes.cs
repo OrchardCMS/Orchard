@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using Orchard.Forms.Services;
 using Orchard.Logging;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Media;
+using Orchard.MediaProcessing.Models;
 using Orchard.MediaProcessing.Services;
 using Orchard.Tokens;
 using Orchard.Utility.Extensions;
@@ -44,68 +46,139 @@ namespace Orchard.MediaProcessing.Shapes {
         public ILogger Logger { get; set; }
 
         [Shape]
-        public void MediaUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem) {
+        public void ResizeMediaUrl(dynamic Display, TextWriter Output, ContentItem ContentItem, string Path, int Width, int Height, string Mode, string Alignment, string PadColor) {
+            var state = new Dictionary<string, string> {
+                {"Width", Width.ToString(CultureInfo.InvariantCulture)},
+                {"Height", Height.ToString(CultureInfo.InvariantCulture)},
+                {"Mode", Mode},
+                {"Alignment", Alignment},
+                {"PadColor", PadColor},
+            };
+
+            var filter = new FilterRecord {
+                Category = "Transform",
+                Type = "Resize",
+                State = FormParametersHelper.ToString(state)
+            };
+
+            var profile = "Transform_Resize"
+                + "_w_" + Convert.ToString(Width) 
+                + "_h_" + Convert.ToString(Height) 
+                + "_m_" + Convert.ToString(Mode)
+                + "_a_" + Convert.ToString(Alignment) 
+                + "_c_" + Convert.ToString(PadColor);
+ 
+            MediaUrl(Display, Output, profile, Path, ContentItem, filter);
+        }
+
+        [Shape]
+        public void MediaUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem, FilterRecord CustomFilter) {
+
+            var services = new Lazy<IOrchardServices>(() => _services.Value);
+            var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
+
+            // try to load the processed filename from cache
             var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
-            // todo: regenerate the file if the profile is newer, by getting IStorageFile.
-            if (string.IsNullOrEmpty(filePath) || !_storageProvider.Value.FileExists(filePath)) {
+            bool process = false;
+
+            // if the filename is not cached, process it
+            if (!string.IsNullOrEmpty(filePath)) {
+                process = true;
+            }
+            
+            // the processd file doesn't exist anymore, process it
+            else if (!storageProvider.Value.FileExists(filePath)) {
+                    process = true;
+            }
+
+            // if the original file is more recent, process it
+            else if (storageProvider.Value.GetFile(Path).GetLastUpdated() > storageProvider.Value.GetFile(filePath).GetLastUpdated()) {
+                process = true;
+            }
+                
+            // todo: regenerate the file if the profile is newer, by deleting the associated filename cache entries.
+            if (process) {
                 try {
-                    var profilePart = _profileService.Value.GetImageProfileByName(Profile);
-                    if (profilePart == null)
-                        return;
+                    ImageProfilePart profilePart;
 
-                    var image = GetImage(Path);
-                    var filterContext = new FilterContext {Media = image, Format = new FileInfo(Path).Extension, FilePath = _storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))};
-
-                    var tokens = new Dictionary<string, object>();
-                    // if a content item is provided, use it while tokenizing
-                    if (ContentItem != null) {
-                        tokens.Add("Content", ContentItem);
+                    if (CustomFilter == null) {
+                        profilePart = _profileService.Value.GetImageProfileByName(Profile);
+                        if (profilePart == null)
+                            return;
+                    }
+                    else {
+                        profilePart = services.Value.ContentManager.New<ImageProfilePart>("ImageProfile");
+                        profilePart.Filters.Add(CustomFilter);
                     }
 
-                    foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
-                        var descriptor = _processingManager.Value.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
-                        if (descriptor == null)
-                            continue;
+                    using (var image = GetImage(Path)) {
+                        var filterContext = new FilterContext {Media = image, Format = new FileInfo(Path).Extension, FilePath = storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))};
 
-                        var tokenized = _tokenizer.Value.Replace(filter.State, tokens);
-                        filterContext.State = FormParametersHelper.ToDynamic(tokenized);
-                        descriptor.Filter(filterContext);
-                    }
+                        var tokens = new Dictionary<string, object>();
+                        // if a content item is provided, use it while tokenizing
+                        if (ContentItem != null) {
+                            tokens.Add("Content", ContentItem);
+                        }
 
-                    _fileNameProvider.Value.UpdateFileName(Profile, Path, filterContext.FilePath);
+                        foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
+                            var descriptor = _processingManager.Value.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
+                            if (descriptor == null)
+                                continue;
 
-                    if (!filterContext.Saved) {
-                        _storageProvider.Value.TryCreateFolder(profilePart.Name);
-                        var newFile = _storageProvider.Value.OpenOrCreate(filterContext.FilePath);
-                        using (var imageStream = newFile.OpenWrite()) {
-                            using (var sw = new BinaryWriter(imageStream)) {
-                                if (filterContext.Media.CanSeek) {
-                                    filterContext.Media.Seek(0, SeekOrigin.Begin);
-                                }
-                                using (var sr = new BinaryReader(filterContext.Media)) {
-                                    int count;
-                                    var buffer = new byte[8192];
-                                    while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
-                                        sw.Write(buffer, 0, count);                                            
+                            var tokenized = _tokenizer.Value.Replace(filter.State, tokens);
+                            filterContext.State = FormParametersHelper.ToDynamic(tokenized);
+                            descriptor.Filter(filterContext);
+                        }
+
+                        _fileNameProvider.Value.UpdateFileName(Profile, Path, filterContext.FilePath);
+
+                        if (!filterContext.Saved) {
+                            storageProvider.Value.TryCreateFolder(profilePart.Name);
+                            var newFile = storageProvider.Value.OpenOrCreate(filterContext.FilePath);
+                            using (var imageStream = newFile.OpenWrite()) {
+                                using (var sw = new BinaryWriter(imageStream)) {
+                                    if (filterContext.Media.CanSeek) {
+                                        filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                    }
+                                    using (var sr = new BinaryReader(filterContext.Media)) {
+                                        int count;
+                                        var buffer = new byte[8192];
+                                        while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
+                                            sw.Write(buffer, 0, count);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    filterContext.Media.Dispose();
-                    filePath = filterContext.FilePath;
+                        filterContext.Media.Dispose();
+                        filePath = filterContext.FilePath;
+                    }
                 }
                 catch (Exception ex) {
                     Logger.Error(ex, "An error occured while processing {0} for image {1}", Profile, Path);
                     return;
                 }
             }
-            Output.Write(_storageProvider.Value.GetPublicUrl(filePath));
+
+            // generate a timestamped url to force client caches to update if the file has changed
+            var publicUrl = storageProvider.Value.GetPublicUrl(filePath);
+            var timestamp = storageProvider.Value.GetFile(storageProvider.Value.GetLocalPath(filePath)).GetLastUpdated().Ticks;
+            Output.Write(publicUrl + "?v=" + timestamp.ToString(CultureInfo.InvariantCulture));
         }
 
         // TODO: Update this method once the storage provider has been updated
         private Stream GetImage(string path) {
+            var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
+            var services = new Lazy<IOrchardServices>(() => _services.Value);
+
+            var request = services.Value.WorkContext.HttpContext.Request;
+
+            // /OrchardLocal/images/my-image.jpg
+            if (Uri.IsWellFormedUriString(path, UriKind.Relative)) {
+                path = storageProvider.Value.GetLocalPath(path);
+            }
+
             // http://blob.storage-provider.net/my-image.jpg
             if (Uri.IsWellFormedUriString(path, UriKind.Absolute)) {
                 var webClient = new WebClient();
@@ -114,10 +187,11 @@ namespace Orchard.MediaProcessing.Shapes {
             // ~/Media/Default/images/my-image.jpg
             if (VirtualPathUtility.IsAppRelative(path)) {
                 var webClient = new WebClient();
-                return webClient.OpenRead(new Uri(_services.Value.WorkContext.HttpContext.Request.Url, VirtualPathUtility.ToAbsolute(path)));
+                return webClient.OpenRead(new Uri(request.Url, VirtualPathUtility.ToAbsolute(path)));
             }
+
             // images/my-image.jpg
-            var file = _storageProvider.Value.GetFile(path);
+            var file = storageProvider.Value.GetFile(path);
             return file.OpenRead();
         }
 

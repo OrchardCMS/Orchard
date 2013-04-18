@@ -1,0 +1,7 @@
+﻿#header, #menu {
+    display: none;
+}
+
+#media-library-main-selection-select {
+    display: initial;
+}

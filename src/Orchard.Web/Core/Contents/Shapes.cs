@@ -20,17 +20,15 @@ namespace Orchard.Core.Contents {
                         displaying.ShapeMetadata.Alternates.Add("Content_" + EncodeAlternateElement(displaying.ShapeMetadata.DisplayType));
 
                         // Content__[ContentType] e.g. Content-BlogPost,
-                        // adjusted to Content_[DisplayType]__[ContentType], e.g. Content.Summary-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Content__" + EncodeAlternateElement(contentItem.ContentType));
 
                         // Content__[Id] e.g. Content-42,
-                        // adjusted to Content_[DisplayType]__[Id], e.g. Content.Summary-42
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
 
-                        // Content_[DisplayType]__[ContentType] e.g. Content.Summary-BlogPost
+                        // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + EncodeAlternateElement(contentItem.ContentType));
 
-                        // Content_[DisplayType]__[Id] e.g. Content.Summary-42
+                        // Content_[DisplayType]__[Id] e.g. Content-42.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
                     }
                 });

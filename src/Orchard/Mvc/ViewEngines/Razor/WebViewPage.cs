@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
@@ -82,6 +83,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             get {
                 return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
             }
+        }
+
+        private IContentManager _contentManager;
+        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
+            if (_contentManager == null) {
+                _contentManager = _workContext.Resolve<IContentManager>();
+            }
+
+            return _contentManager.BuildDisplay(content, displayType, groupId);
         }
 
         public ScriptRegister Script {

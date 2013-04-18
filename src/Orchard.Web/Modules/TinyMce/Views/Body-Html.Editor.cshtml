@@ -1,6 +1,9 @@
 ﻿@{ 
     Script.Require("OrchardTinyMce");
+    Script.Require("jQueryColorBox");
+    Style.Require("jQueryColorBox");
 }
+
 @Html.TextArea("Text", (string)Model.Text, 25, 80,
 	 new Dictionary<string,object> {
 		{"class", "html tinymce"},

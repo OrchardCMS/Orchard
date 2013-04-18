@@ -43,11 +43,11 @@ namespace Orchard.ContentManagement {
 
 
         public bool Has(Type fieldType, string fieldName) {
-            return _fields.Any(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
+            return _fields.Any(field => field.Name == fieldName && fieldType.IsInstanceOfType(field));
         }
 
         public ContentField Get(Type fieldType, string fieldName) {
-            return _fields.FirstOrDefault(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
+            return _fields.FirstOrDefault(field => field.Name == fieldName && fieldType.IsInstanceOfType(field));
         }
 
         public void Weld(ContentField field) {
