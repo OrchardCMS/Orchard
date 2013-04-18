@@ -30,7 +30,7 @@ namespace Orchard.Fields.Drivers {
 
         protected override DriverResult Display(ContentPart part, MediaGalleryField field, string displayType, dynamic shapeHelper) {
             return Combined(
-                ContentShape("Fields_MediaGallery", GetDifferentiator(field, part), () => shapeHelper.Fields_ContentPicker()),
+                ContentShape("Fields_MediaGallery", GetDifferentiator(field, part), () => shapeHelper.Fields_MediaGallery()),
                 ContentShape("Fields_MediaGallery_SummaryAdmin", GetDifferentiator(field, part), () => shapeHelper.Fields_MediaGallery_SummaryAdmin())
             );
         }
