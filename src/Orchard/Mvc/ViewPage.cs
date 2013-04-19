@@ -121,6 +121,10 @@ namespace Orchard.Mvc {
             return new CaptureScope(Writer, callback);
         }
 
+        public IDisposable Capture(dynamic zone, string position = null) {
+            return new CaptureScope(Writer, html => zone.Add(html, position));
+        }
+
         public class CaptureScope : IDisposable {
             private readonly HtmlTextWriter _context;
             private readonly Action<IHtmlString> _callback;

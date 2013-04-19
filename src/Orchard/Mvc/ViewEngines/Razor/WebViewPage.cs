@@ -175,6 +175,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return new CaptureScope(this, callback);
         }
 
+        public IDisposable Capture(dynamic zone, string position = null) {
+            return new CaptureScope(this, html => zone.Add(html, position));
+        }
+
         class CaptureScope : IDisposable {
             readonly WebPageBase _viewPage;
             readonly Action<IHtmlString> _callback;
