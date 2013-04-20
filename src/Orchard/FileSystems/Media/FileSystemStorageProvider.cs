@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -12,6 +11,7 @@ namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
         private readonly string _storagePath;
         private readonly string _publicPath;
+        private readonly string _relativePath;
 
         public FileSystemStorageProvider(ShellSettings settings) {
             var mediaPath = HostingEnvironment.IsHosted
@@ -29,6 +29,7 @@ namespace Orchard.FileSystems.Media {
             if (!appPath.StartsWith("/"))
                 appPath = '/' + appPath;
 
+            _relativePath = "~/Media/" + settings.Name + "/";
             _publicPath = appPath + "Media/" + settings.Name + "/";
 
             T = NullLocalizer.Instance;
@@ -83,12 +84,20 @@ namespace Orchard.FileSystems.Media {
             return MapPublic(path);
         }
 
+        public string GetRelativePath(string path) {
+            return (_relativePath + path).Replace(Path.DirectorySeparatorChar, '/');
+        }
+
         /// <summary>
         /// Retrieves the local path for a given url within the storage provider.
         /// </summary>
         /// <param name="url">The public url of the media.</param>
         /// <returns>The local path.</returns>
         public string GetLocalPath(string url) {
+            if (url.StartsWith(_relativePath)) {
+                return url.Substring(_relativePath.Length);
+            }
+
             if (!url.StartsWith(_publicPath)) {
                 return url;
             }

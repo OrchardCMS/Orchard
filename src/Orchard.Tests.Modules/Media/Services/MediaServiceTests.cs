@@ -276,6 +276,11 @@ namespace Orchard.Tests.Modules.Media.Services {
             public string GetLocalPath(string url) {
                 throw new NotImplementedException();
             }
+
+
+            public string GetRelativePath(string path) {
+                throw new NotImplementedException();
+            }
         }
 
         private class StubStorageFolder : IStorageFolder {

@@ -177,6 +177,10 @@ namespace Orchard.MediaProcessing.Shapes {
             // /OrchardLocal/images/my-image.jpg
             if (Uri.IsWellFormedUriString(path, UriKind.Relative)) {
                 path = storageProvider.Value.GetLocalPath(path);
+
+                // images/my-image.jpg
+                var file = storageProvider.Value.GetFile(path);
+                return file.OpenRead();
             }
 
             // http://blob.storage-provider.net/my-image.jpg
@@ -190,9 +194,7 @@ namespace Orchard.MediaProcessing.Shapes {
                 return webClient.OpenRead(new Uri(request.Url, VirtualPathUtility.ToAbsolute(path)));
             }
 
-            // images/my-image.jpg
-            var file = storageProvider.Value.GetFile(path);
-            return file.OpenRead();
+            throw new ArgumentException("invalid path");
         }
 
         private static string CreateDefaultFileName(string path) {

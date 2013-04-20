@@ -54,7 +54,7 @@ namespace Orchard.MediaLibrary.Factories {
                 _storageProvider.CreateFolder(BaseFolder);
             }
 
-            part.Resource = _storageProvider.GetPublicUrl(_storageProvider.Combine(BaseFolder, uniquePath));
+            part.Resource = _storageProvider.GetRelativePath(_storageProvider.Combine(BaseFolder, uniquePath));
             part.MimeType = mimeType;
             part.Title = Path.GetFileNameWithoutExtension(path);
 
