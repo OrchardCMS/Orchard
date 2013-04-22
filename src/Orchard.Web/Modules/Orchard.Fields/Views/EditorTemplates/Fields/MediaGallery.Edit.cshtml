@@ -1,4 +1,5 @@
 ﻿@model MediaGalleryFieldViewModel
+@using Orchard.Environment.Configuration
 @using Orchard.Fields.Settings;
 
 @{
@@ -7,6 +8,8 @@
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaGalleryFieldSettings>();
     var descriminator = Html.FieldIdFor(m => m.Field.Items);
+
+    var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
 }
 
 <fieldset>
@@ -98,7 +101,7 @@
                     refreshIds();
                     $('#save-message-@descriminator').show();
                 },
-                baseUrl: '@Url.Content("~/")'
+                baseUrl: '@baseUrl'
             });
         });
 
@@ -106,7 +109,7 @@
         $(".items.media-gallery").on("click", ".media-gallery-edit", function() {
             var img = extractModel($(this).parent());
             if (img.Url && img.Url.length > 2 && img.Url.substr(0, 2) == "~/") {
-                img.Url = '@Url.Content("~/")' + img.Url.substr(2);
+                img.Url = '@baseUrl' + img.Url.substr(2);
             }
 
             var tr = $(this).closest('tr');
@@ -121,7 +124,7 @@
                     width: img.Width,
                     height: img.Height
                 },
-                baseUrl: '@Url.Content("~/")',
+                baseUrl: '@baseUrl',
                 //uploadMediaPath: 'images',
                 callback: function (data) {
                     
