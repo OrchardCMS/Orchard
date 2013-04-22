@@ -179,7 +179,6 @@ namespace Orchard.MediaLibrary.Services {
             };
         }
 
-
         public void MoveMedia(int targetId, int[] mediaItemIds) {
             var targetFolder = _taxonomyService.GetTerm(targetId);
             if (targetFolder == null) {

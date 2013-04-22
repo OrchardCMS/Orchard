@@ -74,6 +74,9 @@
                                 </div>
                             </li>
                         </ul>
+                        <div id="media-library-main-selection-actions">
+                            <button id="delete-selection-button">@T("Delete")</button>
+                        </div>
                     </div>
                 </header>
                 <footer>
@@ -367,7 +370,7 @@
 
                             viewModel.clearSelection();
                         } else {
-                            console.log('failed to move images');
+                            console.log('failed to move media items');
                         }
                     });
                 }
@@ -396,6 +399,37 @@
                         }
                     });
                 }
+            });
+
+            $('#delete-selection-button').click(function() {
+                if (!confirm('@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)')) {
+                    return false;
+                }
+                
+                var ids = [];
+                viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
+                var url = '@Url.Action("Delete", "Admin", new { area = "Orchard.MediaLibrary" })';
+                    
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: "json",
+                    traditional: true,
+                    data: {
+                        mediaItemIds: ids,
+                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                    }
+                }).done(function (result) {
+                    if (result) {
+                        viewModel.results.remove(function(item) {
+                            return ids.indexOf(item.data.id) != -1;
+                        });
+
+                        viewModel.clearSelection();
+                    } else {
+                        console.log('failed to delete media items');
+                    }
+                });
             });
         })
     //]]>

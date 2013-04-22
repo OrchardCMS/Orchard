@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -95,6 +96,26 @@ namespace Orchard.MediaLibrary.Controllers {
             dynamic model = Services.ContentManager.BuildDisplay(contentItem, displayType);
 
             return new ShapeResult(this, model);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int[] mediaItemIds) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Couldn't delete media items")))
+                return new HttpUnauthorizedResult();
+
+            try {
+                foreach (var media in Services.ContentManager.Query().ForContentItems(mediaItemIds).List()) {
+                    if (media != null) {
+                        Services.ContentManager.Remove(media);
+                    }
+                }
+
+                return Json(true);
+            }
+            catch(Exception e) {
+                Logger.Error(e, "Could not delete media items.");
+                return Json(false);
+            }
         }
     }
 }
