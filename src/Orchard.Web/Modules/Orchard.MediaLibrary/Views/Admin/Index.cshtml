@@ -177,7 +177,7 @@
                             var selection = self.selection();
                             for (var j = 0; j < selection.length; j++) {
                                 if (selection[j].data.id == item.data.id) {
-                                    item.selected(true);
+                                    viewModel.toggleSelect(item, true);
                                 }
                             }
                         }
@@ -229,16 +229,17 @@
 
                     self.getMediaItems(id, 20);
                     self.displayed(id);
-                                    };
+                };
 
                 self.selectFolder = function (id) {
                     window.history.pushState({ action: 'displayFolder', folder: id }, '', '?folder=' + id);
                     self.displayFolder(id);
                 };
                 
-                self.toggleSelect = function (searchResult) {
+                self.toggleSelect = function (searchResult, force) {
                     var index = $.inArray(searchResult, self.selection());
-                    if (index == -1) {
+                    if (index == -1 || force) {
+                        self.selection.remove(function(item) { return item.data.id == searchResult.data.id; });
                         self.selection.push(searchResult);
                         searchResult.selected(true);
                     } else {
