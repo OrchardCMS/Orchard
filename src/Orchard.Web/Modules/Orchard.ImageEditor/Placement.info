@@ -1,7 +1,7 @@
 ﻿<Placement>
 
   <Match DisplayType="SummaryAdmin">
-    <Place Parts_Image_Editor="Header" />
+    <Place Parts_Image_Editor="Footer:6" />
   </Match>
   
   <!-- ImagePart -->

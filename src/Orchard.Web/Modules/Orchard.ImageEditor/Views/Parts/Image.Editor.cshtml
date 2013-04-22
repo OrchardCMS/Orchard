@@ -1,9 +1,15 @@
-﻿@using Orchard.MediaLibrary.Models
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
 @{
     ImagePart imagePart = Model.ContentPart;
+    
+    // do not show the editor if the image is not local
+    if (!imagePart.As<MediaPart>().Resource.StartsWith("~/")) {
+        return;
+    }
 }           
 
-@Html.ActionLink(T("Edit").Text, "Index", "Admin", new { id = imagePart.Id, area = "Orchard.ImageEditor" }, new { id="edit-image-link"})
+@Html.ActionLink(T("Image Editor").Text, "Index", "Admin", new { id = imagePart.Id, area = "Orchard.ImageEditor" }, new { id="edit-image-link", @class="button"})
 
 <script type="text/javascript">
     //<![CDATA[
