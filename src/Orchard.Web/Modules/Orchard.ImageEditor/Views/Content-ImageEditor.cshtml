@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
 @model dynamic
 @{
     Script.Require("jQuery");
@@ -11,6 +12,11 @@
     ContentItem media = Model.MediaContentItem;
     var mediaPart = media.As<MediaPart>();
     var imagePart = media.As<ImagePart>();
+
+    var returnUrl = Request.QueryString["returnUrl"];
+    if (!Request.IsLocalUrl(returnUrl)) {
+        returnUrl = Url.Content("~/");
+    }
 }
 
 <input type="hidden" id="image-editor-url" value="@Url.Content(mediaPart.Resource)"/>
@@ -42,7 +48,7 @@
 </div>
 <fieldset id="buttons-manage">
     <button id="button-save">@T("Save")</button>
-    <a id="button-cancel" href="@Url.Action("Index", "Admin", new { area = "Orchard.MediaLibrary" })" class="button">@T("Close")</a>
+    <a id="button-cancel" href="@returnUrl" class="button">@T("Close")</a>
 </fieldset>
 
 <input type="hidden" id="upload-image-url" value="@Url.Action("Upload", "Admin", new { id = media.Id })"/>
