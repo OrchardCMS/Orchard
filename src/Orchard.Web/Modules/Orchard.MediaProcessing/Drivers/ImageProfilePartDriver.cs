@@ -69,6 +69,7 @@ namespace Orchard.MediaProcessing.Drivers {
         protected override void Exporting(ImageProfilePart part, ExportContentContext context) {
             var element = context.Element(part.PartDefinition.Name);
             element.Add(
+                new XAttribute("Name", part.Name),
                 new XElement("Filters",
                              part.Filters.Select(filter =>
                                                  new XElement("Filter",
@@ -85,6 +86,8 @@ namespace Orchard.MediaProcessing.Drivers {
 
         protected override void Importing(ImageProfilePart part, ImportContentContext context) {
             var element = context.Data.Element(part.PartDefinition.Name);
+
+            part.Name = element.Attribute("Name").Value;
 
             var filterRecords = element.Element("Filters").Elements("Filter").Select(filter => new FilterRecord {
                 Description = filter.Attribute("Description").Value,
