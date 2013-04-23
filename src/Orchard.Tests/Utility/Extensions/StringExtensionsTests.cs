@@ -95,7 +95,7 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void HtmlClassify_NumbersAreStrippedAtStart() {
             const string toClassify = "5someClass";
-            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("someClass"));
+            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("some-class"));
         }
         [Test]
         public void HtmlClassify_ValidSimpleClassNameReturnsSame() {
