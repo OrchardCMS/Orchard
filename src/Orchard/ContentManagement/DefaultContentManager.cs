@@ -10,6 +10,7 @@ using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.SqlCommand;
 using NHibernate.Transform;
+using Orchard.Caching;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -27,6 +28,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly ICacheManager _cacheManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
@@ -40,6 +42,7 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
+            ICacheManager cacheManager,
             Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ISessionLocator> sessionLocator,
@@ -49,6 +52,7 @@ namespace Orchard.ContentManagement {
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
+            _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
             _handlers = handlers;
             _contentDisplay = contentDisplay;
@@ -661,13 +665,19 @@ namespace Orchard.ContentManagement {
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
-            var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
-            if (contentTypeRecord == null) {
-                //TEMP: this is not safe... ContentItem types could be created concurrently?
-                contentTypeRecord = new ContentTypeRecord { Name = contentType };
-                _contentTypeRepository.Create(contentTypeRecord);
-            }
-            return contentTypeRecord;
+            var contentTypeId = _cacheManager.Get(contentType + "_Record", ctx => {
+                var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
+
+                if (contentTypeRecord == null) {
+                    //TEMP: this is not safe... ContentItem types could be created concurrently?
+                    contentTypeRecord = new ContentTypeRecord { Name = contentType };
+                    _contentTypeRepository.Create(contentTypeRecord);
+                }
+
+                return contentTypeRecord.Id;
+            });
+
+            return _contentTypeRepository.Get(contentTypeId);
         }
 
         public void Index(ContentItem contentItem, IDocumentIndex documentIndex) {
