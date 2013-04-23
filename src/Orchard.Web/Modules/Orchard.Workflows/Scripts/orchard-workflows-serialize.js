@@ -129,14 +129,31 @@ var bindForm = function(form, data) {
 
     $.each(data, function (name, val) {
         var $el = $('[name="' + name + '"]'),
-            type = $el.attr('type');
+            tagName = $el.get(0).nodeName.toLowerCase(),
+            type = $el.attr('type') && $el.attr('type').toLowerCase(),
+            values = val.split(',');
 
-        switch (type) {
-            case 'checkbox':
-                $el.attr('checked', 'checked');
+        switch (tagName) {
+            case 'input':
+                switch (type) {
+                    case 'checkbox':
+                        $el.each(function () {
+                            var self = $(this);
+                            self.attr('checked', values.indexOf(self.attr('value')) != -1);
+                        });
+                        break;
+                    case 'radio':
+                        $el.filter('[value="' + val + '"]').attr('checked', 'checked');
+                        break;
+                    default:
+                        $el.val(val);
+                }
                 break;
-            case 'radio':
-                $el.filter('[value="' + val + '"]').attr('checked', 'checked');
+            case 'select':
+                $el.find('option').each(function () {
+                    var self = $(this);
+                    self.attr('selected', values.indexOf(self.attr('value')) != -1);
+                });
                 break;
             default:
                 $el.val(val);
