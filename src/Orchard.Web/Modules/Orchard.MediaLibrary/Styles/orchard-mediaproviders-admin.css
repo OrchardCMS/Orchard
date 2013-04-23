@@ -161,4 +161,40 @@ button {
     margin-bottom: 5px;
 }
 
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 5px 14px 5px 14px;
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+    
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
 
+     
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+     /*test - base green in pallet is 155,179,108*/
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
+}
+
+.button, a.button /* For link buttons */
+{
+   padding: 5px 14px 5px 14px; 
+}

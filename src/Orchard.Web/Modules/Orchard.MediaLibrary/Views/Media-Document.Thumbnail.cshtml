@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
 @model dynamic
            
 @{
@@ -8,4 +9,4 @@
     var document = contentItem.As<DocumentPart>();
 }
 
-<div/>
+<div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()">

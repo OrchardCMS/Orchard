@@ -174,6 +174,8 @@
     float: left;
     margin: 0 3px 3px 0;
     padding: 0;
+    width: 60px;
+    height: 60px;
 }
 
 #media-library-main-selection .selection {
@@ -182,7 +184,7 @@
     height: 60px;
 }
 
-#media-library-main-selection .selection > img {
+#media-library-main-selection .media-thumbnail > img {
     width: 60px;
     height: 60px;
 }
@@ -201,7 +203,7 @@
     border: none;
 }
 
-#media-library-main-list li.media-thumbnail {
+#media-library-main-list li {
     margin-right: 4px;
     margin-bottom: 4px;
     float: left;
@@ -219,9 +221,16 @@
 #media-library-main-list li.has-focus {
 }
 
-#media-library-main-list li.media-thumbnail-image .thumbnail {
-    width: 100%;
-    height: 100%;
+#media-library-main-list .media-thumbnail {
+    width: 200px;
+    height: 200px;
+}
+
+#media-library-main-selection .media-thumbnail {
+    width: 60px;
+    height: 60px;
+}
+.media-thumbnail-image {
     background-repeat: no-repeat;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -229,9 +238,7 @@
     background-size: cover;
 }
 
-#media-library-main-list li.media-thumbnail-video .thumbnail {
-    width: 100%;
-    height: 100%;
+.media-thumbnail-video {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAAA8CAIAAABQAItJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAUtJREFUaEPt2rGNg0AQheHriZCEiJw6KIEKqIEK6IAKqICYlApIQIgb2WObQwu71hhrd+59KWM0fzJywM+qCGJ8pT1mGIY0TSOPxXHc9z2vu7GPaZqGf+G9uq556Yc/MV3X8WAg2rbl1W9eMcuyFEXBU4HI83yaJg7YxszznGUZT0VRWZb8YKOqKn58Y5yRcHn/diZJknEc+cFRzG7oyWVGQrgDYk5nJBCDGBJkDHn3LH6EcIfDGKsvxFghxgQxFlfF6DkAR4u6zEgId0DM6YwEYhBDgowh1rNIjDMSLu+/5L+ZDxDjq38Zo+cA7IaeXGYkhDsg5nRGAjGIIUHGkHfP4kcIdziMsfpCjBViTBBjcVWMngNwtKjLjIRwB8SczkggBjEkyBhiPYvEOCPh8n6n06zqQyCi5xOtOz0fz93p+awxaIjxlaKYdf0FZhXqxLZlZI0AAAAASUVORK5CYII=');
     background-repeat: no-repeat;
     background-position: center;
@@ -239,9 +246,7 @@
     box-sizing: border-box;
 }
 
-#media-library-main-list li.media-thumbnail-audio .thumbnail {
-    width: 100%;
-    height: 100%;
+.media-thumbnail-audio {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA9CAIAAACY61bEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAXNJREFUaEPt2bGtgzAQgOHs9EoaKnp2oGMEJmAGJmARJqCmZQIaEOJZsQMh+BJj7mwj3V8mxPoSOafgPJb7xFaa2EpTKNa+75Mk+XtWlqV6dJ9na9u20veRluvHWlWVQgHFcTwMg7r6lTvrPM9FUSjLr/xY3zeieU6t0EY0zIX150Y0jMp6aiMahm/F+hSPIVvpoCJM6zRNaZqqhQliK01spYmteGVZtv5yCNRa1/VxzbCsTdOotV6FZdUK1oKw5nk+jqN6JZxPK3SLB+XBetyIhjmyRlHUdZ16zjYXVu26FrGVrWxlK1ttrdCph1whFOvZwwQ/Vv/nhIZWO6jIg9X6HMm19f2as7EVtoqs98C5/2EuzkKZ3XcL+uWusaLMwrWz3C+3GDsr4iz8yPD9f7+d3Ky4s1AbtK8Mb8o3K+4spEhZ0ecLRTe0inBnIUVXv1sopxiGbVYR4iykaGeVocxCijRW2cVZSBFoDTC20nQf67L8AyZI9cubvMwpAAAAAElFTkSuQmCC');
     background-repeat: no-repeat;
     background-position: center;
@@ -249,14 +254,11 @@
     box-sizing: border-box;
 }
 
-#media-library-main-list li.media-thumbnail-document .thumbnail {
-    width: 100%;
-    height: 100%;
+.media-thumbnail-document {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA5CAIAAAD/bz8YAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAASZJREFUaEPt2c8NgjAUx3F3cgFO3JmDEZiAGZiARdiCMxNwgRD8RaryR2j72lfBvO+NGl4/QiQk3saTJSBdpwcVRXF3qCxLNYjaAuSoeVdVlZpo3wfU932SJGqkc+RLxQVCNNN3UBRFbduqDwza+zIEEy8I2ZrYQcjK5B+Ec+u6juN4OpwyN7GAcG7TNDQTFwiLNBMjCBFMvCBka2IHIStTCBAyNwUCIUNTOBDamrbvBf5BVm03+jEIrW6cHxAiv9yladp1nZriEYRoptVePkHmHewloGf/BRqGIcuyad2l+a/JCTRfd2lv5vVBp7tlHAlI13+B5Dn06jIgeQ69EpCADhKQruuDQnYdEPL154tVeZ6r7Z8tQCiwaaVBa9DPE5AuAR03jg+0DsulZjOdQAAAAABJRU5ErkJggg==');
     background-repeat: no-repeat;
     background-position: center;
     border: 1px solid #e0e0e0;
-    box-sizing: border-box;
 }
 
 .media-library-main-list-overlay {
@@ -337,12 +339,12 @@
 }
  
 @media (max-width: 1419px) { 
-    #media-library-main-list li.media-thumbnail {
+    #media-library-main-list li, #media-library-main-list .media-thumbnail {
         width: 120px;
         height: 120px;
     }
 
-    #media-library-main-list li.media-thumbnail img{
+    #media-library-main-list li img{
         width: 120px;
         height: 120px;
     }
@@ -353,12 +355,12 @@
 }
  
 @media (max-width: 1190px) { 
-    #media-library-main-list li.media-thumbnail {
+    #media-library-main-list li, #media-library-main-list .media-thumbnail {
         width: 80px;
         height: 80px;
     }
 
-    #media-library-main-list li.media-thumbnail img{
+    #media-library-main-list li img{
         width: 80px;
         height: 80px;
     }

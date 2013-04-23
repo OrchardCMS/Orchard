@@ -69,8 +69,8 @@
                     <div id="media-library-main-selection" data-bind="visible: selection().length > 0">
                         <h1>@T("SELECTION")</h1>
                         <ul data-bind="foreach: selection">
-                            <li data-bind="css: { 'has-focus': hasFocus(), 'selected': selected() }">
-                                <div class="selection" data-bind="html: data.thumbnail, click: $parent.focus">
+                            <li data-bind="css: cssClass">
+                                <div class="thumbnail selection" data-bind="html: data.thumbnail, click: $parent.focus">
                                 </div>
                             </li>
                         </ul>
@@ -120,7 +120,7 @@
                 self.status = ko.observable('');
                 self.summary = ko.observable('');
                 self.cssClass = ko.computed(function() {
-                    var css = 'media-thumbnail media-thumbnail-' + data.contentTypeClass + ' mime-type-' + data.mimeTypeClass;
+                    var css = '';
                     if (self.selected()) {
                         css += ' selected';
                     }

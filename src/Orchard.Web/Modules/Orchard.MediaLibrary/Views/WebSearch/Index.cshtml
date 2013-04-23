@@ -42,8 +42,10 @@
             <div class="dimensions"><em>@T("Dimensions:")</em> <span data-bind="text: data.Width + ' x ' +  data.Height"></span></div>
             <div class="filename"><em>@T("Filename:")</em> <span data-bind="text: getFilename()"></span></div>
             <div class="filesize"><em>@T("Size:")</em> <span data-bind="text: Math.round(data.FileSize/1024) + ' KB'"></span></div>
-            <a class="source" data-bind="attr: {href: data.SourceUrl}" target="_blank">@T("Source")</a>
-            <a class="media" data-bind="attr: {href: data.MediaUrl}" target="_blank">@T("Open")</a>
+            <div class="actions">
+                <a class="source button" data-bind="attr: {href: data.SourceUrl}" target="_blank">@T("Page")</a>
+                <a class="media button" data-bind="attr: {href: data.MediaUrl}" target="_blank">@T("Open")</a>
+            </div>
         </article>
         
         <div id="websearch-properties-selection" data-bind="visible: selection().length">

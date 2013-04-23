@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
 @model dynamic
            
 @{
@@ -8,4 +9,6 @@
     var image = contentItem.As<ImagePart>();
 }
 
-<img src="@Display.ResizeMediaUrl(Width: 200, Height: 200, Mode: "crop", Alignment: "middlecenter", Path: media.Resource)" >
+<div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()">
+    <img src="@Display.ResizeMediaUrl(Width: 200, Height: 200, Mode: "crop", Alignment: "middlecenter", Path: media.Resource)" >
+</div>
