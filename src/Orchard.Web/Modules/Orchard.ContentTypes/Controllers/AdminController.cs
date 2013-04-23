@@ -51,6 +51,9 @@ namespace Orchard.ContentTypes.Controllers {
         #region Types
 
         public ActionResult List() {
+            if (!Services.Authorizer.Authorize(Permissions.ViewContentTypes, T("Not allowed to view content types.")))
+                return new HttpUnauthorizedResult();
+
             return View("List", new ListContentTypesViewModel {
                 Types = _contentDefinitionService.GetTypes()
             });
