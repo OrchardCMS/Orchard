@@ -86,15 +86,17 @@ namespace Orchard.MediaProcessing.Drivers {
         protected override void Importing(ImageProfilePart part, ImportContentContext context) {
             var element = context.Data.Element(part.PartDefinition.Name);
 
-            part.Record.Filters = element.Element("Filters").Elements("Filter").Select(filter =>
+            var filterRecords = element.Element("Filters").Elements("Filter").Select(filter => new FilterRecord {
+                Description = filter.Attribute("Description").Value,
+                Category = filter.Attribute("Category").Value,
+                Type = filter.Attribute("Type").Value,
+                Position = Convert.ToInt32(filter.Attribute("Position").Value),
+                State = filter.Attribute("State").Value
+            });
 
-                                                                                       new FilterRecord {
-                                                                                           Description = filter.Attribute("Description").Value,
-                                                                                           Category = filter.Attribute("Category").Value,
-                                                                                           Type = filter.Attribute("Type").Value,
-                                                                                           Position = Convert.ToInt32(filter.Attribute("Position").Value),
-                                                                                           State = filter.Attribute("State").Value
-                                                                                       }).ToList();
+            foreach (var result in filterRecords) {
+                part.Record.Filters.Add(result);
+            }
         }
     }
 }
