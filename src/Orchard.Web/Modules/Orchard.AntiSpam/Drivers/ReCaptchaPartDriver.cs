@@ -61,7 +61,7 @@ namespace Orchard.AntiSpam.Drivers {
                     );
 
                 if(!HandleValidateResponse(context, result)) {
-                    updater.AddModelError("Parts_ReCaptcha_Fields", T("Incorrect word"));
+                    updater.AddModelError("Parts_ReCaptcha_Fields", T("The text you entered in the Captcha field does not match the image"));
                 }
             }
 
