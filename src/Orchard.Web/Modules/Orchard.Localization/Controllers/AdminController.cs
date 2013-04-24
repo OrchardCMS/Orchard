@@ -142,7 +142,7 @@ namespace Orchard.Localization.Controllers {
                 Services.Notifier.Information(T("Created content item translation."));
             }
 
-            var metadata = _contentManager.GetItemMetadata(model.Content);
+            var metadata = _contentManager.GetItemMetadata(model.Content.ContentItem);
 
             //todo: (heskew) if null, redirect to somewhere better than nowhere
             return metadata.EditorRouteValues == null ? null : RedirectToRoute(metadata.EditorRouteValues);
