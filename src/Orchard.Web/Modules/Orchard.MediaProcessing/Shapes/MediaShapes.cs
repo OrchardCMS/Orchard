@@ -74,34 +74,32 @@ namespace Orchard.MediaProcessing.Shapes {
 
         [Shape]
         public void MediaUrl(dynamic Shape, dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem, FilterRecord CustomFilter) {
-
+            try {
             Shape.IgnoreShapeTracer = true;
+                var services = new Lazy<IOrchardServices>(() => _services.Value);
+                var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
 
-            var services = new Lazy<IOrchardServices>(() => _services.Value);
-            var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
+                // try to load the processed filename from cache
+                var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
+                bool process = false;
 
-            // try to load the processed filename from cache
-            var filePath = _fileNameProvider.Value.GetFileName(Profile, Path);
-            bool process = false;
-
-            // if the filename is not cached, process it
-            if (!string.IsNullOrEmpty(filePath)) {
-                process = true;
-            }
-            
-            // the processd file doesn't exist anymore, process it
-            else if (!storageProvider.Value.FileExists(filePath)) {
+                // if the filename is not cached, process it
+                if (!string.IsNullOrEmpty(filePath)) {
                     process = true;
-            }
+                }
+            
+                    // the processd file doesn't exist anymore, process it
+                else if (!storageProvider.Value.FileExists(filePath)) {
+                    process = true;
+                }
 
-            // if the original file is more recent, process it
-            else if (storageProvider.Value.GetFile(Path).GetLastUpdated() > storageProvider.Value.GetFile(filePath).GetLastUpdated()) {
-                process = true;
-            }
-                
-            // todo: regenerate the file if the profile is newer, by deleting the associated filename cache entries.
-            if (process) {
-                try {
+                    // if the original file is more recent, process it
+                else if (storageProvider.Value.GetFile(Path).GetLastUpdated() > storageProvider.Value.GetFile(filePath).GetLastUpdated()) {
+                    process = true;
+                }
+
+                // todo: regenerate the file if the profile is newer, by deleting the associated filename cache entries.
+                if (process) {
                     ImageProfilePart profilePart;
 
                     if (CustomFilter == null) {
@@ -158,16 +156,15 @@ namespace Orchard.MediaProcessing.Shapes {
                         filePath = filterContext.FilePath;
                     }
                 }
-                catch (Exception ex) {
-                    Logger.Error(ex, "An error occured while processing {0} for image {1}", Profile, Path);
-                    return;
-                }
-            }
 
-            // generate a timestamped url to force client caches to update if the file has changed
-            var publicUrl = storageProvider.Value.GetPublicUrl(filePath);
-            var timestamp = storageProvider.Value.GetFile(storageProvider.Value.GetLocalPath(filePath)).GetLastUpdated().Ticks;
-            Output.Write(publicUrl + "?v=" + timestamp.ToString(CultureInfo.InvariantCulture));
+                // generate a timestamped url to force client caches to update if the file has changed
+                var publicUrl = storageProvider.Value.GetPublicUrl(filePath);
+                var timestamp = storageProvider.Value.GetFile(storageProvider.Value.GetLocalPath(filePath)).GetLastUpdated().Ticks;
+                Output.Write(publicUrl + "?v=" + timestamp.ToString(CultureInfo.InvariantCulture));
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "An error occured while rendering shape {0} for image {1}", Profile, Path);
+            }
         }
 
         // TODO: Update this method once the storage provider has been updated

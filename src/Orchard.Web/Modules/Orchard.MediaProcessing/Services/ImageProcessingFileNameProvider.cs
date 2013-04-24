@@ -16,30 +16,38 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         public string GetFileName(string profile, string path) {
-            var fileNames = GetFileNames(profile);
+            var cacheKey = GetCacheKey(profile, path);
+            var profileCache = GetProfileCache(profile);
+
             string fileName;
-            if (!fileNames.TryGetValue(path, out fileName)) {
+            if (!profileCache.TryGetValue(cacheKey, out fileName)) {
                 var profilePart = _imageProfileService.GetImageProfileByName(profile);
                 if (profilePart != null) {
                     
                     foreach (var fileNameRecord in profilePart.FileNames) {
-                        fileNames.Add(path, fileNameRecord.FileName);    
+                        var fileNameRecordCacheKey = GetCacheKey(fileNameRecord.ImageProfilePartRecord.Name, fileNameRecord.Path);
+                        profileCache.Add(fileNameRecordCacheKey, fileNameRecord.FileName);
                     }
 
-                    // now the cache has been initialized, call the same method again
-                    return GetFileName(profile, path);
+                    //now the cache has been initialized, look in the dictionary again
+                    if (!profileCache.TryGetValue(cacheKey, out fileName)) {
+                        return null;
+                    }
                 }
             }
             return fileName;
         }
 
         public void UpdateFileName(string profile, string path, string fileName) {
-            var fileNames = GetFileNames(profile);
+            var cacheKey = GetCacheKey(profile, path);
+            var profileCache = GetProfileCache(profile);
+
             string existingFileName;
-            if (fileNames.TryGetValue(path, out existingFileName) && existingFileName == fileName) {
+            if (profileCache.TryGetValue(cacheKey, out existingFileName) && existingFileName == fileName) {
                 return;
             }
-            fileNames[path] = fileName;
+
+            profileCache[cacheKey] = fileName;
             var profilePart = _imageProfileService.GetImageProfileByName(profile);
 
             // profile might not exist in the db if its a dynamic profile
@@ -56,7 +64,11 @@ namespace Orchard.MediaProcessing.Services {
             }
         }
 
-        private Dictionary<string, string> GetFileNames(string profile) {
+        private static string GetCacheKey(string profile, string path) {
+            return profile + "_" + path;
+        }
+
+        private IDictionary<string, string> GetProfileCache(string profile) {
             return _cacheManager.Get("MediaProcessing_" + profile, ctx => {
                                                                        ctx.Monitor(_signals.When("MediaProcessing_" + profile + "_Saved"));
                                                                        return new Dictionary<string, string>();
