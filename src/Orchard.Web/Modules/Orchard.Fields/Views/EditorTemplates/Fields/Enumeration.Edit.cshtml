@@ -43,5 +43,7 @@
     }
     
     @Html.ValidationMessageFor(m => m.SelectedValues)
+    @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
+    }
 </fieldset>

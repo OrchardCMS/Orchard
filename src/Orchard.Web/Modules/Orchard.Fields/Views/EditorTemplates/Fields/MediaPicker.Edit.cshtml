@@ -15,8 +15,9 @@
         <span id="clear-@Html.FieldIdFor(m => m.Url)" class="button">@T("Clear")</span>    
     }
     
+    @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
-
+    }
     @Html.HiddenFor(m => m.AlternateText)
     @Html.HiddenFor(m => m.Class)
     @Html.HiddenFor(m => m.Style)

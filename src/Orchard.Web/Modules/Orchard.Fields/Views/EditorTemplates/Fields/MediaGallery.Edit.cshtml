@@ -14,7 +14,9 @@
 
 <fieldset>
     <label @if(settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
+    @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
+    }
 
     <div id="save-message-@descriminator" class="message message-Warning media-gallery-message">@T("You need to save your changes.")</div>
     <table id="media-gallery-@descriminator" class="items media-gallery" summary="@Model.Field.DisplayName">
