@@ -111,6 +111,9 @@ namespace Orchard.ContentManagement {
             var theme = workContext.CurrentTheme;
             var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
 
+            // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
+            ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
+
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
