@@ -33,7 +33,7 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             dynamic model = _contentManager.BuildDisplay(contentItem);
-            return new ShapeResult(this, model);
+            return View((object)model);
         }
 
         // /Contents/Item/Preview/72
@@ -57,7 +57,7 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             dynamic model = _contentManager.BuildDisplay(contentItem);
-            return new ShapeResult(this, model);
+            return View((object)model);
         }
     }
 }

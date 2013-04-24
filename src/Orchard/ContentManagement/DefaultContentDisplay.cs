@@ -7,13 +7,10 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using Orchard.UI.PageClass;
 using Orchard.UI.Zones;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
-        private readonly IPageClassBuilder _pageClassBuilder;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
@@ -23,14 +20,12 @@ namespace Orchard.ContentManagement {
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public DefaultContentDisplay(
-            IPageClassBuilder pageClassBuilder, 
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
             Lazy<IShapeTableLocator> shapeTableLocator, 
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
-            _pageClassBuilder = pageClassBuilder;
             _handlers = handlers;
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
@@ -51,10 +46,6 @@ namespace Orchard.ContentManagement {
 
             var actualShapeType = stereotype;
             var actualDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
-
-            if (actualDisplayType == "Detail") {
-                _pageClassBuilder.AddClassNames("detail-" + content.ContentItem.ContentType.HtmlClassify());
-            }
 
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
@@ -77,7 +68,6 @@ namespace Orchard.ContentManagement {
                 stereotype = "Content";
 
             var actualShapeType = stereotype + "_Edit";
-            _pageClassBuilder.AddClassNames("edit-" + content.ContentItem.ContentType.HtmlClassify());
 
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
@@ -101,7 +91,6 @@ namespace Orchard.ContentManagement {
                 stereotype = "Content";
 
             var actualShapeType = stereotype + "_Edit";
-            _pageClassBuilder.AddClassNames("edit-" + content.ContentItem.ContentType.HtmlClassify());
 
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;

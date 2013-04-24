@@ -550,6 +550,12 @@
   <ItemGroup>
     <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Display.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Preview.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

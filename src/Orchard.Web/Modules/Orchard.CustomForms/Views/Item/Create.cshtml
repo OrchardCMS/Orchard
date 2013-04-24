@@ -1,8 +1,11 @@
 @using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
 @{
     ContentItem customForm = Model.ContentItem;
     string returnUrl = Model.ReturnUrl;
-    
+
+    Html.AddPageClassNames("edit-" + customForm.ContentType.HtmlClassify());
+
     // remove default Save/Publish buttons
     Model.Zones["Sidebar"].Items.Clear();
 }

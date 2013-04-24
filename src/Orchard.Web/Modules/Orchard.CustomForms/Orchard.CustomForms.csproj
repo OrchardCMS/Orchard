@@ -115,9 +115,6 @@
     <Content Include="Views\Item\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Item\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts.CustomForm.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
