@@ -19,6 +19,7 @@ using Orchard.Tokens;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Shapes {
+
     public class MediaShapes : IDependency {
         private readonly Work<IStorageProvider> _storageProvider;
         private readonly Work<IImageProcessingFileNameProvider> _fileNameProvider;
@@ -46,7 +47,7 @@ namespace Orchard.MediaProcessing.Shapes {
         public ILogger Logger { get; set; }
 
         [Shape]
-        public void ResizeMediaUrl(dynamic Display, TextWriter Output, ContentItem ContentItem, string Path, int Width, int Height, string Mode, string Alignment, string PadColor) {
+        public void ResizeMediaUrl(dynamic Shape, dynamic Display, TextWriter Output, ContentItem ContentItem, string Path, int Width, int Height, string Mode, string Alignment, string PadColor) {
             var state = new Dictionary<string, string> {
                 {"Width", Width.ToString(CultureInfo.InvariantCulture)},
                 {"Height", Height.ToString(CultureInfo.InvariantCulture)},
@@ -67,12 +68,14 @@ namespace Orchard.MediaProcessing.Shapes {
                 + "_m_" + Convert.ToString(Mode)
                 + "_a_" + Convert.ToString(Alignment) 
                 + "_c_" + Convert.ToString(PadColor);
- 
-            MediaUrl(Display, Output, profile, Path, ContentItem, filter);
+
+            MediaUrl(Shape, Display, Output, profile, Path, ContentItem, filter);
         }
 
         [Shape]
-        public void MediaUrl(dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem, FilterRecord CustomFilter) {
+        public void MediaUrl(dynamic Shape, dynamic Display, TextWriter Output, string Profile, string Path, ContentItem ContentItem, FilterRecord CustomFilter) {
+
+            Shape.IgnoreShapeTracer = true;
 
             var services = new Lazy<IOrchardServices>(() => _services.Value);
             var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
