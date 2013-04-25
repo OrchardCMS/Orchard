@@ -66,7 +66,6 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<ContentDefinitionWriter>().As<IContentDefinitionWriter>();
             builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();

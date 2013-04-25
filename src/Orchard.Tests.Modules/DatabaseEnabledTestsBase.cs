@@ -7,7 +7,6 @@ using System.Linq;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
-using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Services;
 using Orchard.Tests.Data;
@@ -48,7 +47,6 @@ namespace Orchard.Tests.Modules {
             builder.RegisterInstance(new StubLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(_clock).As<IClock>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             Register(builder);
             _container = builder.Build();
 

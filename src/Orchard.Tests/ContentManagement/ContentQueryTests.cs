@@ -3,7 +3,6 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
-using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.ContentManagement;
@@ -48,7 +47,6 @@ namespace Orchard.Tests.ContentManagement {
 
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
-            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
