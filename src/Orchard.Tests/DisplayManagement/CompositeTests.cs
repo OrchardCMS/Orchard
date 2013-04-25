@@ -53,10 +53,24 @@ namespace Orchard.Tests.DisplayManagement {
             Assert.That(foo.Bar == null, Is.False);
         }
 
+
+        [Test]
+        public void DuckTyping() {
+            dynamic foo = new Animal();
+            foo.Size(42);
+
+            ISized sized = foo;
+            
+            Assert.That(sized.Size, Is.EqualTo(42));
+        }
     }
 
     public class Animal : Composite {
         public string Kind { get; set; }
         public string Color { get; set; }
+    }
+
+    public interface ISized {
+        int Size { get; set; }
     }
 }
