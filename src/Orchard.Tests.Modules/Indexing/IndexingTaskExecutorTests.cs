@@ -5,6 +5,7 @@ using Autofac;
 using Lucene.Services;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -65,6 +66,7 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<DefaultIndexManager>().As<IIndexManager>();
             builder.RegisterType<IndexingTaskManager>().As<IIndexingTaskManager>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
