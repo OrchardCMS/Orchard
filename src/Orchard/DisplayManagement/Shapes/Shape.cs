@@ -72,7 +72,7 @@ namespace Orchard.DisplayManagement.Shapes {
                 return true;
             }
 
-            return false;
+            return base.TryConvert(binder, out result);
         }
 
         //public class ShapeBehavior : ClayBehavior {
