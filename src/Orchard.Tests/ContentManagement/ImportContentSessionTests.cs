@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
@@ -42,7 +39,6 @@ namespace Orchard.Tests.ContentManagement {
 
             _contentManager.Setup(m => m.New(It.IsAny<string>())).Returns(draftItem5);
 
-            _contentManager.Setup(m => m.HasResolverForIdentity(It.Is<ContentIdentity>(id => id.Get("ItemId") != null))).Returns(true);
             _contentManager.Setup(m => m.ResolveIdentity(It.Is<ContentIdentity>(id => id.Get("ItemId") == "1"))).Returns(publishedItem);
         }
         #endregion

@@ -153,7 +153,6 @@
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
-    <Compile Include="ContentManagement\Handlers\RegisterIdentityResolverContext.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
     <Compile Include="ContentManagement\IHqlQuery.cs" />
@@ -166,6 +165,7 @@
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
+    <Compile Include="ContentManagement\IIdentityResolverSelector.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />

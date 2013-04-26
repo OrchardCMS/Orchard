@@ -327,10 +327,6 @@ namespace Orchard.ContentManagement.Handlers {
             Exported(context);
         }
 
-        void IContentHandler.RegisterIdentityResolver(RegisterIdentityResolverContext context) {
-            RegisterIdentityResolver(context);
-        }
-
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetContentItemMetadata(context);
@@ -386,7 +382,6 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
 
-        protected virtual void RegisterIdentityResolver(RegisterIdentityResolverContext context) { }
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }
         protected virtual void BuildEditorShape(BuildEditorContext context) { }

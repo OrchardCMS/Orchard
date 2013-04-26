@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Commands\AutorouteCommands.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\AliasResolverSelector.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
     <Compile Include="Settings\AutorouteSettingsEvents.cs" />
     <Compile Include="Settings\RoutePattern.cs" />

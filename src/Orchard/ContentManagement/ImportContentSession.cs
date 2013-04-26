@@ -20,11 +20,6 @@ namespace Orchard.ContentManagement {
         private int _batchSize = int.MaxValue;
         private int _currentIndex;
 
-        //for identity prefetch
-        private const int BulkPage = 128;
-        private bool _firstRequest = true;
-        private bool _allIdentitiesPrefetched = false;
-
         public ImportContentSession(IContentManager contentManager) {
             _identityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
             _contentManager = contentManager;
@@ -86,15 +81,6 @@ namespace Orchard.ContentManagement {
         public ContentItem Get(string id, VersionOptions versionOptions, string contentTypeHint = null) {
             var contentIdentity = new ContentIdentity(id);
 
-            if (_firstRequest) {
-                _firstRequest = false;
-                //If we know we have identities without a resolver
-                //just load all up-front
-                if (HasIdentitiesSetWithoutResolver()) {
-                    PrefetchAllIdentities(true);
-                }
-            }
-
             // lookup in local cache
             if (_identities.ContainsKey(contentIdentity)) {
                 if (_draftVersionRecordIds.ContainsKey(_identities[contentIdentity])) {
@@ -111,32 +97,23 @@ namespace Orchard.ContentManagement {
                 }
             }
 
-            if (!_allIdentitiesPrefetched) {
-                ContentItem existingItem = null;
+            ContentItem existingItem  = _contentManager.ResolveIdentity(contentIdentity);
 
-                //try retrieve the item using handlers to resolve, otherwise fall back to full scan
-                if (_contentManager.HasResolverForIdentity(contentIdentity)) {
-                    existingItem = _contentManager.ResolveIdentity(contentIdentity);
+            //ensure we have the correct version
+            if (existingItem != null) {
+                existingItem = _contentManager.Get(existingItem.Id, versionOptions);
+            }
 
-                    //ensure we have the correct version
-                    if (existingItem != null)
-                        existingItem = _contentManager.Get(existingItem.Id, versionOptions);
-                }
-                else {
-                    //may be a contentidentity without a resolver and all identities have not
-                    //been prefetched yet e.g. is a dependency without resolver.
-                    PrefetchAllIdentities(false);
-                    if (_identities.ContainsKey(contentIdentity))
-                        existingItem = _contentManager.Get(_identities[contentIdentity], versionOptions);
-                }
+            if (existingItem == null && _identities.ContainsKey(contentIdentity)) {
+                existingItem = _contentManager.Get(_identities[contentIdentity], versionOptions);
+            }
 
-                if (existingItem != null) {
-                    _identities[contentIdentity] = existingItem.Id;
-                    if (versionOptions.IsDraftRequired) {
-                        _draftVersionRecordIds[existingItem.Id] = existingItem.VersionRecord.Id;
-                    }
-                    return existingItem;
+            if (existingItem != null) {
+                _identities[contentIdentity] = existingItem.Id;
+                if (versionOptions.IsDraftRequired) {
+                    _draftVersionRecordIds[existingItem.Id] = existingItem.VersionRecord.Id;
                 }
+                return existingItem;
             }
 
             //create item if not found and draft was requested, or it is found later in the import queue
@@ -166,37 +143,5 @@ namespace Orchard.ContentManagement {
             return null;
         }
 
-        private bool HasIdentitiesSetWithoutResolver() {
-            return _allIdentitiesForImport.Any(id => !_contentManager.HasResolverForIdentity(id));
-        }
-
-        private void PrefetchAllIdentities(bool clearContentManager) {
-            if (_allIdentitiesPrefetched)
-                return;
-
-            IEnumerable<ContentItem> block;
-            int lastIndex = 0;
-
-            while ((block = _contentManager.HqlQuery()
-                .ForVersion(VersionOptions.Latest)
-                .OrderBy(x => x.ContentItemVersion(), x => x.Asc("Id"))
-                .Slice(lastIndex, BulkPage)).Any()) {
-                foreach (var item in block) {
-                    lastIndex++;
-
-                    var identity = _contentManager.GetItemMetadata(item).Identity;
-
-                    // store mapping for later
-                    _identities[identity] = item.Id;
-                }
-
-                //Clearing the ContentManger after import has started can cause errors
-                if (clearContentManager) {
-                    _contentManager.Clear();
-                }
-            }
-
-            _allIdentitiesPrefetched = true;
-        }
     }
 }
