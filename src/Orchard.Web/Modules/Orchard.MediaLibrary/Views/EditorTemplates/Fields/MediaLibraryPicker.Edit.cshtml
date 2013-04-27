@@ -92,6 +92,10 @@
                     $('html, body').css('overflow', '');
 
                     var selectedData = $.colorbox.selectedData;
+                    
+                    if (selectedData == null) // Dialog cancelled, do nothing
+                        return;
+
                     for (var i = 0; i < selectedData.length; i++) {
                         
                         var template = @Html.FieldIdFor(m => m.Field.Ids)_Template.replace(/\{contentItemId\}/g, selectedData[i].id).replace(/\{thumbnail\}/g, selectedData[i].thumbnail).replace(/\{title\}/g, selectedData[i].title);
