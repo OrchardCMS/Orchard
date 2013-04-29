@@ -66,7 +66,13 @@ namespace Orchard.ContentManagement {
 
         private void ForType(params string[] contentTypeNames) {
             if (contentTypeNames != null && contentTypeNames.Length != 0)
-                BindTypeCriteria().Add(Restrictions.InG("Name", contentTypeNames));
+                // don't use the IN operator if not needed for performance reasons
+                if (contentTypeNames.Length == 1) {
+                    BindTypeCriteria().Add(Restrictions.Eq("Name", contentTypeNames[0]));
+                }
+                else {
+                    BindTypeCriteria().Add(Restrictions.InG("Name", contentTypeNames));
+                }
         }
 
         public void ForVersion(VersionOptions options) {
