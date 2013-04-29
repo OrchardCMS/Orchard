@@ -119,24 +119,4 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
             return "Style__";
         }
     }
-
-    // discovers .css files and turns them into Style__<filename> shapes.
-    public class ScriptBindingStrategy : StaticFileBindingStrategy, IShapeTableProvider {
-        public ScriptBindingStrategy(IExtensionManager extensionManager, ShellDescriptor shellDescriptor, IVirtualPathProvider virtualPathProvider)
-            : base(extensionManager, shellDescriptor, virtualPathProvider) {
-        }
-
-        public override string GetFileExtension() {
-            return ".js";
-        }
-
-        public override string GetFolder() {
-            return "Scripts";
-        }
-
-        public override string GetShapePrefix() {
-            return "Script__";
-        }
-    }
-
 }
