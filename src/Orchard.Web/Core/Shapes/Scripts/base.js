@@ -223,7 +223,7 @@
     $(function () {
         var magicToken = $("input[name=__RequestVerificationToken]").first();
         if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
-        $("a[itemprop~=UnsafeUrl]").on("click", function () {
+        $("a[itemprop~=UnsafeUrl]").on("click", function() {
             var _this = $(this);
             var hrefParts = _this.attr("href").split("?");
             var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
@@ -238,16 +238,16 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
-            _this.click(function () {
-                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                    if (!confirm(confirmRemoveMessage)) {
-                        return false;
-                    }
-                }
 
-                form.submit();
-                return false;
-            });
+            if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                if (!confirm(confirmRemoveMessage)) {
+                    return false;
+                }
+            }
+
+            form.submit();
+            return false;
+
         });
     });
 })(jQuery);
