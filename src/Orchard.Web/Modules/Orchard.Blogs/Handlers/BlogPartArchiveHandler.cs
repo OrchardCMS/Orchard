@@ -31,8 +31,32 @@ namespace Orchard.Blogs.Handlers {
             });
 
             OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
-            OnUnpublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
-            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, bp));
+            OnUnpublished<BlogPostPart>((context, bp) => ReduceBlogArchive(blogArchiveRepository, bp));
+            OnRemoved<BlogPostPart>((context, bp) => ReduceBlogArchive(blogArchiveRepository, bp));
+        }
+
+        private void ReduceBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, BlogPostPart blogPostPart) {
+            blogArchiveRepository.Flush();
+
+            var commonPart = blogPostPart.As<CommonPart>();
+            if (commonPart == null || !commonPart.CreatedUtc.HasValue)
+                return;
+
+            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
+            var datetime = TimeZoneInfo.ConvertTimeFromUtc(commonPart.CreatedUtc.Value, timeZone);
+
+            var previousArchiveRecord = blogArchiveRepository.Table
+                .FirstOrDefault(x => x.BlogPart == blogPostPart.BlogPart.Record
+                                    && x.Month == datetime.Month
+                                    && x.Year == datetime.Year);
+
+            if(previousArchiveRecord == null)
+                return;
+
+            if (previousArchiveRecord.PostCount > 0)
+                previousArchiveRecord.PostCount--;
+            else
+                blogArchiveRepository.Delete(previousArchiveRecord);
         }
 
         private void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, BlogPostPart blogPostPart) {
