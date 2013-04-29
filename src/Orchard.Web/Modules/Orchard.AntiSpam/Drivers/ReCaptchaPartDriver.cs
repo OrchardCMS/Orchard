@@ -9,6 +9,7 @@ using Orchard.AntiSpam.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
+using Orchard.UI.Admin;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
@@ -24,16 +25,22 @@ namespace Orchard.AntiSpam.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
+            var workContext = _workContextAccessor.GetContext();
+
+            // don't display the part in the admin
+            if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
+                return null;
+            }
+
             return ContentShape("Parts_ReCaptcha_Fields", () => {
-                var workContext = _workContextAccessor.GetContext();
                 var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
 
-                if(settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
+                if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
                     return null;
                 }
 
                 var viewModel = new ReCaptchaPartEditViewModel {
-                    PublicKey =  settings.PublicKey
+                    PublicKey = settings.PublicKey
                 };
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.ReCaptcha.Fields", Model: viewModel, Prefix: Prefix);
@@ -43,6 +50,11 @@ namespace Orchard.AntiSpam.Drivers {
         protected override DriverResult Editor(ReCaptchaPart part, IUpdateModel updater, dynamic shapeHelper) {
             var workContext = _workContextAccessor.GetContext();
             var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
+
+            // don't display the part in the admin
+            if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
+                return null;
+            }
 
             if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
                 return null;
