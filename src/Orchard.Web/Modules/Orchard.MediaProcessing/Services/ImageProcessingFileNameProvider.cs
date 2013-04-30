@@ -21,20 +21,9 @@ namespace Orchard.MediaProcessing.Services {
 
             string fileName;
             if (!profileCache.TryGetValue(cacheKey, out fileName)) {
-                var profilePart = _imageProfileService.GetImageProfileByName(profile);
-                if (profilePart != null) {
-                    
-                    foreach (var fileNameRecord in profilePart.FileNames) {
-                        var fileNameRecordCacheKey = GetCacheKey(fileNameRecord.ImageProfilePartRecord.Name, fileNameRecord.Path);
-                        profileCache.Add(fileNameRecordCacheKey, fileNameRecord.FileName);
-                    }
-
-                    //now the cache has been initialized, look in the dictionary again
-                    if (!profileCache.TryGetValue(cacheKey, out fileName)) {
-                        return null;
-                    }
-                }
+                return null;
             }
+
             return fileName;
         }
 
@@ -70,9 +59,20 @@ namespace Orchard.MediaProcessing.Services {
 
         private IDictionary<string, string> GetProfileCache(string profile) {
             return _cacheManager.Get("MediaProcessing_" + profile, ctx => {
-                                                                       ctx.Monitor(_signals.When("MediaProcessing_" + profile + "_Saved"));
-                                                                       return new Dictionary<string, string>();
-                                                                   });
+                ctx.Monitor(_signals.When("MediaProcessing_" + profile + "_Saved"));
+                var dictionary = new Dictionary<string, string>();
+
+                var profilePart = _imageProfileService.GetImageProfileByName(profile);
+                if (profilePart != null) {
+                    foreach (var fileNameRecord in profilePart.FileNames) {
+                        var fileNameRecordCacheKey = GetCacheKey(fileNameRecord.ImageProfilePartRecord.Name, fileNameRecord.Path);
+
+                        dictionary.Add(fileNameRecordCacheKey, fileNameRecord.FileName);
+                    }
+                }
+
+                return dictionary;
+            });
         }
     }
 }
