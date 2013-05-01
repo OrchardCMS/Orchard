@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Linq;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Common {
     public class Migrations : DataMigrationImpl {
+        private readonly IRepository<IdentityPartRecord> _identityPartRepository;
+
+        public Migrations(IRepository<IdentityPartRecord> identityPartRepository) {
+            _identityPartRepository = identityPartRepository;
+        }
+
         public int Create() {
             SchemaBuilder.CreateTable("BodyPartRecord", 
                 table => table
@@ -34,7 +43,7 @@ namespace Orchard.Core.Common {
             SchemaBuilder.CreateTable("IdentityPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("Identifier", column => column.Unlimited())
+                    .Column<string>("Identifier", column => column.WithLength(255))
                 );
 
             ContentDefinitionManager.AlterPartDefinition("BodyPart", builder => builder
@@ -49,7 +58,7 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -74,6 +83,29 @@ namespace Orchard.Core.Common {
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            var existingIdentityParts = _identityPartRepository.Table.ToArray();
+
+            foreach (var existingIdentityPart in existingIdentityParts) {
+                if (existingIdentityPart.Identifier.Length > 255) {
+                    throw new ArgumentException("Identifier '" + existingIdentityPart + "' is over 255 characters");
+                }
+            }
+
+            SchemaBuilder.AlterTable("IdentityPartRecord", table => table.DropColumn("Identifier"));
+            SchemaBuilder.AlterTable("IdentityPartRecord", table => table.AddColumn<string>("Identifier", command => command.WithLength(255)));
+
+            foreach (var existingIdentityPart in existingIdentityParts) {
+                var updateIdentityPartRecord = _identityPartRepository.Get(existingIdentityPart.Id);
+                
+                updateIdentityPartRecord.Identifier = existingIdentityPart.Identifier;
+                
+                _identityPartRepository.Update(updateIdentityPartRecord);
+            }
+
+            return 4;
         }
     }
 }
