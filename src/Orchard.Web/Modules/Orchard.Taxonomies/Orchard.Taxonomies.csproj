@@ -68,6 +68,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TermAdminController.cs" />
+    <Compile Include="Drivers\TaxonomyNavigationPartDriver.cs" />
     <Compile Include="Drivers\TermsPartDriver.cs" />
     <Compile Include="Drivers\TaxonomyPartDriver.cs" />
     <Compile Include="Drivers\TermWidgetPartDriver.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Drivers\TaxonomyFieldDriver.cs" />
     <Compile Include="Handlers\TermPartHandler.cs" />
     <Compile Include="Helpers\PredicateBuilder.cs" />
+    <Compile Include="Models\TaxonomyNavigationPart.cs" />
     <Compile Include="Models\TermContentItemPart.cs" />
     <Compile Include="Models\TaxonomyPartRecord.cs" />
     <Compile Include="Models\TermPart.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Models\TermsPartRecord.cs" />
     <Compile Include="Models\TermWidgetPart.cs" />
     <Compile Include="Models\TermWidgetPartRecord.cs" />
+    <Compile Include="Navigation\TaxonomyNavigationProvider.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Projections\TermsFilter.cs" />
     <Compile Include="Projections\TermsFilterForms.cs" />
@@ -111,7 +114,7 @@
     <Compile Include="ViewModels\TaxonomyFieldViewModel.cs" />
     <Compile Include="ViewModels\TermAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyAdminIndexViewModel.cs" />
-    <Compile Include="ViewModels\TaxonomyMenuViewModel.cs" />
+    <Compile Include="ViewModels\TaxonomyNavigationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\admin-taxonomy-expando.js" />
@@ -206,6 +209,9 @@
     <Content Include="Views\Taxonomy.cshtml" />
     <Content Include="Views\TaxonomyItem.cshtml" />
     <Content Include="Views\TaxonomyItemLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Navigation.Taxonomy.Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

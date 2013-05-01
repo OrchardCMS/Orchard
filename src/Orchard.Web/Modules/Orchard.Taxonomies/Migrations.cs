@@ -61,5 +61,19 @@ namespace Orchard.Taxonomies {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
+               cfg => cfg
+                   .WithPart("TaxonomyNavigationPart")
+                   .WithPart("MenuPart")
+                   .WithPart("CommonPart")
+                   .DisplayedAs("Taxonomy Link")
+                   .WithSetting("Description", "Injects menu items from a Taxonomy")
+                   .WithSetting("Stereotype", "MenuItem")
+               );
+
+            return 2;
+        }
     }
 }

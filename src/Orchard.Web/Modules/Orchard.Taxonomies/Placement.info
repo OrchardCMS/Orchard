@@ -28,4 +28,8 @@
   <Place Parts_TaxonomyPart="Content:5" />
   <Place Parts_TermPart="Content:5" />
   <Place Parts_TermPart_Feed="Content" />
+
+  <!-- Navigation -->
+  <Place Parts_Navigation_Taxonomy_Edit="Content:5"/>
+  
 </Placement>
