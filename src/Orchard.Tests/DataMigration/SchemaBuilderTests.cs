@@ -229,7 +229,7 @@ namespace Orchard.Tests.DataMigration {
 
             _schemaBuilder
                 .CreateTable("Product", table => table
-                    .Column("Price", DbType.Decimal, column => column.WithPrecision(6).WithScale(9))
+                    .Column("Price", DbType.Decimal, column => column.WithPrecision(19).WithScale(9))
                     );
 
             _schemaBuilder
