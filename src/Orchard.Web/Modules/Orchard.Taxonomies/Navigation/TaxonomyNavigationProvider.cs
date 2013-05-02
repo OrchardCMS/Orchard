@@ -35,7 +35,6 @@ namespace Orchard.Taxonomies.Navigation {
                                        : _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId);
 
                     var menuPosition = item.Position;
-                    int index = 0;
                     foreach (var contentItem in allTerms) {
                         if (contentItem != null) {
                             var part = contentItem;

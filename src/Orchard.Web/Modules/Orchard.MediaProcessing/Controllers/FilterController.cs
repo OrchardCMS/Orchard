@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Web.Mvc;
 using Orchard.Caching;
 using Orchard.Data;
 using Orchard.DisplayManagement;
-using Orchard.FileSystems.Media;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.MediaProcessing.Models;
@@ -44,7 +42,6 @@ namespace Orchard.MediaProcessing.Controllers {
         private readonly IRepository<FilterRecord> _filterRepository;
         private readonly IImageProfileService _profileService;
         private readonly ISignals _signals;
-        private readonly IStorageProvider _storageProvider;
         public Localizer T { get; set; }
         public dynamic Shape { get; set; }
 
