@@ -85,7 +85,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Performs an HTTP GET or POST request on the specified URL and stores the response as part of the workflow instance."); }
+            get { return T("Performs an HTTP request."); }
         }
 
         public override string Form {

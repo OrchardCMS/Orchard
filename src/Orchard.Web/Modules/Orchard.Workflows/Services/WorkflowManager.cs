@@ -85,6 +85,8 @@ namespace Orchard.Workflows.Services {
                     Record = awaitingActivityRecord.WorkflowRecord
                 };
 
+                workflowContext.Tokens["Workflow"] = workflowContext;
+
                 var activityContext = CreateActivityContext(awaitingActivityRecord.ActivityRecord, tokens);
 
                 // check the condition
@@ -108,6 +110,8 @@ namespace Orchard.Workflows.Services {
                     Content = target,
                     Tokens = tokens,
                 };
+
+                workflowContext.Tokens["Workflow"] = workflowContext;
 
                 var workflowRecord = new WorkflowRecord {
                     WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,

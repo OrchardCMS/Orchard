@@ -150,10 +150,11 @@ var bindForm = function(form, data) {
                 }
                 break;
             case 'select':
-                $el.find('option').each(function () {
-                    var self = $(this);
-                    self.attr('selected', values.indexOf(self.attr('value')) != -1);
-                });
+                $el.val(values);
+                //$el.find('option').each(function () {
+                //    var self = $(this);
+                //    self.attr('selected', values.indexOf(self.attr('value')) != -1);
+                //});
                 break;
             default:
                 $el.val(val);

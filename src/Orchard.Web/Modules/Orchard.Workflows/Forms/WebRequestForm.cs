@@ -39,12 +39,14 @@ namespace Orchard.Workflows.Forms {
                         _FormValues: New.Textarea(
                             Id: "FormValues", Name: "FormValues",
                             Title: T("Form Values"),
-                            Description: T("For KeyValue, enter one line per key=value pair to submit when using the POST verb. For JSON, enter a valid JSON string"),
+                            Description: T("For KeyValue, enter one line per key=value pair to submit when using the POST verb. For JSon, enter a valid JSon string"),
                             Classes: new[] {"tokenized"})
                         );
 
                     form._Verb.Add(new SelectListItem { Value = "GET", Text = "GET" });
                     form._Verb.Add(new SelectListItem { Value = "POST", Text = "POST" });
+                    form._Verb.Add(new SelectListItem { Value = "PUT", Text = "PUT" });
+                    form._Verb.Add(new SelectListItem { Value = "DELETE", Text = "DELETE" });
 
                     form._FormFormat.Add(new SelectListItem { Value = "KeyValue", Text = "Key / Value" });
                     form._FormFormat.Add(new SelectListItem { Value = "Json", Text = "Json" });

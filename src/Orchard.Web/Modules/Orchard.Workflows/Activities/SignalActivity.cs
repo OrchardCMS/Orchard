@@ -4,15 +4,20 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
-    public class WebResponseActivity : Event {
-        public WebResponseActivity() {
+    /// <summary>
+    /// Represents a named event which can be triggered by any kind of activity.
+    /// </summary>
+    public class SignalActivity : Event {
+        public const string SignalEventName = "Signal";
+
+        public SignalActivity() {
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return true;
+            return activityContext.GetState<string>(SignalEventName) == workflowContext.Tokens[SignalEventName].ToString();
         }
 
         public override bool CanStartWorkflow {
@@ -28,15 +33,21 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override string Name {
-            get { return "WebResponse"; }
+            get { return SignalEventName; }
         }
 
         public override LocalizedString Category {
-            get { return T("HTTP"); }
+            get { return T("Events"); }
         }
 
         public override LocalizedString Description {
-            get { return T("Suspends the workflow until an HTTP request comes in."); }
+            get { return T("Suspends the workflow until this signal is specifically triggered."); }
+        }
+
+        public override string Form {
+            get {
+                return "SignalEvent";
+            }
         }
     }
 }

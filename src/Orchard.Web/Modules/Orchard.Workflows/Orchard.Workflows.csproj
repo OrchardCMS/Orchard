@@ -130,6 +130,8 @@
     <Compile Include="Activities\BranchActivity.cs" />
     <Compile Include="Activities\AssignRoleActivity.cs" />
     <Compile Include="Activities\CloseCommentsActivity.cs" />
+    <Compile Include="Activities\TriggerActivity.cs" />
+    <Compile Include="Activities\SignalActivity.cs" />
     <Compile Include="Activities\MergeBranchActivity.cs" />
     <Compile Include="Activities\DeleteActivity.cs" />
     <Compile Include="Activities\ExclusiveBranchActivity.cs" />
@@ -138,8 +140,8 @@
     <Compile Include="Activities\RedirectActivity.cs" />
     <Compile Include="Activities\TimerActivity.cs" />
     <Compile Include="Activities\WebRequestActivity.cs" />
-    <Compile Include="Activities\WebResponseActivity.cs" />
-    <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Controllers\SignalController.cs" />
+    <Compile Include="Forms\SignalForms.cs" />
     <Compile Include="Forms\RedirectActionForm.cs" />
     <Compile Include="Forms\TimerForms.cs" />
     <Compile Include="Forms\BranchForms.cs" />
@@ -169,6 +171,8 @@
     <Compile Include="Forms\UserTaskForms.cs" />
     <Compile Include="Forms\NotificationActivityForms.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\GenericEventService.cs" />
+    <Compile Include="Services\ISignalService.cs" />
     <Compile Include="Services\Task.cs" />
     <Compile Include="Services\Event.cs" />
     <Compile Include="Services\IActivity.cs" />
@@ -176,6 +180,7 @@
     <Compile Include="Services\IActivitiesManager.cs" />
     <Compile Include="Services\IWorkflowManager.cs" />
     <Compile Include="Services\WorkflowManager.cs" />
+    <Compile Include="Tokens\SignalTokens.cs" />
     <Compile Include="ViewModels\AdminEditViewModel.cs" />
     <Compile Include="ViewModels\AdminIndexViewModel.cs" />
     <Compile Include="ViewModels\WorkflowDefinitionViewModel.cs" />
