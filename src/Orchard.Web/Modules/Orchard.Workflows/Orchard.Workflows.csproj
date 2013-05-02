@@ -140,6 +140,7 @@
     <Compile Include="Activities\WebRequestActivity.cs" />
     <Compile Include="Activities\WebResponseActivity.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Forms\RedirectActionForm.cs" />
     <Compile Include="Forms\TimerForms.cs" />
     <Compile Include="Forms\BranchForms.cs" />
     <Compile Include="Forms\MailForms.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserTaskDriver.cs" />
     <Compile Include="Drivers\WorkflowDriver.cs" />
+    <Compile Include="Forms\WebRequestForm.cs" />
     <Compile Include="Handlers\ContentHandler.cs" />
     <Compile Include="Handlers\WorkflowHandler.cs" />
     <Compile Include="Models\AwaitingActivityRecord.cs" />
