@@ -55,6 +55,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -131,7 +135,11 @@
     <Compile Include="Activities\ExclusiveBranchActivity.cs" />
     <Compile Include="Activities\IsInRoleActivity.cs" />
     <Compile Include="Activities\MailActivity.cs" />
+    <Compile Include="Activities\RedirectActivity.cs" />
     <Compile Include="Activities\TimerActivity.cs" />
+    <Compile Include="Activities\WebRequestActivity.cs" />
+    <Compile Include="Activities\WebResponseActivity.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Forms\TimerForms.cs" />
     <Compile Include="Forms\BranchForms.cs" />
     <Compile Include="Forms\MailForms.cs" />
@@ -232,6 +240,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-Publish.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Redirect.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
