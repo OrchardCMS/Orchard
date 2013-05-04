@@ -28,7 +28,7 @@ namespace Orchard.Workflows.Models {
         /// <summary>
         /// List of <see cref="ActivityRecord"/> composing this workflow definition.
         /// </summary>
-        [CascadeAllDeleteOrphan]
+        [CascadeAllDeleteOrphan, Aggregate]
         public virtual IList<ActivityRecord> ActivityRecords { get; set; }
 
         /// <summary>
@@ -37,13 +37,13 @@ namespace Orchard.Workflows.Models {
         /// any connection an any time of the design process, though they should
         /// be synchronized.
         /// </summary>
-        [CascadeAllDeleteOrphan]
+        [CascadeAllDeleteOrphan, Aggregate]
         public virtual IList<TransitionRecord> TransitionRecords { get; set; }
 
         /// <summary>
         /// List of <see cref="WorkflowRecord"/> associated with this workflow definition.
         /// </summary>
-        [CascadeAllDeleteOrphan]
+        [CascadeAllDeleteOrphan, Aggregate]
         public virtual IList<WorkflowRecord> WorkflowRecords { get; set; }
     }
 }
