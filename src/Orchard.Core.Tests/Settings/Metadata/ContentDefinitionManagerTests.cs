@@ -245,5 +245,46 @@ namespace Orchard.Core.Tests.Settings.Metadata {
                 Assert.That(type.Parts.Select(p=>p.PartDefinition.Name), Has.Some.EqualTo(partName));
             }
         }
+
+        [Test]
+        public void ContentDefinitionsAreCached() {
+            var manager = _container.Resolve<IContentDefinitionManager>();
+            manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
+                                  .Named("alpha")
+                                  .WithPart("foo", pb => { })
+                                  .Build());
+
+            manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
+                                  .Named("beta")
+                                  .WithPart("bar", pb => { })
+                                  .Build());
+
+            ResetSession();
+
+            //_container.Resolve<IRepository<ContentTypeDefinitionRecord>>().Table
+            //    .FetchMany(x => x.ContentTypePartDefinitionRecords)
+            //    .ThenFetch(x => x.ContentPartDefinitionRecord)
+            //    .ThenFetchMany(x => x.ContentPartFieldDefinitionRecords)
+            //    .ThenFetch(x => x.ContentFieldDefinitionRecord)
+            //    .ToList();
+
+            //var foo = manager.GetPartDefinition("foo");
+            //Assert.That(foo, Is.Not.Null);
+            Console.WriteLine("START");
+
+            for (var i = 0; i < 10; i++) {
+                Console.WriteLine("GAMMA");
+                var gamma = manager.ListTypeDefinitions();
+                Assert.That(gamma.Count(), Is.EqualTo(2));
+                Console.WriteLine("ALPHA");
+                var alpha = manager.GetTypeDefinition("alpha");
+                Assert.That(alpha, Is.Not.Null);
+                Console.WriteLine("BETA");
+                var beta = manager.GetTypeDefinition("beta");
+                Assert.That(beta, Is.Not.Null);
+                
+            }
+
+        }
     }
 }
