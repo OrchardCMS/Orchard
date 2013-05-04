@@ -171,6 +171,7 @@
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="DisplayManagement\Arguments.cs" />
     <Compile Include="Data\Bags\SConvert.cs" />
     <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
