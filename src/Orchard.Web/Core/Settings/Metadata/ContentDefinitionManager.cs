@@ -106,13 +106,13 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         public void StoreTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
-            TriggerContentDefinitionSignal();
             Apply(contentTypeDefinition, Acquire(contentTypeDefinition));
+            TriggerContentDefinitionSignal();
         }
 
         public void StorePartDefinition(ContentPartDefinition contentPartDefinition) {
-            _signals.Trigger(ContentDefinitionSignal);
             Apply(contentPartDefinition, Acquire(contentPartDefinition));
+            TriggerContentDefinitionSignal();
         }
 
         private void MonitorContentDefinitionSignal(AcquireContext<string> ctx) {
@@ -127,11 +127,11 @@ namespace Orchard.Core.Settings.Metadata {
             return _cacheManager.Get("ContentTypeDefinitions", ctx => {
                 MonitorContentDefinitionSignal(ctx);
 
+                AcquireContentPartDefinitions();
+
                 var contentTypeDefinitionRecords = _typeDefinitionRepository.Table
                     .FetchMany(x => x.ContentTypePartDefinitionRecords)
                     .ThenFetch(x => x.ContentPartDefinitionRecord)
-                    .ThenFetchMany(x => x.ContentPartFieldDefinitionRecords)
-                    .ThenFetch(x => x.ContentFieldDefinitionRecord)
                     .Select(Build);
 
                 return contentTypeDefinitionRecords.ToDictionary(x => x.Name, y => y );

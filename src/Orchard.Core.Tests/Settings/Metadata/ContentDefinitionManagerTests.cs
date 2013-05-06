@@ -237,6 +237,76 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             Assert.That(manager.GetTypeDefinition("alpha"), Is.Null);
         }
 
+        [Test]
+        public void MultipleFieldsCanBeAddedToImplicitParts() {
+            var manager = _container.Resolve<IContentDefinitionManager>();
+            manager.StorePartDefinition(
+                new ContentPartDefinitionBuilder()
+                    .Named("alpha")
+                    .WithField("field1", f => f.OfType("TextField"))
+                    .WithField("field2", f => f.OfType("TextField"))
+                    .Build()
+                );
+
+            manager.StoreTypeDefinition(
+                new ContentTypeDefinitionBuilder()
+                    .Named("alpha")
+                    .WithPart("foo")
+                    .Build()
+                );
+
+            ResetSession();
+
+            var types = manager.ListTypeDefinitions();
+            Assert.That(types.Count(), Is.EqualTo(1));
+            var parts = manager.ListPartDefinitions();
+            Assert.That(parts.Count(), Is.EqualTo(2));
+            var fields = manager.ListFieldDefinitions();
+            Assert.That(fields.Count(), Is.EqualTo(1));
+
+            var alpha = manager.GetTypeDefinition("alpha");
+            Assert.That(alpha.Parts.Count(), Is.EqualTo(1));
+
+            var part = manager.GetPartDefinition("alpha");
+            Assert.That(part.Fields.Count(), Is.EqualTo(2));
+
+            manager.AlterPartDefinition("alpha", p=>p
+                    .WithField("field3", f => f.OfType("TextField"))
+                    .WithField("field4", f => f.OfType("TextField"))
+                );
+
+            ResetSession();
+
+            part = manager.GetPartDefinition("alpha");
+            Assert.That(part.Fields.Count(), Is.EqualTo(4));
+
+            alpha = manager.GetTypeDefinition("alpha");
+            Assert.That(alpha.Parts.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DontCreateMultiplePartsWhenAddingMultipleFields() {
+            var manager = _container.Resolve<IContentDefinitionManager>();
+
+            manager.AlterPartDefinition("alpha",
+                    part => part
+                        .WithField("StartDate", cfg => cfg
+                            .WithDisplayName("Start Date")
+                            .OfType("DateTimeField")
+                            .WithSetting("DateTimeFieldSettings.Display", "DateAndTime"))
+                        .WithField("EndDate", cfg => cfg
+                            .WithDisplayName("End Date")
+                            .OfType("DateTimeField")
+                            .WithSetting("DateTimeFieldSettings.Display", "DateAndTime"))
+                );
+
+
+            Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(1));
+            
+            var p = manager.GetPartDefinition("alpha");
+            Assert.That(p.Fields.Count(), Is.EqualTo(2));
+        }
+
         private void AssertThatTypeHasParts(string typeName, params string[] partNames) {
             var type = _container.Resolve<IContentDefinitionManager>().GetTypeDefinition(typeName);
             Assert.That(type, Is.Not.Null);
@@ -246,45 +316,5 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             }
         }
 
-        [Test]
-        public void ContentDefinitionsAreCached() {
-            var manager = _container.Resolve<IContentDefinitionManager>();
-            manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
-                                  .Named("alpha")
-                                  .WithPart("foo", pb => { })
-                                  .Build());
-
-            manager.StoreTypeDefinition(new ContentTypeDefinitionBuilder()
-                                  .Named("beta")
-                                  .WithPart("bar", pb => { })
-                                  .Build());
-
-            ResetSession();
-
-            //_container.Resolve<IRepository<ContentTypeDefinitionRecord>>().Table
-            //    .FetchMany(x => x.ContentTypePartDefinitionRecords)
-            //    .ThenFetch(x => x.ContentPartDefinitionRecord)
-            //    .ThenFetchMany(x => x.ContentPartFieldDefinitionRecords)
-            //    .ThenFetch(x => x.ContentFieldDefinitionRecord)
-            //    .ToList();
-
-            //var foo = manager.GetPartDefinition("foo");
-            //Assert.That(foo, Is.Not.Null);
-            Console.WriteLine("START");
-
-            for (var i = 0; i < 10; i++) {
-                Console.WriteLine("GAMMA");
-                var gamma = manager.ListTypeDefinitions();
-                Assert.That(gamma.Count(), Is.EqualTo(2));
-                Console.WriteLine("ALPHA");
-                var alpha = manager.GetTypeDefinition("alpha");
-                Assert.That(alpha, Is.Not.Null);
-                Console.WriteLine("BETA");
-                var beta = manager.GetTypeDefinition("beta");
-                Assert.That(beta, Is.Not.Null);
-                
-            }
-
-        }
     }
 }
