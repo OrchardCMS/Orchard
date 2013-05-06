@@ -631,6 +631,11 @@ namespace Orchard.ContentManagement {
             }
 
             var identity = elementId.Value;
+
+            if (String.IsNullOrWhiteSpace(identity)) {
+                return;
+            }
+
             var status = element.Attribute("Status");
 
             var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
