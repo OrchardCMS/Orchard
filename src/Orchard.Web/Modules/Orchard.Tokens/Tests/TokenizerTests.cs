@@ -59,6 +59,7 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestTokenEscapeSequences() {
             Assert.That(_tokenizer.Replace("{{escaped}} {Site.Global1} }}{{ {{{{ }}}}", null), Is.EqualTo("{escaped} [global1] }{ {{ }}"));
+            Assert.That(_tokenizer.Replace("{{{Site.Global1}}}", null), Is.EqualTo("{[global1]}"));
             Assert.That(_tokenizer.Replace("{Date.Now.{{yyyy}}}", null), Is.EqualTo(DateTime.UtcNow.ToString("{yyyy}")));
         }
 
@@ -92,6 +93,7 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void SimplePatterShouldBeIgnoredWhenHashIsPresent() {
             Assert.That(_tokenizer.Replace("#{Site.Global1}", null), Is.EqualTo("[global1]"));
+            Assert.That(_tokenizer.Replace("{#{Site.Global1}}", null), Is.EqualTo("{[global1]}"));
             Assert.That(_tokenizer.Replace("{Site.Global1}#{Site.Global1}", null), Is.EqualTo("{Site.Global1}[global1]"));
         }
 

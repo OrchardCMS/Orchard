@@ -61,25 +61,13 @@ namespace Orchard.Tokens.Implementation {
                 for (var i = 0; i < text.Length; i++) {
                     var c = text[i];
 
-                    if (!inToken && hashMode) {
-                        if (c == '#' && i + 1 < text.Length) {
-                            c = text[i + 1];
-                            if (c == '{') {
-                                i++;
-                            }
-                            else {
-                                continue;
-                            }
-                        }
-                    }
-
                     if (c == '{') {
                         if (i + 1 < text.Length && text[i + 1] == '{') {
                             text = text.Substring(0, i) + text.Substring(i + 1);
                             continue;
                         }
                     }
-                    else if (c == '}') {
+                    else if (c == '}' && !(inToken)) {
                         if (i + 1 < text.Length && text[i + 1] == '}') {
                             text = text.Substring(0, i) + text.Substring(i + 1);
                             continue;
@@ -93,9 +81,15 @@ namespace Orchard.Tokens.Implementation {
                             tokens.Add(token);
                         }
                     }
-                    else if (c == '{') {
+                    else if (!hashMode && c == '{') {
                         inToken = true;
                         tokenStart = i;
+                    }
+                    else if (hashMode && c == '#' 
+                        && i + 1 < text.Length && text[i + 1] == '{'
+                        && (i + 2 > text.Length || text[i + 2] != '{') ) {
+                        inToken = true;
+                        tokenStart = i+1;
                     }
                 }
             }
