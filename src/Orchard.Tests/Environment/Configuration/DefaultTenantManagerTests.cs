@@ -69,6 +69,36 @@ namespace Orchard.Tests.Environment.Configuration {
         }
 
         [Test]
+        public void CustomSettingsCanBeRetrieved() {
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nProperty1: Foo\r\nProperty2: Bar");
+
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
+            Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
+
+            var settings = loader.LoadSettings().First();
+
+            Assert.That(settings.Name, Is.EqualTo("Default"));
+            Assert.That(settings["Property1"], Is.EqualTo("Foo"));
+            Assert.That(settings["Property2"], Is.EqualTo("Bar"));
+        }
+
+        [Test]
+        public void CustomSettingsCanBeStoredAndRetrieved() {
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
+            var foo = new ShellSettings { Name = "Default" };
+            foo["Property1"] = "Foo";
+            foo["Property2"] = "Bar";
+
+            loader.SaveSettings(foo);
+            Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
+            var settings = loader.LoadSettings().First();
+
+            Assert.That(settings.Name, Is.EqualTo("Default"));
+            Assert.That(settings["Property1"], Is.EqualTo("Foo"));
+            Assert.That(settings["Property2"], Is.EqualTo("Bar"));
+        }
+
+        [Test]
         public void EncryptionSettingsAreStoredAndReadable() {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux", EncryptionAlgorithm = "AES", EncryptionKey = "ABCDEFG", HashAlgorithm = "HMACSHA256", HashKey = "HIJKLMN" };
