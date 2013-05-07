@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
@@ -65,6 +66,9 @@ namespace Orchard.Widgets.Filters {
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
+            var defaultCulture = workContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
+            var currentCulture = workContext.CurrentCulture;
+
             foreach (var widgetPart in widgetParts) {
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
@@ -74,8 +78,17 @@ namespace Orchard.Widgets.Filters {
 
                 // ignore widget for different cultures
                 var localizablePart = widgetPart.As<ILocalizableAspect>();
-                if (localizablePart != null && localizablePart.Culture != workContext.CurrentCulture) {
-                    continue;
+                if (localizablePart != null) {
+                    // if localized culture is null then show if current culture is the default
+                    // this allows a user to show a content item for the default culture only
+                    if (localizablePart.Culture == null && defaultCulture != currentCulture) {
+                        continue;
+                    }
+
+                    // if culture is set, show only if current culture is the same
+                    if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
+                        continue;
+                    }
                 }
 
                 var widgetShape = _contentManager.BuildDisplay(widgetPart);
