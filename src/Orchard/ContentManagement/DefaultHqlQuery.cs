@@ -302,7 +302,7 @@ namespace Orchard.ContentManagement {
                 throw new ArgumentException("Alias can't be empty");
             }
             
-            Name = name;
+            Name = name.Strip('-');
         }
 
         public DefaultHqlQuery<IContent> Query { get; set; }
