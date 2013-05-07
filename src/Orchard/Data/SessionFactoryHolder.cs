@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data.Providers;
@@ -22,6 +23,7 @@ namespace Orchard.Data {
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IDatabaseCacheConfiguration _cacheConfiguration;
+        private readonly Func<IEnumerable<ISessionConfigurationEvents>> _configurers;
         private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly IAppDataFolder _appDataFolder;
         private readonly ISessionConfigurationCache _sessionConfigurationCache;
@@ -36,7 +38,8 @@ namespace Orchard.Data {
             IAppDataFolder appDataFolder,
             ISessionConfigurationCache sessionConfigurationCache,
             IHostEnvironment hostEnvironment,
-            IDatabaseCacheConfiguration cacheConfiguration) {
+            IDatabaseCacheConfiguration cacheConfiguration,
+            Func<IEnumerable<ISessionConfigurationEvents>> configurers) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _dataServicesProviderFactory = dataServicesProviderFactory;
@@ -44,6 +47,7 @@ namespace Orchard.Data {
             _sessionConfigurationCache = sessionConfigurationCache;
             _hostEnvironment = hostEnvironment;
             _cacheConfiguration = cacheConfiguration;
+            _configurers = configurers;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -117,6 +121,8 @@ namespace Orchard.Data {
             }
             #endregion
 
+            parameters.Configurers.Invoke(c => c.Finished(config), Logger);
+
             Logger.Debug("Done Building configuration");
             return config;
         }
@@ -128,6 +134,7 @@ namespace Orchard.Data {
             var shellFolder = _appDataFolder.MapPath(shellPath);
 
             return new SessionFactoryParameters {
+                Configurers = _configurers(),
                 Provider = _shellSettings.DataProvider,
                 DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,
