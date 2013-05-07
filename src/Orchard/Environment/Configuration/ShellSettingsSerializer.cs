@@ -78,7 +78,7 @@ namespace Orchard.Environment.Configuration {
 
             var sb = new StringBuilder();
             foreach (var key in settings.Keys) {
-                sb.AppendLine(key + ":" + (settings[key] ?? EmptyValue));
+                sb.AppendLine(key + ": " + (settings[key] ?? EmptyValue));
             }
 
             return sb.ToString();

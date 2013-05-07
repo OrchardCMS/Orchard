@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Orchard.Environment.Configuration {
     /// <summary>
@@ -54,39 +55,39 @@ namespace Orchard.Environment.Configuration {
         /// </summary>
         public string Name {
             get { return this["Name"] ?? ""; } 
-            set { _values["Name"] = value; }
+            set { this["Name"] = value; }
         }
 
         /// <summary>
         /// The database provider for the tenant
         /// </summary>
         public string DataProvider {
-            get { return this["DataProvider"] ?? ""; } 
-            set { _values["DataProvider"] = value; }
+            get { return this["DataProvider"] ?? ""; }
+            set { this["DataProvider"] = value; }
         }
 
         /// <summary>
         /// The database connection string
         /// </summary>
         public string DataConnectionString {
-            get { return this["DataConnectionString"]; } 
-            set { _values["DataConnectionString"] = value; }
+            get { return this["DataConnectionString"]; }
+            set { this["DataConnectionString"] = value; }
         }
 
         /// <summary>
         /// The data table prefix added to table names for this tenant
         /// </summary>
         public string DataTablePrefix {
-            get { return this["DataTablePrefix"]; } 
-            set { _values["DataTablePrefix"] = value; }
+            get { return this["DataTablePrefix"]; }
+            set { this["DataTablePrefix"] = value; }
         }
 
         /// <summary>
         /// The host name of the tenant
         /// </summary>
         public string RequestUrlHost {
-            get { return this["RequestUrlHost"]; } 
-            set { _values["RequestUrlHost"] = value; }
+            get { return this["RequestUrlHost"]; }
+            set { this["RequestUrlHost"] = value; }
         }
 
         /// <summary>
@@ -101,8 +102,8 @@ namespace Orchard.Environment.Configuration {
         /// The encryption algorithm used for encryption services
         /// </summary>
         public string EncryptionAlgorithm {
-            get { return this["EncryptionAlgorithm"]; } 
-            set { _values["EncryptionAlgorithm"] = value; }
+            get { return this["EncryptionAlgorithm"]; }
+            set { this["EncryptionAlgorithm"] = value; }
         }
 
         /// <summary>
@@ -117,26 +118,30 @@ namespace Orchard.Environment.Configuration {
         /// The hash algorithm used for encryption services
         /// </summary>
         public string HashAlgorithm {
-            get { return this["HashAlgorithm"]; } 
-            set { _values["HashAlgorithm"] = value; }
+            get { return this["HashAlgorithm"]; }
+            set { this["HashAlgorithm"] = value; }
         }
 
         /// <summary>
         /// The hash key used for encryption services
         /// </summary>
         public string HashKey {
-            get { return this["HashKey"]; } 
-            set { _values["HashKey"] = value; }
+            get { return this["HashKey"]; }
+            set { this["HashKey"] = value; }
         }
 
         /// <summary>
         /// List of available themes for this tenant
         /// </summary>
         public string[] Themes {
-            get { return _themes ?? (Themes = (_values["Themes"] ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)); }
+            get { 
+                return _themes ?? (Themes = (_values["Themes"] ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                                                                     .Select(t => t.Trim())
+                                                                     .ToArray(); 
+            }
             set {
                 _themes = value;
-                _values["Themes"] = string.Join(";", value);
+                this["Themes"] = string.Join(";", value);
             }
         }
 
@@ -147,7 +152,7 @@ namespace Orchard.Environment.Configuration {
             get { return _tenantState; } 
             set {
                 _tenantState = value;
-                _values["State"] = value.ToString();
+                this["State"] = value.ToString();
             }
         }
     }
