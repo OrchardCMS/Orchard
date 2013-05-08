@@ -53,7 +53,7 @@ namespace Orchard.Blogs.Handlers {
             if(previousArchiveRecord == null)
                 return;
 
-            if (previousArchiveRecord.PostCount > 0)
+            if (previousArchiveRecord.PostCount > 1)
                 previousArchiveRecord.PostCount--;
             else
                 blogArchiveRepository.Delete(previousArchiveRecord);
