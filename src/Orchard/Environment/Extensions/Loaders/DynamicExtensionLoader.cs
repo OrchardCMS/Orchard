@@ -47,6 +47,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public ILogger Logger { get; set; }
         public bool Disabled { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public override int Order { get { return 100; } }
 
@@ -61,6 +62,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             if (Disabled)
+                return;
+
+            if (DisableMonitoring)
                 return;
 
             // Monitor .csproj and all .cs files

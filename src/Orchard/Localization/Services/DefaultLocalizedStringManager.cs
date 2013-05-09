@@ -8,6 +8,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
+using Orchard.Logging;
 
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
@@ -33,7 +34,12 @@ namespace Orchard.Localization.Services {
             _cacheManager = cacheManager;
             _shellSettings = shellSettings;
             _signals = signals;
+
+            Logger = NullLogger.Instance;
         }
+
+        ILogger Logger { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         // This will translate a string into a string in the target cultureName.
         // The scope portion is optional, it amounts to the location of the file containing 
@@ -109,7 +115,10 @@ namespace Orchard.Localization.Services {
             string text = _webSiteFolder.ReadFile(corePath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, false);
-                context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", corePath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
+                }
             }
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
@@ -118,7 +127,11 @@ namespace Orchard.Localization.Services {
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
                         ParseLocalizationStream(text, translations, true);
-                        context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
+
+                        if (!DisableMonitoring) {
+                            Logger.Debug("Monitoring virtual path \"{0}\"", modulePath);
+                            context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
+                        }
                     }
                 }
             }
@@ -129,7 +142,11 @@ namespace Orchard.Localization.Services {
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {
                         ParseLocalizationStream(text, translations, true);
-                        context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
+
+                        if (!DisableMonitoring) {
+                            Logger.Debug("Monitoring virtual path \"{0}\"", themePath);
+                            context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
+                        }
                     }
                 }
             }
@@ -138,14 +155,20 @@ namespace Orchard.Localization.Services {
             text = _webSiteFolder.ReadFile(rootPath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, true);
-                context.Monitor(_webSiteFolder.WhenPathChanges(rootPath));
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", rootPath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(rootPath));
+                }
             }
 
             string tenantPath = string.Format(TenantLocalizationFilePathFormat, _shellSettings.Name, culture);
             text = _webSiteFolder.ReadFile(tenantPath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, true);
-                context.Monitor(_webSiteFolder.WhenPathChanges(tenantPath));
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", tenantPath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(tenantPath));
+                }
             }
 
             return translations;

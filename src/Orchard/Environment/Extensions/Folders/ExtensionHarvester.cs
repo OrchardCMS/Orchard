@@ -44,6 +44,7 @@ namespace Orchard.Environment.Extensions.Folders {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public IEnumerable<ExtensionDescriptor> HarvestExtensions(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional) {
             return paths
@@ -55,7 +56,11 @@ namespace Orchard.Environment.Extensions.Folders {
             string key = string.Format("{0}-{1}-{2}", path, manifestName, extensionType);
 
             return _cacheManager.Get(key, ctx => {
-                ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", path);
+                    ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
+                }
+
                 return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional).ToReadOnlyCollection();
             });
         }
@@ -127,7 +132,11 @@ namespace Orchard.Environment.Extensions.Folders {
 
         private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionId, string extensionType, string manifestPath, bool manifestIsOptional) {
             return _cacheManager.Get(manifestPath, context => {
-                context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", manifestPath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
+                }
+
                 var manifestText = _webSiteFolder.ReadFile(manifestPath);
                 if (manifestText == null) {
                     if (manifestIsOptional) {

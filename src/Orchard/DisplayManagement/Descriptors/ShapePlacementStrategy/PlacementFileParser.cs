@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
+using Orchard.Logging;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
 
@@ -21,11 +22,20 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         public PlacementFileParser(ICacheManager cacheManager, IWebSiteFolder webSiteFolder) {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public PlacementFile Parse(string virtualPath) {
             return _cacheManager.Get(virtualPath, context => {
-                context.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
+
+                if (!DisableMonitoring) {
+                    Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
+                    context.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
+                }
+
                 var placementText = _webSiteFolder.ReadFile(virtualPath);
                 return ParseImplementation(virtualPath, placementText);
             });

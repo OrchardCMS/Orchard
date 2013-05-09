@@ -131,7 +131,7 @@
     <Content Include="Config\log4net.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Config\Sample.HostComponents.config">
+    <Content Include="Config\HostComponents.config">
       <SubType>Designer</SubType>
     </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,7 +162,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\Sample.Host.config" />
+    <Content Include="Config\Host.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -232,7 +232,6 @@
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard']" />
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/root/appender-ref[@ref='debug-file']" />
     <!-- disable dynamic compilation loader -->
-    <Copy SourceFiles="$(PackageTmp)\Config\Sample.HostComponents.config" DestinationFiles="$(PackageTmp)\Config\HostComponents.config" />
     <XmlUpdate XmlFileName="$(PackageTmp)\Config\HostComponents.config" XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value" Value="true" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">

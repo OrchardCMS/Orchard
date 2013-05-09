@@ -23,6 +23,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public Localizer T { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         private string PersistencePath {
             get { return _appDataFolder.Combine(BasePath, FileName); }
@@ -36,7 +37,10 @@ namespace Orchard.FileSystems.Dependencies {
             return _cacheManager.Get(PersistencePath,
                                      ctx => {
                                          _appDataFolder.CreateDirectory(BasePath);
-                                         ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+
+                                         if (!DisableMonitoring) {
+                                             ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+                                         }
 
                                          _writeThroughToken.IsCurrent = true;
                                          ctx.Monitor(_writeThroughToken);

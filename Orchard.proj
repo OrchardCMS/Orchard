@@ -272,10 +272,6 @@
     <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
       XPath="/log4net/root/appender-ref[@ref='debug-file']" />
 
-    <!-- disable dynamic compilation loader -->
-    <Move SourceFiles="$(StageFolder)\Config\Sample.HostComponents.config"
-    DestinationFiles="$(StageFolder)\Config\HostComponents.config"/>
-
     <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
       XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value"
       Value="true" />

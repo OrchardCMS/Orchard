@@ -37,6 +37,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public ILogger Logger { get; set; }
         public bool Disabled { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public override int Order { get { return 30; } }
 
@@ -123,6 +124,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             if (Disabled)
+                return;
+
+            if (DisableMonitoring)
                 return;
 
             // If the assembly exists, monitor it

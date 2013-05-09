@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.FileSystems.WebSite {
     public class WebSiteFolder : IWebSiteFolder {
@@ -13,7 +14,11 @@ namespace Orchard.FileSystems.WebSite {
         public WebSiteFolder(IVirtualPathMonitor virtualPathMonitor, IVirtualPathProvider virtualPathProvider) {
             _virtualPathMonitor = virtualPathMonitor;
             _virtualPathProvider = virtualPathProvider;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IEnumerable<string> ListDirectories(string virtualPath) {
             if (!_virtualPathProvider.DirectoryExists(virtualPath)) {

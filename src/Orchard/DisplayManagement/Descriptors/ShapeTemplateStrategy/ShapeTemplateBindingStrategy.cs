@@ -49,6 +49,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         }
 
         public ILogger Logger { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         private static IEnumerable<ExtensionDescriptor> Once(IEnumerable<FeatureDescriptor> featureDescriptors) {
             var once = new ConcurrentDictionary<string, object>();
@@ -73,7 +74,11 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                         if (!_virtualPathProvider.DirectoryExists(virtualPath))
                             return new List<string>();
 
-                        ctx.Monitor(_virtualPathMonitor.WhenPathChanges(virtualPath));
+                        if (!DisableMonitoring) {
+                            Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
+                            ctx.Monitor(_virtualPathMonitor.WhenPathChanges(virtualPath));
+                        }
+
                         return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName).ToReadOnlyCollection();
                     });
                     return new { harvesterInfo.harvester, basePath, subPath, virtualPath, fileNames };
