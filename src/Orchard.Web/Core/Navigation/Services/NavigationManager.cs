@@ -40,17 +40,20 @@ namespace Orchard.Core.Navigation.Services {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Reduce(Merge(sources), menuName == "admin").ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Merge(sources), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
             var sources = GetSources(menu);
-            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -100,17 +103,19 @@ namespace Orchard.Core.Navigation.Services {
         /// <summary>
         /// Updates the items by checking for permissions
         /// </summary>
-        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu) {
+        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu, bool hasDebugShowAllMenuItems) {
             foreach (var item in items.Where(item => 
-                !item.Permissions.Any() ||
                 // debug flag is on
-                _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null) ||
-                // a content item is linked and the user can view it
-                (item.Content != null && item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
-                // it's the admin menu and permissions are effective
-                isAdminMenu && item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null)))))
+                hasDebugShowAllMenuItems ||
+                // or item does not have any permissions set
+                !item.Permissions.Any() ||
+                // or user has permission (either based on the linked item or global, if there's no linked item)
+                item.Permissions.Any(x => _authorizationService.TryCheckAccess(
+                    x, 
+                    _orchardServices.WorkContext.CurrentUser, 
+                    item.Content == null || isAdminMenu ? null : item.Content))))
             {
-                item.Items = Reduce(item.Items, isAdminMenu);
+                item.Items = Reduce(item.Items, isAdminMenu, hasDebugShowAllMenuItems);
                 yield return item;
             }
         }
