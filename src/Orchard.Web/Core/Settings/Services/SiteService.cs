@@ -43,11 +43,7 @@ namespace Orchard.Core.Settings.Services {
                 return site.Id;
             });
 
-            return _contentManager.Query<SiteSettingsPart, SiteSettingsPartRecord>(VersionOptions.Published)
-                                  .WithQueryHintsFor("Site")
-                                  .Where(s => s.Id == siteId)
-                                  .List()
-                                  .First();
+            return _contentManager.Get<ISite>(siteId, VersionOptions.Published, new QueryHints().ExpandRecords<SiteSettingsPartRecord>());
         }
     }
 }
