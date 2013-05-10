@@ -50,9 +50,6 @@ namespace Orchard.Mvc.Routes {
             if (routeData == null)
                 return null;
 
-            // push provided session state behavior to underlying MvcHandler
-            effectiveHttpContext.SetSessionStateBehavior(SessionState);
-
             // otherwise wrap handler and return it
             routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler, SessionState);
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
