@@ -87,10 +87,12 @@ namespace Orchard.Core.Navigation.Services {
                 if (url.StartsWith("~/")) {
                     url = url.Substring(2);
                 }
-                var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
-                if (appPath == "/")
-                    appPath = "";
-                url = string.Format("{0}/{1}", appPath, url);
+                if (!url.StartsWith("#")) {
+                    var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+                    if (appPath == "/")
+                        appPath = "";
+                    url = string.Format("{0}/{1}", appPath, url);
+                }
             }
             return url;
         }
