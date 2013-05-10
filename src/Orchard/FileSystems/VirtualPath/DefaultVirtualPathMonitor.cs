@@ -100,7 +100,7 @@ namespace Orchard.FileSystems.VirtualPath {
 
         public void Signal(string key, object value, CacheItemRemovedReason reason) {
             var virtualPath = Convert.ToString(value);
-            Logger.Debug("Virtual path changed '{0}'", virtualPath);
+            Logger.Debug("Virtual path changed ({1}) '{0}'", virtualPath, reason.ToString());
 
             var token = DetachToken(virtualPath);
             if (token != null)
