@@ -41,7 +41,8 @@ namespace Orchard.Tokens.Implementation {
         }
 
         public string Replace(string text, IDictionary<string, object> data, ReplaceOptions options) {
-            
+            if (string.IsNullOrEmpty(text)) return string.Empty;
+
             // do we have to replace tokens with hashes ?
             bool hashMode = text.Contains("#{");
 
