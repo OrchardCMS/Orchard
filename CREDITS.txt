@@ -87,6 +87,12 @@ Website:      http://fluentpath.codeplex.com/
 Copyright:    Copyright (c) 2011 Bertrand Le Roy
 License:      MS-PL
 
+Font Awesome
+-----
+Author: 			Dave Gandy
+Website: 			http://fontawesome.io
+License: 			MIT License
+
 Html Agility Pack
 -----
 Website:      http://htmlagilitypack.codeplex.com/

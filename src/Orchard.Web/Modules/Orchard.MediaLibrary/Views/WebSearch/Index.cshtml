@@ -9,6 +9,7 @@
         
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-websearch-admin.css");
+        Style.Require("FontAwesome");
     }
 
     @Display.Metas()
@@ -22,7 +23,14 @@
         <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
         
         <form data-bind="submit: doSearch">
-            <input id="query" type="text" class="medium" autofocus placeholder="@T("search")"/>
+            <div class="query-container">
+                <div id="icon">
+                    <button type="submit" class="icon-search"></button>    
+                </div>
+                <div id="query">
+                    <input type="text" autofocus placeholder="@T("search")"/>
+                </div>
+            </div>
         </form>
 
         <ul id="websearch-results" data-bind="foreach: results">
@@ -108,7 +116,7 @@
                 };
                 
                 self.doSearch = function () {
-                    var query = $('#query').val();
+                    var query = $('#query > input').val();
                     var url = 'https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query=%27' + encodeURIComponent(query) + '%27';
 
                     $.ajax({

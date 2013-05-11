@@ -12,8 +12,9 @@
 
         Style.Include("orchard-medialibrary-admin.css");
         Style.Include("orchard-mediaproviders-admin.css");
-        Style.Include("orchard-oembed-admin.css");
 
+        Style.Require("FontAwesome");
+        Style.Include("orchard-oembed-admin.css");
     }
 
     @Display.Metas()
@@ -24,9 +25,14 @@
 <body>
     
     <div id="oembed-main">
-        <div>
+        <div class="query-container">
         @using (Html.BeginFormAntiForgeryPost()) {
-            <input id="query" name="url" type="text" class="large" autofocus placeholder="@T("media url")" value="@Model.Url"/>
+            <div id="icon">
+                <button type="submit" class="icon-download"></button>    
+            </div>
+            <div id="query">
+                <input name="url" type="text" autofocus placeholder="@T("media url")" value="@Model.Url"/>
+            </div>
         }
         </div>
 
@@ -35,27 +41,27 @@
             var type = oembed.Element("type").Value;
 
             switch (oembed.Element("type").Value) {
-            case "photo":
+                case "photo":
                 <img src="@oembed.Element("url").Value" width="@oembed.Element("width").Value" height="@oembed.Element("height").Value" />
-                break;
-            case "video":
+                    break;
+                case "video":
                 @Html.Raw(oembed.Element("html").Value)
-                break;
-            case "link":
+                    break;
+                case "link":
                 <a href="@oembed.Element("url").Value">oembed.Element("title").Value</a>
-                break;
-            case "rich":
+                    break;
+                case "rich":
                 @Html.Raw(oembed.Element("html").Value)
-                break;
-        }
+                    break;
+            }
 
-using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
                 @Html.Hidden("url", Model.Url)
                 @Html.Hidden("id", Model.Id)
                 @Html.Hidden("document", Model.Content.ToString())
 
                 <button type="submit">@("Import")</button>
-}
+            }
         }
 
     </div>

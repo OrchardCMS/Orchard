@@ -1,3 +1,11 @@
-﻿.navicon-my-computer {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAPCAYAAAACsSQRAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAQpJREFUOE+dk7EKgzAQQDXSvfRHOvgDbgU3v8NPcHVxdfUH6uziLri6OAl+QycnkWvuyIUkxLZUeJjTu5e7iAEA+AgdIie28q3gX7wPDcxdfZ3QmgMfou97iOMY2raFfd+DLMsgSRLYto1FHyVh0zQkqOua7mVZgiHReXg3C4njOERRFJS8riukaQrLspAAZV8lsuU7Jud5DtM0UREzDAOwXEqeSnDBOi2Y55mSq6oCPgsXPBsecxxHWQbCkmChmXQGdtl1HeXKyzvOlWc/Q41zUwK7E4Q/Ixeo3R6yy5cj4RrdCS0QKREeCY16IiGsQEqiHyV6Y8SSSPAlgj8cg3PT7ApLgFjBf0DwBrFhrWGsTyEzAAAAAElFTkSuQmCC');
+﻿.navicon-my-computer:before {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    content: '\f015';
+    font-size: 14px;
+    color: black;
+    padding-right: 5px;
 }
