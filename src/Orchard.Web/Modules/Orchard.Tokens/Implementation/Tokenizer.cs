@@ -41,7 +41,9 @@ namespace Orchard.Tokens.Implementation {
         }
 
         public string Replace(string text, IDictionary<string, object> data, ReplaceOptions options) {
-            if (string.IsNullOrEmpty(text)) return string.Empty;
+            if (String.IsNullOrEmpty(text)) {
+                return String.Empty;
+            }
 
             // do we have to replace tokens with hashes ?
             bool hashMode = text.Contains("#{");
@@ -56,7 +58,7 @@ namespace Orchard.Tokens.Implementation {
 
         private static Tuple<string, IEnumerable<string>> Parse(string text, bool hashMode) {
             var tokens = new List<string>();
-            if (!string.IsNullOrEmpty(text)) {
+            if (!String.IsNullOrEmpty(text)) {
                 var inToken = false;
                 var tokenStart = 0;
                 for (var i = 0; i < text.Length; i++) {
