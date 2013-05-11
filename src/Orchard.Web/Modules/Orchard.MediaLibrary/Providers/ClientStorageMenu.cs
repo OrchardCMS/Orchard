@@ -1,11 +1,11 @@
 ﻿using Orchard.Localization;
 using Orchard.UI.Navigation;
 
-namespace Orchard.MediaLibrary.Providers.ClientStorage {
-    public class NavigationProvider : INavigationProvider {
+namespace Orchard.MediaLibrary.Providers {
+    public class ClientStorageMenu : INavigationProvider {
         public Localizer T { get; set; }
 
-        public NavigationProvider() {
+        public ClientStorageMenu() {
             T = NullLocalizer.Instance;
         }
 

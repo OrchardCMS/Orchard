@@ -10,7 +10,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_Image_Summary", () => shapeHelper.Parts_Image_Summary()),
                 ContentShape("Parts_Image", () => shapeHelper.Parts_Image()),
                 ContentShape("Parts_Image_SummaryAdmin", () => shapeHelper.Parts_Image_SummaryAdmin())
-                );
+            );
         }
     }
 }

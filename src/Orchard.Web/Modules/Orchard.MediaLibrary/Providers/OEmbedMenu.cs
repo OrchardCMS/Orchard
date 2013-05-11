@@ -2,19 +2,19 @@
 using Orchard.UI.Navigation;
 
 namespace Orchard.MediaLibrary.Providers {
-    public class WebSearchMenu : INavigationProvider {
+    public class OEmbedMenu : INavigationProvider {
         public Localizer T { get; set; }
 
-        public WebSearchMenu() {
+        public OEmbedMenu() {
             T = NullLocalizer.Instance;
         }
 
         public string MenuName { get { return "mediaproviders"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.AddImageSet("websearch")
-                .Add(T("Web Search"), "7", 
-                    menu => menu.Action("Index", "WebSearch", new { area = "Orchard.MediaLibrary" })
+            builder.AddImageSet("oembed")
+                .Add(T("Media Url"), "10", 
+                    menu => menu.Action("Index", "OEmbed", new { area = "Orchard.MediaLibrary" })
                         .Permission(Permissions.ManageMediaContent));
         }
     }

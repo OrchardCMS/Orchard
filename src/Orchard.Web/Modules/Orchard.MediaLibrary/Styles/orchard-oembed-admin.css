@@ -1,0 +1,28 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+#oembed-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    overflow: auto;
+}
+
+#query {
+    background-position: right center;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAARCAIAAABbzbuTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAKdJREFUOE+lkcEJAyEQRe0pRy+evFuHJViBNdiPFXj2agULooiZzbjGuIYgeSALf+aps5K6yR9CKUUp9biQUqaUWm2gCc651viJtRYbOqcQQuCcQ1lrjSlgjIGEUuq9b9GLU8Da2I0sc4JXv+8E4MnTMCTnLIRgjB3H0bKLZWn/BFh7M8Da/kvAt3cA5hnad/XSMUZMRuctLOm79NF/CAA6G8LEplDrE2p/mfIGi8fEAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    padding-right: 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+
+}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
-using Orchard.MediaLibrary.Providers.ClientStorage;
 using Orchard.MediaLibrary.Services;
 using Orchard.Themes;
 using Orchard.UI.Admin;

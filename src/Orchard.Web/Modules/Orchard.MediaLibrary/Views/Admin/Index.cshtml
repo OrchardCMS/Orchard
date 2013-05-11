@@ -394,9 +394,10 @@
 
                         },
                         cursor: 'move',
-                        distance: 10,
+                        distance: 10, 
                         create: function() {
-                            $(this).draggable("option", "cursorAt", { left: $(this).width() / 2, top: $(this).height() / 2 });
+                            // position the handler a little left to the center to let the number of selected items to appear
+                            $(this).draggable("option", "cursorAt", { left: $(this).width() / 2 - 20, top: $(this).height() / 2 });
                         }
                     });
                 }

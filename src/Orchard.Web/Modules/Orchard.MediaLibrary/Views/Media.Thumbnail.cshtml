@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
 @model dynamic
            
 @{
@@ -7,4 +8,4 @@
     var media = contentItem.As<MediaPart>();
 }
 
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADsAAAA3CAIAAAA9haWfAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAkhJREFUaEPtmMGNAjEMRbenPXLhxJ06KIEKqIEK6IAKqIAz16mACwixkRKh2ZnY/9txkFbLO09mHo5jm3w9/xof4/78b+P7/b5er78Flsvl9XotjzYQYHw8HosUzeFwKIvtNBnv9/ui4GK325UXWXAaO+IqYY232VhPVh+mFLcZn8/n8pEOnE6n8hkVg3FgJkgwGcIav0E3A6UpYz4ZFovF5XIpy0YMw7BarcpDCD09sDH5MfLIM3sl/ewMMH48HtvttrxJwNrMmGqz2Wxut1tZ8BtgDEOivFqBCYS0aZoxzIeWUQFGWsoNzVhvwnq2McCIVNu4aAxj4JsKJuhBqe6haAwzmGxROrBuzrO5bgxPhp4S4+X6kzAx5ie7btxy5qprpRRynL+6MdwsyVjaHOl5pjZP0q9uDEd1aa+lzZFiDDczMVlbMWbKuwmlyzATy2R5d2N93mD+d2FjJrcYYMEmR8LJGehirFSSF/xXuhsz3duUeN2N4aBsfT82bjl5MMCOK46+tULJYP6v1wRsnHBEIiMZt0QBd5CEOx7WXshAdemWD8TCTkKxba+FeYevGyd8VyrhWcFO9AlfVZZOXuDbROOEo2LEGlcnE83YsZWBxlKCacYJazYHGntuWBLWohFlPC8RL4BxwpQbIcb6cIKNE3wLDKlurbexGV95dgCHVdY48QZpqJswGCfcExIDeS1mM074eoGOdF6rmI0zgRnCZMIYp3HGPfhn4PVAlSbjjCPe1riOCTB+oae4KVkVIo3fw8e4N8/nD37XlV+UarLaAAAAAElFTkSuQmCC"/>
+<div class="media-thumbnail media-thumbnail-@contentItem.ContentType.HtmlClassify() mime-type-@media.MimeType.HtmlClassify()"></div>

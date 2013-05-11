@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
+@{
+    OEmbedPart oembedPart = Model.ContentPart;
+}           
+
+<div class="o-embed-source">
+    <em>@T("Source:")</em>
+    <span><a href="@oembedPart["provider_url"]" target="_blank">@oembedPart["provider_name"]</a></span>
+</div>

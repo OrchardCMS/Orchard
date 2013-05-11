@@ -4,7 +4,6 @@ namespace Orchard.MediaProcessing.Descriptors.Filter {
     public class FilterContext {
         public dynamic State { get; set; }
         public Stream Media { get; set; }
-        public string Format { get; set; }
         public string FilePath { get; set; }
 
         /// <summary>

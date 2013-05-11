@@ -131,7 +131,7 @@ namespace Orchard.MediaProcessing.Shapes {
 
                     using (var image = GetImage(Path)) {
                         
-                        var filterContext = new FilterContext { Media = image, Format = new FileInfo(Path).Extension, FilePath = storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path)) };
+                        var filterContext = new FilterContext { Media = image, FilePath = storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path)) };
 
                         var tokens = new Dictionary<string, object>();
                         // if a content item is provided, use it while tokenizing

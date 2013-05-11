@@ -71,6 +71,8 @@
   <ItemGroup>
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Styles\menu.oembed-mediaproviders.css" />
+    <Content Include="Styles\orchard-oembed-admin.css" />
     <Content Include="Styles\menu.websearch-mediaproviders.css" />
     <Content Include="Styles\menu.clientstorage-mediaproviders.css" />
     <Content Include="Styles\dialog-mode.css" />
@@ -112,9 +114,11 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ClientStorageController.cs" />
+    <Compile Include="Controllers\OEmbedController.cs" />
     <Compile Include="Controllers\FolderController.cs" />
     <Compile Include="Controllers\WebSearchController.cs" />
     <Compile Include="Drivers\AudioPartDriver.cs" />
+    <Compile Include="Drivers\OEmbedPartDriver.cs" />
     <Compile Include="Drivers\MediaLibraryPickerFieldDriver.cs" />
     <Compile Include="Drivers\DocumentPartDriver.cs" />
     <Compile Include="Drivers\VideoPartDriver.cs" />
@@ -132,14 +136,16 @@
     <Compile Include="Drivers\MediaPartDriver.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AudioPart.cs" />
+    <Compile Include="Models\ImagePart.cs" />
     <Compile Include="Models\DocumentPart.cs" />
     <Compile Include="Models\VideoPart.cs" />
-    <Compile Include="Models\ImagePart.cs" />
+    <Compile Include="Models\OEmbedPart.cs" />
     <Compile Include="Models\MediaFolder.cs" />
     <Compile Include="Models\MediaPart.cs" />
     <Compile Include="Models\MediaPartRecord.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Providers\ClientStorage\ClientStorageMenu.cs" />
+    <Compile Include="Providers\ClientStorageMenu.cs" />
+    <Compile Include="Providers\OEmbedMenu.cs" />
     <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
@@ -153,6 +159,7 @@
     <Compile Include="ViewModels\MediaManagerFolderEditViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerImportViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerIndexViewModel.cs" />
+    <Compile Include="ViewModels\OEmbedViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
@@ -275,6 +282,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\Video.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\OEmbed\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\OEmbed.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-OEmbed.Thumbnail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -67,5 +67,19 @@ namespace Orchard.MediaLibrary {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+
+            ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td
+                .DisplayedAs("External Media")
+                .WithSetting("Stereotype", "Media")
+                .WithPart("CommonPart")
+                .WithPart("MediaPart")
+                .WithPart("OEmbedPart")
+                .WithPart("TitlePart")
+            );
+
+            return 2;
+        }
     }
 }

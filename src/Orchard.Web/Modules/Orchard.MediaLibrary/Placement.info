@@ -80,6 +80,20 @@
     <Place Fields_MediaLibraryPicker_SummaryAdmin="Content:after"/>
   </Match>
 
-  
+
+  <!-- OEmbedPart -->
+  <Match DisplayType="Summary">
+    <Place Parts_OEmbed_Summary="Content:5" />
+  </Match>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_OEmbed_Metadata="Meta:4"
+           Parts_OEmbed_SummaryAdmin="Header"
+           />
+  </Match>
+
+  <Match DisplayType="Detail">
+    <Place Parts_OEmbed="Content:5" />
+  </Match>  
   
 </Placement>

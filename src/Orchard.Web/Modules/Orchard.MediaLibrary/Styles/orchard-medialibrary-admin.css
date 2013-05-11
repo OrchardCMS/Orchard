@@ -113,7 +113,8 @@
     #media-library-main-list {
         width: auto;
         height: 100%;
-        padding-left: 10px;
+        padding-left: 3px;
+        padding-top: 3px;
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -149,6 +150,7 @@
     background: #fafafa;
     color: grey;
     border-left: 1px solid #e0e0e0;
+    overflow-y: auto;
 }
 
     #media-library-main-editor em {
@@ -163,10 +165,17 @@
 
     #media-library-main-editor footer, #media-library-main-editor .properties {
         margin-top: 10px;
+        overflow: hidden;
+        -ms-word-break: break-all;
+        word-break: break-all;
     }
 
     #media-library-main-selection {
         margin-top: 10px;
+        overflow: hidden;
+    }
+
+    #media-library-main-editor .properties span {
         overflow: hidden;
     }
 
@@ -230,6 +239,17 @@
     width: 60px;
     height: 60px;
 }
+
+.media-thumbnail-o-embed {
+    background-repeat: no-repeat;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-image: none;
+    box-sizing: inherit;
+}
+
 .media-thumbnail-image {
     background-repeat: no-repeat;
     -moz-background-size: cover;
