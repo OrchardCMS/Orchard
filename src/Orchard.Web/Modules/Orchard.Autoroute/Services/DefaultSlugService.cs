@@ -25,8 +25,8 @@ namespace Orchard.Autoroute.Services {
             _slugEventHandler.FillingSlugFromTitle(slugContext);
 
             if (!slugContext.Adjusted) {
-                
-                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|]+");
+
+                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|%]+");
 
                 slugContext.Slug = disallowed.Replace(slugContext.Title, "-").Trim('-','.');
 
