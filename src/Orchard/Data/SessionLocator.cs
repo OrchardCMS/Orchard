@@ -36,7 +36,7 @@ namespace Orchard.Data {
             return _session;
         }
 
-        void ITransactionManager.Demand() {
+        public void Demand() {
             EnsureSession();
 
             if (_transaction == null) {
@@ -45,11 +45,11 @@ namespace Orchard.Data {
             }
         }
 
-        void ITransactionManager.RequireNew() {
-            ((ITransactionManager)this).RequireNew(IsolationLevel.ReadCommitted);
+        public void RequireNew() {
+            RequireNew(IsolationLevel.ReadCommitted);
         }
 
-        void ITransactionManager.RequireNew(IsolationLevel level) {
+        public void RequireNew(IsolationLevel level) {
             EnsureSession();
 
             if (_cancelled) {
@@ -67,12 +67,12 @@ namespace Orchard.Data {
             _transaction = _session.BeginTransaction(level);
         }
 
-        void ITransactionManager.Cancel() {
+        public void Cancel() {
             Logger.Debug("Transaction cancelled flag set");
             _cancelled = true;
         }
 
-        void IDisposable.Dispose() {
+        public void Dispose() {
             if (_transaction != null) {
                 try {
                     if (!_cancelled) {
