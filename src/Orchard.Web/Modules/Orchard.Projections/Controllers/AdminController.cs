@@ -14,7 +14,6 @@ using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.UI.Notify;
 using System;
 using Orchard.Settings;
@@ -49,7 +48,7 @@ namespace Orchard.Projections.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to list queries")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -107,7 +106,7 @@ namespace Orchard.Projections.Controllers {
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult Index(FormCollection input) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new AdminIndexViewModel { Queries = new List<QueryEntry>(), Options = new AdminIndexOptions() };
@@ -132,7 +131,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to edit queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
@@ -224,7 +223,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id);
@@ -240,7 +239,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Preview(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var contentItems = _projectionManager.GetContentItems(id, 0, 20);
