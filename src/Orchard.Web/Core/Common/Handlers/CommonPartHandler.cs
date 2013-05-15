@@ -9,7 +9,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Security;
 using Orchard.Services;
-using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.Core.Common.Handlers {
     [UsedImplicitly]
@@ -64,12 +63,14 @@ namespace Orchard.Core.Common.Handlers {
         public Localizer T { get; set; }
 
         protected override void Activating(ActivatingContentContext context) {
-            if (ContentTypeWithACommonPart(context.Definition))
+            if (ContentTypeWithACommonPart(context.ContentType))
                 context.Builder.Weld<ContentPart<CommonPartVersionRecord>>();
         }
 
-        protected bool ContentTypeWithACommonPart(ContentTypeDefinition contentTypeDefinition) {
+        protected bool ContentTypeWithACommonPart(string typeName) {
             //Note: What about content type handlers which activate "CommonPart" in code?
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName);
+            
             if (contentTypeDefinition != null)
                 return contentTypeDefinition.Parts.Any(part => part.PartDefinition.Name == "CommonPart");
 
