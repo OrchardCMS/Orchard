@@ -24,14 +24,14 @@ namespace Orchard.ContentManagement {
         /// Creates (persists) a new content item
         /// </summary>
         /// <param name="contentItem">The content item instance filled with all necessary data</param>
-        void Create(ContentItem contentItem);
+        void Create(IContent content);
 
         /// <summary>
         /// Creates (persists) a new content item with the specified version
         /// </summary>
         /// <param name="contentItem">The content item instance filled with all necessary data</param>
         /// <param name="options">The version to create the item with</param>
-        void Create(ContentItem contentItem, VersionOptions options);
+        void Create(IContent content, VersionOptions options);
 
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace Orchard.ContentManagement {
         IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent;
         IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent;
 
-        void Publish(ContentItem contentItem);
-        void Unpublish(ContentItem contentItem);
-        void Remove(ContentItem contentItem);
-        void Index(ContentItem contentItem, IDocumentIndex documentIndex);
+        void Publish(IContent content);
+        void Unpublish(IContent content);
+        void Remove(IContent content);
+        void Index(IContent content, IDocumentIndex documentIndex);
 
-        XElement Export(ContentItem contentItem);
+        XElement Export(IContent content);
         void Import(XElement element, ImportContentSession importContentSession);
 
         /// <summary>
@@ -83,11 +83,11 @@ namespace Orchard.ContentManagement {
         IContentQuery<ContentItem> Query();
         IHqlQuery HqlQuery();
 
-        ContentItemMetadata GetItemMetadata(IContent contentItem);
-        IEnumerable<GroupInfo> GetEditorGroupInfos(IContent contentItem);
-        IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent contentItem);
-        GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
-        GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
+        ContentItemMetadata GetItemMetadata(IContent content);
+        IEnumerable<GroupInfo> GetEditorGroupInfos(IContent content);
+        IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent content);
+        GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId);
+        GroupInfo GetDisplayGroupInfo(IContent content, string groupInfoId);
 
         ContentItem ResolveIdentity(ContentIdentity contentIdentity);
 

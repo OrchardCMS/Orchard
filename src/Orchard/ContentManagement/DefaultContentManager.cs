@@ -346,7 +346,9 @@ namespace Orchard.ContentManagement {
             return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
         }
 
-        public virtual void Publish(ContentItem contentItem) {
+        public virtual void Publish(IContent content) {
+            var contentItem = content.ContentItem;
+
             if (contentItem.VersionRecord.Published) {
                 return;
             }
@@ -369,7 +371,8 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Published(context), Logger);
         }
 
-        public virtual void Unpublish(ContentItem contentItem) {
+        public virtual void Unpublish(IContent content) {
+            var contentItem = content.ContentItem;
             ContentItem publishedItem;
             if (contentItem.VersionRecord.Published) {
                 // the version passed in is the published one
@@ -377,7 +380,7 @@ namespace Orchard.ContentManagement {
             }
             else {
                 // try to locate the published version of this item
-                publishedItem = Get(contentItem.Id, VersionOptions.Published);
+                publishedItem = Get(content.Id, VersionOptions.Published);
             }
 
             if (publishedItem == null) {
@@ -399,9 +402,9 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Unpublished(context), Logger);
         }
 
-        public virtual void Remove(ContentItem contentItem) {
-            var activeVersions = _contentItemVersionRepository.Fetch(x => x.ContentItemRecord == contentItem.Record && (x.Published || x.Latest));
-            var context = new RemoveContentContext(contentItem);
+        public virtual void Remove(IContent content) {
+            var activeVersions = _contentItemVersionRepository.Fetch(x => x.ContentItemRecord == content.ContentItem.Record && (x.Published || x.Latest));
+            var context = new RemoveContentContext(content.ContentItem);
 
             Handlers.Invoke(handler => handler.Removing(context), Logger);
 
@@ -417,7 +420,8 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
-        protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
+        protected virtual ContentItem BuildNewVersion(IContent existingContent) {
+            var existingContentItem = existingContent.ContentItem;
             var contentItemRecord = existingContentItem.Record;
 
             // locate the existing and the current latest versions, allocate building version
@@ -461,11 +465,13 @@ namespace Orchard.ContentManagement {
             return context.BuildingContentItem;
         }
 
-        public virtual void Create(ContentItem contentItem) {
-            Create(contentItem, VersionOptions.Published);
+        public virtual void Create(IContent content) {
+            Create(content, VersionOptions.Published);
         }
 
-        public virtual void Create(ContentItem contentItem, VersionOptions options) {
+        public virtual void Create(IContent content, VersionOptions options) {
+            var contentItem = content.ContentItem;
+
             if (contentItem.VersionRecord == null) {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
@@ -687,8 +693,8 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public XElement Export(ContentItem contentItem) {
-            var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
+        public XElement Export(IContent content) {
+            var context = new ExportContentContext(content.ContentItem, new XElement(XmlConvert.EncodeLocalName(content.ContentItem.ContentType)));
 
             foreach (var contentHandler in Handlers) {
                 contentHandler.Exporting(context);
@@ -698,8 +704,8 @@ namespace Orchard.ContentManagement {
                 contentHandler.Exported(context);
             }
 
-            context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
-            if (contentItem.IsPublished()) {
+            context.Data.SetAttributeValue("Id", GetItemMetadata(content).Identity.ToString());
+            if (content.IsPublished()) {
                 context.Data.SetAttributeValue("Status", Published);
             }
             else {
@@ -725,8 +731,8 @@ namespace Orchard.ContentManagement {
             return _contentTypeRepository.Get(contentTypeId);
         }
 
-        public void Index(ContentItem contentItem, IDocumentIndex documentIndex) {
-            var indexContentContext = new IndexContentContext(contentItem, documentIndex);
+        public void Index(IContent content, IDocumentIndex documentIndex) {
+            var indexContentContext = new IndexContentContext(content.ContentItem, documentIndex);
 
             // dispatch to handlers to retrieve index information
             Handlers.Invoke(handler => handler.Indexing(indexContentContext), Logger);
