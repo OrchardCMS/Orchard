@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Handlers {
 
             OnVersioning<BlogPostPart>((context, bp1, bp2) => {
                 var commonPart = bp1.As<CommonPart>();
-                if(commonPart == null || !commonPart.CreatedUtc.HasValue || !bp1.IsPublished)
+                if(commonPart == null || !commonPart.CreatedUtc.HasValue || !bp1.IsPublished || !bp2.IsPublished)
                     return;
 
                 _previousCreatedUtc[bp2] = commonPart.CreatedUtc.Value;
