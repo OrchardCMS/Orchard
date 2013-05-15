@@ -21,18 +21,6 @@ namespace Orchard.Projections {
                 new PermissionStereotype {
                     Name = "Editor",
                     Permissions = new[] { ManageQueries }
-                },
-                new PermissionStereotype {
-                    Name = "Moderator",
-                    Permissions = new[] { ManageQueries }
-                },
-                new PermissionStereotype {
-                    Name = "Author",
-                    Permissions = new[] { ManageQueries }
-                },
-                new PermissionStereotype {
-                    Name = "Contributor",
-                    Permissions = new[] { ManageQueries }
                 }
             };
         }
