@@ -51,6 +51,15 @@
 //<![CDATA[
     (function ($) {
 
+        var assignPositions = function () {
+            var position = 1;
+            $('.position').each(function() {
+                $(this).val(position++);
+            });
+        };
+
+        assignPositions();
+        
         var startPos;
 
         $('#placement').sortable({
@@ -60,41 +69,7 @@
                 startPos = self.prevAll().size();
             },
             stop: function (event, ui) {
-                var self = $(ui.item);
-                var stopPos = self.prevAll().size();
-
-                var begin = Math.min(startPos, stopPos);
-                var end = Math.max(startPos, stopPos);
-
-                // do nothing if it was put in place
-                if (begin == end) {
-                    return;
-                }
-                
-                // get siblings ( .siblings() doesn't include itself)
-                var siblings = self.parent().children();
-                for (var i = begin; i < end; i++) {
-                    // get both positions
-                    var a = $(siblings[i]).find('.position').val();
-                    var b = $(siblings[i + 1]).find('.position').val();
-
-                    // swap values
-                    var temp = a;
-                    $(siblings[i]).find('.position').val(b);
-                    $(siblings[i + 1]).find('.position').val(temp);
-                }
-
-                // ensure all successive values are different
-                for (var i = 0; i < siblings.size() - 1; i++) {
-                    // get both positions
-                    a = $(siblings[i]).find('.position').val();
-                    b = $(siblings[i + 1]).find('.position').val();
-
-                    if (a == b) {
-                        $(siblings[i + 1]).find('.position').val(a + '.5');
-                    }
-                }
-
+                assignPositions();
                 $('#save-message').show();
 
             }
