@@ -19,6 +19,7 @@ using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.Controllers {
+    [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
