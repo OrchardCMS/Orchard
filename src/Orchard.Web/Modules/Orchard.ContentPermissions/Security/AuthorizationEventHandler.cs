@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.ContentPermissions.Models;
@@ -38,9 +37,9 @@ namespace Orchard.ContentPermissions.Security {
 
             // if the content item has no right attached, check on the container
             if (part == null || !part.Enabled) {
-                var commonPart = part.As<CommonPart>();
+                var commonPart = context.Content.As<ICommonPart>();
                 if(commonPart != null && commonPart.Container != null) {
-                    part = commonPart.As<ContentPermissionsPart>();
+                    part = commonPart.Container.As<ContentPermissionsPart>();
                 }
             }
 
