@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc;
 
 namespace Orchard.DesignerTools.Services {
     [OrchardFeature("UrlAlternates")]
-    public class UrlAlternatesFactory : ShapeDisplayEvents {
+    public class UrlAlternatesFactory : ShapeFactoryEvents {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<List<string>> _urlAlternates;
 
@@ -43,27 +44,29 @@ namespace Orchard.DesignerTools.Services {
             });
         }
 
-        public override void Displaying(ShapeDisplayingContext context) {
+        public override void Created(ShapeCreatedContext context) {
 
-                if (_urlAlternates.Value == null || !_urlAlternates.Value.Any()) {
-                    return;
-                }
+            IShape shape = context.Shape;
+            var shapeMetaData = shape.Metadata;
 
-                // prevent applying alternate again, c.f. http://orchard.codeplex.com/workitem/18298
-                if (context.ShapeMetadata.Alternates.Any(x => x.Contains("__url__"))) {
-                    return;
-                }
+            if (_urlAlternates.Value == null || !_urlAlternates.Value.Any()) {
+                return;
+            }
 
-                // appends Url alternates to current ones
-                context.ShapeMetadata.Alternates = context.ShapeMetadata.Alternates.SelectMany(
-                    alternate => new [] { alternate }.Union(_urlAlternates.Value.Select(a => alternate + "__url__" + a))
-                    ).ToList();
+            // prevent applying alternate again, c.f. http://orchard.codeplex.com/workitem/18298
+            if (shapeMetaData.Alternates.Any(x => x.Contains("__url__"))) {
+                return;
+            }
 
-                // appends [ShapeType]__url__[Url] alternates
-                context.ShapeMetadata.Alternates = _urlAlternates.Value.Select(url => context.ShapeMetadata.Type + "__url__" + url)
-                    .Union(context.ShapeMetadata.Alternates)
-                    .ToList();
+            // appends Url alternates to current ones
+            shapeMetaData.Alternates = shapeMetaData.Alternates.SelectMany(
+                alternate => new [] { alternate }.Union(_urlAlternates.Value.Select(a => alternate + "__url__" + a))
+                ).ToList();
 
+            // appends [ShapeType]__url__[Url] alternates
+            shapeMetaData.Alternates = _urlAlternates.Value.Select(url => shapeMetaData.Type + "__url__" + url)
+                .Union(shapeMetaData.Alternates)
+                .ToList();
         }
     }
 }
