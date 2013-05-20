@@ -4,6 +4,7 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Themes;
@@ -36,13 +37,17 @@ namespace Orchard.Blogs.Controllers {
             _siteService = siteService;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         dynamic Shape { get; set; }
         protected ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+            var blogs = _blogService.Get()
+                .Where(b => _services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent,b))
+                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -60,6 +65,11 @@ namespace Orchard.Blogs.Controllers {
             var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
             if (blogPart == null)
                 return HttpNotFound();
+
+            if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent, blogPart, T("Cannot view content"))) {
+                return new HttpUnauthorizedResult();
+            }
+
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
