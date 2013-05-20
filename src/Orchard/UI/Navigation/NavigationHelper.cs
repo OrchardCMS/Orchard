@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Routing;
 
 namespace Orchard.UI.Navigation {
@@ -64,31 +65,49 @@ namespace Orchard.UI.Navigation {
         /// Identifies the currently selected path, starting from the selected node.
         /// </summary>
         /// <param name="menuItems">All the menuitems in the navigation menu.</param>
+        /// <param name="currentRequest">The currently executed request if any</param>
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
-        public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, RouteData currentRouteData) {
-            return SetSelectedPath(menuItems, currentRouteData.Values);
+        public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteData currentRouteData) {
+            return SetSelectedPath(menuItems, currentRequest, currentRouteData.Values);
         }
 
         /// <summary>
         /// Identifies the currently selected path, starting from the selected node.
         /// </summary>
         /// <param name="menuItems">All the menuitems in the navigation menu.</param>
+        /// <param name="currentRequest">The currently executed request if any</param>
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
-        public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, RouteValueDictionary currentRouteData) {
+        public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData) {
             if (menuItems == null)
                 return null;
 
             foreach (MenuItem menuItem in menuItems) {
-                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRouteData);
+                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData);
                 if (selectedPath != null) {
                     menuItem.Selected = true;
                     selectedPath.Push(menuItem);
                     return selectedPath;
                 }
 
-                if (RouteMatches(menuItem.RouteValues, currentRouteData)) {
+                bool match = false;
+                // if the menu item doesn't have route values, compare urls
+                if (currentRequest != null && menuItem.RouteValues == null) {
+
+                    string requestUrl = currentRequest.Path.Replace(currentRequest.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
+                    string modelUrl = menuItem.Href.Replace(currentRequest.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
+                    if (requestUrl == modelUrl || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/"))) {
+                        match = true;
+                    }
+                }
+                else {
+                    if (RouteMatches(menuItem.RouteValues, currentRouteData)) {
+                        match = true;
+                    }
+                }
+
+                if (match) {
                     menuItem.Selected = true;
 
                     selectedPath = new Stack<MenuItem>();

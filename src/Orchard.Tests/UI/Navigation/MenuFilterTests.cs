@@ -135,7 +135,7 @@ namespace Orchard.Tests.UI.Navigation {
                 base(navigationManager, workContextAccessor, shapeFactory) {}
 
             public static Stack<MenuItem> FindSelectedPathAccessor(IEnumerable<MenuItem> menuItems, RouteData currentRouteData) {
-                return NavigationHelper.SetSelectedPath(menuItems, currentRouteData);
+                return NavigationHelper.SetSelectedPath(menuItems, null, currentRouteData);
             }
 
             public static MenuItem FindParentLocalTaskAccessor(Stack<MenuItem> selectedPath) {

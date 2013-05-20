@@ -72,8 +72,9 @@ namespace Orchard.Core.Navigation.Drivers {
 
                 menuItems = localized;
 
-                var routeData = _workContextAccessor.GetContext().HttpContext.Request.RequestContext.RouteData;
-                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);                            
+                var request = _workContextAccessor.GetContext().HttpContext.Request;
+                var routeData = request.RequestContext.RouteData;
+                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);                            
                 var menuShape = shapeHelper.Menu();
 
                 if (part.Breadcrumb) {
