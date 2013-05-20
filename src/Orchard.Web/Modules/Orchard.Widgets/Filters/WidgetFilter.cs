@@ -13,16 +13,20 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Filters {
     public class WidgetFilter : FilterProvider, IResultFilter {
-        private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;
+        private readonly IOrchardServices _orchardServices;
 
-        public WidgetFilter(IContentManager contentManager, IWorkContextAccessor workContextAccessor, IRuleManager ruleManager, IWidgetsService widgetsService) {
-            _contentManager = contentManager;
+        public WidgetFilter(
+            IWorkContextAccessor workContextAccessor, 
+            IRuleManager ruleManager, 
+            IWidgetsService widgetsService,
+            IOrchardServices orchardServices) {
             _workContextAccessor = workContextAccessor;
             _ruleManager = ruleManager;
             _widgetsService = widgetsService;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -47,7 +51,7 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<LayerPart> activeLayers = _contentManager.Query<LayerPart, LayerPartRecord>().List();
+            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart, LayerPartRecord>().List();
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
@@ -91,7 +95,12 @@ namespace Orchard.Widgets.Filters {
                     }
                 }
 
-                var widgetShape = _contentManager.BuildDisplay(widgetPart);
+                // check permissions
+                if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
+                    continue;
+                }
+
+                var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
                 zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
             }
         }
