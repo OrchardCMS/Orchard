@@ -129,7 +129,7 @@ namespace Orchard.Data.Migration {
 
                     _transactionManager.RequireNew();
                 }
-                catch (Exception e) {
+                catch {
                     _transactionManager.Cancel();
                 }
 

@@ -64,7 +64,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     }
                 }
             }
-            catch (Exception e) {
+            catch {
                 return View(viewModel);
             }
 

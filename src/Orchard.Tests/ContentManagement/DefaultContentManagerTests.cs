@@ -147,7 +147,7 @@ namespace Orchard.Tests.ContentManagement {
 
                         _transaction.Dispose();
                     }
-                    catch (Exception e) {
+                    catch {
                     }
                     finally {
                         _transaction = null;

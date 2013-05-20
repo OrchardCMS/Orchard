@@ -230,8 +230,6 @@ namespace Orchard.Tests.DataMigration {
 
             public int UpdateFrom1() {
                 throw new Exception();
-
-                return 2;
             }
 
             public int UpdateFrom2() {
