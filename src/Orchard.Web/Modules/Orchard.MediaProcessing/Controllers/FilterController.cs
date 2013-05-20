@@ -62,7 +62,9 @@ namespace Orchard.MediaProcessing.Controllers {
                 return HttpNotFound();
             }
 
+            filter.ImageProfilePartRecord.Filters.Remove(filter);
             _filterRepository.Delete(filter);
+
             Services.Notifier.Information(T("Filter deleted"));
 
             return RedirectToAction("Edit", "Admin", new {id});

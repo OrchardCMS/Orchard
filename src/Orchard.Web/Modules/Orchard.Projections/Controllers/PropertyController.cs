@@ -63,7 +63,9 @@ namespace Orchard.Projections.Controllers {
                 return HttpNotFound();
             }
 
+            property.LayoutRecord.Properties.Remove(property);
             _repository.Delete(property);
+
             Services.Notifier.Information(T("Property deleted"));
 
             return RedirectToAction("Edit", "Layout", new { id });
