@@ -104,9 +104,11 @@ namespace Orchard.Core.Shapes {
                     var menu = menuItem.Menu;
                     menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menu.MenuName));
 
-                    var contentType = ((IContent)menuItem.Content).ContentItem.ContentType;
-                    if(contentType != null) {
-                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
+                    if (menuItem.Content != null) {
+                        var contentType = ((IContent) menuItem.Content).ContentItem.ContentType;
+                        if (contentType != null) {
+                            menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
+                        }
                     }
                 });
 
