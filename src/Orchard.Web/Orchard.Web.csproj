@@ -231,8 +231,10 @@
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard.Localization']" />
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard']" />
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/root/appender-ref[@ref='debug-file']" />
-    <!-- disable dynamic compilation loader -->
-    <XmlUpdate XmlFileName="$(PackageTmp)\Config\HostComponents.config" XPath="/HostComponents/Components/Component[@Type='Orchard.Environment.Extensions.Loaders.DynamicExtensionLoader']/Properties/Property/@Value" Value="true" />
+		<!-- disable all file monitoring but ExtensionMonitoringCorrdinator to detect new modules/themes -->
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
+      XPath="/HostComponents/Components/Component/Properties/Property[@Name='DisableMonitoring']/@Value"
+      Value="true" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
