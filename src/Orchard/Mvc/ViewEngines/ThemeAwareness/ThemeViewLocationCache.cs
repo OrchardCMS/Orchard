@@ -4,7 +4,7 @@ using System.Web.Caching;
 using System.Web;
 using System.Web.Hosting;
 
-namespace Orchard.Mvc.ViewEngines.WebForms {
+namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     public class ThemeViewLocationCache : IViewLocationCache {
         private readonly string _requestTheme;
 

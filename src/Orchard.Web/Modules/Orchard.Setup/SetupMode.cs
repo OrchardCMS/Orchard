@@ -27,7 +27,6 @@ using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
-using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
 using Orchard.Tasks;
@@ -53,7 +52,6 @@ namespace Orchard.Setup {
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().SingleInstance();
             builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().SingleInstance();
             builder.RegisterType<ThemedViewResultFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();

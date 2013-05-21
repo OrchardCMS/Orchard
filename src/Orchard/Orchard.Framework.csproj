@@ -268,6 +268,7 @@
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeViewLocationCache.cs" />
     <Compile Include="OrchardFatalException.cs" />
     <Compile Include="Recipes\Events\IRecipeExecuteEventHandler.cs" />
     <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
@@ -670,8 +671,6 @@
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
     <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
-    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
-    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualFile.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
@@ -797,7 +796,6 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -870,7 +868,6 @@
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />

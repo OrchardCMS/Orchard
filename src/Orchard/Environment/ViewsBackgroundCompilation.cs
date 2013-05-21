@@ -89,7 +89,7 @@ namespace Orchard.Environment {
                     // Leave these at end (as a best effort)
                     "~/Core", "~/Modules", "~/Themes"
                 },
-                FileExtensionsToCompile = new[] { ".cshtml", ".acsx", ".aspx" },
+                FileExtensionsToCompile = new[] { ".cshtml" },
                 ProcessedDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             };
 
