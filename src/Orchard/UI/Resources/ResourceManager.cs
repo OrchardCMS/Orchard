@@ -300,21 +300,31 @@ namespace Orchard.UI.Resources {
         }
 
         public void SetMeta(MetaEntry meta) {
-            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+            if (meta == null) {
                 return;
             }
-            _metas[meta.Name] = meta;
+
+            var index = meta.Name ?? meta.HttpEquiv ?? "charset";
+
+            _metas[index] = meta;
         }
 
         public void AppendMeta(MetaEntry meta, string contentSeparator) {
-            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+            if (meta == null) {
                 return;
             }
+
+            var index = meta.Name ?? meta.HttpEquiv;
+            
+            if (String.IsNullOrEmpty(index)) {
+                return;
+            }
+
             MetaEntry existingMeta;
-            if (_metas.TryGetValue(meta.Name, out existingMeta)) {
+            if (_metas.TryGetValue(index, out existingMeta)) {
                 meta = MetaEntry.Combine(existingMeta, meta, contentSeparator);
             }
-            _metas[meta.Name] = meta;
+            _metas[index] = meta;
         }
 
     }
