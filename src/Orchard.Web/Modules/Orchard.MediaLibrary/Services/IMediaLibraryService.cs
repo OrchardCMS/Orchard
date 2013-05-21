@@ -24,7 +24,7 @@ namespace Orchard.MediaLibrary.Services {
 
         MediaPart ImportStream(int termId, Stream stream, string filename);
 
-        void CreateFolder(int? parentFolderId, string name);
+        MediaFolder CreateFolder(int? parentFolderId, string name);
         void RenameFolder(int folderId, string name);
         void DeleteFolder(int folderId);
         void MoveMedia(int targetId, int[] mediaItemIds);

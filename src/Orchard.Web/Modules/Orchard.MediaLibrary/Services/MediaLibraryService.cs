@@ -144,7 +144,7 @@ namespace Orchard.MediaLibrary.Services {
             return requestMediaFactoryResults.First().MediaFactory;
         }
 
-        public void CreateFolder(int? parentFolderId, string name) {
+        public MediaFolder CreateFolder(int? parentFolderId, string name) {
             var taxonomy = GetMediaLocationTaxonomy();
             TermPart parentTerm = parentFolderId.HasValue ? _taxonomyService.GetTerm(parentFolderId.Value) : null;
             var term = _taxonomyService.NewTerm(taxonomy);
@@ -154,6 +154,8 @@ namespace Orchard.MediaLibrary.Services {
 
             _taxonomyService.ProcessPath(term);
             _contentManager.Create(term, VersionOptions.Published);
+
+            return CreateMediaFolder(term);
         }
 
         public void RenameFolder(int folderId, string name) {
