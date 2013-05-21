@@ -121,6 +121,7 @@ namespace Orchard.Projections.Controllers {
 
                 Services.Notifier.Information(T("Layout Created"));
 
+                _repository.Create(layoutRecord);
                 return RedirectToAction("Edit", new { id = layoutRecord.Id });
             }
 
