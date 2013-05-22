@@ -325,7 +325,7 @@
   <Target Name="Package-Precompiled">
     <ItemGroup>
       <Precompiled-Exclude-Source Include="$(StageFolder)\**\*.cs;$(StageFolder)\**\*.csproj" />
-      <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
+      <Precompiled-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;$(StageFolder)\Modules\**\Tests\**;$(StageFolder)\**\obj\**\*;@(Precompiled-Exclude-Source)" />
     </ItemGroup>
 
     <Copy SourceFiles="@(Precompiled-Folder-Input)"

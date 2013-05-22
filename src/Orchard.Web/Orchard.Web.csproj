@@ -189,7 +189,7 @@
       <Orchard-Web-Bins Include="bin\*" />
       <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
       <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />
-      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*;Config\**\*" Exclude="**\obj\**;**\bin\*.xml;**\.hgignore;**\.hgtags;**\.hg\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;App_Data\Dependencies\*;App_Data\Logs\*" />
+      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*;Config\**\*" Exclude="**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt;**\.hgignore;**\.hgtags;**\.hg\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*" />
       <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
         <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
       </FilesForPackagingFromProject>
@@ -231,10 +231,8 @@
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard.Localization']" />
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/logger[@name='Orchard']" />
     <XmlDelete XmlFileName="$(PackageTmp)\Config\log4net.config" XPath="/log4net/root/appender-ref[@ref='debug-file']" />
-		<!-- disable all file monitoring but ExtensionMonitoringCorrdinator to detect new modules/themes -->
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
-      XPath="/HostComponents/Components/Component/Properties/Property[@Name='DisableMonitoring']/@Value"
-      Value="true" />
+    <!-- disable all file monitoring but ExtensionMonitoringCorrdinator to detect new modules/themes -->
+    <XmlUpdate XmlFileName="$(PackageTmp)\Config\HostComponents.config" XPath="/HostComponents/Components/Component/Properties/Property[@Name='DisableMonitoring']/@Value" Value="true" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
