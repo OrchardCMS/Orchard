@@ -46,6 +46,19 @@ namespace Orchard.AntiSpam {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", builder => builder
+                .WithDescription("Allows to filter submitted content items based on spam filters."));
+
+            ContentDefinitionManager.AlterPartDefinition("SubmissionLimitPart", builder => builder
+                .WithDescription("Allows to filter content items based on submissions frequency."));
+
+            ContentDefinitionManager.AlterPartDefinition("ReCaptchaPart", builder => builder
+                .WithDescription("Ensures content items are submitted by humans only."));
+
+            return 3;
+        }
     }
 
 

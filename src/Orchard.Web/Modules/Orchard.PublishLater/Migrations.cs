@@ -9,5 +9,12 @@ namespace Orchard.PublishLater {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("PublishLaterPart", builder => builder
+                .WithDescription("Adds the ability to delay the publication of a content item to a later date and time."));
+
+            return 2;
+        }
     }
 }
