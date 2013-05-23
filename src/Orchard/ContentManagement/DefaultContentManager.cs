@@ -289,9 +289,10 @@ namespace Orchard.ContentManagement {
                     return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
                 }).AsPart<T>().ToArray();
         }
-        
-        public IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent {
-            var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) => 
+
+
+        public IEnumerable<ContentItem> GetManyByVersionId(IEnumerable<int> versionRecordIds, QueryHints hints) {
+            var contentItemVersionRecords = GetManyImplementation(hints, (contentItemCriteria, contentItemVersionCriteria) =>
                 contentItemVersionCriteria.Add(Restrictions.In("Id", versionRecordIds.ToArray())));
 
             var itemsById = contentItemVersionRecords
@@ -302,7 +303,11 @@ namespace Orchard.ContentManagement {
             return versionRecordIds.SelectMany(id => {
                 IGrouping<int, ContentItem> values;
                 return itemsById.TryGetValue(id, out values) ? values : Enumerable.Empty<ContentItem>();
-            }).AsPart<T>().ToArray();
+            }).ToArray();
+        }
+
+        public IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent {
+            return GetManyByVersionId(versionRecordIds, hints).AsPart<T>();
         }
 
         private IEnumerable<ContentItemVersionRecord> GetManyImplementation(QueryHints hints, Action<ICriteria, ICriteria> predicate) {
