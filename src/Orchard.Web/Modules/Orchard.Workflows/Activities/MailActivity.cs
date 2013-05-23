@@ -91,8 +91,7 @@ namespace Orchard.Workflows.Activities {
                 }
             }
             else if (recipient == "other") {
-                var email = properties["RecipientOther"];
-                _messageManager.Send(SplitEmail(email), MessageType, "email", properties);
+                _messageManager.Send(SplitEmail(activityContext.GetState<string>("RecipientOther")), MessageType, "email", properties);
             }
 
             yield return T("Sent");
