@@ -1,4 +1,4 @@
-﻿Name: Orchard.Workflows
+﻿Name: Workflows
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
