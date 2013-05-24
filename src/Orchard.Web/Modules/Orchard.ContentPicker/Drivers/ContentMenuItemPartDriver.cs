@@ -49,7 +49,7 @@ namespace Orchard.ContentPicker.Drivers {
             var model = new ContentMenuItemEditViewModel();
 
             if(updater.TryUpdateModel(model, Prefix, null, null)) {
-                var contentItem = _contentManager.Get(model.ContentItemId);
+                var contentItem = _contentManager.Get(model.ContentItemId, VersionOptions.Latest);
                 if(contentItem == null) {
                     updater.AddModelError("ContentItemId", T("You must select a Content Item"));
                 }
