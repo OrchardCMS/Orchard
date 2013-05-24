@@ -481,7 +481,7 @@ namespace Orchard.ContentManagement {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
                     ContentItemRecord = new ContentItemRecord {
-                        ContentType = AcquireContentTypeRecord(contentItem.ContentType)
+                        
                     },
                     Number = 1,
                     Latest = true,
