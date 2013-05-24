@@ -111,7 +111,7 @@ namespace Orchard.Data.Migration {
                             current = (int) lookupTable[current].Invoke(migration, new object[0]);
                         }
                         catch (Exception ex) {
-                            Logger.Error(ex, "An unexpected error orccured while applying migration on {0} from version {1}", feature, current);
+                            Logger.Error(ex, "An unexpected error occurred while applying migration on {0} from version {1}", feature, current);
                             throw;
                         }
                     }
