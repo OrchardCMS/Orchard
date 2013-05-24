@@ -71,8 +71,8 @@ namespace Orchard.Projections.Drivers {
                 Int32.TryParse(queryString[pageKey], out page);
             }
 
-            // if 0, then assume "All"
-            if (pageSize == 0) {
+            // if 0, then assume "All", limit to 128 by default
+            if (pageSize == 128) {
                 pageSize = Int32.MaxValue;
             }
 

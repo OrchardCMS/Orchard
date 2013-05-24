@@ -925,8 +925,6 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void ShouldSortRandomly() {
-            var dt = new DateTime(1980, 1, 1);
-
             _manager.Create<LambdaPart>("lambda", init => {
                 init.Record.IntegerStuff = 1;
             });
@@ -951,6 +949,26 @@ namespace Orchard.Tests.ContentManagement {
             }
 
             Assert.That(firstResults.Distinct().Count(), Is.GreaterThan(1));
+        }
+
+        [Test]
+        public void ShouldPageResults() {
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 1;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 2;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 3;
+            });
+            _session.Flush();
+
+            var results = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).Slice(1,1);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.Single().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(2));
         }
 
         [Test]
