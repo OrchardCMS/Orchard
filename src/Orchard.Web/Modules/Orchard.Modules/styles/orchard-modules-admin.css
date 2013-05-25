@@ -80,7 +80,7 @@ html.dyn #main ul.features button { display:none; }
     padding-right:0;
 }
 #main .features.summary-view .description {
-    display:none;
+    /*display:none;*/
 }
 #main .features.detail-view .description {
     display:inline;
