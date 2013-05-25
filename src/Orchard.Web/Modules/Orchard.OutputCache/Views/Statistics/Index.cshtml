@@ -1,0 +1,35 @@
+﻿@using Orchard.OutputCache.ViewModels
+@model StatisticsViewModel
+           
+@{
+    Layout.Title = T("Cache Statistics");
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Evict All").ToString(), "EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" }, new { @class = "button primaryAction", itemprop = "UnsafeUrl" })</div>
+}
+
+<h2>@T("Cached pages")</h2>
+<table class="items">
+    <thead>
+        <tr>
+            <th scope="col">@T("Url")</th>
+            <th scope="col">@T("Cached On")</th>
+            <th scope="col">@T("Cached Until")</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    @foreach (var cacheItem in Model.CacheItems) {
+        <tr>
+            <td><span title="@cacheItem.QueryString">@cacheItem.Url</span></td>
+            <td>@Display.DateTimeRelative(dateTimeUtc: cacheItem.CachedOnUtc)</td>
+            <td>@cacheItem.ValidUntilUtc.ToLocalTime()</td>
+            <td>@Html.ActionLink(T("Evict").Text, "Evict", new { Area = "Orchard.OutputCache", Controller = "Statistics", cacheKey = cacheItem.CacheKey })</td>
+        </tr>
+    }
+</table>
+
+@Display(Model.Pager)
+
+
