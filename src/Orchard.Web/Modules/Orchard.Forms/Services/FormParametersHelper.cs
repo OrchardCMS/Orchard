@@ -18,6 +18,10 @@ namespace Orchard.Forms.Services {
             }
 
             foreach (var entry in parameters) {
+                if (entry.Key.StartsWith("_")) {
+                    continue;
+                }
+
                 root.Add(new XElement(XmlConvert.EncodeLocalName(entry.Key), entry.Value));
             }
 
@@ -42,7 +46,6 @@ namespace Orchard.Forms.Services {
 
             return result;
         }
-
 
         public static dynamic ToDynamic(string parameters) {
             var result = new JObject();
