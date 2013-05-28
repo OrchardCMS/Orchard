@@ -120,7 +120,7 @@ namespace Orchard.Workflows.Activities {
             }
 
             switch (context.Type) {
-                case MailActions.MessageType:
+                case MailActivity.MessageType:
                     context.MailMessage.Subject = context.Properties["Subject"];
                     context.MailMessage.Body = context.Properties["Body"];
                     FormatEmailBody(context);
