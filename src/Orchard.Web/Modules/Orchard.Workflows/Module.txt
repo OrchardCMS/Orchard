@@ -9,4 +9,4 @@ Description: Description for the module
 Features:
     Orchard.Workflows:
         Description: Description for feature Orchard.Workflows.
-		Dependencies: Orchard.Tokens, Orchard.Forms, Orchard.jQuery, Orchard.Roles, Orchard.Comments
+		Dependencies: Orchard.Tokens, Orchard.Forms, Orchard.jQuery, Orchard.Roles, Orchard.Comments, Orchard.Scripting.CSharp
