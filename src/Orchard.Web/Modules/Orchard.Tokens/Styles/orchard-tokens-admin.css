@@ -23,6 +23,9 @@
     margin-bottom: 0px;
 }
 
+    .token-wrapper span[role="status"] {
+        display: none;
+    }
 .ui-autocomplete 
 {
 	max-height: 12em;
