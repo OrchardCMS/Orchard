@@ -25,7 +25,7 @@ namespace Orchard.Workflows.Forms {
                 _Script: Shape.TextArea(
                   Id: "Script", Name: "Script",
                   Title: T("Script"),
-                  Description: T("The script to run every time the Decision Activity is invoked. You can use ContentItem, Services, WorkContext, and T().  Return type must be a strin.gDecisionAc"),
+                  Description: T("The script to run every time the Decision Activity is invoked. You can use ContentItem, Services, WorkContext, and T().  Return type must be a string."),
                   Classes: new[] { "tokenized" }
                   )
                 );
