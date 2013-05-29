@@ -8,19 +8,19 @@ using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
     public class DecisionActivity : Task {
-      private readonly ICSharpService _csharpService;
-      private readonly IOrchardServices _orchardServices;
-      private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ICSharpService _csharpService;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-      public DecisionActivity(
-          IOrchardServices orchardServices,
-          ICSharpService csharpService,
-          IWorkContextAccessor workContextAccessor) {
-        _csharpService = csharpService;
-        _orchardServices = orchardServices;
-        _workContextAccessor = workContextAccessor;
-        T = NullLocalizer.Instance;
-      }
+        public DecisionActivity(
+            IOrchardServices orchardServices,
+            ICSharpService csharpService,
+            IWorkContextAccessor workContextAccessor) {
+            _csharpService = csharpService;
+            _orchardServices = orchardServices;
+            _workContextAccessor = workContextAccessor;
+            T = NullLocalizer.Instance;
+        }
 
         public Localizer T { get; set; }
 
@@ -33,43 +33,41 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Evaluates an expression.");  }
+            get { return T("Evaluates an expression."); }
         }
 
         public override string Form {
-          get { return "ActivityActionDecision"; }
+            get { return "ActivityActionDecision"; }
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-          return GetOutcomes(activityContext).Select(outcome => T(outcome));
+            return GetOutcomes(activityContext).Select(outcome => T(outcome));
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-          var properties = new Dictionary<string, string> {
+            var properties = new Dictionary<string, string> {
                 {"Script", activityContext.GetState<string>("Script")} 
             };
 
-          _csharpService.SetParameter("Services", _orchardServices);
-          _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
-          _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
-          _csharpService.SetFunction("T", (Func<string, string>)(x => T(x).Text));
+            _csharpService.SetParameter("Services", _orchardServices);
+            _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
+            _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
+            _csharpService.SetFunction("T", (Func<string, string>)(x => T(x).Text));
 
-          var scriptResult = _csharpService.Evaluate(properties["Script"]).ToString();
+            var scriptResult = _csharpService.Evaluate(properties["Script"]).ToString();
 
-          yield return T(scriptResult);
+            yield return T(scriptResult);
         }
 
-        private IEnumerable<string> GetOutcomes(ActivityContext context)
-        {
+        private IEnumerable<string> GetOutcomes(ActivityContext context) {
 
-          var outcomes = context.GetState<string>("Outcomes");
+            var outcomes = context.GetState<string>("Outcomes");
 
-          if (String.IsNullOrEmpty(outcomes))
-          {
-            return Enumerable.Empty<string>();
-          }
+            if (String.IsNullOrEmpty(outcomes)) {
+                return Enumerable.Empty<string>();
+            }
 
-          return outcomes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            return outcomes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
 
         }
     }
