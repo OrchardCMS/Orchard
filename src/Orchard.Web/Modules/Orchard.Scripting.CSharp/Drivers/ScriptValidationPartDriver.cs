@@ -35,11 +35,11 @@ namespace Orchard.Scripting.CSharp.Drivers {
 
             if (!String.IsNullOrWhiteSpace(script)) {
 
-                _csharpService.SetParameter("orchardServices", _orchardServices);
-                _csharpService.SetParameter("contentItem", (dynamic)part.ContentItem);
-                _csharpService.SetParameter("workContext", _workContextAccessor.GetContext());
-                _csharpService.SetFunction("t", (Func<string, string>)(x => T(x).Text));
-                _csharpService.SetFunction("addModelError", (Action<string>)(x => updater.AddModelError("Script", T(x))));
+                _csharpService.SetParameter("Services", _orchardServices);
+                _csharpService.SetParameter("ContentItem", (dynamic)part.ContentItem);
+                _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
+                _csharpService.SetFunction("T", (Func<string, string>)(x => T(x).Text));
+                _csharpService.SetFunction("AddModelError", (Action<string>)(x => updater.AddModelError("Script", T(x))));
 
                 _csharpService.Run(script);
             }
