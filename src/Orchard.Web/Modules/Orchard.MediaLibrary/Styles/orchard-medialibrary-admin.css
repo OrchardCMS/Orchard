@@ -367,7 +367,7 @@
         height: 120px;
     }
 
-    #media-library-main-list li img{
+    #media-library-main-list li img, .dragged-selection img {
         width: 120px;
         height: 120px;
     }
@@ -383,7 +383,7 @@
         height: 80px;
     }
 
-    #media-library-main-list li img{
+    #media-library-main-list li img, .dragged-selection img{
         width: 80px;
         height: 80px;
     }
