@@ -340,6 +340,7 @@
                     $(ui.helper).removeClass('over');
                     $(this).removeClass('dropping');
                 },
+                tolerance: "pointer",
                 drop: function(event, ui) {
                     $(this).removeClass('dropping');
                     var targetId = $(this).data('term-id');
@@ -383,8 +384,9 @@
                         revert: 'invalid',
                         //containment: 'li',
                         helper: function(event) {
-                            var clone = $(event.currentTarget).clone();
+                            var clone = $(event.currentTarget).clone().removeAttr('id');
                             clone.removeClass('selected');
+                            clone.addClass('dragged-selection');
                             
                             if (viewModel.selection().length > 1) {
                                 clone.append($('<div class="draggable-selection"><p>' + viewModel.selection().length + '</p></div>'));
@@ -395,6 +397,7 @@
                         },
                         cursor: 'move',
                         distance: 10, 
+                        appendTo: 'body',
                         create: function() {
                             // position the handler a little left to the center to let the number of selected items to appear
                             $(this).draggable("option", "cursorAt", { left: $(this).width() / 2 - 20, top: $(this).height() / 2 });

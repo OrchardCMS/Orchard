@@ -68,6 +68,7 @@
 
     .media-library-folder-title {
         box-sizing: border-box;
+        -moz-box-sizing: border-box;
         border: 2px solid transparent;
         width: 100%;
     }
@@ -310,10 +311,12 @@
         display: none;
     }
 
-    .ui-draggable-dragging {
-        z-index: 3000;
+    /* the draggable element*/
+    .dragged-selection {
+        z-index: 3000; /* above the checkmark */
     }
 
+    /* the element representing the number of selected elements in the dragged element */
     .draggable-selection {
         position: absolute;
         top: 25%;
