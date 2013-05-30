@@ -25,13 +25,14 @@
             var tag = Tag(Model, "li");
             @tag.StartElement
             @renderedMenuItemLink
-            @tag.EndElement
-        }
 
-        if (items.Any()) {
+            if (items.Any()) {
             <ul>
                 @DisplayChildren(Model)
             </ul>
+            }
+    
+            @tag.EndElement
         }
     }
 }
