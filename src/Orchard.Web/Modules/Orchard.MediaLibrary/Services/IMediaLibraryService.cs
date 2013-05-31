@@ -19,8 +19,10 @@ namespace Orchard.MediaLibrary.Services {
         /// <returns></returns>
         IEnumerable<string> GetMediaTypes();
 
-        IEnumerable<MediaPart> GetMediaContentItemsForLocation(int? locationId, int skip, int count);
-        int GetMediaContentItemsCountForLocation(int? locationId);
+        IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType);
+        IEnumerable<MediaPart> GetMediaContentItems(int folder, int skip, int count, string order, string mediaType);
+        int GetMediaContentItemsCount(string mediaType);
+        int GetMediaContentItemsCount(int folder, string mediaType);
 
         MediaPart ImportStream(int termId, Stream stream, string filename);
 

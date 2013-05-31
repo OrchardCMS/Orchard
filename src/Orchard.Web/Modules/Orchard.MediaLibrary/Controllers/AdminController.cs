@@ -11,19 +11,24 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
+using Orchard.ContentManagement.MetaData;
+using System.Collections.Generic;
 
 namespace Orchard.MediaLibrary.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly INavigationManager _navigationManager;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public AdminController(
             IOrchardServices services, 
             IMediaLibraryService mediaLibraryService,
-            INavigationManager navigationManager ) {
+            INavigationManager navigationManager,
+            IContentDefinitionManager contentDefinitionManager) {
             _mediaLibraryService = mediaLibraryService;
             _navigationManager = navigationManager;
+            _contentDefinitionManager = contentDefinitionManager;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -35,16 +40,21 @@ namespace Orchard.MediaLibrary.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index(int? id, bool dialog = false) {
+            string stereotype;
+            var mediaTypes = new List<string>();
+
+            foreach(var contentTypeDefinition in _contentDefinitionManager.ListTypeDefinitions()) {
+                if (contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "Media")
+                    mediaTypes.Add(contentTypeDefinition.Name);
+            }
+
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 Folders = _mediaLibraryService.GetMediaFolders(),
                 Folder = id,
-                Hierarchy = id.HasValue ? _mediaLibraryService.GetMediaFolderHierarchy(id.Value) : Enumerable.Empty<MediaFolder>()
+                Hierarchy = id.HasValue ? _mediaLibraryService.GetMediaFolderHierarchy(id.Value) : Enumerable.Empty<MediaFolder>(),
+                MediaTypes = mediaTypes.ToArray()
             };
-
-            if (!id.HasValue && viewModel.Folders.Any()) {
-                viewModel.Folder = viewModel.Folders.First().TermId;
-            }
 
             return View(viewModel);
         }
@@ -55,20 +65,21 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var hierarchy = _mediaLibraryService.GetMediaFolderHierarchy(id);
 
+            
             var viewModel = new MediaManagerImportViewModel {
                 DialogMode = dialog,
                 Menu = mediaProviderMenu,
                 Hierarchy = hierarchy.ToReadOnlyCollection(),
-                ImageSets = imageSets
+                ImageSets = imageSets,
             };
 
             return View(viewModel);
         }
 
         [Themed(false)]
-        public ActionResult MediaItems(int id, int skip = 0, int count = 0) {
-            var mediaParts = _mediaLibraryService.GetMediaContentItemsForLocation(id, skip, count);
-            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCountForLocation(id);
+        public ActionResult MediaItems(int id, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+            var mediaParts = _mediaLibraryService.GetMediaContentItems(id, skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(id, mediaType);
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
                 MediaPart = x,
@@ -81,6 +92,24 @@ namespace Orchard.MediaLibrary.Controllers {
             };
 
             return View(viewModel);
+        }
+
+        [Themed(false)]
+        public ActionResult RecentMediaItems(int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+            var mediaParts = _mediaLibraryService.GetMediaContentItems(skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(mediaType);
+
+            var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
+                MediaPart = x,
+                Shape = Services.ContentManager.BuildDisplay(x, "Thumbnail")
+            }).ToList();
+
+            var viewModel = new MediaManagerMediaItemsViewModel {
+                MediaItems = mediaItems,
+                MediaItemsCount = mediaPartsCount
+            };
+
+            return View("MediaItems", viewModel);
         }
 
         [Themed(false)]

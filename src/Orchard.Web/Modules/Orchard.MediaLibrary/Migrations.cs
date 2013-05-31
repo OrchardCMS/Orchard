@@ -23,11 +23,21 @@ namespace Orchard.MediaLibrary {
                 .Column<string>("Resource", c => c.WithLength(2048))
                 );
 
+            // create the "Media Location" taxonomy
             var taxonomy = _contentManager.New<TaxonomyPart>("Taxonomy");
             taxonomy.IsInternal = true;
             taxonomy.Name = MediaLibraryService.MediaLocation;
 
             _contentManager.Create(taxonomy);
+
+            // create the "Media" term
+            var term = _contentManager.New<TermPart>(taxonomy.TermTypeName);
+            term.TaxonomyId = taxonomy.Id;
+            term.Container = taxonomy;
+            term.Name = "Media";
+            term.Path = "/";
+
+            _contentManager.Create(term, VersionOptions.Published);
 
             ContentDefinitionManager.AlterTypeDefinition("Image", td => td
                 .DisplayedAs("Image")
@@ -65,21 +75,17 @@ namespace Orchard.MediaLibrary {
                 .WithPart("TitlePart")
             );
 
-            return 1;
-        }
-
-        public int UpdateFrom1() {
-
             ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td
-                .DisplayedAs("External Media")
-                .WithSetting("Stereotype", "Media")
-                .WithPart("CommonPart")
-                .WithPart("MediaPart")
-                .WithPart("OEmbedPart")
-                .WithPart("TitlePart")
-            );
+               .DisplayedAs("External Media")
+               .WithSetting("Stereotype", "Media")
+               .WithPart("CommonPart")
+               .WithPart("MediaPart")
+               .WithPart("OEmbedPart")
+               .WithPart("TitlePart")
+           );
 
             return 2;
         }
+
     }
 }

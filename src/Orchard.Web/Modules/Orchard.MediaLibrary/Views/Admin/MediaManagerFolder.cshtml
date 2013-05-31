@@ -2,8 +2,7 @@
 
 <div class="media-library-folder">
     <div class="media-library-folder-title" data-bind="click: function(data, event) { selectFolder(@Model.TermId); }, css: { selected: displayed() == $element.getAttribute('data-term-id') }" data-term-id="@Model.TermId" >
-        <span class="media-library-navigation-folder-icon">&nbsp;</span>
-        <a data-bind="disable: $root.pendingRequest" href="#" class="media-library-navigation-folder-link" data-mediapath="@Model.MediaPath">@Model.Name</a>
+        <a data-bind="disable: $root.pendingRequest" href="#" class="media-library-navigation-folder-link" data-mediapath="@Model.MediaPath"><i class="icon-folder-close-alt"></i>@Model.Name</a>
     </div>
     @if (Model.Folders.Any()) {
         <ul>

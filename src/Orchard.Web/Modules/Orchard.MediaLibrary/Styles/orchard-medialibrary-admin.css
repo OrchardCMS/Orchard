@@ -49,6 +49,10 @@
     float: right;
 }
 
+#media-library-toolbar label {
+    display: inline;
+}
+
 #media-library-main {
     display: table-row;
     border-bottom: 1px solid #e0e0e0;
@@ -63,8 +67,24 @@
     border-right: 1px solid #e0e0e0;
 }
     #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
-        padding-left: 16px;
     }
+
+    #button-recent {
+        display: block;
+        padding:2px;
+    }
+    
+    #button-recent:hover, #button-recent.selected  {
+        cursor: pointer;
+        background-color: #e0e0e0;
+    }
+
+        #button-recent i {
+            color: rgb(75,75,75);
+            padding-left:3px;
+            padding-right: 5px;
+            font-size:14px;
+        }
 
     .media-library-folder-title {
         box-sizing: border-box;
@@ -82,16 +102,16 @@
         background-color: #e0e0e0;
     }
 
-    .media-library-navigation-folder-icon {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAQCAYAAADwMZRfAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAHNJREFUOE/tkjkOACEIRbmTJ7H1ht6Ai1FRMA6zxAVJjJluTB6RD/xQACKyjSmuYoqrvB9ElBBCQ865lPQ1Qz0amBlSSkJEJb0KljZDw8wkxjhs93Bv6Zt4VP2a92JJ7cGa32TkO5MT62I9hjvZxRTXEDgA7+gHJFX/VbUAAAAASUVORK5CYII=');
-        background-position: left;
-        background-repeat: no-repeat;
-        padding-left: 12px;
-    }
-
     .media-library-navigation-folder-link {
         padding: 0;
     }
+
+        .media-library-navigation-folder-link i {
+            color: #808080;
+            padding-left:3px;
+            padding-right: 5px;
+            font-size:14px;
+        }
 
     .media-library-folder ul {
         margin: 0;

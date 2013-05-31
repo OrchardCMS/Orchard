@@ -9,6 +9,7 @@ using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.MediaLibrary.Services {
     public class MediaLibraryService : IMediaLibraryService {
@@ -37,24 +38,26 @@ namespace Orchard.MediaLibrary.Services {
             var taxonomy = GetMediaLocationTaxonomy();
 
             var terms = _taxonomyService.GetTerms(taxonomy.Id);
-            var result = new List<MediaFolder>();
+            var rootFolders = new List<MediaFolder>();
+            var index = new Dictionary<int, MediaFolder>();
 
              _taxonomyService.CreateHierarchy(terms, (parent, child) => {
+                 MediaFolder parentFolder;
+                 MediaFolder childFolder = CreateMediaFolder(child.TermPart);
+                 index.Add(child.TermPart.Id, childFolder);
 
                 // adding to root
-                if (parent.TermPart == null) {
-                    result.Add(CreateMediaFolder(child.TermPart));
+                if (parent.TermPart != null) {
+                    parentFolder = index.ContainsKey(parent.TermPart.Id) ? index[parent.TermPart.Id] : null;
+                    parentFolder.Folders.Add(childFolder);
                 }
                 else {
-                    var seek = result.FirstOrDefault(x => x.TermId == parent.TermPart.Id);
-                    if (seek != null) {
-                        seek.Folders.Add(CreateMediaFolder(child.TermPart));
-                    }
+                    rootFolders.Add(childFolder);
                 }
 
             });
 
-            return result;
+            return rootFolders;
         }
 
         public MediaFolder GetMediaFolder(int id) {
@@ -90,33 +93,64 @@ namespace Orchard.MediaLibrary.Services {
             return _contentManager.Query<MediaPart, MediaPartRecord>();
         }
 
-        public IEnumerable<MediaPart> GetMediaContentItemsForLocation(int? locationId, int skip, int count) {
-            if (locationId.HasValue) {
-                return _contentManager.Query<MediaPart, MediaPartRecord>()
-                                      .Where(m => m.TermPartRecord.Id == locationId)
-                                      .Join<CommonPartRecord>()
-                                      .OrderByDescending(x => x.CreatedUtc)
-                                      .Slice(skip, count)
-                                      .ToArray();
+        public IEnumerable<MediaPart> GetMediaContentItems(int folder, int skip, int count, string order, string mediaType) {
+            var query = _contentManager.Query<MediaPart>();
+
+            if (!String.IsNullOrEmpty(mediaType)) {
+                query = query.ForType(new[] { mediaType });
             }
 
-            return _contentManager.Query<MediaPart, MediaPartRecord>()
-                                    .Where(m => m.TermPartRecord == null)
-                                    .Join<CommonPartRecord>()
+            if (folder > 0) {
+                query = query.Join<MediaPartRecord>().Where(m => m.TermPartRecord.Id == folder);
+            }
+
+            switch(order) {
+                case "title":
+                    return query.Join<TitlePartRecord>()
+                                    .OrderBy(x => x.Title)
+                                    .Slice(skip, count)
+                                    .ToArray();
+
+                case "modified":
+                    return query.Join<CommonPartRecord>()
+                                    .OrderByDescending(x => x.ModifiedUtc)
+                                    .Slice(skip, count)
+                                    .ToArray();
+
+                case "published":
+                    return query.Join<CommonPartRecord>()
+                                    .OrderByDescending(x => x.PublishedUtc)
+                                    .Slice(skip, count)
+                                    .ToArray();
+
+                default:
+                    return query.Join<CommonPartRecord>()
                                     .OrderByDescending(x => x.CreatedUtc)
                                     .Slice(skip, count)
                                     .ToArray();
+            }
         }
 
-        public int GetMediaContentItemsCountForLocation(int? locationId) {
-            if (locationId.HasValue) {
-                return _contentManager.Query<MediaPart, MediaPartRecord>()
-                                      .Where(m => m.TermPartRecord.Id == locationId)
-                                      .Count();
+        public IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType) {
+            return GetMediaContentItems(-1, skip, count, order, mediaType);
+        }
+
+        public int GetMediaContentItemsCount(int folder, string mediaType) {
+            var query = _contentManager.Query<MediaPart>();
+
+            if (!String.IsNullOrEmpty(mediaType)) {
+                query = query.ForType(new[] { mediaType });
             }
-            return _contentManager.Query<MediaPart, MediaPartRecord>()
-                                    .Where(m => m.TermPartRecord == null)
-                                    .Count();
+
+            if (folder > 0) {
+                query = query.Join<MediaPartRecord>().Where(m => m.TermPartRecord.Id == folder);
+            }
+
+            return query.Count();
+        }
+
+        public int GetMediaContentItemsCount(string mediaType) {
+            return GetMediaContentItemsCount(-1, mediaType);
         }
 
         public MediaPart ImportStream(int termId, Stream stream, string filename) {
