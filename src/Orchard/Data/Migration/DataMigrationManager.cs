@@ -129,7 +129,8 @@ namespace Orchard.Data.Migration {
 
                     _transactionManager.RequireNew();
                 }
-                catch {
+                catch(Exception e) {
+                    Logger.Error(e, "Error while running migration version {0} for {1}", current, feature);
                     _transactionManager.Cancel();
                 }
 
