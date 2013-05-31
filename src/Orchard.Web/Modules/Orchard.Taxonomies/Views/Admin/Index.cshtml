@@ -31,19 +31,28 @@
 			</thead>
 			@foreach (var taxonomyEntry in Model.Taxonomies) {
 			ti = taxonomyIndex;
-			<tr>
+			<tr class="@(taxonomyEntry.Taxonomy.IsInternal ? "internal" : null)">
 				<td>
 					<input type="hidden" value="@Model.Taxonomies[taxonomyIndex].Taxonomy.Id" name="@Html.NameOf(m => m.Taxonomies[ti].Taxonomy.Id)"/>
-					<input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"/>
+					@if (!taxonomyEntry.Taxonomy.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Taxonomies[ti].IsChecked)"/>
+                    }
 				</td>
 				<td>
-					@Html.ActionLink(taxonomyEntry.Taxonomy.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { })
+					@if (!taxonomyEntry.Taxonomy.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+                        @Html.ActionLink(taxonomyEntry.Taxonomy.Name, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { })
+                    }   
+                    else {
+                        @Html.ItemDisplayText(taxonomyEntry.Taxonomy)
+                    } 
 				</td>
 				<td>
-					@Html.ItemEditLink(T("Edit").Text, taxonomyEntry.Taxonomy) |
-					@Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { }) |
-					@Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Taxonomy.Id }, new object { }) |
+                    @if (!taxonomyEntry.Taxonomy.IsInternal || Authorizer.Authorize(Orchard.Security.StandardPermissions.SiteOwner)) {
+					@Html.ItemEditLink(T("Edit").Text, taxonomyEntry.Taxonomy) <text>|</text>
+					@Html.ActionLink(T("Terms").Text, "Index", "TermAdmin", new { taxonomyId = taxonomyEntry.Taxonomy.Id }, new object { }) <text>|</text>
+					@Html.ActionLink(T("Delete").Text, "Delete", new { id = taxonomyEntry.Taxonomy.Id }, new object { }) <text>|</text>
 					@Html.ActionLink(T("Import").Text, "Import", new { id = taxonomyEntry.Taxonomy.Id }, new object { })
+                    }
 				</td>
 			</tr>
 			   taxonomyIndex++;

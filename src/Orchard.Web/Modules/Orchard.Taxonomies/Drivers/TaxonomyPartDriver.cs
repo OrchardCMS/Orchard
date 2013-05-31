@@ -57,6 +57,10 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Exporting(TaxonomyPart part, ExportContentContext context) {
+            if (part.IsInternal) {
+                context.Exclude = true;
+            }
+
             context.Element(part.PartDefinition.Name).SetAttributeValue("TermTypeName", part.TermTypeName);
         }
 

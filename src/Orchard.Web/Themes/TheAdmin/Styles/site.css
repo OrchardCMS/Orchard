@@ -895,6 +895,11 @@ table.items td .add
     float: right;
 }
 
+table.items tr.internal *{
+    background-color: #eee;
+    color: grey; 
+}
+
 /* Content item lists
 ----------------------------------------------------------*/
 .contentItems {
