@@ -66,7 +66,9 @@
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
-    <Content Include="Scripts\jquery.colorbox-min.js" />
+    <Content Include="Scripts\jquery.colorbox.min.js">
+      <DependentUpon>jquery.colorbox.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.colorbox.js" />
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.fileupload.min.js">
