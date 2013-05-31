@@ -20,7 +20,7 @@ namespace Orchard.Users.Services {
     public class MembershipService : IMembershipService {
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageService _messageService;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
+        private readonly IUserEventHandler _userEventHandlers;
         private readonly IEncryptionService _encryptionService;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
@@ -28,7 +28,7 @@ namespace Orchard.Users.Services {
         public MembershipService(
             IOrchardServices orchardServices, 
             IMessageService messageService, 
-            IEnumerable<IUserEventHandler> userEventHandlers, 
+            IUserEventHandler userEventHandlers, 
             IClock clock, 
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
@@ -76,9 +76,7 @@ namespace Orchard.Users.Services {
             }
 
             var userContext = new UserContext {User = user, Cancel = false, UserParameters = createUserParams};
-            foreach(var userEventHandler in _userEventHandlers) {
-                userEventHandler.Creating(userContext);
-            }
+            _userEventHandlers.Creating(userContext);
 
             if(userContext.Cancel) {
                 return null;
@@ -86,11 +84,9 @@ namespace Orchard.Users.Services {
 
             _orchardServices.ContentManager.Create(user);
 
-            foreach ( var userEventHandler in _userEventHandlers ) {
-                userEventHandler.Created(userContext);
-                if (user.RegistrationStatus == UserStatus.Approved) {
-                    userEventHandler.Approved(user);
-                }
+            _userEventHandlers.Created(userContext);
+            if (user.RegistrationStatus == UserStatus.Approved) {
+                _userEventHandlers.Approved(user);
             }
 
             if ( registrationSettings != null  
