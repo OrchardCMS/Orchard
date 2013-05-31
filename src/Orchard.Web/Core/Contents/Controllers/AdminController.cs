@@ -343,6 +343,13 @@ namespace Orchard.Core.Contents.Controllers {
             var importContentSession = new ImportContentSession(_contentManager);
 
             var element = _contentManager.Export(contentItem);
+
+            // if a handler prevents this element from being exported, it can't be cloned
+            if (element == null) {
+                Services.Notifier.Warning(T("Could not clone the content item."));
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
+            }
+
             var elementId = element.Attribute("Id");
             var copyId = elementId.Value + "-copy";
             elementId.SetValue(copyId);

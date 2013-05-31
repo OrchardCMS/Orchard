@@ -703,6 +703,10 @@ namespace Orchard.ContentManagement {
                 contentHandler.Exported(context);
             }
 
+            if (context.Exclude) {
+                return null;
+            }
+
             context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
             if (contentItem.IsPublished()) {
                 context.Data.SetAttributeValue("Status", Published);
