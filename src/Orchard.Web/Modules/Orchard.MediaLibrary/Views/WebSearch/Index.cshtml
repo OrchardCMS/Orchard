@@ -1,4 +1,7 @@
 ﻿@using System.Text
+@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.UI.Notify
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -16,12 +19,20 @@
     @Display.HeadScripts()
     @Display.HeadLinks()
     @Display.StyleSheetLinks()
+    
+    @{
+        var apiKey = WorkContext.CurrentSite.As<WebSearchSettingsPart>().ApiKey;
+    }
 </head>
 <body >
-    
     <div id="websearch-main">
         <!-- Register for an API account on https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44 -->
         
+        @if (String.IsNullOrWhiteSpace(apiKey)) {
+            <div id="message-api">
+                @T("You need to define an API Key in the Media settings before being able to use this feature.")
+            </div>
+        }
         <form data-bind="submit: doSearch">
             <div class="query-container">
                 <div id="icon">
@@ -118,11 +129,11 @@
                 self.doSearch = function () {
                     var query = $('#query > input').val();
                     var url = 'https://api.datamarket.azure.com/Bing/Search/Image?$format=json&Query=%27' + encodeURIComponent(query) + '%27';
-
+                    
                     $.ajax({
                         type: "POST",
                         url: url,
-                        headers: { "Authorization": "Basic @Convert.ToBase64String(Encoding.ASCII.GetBytes(":" + "FqMaK2bg6vxvFBOFFNF2uS8hHFWo3t1PM3YNxVswx7o="))" }
+                        headers: { "Authorization": "Basic @Convert.ToBase64String(Encoding.ASCII.GetBytes(":" + @apiKey))" }
                     }).done(function (msg) {
                         var results = msg.d.results;
                         self.clearSelection();

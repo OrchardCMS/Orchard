@@ -134,8 +134,10 @@
     <Compile Include="Handlers\MediaLibraryPickerFieldHandler.cs" />
     <Compile Include="Handlers\MediaPartHandler.cs" />
     <Compile Include="Drivers\MediaPartDriver.cs" />
+    <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AudioPart.cs" />
+    <Compile Include="Models\WebSearchSettingsPart.cs" />
     <Compile Include="Models\ImagePart.cs" />
     <Compile Include="Models\DocumentPart.cs" />
     <Compile Include="Models\VideoPart.cs" />
@@ -300,6 +302,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media-OEmbed.Thumbnail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\WebSearch.WebSearchSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

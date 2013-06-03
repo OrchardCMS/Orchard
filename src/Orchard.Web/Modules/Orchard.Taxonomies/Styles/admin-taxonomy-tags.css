@@ -109,14 +109,16 @@ ul.tagit li.tagit-choice a.tagit-close:hover {
     color: #535353;
 }
 
-ul.tagit input[type="text"] {
-    -moz-box-sizing: border-box;
-    border: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: inherit !important;
-    outline: none;
-}
+    ul.tagit input[type="text"] {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: inherit !important;
+        outline: none;
+    }
 
 .tagit-hiddenSelect {
     display:none;

@@ -162,11 +162,13 @@
     margin-right: 40px;
 }
 
-#query input {
-    width: 100%;
-    box-sizing: border-box;
-    height: 28px;
-}
+    #query input {
+        width: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        height: 28px;
+    }
 
 #icon {
     float: right;
@@ -188,4 +190,14 @@
 
 .actions {
     margin-top: 5px;
+}
+
+#message-api {
+    background: #fdf5bc; /* yellow */
+    border: 1px solid #ffea9b;
+    margin: 5px;
+    padding: 5px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }

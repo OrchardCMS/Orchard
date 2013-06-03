@@ -83,7 +83,7 @@ Pixels   EMs         Percent    Points
 24px     1.846em     184.6%     18pt
 */
 
-html, body { height:100%; box-sizing: border-box; }
+html, body { height:100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
 html {
     color:#333;
