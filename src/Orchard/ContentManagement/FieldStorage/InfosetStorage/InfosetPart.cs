@@ -11,6 +11,19 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         public Infoset Infoset { get; set; }
         public Infoset VersionInfoset { get; set; }
 
+
+        public string Get<TPart>(string fieldName) {
+            return Get<TPart>(fieldName, null);
+        }
+
+        public string Get<TPart>(string fieldName, string valueName) {
+            return Get(typeof(TPart).Name, fieldName, valueName);
+        }
+
+        public string Get(string partName, string fieldName) {
+            return Get(partName, fieldName, null);
+        }
+
         public string Get(string partName, string fieldName, string valueName) {
             var partElement = Infoset.Element.Element(partName);
             if (partElement == null) {
@@ -28,6 +41,18 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
                 return null;
             }
             return valueAttribute.Value;
+        }
+
+        public void Set<TPart>(string fieldName, string valueName, string value) {
+            Set<TPart>(fieldName, value);
+        }
+
+        public void Set<TPart>(string fieldName, string value) {
+            Set(typeof(TPart).Name, fieldName, null, value);
+        }
+
+        public void Set(string partName, string fieldName, string value) {
+            Set(partName, fieldName, null, value);
         }
 
         public void Set(string partName, string fieldName, string valueName, string value) {
