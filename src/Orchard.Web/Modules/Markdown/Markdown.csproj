@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,12 +72,15 @@
     <Content Include="Scripts\jquery.textarearesizer.min.js">
       <DependentUpon>jquery.textarearesizer.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\Markdown.Converter.js" />
     <Content Include="Scripts\Markdown.Converter.min.js">
       <DependentUpon>Markdown.Converter.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\Markdown.Editor.js" />
     <Content Include="Scripts\Markdown.Editor.min.js">
       <DependentUpon>Markdown.Editor.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\Markdown.Sanitizer.js" />
     <Content Include="Scripts\Markdown.Sanitizer.min.js">
       <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
     </Content>
@@ -85,9 +92,6 @@
     <Content Include="Styles\admin-markdown.css" />
     <Content Include="Content\Admin\Images\wmd-buttons.png" />
     <Content Include="Module.txt" />
-    <Content Include="Scripts\Markdown.Converter.js" />
-    <Content Include="Scripts\Markdown.Editor.js" />
-    <Content Include="Scripts\Markdown.Sanitizer.js" />
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -120,6 +124,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\orchard-markdown.min.js.map">
+      <DependentUpon>orchard-markdown.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Scripts\Markdown.Converter.min.js.map">
       <DependentUpon>Markdown.Converter.js</DependentUpon>
     </Content>
@@ -132,11 +141,6 @@
   <ItemGroup>
     <Content Include="Scripts\Markdown.Sanitizer.min.js.map">
       <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown.min.js.map">
-      <DependentUpon>orchard-markdown.js</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup>
