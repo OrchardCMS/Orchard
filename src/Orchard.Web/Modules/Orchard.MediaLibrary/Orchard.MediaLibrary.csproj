@@ -306,6 +306,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\WebSearch.WebSearchSettings.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media.Raw.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
