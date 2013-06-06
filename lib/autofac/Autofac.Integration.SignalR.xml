@@ -32,14 +32,6 @@
             <param name="serviceType">Type of the service.</param>
             <returns>The list of instances if any were resolved; otherwise, an empty list.</returns>
         </member>
-        <member name="M:Autofac.Integration.SignalR.AutofacDependencyResolver.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
-            <summary>
-            Retrieve registrations for an unregistered service, to be used by the container.
-            </summary>
-            <param name="service">The service that was requested.</param>
-            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
-            <returns>Registrations providing the service.</returns>
-        </member>
         <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.Current">
             <summary>
             Gets the Autofac implementation of the dependency resolver.
@@ -48,12 +40,6 @@
         <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.LifetimeScope">
             <summary>
             Gets the <see cref="T:Autofac.ILifetimeScope"/> that was provided to the constructor.
-            </summary>
-        </member>
-        <member name="P:Autofac.Integration.SignalR.AutofacDependencyResolver.IsAdapterForIndividualComponents">
-            <summary>
-            Gets whether the registrations provided by this source are 1:1 adapters on top
-            of other components (I.e. like Meta, Func or Owned.)
             </summary>
         </member>
         <member name="T:Autofac.Integration.SignalR.RegistrationExtensions">
