@@ -56,6 +56,9 @@ namespace Orchard.Roles.Services {
         }
 
         public void CreateRole(string roleName) {
+            if (GetRoleByName(roleName) != null)
+                return;
+
             _roleRepository.Create(new RoleRecord { Name = roleName });
             TriggerSignal();
         }

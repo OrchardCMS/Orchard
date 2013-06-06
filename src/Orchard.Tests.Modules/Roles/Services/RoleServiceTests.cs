@@ -86,5 +86,20 @@ namespace Orchard.Tests.Modules.Roles.Services {
                 Assert.That(result.Count(), Is.EqualTo(4));
             }
         }
+
+        [Test]
+        public void ShouldNotCreateARoleTwice() {
+            var service = _container.Resolve<IRoleService>();
+            service.CreateRole("one");
+            service.CreateRole("two");
+            service.CreateRole("one");
+
+            ClearSession();
+
+            var roles = service.GetRoles();
+            Assert.That(roles.Count(), Is.EqualTo(2));
+            Assert.That(roles, Has.Some.Property("Name").EqualTo("one"));
+            Assert.That(roles, Has.Some.Property("Name").EqualTo("two"));
+        }
     }
 }
