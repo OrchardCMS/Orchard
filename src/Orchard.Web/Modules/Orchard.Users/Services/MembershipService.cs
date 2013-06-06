@@ -63,7 +63,7 @@ namespace Orchard.Users.Services {
                 user.Record.EmailStatus = UserStatus.Approved;
             }
 
-            var userContext = new UserContext {User = user, Cancel = false};
+            var userContext = new UserContext {User = user, Cancel = false, UserParameters = createUserParams};
             foreach(var userEventHandler in _userEventHandlers) {
                 userEventHandler.Creating(userContext);
             }
