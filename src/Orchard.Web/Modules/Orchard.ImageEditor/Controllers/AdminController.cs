@@ -41,6 +41,19 @@ namespace Orchard.ImageEditor.Controllers {
         }
 
         [Themed(false)]
+        public ActionResult Touch(string src) {
+            var localPath = _storageProvider.GetLocalPath(src);
+
+            if (_storageProvider.GetFile(localPath) == null) {
+                return HttpNotFound();
+            }
+
+            var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.Resource == src).Slice(0, 1).FirstOrDefault();
+
+            return Json(media != null);
+        }
+
+        [Themed(false)]
         public ActionResult Edit(string src) {
             var localPath = _storageProvider.GetLocalPath(src);
 

@@ -1,6 +1,16 @@
 ﻿<Placement>
   <Place Parts_Media_Edit="Content:6"/>
 
+  <!-- Raw Media -->
+  <Match DisplayType="Raw">
+    <Place Parts_Image="Content"
+           Parts_Video="Content"
+           Parts_Audio="Content"
+           Parts_Document="Content"
+           Parts_OEmbed="Content"
+            />
+  </Match>
+
   <!-- MediaPart -->
   <Match DisplayType="SummaryAdmin">
     <Place Parts_Media_SummaryAdmin="Meta:5"

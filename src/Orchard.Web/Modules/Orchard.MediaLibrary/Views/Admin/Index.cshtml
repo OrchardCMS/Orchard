@@ -418,7 +418,7 @@
 
             $("#media-library-main-selection-select > .button-cancel").on('click', function() {
                 if (parent.$.colorbox) {
-                    parent.$.colorbox.selectedData = [];
+                    parent.$.colorbox.selectedData = null;
                     parent.$.colorbox.close();
                 };
             });
