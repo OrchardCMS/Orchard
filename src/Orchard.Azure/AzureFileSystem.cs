@@ -17,8 +17,8 @@ namespace Orchard.Azure {
         public string ContainerName { get; protected set; }
 
         private readonly CloudStorageAccount _storageAccount;
-        private readonly string _root;
-        private readonly string _absoluteRoot;
+        protected readonly string _root;
+        protected readonly string _absoluteRoot;
         public CloudBlobClient BlobClient { get; private set; }
         public CloudBlobContainer Container { get; private set; }
 

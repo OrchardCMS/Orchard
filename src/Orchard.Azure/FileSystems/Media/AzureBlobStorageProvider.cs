@@ -38,5 +38,23 @@ namespace Orchard.Azure.FileSystems.Media {
                 }
             }
         }
+
+        /// <summary>
+        /// Retrieves the local path for a given url within the storage provider.
+        /// </summary>
+        /// <param name="url">The public url of the media.</param>
+        /// <returns>The local path.</returns>
+        public string GetLocalPath(string url) {
+            if (url.StartsWith(_absoluteRoot)) {
+                return url.Substring(_absoluteRoot.Length);
+            }
+
+            return url;
+        }
+
+        public string GetRelativePath(string path) {
+            return GetPublicUrl(path);
+        }
+
     }
 }

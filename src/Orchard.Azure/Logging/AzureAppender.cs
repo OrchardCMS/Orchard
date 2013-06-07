@@ -1,7 +1,5 @@
 ﻿using System;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics.Management;
-using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.Diagnostics;
 using log4net.Appender;
 using log4net.Core;
 
@@ -13,21 +11,16 @@ namespace Orchard.Azure.Logging {
     /// </summary>
     public class AzureAppender : AppenderSkeleton {
         private const string WadConnectionString = "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString";
-        
         public AzureAppender() {
             
-            var cloudStorageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue(WadConnectionString));
+            var defaultDiagnostics = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            var period = TimeSpan.FromMinutes(1d);
+            
+            defaultDiagnostics.Directories.ScheduledTransferPeriod = period;
+            defaultDiagnostics.Logs.ScheduledTransferPeriod = period;
+            defaultDiagnostics.WindowsEventLog.ScheduledTransferPeriod = period;
 
-            var roleInstanceDiagnosticManager = cloudStorageAccount.CreateRoleInstanceDiagnosticManager(
-                RoleEnvironment.DeploymentId,
-                RoleEnvironment.CurrentRoleInstance.Role.Name,
-                RoleEnvironment.CurrentRoleInstance.Id);
-    
-            var diagnosticMonitorConfiguration = roleInstanceDiagnosticManager.GetCurrentConfiguration();
-            diagnosticMonitorConfiguration.Directories.ScheduledTransferPeriod = TimeSpan.FromMinutes(1d);
-            diagnosticMonitorConfiguration.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1d);
-
-            roleInstanceDiagnosticManager.SetCurrentConfiguration(diagnosticMonitorConfiguration);
+            DiagnosticMonitor.Start(WadConnectionString, defaultDiagnostics);
         } 
 
         protected override void Append(LoggingEvent loggingEvent) {
