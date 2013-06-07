@@ -29,5 +29,26 @@ namespace Orchard.Tests.Modules.Autoroute {
 
             Assert.That(slugService.Slugify("a  -  b - c -- d"), Is.EqualTo("a-b-c-d"));
         }
+
+        [Test]
+        public void ShouldChangePercentSymbolsToHyphans() {
+            DefaultSlugService slugService = new DefaultSlugService(new Mock<ISlugEventHandler>().Object);
+
+            Assert.That(slugService.Slugify("a%d"), Is.EqualTo("a-d"));
+        }
+
+        [Test]
+        public void ShouldChangeDotSymbolsToHyphans() {
+            DefaultSlugService slugService = new DefaultSlugService(new Mock<ISlugEventHandler>().Object);
+
+            Assert.That(slugService.Slugify("a,d"), Is.EqualTo("a-d"));
+        }
+
+        [Test]
+        public void ShouldMakeSureFunkycharactersAndHyphansOnlyReturnSingleHyphan() {
+            DefaultSlugService slugService = new DefaultSlugService(new Mock<ISlugEventHandler>().Object);
+
+            Assert.That(slugService.Slugify("a-%-.d"), Is.EqualTo("a-d"));
+        }
     }
 }
