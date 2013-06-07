@@ -1,6 +1,7 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
 @{
 	Script.Require("jQuery");
+    Script.Require("ShapesBase");
     Script.Include("setup.js");
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
@@ -19,11 +20,11 @@
     </div>
     <div>
         <label for="AdminPassword">@T("Choose a password:")</label>
-        @Html.PasswordFor(svm => svm.AdminPassword)
+        @Html.PasswordFor(svm => svm.AdminPassword, new { @class = "text-box single-line" })
     </div>
     <div>
         <label for="ConfirmAdminPassword">@T("Confirm the password:")</label>
-        @Html.PasswordFor(svm => svm.ConfirmPassword)
+        @Html.PasswordFor(svm => svm.ConfirmPassword, new { @class = "text-box single-line" })
     </div>
 </fieldset>
 if (!Model.DatabaseIsPreconfigured) {
