@@ -105,7 +105,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         private bool IsAuthorizedToManageWidgets() {
-            return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets"));
+            return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets."));
         }
 
 
