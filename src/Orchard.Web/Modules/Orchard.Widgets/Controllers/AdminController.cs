@@ -49,6 +49,12 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId) {
+            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
+            if (currentTheme == null) {
+                Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
+                return RedirectToAction("Index", "Admin", new { area = "Dashboard" });
+            }
+
             IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
 
             if (!layers.Any()) {
@@ -65,7 +71,6 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             IEnumerable<string> allZones = _widgetsService.GetZones();
             IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
 
