@@ -7,6 +7,7 @@ using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
+using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
@@ -45,7 +46,8 @@ namespace Orchard.Widgets.Filters {
             if (workContext == null ||
                 workContext.Layout == null ||
                 workContext.CurrentSite == null ||
-                AdminFilter.IsApplied(filterContext.RequestContext)) {
+                AdminFilter.IsApplied(filterContext.RequestContext) ||
+                !ThemeFilter.IsApplied(filterContext.RequestContext)) {
                 return;
             }
 
