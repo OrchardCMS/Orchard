@@ -3,6 +3,7 @@
 namespace Orchard.Workflows.ViewModels {
     public class WorkflowDefinitionViewModel {
         public int Id { get; set; }
+        public string Name { get; set; }
         public string JsonData { get; set; }
     }
 

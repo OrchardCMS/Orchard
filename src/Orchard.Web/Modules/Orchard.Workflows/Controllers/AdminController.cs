@@ -208,7 +208,8 @@ namespace Orchard.Workflows.Controllers {
             }
 
             var workflowDefinitionModel = new WorkflowDefinitionViewModel {
-                Id = workflowDefinitionRecord.Id
+                Id = workflowDefinitionRecord.Id,
+                Name = workflowDefinitionRecord.Name
             };
 
             dynamic workflow = new JObject();

@@ -3,7 +3,7 @@
 @using Orchard.Workflows.ViewModels;
 
 @{
-    Layout.Title = @T("Edit Workflow");
+    Layout.Title = @T("Edit Workflow {0}", Model.WorkflowDefinition.Name);
     Style.Require("WorkflowsAdmin");
     Style.Require("WorkflowsActivities");
     Script.Require("jQueryUI");
