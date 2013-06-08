@@ -150,6 +150,9 @@ namespace Orchard.Tests.ContentManagement {
             result = queryWhere(x => x.Like("StringStuff", "bc", HqlMatchMode.Anywhere));
             Assert.That(result.Count(), Is.EqualTo(1));
 
+            result = queryWhere(x => x.Like("StringStuff", "bc'", HqlMatchMode.Anywhere));
+            Assert.That(result.Count(), Is.EqualTo(0));
+
             result = queryWhere(x => x.Like("StringStuff", "ab", HqlMatchMode.Anywhere));
             Assert.That(result.Count(), Is.EqualTo(1));
 
