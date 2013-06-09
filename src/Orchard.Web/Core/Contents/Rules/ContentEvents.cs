@@ -27,7 +27,7 @@ namespace Orchard.Core.Contents.Rules {
         }
 
         private string FormatPartsList(dynamic context) {
-            var contenttypes = context.Properties["contenttypes"];
+            var contenttypes = context.Properties["ContentTypes"];
 
             if (String.IsNullOrEmpty(contenttypes)) {
                 return T("Any").Text;
@@ -37,7 +37,7 @@ namespace Orchard.Core.Contents.Rules {
         }
 
         private static bool ContentHasPart(dynamic context) {
-            string contenttypes = context.Properties["contenttypes"];
+            string contenttypes = context.Properties["ContentTypes"];
             var content = context.Tokens["Content"] as IContent;
 
             // "" means 'any'
