@@ -706,14 +706,14 @@ namespace Orchard.Core.Shapes {
                 Output.Write(itemOutput);
 
                 if (itemTag != null) {
-                    Output.Write(itemTag.ToString(TagRenderMode.EndTag));
+                    Output.WriteLine(itemTag.ToString(TagRenderMode.EndTag));
                 }
 
                 ++index;
             }
 
             if (listTag != null) {
-                Output.Write(listTag.ToString(TagRenderMode.EndTag));
+                Output.WriteLine(listTag.ToString(TagRenderMode.EndTag));
             }
         }
 
