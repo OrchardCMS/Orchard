@@ -36,6 +36,8 @@ namespace Orchard.DisplayManagement.Implementation {
             ShapeDescriptor shapeDescriptor;
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
+            parameters = parameters ?? Arguments.Empty();
+
             var creatingContext = new ShapeCreatingContext {
                 New = this,
                 ShapeFactory = this,
