@@ -97,7 +97,15 @@ namespace Orchard.Mvc.Routes {
                         IsHttpRoute = routeDescriptor is HttpRouteDescriptor,
                         SessionState = sessionStateBehavior
                     };
-                    _routeCollection.Add(routeDescriptor.Name, shellRoute);
+
+                    try {
+                        _routeCollection.Add(routeDescriptor.Name, shellRoute);
+                    }
+                    catch(ArgumentException) {
+                        // Named routes can be added multiple times in the case of a module
+                        // loaded in multiple tenants. There is no way to ensure a named route
+                        // is already registered, thus catching the specific exception.
+                    }
                 }
             }
         }
