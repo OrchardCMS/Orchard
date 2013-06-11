@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Fields.Fields {
+namespace Orchard.MediaPicker.Fields {
     public class MediaGalleryField : ContentField {
         internal LazyField<ICollection<MediaGalleryItem>> _mediaGalleryItems = new LazyField<ICollection<MediaGalleryItem>>();
 

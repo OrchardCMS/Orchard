@@ -1,15 +1,15 @@
 ﻿using System;
-using Orchard.Fields.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Fields.Fields;
-using Orchard.Fields.ViewModels;
 using Orchard.Localization;
+using Orchard.MediaPicker.Fields;
+using Orchard.MediaPicker.Settings;
+using Orchard.MediaPicker.ViewModels;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Fields.Drivers {
+namespace Orchard.MediaPicker.Drivers {
     public class MediaGalleryFieldDriver : ContentFieldDriver<MediaGalleryField> {
         private readonly IJsonConverter _jsonConverter;
 

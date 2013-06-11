@@ -1,5 +1,5 @@
 ﻿jQuery(function ($) {
-    $("form").bind("orchard-admin-pickimage-open", function (ev, data) {
+    $("form").on("orchard-admin-pickimage-open", function (ev, data) {
         data = data || {};
         // the popup will be doing full page reloads, so will not be able to retain
         // a pointer to the callback. We will generate a temporary callback

@@ -6,7 +6,7 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Fields.Settings {
+namespace Orchard.MediaPicker.Settings {
     public class MediaGalleryFieldEditorEvents : ContentDefinitionEditorEventsBase {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {

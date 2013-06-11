@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Fields.Fields;
+using Orchard.MediaPicker.Fields;
 using Orchard.Services;
 
-namespace Orchard.Fields.Handlers {
+namespace Orchard.MediaPicker.Handlers {
     public class MediaGalleryFieldHandler : ContentHandler {
         private readonly IJsonConverter _jsonConverter;
         private readonly IContentDefinitionManager _contentDefinitionManager;

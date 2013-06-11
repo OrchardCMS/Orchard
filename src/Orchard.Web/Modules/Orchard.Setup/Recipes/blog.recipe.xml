@@ -11,7 +11,7 @@
 
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
                    XmlRpc,Orchard.Blogs.RemotePublishing,Orchard.ContentPicker, 
-                   TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
+                   TinyMce,Orchard.MediaLibrary,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Orchard.Warmup,

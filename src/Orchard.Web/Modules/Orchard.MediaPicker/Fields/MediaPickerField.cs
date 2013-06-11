@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 
-namespace Orchard.Fields.Fields {
+namespace Orchard.MediaPicker.Fields {
     public class MediaPickerField : ContentField {
         public string Url {
             get { return Storage.Get<string>(); }

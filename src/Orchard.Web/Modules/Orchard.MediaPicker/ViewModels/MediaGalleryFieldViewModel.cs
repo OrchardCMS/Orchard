@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Orchard.Fields.Fields;
+using Orchard.MediaPicker.Fields;
 
-namespace Orchard.Fields.ViewModels {
+namespace Orchard.MediaPicker.ViewModels {
 
     public class MediaGalleryFieldViewModel {
 
