@@ -241,6 +241,7 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 #site {
     font-size:1.385em; /*18px*/
+    overflow: hidden;
 }
 #site a, #site a:visited, #site a:active {
     color:#fff;
