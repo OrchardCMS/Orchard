@@ -11,6 +11,7 @@ namespace Orchard.Scripting.CSharp {
             
             ContentDefinitionManager.AlterPartDefinition("ScriptValidationPart", cfg => cfg
                 .Attachable()
+                .WithDescription("Provides a way to validate content items using C#.")
                 );
 
             return 1;
