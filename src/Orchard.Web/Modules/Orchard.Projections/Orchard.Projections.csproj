@@ -130,6 +130,11 @@
     <Compile Include="Models\NavigationQueryPart.cs" />
     <Compile Include="Models\NavigationQueryPartRecord.cs" />
     <Compile Include="Models\QueryPart.cs" />
+    <Compile Include="Providers\Layouts\RawLayout.cs" />
+    <Compile Include="Providers\Layouts\RawLayoutForms.cs" />
+    <Compile Include="Providers\Layouts\RawShapes.cs" />
+    <Compile Include="Providers\Layouts\ShapeLayout.cs" />
+    <Compile Include="Providers\Layouts\ShapeLayoutForms.cs" />
     <Compile Include="Providers\Properties\CustomValueProperties.cs" />
     <Compile Include="Navigation\NavigationQueryProvider.cs" />
     <Compile Include="Shapes.cs" />
