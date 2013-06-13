@@ -240,8 +240,15 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     width:40px;
 }
 #site {
-    font-size:1.385em; /*18px*/
+    font-size: 1.385em; /*18px*/
+}
+#site a {
+    width: 186px;
+    white-space: nowrap;
     overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
 #site a, #site a:visited, #site a:active {
     color:#fff;
