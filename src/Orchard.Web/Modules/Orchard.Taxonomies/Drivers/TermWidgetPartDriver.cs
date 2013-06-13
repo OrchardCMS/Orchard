@@ -48,7 +48,7 @@ namespace Orchard.Taxonomies.Drivers {
                     var results = query.Join<CommonPartRecord>().OrderByDescending(orderBy);
 
                     if(!String.IsNullOrWhiteSpace(part.ContentType)) {
-                        results = results.Where(x => x.ContentItemRecord.ContentType.Name == part.ContentType);
+                        results = results.ForType(part.ContentType).Join<CommonPartRecord>();
                     }
 
                     // build the Summary display for each content item
