@@ -283,6 +283,12 @@ namespace Orchard.OutputCache.Filters
 
             // ignore error results from cache
             if (filterContext.HttpContext.Response.StatusCode != (int)HttpStatusCode.OK) {
+
+                // Never cache non-200 responses.
+                filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                filterContext.HttpContext.Response.Cache.SetNoStore();
+                filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
+                
                 _filter = null;
                 return;
             }
