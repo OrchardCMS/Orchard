@@ -155,6 +155,8 @@ namespace Orchard.Modules.Controllers {
                 Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
             }
 
+            Services.Notifier.Information(T("The recipe {0} was executed successfully.", recipe.Name));
+            
             return RedirectToAction("Recipes");
 
         }
