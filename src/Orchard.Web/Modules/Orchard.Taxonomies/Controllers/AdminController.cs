@@ -55,7 +55,7 @@ namespace Orchard.Taxonomies.Controllers {
                         return new HttpUnauthorizedResult();
 
                     foreach (var entry in checkedEntries) {
-                        _taxonomyService.DeleteTaxonomy(entry.Taxonomy);
+                        _taxonomyService.DeleteTaxonomy(_taxonomyService.GetTaxonomy(entry.Id));
                     }
                     break;
 
@@ -187,7 +187,10 @@ namespace Orchard.Taxonomies.Controllers {
 
         private static TaxonomyEntry CreateTaxonomyEntry(TaxonomyPart taxonomy) {
             return new TaxonomyEntry {
-                Taxonomy = taxonomy,
+                Id = taxonomy.Id,
+                Name = taxonomy.Name,
+                IsInternal = taxonomy.IsInternal,
+                ContentItem = taxonomy.ContentItem,
                 IsChecked = false,
             };
         }

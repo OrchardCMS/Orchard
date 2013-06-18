@@ -59,7 +59,17 @@ namespace Orchard.Taxonomies {
                 .WithSetting("Stereotype", "Widget")
             );
 
-            return 1;
+            ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
+               cfg => cfg
+                   .WithPart("TaxonomyNavigationPart")
+                   .WithPart("MenuPart")
+                   .WithPart("CommonPart")
+                   .DisplayedAs("Taxonomy Link")
+                   .WithSetting("Description", "Injects menu items from a Taxonomy")
+                   .WithSetting("Stereotype", "MenuItem")
+               );
+
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -74,6 +84,12 @@ namespace Orchard.Taxonomies {
                );
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("TaxonomyPartRecord", table => table.AddColumn<bool>("IsInternal"));
+
+            return 3;
         }
     }
 }

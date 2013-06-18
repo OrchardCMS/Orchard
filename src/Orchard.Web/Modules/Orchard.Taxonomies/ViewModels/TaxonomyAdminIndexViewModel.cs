@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.Taxonomies.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Taxonomies.ViewModels {
     public class TaxonomyAdminIndexViewModel {
@@ -8,7 +8,10 @@ namespace Orchard.Taxonomies.ViewModels {
     }
 
     public class TaxonomyEntry {
-        public TaxonomyPart Taxonomy { get; set; }
+        public int Id { get; set; }
+        public bool IsInternal { get; set; }
+        public string Name { get; set; }
+        public ContentItem ContentItem { get; set; }
         public bool IsChecked { get; set; }
     }
 
