@@ -16,7 +16,8 @@ namespace Orchard.Workflows.Activities {
         public Localizer T { get; set; }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return true;
+            var url = activityContext.GetState<string>("Url");
+            return !string.IsNullOrWhiteSpace(url);
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -38,7 +39,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Redirect to the specified URL."); }
+            get { return T("Redirects to the specified URL."); }
         }
 
         public override string Form {
