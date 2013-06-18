@@ -5,8 +5,8 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.0
 Category: Content
-Description: Description for the module
+Description: Provides tools to create custom workflows.
 Features:
     Orchard.Workflows:
-        Description: Description for feature Orchard.Workflows.
-		Dependencies: Orchard.Tokens, Orchard.Forms, Orchard.jQuery, Orchard.Roles, Orchard.Comments, Orchard.Scripting.CSharp
+        Description: Provides tools to create custom workflows.
+        Dependencies: Orchard.Tokens, Orchard.Forms, Orchard.jQuery, Orchard.Roles, Orchard.Comments, Orchard.Scripting.CSharp
