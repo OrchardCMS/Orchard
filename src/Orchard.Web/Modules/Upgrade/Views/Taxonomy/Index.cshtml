@@ -1,12 +1,12 @@
 ﻿@using Orchard.Utility.Extensions
 
-@{ Layout.Title = T("Migrate Media Files").ToString(); }
+@{ Layout.Title = T("Migrate Taxonomies").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
     <fieldset>
-        <legend>@T("Migrating Media Files:")</legend>
-        <span class="hint">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
+        <legend>@T("Migrating Taxonomies:")</legend>
+        <span class="hint">@T("This migration step will convert the Contrib.Taxonomies content items to Orchard.Taxonomies.")</span>
     </fieldset>
     <fieldset>
         <button type="submit">@T("Migrate")</button>

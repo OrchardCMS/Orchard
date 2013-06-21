@@ -15,7 +15,13 @@ namespace Orchard.ContentPicker.Handlers {
             Filters.Add(new ActivatingFilter<ContentMenuItemPart>("ContentMenuItem"));
             Filters.Add(StorageFilter.For(repository));
 
-            OnLoading<ContentMenuItemPart>((context, part) => part._content.Loader(p => contentManager.Get(part.Record.ContentMenuItemRecord.Id)));
+            OnLoading<ContentMenuItemPart>((context, part) => part._content.Loader(p => {
+                if (part.Record.ContentMenuItemRecord != null) {
+                    return contentManager.Get(part.Record.ContentMenuItemRecord.Id);
+                }
+
+                return null;
+            }));
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {

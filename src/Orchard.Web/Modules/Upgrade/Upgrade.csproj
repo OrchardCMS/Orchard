@@ -69,6 +69,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Controllers\ContentPickerController.cs" />
     <Compile Include="Controllers\TaxonomyController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,6 +110,8 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\FieldController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
+    <Compile Include="Services\IUpgradeService.cs" />
+    <Compile Include="Services\UpgradeService.cs" />
     <Compile Include="ViewModels\MigrateViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +129,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Taxonomy\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ContentPicker\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

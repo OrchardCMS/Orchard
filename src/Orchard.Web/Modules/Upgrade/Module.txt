@@ -9,4 +9,4 @@ Category: Developer
 Features:
     Upgrade:
         Description: Provides actions for upgrading Orchard instances
-        Dependencies: Orchard.Autoroute, Title, Navigation
+        Dependencies: Orchard.Autoroute, Title, Navigation, Orchard.MediaLibrary
