@@ -11,7 +11,7 @@ using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
-namespace UpgradeTo16.Controllers {
+namespace Upgrade.Controllers {
     [Admin]
     public class MenuController : Controller {
         private readonly IMenuService _menuService;

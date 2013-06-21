@@ -1,0 +1,12 @@
+Name: Upgrade
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.7
+OrchardVersion: 1.7
+Description: Provides actions for upgrading Orchard instances
+Category: Developer
+Features:
+    Upgrade:
+        Description: Provides actions for upgrading Orchard instances
+        Dependencies: Orchard.Autoroute, Title, Navigation

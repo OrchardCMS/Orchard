@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UpgradeTo16.ViewModels {
+namespace Upgrade.ViewModels {
     public class MigrateViewModel {
         public IList<ContentTypeEntry> ContentTypes { get; set; }
     }

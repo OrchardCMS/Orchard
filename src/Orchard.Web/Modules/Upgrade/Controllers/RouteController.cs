@@ -18,9 +18,9 @@ using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using UpgradeTo16.ViewModels;
+using Upgrade.ViewModels;
 
-namespace UpgradeTo16.Controllers {
+namespace Upgrade.Controllers {
     [Admin]
     public class RouteController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;
@@ -73,7 +73,7 @@ namespace UpgradeTo16.Controllers {
             if(TryUpdateModel(viewModel)) {
 
                 // creating report
-                _reportsCoordinator.Register("Migration", "UpgradeTo16", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
+                _reportsCoordinator.Register("Migration", "Upgrade", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
             
                 var contentTypesToMigrate = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
 
