@@ -42,7 +42,7 @@ namespace Upgrade.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to migrate Orchard.ContentPicker.")))
                 return new HttpUnauthorizedResult();
             try {
-                _upgradeService.CopyTable("Navigation_ContentMenuItemPartRecord", "Orchard_ContentPicker_ContentMenuItemPartRecord");
+                _upgradeService.CopyTable("Navigation_ContentMenuItemPartRecord", "Orchard_ContentPicker_ContentMenuItemPartRecord", new string[0]);
 
                 _orchardServices.Notifier.Information(T("Content Picker menu items were migrated successfully."));
             }

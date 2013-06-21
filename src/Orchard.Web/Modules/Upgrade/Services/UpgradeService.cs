@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Transactions;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
@@ -20,7 +19,7 @@ namespace Upgrade.Services {
 
         public ILogger Logger { get; set; }
 
-        public void CopyTable(string fromTableName, string toTableName) {
+        public void CopyTable(string fromTableName, string toTableName, string[] ignoreColumns) {
             var fromPrefixedTableName = GetPrefixedTableName(fromTableName);
             var toPrefixedTableName = GetPrefixedTableName(toTableName);
 
@@ -47,6 +46,10 @@ namespace Upgrade.Services {
                 var statement = String.Format("INSERT INTO {0} (", toPrefixedTableName);
 
                 foreach (var keyValuePair in record) {
+                    if (ignoreColumns.Contains(keyValuePair.Key)) {
+                        continue;
+                    }
+
                     statement += keyValuePair.Key;
                     if (keyValuePair.Key != record.Last().Key) {
                         statement += ", ";
@@ -56,6 +59,9 @@ namespace Upgrade.Services {
                 statement += ") VALUES ( ";
 
                 foreach (var keyValuePair in record) {
+                    if (ignoreColumns.Contains(keyValuePair.Key)) {
+                        continue;
+                    }
 
                     var parameter = command.CreateParameter();
                     parameter.ParameterName = "@" + keyValuePair.Key;
