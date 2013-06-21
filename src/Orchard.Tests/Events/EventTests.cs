@@ -170,6 +170,22 @@ namespace Orchard.Tests.Events {
             Assert.That(results, Has.Some.EqualTo("alpha"));
             Assert.That(results, Has.Some.EqualTo("[42,alpha]"));
         }
+
+        [Test]
+        public void StringResultsAreTreatedLikeSelect() {
+            var results = _eventBus.Notify("ITestEventHandler.GetString", new Dictionary<string, object>()).Cast<string>();
+            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results, Has.Some.EqualTo("Foo"));
+            Assert.That(results, Has.Some.EqualTo("Bar"));
+        }
+
+        [Test]
+        public void NonStringNonEnumerableResultsAreTreatedLikeSelect() {
+            var results = _eventBus.Notify("ITestEventHandler.GetInt", new Dictionary<string, object>()).Cast<int>();
+            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results, Has.Some.EqualTo(1));
+            Assert.That(results, Has.Some.EqualTo(2));
+        }
         
         public interface ITestEventHandler : IEventHandler {
             void Increment();
@@ -179,6 +195,8 @@ namespace Orchard.Tests.Events {
             void Substract(int a, int b);
             void Concat(string a, string b, string c);
             IEnumerable<string> Gather(int a, string b);
+            string GetString();
+            int GetInt();
         }
 
         public class StubEventHandler : ITestEventHandler {
@@ -213,6 +231,14 @@ namespace Orchard.Tests.Events {
             public IEnumerable<string> Gather(int a, string b) {
                 yield return String.Format("[{0},{1}]", a, b);
             }
+
+            public string GetString() {
+                return "Foo";
+            }
+
+            public int GetInt() {
+                return 1;
+            }
         }
         public class StubEventHandler2 : ITestEventHandler {
             public void Increment() {
@@ -235,6 +261,14 @@ namespace Orchard.Tests.Events {
 
             public IEnumerable<string> Gather(int a, string b) {
                 return new[] { a.ToString(), b };
+            }
+
+            public string GetString() {
+                return "Bar";
+            }
+
+            public int GetInt() {
+                return 2;
             }
         }
     }

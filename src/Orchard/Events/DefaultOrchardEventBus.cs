@@ -81,7 +81,7 @@ namespace Orchard.Events {
                 var result = cachedDelegate.Item2(eventHandler, args);
 
                 returnValue = result as IEnumerable;
-                if (returnValue == null && result != null)
+                if (result != null && (returnValue == null || result is string))
                     returnValue = new[] { result };
                 return true;
             }
