@@ -172,7 +172,7 @@
                     }
                     
                     if (self.results().length > 0 && self.results().length >= self.mediaItemsCount) {
-                        console.log('no more content, mediaItemsCount: ' + self.mediaItemsCount);
+                        // console.log('no more content, mediaItemsCount: ' + self.mediaItemsCount);
                         return;
                     }
 
@@ -326,7 +326,7 @@
                 self.scrolled = function(data, event) {
                     var elem = event.target;
                     if (elem.scrollTop > (elem.scrollHeight - elem.offsetHeight - 300)) {
-                        if(seld.displayed()) {
+                        if(self.displayed()) {
                             self.getMediaItems(self.displayed(), 20);
                         }
                         else {
