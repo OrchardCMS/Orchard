@@ -132,7 +132,7 @@
     <Compile Include="Factories\IMediaFactory.cs" />
     <Compile Include="Factories\IMediaFactorySelector.cs" />
     <Compile Include="Factories\MediaFactorySelectorResult.cs" />
-    <Compile Include="Fields\MediaLibrayPickerField.cs" />
+    <Compile Include="Fields\MediaLibraryPickerField.cs" />
     <Compile Include="Handlers\MediaLibraryPickerFieldHandler.cs" />
     <Compile Include="Handlers\MediaPartHandler.cs" />
     <Compile Include="Drivers\MediaPartDriver.cs" />
