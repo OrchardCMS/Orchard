@@ -94,7 +94,9 @@ namespace Upgrade.Services {
 
             while (reader != null && reader.Read()) {
                 try {
-                    action(reader, session.Connection);
+                    if (action != null) {
+                        action(reader, session.Connection);
+                    }
                 }
                 catch (Exception e) {
                     Logger.Error(e, "Error while executing custom SQL Statement in Upgrade.");

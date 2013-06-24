@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Environment.Features;
+using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Media.Models;
@@ -16,7 +16,6 @@ using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using MediaFolder = Orchard.Media.Models.MediaFolder;
-using Orchard.Mvc.Extensions;
 
 namespace Upgrade.Controllers {
     [Admin]
@@ -25,16 +24,19 @@ namespace Upgrade.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly IMediaService _mediaService;
         private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IStorageProvider _storageProvider;
 
         public MediaController(
             IOrchardServices orchardServices,
             IFeatureManager featureManager,
             IMediaService mediaService,
-            IMediaLibraryService mediaLibraryService) {
+            IMediaLibraryService mediaLibraryService,
+            IStorageProvider storageProvider) {
             _orchardServices = orchardServices;
             _featureManager = featureManager;
             _mediaService = mediaService;
             _mediaLibraryService = mediaLibraryService;
+            _storageProvider = storageProvider;
 
             Logger = NullLogger.Instance;
         }
@@ -60,7 +62,7 @@ namespace Upgrade.Controllers {
             foreach (var mediaFolder in mediaFolders) {
                 ImportMediaFolder(mediaFolder, null);
             }
-            
+
             _orchardServices.Notifier.Information(T("Media files were migrated successfully."));
             
             return RedirectToAction("Index");
@@ -95,13 +97,14 @@ namespace Upgrade.Controllers {
             }
             
             try {
-                _orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
-                var url = _mediaService.GetPublicUrl(mediaFile.MediaPath);
-                url = Url.MakeAbsolute(url);
+                var prefix = _mediaService.GetPublicUrl("foo.$$$");
+                var trim = prefix.IndexOf("foo.$$$");
 
-                var buffer = new WebClient().DownloadData(url);
-                var stream = new MemoryStream(buffer);
-                var mediaPart = _mediaLibraryService.ImportStream(mediaLibraryFolder.TermId, stream, Path.GetFileName(url));
+                _orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
+                var storageFile = _storageProvider.GetFile(mediaFile.MediaPath.Substring(trim));
+                using (var stream = storageFile.OpenRead()) {
+                    _mediaLibraryService.ImportStream(mediaLibraryFolder.TermId, stream, Path.GetFileName(mediaFile.MediaPath));
+                }
             }
             catch(Exception e) {
                 _orchardServices.Notifier.Error(T("Error while importing {0}. Please check the logs", mediaFile.MediaPath));

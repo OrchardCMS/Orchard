@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Transactions;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Environment.Features;
@@ -30,7 +31,7 @@ namespace Upgrade.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            if(_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.ContentPicker")) {
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.ContentPicker")) {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.ContentPicker in order to migrate Content Picker items to Orchard.ContentPicker."));
             }
 
@@ -41,9 +42,11 @@ namespace Upgrade.Controllers {
         public ActionResult IndexPOST() {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to migrate Orchard.ContentPicker.")))
                 return new HttpUnauthorizedResult();
-            try {
-                _upgradeService.CopyTable("Navigation_ContentMenuItemPartRecord", "Orchard_ContentPicker_ContentMenuItemPartRecord", new string[0]);
 
+            try {
+                _upgradeService.ExecuteReader("DELETE FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord"), null);
+                _upgradeService.CopyTable("Navigation_ContentMenuItemPartRecord", "Orchard_ContentPicker_ContentMenuItemPartRecord", new string[0]);
+                
                 _orchardServices.Notifier.Information(T("Content Picker menu items were migrated successfully."));
             }
             catch(Exception e) {
