@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\Images\grippie.png" />
+    <Content Include="Scripts\orchard-markdown.js" />
+    <Content Include="Scripts\orchard-markdown-media-library.js" />
     <Content Include="Scripts\jquery.textarearesizer.min.js">
       <DependentUpon>jquery.textarearesizer.js</DependentUpon>
     </Content>
@@ -84,8 +86,14 @@
     <Content Include="Scripts\Markdown.Sanitizer.min.js">
       <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\orchard-markdown.js" />
+    <Content Include="Scripts\orchard-markdown-media-library.min.js">
+      <DependentUpon>orchard-markdown-media-library.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\orchard-markdown-media-picker.js" />
     <Content Include="Scripts\jquery.textarearesizer.js" />
+    <Content Include="Scripts\orchard-markdown-media-picker.min.js">
+      <DependentUpon>orchard-markdown-media-picker.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\orchard-markdown.min.js">
       <DependentUpon>orchard-markdown.js</DependentUpon>
     </Content>
@@ -124,11 +132,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\orchard-markdown.min.js.map">
-      <DependentUpon>orchard-markdown.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\Markdown.Converter.min.js.map">
       <DependentUpon>Markdown.Converter.js</DependentUpon>
     </Content>
@@ -141,6 +144,21 @@
   <ItemGroup>
     <Content Include="Scripts\Markdown.Sanitizer.min.js.map">
       <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\orchard-markdown-media-library.min.js.map">
+      <DependentUpon>orchard-markdown-media-library.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\orchard-markdown-media-picker.min.js.map">
+      <DependentUpon>orchard-markdown-media-picker.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\orchard-markdown.min.js.map">
+      <DependentUpon>orchard-markdown.js</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup>
