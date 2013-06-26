@@ -44,6 +44,10 @@ namespace Orchard.Workflows.Drivers {
         protected override DriverResult Editor(ContentPart part, dynamic shapeHelper) {
             var results = new List<DriverResult> {
                 ContentShape("UserTask_ActionButton", () => {
+                    if (part.ContentItem.Record == null) {
+                        return null;
+                    }
+
                     var workContext = _workContextAccessor.GetContext();
                     var user = workContext.CurrentUser;
 
@@ -53,8 +57,6 @@ namespace Orchard.Workflows.Drivers {
                     return shapeHelper.UserTask_ActionButton().Actions(actions);
                 })
             };
-
-            //if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {}
 
             return Combined(results.ToArray());
         }
@@ -100,22 +102,5 @@ namespace Orchard.Workflows.Drivers {
 
             return Editor(part, shapeHelper);
         }
-
-        //protected override DriverResult Display(ContentPart part, string displayType, dynamic shapeHelper) {
-        //    return ContentShape("Parts_UserTask_SummaryAdmin", () => {
-        //        var workContext = _workContextAccessor.GetContext();
-        //        var user = workContext.CurrentUser;
-
-        //        var awaiting = _awaitingActivityRepository.Table.Where(x => x.ContentItemRecord == part.ContentItem.Record && x.ActivityRecord.Name == "UserTask").ToList();
-        //        awaiting = awaiting.Where(x => {
-        //            var state = FormParametersHelper.FromJsonString(x.ActivityRecord.State);
-        //            string rolesState = state.Roles ?? "";
-        //            var roles = rolesState.Split(',');
-        //            return UserTaskActivity.UserIsInRole(user, roles);
-        //        }).ToList();
-
-        //        return shapeHelper.Parts_Workflow_SummaryAdmin().Activities(awaiting.Select(x => x.ActivityRecord));
-        //    });
-        //}
     }
 }
