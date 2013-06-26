@@ -1,8 +1,25 @@
-﻿@{ 
+﻿@using Orchard.Environment.Descriptor.Models
+
+@{
     Script.Require("OrchardMarkdown");
     Style.Require("OrchardMarkdown");
-    string idPostfix = @Html.FieldIdFor(m => m);
+
+    string idPostfix = Html.FieldIdFor(m => m);
+
+    var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var mediaLibraryEnabled = shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary");
+
+    if (mediaLibraryEnabled) {
+        Script.Require("jQueryColorBox");
+        Script.Require("OrchardMarkdown-MediaLibrary");
+        Style.Require("jQueryColorBox");
+    }
+    else {
+        Script.Require("OrchardMarkdown-MediaPicker");
+    }
+
 }
+
 <div class="wmd-box has-grip">
     <div class="wmd-innerbox">
         <div class="wmd-editor-box">

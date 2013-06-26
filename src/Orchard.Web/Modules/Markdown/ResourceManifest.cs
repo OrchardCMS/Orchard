@@ -11,6 +11,9 @@ namespace Markdown {
 
             manifest.DefineScript("OrchardMarkdown").SetUrl("orchard-markdown.min.js", "orchard-markdown.js").SetDependencies("Resizer", "Markdown_Editor");
             manifest.DefineStyle("OrchardMarkdown").SetUrl("admin-markdown.css");
+
+            manifest.DefineScript("OrchardMarkdown-MediaPicker").SetUrl("orchard-markdown-media-picker.min.js", "orchard-markdown-media-picker.js");
+            manifest.DefineScript("OrchardMarkdown-MediaLibrary").SetUrl("orchard-markdown-media-library.min.js", "orchard-markdown-media-library.js");
         }
     }
 }

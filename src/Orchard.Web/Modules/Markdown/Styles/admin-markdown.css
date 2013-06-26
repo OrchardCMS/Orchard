@@ -45,6 +45,7 @@
     display: table;
     position: relative;
     height: 400px;
+    width: 99%;
 }
 .wmd-innerbox {
     height: 100%;
