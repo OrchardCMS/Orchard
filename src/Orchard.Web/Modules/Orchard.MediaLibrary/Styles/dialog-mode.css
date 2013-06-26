@@ -1,7 +1,18 @@
-﻿#header, #menu {
+﻿.media-library-modal-window #header, 
+.media-library-modal-window #menu,
+.media-library-modal-window #footer {
     display: none;
 }
 
-#media-library-main-selection-select {
+.media-library-modal-window #media-library-main-selection-select {
     display: initial;
+}
+
+
+.media-library-modal-window #main {
+    margin-left: 20px;
+}
+
+.media-library-modal-window #layout-content {
+    background-image: none;
 }

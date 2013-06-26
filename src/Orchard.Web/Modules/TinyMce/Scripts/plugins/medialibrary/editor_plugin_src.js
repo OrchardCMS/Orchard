@@ -24,12 +24,12 @@
                     href: url,
                     iframe: true,
                     reposition: true,
-                    width: "100%",
-                    height: "100%",
+                    width: "90%",
+                    height: "90%",
                     onLoad: function() {
                         // hide the scrollbars from the main window
                         $('html, body').css('overflow', 'hidden');
-                        $('#cboxClose').remove();
+                        //$('#cboxClose').remove();
                     },
                     onClosed: function() {
                         $('html, body').css('overflow', '');

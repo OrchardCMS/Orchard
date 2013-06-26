@@ -59,7 +59,7 @@ namespace Orchard.MediaLibrary.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Import(int id, bool dialog = false) {
+        public ActionResult Import(int id) {
             var mediaProviderMenu = _navigationManager.BuildMenu("mediaproviders");
             var imageSets = _navigationManager.BuildImageSets("mediaproviders");
 
@@ -67,7 +67,6 @@ namespace Orchard.MediaLibrary.Controllers {
 
             
             var viewModel = new MediaManagerImportViewModel {
-                DialogMode = dialog,
                 Menu = mediaProviderMenu,
                 Hierarchy = hierarchy.ToReadOnlyCollection(),
                 ImageSets = imageSets,

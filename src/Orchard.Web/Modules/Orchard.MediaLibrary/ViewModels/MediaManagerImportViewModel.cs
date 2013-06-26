@@ -7,6 +7,5 @@ namespace Orchard.MediaLibrary.ViewModels {
         public IEnumerable<MenuItem> Menu { get; set; }
         public IEnumerable<string> ImageSets { get; set; }
         public ICollection<MediaFolder> Hierarchy { get; set; }
-        public bool DialogMode { get; set; }
     }
 }

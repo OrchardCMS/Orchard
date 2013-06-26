@@ -4,9 +4,6 @@
     Style.Require("MediaManagerAdmin");
     Layout.Title = T("Media Library");
 
-    if (Model.DialogMode) {
-        Style.Include("dialog-mode.css");
-    }
 
     if (Model.ImageSets != null) {
         foreach (var imageSet in Model.ImageSets) {

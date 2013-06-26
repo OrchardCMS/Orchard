@@ -69,6 +69,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\modal-window.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Styles\menu.oembed-mediaproviders.css" />
@@ -113,6 +114,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModalAdminFilter.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ClientStorageController.cs" />

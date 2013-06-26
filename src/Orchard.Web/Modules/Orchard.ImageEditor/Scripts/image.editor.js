@@ -64,10 +64,6 @@
                 __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
             })
             .done(function () {
-                if (parent.$.colorbox) {
-                    parent.$.colorbox.close();
-                };
-
                 window.location = $('#button-cancel').attr('href');
             });
         };
@@ -76,9 +72,6 @@
     });
 
     $('#button-cancel').click(function () {
-        console.log('closing');
-        parent.$.colorbox.close();
-        return false;
     });
     
 });
