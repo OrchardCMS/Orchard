@@ -83,12 +83,6 @@ namespace Orchard.Taxonomies {
                    .WithSetting("Stereotype", "MenuItem")
                );
 
-            return 2;
-        }
-
-        public int UpdateFrom2() {
-            SchemaBuilder.AlterTable("TaxonomyPartRecord", table => table.AddColumn<bool>("IsInternal"));
-
             return 3;
         }
     }
