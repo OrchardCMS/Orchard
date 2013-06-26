@@ -132,6 +132,11 @@ namespace Orchard.Comments {
             // define the default value for positions
             foreach (var comment in _commentService.GetComments().List()) {
                 comment.Position = comment.Id;
+
+                // migrating the Spam value which is now deprecated
+                if (comment.Status != CommentStatus.Approved) {
+                    comment.Status = CommentStatus.Pending;
+                }
             }
             
             return 4;
