@@ -26,17 +26,23 @@
     bottom: 0;
     padding: 0;
     margin: 10px 15px 15px 10px;
-    
 }
 
 #fileupload input{
     position: absolute;
     opacity: 0;
     top: 0;
-    right: 0;
     left: 0;
-    bottom: 0;
-    z-index: 0;
+    /*bottom: 0;*/
+    width: 0;
+    height: 0;
+    cursor: none;
+    z-index: 1000;
+}
+
+#fileupload ul {
+    width: 100%;
+    z-index: 2000;
 }
 
 #clientstorage-main li {

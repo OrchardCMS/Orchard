@@ -73,6 +73,15 @@
             var viewModel = new clientStorageViewModel();
             ko.applyBindings(viewModel);
 
+            $('#fileupload').click(function() {
+                console.log('click');
+                $('#fileupload > input').trigger('click');
+            });
+
+            $('#fileupload > input').click(function(event) {
+                event.stopPropagation();
+            });
+            
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 url: '@Url.Action("Upload", "ClientStorage")',
