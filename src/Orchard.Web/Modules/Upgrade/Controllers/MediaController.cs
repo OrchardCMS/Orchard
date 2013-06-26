@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.Environment.Features;
@@ -103,7 +104,8 @@ namespace Upgrade.Controllers {
                 _orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
                 var storageFile = _storageProvider.GetFile(mediaFile.MediaPath.Substring(trim));
                 using (var stream = storageFile.OpenRead()) {
-                    _mediaLibraryService.ImportStream(mediaLibraryFolder.TermId, stream, Path.GetFileName(mediaFile.MediaPath));
+                    var filename = HttpUtility.UrlDecode(mediaFile.MediaPath);
+                    _mediaLibraryService.ImportStream(mediaLibraryFolder.TermId, stream, Path.GetFileName(filename));
                 }
             }
             catch(Exception e) {
