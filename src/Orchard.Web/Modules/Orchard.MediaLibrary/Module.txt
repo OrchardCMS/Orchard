@@ -2,12 +2,12 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0
-OrchardVersion: 1.0
-Description: Description for the module
+Version: 1.7
+OrchardVersion: 1.7
+Description: Provides enhanced Media management tools.
 Features:
     Orchard.MediaLibrary:
 		Name: Media Library
-        Description: Description for feature Orchard.MediaLibrary.
+        Description: Provides enhanced Media management tools.
 		Dependencies: Orchard.Taxonomies, Orchard.MediaProcessing, Title
 		Category: Media
