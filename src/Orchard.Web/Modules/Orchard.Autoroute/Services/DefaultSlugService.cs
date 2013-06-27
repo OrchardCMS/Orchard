@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using System.Text.RegularExpressions;
 using Orchard.Utility.Extensions;
+using System;
 
 namespace Orchard.Autoroute.Services {
 
@@ -16,7 +17,7 @@ namespace Orchard.Autoroute.Services {
 
         public string Slugify(IContent content) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata == null) return null;
+            if (metadata == null || String.IsNullOrEmpty(metadata.DisplayText)) return null;
             var title = metadata.DisplayText.Trim();
             return Slugify(new FillSlugContext(content,title));
         }
