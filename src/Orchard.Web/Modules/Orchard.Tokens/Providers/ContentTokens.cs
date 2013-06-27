@@ -30,17 +30,17 @@ namespace Orchard.Tokens.Providers {
                 .Token("Date", T("Content Date"), T("Date the content was created."), "DateTime")
                 .Token("Identity", T("Identity"), T("Identity of the content."))
                 .Token("ContentType", T("Content Type"), T("The name of the item Content Type."), "TypeDefinition")
-                .Token("DisplayText", T("Display Text"), T("Title of the content."),"Text")
+                .Token("DisplayText", T("Display Text"), T("Title of the content."), "Text")
                 .Token("DisplayUrl", T("Display Url"), T("Url to display the content."), "Url")
                 .Token("EditUrl", T("Edit Url"), T("Url to edit the content."), "Url")
                 .Token("Container", T("Container"), T("The container Content Item."), "Content")
                 ;
 
             // Token descriptors for fields
-            foreach(var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
+            foreach (var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
                 foreach (var typePart in typeDefinition.Parts) {
-                    
-                    if(!typePart.PartDefinition.Fields.Any()) {
+
+                    if (!typePart.PartDefinition.Fields.Any()) {
                         continue;
                     }
 
@@ -86,8 +86,8 @@ namespace Orchard.Tokens.Providers {
                 .Chain("EditUrl", "Url", content => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues))
                 .Token("Container", content => {
                     var container = Container(content);
-                    if(container == null) {
-                        return string.Empty;
+                    if (container == null) {
+                        return String.Empty;
                     }
                     return _contentManager.GetItemMetadata(container).DisplayText;
                 })
@@ -149,7 +149,7 @@ namespace Orchard.Tokens.Providers {
 
         private IContent Container(IContent content) {
             var commonPart = content.As<ICommonPart>();
-            if(commonPart == null) {
+            if (commonPart == null) {
                 return null;
             }
 
