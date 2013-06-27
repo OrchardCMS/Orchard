@@ -295,10 +295,18 @@
       <Name>Orchard.Localization</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaPicker\Orchard.MediaPicker.csproj">
       <Project>{43D0EC0B-1955-4566-8D31-7B9102DA1703}</Project>
       <Name>Orchard.MediaPicker</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaProcessing\Orchard.MediaProcessing.csproj">
+      <Project>{08191fcd-7258-4f19-95fb-aec3de77b2eb}</Project>
+      <Name>Orchard.MediaProcessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
@@ -357,6 +365,10 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Rules\Orchard.Rules.csproj">
       <Project>{966EC390-3C7F-4D98-92A6-F0F30D02E9B1}</Project>
       <Name>Orchard.Rules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
@@ -418,10 +430,6 @@
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
       <Name>TinyMce</Name>
       <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\UpgradeTo16\UpgradeTo16.csproj">
-      <Project>{8a9fdb57-342d-49c2-bafc-d885aae5cc7c}</Project>
-      <Name>UpgradeTo16</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
