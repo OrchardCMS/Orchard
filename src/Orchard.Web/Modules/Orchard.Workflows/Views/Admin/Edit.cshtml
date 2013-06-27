@@ -6,10 +6,8 @@
     Layout.Title = @T("Edit Workflow {0}", Model.WorkflowDefinition.Name);
     Style.Require("WorkflowsAdmin");
     Style.Require("WorkflowsActivities");
-    Script.Require("jQueryUI");
     Style.Require("jQueryUI_Orchard");
-    Script.Include("jquery.jsPlumb-1.3.16-all-min.js");
-    
+    Script.Require("jsPlumb");    
     Script.Include("orchard-workflows.js").AtFoot();
     Script.Include("orchard-workflows-serialize.js").AtFoot();
 }

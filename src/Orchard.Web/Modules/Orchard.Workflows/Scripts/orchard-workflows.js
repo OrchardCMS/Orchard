@@ -16,11 +16,12 @@
         paintStyle: { fillStyle: '#225588' },
         isSource: true,
         isTarget: false,
+        deleteEndpointsOnDetach: false,
         connector: ["Flowchart"], // gap needs to be the same as makeTarget.paintStyle.radius
         connectorStyle: connectorPaintStyle,
         hoverPaintStyle: connectorHoverStyle,
         connectorHoverStyle: connectorHoverStyle,
-        overlays: [["Label", { location: [0.5, 1.5], cssClass: "sourceEndpointLabel" }]]
+        overlays: [["Label", { location: [3, -1.5], cssClass: "sourceEndpointLabel" }]]
     };
 
     jsPlumb.bind("ready", function () {
@@ -36,7 +37,7 @@
             // the overlays to decorate each connection with.  note that the label overlay uses a function to generate the label text; in this
             // case it returns the 'labelText' member that we set on each connection in the 'init' method below.
             ConnectionOverlays: [
-                ["Arrow", { width: 12, length: 12, location: 1 }],
+                ["Arrow", { width: 12, length: 12, location: -5 }],
                 // ["Label", { location: 0.1, id: "label", cssClass: "aLabel" }]
             ],
             ConnectorZIndex: 5
@@ -73,8 +74,10 @@
     $('.activity-toolbox-item').draggable({ helper: 'clone' });
     $('#activity-editor').droppable({ drop: function(event, ui) {
         var activityName = ui.draggable.data('activity-name');
-        createActivity(activityName, event.pageY, event.pageX);
+        if (activityName && activityName.length) {
+            createActivity(activityName, event.pageY, event.pageX);
         }
+    }
     });
 
     var renderActivity = function (clientId, id, name, state, start, top, left) {
@@ -143,7 +146,7 @@
 
                     elt.endpoints[outcomes[i]] = ep;
                     ep.outcome = outcomes[i];
-                    //ep.setLabel(outcomes[i]);
+                    // ep.overlays[0].setLabel(outcomes[i]);
                 }
 
                 if (activities[name].hasForm) {

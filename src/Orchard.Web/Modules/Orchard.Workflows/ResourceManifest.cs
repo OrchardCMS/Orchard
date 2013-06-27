@@ -37,6 +37,7 @@ namespace Orchard.Workflows {
                 "WorkflowsActivities-UserTask"
                 );
 
+            builder.Add().DefineScript("jsPlumb").SetUrl("jquery.jsPlumb-1.4.1-all-min.js").SetDependencies("jQueryUI");
         }
     }
 }

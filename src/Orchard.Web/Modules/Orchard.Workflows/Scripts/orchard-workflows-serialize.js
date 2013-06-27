@@ -77,8 +77,7 @@ var loadActivities = function (localId) {
         jsPlumb.connect({
             source: ep,
             target: connection.TargetId,
-            newConnection: true
-
+            deleteEndpointsOnDetach: false
         });
     }
 
