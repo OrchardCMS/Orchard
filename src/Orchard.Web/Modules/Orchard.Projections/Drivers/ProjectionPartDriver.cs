@@ -135,21 +135,19 @@ namespace Orchard.Projections.Drivers {
                         return list;
                     }
 
-                    var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
                     var allFielDescriptors = _projectionManager.DescribeProperties().ToList();
                     var fieldDescriptors = layout.Properties.OrderBy(p => p.Position).Select(p => allFielDescriptors.SelectMany(x => x.Descriptors).Select(d => new { Descriptor = d, Property = p }).FirstOrDefault(x => x.Descriptor.Category == p.Category && x.Descriptor.Type == p.Type)).ToList();
-                    var tokenizedDescriptors = fieldDescriptors.Select(fd => new { fd.Descriptor, fd.Property, State = FormParametersHelper.ToDynamic(_tokenizer.Replace(fd.Property.State, tokens)) }).ToList();
 
                     var layoutComponents = contentItems.Select(
                         contentItem => {
 
                             var contentItemMetadata = Services.ContentManager.GetItemMetadata(contentItem);
 
-                            var propertyDescriptors = tokenizedDescriptors.Select(
+                            var propertyDescriptors = fieldDescriptors.Select(
                                 d => {
                                     var fieldContext = new PropertyContext {
-                                        State = d.State,
-                                        Tokens = tokens
+                                        State = FormParametersHelper.ToDynamic(d.Property.State),
+                                        Tokens = new Dictionary<string, object> { { "Content", contentItem } }
                                     };
 
                                     return new { d.Property, Shape = d.Descriptor.Property(fieldContext, contentItem) };
