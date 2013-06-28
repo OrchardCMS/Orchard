@@ -48,7 +48,7 @@ namespace Orchard.Indexing.Commands {
             }
             else {
                 _indexManager.GetSearchIndexProvider().CreateIndex(index);
-                Context.Output.WriteLine(T("New index has been created succeffully."));
+                Context.Output.WriteLine(T("New index has been created successfully."));
             }
         }
 

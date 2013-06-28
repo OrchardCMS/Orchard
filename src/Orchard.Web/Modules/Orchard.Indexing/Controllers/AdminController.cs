@@ -80,7 +80,7 @@ namespace Orchard.Indexing.Controllers {
 
             try {
                 provider.CreateIndex(id);
-                Services.Notifier.Information(T("Index named {0} created succeffully", id));
+                Services.Notifier.Information(T("Index named {0} created successfully", id));
             }
             catch(Exception e) {
                 Services.Notifier.Error(T("An error occured while creating the index: {0}", id));
