@@ -53,7 +53,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to be mapped.</param>
         /// <returns>The relative path combined with the public path in an URL friendly format ('/' character for directory separator).</returns>
         private string MapPublic(string path) {
-            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/').Replace(" ", "%20");
+            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/');
         }
 
         private static string Fix(string path) {
@@ -102,7 +102,7 @@ namespace Orchard.FileSystems.Media {
                 return url;
             }
 
-            return Combine("", url.Substring(_publicPath.Length).Replace("%20", " "));
+            return Combine("", url.Substring(_publicPath.Length));
         }
 
         /// <summary>

@@ -73,8 +73,29 @@ namespace Upgrade.Controllers {
             // create the folder in Media Library
 
             int? parentMediaFolderId = parentMediaFolder != null ? (int?)parentMediaFolder.TermId : null;
+            Orchard.MediaLibrary.Models.MediaFolder mediaLibraryFolder = null;
 
-            var mediaLibraryFolder = _mediaLibraryService.CreateFolder(parentMediaFolderId, mediaFolder.Name);
+            var candidateFolders = Enumerable.Empty<Orchard.MediaLibrary.Models.MediaFolder>();
+
+            if (parentMediaFolderId.HasValue) {
+                var parentMediaFolderTerm = _mediaLibraryService.GetMediaFolder(parentMediaFolderId.Value);
+                if (parentMediaFolderTerm != null) {
+                    candidateFolders = parentMediaFolderTerm.Folders;
+                }
+            }
+            else {
+                candidateFolders = _mediaLibraryService.GetMediaFolders();
+            }
+
+            var match = candidateFolders.FirstOrDefault(x => x.Name.Equals(mediaFolder.Name, StringComparison.OrdinalIgnoreCase));
+            
+            // if we find an existing term reuse it
+            if (match != null) {
+                mediaLibraryFolder = match;
+            }
+            else {
+                mediaLibraryFolder = _mediaLibraryService.CreateFolder(parentMediaFolderId, mediaFolder.Name);
+            }
 
             foreach (var mediaFile in _mediaService.GetMediaFiles(mediaFolder.MediaPath)) {
                 ImportMediaFile(mediaFile, mediaLibraryFolder);
@@ -89,20 +110,23 @@ namespace Upgrade.Controllers {
         private void ImportMediaFile(MediaFile mediaFile, Orchard.MediaLibrary.Models.MediaFolder mediaLibraryFolder) {
             // foreach media file, if there is no media with the same url, import it
 
+            var prefix = _mediaService.GetPublicUrl("foo.$$$");
+            var trim = prefix.IndexOf("foo.$$$");
+            var canonicalFileName = mediaFile.MediaPath.Substring(trim);
+            var fileName = Path.GetFileName(canonicalFileName);
+
             var contentManager = _orchardServices.ContentManager;
-            var media = contentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => x.Resource.EndsWith(mediaFile.MediaPath)).Slice(0, 1).FirstOrDefault();
+            var media = contentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => x.Resource.EndsWith("/" + fileName)).Slice(0, 1).FirstOrDefault();
 
             if (media != null) {
-                _orchardServices.Notifier.Information(T("Media {0} has already been imported.", mediaFile.MediaPath));
+                _orchardServices.Notifier.Warning(T("Media {0} has already been imported.", mediaFile.MediaPath));
                 return;
             }
             
             try {
-                var prefix = _mediaService.GetPublicUrl("foo.$$$");
-                var trim = prefix.IndexOf("foo.$$$");
-
                 _orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
-                var storageFile = _storageProvider.GetFile(mediaFile.MediaPath.Substring(trim));
+                var storageFile = _storageProvider.GetFile(canonicalFileName);
+
                 using (var stream = storageFile.OpenRead()) {
                     var filename = HttpUtility.UrlDecode(mediaFile.MediaPath);
                     _mediaLibraryService.ImportStream(mediaLibraryFolder.TermId, stream, Path.GetFileName(filename));
