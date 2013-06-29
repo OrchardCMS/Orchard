@@ -56,7 +56,7 @@
                     <td>
                         @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.ImageProfileId, returnurl = HttpContext.Current.Request.RawUrl }) |
                         @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.ImageProfileId }) |
-                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.ImageProfileId }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.ImageProfileId }, new { itemprop = "RemoveUrl UnsafeUrl" })
                         @*@Html.ActionLink(T("Preview").ToString(), "Preview", new { id = entry.ImageProfileId })*@
                     </td>
                 </tr>

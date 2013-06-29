@@ -34,6 +34,7 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<ISessionLocator> _sessionLocator; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
+        private readonly ISignals _signals;
 
         private const string Published = "Published";
         private const string Draft = "Draft";
@@ -49,7 +50,8 @@ namespace Orchard.ContentManagement {
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ISessionLocator> sessionLocator,
             Lazy<IEnumerable<IContentHandler>> handlers,
-            Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors) {
+            Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors,
+            ISignals signals) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
@@ -58,6 +60,7 @@ namespace Orchard.ContentManagement {
             _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
             _identityResolverSelectors = identityResolverSelectors;
+            _signals = signals;
             _handlers = handlers;
             _contentDisplay = contentDisplay;
             _sessionLocator = sessionLocator;
@@ -720,6 +723,8 @@ namespace Orchard.ContentManagement {
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
             var contentTypeId = _cacheManager.Get(contentType + "_Record", ctx => {
+                ctx.Monitor(_signals.When(contentType + "_Record"));
+
                 var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
 
                 if (contentTypeRecord == null) {
@@ -731,7 +736,20 @@ namespace Orchard.ContentManagement {
                 return contentTypeRecord.Id;
             });
 
-            return _contentTypeRepository.Get(contentTypeId);
+            // There is a case when a content type record is created locally but the transaction is actually
+            // cancelled. In this case we are caching an Id which is none existent, or might represent another
+            // content type. Thus we need to ensure that the cache is valid, or invalidate it and retrieve it 
+            // another time.
+            
+            var result = _contentTypeRepository.Get(contentTypeId);
+
+            if (result != null && result.Name.Equals(contentType, StringComparison.OrdinalIgnoreCase) ) {
+                return result;
+            }
+
+            // invalidate the cache entry and load it again
+            _signals.Trigger(contentType + "_Record");
+            return AcquireContentTypeRecord(contentType);
         }
 
         public void Index(ContentItem contentItem, IDocumentIndex documentIndex) {
