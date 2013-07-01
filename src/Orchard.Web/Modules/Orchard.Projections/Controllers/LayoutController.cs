@@ -216,7 +216,7 @@ namespace Orchard.Projections.Controllers {
 
                 Services.Notifier.Information(T("Layout Saved"));
 
-                return RedirectToAction("Edit", layoutRecord.Id);
+                return RedirectToAction("Edit", new { id = layoutRecord.Id });
             }
 
             #region Load Fields
