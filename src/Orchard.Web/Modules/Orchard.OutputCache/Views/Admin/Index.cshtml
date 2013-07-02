@@ -41,7 +41,7 @@
     <fieldset>
         <label>@T("Culture")</label>
         @Html.CheckBoxFor(m => m.ApplyCulture) <label for="@Html.FieldIdFor(m => m.ApplyCulture)" class="forcheckbox">@T("Differentiate cultures")</label>
-        <span class="hint">@T("When checked, the cached content will differ per culture too. For performance reasons leave it unchecked if you website uses only one culture.")</span>
+        <span class="hint">@T("When checked, the cached content will differ per culture too. For better performance, leave this unchecked if your website uses only one culture.")</span>
     </fieldset>    
     
     <fieldset>
