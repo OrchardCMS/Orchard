@@ -6,7 +6,6 @@ using System.Xml.Linq;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
-using Orchard.Taxonomies.Services;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.ContentManagement;
@@ -14,30 +13,30 @@ using Orchard.ContentManagement;
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class OEmbedController : Controller {
-        private readonly ITaxonomyService _taxonomyService;
         private readonly IMediaLibraryService _mediaLibraryService;
 
         public OEmbedController(
-            ITaxonomyService taxonomyService, 
             IMediaLibraryService mediaManagerService, 
             IOrchardServices services) {
-            _taxonomyService = taxonomyService;
             _mediaLibraryService = mediaManagerService;
             Services = services;
         }
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(int id) {
-            var viewModel = new OEmbedViewModel();
+        public ActionResult Index(string folderPath) {
+            var viewModel = new OEmbedViewModel {
+                FolderPath = folderPath
+            };
+
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(int id, string url) {
+        public ActionResult Index(string folderPath, string url) {
             var viewModel = new OEmbedViewModel {
                 Url = url,
-                Id = id
+                FolderPath = folderPath
             };
 
             try {
@@ -72,20 +71,13 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult MediaPost(int id, string url, string document) {
-            var termPart = _taxonomyService.GetTerm(id);
-
-            if (termPart == null) {
-                return HttpNotFound();
-            }
-
+        public ActionResult MediaPost(string folderPath, string url, string document) {
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 
             var part = Services.ContentManager.New<MediaPart>("OEmbed");
-            part.TermPart = _taxonomyService.GetTerm(id);
 
-            part.Resource = url;
+            part.FileName = url;
             part.MimeType = "text/html";
             part.Title = oembed.Element("title").Value;
             if (oembed.Element("description") != null) {
@@ -101,7 +93,7 @@ namespace Orchard.MediaLibrary.Controllers {
             Services.ContentManager.Create(oembedPart);
 
             var viewModel = new OEmbedViewModel {
-                Id = id
+                FolderPath = folderPath
             };
 
             return View("Index", viewModel);

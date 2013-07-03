@@ -96,10 +96,6 @@
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Media\Orchard.Media.csproj">
-      <Project>{d9a7b330-cd22-4da1-a95a-8de1982ad8eb}</Project>
-      <Name>Orchard.Media</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
       <Name>Orchard.Widgets</Name>

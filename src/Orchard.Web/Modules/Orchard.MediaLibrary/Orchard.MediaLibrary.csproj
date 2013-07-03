@@ -72,6 +72,8 @@
     <Content Include="Scripts\modal-window.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Styles\Images\menu.media.png" />
+    <Content Include="Styles\menu.media-library-admin.css" />
     <Content Include="Styles\menu.oembed-mediaproviders.css" />
     <Content Include="Styles\orchard-oembed-admin.css" />
     <Content Include="Styles\menu.websearch-mediaproviders.css" />
@@ -104,14 +106,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.MediaProcessing\Orchard.MediaProcessing.csproj">
-      <Project>{08191fcd-7258-4f19-95fb-aec3de77b2eb}</Project>
-      <Name>Orchard.MediaProcessing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
-      <Project>{E649EA64-D213-461B-87F7-D67035801443}</Project>
-      <Name>Orchard.Taxonomies</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModalAdminFilter.cs" />
@@ -141,12 +135,14 @@
     <Compile Include="Handlers\WebSearchSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AudioPart.cs" />
+    <Compile Include="Models\FolderHierarchy.cs" />
+    <Compile Include="Models\MediaFile.cs" />
+    <Compile Include="Models\MediaFolder.cs" />
     <Compile Include="Models\WebSearchSettingsPart.cs" />
     <Compile Include="Models\ImagePart.cs" />
     <Compile Include="Models\DocumentPart.cs" />
     <Compile Include="Models\VideoPart.cs" />
     <Compile Include="Models\OEmbedPart.cs" />
-    <Compile Include="Models\MediaFolder.cs" />
     <Compile Include="Models\MediaPart.cs" />
     <Compile Include="Models\MediaPartRecord.cs" />
     <Compile Include="Permissions.cs" />

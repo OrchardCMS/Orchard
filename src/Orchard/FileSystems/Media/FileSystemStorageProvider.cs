@@ -9,9 +9,9 @@ using Orchard.Validation;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
-        private readonly string _storagePath;
-        private readonly string _publicPath;
-        private readonly string _relativePath;
+        private readonly string _storagePath; // c:\orchard\media\default
+        private readonly string _virtualPath; // ~/Media/Default/
+        private readonly string _publicPath; // /Orchard/Media/Default/
 
         public FileSystemStorageProvider(ShellSettings settings) {
             var mediaPath = HostingEnvironment.IsHosted
@@ -19,6 +19,7 @@ namespace Orchard.FileSystems.Media {
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
 
             _storagePath = Path.Combine(mediaPath, settings.Name);
+            _virtualPath = "~/Media/" + settings.Name + "/";
 
             var appPath = "";
             if (HostingEnvironment.IsHosted) {
@@ -29,7 +30,6 @@ namespace Orchard.FileSystems.Media {
             if (!appPath.StartsWith("/"))
                 appPath = '/' + appPath;
 
-            _relativePath = "~/Media/" + settings.Name + "/";
             _publicPath = appPath + "Media/" + settings.Name + "/";
 
             T = NullLocalizer.Instance;
@@ -53,7 +53,7 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to be mapped.</param>
         /// <returns>The relative path combined with the public path in an URL friendly format ('/' character for directory separator).</returns>
         private string MapPublic(string path) {
-            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/');
+            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/').Replace(" ", "%20");
         }
 
         private static string Fix(string path) {
@@ -84,25 +84,21 @@ namespace Orchard.FileSystems.Media {
             return MapPublic(path);
         }
 
-        public string GetRelativePath(string path) {
-            return (_relativePath + path).Replace(Path.DirectorySeparatorChar, '/');
-        }
-
         /// <summary>
-        /// Retrieves the local path for a given url within the storage provider.
+        /// Retrieves the path within the storage provider for a given public url.
         /// </summary>
-        /// <param name="url">The public url of the media.</param>
-        /// <returns>The local path.</returns>
-        public string GetLocalPath(string url) {
-            if (url.StartsWith(_relativePath)) {
-                return url.Substring(_relativePath.Length);
+        /// <param name="url">The virtual or public url of a media.</param>
+        /// <returns>The storage path or <value>null</value> if the media is not in a correct format.</returns>
+        public string GetStoragePath(string url) {
+            if (url.StartsWith(_virtualPath)) {
+                return url.Substring(_virtualPath.Length).Replace('/', Path.DirectorySeparatorChar).Replace("%20", " ");
             }
 
-            if (!url.StartsWith(_publicPath)) {
-                return url;
+            if (url.StartsWith(_publicPath)) {
+                return url.Substring(_publicPath.Length).Replace('/', Path.DirectorySeparatorChar).Replace("%20", " "); ;
             }
 
-            return Combine("", url.Substring(_publicPath.Length));
+            return null;
         }
 
         /// <summary>

@@ -1,8 +1,5 @@
 ﻿@model Orchard.MediaLibrary.ViewModels.OEmbedViewModel
 
-@using System.Text
-@using System.Xml;
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -57,7 +54,7 @@
 
             using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
                 @Html.Hidden("url", Model.Url)
-                @Html.Hidden("id", Model.Id)
+                @Html.Hidden("folderPath", Model.FolderPath)
                 @Html.Hidden("document", Model.Content.ToString())
 
                 <button type="submit">@("Import")</button>

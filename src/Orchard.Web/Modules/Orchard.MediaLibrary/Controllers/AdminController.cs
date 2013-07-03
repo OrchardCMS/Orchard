@@ -10,9 +10,9 @@ using Orchard.MediaLibrary.ViewModels;
 using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
-using Orchard.Utility.Extensions;
 using Orchard.ContentManagement.MetaData;
 using System.Collections.Generic;
+using Orchard.Validation;
 
 namespace Orchard.MediaLibrary.Controllers {
     [ValidateInput(false)]
@@ -39,46 +39,42 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index(int? id, bool dialog = false) {
-            string stereotype;
+        public ActionResult Index(string folderPath = "", bool dialog = false) {
             var mediaTypes = new List<string>();
 
             foreach(var contentTypeDefinition in _contentDefinitionManager.ListTypeDefinitions()) {
+                string stereotype;
                 if (contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "Media")
                     mediaTypes.Add(contentTypeDefinition.Name);
             }
 
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
-                Folders = _mediaLibraryService.GetMediaFolders(),
-                Folder = id,
-                Hierarchy = id.HasValue ? _mediaLibraryService.GetMediaFolderHierarchy(id.Value) : Enumerable.Empty<MediaFolder>(),
+                Folders = _mediaLibraryService.GetMediaFolders(null).Select(GetFolderHierarchy),
+                FolderPath = folderPath,
                 MediaTypes = mediaTypes.ToArray()
             };
 
             return View(viewModel);
         }
 
-        public ActionResult Import(int id) {
+        public ActionResult Import(string folderPath) {
             var mediaProviderMenu = _navigationManager.BuildMenu("mediaproviders");
             var imageSets = _navigationManager.BuildImageSets("mediaproviders");
 
-            var hierarchy = _mediaLibraryService.GetMediaFolderHierarchy(id);
-
-            
             var viewModel = new MediaManagerImportViewModel {
                 Menu = mediaProviderMenu,
-                Hierarchy = hierarchy.ToReadOnlyCollection(),
                 ImageSets = imageSets,
+                FolderPath = folderPath
             };
 
             return View(viewModel);
         }
 
         [Themed(false)]
-        public ActionResult MediaItems(int id, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
-            var mediaParts = _mediaLibraryService.GetMediaContentItems(id, skip, count, order, mediaType);
-            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(id, mediaType);
+        public ActionResult MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+            var mediaParts = _mediaLibraryService.GetMediaContentItems(folderPath, skip, count, order, mediaType);
+            var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(folderPath, mediaType);
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
                 MediaPart = x,
@@ -144,6 +140,11 @@ namespace Orchard.MediaLibrary.Controllers {
                 Logger.Error(e, "Could not delete media items.");
                 return Json(false);
             }
+        }
+
+        private FolderHierarchy GetFolderHierarchy(MediaFolder root) {
+            Argument.ThrowIfNull(root, "root");
+            return new FolderHierarchy(root) {Children = _mediaLibraryService.GetMediaFolders(root.MediaPath).Select(GetFolderHierarchy)};
         }
     }
 }

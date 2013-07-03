@@ -1,43 +1,67 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Title.Models;
-using Orchard.Taxonomies.Models;
 
 namespace Orchard.MediaLibrary.Models {
     public class MediaPart : ContentPart<MediaPartRecord> {
 
-        private readonly LazyField<TermPart> _termPartField = new LazyField<TermPart>();
+        internal LazyField<string> _publicUrl = new LazyField<string>();
 
-        public LazyField<TermPart> TermPartField { get { return _termPartField; } }
-
+        /// <summary>
+        /// Gets or sets the title of the media.
+        /// </summary>
         public string Title {
             get { return ContentItem.As<TitlePart>().Title; }
             set { ContentItem.As<TitlePart>().Title = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the mime type of the media.
+        /// </summary>
         public string MimeType {
             get { return Record.MimeType; }
             set { Record.MimeType = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the caption of the media.
+        /// </summary>
         public string Caption {
             get { return Record.Caption; }
             set { Record.Caption = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the alternate text of the media.
+        /// </summary>
         public string AlternateText {
             get { return Record.AlternateText; }
             set { Record.AlternateText = value; }
         }
 
-        public TermPart TermPart {
-            get { return _termPartField.Value; }
-            set { Record.TermPartRecord = value.Record; }
+        /// <summary>
+        /// Gets or sets the hierarchical location of the media.
+        /// </summary>
+        public string FolderPath {
+            get { return Record.FolderPath; }
+            set { Record.FolderPath = value; }
         }
 
-        public string Resource {
-            get { return Record.Resource; }
-            set { Record.Resource = value; }
+        /// <summary>
+        /// Gets or set the name of the media when <see cref="IMediaService"/> is used 
+        /// to store the physical media. If <value>null</value> then the media is not associated
+        /// with a local file.
+        /// </summary>
+        public string FileName {
+            get { return Record.FileName; }
+            set { Record.FileName = value; }
+        }
+
+        /// <summary>
+        /// Gets the public Url of the media if stored locally.
+        /// </summary>
+        public string MediaUrl {
+            get { return _publicUrl.Value;  }
         }
     }
 }

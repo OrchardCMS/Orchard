@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.MediaLibrary.Services;
 using Orchard.Themes;
@@ -18,22 +15,22 @@ namespace Orchard.MediaLibrary.Controllers {
             _mediaLibraryService = mediaManagerService;
         }
 
-        public ActionResult Index(int id) {
+        public ActionResult Index(string folderPath) {
 
-            return View(id);
+            return View((object)folderPath);
         }
 
 
         [HttpPost]
-        public JsonResult ImagePost(int id, string url) {
+        public JsonResult ImagePost(string folderPath, string url) {
 
             try {
                 var buffer = new WebClient().DownloadData(url);
                 var stream = new MemoryStream(buffer);
-                var mediaPart = _mediaLibraryService.ImportStream(id, stream, Path.GetFileName(url));
+                var mediaPart = _mediaLibraryService.ImportMedia(stream, folderPath, Path.GetFileName(url));
 
                 return new JsonResult {
-                    Data = new {id, mediaPart.Resource}
+                    Data = new {folderPath, MediaPath = mediaPart.FileName}
                 };
             }
             catch(Exception e) {

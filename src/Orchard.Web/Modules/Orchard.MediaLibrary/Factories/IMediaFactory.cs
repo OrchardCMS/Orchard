@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Orchard.ContentManagement;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Factories {

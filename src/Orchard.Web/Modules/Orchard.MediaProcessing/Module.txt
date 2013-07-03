@@ -6,4 +6,4 @@ Version: 1.7
 OrchardVersion: 1.7
 Description: Module for processing Media e.g. image resizing
 Category: Media
-Dependencies: Orchard.Media, Orchard.Forms
+Dependencies: Orchard.Forms

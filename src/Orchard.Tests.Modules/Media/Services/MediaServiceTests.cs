@@ -218,6 +218,10 @@ namespace Orchard.Tests.Modules.Media.Services {
                 return FileSystemStorageProvider.GetPublicUrl(path);
             }
 
+            public string GetStoragePath(string url) {
+                throw new NotImplementedException();
+            }
+
             public IStorageFile GetFile(string path) {
                 throw new NotImplementedException();
             }

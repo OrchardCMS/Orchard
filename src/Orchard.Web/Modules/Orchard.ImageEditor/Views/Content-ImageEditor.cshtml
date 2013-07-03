@@ -19,7 +19,7 @@
     }
 }
 
-<input type="hidden" id="image-editor-url" value="@Url.Content(mediaPart.Resource)"/>
+<input type="hidden" id="image-editor-url" value="@Url.Content(mediaPart.MediaPath)"/>
 <input type="hidden" id="image-editor-callback" value="@Model.CallBack"/>
 
 <div id="image-editor">
@@ -41,7 +41,7 @@
     <div id="image-editor-container" class="editor-shadow">
         <div id="image-editor-image-wrapper" >
             @*<canvas id="image-editor-image" class="canvas-shadow"></canvas>*@        
-            <img id="image-editor-image" class="canvas-shadow" src="@Url.Content(mediaPart.Resource)">    
+            <img id="image-editor-image" class="canvas-shadow" src="@Url.Content(mediaPart.MediaUrl)">    
         </div>
     </div>
     

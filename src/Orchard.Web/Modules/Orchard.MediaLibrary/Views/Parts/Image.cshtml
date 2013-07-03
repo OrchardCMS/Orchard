@@ -5,5 +5,5 @@
     var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
 }           
 
-<img width="@imagePart.Width" height="@imagePart.Height" alt="@mediaPart.AlternateText" src="@Url.Content(mediaPart.Resource)" />
+<img width="@imagePart.Width" height="@imagePart.Height" alt="@mediaPart.AlternateText" src="@Url.Content(mediaPart.MediaUrl)" />
 

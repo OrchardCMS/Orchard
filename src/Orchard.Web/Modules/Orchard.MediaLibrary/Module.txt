@@ -9,5 +9,5 @@ Features:
     Orchard.MediaLibrary:
 		Name: Media Library
         Description: Provides enhanced Media management tools.
-		Dependencies: Orchard.Taxonomies, Orchard.MediaProcessing, Title
+		Dependencies: Title, Orchard.MediaProcessing
 		Category: Media

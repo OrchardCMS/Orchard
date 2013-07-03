@@ -4,11 +4,14 @@
 }
 
 <div class="breadCrumbs">
-<p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }) &#62; 
-        @foreach (var folder in Model.Hierarchy) { 
-            @Html.ActionLink(folder.Name, "Edit", new { id = folder.TermId }) <text>&#62;</text>
+    <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }) &#62; 
+    @foreach (var folder in Model.FolderPath.Split('/')) {
+        if (!String.IsNullOrEmpty(folder)) {
+            @Html.ActionLink(folder, "Edit", new {folderPath = folder})
+            <text>&#62;</text>
         }
-        @T("Add a Folder") </p>
+    }
+    @T("Add a Folder") </p>
 </div> 
 
 @using (Html.BeginFormAntiForgeryPost()) { 
@@ -16,10 +19,10 @@
     <fieldset>
         <label for="Name">@T("Folder Name")</label>
         <input id="Name" class="textMedium" name="Name" type="text" autofocus="autofocus"/>
-        @Html.HiddenFor(m => m.ParentFolderId)
+        @Html.HiddenFor(m => m.FolderPath)
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
-        @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new { @class= "button"})
+        @Html.ActionLink(T("Cancel").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary", folderPath = Model.FolderPath }, new { @class= "button"})
     </fieldset>
  }

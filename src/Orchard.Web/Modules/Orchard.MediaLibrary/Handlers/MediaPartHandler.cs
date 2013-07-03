@@ -1,37 +1,34 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.FileSystems.Media;
+using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.Models;
-using Orchard.Taxonomies.Models;
 
 namespace Orchard.MediaLibrary.Handlers {
     public class MediaPartHandler : ContentHandler {
-        private readonly IContentManager _contentManager;
+        private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IStorageProvider _storageProvider;
 
         public MediaPartHandler(
-            IContentManager contentManager, 
+            IMediaLibraryService mediaLibraryService,
             IRepository<MediaPartRecord> repository, 
             IStorageProvider storageProvider) {
-            
-            _contentManager = contentManager;
+            _mediaLibraryService = mediaLibraryService;
             _storageProvider = storageProvider;
 
             Filters.Add(StorageFilter.For(repository));
-            OnLoading<MediaPart>((context, part) => LazyLoadHandlers(part));
-            OnVersioning<MediaPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
             OnRemoving<MediaPart>((context, part) => RemoveMedia(part));
-        }
-
-        protected void LazyLoadHandlers(MediaPart part) {
-            // add handlers that will load content for id's just-in-time
-            part.TermPartField.Loader(() => part.Record.TermPartRecord == null ? null : _contentManager.Get<TermPart>(part.Record.TermPartRecord.Id));
+            OnLoading<MediaPart>((context, part) => {
+                if (!String.IsNullOrEmpty(part.FileName)) {
+                    part._publicUrl.Loader(x => _mediaLibraryService.GetMediaPublicUrl(part.FolderPath, part.FileName));
+                }
+            });
         }
 
         protected void RemoveMedia(MediaPart part) {
-            if (part.Resource.StartsWith("~/")) {
-                var path = _storageProvider.GetLocalPath(part.Resource);
+            if (!string.IsNullOrEmpty(part.FileName)) {
+                var path = _storageProvider.Combine(part.FolderPath, part.FileName);
                 _storageProvider.DeleteFile(path);
             }
         }

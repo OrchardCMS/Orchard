@@ -19,10 +19,10 @@
     <div id="media-library-toolbar">
     
         <div id="media-library-toolbar-actions">
-            <a href="@Url.Action("Index", "Admin", new { id = Model.Hierarchy.First().TermId})" class="button">@T("Close")</a>
+            <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
         </div>
         
-        @T("Media Folders") @foreach (var folder in Model.Hierarchy.Reverse()) {<text> &gt; </text>@folder.Name}
+        @T("Media Folders") @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
         
     </div>
 
@@ -32,7 +32,7 @@
             string sectionHeaderTextHint = menuItem.Text.TextHint;
             var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
                     
-            <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index/@Model.Hierarchy.First().TermId">@menuItem.Text</a></div>    
+            <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>    
         }
         </div>
         <div id="media-library-main-list-wrapper">

@@ -17,8 +17,8 @@
 <div id="media-library">
     <div id="media-library-toolbar">
         <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
-        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))/' + displayed() }" class="button"  id="button-create-folder">@T("Create Folder")</a>
-        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))/' + displayed() }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
+        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))/folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
+        <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
 
         <label for="filterMediaType">@T("Show")</label>
         <select id="filterMediaType" name="FilteredMediaType" data-bind="selectedOptions: mediaType">
@@ -162,20 +162,19 @@
                 self.orderMedia = ko.observableArray(['created']);
                 self.mediaType = ko.observableArray([]);
 
-                self.getMediaItems = function (id, max) {
+                self.getMediaItems = function (folderPath, max) {
                     if (self.pendingRequest()) {
                         return;
                     }
                     
                     if (self.results().length > 0 && self.results().length >= self.mediaItemsCount) {
-                        // console.log('no more content, mediaItemsCount: ' + self.mediaItemsCount);
                         return;
                     }
 
                     self.pendingRequest(true);
 
-                    var url = id
-                        ? '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Admin"))/' + id + '?skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType()
+                    var url = folderPath
+                        ? '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Admin"))?folderPath=' + encodeURIComponent(folderPath) + '&skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType()
                         : '@HttpUtility.JavaScriptStringEncode(Url.Action("RecentMediaItems", "Admin"))?skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType();
                     
                     $.ajax({
@@ -238,17 +237,17 @@
                     }
                 });
                 
-                self.displayFolder = function (id) {
+                self.displayFolder = function (folderPath) {
                     
                     self.results([]);
 
-                    self.getMediaItems(id, 20);
-                    self.displayed(id);
+                    self.getMediaItems(folderPath, 20);
+                    self.displayed(folderPath);
                 };
 
-                self.selectFolder = function (id) {
-                    window.history.pushState({ action: 'displayFolder', folder: id }, '', '?folder=' + id);
-                    self.displayFolder(id);
+                self.selectFolder = function (folderPath) {
+                    window.history.pushState({ action: 'displayFolder', folderPath: folderPath }, '', '?folderPath=' + folderPath);
+                    self.displayFolder(folderPath);
                 };
 
                 self.selectRecent = function () {
@@ -335,7 +334,7 @@
                 };
 
                 self.importMedia = function() {
-                    var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))/' + self.displayed();
+                    var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))?folderPath=' + encodeURIComponent(self.displayed());
                     window.location = url;
                 };
 
@@ -361,10 +360,10 @@
             var viewModel = new MediaIndexViewModel();
             ko.applyBindings(viewModel);
             
-            @if (viewModel.Folder.HasValue) {
+            @if (viewModel.FolderPath != null) {
             <text>
-            viewModel.displayFolder(@viewModel.Folder.Value);
-            window.history.pushState({ action: 'displayFolder', folder: @viewModel.Folder.Value }, '', '?folder=@viewModel.Folder.Value');
+            viewModel.displayFolder('@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)');
+            window.history.pushState({ action: 'displayFolder', folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)' }, '', '?folderPath=@HttpUtility.UrlEncode(viewModel.FolderPath)');
             </text>
             }
             else {
@@ -437,24 +436,25 @@
                 tolerance: "pointer",
                 drop: function(event, ui) {
                     $(this).removeClass('dropping');
-                    var targetId = $(this).data('term-id');
+                    var folderPath = $(this).data('media-path');
 
-                    if (targetId == viewModel.displayed()) {
+                    if (folderPath == viewModel.displayed()) {
                         return;
                     }
                     
                     var ids = [];
                     viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
                     var url = '@Url.Action("Move", "Folder", new { area = "Orchard.MediaLibrary" })';
-                    
 
+                    console.log(folderPath);
+                    
                     $.ajax({
                         type: "POST",
                         url: url,
                         dataType: "json",
                         traditional: true,
                         data: {
-                            targetId: targetId,
+                            folderPath: folderPath,
                             mediaItemIds: ids,
                             __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                         },

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using Orchard.MediaLibrary.Services;
@@ -15,13 +14,13 @@ namespace Orchard.MediaLibrary.Controllers {
             _mediaLibraryService = mediaManagerService;
         }
 
-        public ActionResult Index(int id) {
+        public ActionResult Index(string folderPath) {
 
-            return View(id);
+            return View((object)folderPath);
         }
         
         [HttpPost]
-        public ActionResult Upload(int id) {
+        public ActionResult Upload(string folderPath) {
             var statuses = new List<object>();
 
             // Loop through each file in the request
@@ -34,8 +33,8 @@ namespace Orchard.MediaLibrary.Controllers {
                 if (filename == "blob") {
                     filename = "clipboard.png";
                 }
-                
-                var mediaPart = _mediaLibraryService.ImportStream(id, file.InputStream, filename);
+
+                var mediaPart = _mediaLibraryService.ImportMedia(file.InputStream, folderPath, filename);
 
                 statuses.Add(new {
                     id = mediaPart.Id,
@@ -43,7 +42,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     type = mediaPart.MimeType,
                     size = file.ContentLength,
                     progress = 1.0,
-                    url= mediaPart.Resource,
+                    url= mediaPart.FileName,
                 });
             }
 

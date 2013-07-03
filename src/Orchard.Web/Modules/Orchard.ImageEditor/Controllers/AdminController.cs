@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.FileSystems.Media;
 using Orchard.ImageEditor.Models;
 using Orchard.MediaLibrary.Models;
+using Orchard.MediaLibrary.Services;
 using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -13,10 +13,10 @@ using Orchard.UI.Admin;
 namespace Orchard.ImageEditor.Controllers {
     [Admin]
     public class AdminController : Controller {
-        private readonly IStorageProvider _storageProvider;
+        private readonly IMediaLibraryService _mediaLibraryService;
 
-        public AdminController(IOrchardServices orchardServices, IStorageProvider storageProvider) {
-            _storageProvider = storageProvider;
+        public AdminController(IOrchardServices orchardServices, IMediaLibraryService mediaLibraryService) {
+            _mediaLibraryService = mediaLibraryService;
             Services = orchardServices;
         }
 
@@ -41,27 +41,8 @@ namespace Orchard.ImageEditor.Controllers {
         }
 
         [Themed(false)]
-        public ActionResult Touch(string src) {
-            var localPath = _storageProvider.GetLocalPath(src);
-
-            if (_storageProvider.GetFile(localPath) == null) {
-                return HttpNotFound();
-            }
-
-            var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.Resource == src).Slice(0, 1).FirstOrDefault();
-
-            return Json(media != null);
-        }
-
-        [Themed(false)]
-        public ActionResult Edit(string src) {
-            var localPath = _storageProvider.GetLocalPath(src);
-
-            if (_storageProvider.GetFile(localPath) == null) {
-                return HttpNotFound();
-            }
-
-            var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.Resource == src).Slice(0, 1).FirstOrDefault();
+        public ActionResult Edit(string folderPath, string filename) {
+            var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.FolderPath == folderPath && x.FileName == filename).Slice(0, 1).FirstOrDefault();
 
             if (media == null) {
                 return HttpNotFound();
@@ -97,10 +78,11 @@ namespace Orchard.ImageEditor.Controllers {
             content = content.Substring(signature.Length);
 
             var buffer = Convert.FromBase64String(content);
-            var localPath = _storageProvider.GetLocalPath(media.Resource);
-            _storageProvider.DeleteFile(localPath);
+
+            _mediaLibraryService.DeleteFile(media.FolderPath, media.FileName);
+
             using (var stream = new MemoryStream(buffer)) {
-                _storageProvider.SaveStream(localPath, stream);
+                _mediaLibraryService.UploadMediaFile(media.FolderPath, media.FileName, stream);
             }
 
             image.Width = width;

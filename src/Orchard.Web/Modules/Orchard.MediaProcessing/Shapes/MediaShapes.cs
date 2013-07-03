@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Hosting;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment;
@@ -126,12 +125,13 @@ namespace Orchard.MediaProcessing.Shapes {
                     }
                     else {
                         profilePart = services.Value.ContentManager.New<ImageProfilePart>("ImageProfile");
+                        profilePart.Name = Profile;
                         profilePart.Filters.Add(CustomFilter);
                     }
 
                     using (var image = GetImage(Path)) {
-                        
-                        var filterContext = new FilterContext { Media = image, FilePath = storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path)) };
+
+                        var filterContext = new FilterContext { Media = image, FilePath = storageProvider.Value.Combine("_Profiles", storageProvider.Value.Combine(Profile, CreateDefaultFileName(Path))) };
 
                         var tokens = new Dictionary<string, object>();
                         // if a content item is provided, use it while tokenizing
@@ -152,7 +152,7 @@ namespace Orchard.MediaProcessing.Shapes {
                         _fileNameProvider.Value.UpdateFileName(Profile, Path, filterContext.FilePath);
 
                         if (!filterContext.Saved) {
-                            storageProvider.Value.TryCreateFolder(profilePart.Name);
+                            storageProvider.Value.TryCreateFolder(storageProvider.Value.Combine("_Profiles", profilePart.Name));
                             var newFile = storageProvider.Value.OpenOrCreate(filterContext.FilePath);
                             using (var imageStream = newFile.OpenWrite()) {
                                 using (var sw = new BinaryWriter(imageStream)) {
@@ -177,7 +177,7 @@ namespace Orchard.MediaProcessing.Shapes {
 
                 // generate a timestamped url to force client caches to update if the file has changed
                 var publicUrl = storageProvider.Value.GetPublicUrl(filePath);
-                var timestamp = storageProvider.Value.GetFile(storageProvider.Value.GetLocalPath(filePath)).GetLastUpdated().Ticks;
+                var timestamp = storageProvider.Value.GetFile(filePath).GetLastUpdated().Ticks;
                 Output.Write(publicUrl + "?v=" + timestamp.ToString(CultureInfo.InvariantCulture));
             }
             catch (Exception ex) {
@@ -185,84 +185,39 @@ namespace Orchard.MediaProcessing.Shapes {
             }
         }
 
-        private enum ImagePathType
-        {
-            StorageProvider,
-            AbsoluteUrl,
-            AppRelative,
-            Invalid
-        }
+        // TODO: Update this method once the storage provider has been updated
+        private Stream GetImage(string path) {
+            var request = _services.Value.WorkContext.HttpContext.Request;
 
-        private ImagePathType GetImagePathType(string path) {
-            // /OrchardLocal/images/my-image.jpg
-            if (Uri.IsWellFormedUriString(path, UriKind.Relative)) {
-                return ImagePathType.StorageProvider;
+            var storagePath = _storageProvider.Value.GetStoragePath(path);
+            if (storagePath != null) {
+                var file = _storageProvider.Value.GetFile(storagePath);
+                return file.OpenRead();
             }
 
             // http://blob.storage-provider.net/my-image.jpg
             if (Uri.IsWellFormedUriString(path, UriKind.Absolute)) {
-                return ImagePathType.AbsoluteUrl;
+                return new WebClient().OpenRead(new Uri(path));
             }
 
             // ~/Media/Default/images/my-image.jpg
             if (VirtualPathUtility.IsAppRelative(path)) {
-                return ImagePathType.AppRelative;
+                return new WebClient().OpenRead(new Uri(request.Url, VirtualPathUtility.ToAbsolute(path)));
             }
 
-            return ImagePathType.Invalid;
-        }
-
-        // TODO: Update this method once the storage provider has been updated
-        private Stream GetImage(string path) {
-            var storageProvider = new Lazy<IStorageProvider>(() => _storageProvider.Value);
-            var services = new Lazy<IOrchardServices>(() => _services.Value);
-            var webClient = new Lazy<WebClient>(() => new WebClient());
-
-            var request = services.Value.WorkContext.HttpContext.Request;
-
-            switch (GetImagePathType(path)) {
-                case ImagePathType.StorageProvider:
-                    path = storageProvider.Value.GetLocalPath(path);
-
-                    // images/my-image.jpg
-                    var file = storageProvider.Value.GetFile(path);
-                    return file.OpenRead();
-
-                case ImagePathType.AbsoluteUrl:
-                    return webClient.Value.OpenRead(new Uri(path));
-
-                case ImagePathType.AppRelative:
-                    return webClient.Value.OpenRead(new Uri(request.Url, VirtualPathUtility.ToAbsolute(path)));
-
-                default:
-                    throw new ArgumentException("invalid path");
-            }
+            return null;
         }
 
         private bool TryGetImageLastUpdated(string path, out DateTime lastUpdated) {
-            var imagePathType = GetImagePathType(path);
-            switch (imagePathType)
-            {
-                case ImagePathType.StorageProvider:
-                    path = _storageProvider.Value.GetLocalPath(path);
-
-                    var file = _storageProvider.Value.GetFile(path);
-                    lastUpdated = file.GetLastUpdated();
-
-                    return true;
-
-                case ImagePathType.AppRelative:
-                    var serverPath = HostingEnvironment.MapPath(path);
-                    lastUpdated = File.GetLastWriteTime(serverPath);
-
-                    return true;
-
-                default:
-                    Logger.Warning("Cannot get last updated time for {0}, {1}", imagePathType, path);
-
-                    lastUpdated = DateTime.MinValue;
-                    return false;
+            var storagePath = _storageProvider.Value.GetStoragePath(path);
+            if (storagePath != null) {
+                var file = _storageProvider.Value.GetFile(storagePath);
+                lastUpdated = file.GetLastUpdated();
+                return true;
             }
+
+            lastUpdated = DateTime.MinValue;
+            return false;
         }
 
         private static string CreateDefaultFileName(string path) {

@@ -87,7 +87,7 @@
                 url: '@Url.Action("Upload", "ClientStorage")',
                 autoUpload: true,
                 formData: {
-                    id: @Model,
+                    folderPath: '@HttpUtility.JavaScriptStringEncode(Model)',
                     __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                 },
                 done: function (e, data) {

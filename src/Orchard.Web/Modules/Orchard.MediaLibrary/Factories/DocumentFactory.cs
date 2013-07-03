@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Orchard.ContentManagement;
-using Orchard.FileSystems.Media;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Factories {
@@ -11,48 +10,30 @@ namespace Orchard.MediaLibrary.Factories {
     /// </summary>
     public class DocumentFactorySelector : IMediaFactorySelector {
         private readonly IContentManager _contentManager;
-        private readonly IStorageProvider _storageProvider;
 
-        public DocumentFactorySelector(IContentManager contentManager, IStorageProvider storageProvider) {
+        public DocumentFactorySelector(IContentManager contentManager) {
             _contentManager = contentManager;
-            _storageProvider = storageProvider;
         }
 
         public MediaFactorySelectorResult GetMediaFactory(Stream stream, string mimeType) {
             return new MediaFactorySelectorResult {
                 Priority = -10,
-                MediaFactory = new DocumentFactory(_contentManager, _storageProvider)
+                MediaFactory = new DocumentFactory(_contentManager)
             };
         }
     }
 
     public class DocumentFactory : IMediaFactory {
         private readonly IContentManager _contentManager;
-        private readonly IStorageProvider _storageProvider;
 
-        public const string BaseFolder = "Documents";
-
-        public DocumentFactory(IContentManager contentManager, IStorageProvider storageProvider) {
+        public DocumentFactory(IContentManager contentManager) {
             _contentManager = contentManager;
-            _storageProvider = storageProvider;
         }
 
         public MediaPart CreateMedia(Stream stream, string path, string mimeType) {
-            var uniquePath = path;
-            var index = 1;
-            while (_storageProvider.FileExists(_storageProvider.Combine(BaseFolder, uniquePath))) {
-                uniquePath = Path.GetFileNameWithoutExtension(path) + "-" + index++ + Path.GetExtension(path);
-            }
-
-            _storageProvider.SaveStream(_storageProvider.Combine(BaseFolder, uniquePath), stream);
 
             var part = _contentManager.New<MediaPart>("Document");
 
-            if (!_storageProvider.FolderExists(BaseFolder)) {
-                _storageProvider.CreateFolder(BaseFolder);
-            }
-
-            part.Resource = _storageProvider.GetPublicUrl(_storageProvider.Combine(BaseFolder, uniquePath));
             part.MimeType = mimeType;
             part.Title = Path.GetFileNameWithoutExtension(path);
 

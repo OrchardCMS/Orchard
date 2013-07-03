@@ -161,6 +161,20 @@ namespace Orchard.Media.Services {
         }
 
         /// <summary>
+        /// Moves a media file.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <param name="currentPath">The path to the file's parent folder.</param>
+        /// <param name="newPath">The path where the file will be moved to.</param>
+        public void MoveFile(string fileName, string currentPath, string newPath) {
+            Argument.ThrowIfNullOrEmpty(currentPath, "currentPath");
+            Argument.ThrowIfNullOrEmpty(newPath, "newPath");
+            Argument.ThrowIfNullOrEmpty(fileName, "fileName");
+
+            _storageProvider.RenameFile(_storageProvider.Combine(currentPath, fileName), _storageProvider.Combine(newPath, fileName));
+        }
+
+        /// <summary>
         /// Uploads a media file based on a posted file.
         /// </summary>
         /// <param name="folderPath">The path to the folder where to upload the file.</param>
