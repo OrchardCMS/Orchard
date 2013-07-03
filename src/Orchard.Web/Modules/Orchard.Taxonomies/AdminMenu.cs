@@ -7,7 +7,9 @@ namespace Orchard.Taxonomies {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Taxonomies"), "4", menu => menu
+            builder
+                .AddImageSet("taxonomies")
+                .Add(T("Taxonomies"), "4", menu => menu
                 .Add(T("Manage Taxonomies"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Taxonomies" }).Permission(Permissions.ManageTaxonomies))
             );
         }

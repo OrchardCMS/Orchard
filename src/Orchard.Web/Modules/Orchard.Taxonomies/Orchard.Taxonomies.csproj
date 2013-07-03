@@ -122,6 +122,8 @@
     <Content Include="Scripts\admin-taxonomy-tags.js" />
     <Content Include="Scripts\tagit.js" />
     <Content Include="Styles\admin-taxonomy-tags.css" />
+    <Content Include="Styles\images\menu.taxonomies.png" />
+    <Content Include="Styles\menu.taxonomies-admin.css" />
     <Content Include="Styles\ui-anim_basic_16x16.gif" />
     <Content Include="Views\Admin\Import.cshtml" />
   </ItemGroup>

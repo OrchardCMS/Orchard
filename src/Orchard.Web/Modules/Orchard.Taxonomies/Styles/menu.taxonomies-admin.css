@@ -1,0 +1,6 @@
+﻿.navicon-taxonomies {
+background-image:url(images/menu.taxonomies.png) !important;
+}
+.navicon-taxonomies:hover {
+background-position:0 -30px !important;
+}

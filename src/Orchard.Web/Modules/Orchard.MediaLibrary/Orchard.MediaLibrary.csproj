@@ -72,6 +72,9 @@
     <Content Include="Scripts\modal-window.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Styles\font-awesome\css\font-awesome.css" />
+    <Content Include="Styles\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.svg" />
     <Content Include="Styles\Images\menu.media.png" />
     <Content Include="Styles\menu.media-library-admin.css" />
     <Content Include="Styles\menu.oembed-mediaproviders.css" />
@@ -308,6 +311,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media.Raw.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.eot" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.ttf" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.woff" />
+    <Content Include="Styles\font-awesome\font\FontAwesome.otf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
