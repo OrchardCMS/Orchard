@@ -208,14 +208,14 @@
             
             $("#button-import").on("click", function (e) {
                 var antiForgeryToken = $('[name=antiforgerytoken]').val();
-                var id = $('[name=id]').val();
+                var folderPath = $('[name=folderPath]').val();
                 var action = $('[name=action]').val();
 
                 viewModel.selection().forEach(function (item) {
                     var url = item.data.MediaUrl;
                     item.status('uploading');
                     $.post(action, {
-                        id: id,
+                        folderPath: folderPath,
                         url: url,
                         __RequestVerificationToken: antiForgeryToken,
                     })
