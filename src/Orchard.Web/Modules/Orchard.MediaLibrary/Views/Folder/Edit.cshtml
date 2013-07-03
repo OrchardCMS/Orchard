@@ -7,10 +7,10 @@
 
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }) &#62; 
-        @foreach (var folder in Model.Hierarchy) { 
-            @Html.ActionLink(folder.Name, "Edit", new { id = folder.TermId }) <text>&#62;</text>
+        @foreach (var folder in Model.FolderPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)) { 
+            @folder <text>&#62;</text>
         }
-        @T("Add a Folder") </p>
+</p>
 </div> 
 
 @using (Html.BeginFormAntiForgeryPost()) { 
@@ -18,7 +18,7 @@
     <fieldset>
         <label for="Name">@T("Folder Name")</label>
         @Html.TextBoxFor(m => m.Name, new { @class = "textMedium", autofocus = "autofocus"})
-        @Html.HiddenFor(m => m.FolderId)
+        @Html.HiddenFor(m => m.FolderPath)
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>

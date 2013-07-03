@@ -17,7 +17,7 @@
 <div id="media-library">
     <div id="media-library-toolbar">
         <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
-        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))/folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
+        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
         <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
 
         <label for="filterMediaType">@T("Show")</label>

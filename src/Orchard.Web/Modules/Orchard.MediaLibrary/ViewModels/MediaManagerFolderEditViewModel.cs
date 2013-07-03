@@ -7,6 +7,5 @@ namespace Orchard.MediaLibrary.ViewModels {
         [Required]
         public string Name { get; set; }
         public string FolderPath { get; set; }
-        public IEnumerable<MediaFolder> Hierarchy { get; set; }
     }
 }
