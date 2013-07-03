@@ -44,8 +44,11 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 var source = new WebClient().DownloadString(url);
 
-                // seek type="text/xml+oembed"
+                // seek type="text/xml+oembed" or application/xml+oembed
                 var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                if (oembedSignature == -1) {
+                    oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                }
                 if (oembedSignature != -1) {
                     var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
                     var tagEnd = source.IndexOf('>', oembedSignature);
@@ -53,8 +56,8 @@ namespace Orchard.MediaLibrary.Controllers {
                     var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
                     if (matches.Count > 0) {
                         var href = matches[0].Groups[1].Value;
-                        try {   
-                            var content = new WebClient().DownloadString(href);
+                        try {
+                            var content = new WebClient().DownloadString(Server.HtmlDecode(href));
                             viewModel.Content = XDocument.Parse(content);
                         }
                         catch {
@@ -79,6 +82,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             part.FileName = url;
             part.MimeType = "text/html";
+            part.FolderPath = folderPath;
             part.Title = oembed.Element("title").Value;
             if (oembed.Element("description") != null) {
                 part.Caption = oembed.Element("description").Value;
