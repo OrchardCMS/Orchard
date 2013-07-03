@@ -9,6 +9,8 @@
         <span class="hint">@T("This migration step will convert the Contrib.Taxonomies content items to Orchard.Taxonomies.")</span>
     </fieldset>
     <fieldset>
-        <button type="submit">@T("Migrate")</button>
+        @if (ViewBag.CanMigrate) {
+            <button type="submit">@T("Migrate")</button>
+        }
     </fieldset>
 }

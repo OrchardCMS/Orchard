@@ -34,8 +34,12 @@ namespace Upgrade.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            if(_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.MediaLibrary")) {
+            ViewBag.CanMigrate = false;
+            if (_featureManager.GetEnabledFeatures().All(x => x.Id != "Orchard.MediaLibrary")) {
                 _orchardServices.Notifier.Warning(T("You need to enable Orchard.MediaLibrary in order to convert current media files to the Media Library."));
+            }
+            else {
+                ViewBag.CanMigrate = true;
             }
 
             return View();

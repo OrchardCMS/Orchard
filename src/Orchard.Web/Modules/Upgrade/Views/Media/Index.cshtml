@@ -9,6 +9,8 @@
         <span class="hint">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
     </fieldset>
     <fieldset>
-        <button type="submit">@T("Migrate")</button>
+        @if (ViewBag.CanMigrate) {
+            <button type="submit">@T("Migrate")</button>
+        }
     </fieldset>
 }
