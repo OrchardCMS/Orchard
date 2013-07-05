@@ -100,7 +100,7 @@ namespace Orchard.Environment {
                 .SelectMany(group => group
                     .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
                     .FirstOrDefault(settings => {
-                        if (settings.State.CurrentState == TenantState.State.Disabled) {
+                        if (settings.State == TenantState.Disabled) {
                             return false;
                         }
 

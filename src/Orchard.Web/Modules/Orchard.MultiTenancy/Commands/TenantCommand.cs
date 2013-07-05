@@ -47,7 +47,7 @@ namespace Orchard.MultiTenancy.Commands {
                         Name = tenantName,
                         RequestUrlHost = Host,
                         RequestUrlPrefix = UrlPrefix,
-                        State = new TenantState("Uninitialized")
+                        State = TenantState.Uninitialized
                     });
         }
 

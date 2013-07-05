@@ -75,7 +75,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         DataProvider = viewModel.DataProvider,
                         DataConnectionString = viewModel.DatabaseConnectionString,
                         DataTablePrefix = viewModel.DatabaseTablePrefix,
-                        State = new TenantState("Uninitialized"),
+                        State = TenantState.Uninitialized,
                         Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray()
                     });
 
@@ -167,7 +167,7 @@ namespace Orchard.MultiTenancy.Controllers {
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
 
             if (tenant != null && tenant.Name != _thisShellSettings.Name) {
-                tenant.State.CurrentState = TenantState.State.Disabled;
+                tenant.State = TenantState.Disabled;
                 _tenantService.UpdateTenant(tenant);
             }
 
@@ -185,7 +185,7 @@ namespace Orchard.MultiTenancy.Controllers {
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
 
             if (tenant != null && tenant.Name != _thisShellSettings.Name) {
-                tenant.State.CurrentState = TenantState.State.Running;
+                tenant.State = TenantState.Running;
                 _tenantService.UpdateTenant(tenant);
             }
 

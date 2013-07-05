@@ -112,5 +112,19 @@ namespace Orchard.Tests.Environment.Configuration {
             Assert.That(settings.HashAlgorithm, Is.EqualTo("HMACSHA256"));
             Assert.That(settings.HashKey, Is.EqualTo("HIJKLMN"));
         }
+
+
+        [Test]
+        public void SettingsDontLoseTenantState() {
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
+            var foo = new ShellSettings { Name = "Default" };
+            foo.State = TenantState.Disabled;
+
+            loader.SaveSettings(foo);
+            var settings = loader.LoadSettings().First();
+
+            Assert.That(settings.Name, Is.EqualTo("Default"));
+            Assert.That(settings.State, Is.EqualTo(TenantState.Disabled));
+        }
     }
 }

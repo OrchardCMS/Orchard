@@ -33,7 +33,8 @@ namespace Orchard.Environment.Configuration {
                             shellSettings.DataProvider = value;
                             break;
                         case "State":
-                            shellSettings.State = new TenantState(value);
+                            TenantState state;
+                            shellSettings.State = Enum.TryParse(value, true, out state) ? state : TenantState.Uninitialized;
                             break;
                         case "DataConnectionString":
                             shellSettings.DataConnectionString = value;

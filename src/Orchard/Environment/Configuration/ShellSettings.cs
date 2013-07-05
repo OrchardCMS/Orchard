@@ -16,7 +16,7 @@ namespace Orchard.Environment.Configuration {
 
         public ShellSettings() {
             _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            State = new TenantState("Invalid");
+            State = TenantState.Invalid;
             Themes = new string[0];
         }
 

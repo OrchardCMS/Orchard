@@ -255,7 +255,7 @@ namespace Orchard.Tests.Environment {
                     x.Name == y.Name &&
                     x.RequestUrlHost == y.RequestUrlHost &&
                     x.RequestUrlPrefix == y.RequestUrlPrefix &&
-                    x.State.CurrentState == y.State.CurrentState
+                    x.State == y.State
                     );
             }
 

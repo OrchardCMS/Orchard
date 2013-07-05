@@ -25,10 +25,7 @@ namespace Orchard.MultiTenancy.Services {
         }
 
         public void UpdateTenant(ShellSettings settings) {
-            var tenant = GetTenants().FirstOrDefault(ss => ss.Name == settings.Name);
-            if ( tenant != null ) {
-                _shellSettingsManager.SaveSettings(settings);
-            }
+            _shellSettingsManager.SaveSettings(settings);
         }
 
         /// <summary>
