@@ -45,7 +45,7 @@ namespace Orchard.Mvc.Routes {
                 var httpRouteDescriptor = routeDescriptor as HttpRouteDescriptor;
                 if (httpRouteDescriptor != null) {
                     var httpRouteCollection = new RouteCollection();
-                    httpRouteCollection.MapHttpRoute(httpRouteDescriptor.Name, httpRouteDescriptor.RouteTemplate, httpRouteDescriptor.Defaults);
+                    httpRouteCollection.MapHttpRoute(httpRouteDescriptor.Name, httpRouteDescriptor.RouteTemplate, httpRouteDescriptor.Defaults, httpRouteDescriptor.Constraints);
                     routeDescriptor.Route = httpRouteCollection.First();
                 }
 
