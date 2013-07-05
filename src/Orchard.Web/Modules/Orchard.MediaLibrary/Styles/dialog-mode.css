@@ -5,7 +5,7 @@
 }
 
 .media-library-modal-window #media-library-main-selection-select {
-    display: initial;
+    display: inherit;
 }
 
 
