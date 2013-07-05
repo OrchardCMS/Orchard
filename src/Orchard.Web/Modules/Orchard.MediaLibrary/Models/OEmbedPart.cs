@@ -9,5 +9,9 @@ namespace Orchard.MediaLibrary.Models {
             set { this.As<InfosetPart>().Set("OEmbedPart", index, null, value); }
         }
 
+        public string Source {
+            get { return this.As<InfosetPart>().Get("OEmbedPart", "Source"); }
+            set { this.As<InfosetPart>().Set("OEmbedPart", "Source", value); }
+        }
    }
 }

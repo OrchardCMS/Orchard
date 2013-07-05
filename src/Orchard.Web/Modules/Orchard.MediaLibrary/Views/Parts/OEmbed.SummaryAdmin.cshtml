@@ -1,10 +1,8 @@
-﻿@using Orchard.ContentManagement
-@using Orchard.MediaLibrary.Models
+﻿@using Orchard.MediaLibrary.Models
 @{
     OEmbedPart oEmbedPart = Model.ContentPart;
-    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
 }
 
-<a href="@mediaPart.MediaUrl" target="_blank" class="button">
+<a href="@oEmbedPart.Source" target="_blank" class="button">
     <span>@T("Preview")</span>
 </a>

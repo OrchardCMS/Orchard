@@ -134,10 +134,15 @@ namespace Orchard.MediaLibrary.Controllers {
                 return new HttpUnauthorizedResult();
 
             foreach (var media in Services.ContentManager.Query().ForPart<MediaPart>().ForContentItems(mediaItemIds).List()) {
-                var uniqueFilename = _mediaLibraryService.GetUniqueFilename(folderPath, media.FileName);
-                _mediaLibraryService.MoveFile(media.FolderPath, media.FileName, folderPath, uniqueFilename);
+
+                // don't try to rename the file if there is no associated media file
+                if (!String.IsNullOrEmpty(media.FileName)) {
+                    var uniqueFilename = _mediaLibraryService.GetUniqueFilename(folderPath, media.FileName);
+                    _mediaLibraryService.MoveFile(media.FolderPath, media.FileName, folderPath, uniqueFilename);
+                    media.FileName = uniqueFilename;
+                }
+
                 media.FolderPath = folderPath;
-                media.FileName = uniqueFilename;
             }
 
             return Json(true);

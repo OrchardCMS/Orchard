@@ -80,7 +80,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var part = Services.ContentManager.New<MediaPart>("OEmbed");
 
-            part.FileName = url;
+            
             part.MimeType = "text/html";
             part.FolderPath = folderPath;
             part.Title = oembed.Element("title").Value;
@@ -88,6 +88,8 @@ namespace Orchard.MediaLibrary.Controllers {
                 part.Caption = oembed.Element("description").Value;
             }
             var oembedPart = part.As<OEmbedPart>();
+
+            oembedPart.Source = url;
 
             foreach (var element in oembed.Elements()) {
                 oembedPart[element.Name.LocalName] = element.Value;
