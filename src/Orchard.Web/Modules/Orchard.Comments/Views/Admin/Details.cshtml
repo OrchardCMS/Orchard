@@ -1,4 +1,5 @@
 ﻿@model CommentsDetailsViewModel
+@using Orchard.Comments.Models
 @using Orchard.Comments.ViewModels;
 
 @{ Layout.Title = T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString(); }
@@ -69,7 +70,7 @@
                     <input type="hidden" value="@Model.CommentedItemId" name="CommentedItemId" />
                 </td>
                 <td>
-                    if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending"); }
+                    @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending"); }
                     else { @T("Approved"); }
                 </td>
                 <td>@commentEntry.Comment.Author</td>
