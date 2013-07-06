@@ -139,7 +139,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
 
                     if (normalizedPath.EndsWith("*")) {
                         var prefix = normalizedPath.Substring(0, normalizedPath.Length - 1);
-                        return ctx => VirtualPathUtility.ToAppRelative(ctx.Path ?? "").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
+                        return ctx => VirtualPathUtility.ToAppRelative(ctx.Path ?? "/").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
                     }
 
                     normalizedPath = VirtualPathUtility.AppendTrailingSlash(normalizedPath);
