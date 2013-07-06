@@ -31,6 +31,9 @@ using System.Security;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
+
+
+// CHANGE ON THIS VERSION NEEDS TO BE APPLIED ON WEB.CONFIG TOO 
 [assembly: AssemblyVersion("1.7")]
 [assembly: AssemblyFileVersion("1.7")]
 
