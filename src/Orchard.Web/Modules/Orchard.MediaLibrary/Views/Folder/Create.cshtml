@@ -4,7 +4,7 @@
 }
 
 <div class="breadCrumbs">
-    <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }) &#62; 
+    <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new {}) &#62; 
     @foreach (var folder in Model.FolderPath.Split('/')) {
         if (!String.IsNullOrEmpty(folder)) {
             @Html.ActionLink(folder, "Edit", new {folderPath = folder})
