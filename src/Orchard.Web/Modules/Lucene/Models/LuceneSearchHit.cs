@@ -1,7 +1,5 @@
 ﻿using System;
 using Lucene.Net.Documents;
-using System.Globalization;
-using Lucene.Net.Util;
 using Orchard.Indexing;
 
 namespace Lucene.Models {
@@ -20,26 +18,26 @@ namespace Lucene.Models {
 
         public int GetInt(string name) {
             var field = _doc.GetField(name);
-            return field == null ? 0 : Int32.Parse(field.StringValue());
+            return field == null ? 0 : Int32.Parse(field.StringValue);
         }
 
         public double GetDouble(string name) {
             var field = _doc.GetField(name);
-            return field == null ? 0 : double.Parse(field.StringValue());
+            return field == null ? 0 : double.Parse(field.StringValue);
         }
 
         public bool GetBoolean(string name) {
-            return GetInt(name) > 0 ? true : false;
+            return GetInt(name) > 0;
         }
 
         public string GetString(string name) {
             var field = _doc.GetField(name);
-            return field == null ? null : field.StringValue();
+            return field == null ? null : field.StringValue;
         }
 
         public DateTime GetDateTime(string name) {
             var field = _doc.GetField(name);
-            return field == null ? DateTime.MinValue : DateTools.StringToDate(field.StringValue());
+            return field == null ? DateTime.MinValue : DateTools.StringToDate(field.StringValue);
         }
     }
 }

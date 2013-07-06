@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace Lucene.Services {
         private bool _asFilter;
 
         // pending clause attributes
-        private BooleanClause.Occur _occur;
+        private Occur _occur;
         private bool _exactMatch;
         private float _boost;
         private Query _query;
@@ -53,7 +52,7 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder Parse(string defaultField, string query, bool escape) {
-            return Parse(new[] { defaultField }, query, escape);
+            return Parse(new[] {defaultField}, query, escape);
         }
 
         public ISearchBuilder Parse(string[] defaultFields, string query, bool escape) {
@@ -135,12 +134,12 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder Mandatory() {
-            _occur = BooleanClause.Occur.MUST;
+            _occur = Occur.MUST;
             return this;
         }
 
         public ISearchBuilder Forbidden() {
-            _occur = BooleanClause.Occur.MUST_NOT;
+            _occur = Occur.MUST_NOT;
             return this;
         }
 
@@ -155,7 +154,7 @@ namespace Lucene.Services {
         }
 
         private void InitPendingClause() {
-            _occur = BooleanClause.Occur.SHOULD;
+            _occur = Occur.SHOULD;
             _exactMatch = false;
             _query = null;
             _boost = 0;
@@ -172,13 +171,13 @@ namespace Lucene.Services {
             // comparing floating-point numbers using an epsilon value
             const double epsilon = 0.001;
             if (Math.Abs(_boost - 0) > epsilon) {
-                _query.SetBoost(_boost);
+                _query.Boost = _boost;
             }
 
             if (!_exactMatch) {
                 var termQuery = _query as TermQuery;
                 if (termQuery != null) {
-                    var term = termQuery.GetTerm();
+                    var term = termQuery.Term;
                     // prefixed queries are case sensitive
                     _query = new PrefixQuery(term);
                 }
@@ -259,14 +258,16 @@ namespace Lucene.Services {
             Query resultQuery = booleanQuery;
 
             if (_clauses.Count == 0) {
-                if (_filters.Count > 0) { // only filters applieds => transform to a boolean query
+                if (_filters.Count > 0) {
+                    // only filters applieds => transform to a boolean query
                     foreach (var clause in _filters) {
                         booleanQuery.Add(clause);
                     }
 
                     resultQuery = booleanQuery;
                 }
-                else { // search all documents, without filter or clause
+                else {
+                    // search all documents, without filter or clause
                     resultQuery = new MatchAllDocsQuery(null);
                 }
             }
@@ -302,11 +303,11 @@ namespace Lucene.Services {
                 return Enumerable.Empty<ISearchHit>();
             }
 
-            try {
+            using (searcher) {
                 var sort = String.IsNullOrEmpty(_sort)
                                ? Sort.RELEVANCE
                                : new Sort(new SortField(_sort, _comparer, _sortDescending));
-                var collector = TopFieldCollector.create(
+                var collector = TopFieldCollector.Create(
                     sort,
                     _count + _skip,
                     false,
@@ -318,18 +319,14 @@ namespace Lucene.Services {
                 searcher.Search(query, collector);
 
                 var results = collector.TopDocs().ScoreDocs
-                    .Skip(_skip)
-                    .Select(scoreDoc => new LuceneSearchHit(searcher.Doc(scoreDoc.doc), scoreDoc.score))
-                    .ToList();
+                                       .Skip(_skip)
+                                       .Select(scoreDoc => new LuceneSearchHit(searcher.Doc(scoreDoc.Doc), scoreDoc.Score))
+                                       .ToList();
 
                 Logger.Debug("Search results: {0}", results.Count);
 
                 return results;
             }
-            finally {
-                searcher.Close();
-            }
-
         }
 
         public int Count() {
@@ -345,16 +342,12 @@ namespace Lucene.Services {
                 return 0;
             }
 
-            try {
+            using (searcher) {
                 var hits = searcher.Search(query, Int16.MaxValue);
                 Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
                 var length = hits.ScoreDocs.Length;
                 return Math.Min(length - _skip, _count);
             }
-            finally {
-                searcher.Close();
-            }
-
         }
 
         public ISearchBits GetBits() {
@@ -370,30 +363,22 @@ namespace Lucene.Services {
                 return null;
             }
 
-            try {
+            using (searcher) {
                 var filter = new QueryWrapperFilter(query);
-                var bits = filter.GetDocIdSet(searcher.GetIndexReader());
-                var disi = new OpenBitSetDISI(bits.Iterator(), searcher.MaxDoc());
+                var bits = filter.GetDocIdSet(searcher.IndexReader);
+                var disi = new OpenBitSetDISI(bits.Iterator(), searcher.MaxDoc);
                 return new SearchBits(disi);
-            }
-            finally {
-                searcher.Close();
             }
         }
 
         public ISearchHit Get(int documentId) {
             var query = new TermQuery(new Term("id", documentId.ToString(CultureInfo.InvariantCulture)));
 
-            var searcher = new IndexSearcher(_directory, true);
-            try {
+            using (var searcher = new IndexSearcher(_directory, true)) {
                 var hits = searcher.Search(query, 1);
                 Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
-                return hits.ScoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.ScoreDocs[0].doc), hits.ScoreDocs[0].score) : null;
-            }
-            finally {
-                searcher.Close();
+                return hits.ScoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.ScoreDocs[0].Doc), hits.ScoreDocs[0].Score) : null;
             }
         }
-
     }
 }

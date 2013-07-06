@@ -89,13 +89,8 @@ namespace Lucene.Services {
                 return true;
             }
 
-            var reader = IndexReader.Open(GetDirectory(indexName), true);
-
-            try {
+            using (var reader = IndexReader.Open(GetDirectory(indexName), true)) {
                 return reader.NumDocs() == 0;
-            }
-            finally {
-                reader.Close();
             }
         }
 
@@ -104,21 +99,14 @@ namespace Lucene.Services {
                 return 0;
             }
 
-            var reader = IndexReader.Open(GetDirectory(indexName), true);
-
-            try {
+            using (var reader = IndexReader.Open(GetDirectory(indexName), true)) {
                 return reader.NumDocs();
-            }
-            finally {
-                reader.Close();
             }
         }
 
         public void CreateIndex(string indexName) {
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
-            writer.Close();
-
-            Logger.Information("Index [{0}] created", indexName);
+            using (new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED)) {
+            }
         }
 
         public void DeleteIndex(string indexName) {
@@ -135,6 +123,8 @@ namespace Lucene.Services {
         }
 
         public void Store(string indexName, IEnumerable<LuceneDocumentIndex> indexDocuments) {
+            indexDocuments = indexDocuments.ToArray();
+
             if (!indexDocuments.Any()) {
                 return;
             }
@@ -142,25 +132,13 @@ namespace Lucene.Services {
             // Remove any previous document for these content items
             Delete(indexName, indexDocuments.Select(i => i.ContentItemId));
 
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
-            LuceneDocumentIndex current = null;
-
-            try {
-
+            using(var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED)) {
                 foreach (var indexDocument in indexDocuments) {
-                    current = indexDocument;
                     var doc = CreateDocument(indexDocument);
 
                     writer.AddDocument(doc);
                     Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
                 }
-            }
-            catch (Exception ex) {
-                Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.ContentItemId, indexName);
-            }
-            finally {
-                writer.Optimize();
-                writer.Close();
             }
         }
 
@@ -169,18 +147,18 @@ namespace Lucene.Services {
         }
 
         public void Delete(string indexName, IEnumerable<int> documentIds) {
+            documentIds = documentIds.ToArray();
+            
             if (!documentIds.Any()) {
                 return;
             }
 
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
-
-            try {
+            using(var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED)) {
                 var query = new BooleanQuery();
 
                 try {
                     foreach (var id in documentIds) {
-                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), BooleanClause.Occur.SHOULD));
+                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), Occur.SHOULD));
                     }
 
                     writer.DeleteDocuments(query);
@@ -188,9 +166,6 @@ namespace Lucene.Services {
                 catch (Exception ex) {
                     Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
                 }
-            }
-            finally {
-                writer.Close();
             }
         }
 
@@ -207,13 +182,8 @@ namespace Lucene.Services {
                 return Enumerable.Empty<string>();
             }
 
-            var reader = IndexReader.Open(GetDirectory(indexName), true);
-
-            try {
+            using(var reader = IndexReader.Open(GetDirectory(indexName), true)) {
                 return reader.GetFieldNames(IndexReader.FieldOption.ALL).ToList();
-            }
-            finally {
-                reader.Close();
             }
         }
     }
