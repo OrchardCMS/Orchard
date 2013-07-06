@@ -8,7 +8,8 @@
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaGalleryFieldSettings>();
     var descriminator = Html.FieldIdFor(m => m.Field.Items);
-
+    var safeDescriminator = descriminator.Replace("-", "_");
+        
     var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
 }
 
@@ -61,7 +62,7 @@
         var required = @(settings.Required ? "true" : "false");
         var multiple = @(settings.Multiple ? "true" : "false");
         var addButton = $('#btn-@descriminator');
-        var @(descriminator)_Template = '<tr><td>&nbsp;</td><td><span data-url="{url}" data-alt="{alt}" data-class="{class}" data-style="{style}" data-align="{align}" data-width="{width}" data-height="{height}" data-fieldid="@descriminator" class="media-gallery-item"><a title="@T("Edit")" class="media-gallery-edit" href="#">{url}</a></span></td><td><span class="media-gallery-remove button grey">@T("Remove")</span></td></tr>';
+        var @(safeDescriminator)_Template = '<tr><td>&nbsp;</td><td><span data-url="{url}" data-alt="{alt}" data-class="{class}" data-style="{style}" data-align="{align}" data-width="{width}" data-height="{height}" data-fieldid="@descriminator" class="media-gallery-item"><a title="@T("Edit")" class="media-gallery-edit" href="#">{url}</a></span></td><td><span class="media-gallery-remove button grey">@T("Remove")</span></td></tr>';
         
         var refreshIds = function() {
             var id = $('#@Html.FieldIdFor(m => m.SelectedItems)');
@@ -88,7 +89,7 @@
             addButton.trigger("orchard-admin-pickimage-open", {
                 callback: function(data) {
                     
-                    var template = @(descriminator)_Template
+                    var template = @(safeDescriminator)_Template
                         .replace( /\{url\}/g , formatUrl(data.img.src))
                         .replace( /\{alt\}/g , data.img.alt)
                         .replace( /\{class\}/g , data.img['class'])
@@ -130,7 +131,7 @@
                 //uploadMediaPath: 'images',
                 callback: function (data) {
                     
-                    var template = @(descriminator)_Template
+                    var template = @(safeDescriminator)_Template
                          .replace( /\{url\}/g , formatUrl(data.img.src))
                          .replace( /\{alt\}/g , data.img.alt)
                          .replace( /\{class\}/g , data.img['class'])
