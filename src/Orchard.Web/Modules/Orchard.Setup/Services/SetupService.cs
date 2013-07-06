@@ -155,7 +155,7 @@ namespace Orchard.Setup.Services {
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect
 
             // must mark state as Running - otherwise standalone enviro is created "for setup"
-            shellSettings.State = new TenantState("Running");
+            shellSettings.State = TenantState.Running;
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
                     executionId = CreateTenantData(context, environment);

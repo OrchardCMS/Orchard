@@ -51,7 +51,7 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
             if (settings == null) {
                 settings = new ShellSettings {
                     Name = name,
-                    State = new TenantState("Uninitialized")
+                    State = TenantState.Uninitialized
                 };
             }
     

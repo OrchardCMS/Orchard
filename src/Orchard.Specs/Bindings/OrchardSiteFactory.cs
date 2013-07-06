@@ -93,7 +93,7 @@ namespace Orchard.Specs.Bindings {
                 var shellSettings = new ShellSettings {
                     Name = shellName,
                     RequestUrlHost = hostName,
-                    State = new TenantState("Uninitialized"),
+                    State = TenantState.Uninitialized,
                 };
                 using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
                     environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
