@@ -83,7 +83,7 @@ namespace Orchard.Environment {
                     "~/Core/Containers/Views",
                     "~/Modules/Orchard.Widgets/Views",
                     "~/Modules/Orchard.Users/Views",
-                    "~/Modules/Orchard.Media/Views",
+                    "~/Modules/Orchard.MediaLibrary/Views",
                     "~/Modules/Orchard.Comments/Views",
 
                     // Leave these at end (as a best effort)
