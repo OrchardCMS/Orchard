@@ -55,7 +55,9 @@
             canvas.height = imeImage.height;
             var context = canvas.getContext('2d');
             context.drawImage(image, 0, 0, imeImage.width, imeImage.height, 0, 0, imeImage.width, imeImage.height);
-            var imageSrc = canvas.toDataURL("image/png");
+
+            var quality = 0.92;
+            var imageSrc = canvas.toDataURL("image/jpeg", quality);
             
             $.post($('#upload-image-url').val(), {
                 content: imageSrc,

@@ -4,7 +4,7 @@
     ImagePart imagePart = Model.ContentPart;
     
     // do not show the editor if the image is not local
-    if (String.IsNullOrEmpty(imagePart.As<MediaPart>().MediaPath)) {
+    if (String.IsNullOrEmpty(imagePart.As<MediaPart>().MediaUrl)) {
         return;
     }
 }           

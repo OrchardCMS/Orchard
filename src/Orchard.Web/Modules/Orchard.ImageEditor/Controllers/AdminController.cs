@@ -67,7 +67,7 @@ namespace Orchard.ImageEditor.Controllers {
                 return HttpNotFound();
             }
 
-            const string signature = "data:image/png;base64,";
+            const string signature = "data:image/jpeg;base64,";
 
             if (!content.StartsWith(signature, StringComparison.OrdinalIgnoreCase)) {
                 return HttpNotFound();
