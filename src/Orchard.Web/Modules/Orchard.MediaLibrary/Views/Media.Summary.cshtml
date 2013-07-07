@@ -4,11 +4,11 @@
     MediaPart mediaPart = Model.ContentItem.MediaPart;
     var contentTypeClassName = mediaPart.ContentItem.ContentType.HtmlClassify();
 }
-<article class="media-item media-item-summary-admin @contentTypeClassName">
+<article class="media-item media-item-summary @contentTypeClassName">
     <header>
         @Display(Model.Header)
         @if (Model.Meta != null) {
-            <div class="properties">
+            <div class="metadata">
             @Display(Model.Meta)
             </div>
         }
