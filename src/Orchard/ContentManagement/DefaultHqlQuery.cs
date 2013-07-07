@@ -264,8 +264,9 @@ namespace Orchard.ContentManagement {
                 }
             }
 
-            // no order clause was specified
-            if (firstSort) {
+            // no order clause was specified, use a default sort order, unless it's a count
+            // query hence it doesn't need one
+            if (firstSort && !count) {
                 sb.Append("order by Id");
             }
 
