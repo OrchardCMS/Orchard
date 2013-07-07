@@ -17,15 +17,16 @@ namespace Upgrade.Controllers {
     public class MediaController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IFeatureManager _featureManager;
-        private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IEnumerable<IMediaLibraryService> _mediaLibraryServices;
+        private IMediaLibraryService _mediaLibraryService { get { return _mediaLibraryServices.FirstOrDefault(); }} 
 
         public MediaController(
             IOrchardServices orchardServices,
             IFeatureManager featureManager,
-            IMediaLibraryService mediaLibraryService) {
+            IEnumerable<IMediaLibraryService> mediaLibraryServices) {
             _orchardServices = orchardServices;
             _featureManager = featureManager;
-            _mediaLibraryService = mediaLibraryService;
+            _mediaLibraryServices = mediaLibraryServices;
 
             Logger = NullLogger.Instance;
         }
