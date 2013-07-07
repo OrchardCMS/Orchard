@@ -7,11 +7,10 @@
     Style.Require("WorkflowsAdmin");
     Style.Require("WorkflowsActivities");
     Style.Require("jQueryUI_Orchard");
-    Script.Require("jsPlumb");    
-    Script.Include("orchard-workflows.js").AtFoot();
+    Script.Require("jsPlumb");
     Script.Include("orchard-workflows-serialize.js").AtFoot();
+    Script.Include("orchard-workflows.js").AtFoot();
 }
-
 
 @using (Html.BeginFormAntiForgeryPost("Edit")) {
     @Html.ValidationSummary()
