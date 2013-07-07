@@ -64,7 +64,7 @@ namespace Orchard.Search.Controllers {
                     return View("NoIndex");
                 }
 
-                var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(settings.SearchIndex);
+                var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchIndex);
 
                 try {
                     builder.Parse(searchFields, searchText);
