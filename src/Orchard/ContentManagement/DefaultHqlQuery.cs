@@ -24,6 +24,8 @@ namespace Orchard.ContentManagement {
         protected readonly List<Tuple<IAlias, Action<IHqlExpressionFactory>>> _wheres = new List<Tuple<IAlias, Action<IHqlExpressionFactory>>>();
         protected readonly List<Tuple<IAlias, Action<IHqlSortFactory>>> _sortings = new List<Tuple<IAlias, Action<IHqlSortFactory>>>();
 
+        private bool cacheable;
+
         public IContentManager ContentManager { get; private set; }
 
         public DefaultHqlQuery(
@@ -168,11 +170,13 @@ namespace Orchard.ContentManagement {
 
         public IEnumerable<ContentItem> Slice(int skip, int count) {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            var hql = ToHql(false);
+            cacheable = true;
             
+            var hql = ToHql(false);
+
             var query = _session
                 .CreateQuery(hql)
-                .SetCacheable(true)
+                .SetCacheable(cacheable)
                 ;
 
             if (skip != 0) {
@@ -215,6 +219,7 @@ namespace Orchard.ContentManagement {
                     sort.Item2(sortFactory);
 
                     if (!sortFactory.Randomize) {
+                        cacheable = false;
                         sb.Append(", ");
                         sb.Append(sort.Item1.Name).Append(".").Append(sortFactory.PropertyName);
                     }
