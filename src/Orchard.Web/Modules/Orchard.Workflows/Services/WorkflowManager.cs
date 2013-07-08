@@ -63,7 +63,7 @@ namespace Orchard.Workflows.Services {
             // it's important to return activities at this point as a workflow could be awaiting 
             // on several ones. When an activity is restarted, all the other ones of the same workflow are cancelled.
             awaitingActivities.AddRange(_awaitingActivityRepository.Table.Where(
-                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && x.WorkflowRecord.ContentItemRecord == target.ContentItem.Record
+                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && (target.ContentItem == null || (x.WorkflowRecord.ContentItemRecord == target.ContentItem.Record))
                 ).ToList()
             );
 
