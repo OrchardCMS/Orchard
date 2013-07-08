@@ -85,6 +85,7 @@
     <Compile Include="Services\IRuleManager.cs" />
     <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
+    <Compile Include="Services\LayerResolverSelector.cs" />
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
