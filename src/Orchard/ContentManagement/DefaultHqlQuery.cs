@@ -219,12 +219,12 @@ namespace Orchard.ContentManagement {
                     sort.Item2(sortFactory);
 
                     if (!sortFactory.Randomize) {
-                        cacheable = false;
                         sb.Append(", ");
                         sb.Append(sort.Item1.Name).Append(".").Append(sortFactory.PropertyName);
                     }
                     else {
                         // select distinct can't be used with newid()
+                        cacheable = false;
                         sb.Replace("select distinct", "select ");
                     }
                 }
