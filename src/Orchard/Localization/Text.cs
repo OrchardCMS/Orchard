@@ -25,7 +25,6 @@ namespace Orchard.Localization {
 
             var workContext = _workContextAccessor.GetContext();
             var currentCulture = workContext.CurrentCulture;
-            textHint = textHint.Replace(@"""", @"""""");
             var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length == 0 
