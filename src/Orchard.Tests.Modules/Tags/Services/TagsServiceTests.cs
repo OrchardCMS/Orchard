@@ -11,6 +11,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Tags.Handlers;
 using Orchard.Tags.Models;

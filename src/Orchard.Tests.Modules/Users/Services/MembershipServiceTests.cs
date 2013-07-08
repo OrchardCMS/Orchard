@@ -18,6 +18,7 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
@@ -78,6 +79,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();

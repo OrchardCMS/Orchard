@@ -7,6 +7,7 @@ using Autofac;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Services;
 using Orchard.Tests.Data;
 using Orchard.Tests.Stubs;
@@ -43,6 +44,8 @@ namespace Orchard.Tests {
             builder.RegisterInstance(new StubLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(_clock).As<IClock>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
+            
             Register(builder);
             _container = builder.Build();
         }
