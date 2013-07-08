@@ -17,6 +17,8 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Data.Providers;
+using Orchard.Environment.Configuration;
 using Orchard.Indexing;
 using Orchard.Logging;
 using Orchard.UI;
@@ -34,6 +36,8 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<ISessionLocator> _sessionLocator; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
+        private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
+        private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
 
         private const string Published = "Published";
@@ -51,6 +55,8 @@ namespace Orchard.ContentManagement {
             Lazy<ISessionLocator> sessionLocator,
             Lazy<IEnumerable<IContentHandler>> handlers,
             Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors,
+            Lazy<IEnumerable<ISqlStatementProvider>> sqlStatementProviders,
+            ShellSettings shellSettings,
             ISignals signals) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
@@ -60,6 +66,8 @@ namespace Orchard.ContentManagement {
             _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
             _identityResolverSelectors = identityResolverSelectors;
+            _sqlStatementProviders = sqlStatementProviders;
+            _shellSettings = shellSettings;
             _signals = signals;
             _handlers = handlers;
             _contentDisplay = contentDisplay;
@@ -627,7 +635,7 @@ namespace Orchard.ContentManagement {
         }
 
         public IHqlQuery HqlQuery() {
-            return new DefaultHqlQuery(this, _sessionLocator.Value.For(typeof(ContentItemVersionRecord)));
+            return new DefaultHqlQuery(this, _sessionLocator.Value.For(typeof(ContentItemVersionRecord)), _sqlStatementProviders.Value, _shellSettings);
         }
 
         // Insert or Update imported data into the content manager.

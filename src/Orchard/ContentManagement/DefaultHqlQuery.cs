@@ -7,12 +7,16 @@ using System.Text;
 using NHibernate;
 using NHibernate.Transform;
 using Orchard.ContentManagement.Records;
+using Orchard.Data.Providers;
+using Orchard.Environment.Configuration;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
 
     public class DefaultHqlQuery : IHqlQuery {
         private readonly ISession _session;
+        private readonly IEnumerable<ISqlStatementProvider> _sqlStatementProviders;
+        private readonly ShellSettings _shellSettings;
         private VersionOptions _versionOptions;
 
         protected IJoin _from;
@@ -22,8 +26,14 @@ namespace Orchard.ContentManagement {
 
         public IContentManager ContentManager { get; private set; }
 
-        public DefaultHqlQuery(IContentManager contentManager, ISession session) {
+        public DefaultHqlQuery(
+            IContentManager contentManager, 
+            ISession session,
+            IEnumerable<ISqlStatementProvider> sqlStatementProviders,
+            ShellSettings shellSettings) {
             _session = session;
+            _sqlStatementProviders = sqlStatementProviders;
+            _shellSettings = shellSettings;
             ContentManager = contentManager;
         }
 
@@ -253,8 +263,20 @@ namespace Orchard.ContentManagement {
                 sort.Item2(sortFactory);
 
                 if (sortFactory.Randomize) {
-                    //sb.Append(" newid()");
-                    sb.Append("newid()");
+
+                    string command = null;
+
+                    foreach (var sqlStatementProvider in _sqlStatementProviders) {
+                        if (!String.Equals(sqlStatementProvider.DataProvider, _shellSettings.DataProvider)) {
+                            continue;
+                        }
+
+                        command = sqlStatementProvider.GetStatement("random") ?? command;
+                    }
+
+                    if (command != null) {
+                        sb.Append(command);    
+                    }
                 }
                 else {
                     sb.Append(sort.Item1.Name).Append(".").Append(sortFactory.PropertyName);

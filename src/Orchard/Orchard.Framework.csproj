@@ -178,6 +178,10 @@
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
+    <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
+    <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
     <Compile Include="DisplayManagement\Arguments.cs" />
     <Compile Include="Data\Bags\SConvert.cs" />
     <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
