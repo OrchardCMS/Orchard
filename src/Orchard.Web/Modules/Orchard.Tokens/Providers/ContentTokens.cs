@@ -60,7 +60,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("Length", T("Length"), T("The length of the field."));
 
             context.For("Url", T("Url"), T("Tokens for Urls"))
-                .Token("Absolute", T("Absolute"), T("Absolute url."));
+                .Token("Absolute", T("Absolute"), T("Absolute url."), "Text");
 
             context.For("TypeDefinition", T("Type Definition"), T("Tokens for Content Types"))
                 .Token("Name", T("Name"), T("Name of the content type."))
@@ -86,7 +86,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("EditUrl", EditUrl)
                 .Chain("EditUrl", "Url", EditUrl)
                 .Token("Container", content => DisplayText(Container(content)))
-                .Chain("Container", "Content", content => Container(content))
+                .Chain("Container", "Content", Container)
                 ;
 
             if (context.Target == "Content") {
@@ -111,7 +111,9 @@ namespace Orchard.Tokens.Providers {
             }
 
             context.For<string>("Url")
-                .Token("Absolute", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url));
+                   .Token("Absolute", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url))
+                   .Chain("Absolute", "Text", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url))
+                ;
 
             context.For<TextField>("TextField")
                 .Token("Length", field => (field.Value ?? "").Length)

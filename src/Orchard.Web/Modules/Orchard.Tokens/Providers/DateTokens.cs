@@ -31,8 +31,8 @@ namespace Orchard.Tokens.Providers {
 
         public void Describe(DescribeContext context) {
             context.For("Date", T("Date/time"), T("Current date/time tokens"))
-                .Token("Since", T("Since"), T("Relative to the current date/time."))
-                .Token("Local", T("Local"), T("Based on the configured time zone."))
+                .Token("Since", T("Since"), T("Relative to the current date/time."), "Date")
+                .Token("Local", T("Local"), T("Based on the configured time zone."), "Date")
                 .Token("ShortDate", T("Short Date"), T("Short date format."))
                 .Token("ShortTime", T("Short Time"), T("Short time format."))
                 .Token("Long", T("Long Date and Time"), T("Long date and time format."))
