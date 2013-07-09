@@ -122,7 +122,8 @@ namespace Orchard.Projections.Drivers {
 
                     // create pager shape
                     if (part.Record.DisplayPager) {
-                        var contentItemsCount = _projectionManager.GetCount(query.Id);
+                        var contentItemsCount = _projectionManager.GetCount(query.Id) - part.Record.Skip;
+                        contentItemsCount = Math.Max(0, contentItemsCount);
                         pagerShape.TotalItemCount(contentItemsCount);
                     }
 
