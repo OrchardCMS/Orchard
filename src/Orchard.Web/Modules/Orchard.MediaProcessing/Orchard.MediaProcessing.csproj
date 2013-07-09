@@ -114,8 +114,10 @@
     <Compile Include="Models\ImageProfilePartRecord.cs" />
     <Compile Include="Providers\Filters\FormatFilter.cs" />
     <Compile Include="Providers\Filters\ResizeFilter.cs" />
+    <Compile Include="Services\ImageProfileManager.cs" />
     <Compile Include="Services\IImageFilterProvider.cs" />
     <Compile Include="Services\IImageProcessingFileNameProvider.cs" />
+    <Compile Include="Services\IImageProfileManager.cs" />
     <Compile Include="Services\IImageProfileService.cs" />
     <Compile Include="Services\IImageProcessingManager.cs" />
     <Compile Include="Services\ImageProcessingFileNameProvider.cs" />
