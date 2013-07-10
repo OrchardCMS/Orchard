@@ -160,12 +160,15 @@ namespace Orchard.MediaProcessing.Services {
 
         // TODO: Update this method once the storage provider has been updated
         private Stream GetImage(string path) {
-            var request = _services.WorkContext.HttpContext.Request;
-
             var storagePath = _storageProvider.GetStoragePath(path);
             if (storagePath != null) {
-                var file = _storageProvider.GetFile(storagePath);
-                return file.OpenRead();
+                try {
+                    var file = _storageProvider.GetFile(storagePath);
+                    return file.OpenRead();
+                }
+                catch {
+                    Logger.Error("path:" + path + " storagePath:" + storagePath);
+                }
             }
 
             // http://blob.storage-provider.net/my-image.jpg
@@ -175,6 +178,7 @@ namespace Orchard.MediaProcessing.Services {
 
             // ~/Media/Default/images/my-image.jpg
             if (VirtualPathUtility.IsAppRelative(path)) {
+                var request = _services.WorkContext.HttpContext.Request;
                 return new WebClient().OpenRead(new Uri(request.Url, VirtualPathUtility.ToAbsolute(path)));
             }
 

@@ -46,10 +46,10 @@ namespace Orchard.Azure.FileSystems.Media {
         /// <returns>The local path.</returns>
         public string GetStoragePath(string url) {
             if (url.StartsWith(_absoluteRoot)) {
-                return url.Substring(_absoluteRoot.Length);
+                return url.Substring(Combine(_absoluteRoot, "/").Length);
             }
 
-            return url;
+            return null;
         }
 
         public string GetRelativePath(string path) {
