@@ -7,12 +7,18 @@ using FluentNHibernate.Conventions.Instances;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Conventions {
-    public class CacheConvention : IClassConvention, IConventionAcceptance<IClassInspector> {
+    public class CacheConventions :
+        IClassConvention, IClassConventionAcceptance,
+        ICollectionConvention, ICollectionConventionAcceptance,
+        IHasManyConvention, IHasManyConventionAcceptance,
+        IHasManyToManyConvention, IHasManyToManyConventionAcceptance {
+
         private readonly IEnumerable<RecordBlueprint> _descriptors;
 
-        public CacheConvention(IEnumerable<RecordBlueprint> descriptors) {
+        public CacheConventions(IEnumerable<RecordBlueprint> descriptors) {
             _descriptors = descriptors;
         }
+
 
         public void Apply(IClassInstance instance) {
             instance.Cache.ReadWrite();
@@ -21,14 +27,7 @@ namespace Orchard.Data.Conventions {
         public void Accept(IAcceptanceCriteria<IClassInspector> criteria) {
             criteria.Expect(x => _descriptors.Any(d => d.Type.Name == x.EntityType.Name));
         }
-    }
 
-    public class CacheableCollectionConvention : IHasManyConvention, IHasManyConventionAcceptance, IHasManyToManyConvention {
-        private readonly IEnumerable<RecordBlueprint> _descriptors;
-
-        public CacheableCollectionConvention(IEnumerable<RecordBlueprint> descriptors) {
-            _descriptors = descriptors;
-        }
 
         public void Apply(IOneToManyCollectionInstance instance) {
             instance.Cache.ReadWrite();
@@ -44,6 +43,15 @@ namespace Orchard.Data.Conventions {
         }
 
         public void Accept(IAcceptanceCriteria<IManyToManyCollectionInspector> criteria) {
+            criteria.Expect(x => _descriptors.Any(d => d.Type.Name == x.EntityType.Name));
+        }
+
+
+        public void Apply(ICollectionInstance instance) {
+            instance.Cache.ReadWrite();
+        }
+
+        public void Accept(IAcceptanceCriteria<ICollectionInspector> criteria) {
             criteria.Expect(x => _descriptors.Any(d => d.Type.Name == x.EntityType.Name));
         }
     }

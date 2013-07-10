@@ -191,7 +191,7 @@
     <Compile Include="Data\Bags\StateValueProvider.cs" />
     <Compile Include="Data\Bags\SValue.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
-    <Compile Include="Data\Conventions\CacheConvention.cs" />
+    <Compile Include="Data\Conventions\CacheConventions.cs" />
     <Compile Include="Data\DefaultDatabaseCacheConfiguration.cs" />
     <Compile Include="Data\IDatabaseCacheConfiguration.cs" />
     <Compile Include="Data\Migration\AutomaticDataMigrations.cs" />
