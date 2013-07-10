@@ -11,7 +11,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
-using Orchard;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
@@ -22,10 +21,8 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.OutputCache.Filters
-{
-    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter
-    {
+namespace Orchard.OutputCache.Filters {
+    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
 
         private readonly ICacheManager _cacheManager;
         private readonly IOutputCacheStorageProvider _cacheStorageProvider;
@@ -38,8 +35,6 @@ namespace Orchard.OutputCache.Filters
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
 
-        private const string AntiforgeryBeacon = "<!--OutputCacheFilterAntiForgeryToken-->";
-        private const string AntiforgeryTag = "<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"";
         private const string RefreshKey = "__r";
 
         public OutputCacheFilter(
@@ -52,8 +47,7 @@ namespace Orchard.OutputCache.Filters
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings)
-        {
+            ShellSettings shellSettings) {
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
             _tagCache = tagCache;
@@ -87,15 +81,14 @@ namespace Orchard.OutputCache.Filters
 
         public ILogger Logger { get; set; }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        {
+        public void OnActionExecuting(ActionExecutingContext filterContext) {
             // use the action in the cacheKey so that the same route can't return cache for different actions
             _actionName = filterContext.ActionDescriptor.ActionName;
 
             // apply OutputCacheAttribute logic if defined
-            var outputCacheAttribute = filterContext.ActionDescriptor.GetCustomAttributes(typeof (OutputCacheAttribute), true).Cast<OutputCacheAttribute>().FirstOrDefault() ;
+            var outputCacheAttribute = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true).Cast<OutputCacheAttribute>().FirstOrDefault();
 
-            if(outputCacheAttribute != null) {
+            if (outputCacheAttribute != null) {
                 if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore) {
                     Logger.Debug("Request ignored based on OutputCache attribute");
                     return;
@@ -111,7 +104,7 @@ namespace Orchard.OutputCache.Filters
             Logger.Debug("Request on: " + filterContext.RequestContext.HttpContext.Request.RawUrl);
 
             // don't cache POST requests
-            if(filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) ) {
+            if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
                 Logger.Debug("Request ignored on POST");
                 return;
             }
@@ -123,7 +116,7 @@ namespace Orchard.OutputCache.Filters
             }
 
             // ignore child actions, e.g. HomeController is using RenderAction()
-            if (filterContext.IsChildAction){
+            if (filterContext.IsChildAction) {
                 Logger.Debug("Request ignored on Child actions");
                 return;
             }
@@ -156,9 +149,9 @@ namespace Orchard.OutputCache.Filters
                 context => {
                     context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
                     var varyQueryStringParameters = _workContext.CurrentSite.As<CacheSettingsPart>().VaryQueryStringParameters;
-                    
-                    return string.IsNullOrWhiteSpace(varyQueryStringParameters) ? null 
-                        : varyQueryStringParameters.Split(new[]{","}, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+
+                    return string.IsNullOrWhiteSpace(varyQueryStringParameters) ? null
+                        : varyQueryStringParameters.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                 }
             );
 
@@ -189,7 +182,7 @@ namespace Orchard.OutputCache.Filters
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             var parameters = new Dictionary<string, object>(filterContext.ActionParameters);
 
-            foreach(var key in queryString.AllKeys) {
+            foreach (var key in queryString.AllKeys) {
                 if (key == null) continue;
 
                 parameters[key] = queryString[key];
@@ -200,7 +193,7 @@ namespace Orchard.OutputCache.Filters
 
             // create a tag which doesn't care about querystring
             _invariantCacheKey = ComputeCacheKey(filterContext, null);
-            
+
             // don't retrieve cache content if refused
             // in this case the result of the action will update the current cached version
             if (filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache") {
@@ -219,46 +212,20 @@ namespace Orchard.OutputCache.Filters
             var response = filterContext.HttpContext.Response;
 
             // render cached content
-            if (_cacheItem != null)
-            {
+            if (_cacheItem != null) {
                 Logger.Debug("Cache item found, expires on " + _cacheItem.ValidUntilUtc);
 
                 var output = _cacheItem.Output;
 
-                /* 
-                 * 
-                 * There is no need to replace the AntiForgeryToken as it is not used for unauthenticated requests
-                 * and at this point, the request can't be authenticated
-                 *
-                 * 
-
-                // replace any anti forgery token with a fresh value
-                if (output.Contains(AntiforgeryBeacon))
-                {
-                    var viewContext = new ViewContext
-                    {
-                        HttpContext = filterContext.HttpContext,
-                        Controller = filterContext.Controller
-                    };
-
-                    var htmlHelper = new HtmlHelper(viewContext, new ViewDataContainer());
-                    var siteSalt = _workContext.CurrentSite.SiteSalt;
-                    var token = htmlHelper.AntiForgeryToken(siteSalt);
-                    output = output.Replace(AntiforgeryBeacon, token.ToString());
-                }
-
-                 */
-
                 // adds some caching information to the output if requested
-                if (_debugMode)
-                {
+                if (_debugMode) {
                     output += "\r\n<!-- Cached on " + _cacheItem.CachedOnUtc + " (UTC) until " + _cacheItem.ValidUntilUtc + "  (UTC) -->";
                     response.AddHeader("X-Cached-On", _cacheItem.CachedOnUtc.ToString("r"));
                     response.AddHeader("X-Cached-Until", _cacheItem.ValidUntilUtc.ToString("r"));
                 }
 
-                filterContext.Result = new ContentResult
-                {
+                // shorcut action execution
+                filterContext.Result = new ContentResult {
                     Content = output,
                     ContentType = _cacheItem.ContentType
                 };
@@ -288,7 +255,7 @@ namespace Orchard.OutputCache.Filters
                 filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 filterContext.HttpContext.Response.Cache.SetNoStore();
                 filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
-                
+
                 _filter = null;
                 return;
             }
@@ -309,6 +276,8 @@ namespace Orchard.OutputCache.Filters
             if (_workContext.CurrentUser != null) {
                 return;
             }
+
+            // todo: look for RedirectToRoute to, or intercept 302s
 
             if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
                 && filterContext.Result is RedirectResult) {
@@ -359,8 +328,7 @@ namespace Orchard.OutputCache.Filters
             }
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext)
-        {
+        public void OnResultExecuted(ResultExecutedContext filterContext) {
             var response = filterContext.HttpContext.Response;
 
             // save the result only if the content can be intercepted
@@ -379,40 +347,27 @@ namespace Orchard.OutputCache.Filters
             var configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
 
             // do not cache ?
-            if (configuration != null && configuration.Duration == 0)
-            {
+            if (configuration != null && configuration.Duration == 0) {
                 return;
             }
 
             // ignored url ?
-            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, _ignoredUrls))
-            {
+            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, _ignoredUrls)) {
                 return;
             }
 
-            if(response.IsClientConnected)
+            // flush here to force the Filter to get the rendered content
+            if (response.IsClientConnected)
                 response.Flush();
 
             var output = _filter.GetContents(response.ContentEncoding);
 
-            if (String.IsNullOrWhiteSpace(output))
-            {
+            if (String.IsNullOrWhiteSpace(output)) {
                 return;
             }
 
-            var tokenIndex = output.IndexOf(AntiforgeryTag, StringComparison.Ordinal);
-
-            // substitute antiforgery token by a beacon
-            if (tokenIndex != -1)
-            {
-                var tokenEnd = output.IndexOf(">", tokenIndex, StringComparison.Ordinal);
-                var sb = new StringBuilder();
-                sb.Append(output.Substring(0, tokenIndex));
-                sb.Append(AntiforgeryBeacon);
-                sb.Append(output.Substring(tokenEnd + 1));
-
-                output = sb.ToString();
-            }
+            response.Filter = null;
+            response.Write(output);
 
             // default duration of specific one ?
             var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
@@ -442,13 +397,12 @@ namespace Orchard.OutputCache.Filters
 
             // add to the tags index
             foreach (var tag in _cacheItem.Tags) {
-                _tagCache.Tag(tag, _cacheKey);    
+                _tagCache.Tag(tag, _cacheKey);
             }
-            
+
         }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext)
-        {
+        public void OnResultExecuting(ResultExecutingContext filterContext) {
         }
 
         /// <summary>
@@ -468,7 +422,7 @@ namespace Orchard.OutputCache.Filters
             // an ETag is a string that uniquely identifies a specific version of a component.
             // we use the cache item to detect if it's a new one
             response.Cache.SetETag(cacheItem.GetHashCode().ToString(CultureInfo.InvariantCulture));
-            
+
             response.Cache.SetOmitVaryStar(true);
 
             if (_varyQueryStringParameters != null) {
@@ -489,25 +443,25 @@ namespace Orchard.OutputCache.Filters
             // create a unique cache per browser, in case a Theme is rendered differently (e.g., mobile)
             // c.f. http://msdn.microsoft.com/en-us/library/aa478965.aspx
             // c.f. http://stackoverflow.com/questions/6007287/outputcache-varybyheader-user-agent-or-varybycustom-browser
-            response.Cache.SetVaryByCustom("browser"); 
+            response.Cache.SetVaryByCustom("browser");
 
             // enabling this would create an entry for each different browser sub-version
             // response.Cache.VaryByHeaders.UserAgent = true;
-            
+
         }
 
         private string ComputeCacheKey(ControllerContext controllerContext, IEnumerable<KeyValuePair<string, object>> parameters) {
             var url = controllerContext.HttpContext.Request.RawUrl;
-            if(!VirtualPathUtility.IsAbsolute(url)) {
+            if (!VirtualPathUtility.IsAbsolute(url)) {
                 var applicationRoot = controllerContext.HttpContext.Request.ToRootUrlString();
-                if(url.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
+                if (url.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
                     url = url.Substring(applicationRoot.Length);
                 }
             }
-            return ComputeCacheKey(_shellSettings.Name, url, () => _workContext.CurrentCulture, _themeManager.GetRequestTheme(controllerContext.RequestContext).Id,  parameters);
+            return ComputeCacheKey(_shellSettings.Name, url, () => _workContext.CurrentCulture, _themeManager.GetRequestTheme(controllerContext.RequestContext).Id, parameters);
         }
 
-        private string ComputeCacheKey(string tenant, string absoluteUrl, Func<string> culture, string theme, IEnumerable<KeyValuePair<string, object>> parameters){
+        private string ComputeCacheKey(string tenant, string absoluteUrl, Func<string> culture, string theme, IEnumerable<KeyValuePair<string, object>> parameters) {
             var keyBuilder = new StringBuilder();
 
             keyBuilder.Append("tenant=").Append(tenant).Append(";");
@@ -537,43 +491,36 @@ namespace Orchard.OutputCache.Filters
         /// <summary>
         /// Returns true if the given url should be ignored, as defined in the settings
         /// </summary>
-        private static bool IsIgnoredUrl(string url, string ignoredUrls)
-        {
-            if(String.IsNullOrEmpty(ignoredUrls))
-            {
+        private static bool IsIgnoredUrl(string url, string ignoredUrls) {
+            if (String.IsNullOrEmpty(ignoredUrls)) {
                 return false;
             }
 
             // remove ~ if present
-            if(url.StartsWith("~")) {
+            if (url.StartsWith("~")) {
                 url = url.Substring(1);
             }
 
-            using (var urlReader = new StringReader(ignoredUrls))
-            {
+            using (var urlReader = new StringReader(ignoredUrls)) {
                 string relativePath;
-                while (null != (relativePath = urlReader.ReadLine()))
-                {
+                while (null != (relativePath = urlReader.ReadLine())) {
                     // remove ~ if present
                     if (relativePath.StartsWith("~")) {
                         relativePath = relativePath.Substring(1);
                     }
 
-                    if (String.IsNullOrWhiteSpace(relativePath))
-                    {
+                    if (String.IsNullOrWhiteSpace(relativePath)) {
                         continue;
                     }
 
                     relativePath = relativePath.Trim();
 
                     // ignore comments
-                    if(relativePath.StartsWith("#"))
-                    {
+                    if (relativePath.StartsWith("#")) {
                         continue;
                     }
 
-                    if(String.Equals(relativePath, url, StringComparison.OrdinalIgnoreCase))
-                    {
+                    if (String.Equals(relativePath, url, StringComparison.OrdinalIgnoreCase)) {
                         return true;
                     }
                 }
@@ -583,92 +530,86 @@ namespace Orchard.OutputCache.Filters
         }
 
     }
-    
+
     /// <summary>
     /// Captures the response stream while writing to it
     /// </summary>
-    public class CapturingResponseFilter : Stream
-    {
-        private readonly Stream _sink;
+    public class CapturingResponseFilter : Stream {
+        // private readonly Stream _sink;
         private readonly MemoryStream _mem;
 
-        public CapturingResponseFilter(Stream sink)
-        {
-            _sink = sink;
+        public CapturingResponseFilter(Stream sink) {
+            // _sink = sink;
             _mem = new MemoryStream();
         }
 
         // The following members of Stream must be overriden.
-        public override bool CanRead
-        {
+        public override bool CanRead {
             get { return true; }
         }
 
-        public override bool CanSeek
-        {
+        public override bool CanSeek {
             get { return false; }
         }
 
-        public override bool CanWrite
-        {
+        public override bool CanWrite {
             get { return false; }
         }
 
-        public override long Length
-        {
+        public override long Length {
             get { return 0; }
         }
 
         public override long Position { get; set; }
 
-        public override long Seek(long offset, SeekOrigin direction)
-        {
+        public override long Seek(long offset, SeekOrigin direction) {
             return 0;
         }
 
-        public override void SetLength(long length)
-        {
-            _sink.SetLength(length);
+        public override void SetLength(long length) {
+            // _sink.SetLength(length);
         }
 
-        public override void Close()
-        {
-            _sink.Close();
+        public override void Close() {
+            // _sink.Close();
             _mem.Close();
         }
 
-        public override void Flush()
-        {
-            _sink.Flush();
+        public override void Flush() {
+            // _sink.Flush();
         }
 
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            return _sink.Read(buffer, offset, count);
+        public override int Read(byte[] buffer, int offset, int count) {
+            // return _sink.Read(buffer, offset, count);
+            return count;
         }
 
         // Override the Write method to filter Response to a file. 
-        public override void Write(byte[] buffer, int offset, int count)
-        {
+        public override void Write(byte[] buffer, int offset, int count) {
             //Here we will not write to the sink b/c we want to capture
-            _sink.Write(buffer, offset, count);
+            // _sink.Write(buffer, offset, count);
 
             //Write out the response to the file.
             _mem.Write(buffer, 0, count);
         }
 
-        public string GetContents(Encoding enc)
-        {
+        public string GetContents(Encoding enc) {
             var buffer = new byte[_mem.Length];
             _mem.Position = 0;
             _mem.Read(buffer, 0, buffer.Length);
             return enc.GetString(buffer, 0, buffer.Length);
         }
 
+        public byte[] GetContents() {
+            return _mem.ToArray();
+        }
+
+        protected override void Dispose(bool disposing) {
+            _mem.Dispose();
+        }
     }
 
-    public class ViewDataContainer : IViewDataContainer
-    {
+    public class ViewDataContainer : IViewDataContainer {
         public ViewDataDictionary ViewData { get; set; }
     }
 
