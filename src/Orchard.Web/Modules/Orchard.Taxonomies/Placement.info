@@ -20,10 +20,6 @@
   <!-- Display in admin -->
   <Place Parts_Taxonomies_Term_Fields="Content:2"/>
   
-  <!-- Widget -->
-  <Place Parts_TermWidget_List="Content"/>
-  <Place Parts_Taxonomy_TermWidget_Edit ="Content:5" />
-  
   <!-- New Shapes -->
   <Place Parts_TaxonomyPart="Content:5" />
   <Place Parts_TermPart="Content:5" />

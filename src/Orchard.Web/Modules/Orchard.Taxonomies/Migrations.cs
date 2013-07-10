@@ -42,23 +42,6 @@ namespace Orchard.Taxonomies {
                 .ContentPartRecord()
             );
 
-            SchemaBuilder.CreateTable("TermWidgetPartRecord", table => table
-                .ContentPartRecord()
-                .Column<int>("TaxonomyPartRecord_id")
-                .Column<int>("TermPartRecord_id")
-                .Column<int>("Count")
-                .Column<string>("OrderBy")
-                .Column<string>("FieldName")
-                .Column<string>("ContentType", c => c.Nullable())
-            );
-
-            ContentDefinitionManager.AlterTypeDefinition("TermWidget", cfg => cfg
-                .WithPart("TermWidgetPart")
-                .WithPart("CommonPart")
-                .WithPart("WidgetPart")
-                .WithSetting("Stereotype", "Widget")
-            );
-
             ContentDefinitionManager.AlterTypeDefinition("TaxonomyNavigationMenuItem",
                cfg => cfg
                    .WithPart("TaxonomyNavigationPart")

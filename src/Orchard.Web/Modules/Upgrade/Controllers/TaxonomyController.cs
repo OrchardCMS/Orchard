@@ -61,7 +61,6 @@ namespace Upgrade.Controllers {
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermContentItem", "Orchard_Taxonomies_TermContentItem", new[] {"Id"});
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermPartRecord", "Orchard_Taxonomies_TermPartRecord", new string[0]);
                 _upgradeService.CopyTable("Contrib_Taxonomies_TermsPartRecord", "Orchard_Taxonomies_TermsPartRecord", new string[0]);
-                _upgradeService.CopyTable("Contrib_Taxonomies_TermWidgetPartRecord", "Orchard_Taxonomies_TermWidgetPartRecord", new string[0]);
 
                 _orchardServices.Notifier.Information(T("Taxonomies were migrated successfully."));
             }

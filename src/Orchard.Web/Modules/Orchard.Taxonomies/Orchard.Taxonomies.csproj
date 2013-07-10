@@ -71,10 +71,8 @@
     <Compile Include="Drivers\TaxonomyNavigationPartDriver.cs" />
     <Compile Include="Drivers\TermsPartDriver.cs" />
     <Compile Include="Drivers\TaxonomyPartDriver.cs" />
-    <Compile Include="Drivers\TermWidgetPartDriver.cs" />
     <Compile Include="Handlers\TaxonomyPartHandler.cs" />
     <Compile Include="Handlers\TermsPartHandler.cs" />
-    <Compile Include="Handlers\TermWidgetPartHandler.cs" />
     <Compile Include="Helpers\PathExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\TermPartDriver.cs" />
@@ -91,8 +89,6 @@
     <Compile Include="Models\TermContentItem.cs" />
     <Compile Include="Models\TermsPart.cs" />
     <Compile Include="Models\TermsPartRecord.cs" />
-    <Compile Include="Models\TermWidgetPart.cs" />
-    <Compile Include="Models\TermWidgetPartRecord.cs" />
     <Compile Include="Navigation\TaxonomyNavigationProvider.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Projections\TermsFilter.cs" />
@@ -108,7 +104,6 @@
     <Compile Include="Tokens\TaxonomyTokens.cs" />
     <Compile Include="ViewModels\ImportViewModel.cs" />
     <Compile Include="ViewModels\MergeTermViewModel.cs" />
-    <Compile Include="ViewModels\TermWidgetViewModel.cs" />
     <Compile Include="ViewModels\MoveTermViewModel.cs" />
     <Compile Include="ViewModels\SelectTermViewModel.cs" />
     <Compile Include="ViewModels\TaxonomyFieldViewModel.cs" />
@@ -166,12 +161,6 @@
     <Content Include="Views\TermAdmin\SelectTerm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\Taxonomies.TermWidget.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\TermWidget.List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Navigation.Taxonomy.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Parts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
