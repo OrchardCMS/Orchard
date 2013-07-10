@@ -1,4 +1,5 @@
-﻿@model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
+﻿@using Orchard.Environment.Configuration
+@model Orchard.ContentPicker.ViewModels.ContentMenuItemEditViewModel
 @{
     Script.Require("ContentPicker").AtFoot();
     var title = Model.Part.Content == null ? new HtmlString(T("Empty").Text) : Html.ItemDisplayText(Model.Part.Content);
@@ -29,7 +30,7 @@
                     menuText.val(data.displayText);
                 }
             },
-            baseUrl: '@Url.Content("~/")'
+            baseUrl: '@HttpUtility.JavaScriptStringEncode(Url.Content("~/" + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix))'
         });
     });
 //]]>
