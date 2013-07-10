@@ -62,7 +62,7 @@ namespace Orchard.Data.Providers {
                 // identical type names from different namespaces can be mapped without ambiguity
                 .Conventions.Setup(x => x.Add(AutoImport.Never()))
                 .Conventions.Add(new RecordTableNameConvention(recordDescriptors))
-                .Conventions.Add(new CacheConvention(recordDescriptors))
+                .Conventions.Add(new CacheConvention(recordDescriptors), new CacheableCollectionConvention(recordDescriptors))
                 .Alterations(alt => {
                     foreach (var recordAssembly in recordDescriptors.Select(x => x.Type.Assembly).Distinct()) {
                         alt.Add(new AutoMappingOverrideAlteration(recordAssembly));
