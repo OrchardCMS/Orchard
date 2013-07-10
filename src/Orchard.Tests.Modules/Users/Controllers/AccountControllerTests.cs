@@ -204,7 +204,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                 @"""Austin@Powers""@example.com",
                 @"Ima.Fool@example.com",
                 @"""Ima.Fool""@example.com",
-                @"""Ima Fool""@example.com"
+                @"""Ima Fool""@example.com",
+                "2xxx1414@i.ua"
                 )]
             string email)
         {

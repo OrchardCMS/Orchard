@@ -5,7 +5,7 @@ namespace Orchard.Users.Models {
     public sealed class UserPart : ContentPart<UserPartRecord>, IUser {
         public const string EmailPattern = 
             @"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)"
-            + @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
+            + @"@([a-z0-9][\w-]*\.)+[a-z]{2,}$";
 
         public string UserName {
             get { return Record.UserName; }
