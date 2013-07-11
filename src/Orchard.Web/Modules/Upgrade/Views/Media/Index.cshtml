@@ -7,6 +7,9 @@
     <fieldset>
         <legend>@T("Migrating Media Files:")</legend>
         <span class="hint">@T("This migration step will create and organize new Media Content Items based on the media files in your ~/Media folder.")</span>
+        @if (ViewBag.CanMigrate) {
+            <span class="hint">@T("Before importing, please ensure the server has the expected mime types already registered as explained here: <a href=\"http://www.iis.net/configreference/system.webserver/staticcontent/mimemap\">http://www.iis.net/configreference/system.webserver/staticcontent/mimemap</a>")</span>
+        }
     </fieldset>
     <fieldset>
         @if (ViewBag.CanMigrate) {
