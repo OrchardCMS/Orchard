@@ -72,7 +72,6 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />
-    <Compile Include="Services\HtmlEncodeFilter.cs" />
     <Compile Include="Settings\CommentsPartSettings.cs" />
     <Compile Include="Settings\CommentsPartSettingsEvents.cs" />
     <Compile Include="Shapes.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
     <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
-    <Compile Include="ViewModels\CommentsPartSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -159,11 +157,14 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.Comment.AdminEdit.cshtml" />
     <Content Include="Views\CommentReplyButton.cshtml" />
-    <Content Include="Views\DefinitionTemplates\CommentsPartSettingsViewModel.cshtml" />
+    <Content Include="Views\DefinitionTemplates\CommentsPartSettings.cshtml" />
     <Content Include="Views\Parts.Comment.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Comment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CommentText.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

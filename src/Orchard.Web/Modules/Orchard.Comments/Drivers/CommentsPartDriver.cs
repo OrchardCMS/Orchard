@@ -7,22 +7,18 @@ using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
-using Orchard.Services;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
-        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         public CommentsPartDriver(
             ICommentService commentService,
-            IContentManager contentManager,
-            IEnumerable<IHtmlFilter> htmlFilters) {
+            IContentManager contentManager) {
             _commentService = commentService;
             _contentManager = contentManager;
-            _htmlFilters = htmlFilters;
         }
 
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
@@ -36,17 +32,13 @@ namespace Orchard.Comments.Drivers {
             return Combined(
                 ContentShape("Parts_ListOfComments",
                     () => {
-                        var settings = part.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
-
                         // create a hierarchy of shapes
                         var firstLevelShapes = new List<dynamic>();
                         var allShapes = new Dictionary<int, dynamic>();
                         var comments = commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).OrderBy(x => x.Position).List().ToList();
                         
                         foreach (var item in comments) {
-                            var formatted = _htmlFilters.Where(x => x.GetType().Name.Equals(settings.HtmlFilter, StringComparison.OrdinalIgnoreCase)).Aggregate(item.CommentText, (text, filter) => filter.ProcessContent(text));
-                            var shape = shapeHelper.Parts_Comment(FormattedText: formatted, ContentPart: item, ContentItem: item.ContentItem);
-
+                            var shape = shapeHelper.Parts_Comment(ContentPart: item, ContentItem: item.ContentItem);
                             allShapes.Add(item.Id, shape);
                         }
 
