@@ -101,15 +101,25 @@ namespace Orchard.Core.Shapes {
             builder.Describe("MenuItemLink")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
-                    var menu = menuItem.Menu;
-                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menu.MenuName));
-
+                    string menuName = menuItem.Menu.MenuName;
+                    string contentType = null;
                     if (menuItem.Content != null) {
-                        var contentType = ((IContent) menuItem.Content).ContentItem.ContentType;
-                        if (contentType != null) {
-                            menuItem.Metadata.Alternates.Add("MenuItemLink__" + contentType);
-                        }
+                        contentType = ((IContent) menuItem.Content).ContentItem.ContentType;
                     }
+
+                    // MenuItemLink__[ContentType] e.g. MenuItemLink-HtmlMenuItem
+                    if (contentType != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(contentType));
+                    }
+
+                    // MenuItemLink__[MenuName] e.g. MenuItemLink-Main-Menu
+                    menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menuName));
+
+                    // MenuItemLink__[MenuName]__[ContentType] e.g. MenuItemLink-Main-Menu-HtmlMenuItem
+                    if (contentType != null) {
+                        menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menuName) + "__" + EncodeAlternateElement(contentType));
+                    }
+                    
                 });
 
             builder.Describe("LocalMenu")
