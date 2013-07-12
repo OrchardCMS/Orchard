@@ -11,7 +11,6 @@ namespace Orchard.Taxonomies.Services {
         TaxonomyPart GetTaxonomyBySlug(string slug);
         void CreateTermContentType(TaxonomyPart taxonomy);
         void DeleteTaxonomy(TaxonomyPart taxonomy);
-        void EditTaxonomy(TaxonomyPart taxonomy, string oldName);
 
         IEnumerable<TermPart> GetAllTerms();
         IEnumerable<TermPart> GetTerms(int taxonomyId);

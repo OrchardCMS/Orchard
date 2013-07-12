@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
@@ -99,14 +100,6 @@ namespace Orchard.Taxonomies.Services {
                     .DisplayedAs(taxonomy.Name + " Term")
                 );
 
-        }
-
-        public void EditTaxonomy(TaxonomyPart taxonomy, string oldName) {        
-            // Rename term definition
-            _contentDefinitionManager.AlterTypeDefinition(taxonomy.TermTypeName, cfg => cfg
-                .WithSetting("Taxonomy", taxonomy.Name)
-                .DisplayedAs(taxonomy.Name + " Term")
-            );
         }
 
         public void DeleteTaxonomy(TaxonomyPart taxonomy) {
