@@ -14,6 +14,7 @@ Features:
         Name: Url Alternates
         Category: Designer
         Description: Adds shape alternates for specific urls
+		Dependencies: Core
     WidgetAlternates:
         Name: Widget Alternates
         Category: Designer
