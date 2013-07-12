@@ -13,6 +13,11 @@ namespace Orchard.Projections.Services {
         IEnumerable<TypeDescriptor<LayoutDescriptor>> DescribeLayouts();
         IEnumerable<TypeDescriptor<PropertyDescriptor>> DescribeProperties();
 
+        FilterDescriptor GetFilter(string category, string type);
+        SortCriterionDescriptor GetSortCriterion(string category, string type);
+        LayoutDescriptor GetLayout(string category, string type);
+        PropertyDescriptor GetProperty(string category, string type);
+
         IEnumerable<ContentItem> GetContentItems(int queryId, int skip = 0, int count = 0);
         int GetCount(int queryId);
     }

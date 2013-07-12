@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Services;
 using Orchard.DisplayManagement;
@@ -65,7 +67,35 @@ namespace Orchard.Taxonomies.Projections {
                     return f;
                 };
 
-            context.Form("SelectTerms", form);
+            context.Form("SelectTerms", 
+                form, 
+                (Action<dynamic, ImportContentContext>) Import, 
+                (Action<dynamic, ExportContentContext>) Export
+            );
+        }
+
+        public void Export(dynamic state, ExportContentContext context) {
+            string termIds = Convert.ToString(state.TermIds);
+
+            if (!String.IsNullOrEmpty(termIds)) {
+                var ids = termIds.Split(new[] {','}).Select(Int32.Parse).ToArray();
+                var terms = ids.Select(_taxonomyService.GetTerm).ToList();
+                var identities = terms.Select(context.ContentManager.GetItemMetadata).Select(x => x.Identity.ToString()).ToArray();
+
+                state.TermIds = String.Join(",", identities);
+            }
+        }
+
+        public void Import(dynamic state, ImportContentContext context) {
+            string termIdentities = Convert.ToString(state.TermIds);
+
+            if (!String.IsNullOrEmpty(termIdentities)) {
+                var identities = termIdentities.Split(new[] { ',' }).ToArray();
+                var terms = identities.Select(context.GetItemFromSession).ToList();
+                var ids = terms.Select(x => x.Id).Select(x => x.ToString()).ToArray();
+
+                state.TermIds = String.Join(",", ids);
+            }
         }
     }
 }

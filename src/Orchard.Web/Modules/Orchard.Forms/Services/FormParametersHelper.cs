@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
@@ -8,6 +9,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Orchard.Forms.Services {
     public static class FormParametersHelper {
+        public static string ToString(dynamic state) {
+            var json = JsonConvert.SerializeObject(state);
+            var doc = (XmlDocument)JsonConvert.DeserializeXmlNode("{ 'Form': " + json + "}");
+            using (var sw = new StringWriter()) {
+                doc.Save(sw);
+                return sw.ToString();
+            }
+        }
+
         public static string ToString(IDictionary<string, string> parameters) {
             var doc = new XDocument();
             doc.Add(new XElement("Form"));
