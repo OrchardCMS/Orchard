@@ -149,7 +149,7 @@ namespace Orchard.Taxonomies.Controllers {
                     }
 
                     parentTerm.Position++;
-                    term.Weight = parentTerm.Position;
+                    term.Weight = 10 - parentTerm.Position;
 
                     term.Container = parentTerm.Term == null ? taxonomy.ContentItem : parentTerm.Term.ContentItem;
 

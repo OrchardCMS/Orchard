@@ -56,7 +56,7 @@ namespace Orchard.Taxonomies.Drivers {
 
                     // if no taxonomy is selected, take the first available one as 
                     // the terms drop down needs one by default
-                    if (model.SelectedTaxonomyId == -1) {
+                    if (model.SelectedTaxonomyId <= 0) {
                         var firstTaxonomy = taxonomies.FirstOrDefault();
                         if (firstTaxonomy != null) {
                             model.SelectedTaxonomyId = firstTaxonomy.Id;
