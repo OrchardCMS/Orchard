@@ -114,7 +114,13 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public string GenerateTermTypeName(string taxonomyName) {
-            return taxonomyName.ToSafeName();
+            var name = taxonomyName.ToSafeName() + "Term";
+            int i = 2;
+            while (_contentDefinitionManager.GetTypeDefinition(name) != null) {
+                name = taxonomyName.ToSafeName() + i++;
+            }
+
+            return name;
         }
 
         public TermPart NewTerm(TaxonomyPart taxonomy) {

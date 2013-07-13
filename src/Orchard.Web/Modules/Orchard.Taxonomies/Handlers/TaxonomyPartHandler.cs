@@ -21,12 +21,13 @@ namespace Orchard.Taxonomies.Handlers {
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<TaxonomyPart>((context, part) => {
+                var previousTermTypeName = part.TermTypeName;
                 taxonomyService.CreateTermContentType(part);
 
                 if (previousName != null && part.Name != previousName) {
 
                     // remove previous term type
-                    contentDefinitionManager.DeleteTypeDefinition(previousName + " Term");
+                    contentDefinitionManager.DeleteTypeDefinition(previousTermTypeName);
 
                     // update existing fields
                     foreach (var partDefinition in contentDefinitionManager.ListPartDefinitions()) {
