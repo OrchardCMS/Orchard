@@ -29,8 +29,9 @@ namespace Orchard.FileSystems.Media {
             return _cacheManager.Get(extension, ctx => {
                 try {
                     try {
+
                         string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
-                        string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(null).FilePath;
+                        string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~").FilePath;
 
                         // search for custom mime types in web.config and applicationhost.config
                         foreach (var configFile in new[] { webConfig, applicationHost }) {
