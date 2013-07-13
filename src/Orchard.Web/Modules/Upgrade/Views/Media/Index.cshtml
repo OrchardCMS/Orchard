@@ -17,3 +17,19 @@
         }
     </fieldset>
 }
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPicker", "Media"))) {
+    <fieldset>
+        <legend>@T("Migrating Media Picker Fields:")</legend>
+        <span class="hint">@T("This migration step will migrate your Media Picker and Media Gallery Picker fields to the new Media Library Field.")</span>
+        @if (!ViewBag.CanMigrateFields) {
+            <span class="hint">@T("Before migrating fields, please migrate all the Media files.")</span>
+        }
+    </fieldset>
+    <fieldset>
+        @if (ViewBag.CanMigrateFields) {
+            <button type="submit">@T("Migrate")</button>
+        }
+    </fieldset>
+    
+}

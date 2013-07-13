@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Orchard.FileSystems.WebSite;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,10 +10,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaPicker.Drivers {
     public class MediaPickerFieldDriver : ContentFieldDriver<MediaPickerField> {
-        private readonly IWebSiteFolder _webSiteFolder;
 
-        public MediaPickerFieldDriver(IWebSiteFolder webSiteFolder) {
-            _webSiteFolder = webSiteFolder;
+        public MediaPickerFieldDriver() {
             T = NullLocalizer.Instance;
         }
 

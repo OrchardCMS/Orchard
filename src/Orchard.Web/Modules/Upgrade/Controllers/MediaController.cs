@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Features;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
@@ -21,6 +25,7 @@ namespace Upgrade.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IMediaLibraryService> _mediaLibraryServices;
         private readonly IMimeTypeProvider _mimeTypeProvider;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private IMediaLibraryService _mediaLibraryService { get { return _mediaLibraryServices.FirstOrDefault(); }}
         private int BATCH = 100;
 
@@ -28,11 +33,13 @@ namespace Upgrade.Controllers {
             IOrchardServices orchardServices,
             IFeatureManager featureManager,
             IEnumerable<IMediaLibraryService> mediaLibraryServices,
-            IMimeTypeProvider mimeTypeProvider) {
+            IMimeTypeProvider mimeTypeProvider,
+            IContentDefinitionManager contentDefinitionManager) {
             _orchardServices = orchardServices;
             _featureManager = featureManager;
             _mediaLibraryServices = mediaLibraryServices;
             _mimeTypeProvider = mimeTypeProvider;
+            _contentDefinitionManager = contentDefinitionManager;
 
             Logger = NullLogger.Instance;
         }
@@ -68,6 +75,28 @@ namespace Upgrade.Controllers {
                     }
                 }
             }
+
+            // ensuring all media items have been migrated
+            var hasMore = false;
+
+            if (ViewBag.CanMigrate) {
+
+                // crawl media file, ignore recipes and profiles
+                IEnumerable<MediaFolder> mediaFolders = _mediaLibraryService.GetMediaFolders(null);
+                foreach (var mediaFolder in mediaFolders) {
+                    ImportMediaFolder(mediaFolder, x => {
+                        var media = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(m => m.FolderPath == x.FolderName && m.FileName == x.Name).Slice(0, 1).FirstOrDefault();
+                        if (media == null) {
+                            hasMore = true;
+                        }
+                    });
+                    if (hasMore) {
+                        break;
+                    }
+                }
+            }
+
+            ViewBag.CanMigrateFields = ViewBag.CanMigrate && !hasMore;
 
             return View();
         }
@@ -140,6 +169,53 @@ namespace Upgrade.Controllers {
                 Logger.Error(e, "Error while importing {0}", mediaFile.MediaPath);
                 return null;
             }
+        }
+
+        [HttpPost]
+        public ActionResult MediaPicker() {
+
+            var matches = _contentDefinitionManager
+                .ListTypeDefinitions()
+                .SelectMany(ct => ct.Parts.SelectMany(p => p.PartDefinition.Fields.Select(y => new {Type = ct, Part = p, Field = y})))
+                .Where(x => x.Field.FieldDefinition.Name == "MediaPickerField");
+
+            foreach (var match in matches) {
+                foreach (var contentItem in _orchardServices.ContentManager.Query().ForType(match.Type.Name).List()) {
+                    var contentPart = contentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == match.Part.PartDefinition.Name);
+                    if (contentPart != null) {
+                        dynamic contentField = contentPart.Fields.FirstOrDefault(x => x.Name == match.Field.Name);
+                        if (contentField != null && contentField.Url != null) {
+                            string url = Convert.ToString(contentField.Url);
+                            var filename = Path.GetFileName(url);
+                            var media = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => filename == x.FileName).Slice(0, 1).FirstOrDefault();
+                            if (media != null) {
+                                contentField.Url = "{" + media.Id + "}";
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var match in matches) {
+                
+                string hint, required;
+                match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Hint", out hint);
+                match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Required", out required);
+
+                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name,
+                                                              cfg => cfg.RemoveField(match.Field.Name));
+                
+                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name, cfg => cfg
+                    .WithField(match.Field.Name, builder => builder
+                        .OfType("MediaLibraryPickerField")
+                        .WithDisplayName(match.Field.DisplayName)
+                        .WithSetting("MediaLibraryPickerFieldSettings.Hint", hint)
+                        .WithSetting("MediaLibraryPickerFieldSettings.Required", required)
+                        .WithSetting("MediaLibraryPickerFieldSettings.Multiple", false.ToString(CultureInfo.InvariantCulture))
+                        .WithSetting("MediaLibraryPickerFieldSettings.DisplayedContentTypes", String.Empty)
+                ));
+            }
+            return RedirectToAction("Index");
         }
     }
 }
