@@ -70,8 +70,7 @@ namespace Upgrade.Controllers {
 
                 foreach (var extension in extensions) {
                     if (_mimeTypeProvider.GetMimeType("." + extension) == "application/unknown") {
-                        _orchardServices.Notifier.Warning(T("Unknown MIME type: {0}", extension));
-                        ViewBag.CanMigrate = false;
+                        _orchardServices.Notifier.Warning(T("Unknown MIME type for extension: {0}. These files will be imported as Document media.", extension));
                     }
                 }
             }
