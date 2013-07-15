@@ -93,6 +93,12 @@ Author: 			Dave Gandy
 Website: 			http://fontawesome.io
 License: 			MIT License
 
+History.js
+-----
+Website:      https://github.com/browserstate/history.js
+Copyright:    Copyright (c) 2011, Benjamin Arthur Lupton
+Licence:      BSD
+
 Html Agility Pack
 -----
 Website:      http://htmlagilitypack.codeplex.com/
@@ -111,10 +117,23 @@ Copyright:    Copyright (c) 2002-2004 Jason Smith
 License:      http://www.codeproject.com/info/Licenses.aspx
               distributed with NHibernate under LGPL 2.1
 
+Image Resizer
+-----
+Author:       Brice Lambson
+Website:      https://imageresizer.codeplex.com
+Copyright:    Copyright (c) 2012 Imazen
+License:      Freedom license
+  
 jQuery
 -----
 Website:      http://jquery.com
 Copyright:    Copyright (c) 2010 John Resig, http://jquery.com
+License:      MIT
+
+jQuery Colorbox 
+-----
+Website:      http://www.jacklmoore.com/colorbox/
+Copyright:    (c) 2013 Jack Moore - jacklmoore.com/colorbox
 License:      MIT
 
 jQuery UI (Core, Widget, Datepicker)
@@ -133,6 +152,18 @@ jQuery ScrollTo
 -----
 Website:      http://flesler.blogspot.com
 Copyright:    Copyright (c) 2007-2009 Ariel Flesler
+License:      MIT
+
+jsPlumb
+-----
+Website:      http://jsplumb.org
+Copyright:    Copyright (c) 2010 - 2013 Simon Porritt (http://jsplumb.org)
+License:      MIT
+
+Knockout
+-----
+Website:      http://knockoutjs.com/
+Copyright:    Copyright (c) Steven Sanderson
 License:      MIT
 
 Log4Net
