@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Authentication;
+using System.Threading;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Features;
 using Orchard.FileSystems.Media;
@@ -27,7 +28,7 @@ namespace Upgrade.Controllers {
         private readonly IMimeTypeProvider _mimeTypeProvider;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private IMediaLibraryService _mediaLibraryService { get { return _mediaLibraryServices.FirstOrDefault(); }}
-        private int BATCH = 100;
+        private int BATCH = 10;
 
         public MediaController(
             IOrchardServices orchardServices,
@@ -46,6 +47,11 @@ namespace Upgrade.Controllers {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+
+        private Queue<MediaEntry> MediaList {
+            get { return Session["MediaList"] as Queue<MediaEntry>; }
+            set { Session["MediaList"] = value; }
+        }
 
         public ActionResult Index() {
             ViewBag.CanMigrate = false;
@@ -66,7 +72,7 @@ namespace Upgrade.Controllers {
                                 extensions.Add(extension);
                             }
                         }
-                    }));
+                    }, new CancellationTokenSource()));
 
                 foreach (var extension in extensions) {
                     if (_mimeTypeProvider.GetMimeType("." + extension) == "application/unknown") {
@@ -75,7 +81,8 @@ namespace Upgrade.Controllers {
                 }
             }
 
-            // ensuring all media items have been migrated
+            MediaList = new Queue<MediaEntry>();
+            var cts = new CancellationTokenSource();
             var hasMore = false;
 
             if (ViewBag.CanMigrate) {
@@ -84,15 +91,21 @@ namespace Upgrade.Controllers {
                 IEnumerable<MediaFolder> mediaFolders = _mediaLibraryService.GetMediaFolders(null);
                 foreach (var mediaFolder in mediaFolders) {
                     ImportMediaFolder(mediaFolder, x => {
-                        var media = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(m => m.FolderPath == x.FolderName && m.FileName == x.Name).Slice(0, 1).FirstOrDefault();
-                        if (media == null) {
+                        MediaList.Enqueue(new MediaEntry { FolderName = x.FolderName, FileName = x.Name });
+                        if (!hasMore && _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(m => m.FolderPath == x.FolderName && m.FileName == x.Name).Count() == 0) {
                             hasMore = true;
                         }
-                    });
-                    if (hasMore) {
-                        break;
-                    }
+                    },
+                    cts);
                 }
+            }
+
+            if (hasMore) {
+                _orchardServices.Notifier.Warning(T("Some media files need to be migrated."));
+                _orchardServices.Notifier.Information(T("{0} media files have been found, {1} media are in the library.", MediaList.Count, _orchardServices.ContentManager.Query<MediaPart>().Count()));
+            }
+            else {
+                _orchardServices.Notifier.Warning(T("All media files have been migrated."));
             }
 
             ViewBag.CanMigrateFields = ViewBag.CanMigrate && !hasMore;
@@ -100,72 +113,55 @@ namespace Upgrade.Controllers {
             return View();
         }
 
-        [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST() {
+        [HttpPost]
+        public JsonResult ImportMedia() {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to convert media files.")))
-                return new HttpUnauthorizedResult();
+                throw new AuthenticationException("");
 
-            var count = 0;
-            var hasMore = false;
-
-            // crawl media file, ignore recipes and profiles
-            IEnumerable<MediaFolder> mediaFolders = _mediaLibraryService.GetMediaFolders(null);
-            foreach (var mediaFolder in mediaFolders) {
-                ImportMediaFolder(mediaFolder, x => {
-                    if (count < BATCH) {
-                        if (ImportMediaFile(x) != null) {
-                            count++;
-                        }
-                    }
-                    else {
-                        hasMore = true;
-                    }
-                });
+            for (int i = 0; i < BATCH && MediaList.Any(); i++) {
+                var media = MediaList.Dequeue();
+                ImportMediaFile(media.FolderName, media.FileName);
             }
-
-            if (count > 0) {
-                _orchardServices.Notifier.Information(T("{0} media files were imported.", count));
-            }
-
-            if (hasMore && count <= BATCH) {
-                _orchardServices.Notifier.Information(T("More than {0} media files were found, please import again.", BATCH));
-            }
-            else {
-                _orchardServices.Notifier.Information(T("All media files were imported."));
-            }
-
-            return RedirectToAction("Index");
+            
+            return new JsonResult { Data = MediaList.Count };
         }
 
-        private void ImportMediaFolder(MediaFolder mediaFolder, Action<MediaFile> action) {
+        private void ImportMediaFolder(MediaFolder mediaFolder, Action<MediaFile> action, CancellationTokenSource cts) {
+            if (cts.IsCancellationRequested) {
+                return;
+            }
+
             foreach (var mediaFile in _mediaLibraryService.GetMediaFiles(mediaFolder.MediaPath)) {
                 action(mediaFile);
+                if (cts.IsCancellationRequested) {
+                    return;
+                }
             }
 
             // recursive call on sub-folders
             foreach (var subMediaFolder in _mediaLibraryService.GetMediaFolders(mediaFolder.MediaPath)) {
-                ImportMediaFolder(subMediaFolder, action);
+                ImportMediaFolder(subMediaFolder, action, cts);
             }
         }
 
-        private MediaPart ImportMediaFile(MediaFile mediaFile) {
+        private MediaPart ImportMediaFile(string folderName, string fileName) {
             // foreach media file, if there is no media with the same url, import it
 
             var contentManager = _orchardServices.ContentManager;
-            var media = contentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => x.FolderPath == mediaFile.FolderName && x.FileName == mediaFile.Name).Slice(0, 1).FirstOrDefault();
+            var mediaExists = contentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => x.FolderPath == folderName && x.FileName == fileName).Count() > 0;
 
-            if (media != null) {
+            if (mediaExists) {
                 // _orchardServices.Notifier.Warning(T("Media {0} has already been imported.", mediaFile.MediaPath));
                 return null;
             }
             
             try {
                 //_orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
-                return _mediaLibraryService.ImportMedia(mediaFile.FolderName, mediaFile.Name);
+                return _mediaLibraryService.ImportMedia(folderName, fileName);
             }
             catch(Exception e) {
-                _orchardServices.Notifier.Error(T("Error while importing {0}. Please check the logs", mediaFile.MediaPath));
-                Logger.Error(e, "Error while importing {0}", mediaFile.MediaPath);
+                _orchardServices.Notifier.Error(T("Error while importing {0}. Please check the logs", folderName + "/" + fileName));
+                Logger.Error(e, "Error while importing {0}", folderName + "/" + fileName);
                 return null;
             }
         }
@@ -215,6 +211,12 @@ namespace Upgrade.Controllers {
                 ));
             }
             return RedirectToAction("Index");
+        }
+
+        [Serializable]
+        private class MediaEntry {
+            public string FolderName { get; set; }
+            public string FileName { get; set; }
         }
     }
 }
