@@ -130,7 +130,10 @@ namespace Orchard.CustomForms.Controllers {
                 if (form.ContentType == "CustomFormWidget") {
                     foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
                         Services.Notifier.Error(T(error));
-                    } 
+                    }
+
+                    // save the updated editor shape into TempData to survive a redirection and keep the edited values
+                    TempData["CustomFormWidget.InvalidCustomFormState"] = model;
 
                     if (returnUrl != null) {
                         return this.RedirectLocal(returnUrl);
