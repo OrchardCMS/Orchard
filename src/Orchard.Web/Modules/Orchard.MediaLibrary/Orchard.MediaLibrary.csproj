@@ -69,9 +69,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\knockout-2.3.0.js" />
     <Content Include="Scripts\modal-window.js" />
     <Content Include="Scripts\history.js" />
-    <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Styles\font-awesome\css\font-awesome.css" />
     <Content Include="Styles\font-awesome\css\font-awesome.min.css" />
     <Content Include="Styles\font-awesome\font\fontawesome-webfont.svg" />
