@@ -15,7 +15,7 @@
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Orchard.Warmup,Orchard.OutputCache,
-                   Orchard.Taxonomies,Orchard.Workflows
+                   Orchard.Taxonomies,Orchard.Workflows,
                    TheThemeMachine" />
 
   <Metadata>
