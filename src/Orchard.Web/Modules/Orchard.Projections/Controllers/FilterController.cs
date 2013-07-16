@@ -77,6 +77,7 @@ namespace Orchard.Projections.Controllers {
             }
             var queryId = group.QueryPartRecord.Id;
 
+            group.QueryPartRecord.FilterGroups.Remove(group);
             _groupRepository.Delete(group);
 
             return RedirectToAction("Edit", "Admin", new { id = queryId });
@@ -92,7 +93,9 @@ namespace Orchard.Projections.Controllers {
                 return HttpNotFound();
             }
 
+            filter.FilterGroupRecord.Filters.Remove(filter);
             _repository.Delete(filter);
+
             Services.Notifier.Information(T("Filter deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id });

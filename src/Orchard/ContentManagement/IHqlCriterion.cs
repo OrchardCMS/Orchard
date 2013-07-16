@@ -119,22 +119,30 @@ namespace Orchard.ContentManagement {
             return from object value in values select FormatValue(value, quoteStrings);
         }
 
+        public static string FormatValue(string value, bool quoteStrings = true) {
+            return FormatValue((object)value, quoteStrings);
+        }
+
         public static string FormatValue(object value, bool quoteStrings = true) {
             var typeCode = Type.GetTypeCode(value.GetType());
             switch (typeCode) {
                 case TypeCode.String:
                     if (quoteStrings) {
-                        return String.Concat("'", Convert.ToString(value, CultureInfo.InvariantCulture), "'");
+                        return String.Concat("'", EncodeQuotes(Convert.ToString(value, CultureInfo.InvariantCulture)), "'");
                     }
-                    
-                    return Convert.ToString(value, CultureInfo.InvariantCulture);
+
+                    return EncodeQuotes(Convert.ToString(value, CultureInfo.InvariantCulture));
                 case TypeCode.DateTime:
                     // convert the date time to a valid string representation for Hql
                     var sortableDateTime = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    return quoteStrings ? String.Concat("'", sortableDateTime, "'") : sortableDateTime;
+                    return quoteStrings ? String.Concat("'", EncodeQuotes(sortableDateTime), "'") : sortableDateTime;
             }
 
-            return Convert.ToString(value, CultureInfo.InvariantCulture);
+            return EncodeQuotes(Convert.ToString(value, CultureInfo.InvariantCulture));
+        }
+
+        private static string EncodeQuotes(string value) {
+            return value.Replace("'", "''");
         }
 
         public static IHqlCriterion AllEq(IDictionary propertyNameValues) {
@@ -248,20 +256,20 @@ namespace Orchard.ContentManagement {
         public static BinaryExpression Like(string propertyName, string value, HqlMatchMode matchMode) {
             switch (matchMode) {
                 case HqlMatchMode.Start:
-                    value = "'" + value + "%'";
+                    value = "'" + FormatValue(value, false) + "%'";
                     break;
                 case HqlMatchMode.Exact:
-                    value = "'" + value + "'";
+                    value = "'" + FormatValue(value, false) + "'";
                     break;
                 case HqlMatchMode.Anywhere:
-                    value = "'%" + value + "%'";
+                    value = "'%" + FormatValue(value, false) + "%'";
                     break;
                 case HqlMatchMode.End:
-                    value = "'%" + value + "'";
+                    value = "'%" + FormatValue(value, false) + "'";
                     break;
             }
 
-            return new BinaryExpression("like", propertyName, FormatValue((object)value, false));
+            return new BinaryExpression("like", propertyName, value);
         }
 
         public static IHqlCriterion Lt(string propertyName, object value) {

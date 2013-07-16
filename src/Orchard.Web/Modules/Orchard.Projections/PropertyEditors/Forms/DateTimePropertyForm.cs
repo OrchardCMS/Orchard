@@ -41,7 +41,7 @@ namespace Orchard.Projections.PropertyEditors.Forms {
                     f._Format.Add(new SelectListItem { Value = "O", Text = T("Round-trip date/time pattern: 2009-06-15T13:45:30.0900000").Text });
                     f._Format.Add(new SelectListItem { Value = "R", Text = T("RFC1123 pattern: Mon, 15 Jun 2009 20:45:30 GMT").Text });
                     f._Format.Add(new SelectListItem { Value = "s", Text = T("Sortable date/time pattern: 2009-06-15T13:45:30").Text });
-                    f._Format.Add(new SelectListItem { Value = "t", Text = T("Long time pattern: 1:45 PM").Text });
+                    f._Format.Add(new SelectListItem { Value = "t", Text = T("Short time pattern: 1:45 PM").Text });
                     f._Format.Add(new SelectListItem { Value = "T", Text = T("Long time pattern: 1:45:30 PM").Text });
                     f._Format.Add(new SelectListItem { Value = "u", Text = T("Universal sortable date/time pattern: 2009-06-15 20:45:30Z").Text });
                     f._Format.Add(new SelectListItem { Value = "U", Text = T("Universal full date/time pattern:  Monday, June 15, 2009 8:45:30 PM").Text });
@@ -50,7 +50,7 @@ namespace Orchard.Projections.PropertyEditors.Forms {
                     f._Format.Add(new SelectListItem { Value = "month", Text = T("Month: 6").Text });
                     f._Format.Add(new SelectListItem { Value = "year", Text = T("Year: 2009").Text });
                     f._Format.Add(new SelectListItem { Value = "dayOfYear", Text = T("Day of year: 166").Text });
-                    f._Format.Add(new SelectListItem { Value = "ago", Text = T("Time ago").Text });
+                    f._Format.Add(new SelectListItem { Value = "ago", Text = T("Relative time: 1 minute ago").Text });
 
                     return f;
                 };

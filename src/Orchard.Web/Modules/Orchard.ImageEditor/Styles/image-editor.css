@@ -1,0 +1,57 @@
+﻿#image-editor-toolbar {
+    padding: 0 0 4px 0;
+    display: block;
+}
+
+#image-editor-options {
+    padding: 0 0 4px 0;
+    display: block;
+}
+
+#image-editor-container {
+    padding: 30px;
+    margin-top:10px;
+    background-color: rgb(62, 70, 74);
+}
+
+#image-editor-options-container {
+    display: none;
+}
+
+#image-editor-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.canvas-shadow {
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.80);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.80);
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.80);
+}
+
+.editor-shadow {
+    -moz-box-shadow: inset 0px 0px 12px rgba(0, 0, 0, 0.80);
+    -webkit-box-shadow: inset 0px 0px 12px rgba(0, 0, 0, 0.80);
+    box-shadow: inset 0px 0px 12px rgba(0, 0, 0, 0.80);    
+}
+
+/* FILTERS */
+.filters {
+}
+
+.filter {
+    float: left;
+    margin-right: 20px;
+}
+
+.filter > span {
+    display: inline-block;
+    width: 100px;
+}
+
+.slider {
+    display: inline-block;
+    width: 200px;
+    margin-top: 10px;
+}

@@ -12,15 +12,21 @@ namespace Orchard.ContentTypes.ViewModels {
             Index = index;
             PartDefinition = new EditPartViewModel(part.PartDefinition);
             Settings = part.Settings;
+            PartSettings = part.PartDefinition.Settings;
             _Definition = part;
         }
 
         public int Index { get; set; }
         public string Prefix { get { return "Parts[" + Index + "]"; } }
         public EditPartViewModel PartDefinition { get; set; }
+        public SettingsDictionary PartSettings { get; set; }
         public SettingsDictionary Settings { get; set; }
         public EditTypeViewModel Type { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public ContentTypePartDefinition _Definition { get; private set; }
+
+        public string Description {
+            get { return PartSettings.ContainsKey("ContentPartSettings.Description") ? PartSettings["ContentPartSettings.Description"] : null; }
+        }
     }
 }

@@ -86,6 +86,8 @@ namespace Orchard.FileSystems.VirtualPath {
                 new[] { virtualPath },
                 _clock.UtcNow);
 
+            Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
+
             HostingEnvironment.Cache.Add(
                 key,
                 virtualPath,
@@ -98,6 +100,8 @@ namespace Orchard.FileSystems.VirtualPath {
 
         public void Signal(string key, object value, CacheItemRemovedReason reason) {
             var virtualPath = Convert.ToString(value);
+            Logger.Debug("Virtual path changed ({1}) '{0}'", virtualPath, reason.ToString());
+
             var token = DetachToken(virtualPath);
             if (token != null)
                 token.IsCurrent = false;

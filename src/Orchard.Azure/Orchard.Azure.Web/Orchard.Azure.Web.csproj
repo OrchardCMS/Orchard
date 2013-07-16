@@ -61,12 +61,28 @@
       <HintPath>..\..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\ref\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\ref\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate.SqlAzure">
+      <HintPath>..\..\..\lib\nhibernate.sqlazure\NHibernate.SqlAzure.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -82,7 +98,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="System.Data.SqlServerCe, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.ApplicationServices">
       <Private>False</Private>
     </Reference>
@@ -137,9 +157,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Web.Services">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.EnterpriseServices">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Web.Mobile">
@@ -257,6 +274,10 @@
       <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
       <Name>Orchard.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ImageEditor\Orchard.ImageEditor.csproj">
+      <Project>{1f0b6b85-8b0b-47ca-899d-f25b4f1b52c3}</Project>
+      <Name>Orchard.ImageEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj">
       <Project>{fe5c5947-d2d5-42c5-992a-13d672946135}</Project>
       <Name>Orchard.ImportExport</Name>
@@ -281,10 +302,18 @@
       <Name>Orchard.Localization</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaPicker\Orchard.MediaPicker.csproj">
       <Project>{43D0EC0B-1955-4566-8D31-7B9102DA1703}</Project>
       <Name>Orchard.MediaPicker</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaProcessing\Orchard.MediaProcessing.csproj">
+      <Project>{08191fcd-7258-4f19-95fb-aec3de77b2eb}</Project>
+      <Name>Orchard.MediaProcessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
@@ -310,6 +339,10 @@
       <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
       <Name>Orchard.MultiTenancy</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.OutputCache\Orchard.OutputCache.csproj">
+      <Project>{6e444ff1-a47c-4cf6-bb3f-507c8ebd776d}</Project>
+      <Name>Orchard.OutputCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
@@ -344,6 +377,10 @@
       <Project>{966EC390-3C7F-4D98-92A6-F0F30D02E9B1}</Project>
       <Name>Orchard.Rules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
@@ -373,6 +410,10 @@
       <Project>{3F72A4E9-7B72-4260-B010-C16EC54F9BAF}</Project>
       <Name>Orchard.TaskLease</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
+      <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
+      <Name>Orchard.Taxonomies</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
@@ -396,6 +437,10 @@
       <Name>Orchard.Widgets</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\SysCache\SysCache.csproj">
       <Project>{3bd22132-d538-48c6-8854-f71333c798eb}</Project>
       <Name>SysCache</Name>
@@ -405,9 +450,9 @@
       <Name>TinyMce</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\UpgradeTo16\UpgradeTo16.csproj">
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Upgrade\Upgrade.csproj">
       <Project>{8a9fdb57-342d-49c2-bafc-d885aae5cc7c}</Project>
-      <Name>UpgradeTo16</Name>
+      <Name>Upgrade</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>

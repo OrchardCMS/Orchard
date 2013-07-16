@@ -16,6 +16,10 @@ namespace Orchard.AntiSpam.ViewModels {
     }
 
     public class SpamIndexOptions {
+        public SpamIndexOptions() {
+            Filter = SpamFilter.Spam;
+        }
+
         public string Search { get; set; }
         public SpamOrder Order { get; set; }
         public SpamFilter Filter { get; set; }

@@ -113,13 +113,13 @@
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
                     }
                 })
-                .live("focus", function () {
+                .on("focus", function () {
                     var _this = $(this);
                     if (_this.val() === _this.attr("placeholder")) {
                         _this.val("").removeClass("placeholderd");
                     }
                 })
-                .live("blur", function () {
+                .on("blur", function () {
                     var _this = $(this);
                     if (_this.val() === "") {
                         _this.val(_this.attr("placeholder")).addClass("placeholderd");
@@ -127,7 +127,7 @@
                 });
 
             //make sure the placeholder value is not taken as the input value when submitting forms
-            $("form").live("submit", function () {
+            $("form").on("submit", function () {
                 $(":input[placeholder].placeholderd").val("");
             });
 
@@ -223,7 +223,7 @@
     $(function () {
         var magicToken = $("input[name=__RequestVerificationToken]").first();
         if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
-        $("a[itemprop~=UnsafeUrl]").each(function () {
+        $("a[itemprop~=UnsafeUrl]").on("click", function() {
             var _this = $(this);
             var hrefParts = _this.attr("href").split("?");
             var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
@@ -238,16 +238,16 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
-            _this.click(function () {
-                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
-                    if (!confirm(confirmRemoveMessage)) {
-                        return false;
-                    }
-                }
 
-                form.submit();
-                return false;
-            });
+            if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                if (!confirm(confirmRemoveMessage)) {
+                    return false;
+                }
+            }
+
+            form.submit();
+            return false;
+
         });
     });
 })(jQuery);

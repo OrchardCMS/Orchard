@@ -66,11 +66,24 @@ namespace Orchard.ContentManagement {
 
         private void ForType(params string[] contentTypeNames) {
             if (contentTypeNames != null && contentTypeNames.Length != 0)
-                BindTypeCriteria().Add(Restrictions.InG("Name", contentTypeNames));
+                // don't use the IN operator if not needed for performance reasons
+                if (contentTypeNames.Length == 1) {
+                    BindTypeCriteria().Add(Restrictions.Eq("Name", contentTypeNames[0]));
+                }
+                else {
+                    BindTypeCriteria().Add(Restrictions.InG("Name", contentTypeNames));
+                }
         }
 
         public void ForVersion(VersionOptions options) {
             _versionOptions = options;
+        }
+
+        private void ForContentItems(IEnumerable<int> ids) {
+            if (ids == null) throw new ArgumentNullException("ids");
+
+            // Converting to array as otherwise an exception "Expression argument must be of type ICollection." is thrown.
+            Where<ContentItemRecord>(record => ids.ToArray().Contains(record.Id), BindCriteriaByPath(BindItemCriteria(), typeof(ContentItemRecord).Name));
         }
 
         private void Where<TRecord>() where TRecord : ContentPartRecord {
@@ -79,7 +92,10 @@ namespace Orchard.ContentManagement {
         }
 
         private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
+            Where<TRecord>(predicate, BindPartCriteria<TRecord>());
+        }
 
+        private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate, ICriteria bindCriteria) {
             // build a linq to nhibernate expression
             var options = new QueryOptions();
             var queryProvider = new NHibernateQueryProvider(BindSession(), options);
@@ -89,7 +105,7 @@ namespace Orchard.ContentManagement {
             var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
 
             // attach the criterion from the predicate to this query's criteria for the record
-            var recordCriteria = BindPartCriteria<TRecord>();
+            var recordCriteria = bindCriteria;
             foreach (var expressionEntry in criteria.IterateExpressionEntries()) {
                 recordCriteria.Add(expressionEntry.Criterion);
             }
@@ -184,6 +200,11 @@ namespace Orchard.ContentManagement {
 
             IContentQuery<T> IContentQuery<T>.ForVersion(VersionOptions options) {
                 _query.ForVersion(options);
+                return this;
+            }
+
+            IContentQuery<T> IContentQuery<T>.ForContentItems(IEnumerable<int> ids) {
+                _query.ForContentItems(ids);
                 return this;
             }
 

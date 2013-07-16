@@ -1,0 +1,44 @@
+﻿@{
+    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
+    Style.Include("~/themes/theadmin/styles/site.css");
+    Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
+
+    Layout.Title = @T("Edit Activity");
+    //Script.Require("jQueryUI");
+    Script.Include("orchard-workflows-serialize.js");
+}
+
+@Html.ValidationSummary()
+
+@using (Html.BeginFormAntiForgeryPost()) {
+
+    @* Render the dynamic form *@    
+    if (Model.Form != null) {
+        <fieldset>
+            @DisplayChildren(Model.Form)
+        </fieldset>
+    }
+
+    @Display.TokenHint()
+
+<fieldset>
+    <button class="primaryAction" type="submit" name="_submit.Save" value="@T("Save")">@T("Save")</button>
+    <button class="cancel" type="submit" name="_submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+</fieldset>
+}
+
+@using (Script.Head()) {
+<script type="text/javascript">
+    //<![CDATA[
+    var requestAntiForgeryToken = '@Html.AntiForgeryTokenValueOrchard()';
+    var localId = '@Model.LocalId';
+    //]]>
+</script>
+}
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        loadForm('@Model.LocalId', '@Model.ClientId');
+    </script>
+}

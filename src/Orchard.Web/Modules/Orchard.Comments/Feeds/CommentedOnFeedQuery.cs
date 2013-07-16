@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
@@ -25,8 +26,9 @@ namespace Orchard.Comments.Feeds {
 
             var limit = 20;
             var limitValue = context.ValueProvider.GetValue("limit");
-            if (limitValue != null)
-                limit = (int)limitValue.ConvertTo(typeof(int));
+            if (limitValue != null) {
+                Int32.TryParse(Convert.ToString(limitValue), out limit);
+            }
 
             var comments = _contentManager
                 .Query<CommentPart, CommentPartRecord>()

@@ -1,0 +1,7 @@
+@{
+    Layout.Title = T("Term Properties").Text;
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    @Display(Model)
+}

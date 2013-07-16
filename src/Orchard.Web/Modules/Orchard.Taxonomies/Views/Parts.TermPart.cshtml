@@ -1,0 +1,13 @@
+﻿@*
+    This shape displays a term and all content items associated to it.
+    - ContentItems is a List shape
+    - Pager is a Pager shape
+    - Taxonomy is the parent taxonomy
+    - ContentPart is the TermPart displayed
+*@
+@{
+    Model.ContentItems.Classes.Add("content-items");
+}
+
+@Display(Model.ContentItems)
+@Display(Model.Pager)

@@ -17,16 +17,19 @@ namespace Orchard.Core.Scheduling.Services {
         private readonly IRepository<ScheduledTaskRecord> _repository;
         private readonly IEnumerable<IScheduledTaskHandler> _handlers;
         private readonly IContentManager _contentManager;
+        private readonly ITransactionManager _transactionManager;
 
         public ScheduledTaskExecutor(
             IClock clock,
             IRepository<ScheduledTaskRecord> repository,
             IEnumerable<IScheduledTaskHandler> handlers,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            ITransactionManager transactionManager) {
             _clock = clock;
             _repository = repository;
             _handlers = handlers;
             _contentManager = contentManager;
+            _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
         }
 
@@ -38,7 +41,7 @@ namespace Orchard.Core.Scheduling.Services {
                 .ToArray();
 
             foreach (var taskEntry in taskEntries) {
-                //TODO: start a dedicated transaction scope
+                _transactionManager.RequireNew();
 
                 try {
                     // fetch the task
@@ -60,14 +63,10 @@ namespace Orchard.Core.Scheduling.Services {
                     foreach (var handler in _handlers) {
                         handler.Process(context);
                     }
-
-                    //TODO: commit dedicated scope
                 }
                 catch (Exception ex) {
                     Logger.Warning(ex, "Unable to process scheduled task #{0} of type {1}", taskEntry.Id, taskEntry.Action);
-
-                    //TODO: handle exception to rollback dedicated xact, and re-delete task record. 
-                    // does this also need some retry logic?
+                    _transactionManager.Cancel();
                 }
             }
         }

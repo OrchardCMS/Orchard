@@ -35,6 +35,9 @@ namespace Orchard.Blogs {
                     .Column<int>("BlogId")
                 );
 
+            ContentDefinitionManager.AlterPartDefinition("BlogPart", builder => builder
+                .WithDescription("Turns content types into a Blog."));
+
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                 cfg => cfg
                     .WithPart("BlogPart")
@@ -48,6 +51,9 @@ namespace Orchard.Blogs {
                     .WithPart("MenuPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                 );
+
+            ContentDefinitionManager.AlterPartDefinition("BlogPostPart", builder => builder
+                .WithDescription("Turns content types into a BlogPost."));
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
                 cfg => cfg
@@ -65,6 +71,9 @@ namespace Orchard.Blogs {
                     .Draftable()
                 );
             
+            ContentDefinitionManager.AlterPartDefinition("RecentBlogPostsPart", part => part
+                .WithDescription("Renders a list of recent blog posts."));
+
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
                 cfg => cfg
                     .WithPart("RecentBlogPostsPart")
@@ -72,6 +81,9 @@ namespace Orchard.Blogs {
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
                 );
+
+            ContentDefinitionManager.AlterPartDefinition("BlogArchivesPart", part => part
+                .WithDescription("Renders an archive of posts for a blog."));
 
             ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
                 cfg => cfg
@@ -81,7 +93,7 @@ namespace Orchard.Blogs {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 5;
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -111,6 +123,22 @@ namespace Orchard.Blogs {
                     .AddColumn<int>("BlogId"));
             
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterPartDefinition("BlogPart", builder => builder
+                .WithDescription("Turns a content type into a Blog."));
+
+            ContentDefinitionManager.AlterPartDefinition("BlogPostPart", builder => builder
+                .WithDescription("Turns a content type into a BlogPost."));
+
+            ContentDefinitionManager.AlterPartDefinition("RecentBlogPostsPart", part => part
+                .WithDescription("Renders a list of recent blog posts."));
+
+            ContentDefinitionManager.AlterPartDefinition("BlogArchivesPart", part => part
+                .WithDescription("Renders an archive of posts for a blog."));
+
+            return 6;
         }
     }
 }

@@ -1,0 +1,125 @@
+.ui-autocomplete  .ui-menu-item.disabled {
+    opacity: 0.3;
+}
+
+.ui-autocomplete  .ui-menu-item a {
+    font-size: 0.8em;
+}
+
+ul.tagit {
+    cursor: text;
+    overflow: auto;
+    font-size: 14px;
+    width: 97%;
+    padding: 3px;
+    margin-top: 2px;
+    margin-right: 6px;
+    margin-bottom: 0;
+    border: 1px solid #E5E5E5;
+    background: #fff;
+    color: #555;
+}
+
+ul.tagit li {
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    display: block;
+    float: left;
+    margin:0px 5px 0px 0;
+    position: relative;
+}
+
+ul.tagit.ui-sortable li.tagit-choice a.ui-icon.ui-icon-grip-dotted-vertical {
+    float: left;
+    width: 12px;
+    margin-left: -5px;
+    cursor: move;
+}
+
+ul.tagit li.tagit-choice {
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 4px 14px 4px 4px;
+    
+    color:#5d615d;
+	background:#f5f5f5;
+	border:1px solid #999;
+
+	/*CSS3 properties*/
+	text-shadow:none;
+		
+	-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+    box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
+		
+	/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
+    background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+		
+	-webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+        border-radius: 2px;	
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+}
+
+ul.tagit li.tagit-choice.selected {
+    border-color: #555;
+}
+
+ul.tagit li.tagit-choice:hover {
+    border-color: #bbb;
+}
+
+ul.tagit li.tagit-new {
+    padding: 2px 4px 3px;
+    padding: 2px 4px 1px;
+    padding: 2px 4px 1px 0;
+}
+
+ul.tagit li.tagit-choice input {
+    display: block;
+    float: left;
+    margin: 0 5px 0 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+ul.tagit li.tagit-choice a.tagit-close {
+    color: #777777;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    outline: medium none;
+    padding: 1px 0 1px 3px;
+    text-decoration: none;
+    position: absolute;
+    display: block;
+    top: 3px;
+    right: 3px;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+ul.tagit li.tagit-choice a.tagit-close:hover {
+    color: #535353;
+}
+
+    ul.tagit input[type="text"] {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: inherit !important;
+        outline: none;
+    }
+
+.tagit-hiddenSelect {
+    display:none;
+}

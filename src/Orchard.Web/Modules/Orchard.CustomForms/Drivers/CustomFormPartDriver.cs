@@ -33,7 +33,7 @@ namespace Orchard.CustomForms.Drivers {
             return ContentShape("Parts_CustomForm_Wrapper", () => {
                 return shapeHelper.Parts_CustomForm_Wrapper()
                     .Editor(_orchardServices.ContentManager.BuildEditor(contentItem))
-                    .ContenItem(part);
+                    .ContentItem(part);
             });
         }
 

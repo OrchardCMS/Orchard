@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    VideoPart videoPart = Model.ContentPart;
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+}
+
+<video width="100%" height="160px" src="@mediaPart.MediaUrl" controls></video>

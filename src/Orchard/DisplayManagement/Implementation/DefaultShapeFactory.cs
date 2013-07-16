@@ -1,38 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClaySharp;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {
 
-    public class DefaultShapeFactory : Clay, IShapeFactory {
+    public class DefaultShapeFactory : Composite, IShapeFactory {
         private readonly IEnumerable<Lazy<IShapeFactoryEvents>> _events;
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
 
         public DefaultShapeFactory(
             IEnumerable<Lazy<IShapeFactoryEvents>> events,
-            Lazy<IShapeTableLocator> shapeTableLocator) : base(new ShapeFactoryBehavior())
+            Lazy<IShapeTableLocator> shapeTableLocator)
         {
             _events = events;
             _shapeTableLocator = shapeTableLocator;
         }
-        
-        class ShapeFactoryBehavior : ClayBehavior {
-            public override object InvokeMember(Func<object> proceed, object target, string name, INamedEnumerable<object> args) {
-                return ((DefaultShapeFactory)target).Create(name, args);
-            }
+
+        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result) {
+            result = Create(binder.Name, Arguments.From(args, binder.CallInfo.ArgumentNames));
+            return true;
+        }
+
+        public IShape Create(string shapeType) {
+            return Create(shapeType, Arguments.Empty(), () => new Shape());
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
-            return Create(shapeType, parameters, Enumerable.Empty<IClayBehavior>());
+            return Create(shapeType, parameters, () => new Shape());
         }
 
-        public IShape Create(string shapeType, INamedEnumerable<object> parameters, IEnumerable<IClayBehavior> behaviors) {
+        public IShape Create(string shapeType, INamedEnumerable<object> parameters, Func<dynamic> createShape) {
             var defaultShapeTable = _shapeTableLocator.Value.Lookup(null);
             ShapeDescriptor shapeDescriptor;
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
+
+            parameters = parameters ?? Arguments.Empty();
 
             var creatingContext = new ShapeCreatingContext {
                 New = this,
@@ -40,42 +44,20 @@ namespace Orchard.DisplayManagement.Implementation {
                 ShapeType = shapeType,
                 OnCreated = new List<Action<ShapeCreatedContext>>()
             };
-            var positional = parameters.Positional;
 
-            creatingContext.BaseType = positional.Take(1).OfType<Type>().SingleOrDefault();
-            if (creatingContext.BaseType == null) {
+            IEnumerable<object> positional = parameters.Positional.ToList();
+            var baseType = positional.FirstOrDefault() as Type;
+
+            if (baseType == null) {
                 // default to common base class
-                creatingContext.BaseType = typeof(Shape);
+                creatingContext.Create = createShape ?? (() => new Shape());
             }
             else {
                 // consume the first argument
                 positional = positional.Skip(1);
-            }
-
-            if (creatingContext.BaseType == typeof(Array)) {
-                // array is a hint - not an intended base class
-                creatingContext.BaseType = typeof(Shape);
-                creatingContext.Behaviors = new List<IClayBehavior> {
-                    new ClaySharp.Behaviors.InterfaceProxyBehavior(),
-                    new ClaySharp.Behaviors.PropBehavior(),
-                    new ClaySharp.Behaviors.ArrayBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior(),
-                };
-            }
-            else {
-                creatingContext.Behaviors = new List<IClayBehavior> {
-                    new ClaySharp.Behaviors.InterfaceProxyBehavior(),
-                    new ClaySharp.Behaviors.PropBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior(),
-                    new Shape.ShapeBehavior(),
-                };
+                creatingContext.Create = () => Activator.CreateInstance(baseType);
             }
             
-            if (behaviors != null && behaviors.Any()) {
-                // include behaviors passed in by caller, if any
-                creatingContext.Behaviors = creatingContext.Behaviors.Concat(behaviors).ToList();
-            }
-
             // "creating" events may add behaviors and alter base type)
             foreach (var ev in _events) {
                 ev.Value.Creating(creatingContext);
@@ -90,10 +72,15 @@ namespace Orchard.DisplayManagement.Implementation {
             var createdContext = new ShapeCreatedContext {
                 New = creatingContext.New,
                 ShapeType = creatingContext.ShapeType,
-                Shape = ClayActivator.CreateInstance(creatingContext.BaseType, creatingContext.Behaviors)
+                Shape = creatingContext.Create()
             };
-            var shapeMetadata = new ShapeMetadata { Type = shapeType };
-            createdContext.Shape.Metadata = shapeMetadata;
+
+            if (!(createdContext.Shape is IShape)) {
+                throw new InvalidOperationException("Invalid base type for shape: " + createdContext.Shape.GetType().ToString());
+            }
+
+            ShapeMetadata shapeMetadata = createdContext.Shape.Metadata;
+            createdContext.Shape.Metadata.Type = shapeType;
 
             if (shapeDescriptor != null)
                 shapeMetadata.Wrappers = shapeMetadata.Wrappers.Concat(shapeDescriptor.Wrappers).ToList();

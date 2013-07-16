@@ -36,15 +36,16 @@ namespace Orchard.Search.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
-
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+            
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
                 searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
                                                   Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                  searchFields,
+                                                  searchSettingsPart.SearchIndex,
+                                                  searchSettingsPart.SearchedFields,
                                                   searchHit => searchHit);
             }
             catch (Exception exception) {

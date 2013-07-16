@@ -9,6 +9,7 @@ using Autofac.Builder;
 using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Features.Indexed;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
@@ -66,12 +67,12 @@ namespace Orchard.Environment.ShellBuilders {
                             .InstancePerLifetimeScope();
 
                         foreach (var interfaceType in item.Type.GetInterfaces()
-                            .Where(itf => typeof(IDependency).IsAssignableFrom(itf) 
+                            .Where(itf => typeof(IDependency).IsAssignableFrom(itf)
                                       && !typeof(IEventHandler).IsAssignableFrom(itf))) {
                             registration = registration.As(interfaceType);
                             if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("shell");
-                            } 
+                            }
                             else if (typeof(IUnitOfWorkDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("work");
                             }
@@ -81,7 +82,15 @@ namespace Orchard.Environment.ShellBuilders {
                         }
 
                         if (typeof(IEventHandler).IsAssignableFrom(item.Type)) {
-                            registration = registration.As(typeof(IEventHandler));
+                            var interfaces = item.Type.GetInterfaces();
+                            foreach (var interfaceType in interfaces) {
+
+                                // register named instance for each interface, for efficient filtering inside event bus
+                                // IEventHandler derived classes only
+                                if (interfaceType.GetInterface(typeof (IEventHandler).Name) != null) {
+                                    registration = registration.Named<IEventHandler>(interfaceType.Name);
+                                }
+                            }
                         }
 
                         foreach (var parameter in item.Parameters) {
@@ -125,11 +134,11 @@ namespace Orchard.Environment.ShellBuilders {
 
                     var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
                     if (File.Exists(optionalShellConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellConfig));
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellConfig));
 
                     var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
                     if (File.Exists(optionalShellByNameConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellByNameConfig));
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellByNameConfig));
                 });
         }
 

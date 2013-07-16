@@ -165,7 +165,7 @@ namespace Orchard.Environment {
         }
 
         ShellContext CreateShellContext(ShellSettings settings) {
-            if (settings.State.CurrentState == TenantState.State.Uninitialized) {
+            if (settings.State == TenantState.Uninitialized) {
                 Logger.Debug("Creating shell context for tenant {0} setup", settings.Name);
                 return _shellContextFactory.CreateSetupContext(settings);
             }
@@ -231,7 +231,7 @@ namespace Orchard.Environment {
             lock (_syncLock) {
                 
                 // if a tenant has been altered, and is not invalid, reload it
-                if (settings.State.CurrentState != TenantState.State.Invalid) {
+                if (settings.State != TenantState.Invalid) {
                     _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
                 }
             }
@@ -242,7 +242,7 @@ namespace Orchard.Environment {
             var shellContext = _shellContexts.FirstOrDefault(c => c.Settings.Name == settings.Name);
 
             // is this is a new tenant ? or is it a tenant waiting for setup ?
-            if (shellContext == null || settings.State.CurrentState == TenantState.State.Uninitialized) {
+            if (shellContext == null || settings.State == TenantState.Uninitialized) {
                 // create the Shell
                 var context = CreateShellContext(settings);
 

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ClaySharp;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class ShapeDebugView {
@@ -19,12 +19,12 @@ namespace Orchard.DisplayManagement.Shapes {
         public IEnumerable<dynamic> Items { get { return _shape.Items; } }
 
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public KeyValuePairs[] ClayProperties {
+        public KeyValuePairs[] Properties {
             get {
-                var members = new Dictionary<string, object>();
-                ((IClayBehaviorProvider)_shape).Behavior.GetMembers(() => null, _shape, members);
-
-                return members.Keys.Select(key => new KeyValuePairs(key, members[key])).ToArray();
+                return _shape.Properties
+                    .Cast<DictionaryEntry>()
+                    .Select(entry => new KeyValuePairs(entry.Key, entry.Value))
+                    .ToArray();
             }
         }
 
@@ -32,20 +32,11 @@ namespace Orchard.DisplayManagement.Shapes {
         public class KeyValuePairs {
 
             public KeyValuePairs(object key, object value) {
-                try {
-                    var dynProxyGetTarget = value.GetType().GetMethod("DynProxyGetTarget");
-                    if (dynProxyGetTarget != null) {
-                        _value = dynProxyGetTarget.Invoke(value, null);
-                        _shapeType = ((IShape)_value).Metadata.Type;
-                    }
-                    else {
-                        _value = value;
-                    }
-                }
-                catch {
-                    _value = value;
+                if (_value is IShape) {
+                    _shapeType = ((IShape)_value).Metadata.Type;    
                 }
 
+                _value = value;
                 _key = key;
             }
 

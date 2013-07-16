@@ -4,6 +4,7 @@ using System.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -21,6 +22,7 @@ using Orchard.Environment.Features;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
@@ -87,6 +89,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
                 .Returns(new[] { theme1, theme2, theme3, module1 });
 
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
@@ -103,6 +107,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
         }
@@ -113,14 +118,12 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(layers.Count(), Is.EqualTo(0));
 
             LayerPart layerPartFirst = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(1));
             Assert.That(layers.First().Id, Is.EqualTo(layerPartFirst.Id));
 
             _widgetService.CreateLayer(LayerName2, LayerDescription2, "");
-            _contentManager.Flush();
             Assert.That(layers.Count(), Is.EqualTo(1));
         }
 
@@ -130,7 +133,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(layers.Count(), Is.EqualTo(0), "No layers yet");
 
             _widgetService.CreateLayer("Test layer 1", "Test layer 1", "");
-            _contentManager.Flush();
 
             layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(1), "One layer was created");
@@ -142,7 +144,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(layers.Count(), Is.EqualTo(0), "No layers yet");
 
             _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             layers = _widgetService.GetLayers();
             LayerPart layer = layers.First();
@@ -153,7 +154,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         [Test]
         public void GetWidgetTest() {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             WidgetPart widgetResult = _widgetService.GetWidget(0);
             Assert.That(widgetResult, Is.Null);
@@ -164,7 +164,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             widgetResult = _widgetService.GetWidget(0);
             Assert.That(widgetResult, Is.Null, "Still yields null on an invalid identifier");
 
-            _contentManager.Flush();
             widgetResult = _widgetService.GetWidget(widgetPart.Id);
             Assert.That(widgetResult.Id, Is.EqualTo(widgetPart.Id), "Returns correct widget");
         }
@@ -172,21 +171,18 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         [Test]
         public void GetWidgetsTest() {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             IEnumerable<WidgetPart> widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(0));
 
             WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
-            _contentManager.Flush();
 
             widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(1));
             Assert.That(widgetResults.First().Id, Is.EqualTo(widgetPart.Id));
 
             _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle2, "2", "");
-            _contentManager.Flush();
 
             widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(2));
@@ -195,7 +191,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         [Test]
         public void CreateWidgetTest() {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
@@ -214,7 +209,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         [Test, Ignore("Fix when possible")]
         public void MoveWidgetTest() {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             // same zone widgets
             WidgetPart widgetPart1 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, Position1, Zone1);
@@ -222,7 +216,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
             // different zone widget
             WidgetPart widgetPart3 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle3, Position3, Zone2);
-            _contentManager.Flush();
 
             // test 1 - moving first widget up will have no effect
             Assert.That(_widgetService.MoveWidgetUp(widgetPart1), Is.False);
@@ -252,7 +245,6 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         [Test, Ignore("Fix when possible")]
         public void GetLayerWidgetsTest() {
             LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
-            _contentManager.Flush();
 
             // same zone widgets
             WidgetPart widgetPart1 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, Position1, Zone1);

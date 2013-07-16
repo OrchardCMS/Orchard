@@ -1,7 +1,8 @@
 ﻿@using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
+@using Orchard.ContentManagement
 
-@{ Layout.Title = (string)Model.Title; }
+@{ Layout.Title = T("Manage {0}", Html.ItemDisplayText((IContent)Model.ContentItem)); }
 
 @Display(Model.Header)
 @Display(Model.Actions)

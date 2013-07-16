@@ -11,20 +11,21 @@
 
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
                    XmlRpc,Orchard.Blogs.RemotePublishing,Orchard.ContentPicker, 
-                   TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
+                   TinyMce,Orchard.MediaLibrary,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Orchard.Warmup,
+                   PackagingServices,Orchard.Packaging,Orchard.Warmup,Orchard.OutputCache,
+                   Orchard.Taxonomies,Orchard.Workflows,
                    TheThemeMachine" />
 
   <Metadata>
     <Types>
-      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <TagsPart />
         <LocalizationPart />
         <AutoroutePart />
       </Page>
-      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />

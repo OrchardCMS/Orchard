@@ -34,12 +34,16 @@ namespace Orchard.ContentManagement {
         }
 
         public string Get(string name) {
-            return _dictionary.ContainsKey(name) ? _dictionary[name] : null;
+            return Has(name) ? _dictionary[name] : null;
+        }
+
+        public bool Has(string name) {
+            return _dictionary.ContainsKey(name);
         }
 
         public override string ToString() {
             var stringBuilder = new StringBuilder();
-            foreach (var key in _dictionary.Keys) {
+            foreach (var key in _dictionary.Keys.OrderBy(key => key)) {
                 var escapedIdentity = EncodeIdentityValue(_dictionary[key]);
                 stringBuilder.Append("/" + key + "=" + escapedIdentity);
             }

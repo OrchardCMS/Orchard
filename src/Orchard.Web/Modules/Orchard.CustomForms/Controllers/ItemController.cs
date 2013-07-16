@@ -130,15 +130,18 @@ namespace Orchard.CustomForms.Controllers {
                 if (form.ContentType == "CustomFormWidget") {
                     foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {
                         Services.Notifier.Error(T(error));
-                    } 
+                    }
+
+                    // save the updated editor shape into TempData to survive a redirection and keep the edited values
+                    TempData["CustomFormWidget.InvalidCustomFormState"] = model;
 
                     if (returnUrl != null) {
                         return this.RedirectLocal(returnUrl);
                     }
                 }
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                model.ContentItem(form);
+                return View(model);
             }
 
             contentItem.As<ICommonPart>().Container = customForm.ContentItem;

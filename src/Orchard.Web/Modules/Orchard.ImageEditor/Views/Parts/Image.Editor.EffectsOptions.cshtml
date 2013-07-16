@@ -1,0 +1,28 @@
+﻿@using Orchard.ImageEditor.Models
+@{
+    ImageEditorPart imageEditorPart = Model.ContentPart;
+}
+
+<div id="preset-options" style="display: none">
+    <fieldset>
+        <div id="preset-filters">
+            <a href="#" title="Vintage" data-preset="vintage"></a>
+            <a href="#" title="Lomo" data-preset="lomo"></a>
+            <a href="#" title="Clarity" data-preset="clarity"></a>
+            <a href="#" title="Sin City" data-preset="sinCity"></a>
+            <a href="#" title="Sunrise" data-preset="sunrise"></a>
+            <a href="#" title="Cross Process" data-preset="crossProcess"></a>
+            <a href="#" title="Orange Peel" data-preset="orangePeel"></a>
+            <a href="#" title="Love" data-preset="love"></a>
+            <a href="#" title="Grungy" data-preset="grungy"></a>
+            <a href="#" title="Jarques" data-preset="jarques"></a>
+            <a href="#" title="Hemingway" data-preset="hemingway"></a>
+            <a href="#" title="Concentrate" data-preset="concentrate"></a>
+            <a href="#" title="Nostalgia" data-preset="nostalgia"></a>
+        </div>
+    </fieldset>
+
+    <button id="preset-apply">@T("Apply")</button>
+    <button id="preset-cancel">@T("Cancel")</button>
+</div>
+

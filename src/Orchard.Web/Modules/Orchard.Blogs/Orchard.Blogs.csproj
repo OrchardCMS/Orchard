@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -89,6 +93,7 @@
     <Compile Include="Routing\IRsdConstraint.cs" />
     <Compile Include="Routing\IBlogPathConstraint.cs" />
     <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
+    <Compile Include="Services\ArchiveService.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\BlogPart.cs" />
@@ -99,6 +104,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
+    <Compile Include="Services\IArchiveService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
@@ -141,6 +147,10 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentPicker\Orchard.ContentPicker.csproj">
+      <Project>{f301ef7d-f19c-4d83-aa94-cb64f29c037d}</Project>
+      <Name>Orchard.ContentPicker</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -44,6 +45,9 @@ namespace Orchard.Recipes.Services {
                                     break;
                                 case "Version":
                                     recipe.Version = metadataElement.Value;
+                                    break;
+                                case "ExportUtc":
+                                    recipe.ExportUtc = !string.IsNullOrEmpty(metadataElement.Value) ? (DateTime?)XmlConvert.ToDateTime(metadataElement.Value, XmlDateTimeSerializationMode.Utc) : null;
                                     break;
                                 case "Tags":
                                     recipe.Tags = metadataElement.Value;

@@ -16,6 +16,13 @@ namespace Orchard.AntiSpam {
                 .Attachable()
                 );
 
+            SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
+                table => table.ContentPartVersionRecord()
+                    .Column<string>("PublicKey")
+                    .Column<string>("PrivateKey")
+                    .Column<bool>("TrustAuthenticatedUsers")
+                );
+
             ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", cfg => cfg
                 .Attachable()
                 );
@@ -25,9 +32,35 @@ namespace Orchard.AntiSpam {
                     .Column<string>("Status", c => c.WithLength(64))
                 );
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+
+            SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
+                table => table.ContentPartVersionRecord()
+                    .Column<string>("PublicKey")
+                    .Column<string>("PrivateKey")
+                    .Column<bool>("TrustAuthenticatedUsers")
+                );
+
+            return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", builder => builder
+                .WithDescription("Allows to filter submitted content items based on spam filters."));
+
+            ContentDefinitionManager.AlterPartDefinition("SubmissionLimitPart", builder => builder
+                .WithDescription("Allows to filter content items based on submissions frequency."));
+
+            ContentDefinitionManager.AlterPartDefinition("ReCaptchaPart", builder => builder
+                .WithDescription("Ensures content items are submitted by humans only."));
+
+            return 3;
         }
     }
+
 
     [OrchardFeature("Akismet.Filter")]
     public class AkismetMigrations : DataMigrationImpl {

@@ -6,6 +6,7 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
@@ -25,6 +26,7 @@ using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
+using Orchard.UI.PageClass;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
@@ -82,6 +84,8 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterInstance(_clock = new StubClock()).As<IClock>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
@@ -96,16 +100,25 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
 
             _session = _sessionFactory.OpenSession();
+            _session.BeginTransaction();
+
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
             _membershipService = _container.Resolve<IMembershipService>();
             _userService = _container.Resolve<IUserService>();
+        }
+
+        [TearDown]
+        public void TearDown() {
+            _session.Transaction.Commit();
+            _session.Transaction.Dispose();
         }
 
         [Test]
@@ -132,7 +145,6 @@ namespace Orchard.Tests.Modules.Users.Services {
 
             // Create user lower case
             _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true));
-            _container.Resolve<IOrchardServices>().ContentManager.Flush();
 
             // Verify unicity with upper case which with turkish coallition would yeld admin with an i without the dot and therefore generate a different user name
             Assert.That(_userService.VerifyUserUnicity("ADMIN", "differentfoo@bar.com"), Is.False);

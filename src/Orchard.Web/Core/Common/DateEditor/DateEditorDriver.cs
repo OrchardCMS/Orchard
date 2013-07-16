@@ -75,6 +75,7 @@ namespace Orchard.Core.Common.DateEditor {
 
                                 // the date time is entered locally for the configured timezone
                                 part.CreatedUtc = TimeZoneInfo.ConvertTimeToUtc(createdUtc, Services.WorkContext.CurrentTimeZone);
+                                part.VersionCreatedUtc = part.CreatedUtc;
                             }
                             else {
                                 updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));

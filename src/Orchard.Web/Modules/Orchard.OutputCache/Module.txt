@@ -1,0 +1,11 @@
+﻿Name: Output Cache
+AntiForgery: enabled
+Author: Sébastien Ros
+Website: http://orchardproject.net/
+Version: 1.7
+OrchardVersion: 1.7
+Description: Adds Output Caching functionality.
+Features:
+    Orchard.OutputCache:
+        Description: Adds Output Caching functionality.
+        Category: Performance

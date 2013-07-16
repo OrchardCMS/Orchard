@@ -12,6 +12,7 @@ using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.AntiSpam.Controllers {
     [ValidateInput(false)]
@@ -46,7 +47,7 @@ namespace Orchard.AntiSpam.Controllers {
             if (options == null)
                 options = new SpamIndexOptions();
 
-            var query = Services.ContentManager.Query().ForPart<SpamFilterPart>();
+            var query = Services.ContentManager.Query().ForPart<SpamFilterPart>().ForVersion(VersionOptions.Latest);
             
             switch(options.Filter) {
                 case SpamFilter.Spam:
@@ -104,32 +105,63 @@ namespace Orchard.AntiSpam.Controllers {
                     break;
                 case SpamBulkAction.Spam:
                     foreach (var checkedId in itemIds) {
-                        var spam = Services.ContentManager.Get(checkedId);
+                        var spam = Services.ContentManager.Get(checkedId, VersionOptions.Latest);
                         if(spam != null) {
                             spam.As<SpamFilterPart>().Status = SpamStatus.Spam;
                             _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                            Services.ContentManager.Publish(spam);
                         }
                     }
                     break;
                 case SpamBulkAction.Ham:
                     foreach (var checkedId in itemIds) {
-                        var ham = Services.ContentManager.Get(checkedId);
+                        var ham = Services.ContentManager.Get(checkedId, VersionOptions.Latest);
                         if (ham != null) {
                             ham.As<SpamFilterPart>().Status = SpamStatus.Ham;
                             _spamService.ReportHam(ham.As<SpamFilterPart>());
+                            Services.ContentManager.Publish(ham);
                         }
                     }
                     break;
                 case SpamBulkAction.Delete:
                     foreach (var checkedId in itemIds) {
-                        Services.ContentManager.Remove(Services.ContentManager.Get(checkedId));
+                        Services.ContentManager.Remove(Services.ContentManager.Get(checkedId, VersionOptions.Latest));
                     }
                     break;
             }
 
-            Services.ContentManager.Flush();
 
             return Index(options, new PagerParameters());
+        }
+
+        [HttpPost]
+        public ActionResult ReportSpam(int id, string returnUrl) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
+                return new HttpUnauthorizedResult();
+
+            var spam = Services.ContentManager.Get(id, VersionOptions.Latest);
+            if (spam != null) {
+                spam.As<SpamFilterPart>().Status = SpamStatus.Spam;
+                _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                Services.ContentManager.Publish(spam);
+            }
+
+            return this.RedirectLocal(returnUrl, "~/");
+        }
+
+        [HttpPost]
+        public ActionResult ReportHam(int id, string returnUrl) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
+                return new HttpUnauthorizedResult();
+
+            var spam = Services.ContentManager.Get(id, VersionOptions.Latest);
+            if (spam != null) {
+                spam.As<SpamFilterPart>().Status = SpamStatus.Ham;
+                _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                Services.ContentManager.Publish(spam);
+            }
+
+            return this.RedirectLocal(returnUrl, "~/");
         }
     }
 }

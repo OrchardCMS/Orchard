@@ -240,7 +240,15 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     width:40px;
 }
 #site {
-    font-size:1.385em; /*18px*/
+    font-size: 1.385em; /*18px*/
+}
+#site a {
+    width: 186px;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
 #site a, #site a:visited, #site a:active {
     color:#fff;
@@ -661,23 +669,23 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
     float:right;
 }
 .button.grey {
-  		color:#5d615d;
-		background:#f5f5f5;
-		border:1px solid #999;
+        color:#5d615d;
+        background:#f5f5f5;
+        border:1px solid #999;
 
-		/*CSS3 properties*/
-		text-shadow:none;
-		
-		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        /*CSS3 properties*/
+        text-shadow:none;
+        
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
         -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
         box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
-		
-		/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+        
+        /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
         filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
         background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
         background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
-		
-		-webkit-border-radius: 2px;
+        
+        -webkit-border-radius: 2px;
         -moz-border-radius: 2px;
          border-radius: 2px;	
 }
@@ -703,7 +711,7 @@ button, .button, a.button {
      
     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
      /*test - base green in pallet is 155,179,108*/
@@ -744,7 +752,7 @@ button:active, .buton:active, a.button:active {
     /*CSS3 properties*/
     text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
@@ -752,19 +760,19 @@ button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
 }
 /*disabled*/
 .button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
-	background-color:#eee;
-	border:1px solid #ababab;
-	color:#ababab;
-	cursor:default;
-	
-	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffeeeeee',  endColorstr='#ffeeeeee');
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));   
+    background-color:#eee;
+    border:1px solid #ababab;
+    color:#ababab;
+    cursor:default;
+    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffeeeeee',  endColorstr='#ffeeeeee');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(238, 238, 238, 1.0)), to(rgba(238, 238, 238, 1.0)));   
     background: -moz-linear-gradient(top, rgba(238, 238, 238, 1.0), rgba(238, 238, 238, 1.0));
     
-	text-shadow: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+    text-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 /* and allow all of that button style to be undone and beyond - to look like a link */
 button.link {
@@ -895,10 +903,16 @@ table.items td .add
     float: right;
 }
 
+table.items tr.internal *{
+    background-color: #eee;
+    color: grey; 
+}
+
 /* Content item lists
 ----------------------------------------------------------*/
 .contentItems {
     border:1px solid #eaeaea;
+    border-bottom: none;
     background:#FFF;
     clear:both;
     margin:1em 0;
@@ -909,9 +923,6 @@ table.items td .add
     overflow:hidden;
     padding:0 1.4em .8em;
     border-bottom:1px solid #eaeaea;
-}
-.contentItems li.last {
-    border-bottom:none;
 }
 .contentItems.bulk-items li {
     padding-bottom:.6em;
@@ -974,7 +985,7 @@ table.items td .add
 .contentItems .related {
     text-align:right;
 }
-.contentItems .commentcount {
+.contentItems .comment-count {
     line-height:2em;
 }
 

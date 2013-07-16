@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,14 +65,27 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Settings\MediaGalleryFieldEditorEvents.cs" />
+    <Compile Include="Settings\MediaGalleryFieldSettings.cs" />
+    <Compile Include="Settings\MediaPickerFieldEditorEvents.cs" />
+    <Compile Include="Settings\MediaPickerFieldSettings.cs" />
+    <Compile Include="Tokens\FieldTokens.cs" />
+    <Compile Include="ViewModels\MediaGalleryFieldViewModel.cs" />
     <Content Include="Scripts\MediaBrowser.js" />
     <Content Include="Scripts\MediaPicker.js" />
     <Content Include="Styles\images\imagepreview.png" />
+    <Content Include="Styles\images\move.gif" />
     <Content Include="Styles\images\synchronizing.gif" />
+    <Content Include="Styles\media-gallery-admin.css" />
     <Content Include="Styles\mediapicker.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\MediaGalleryFieldDriver.cs" />
+    <Compile Include="Drivers\MediaPickerFieldDriver.cs" />
+    <Compile Include="Fields\MediaGalleryField.cs" />
+    <Compile Include="Fields\MediaPickerField.cs" />
+    <Compile Include="Handlers\MediaGalleryFieldHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -107,6 +124,32 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaGalleryFieldSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaPickerFieldSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\MediaGallery.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Fields\MediaPicker.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaGallery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaGallery.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

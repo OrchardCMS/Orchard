@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,10 +46,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClaySharp">
-      <HintPath>..\..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -71,7 +71,7 @@
     <Content Include="Scripts\CodeMirror\htmlmixed.js" />
     <Content Include="Scripts\CodeMirror\javascript.js" />
     <Content Include="Scripts\CodeMirror\razor.js" />
-    <Content Include="Scripts\jquery.scrollTo-min.js" />
+    <Content Include="Scripts\jquery.scrollTo-1.4.4.min.js" />
     <Content Include="Scripts\jquery.tmpl.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Styles\CodeMirror\codemirror.css" />

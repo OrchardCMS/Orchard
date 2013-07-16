@@ -125,6 +125,10 @@ namespace Orchard.ContentManagement {
         }
 
 
+        public static IContentQuery<T> ForContentItems<T>(this IContentQuery<T> query, params int[] ids) where T : IContent {
+            return query.ForContentItems(ids);
+        }
+
 
         public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : ContentPart {
             return manager.Query<T>(contentTypeNames).List();

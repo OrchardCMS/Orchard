@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ClaySharp;
 
 namespace Orchard.DisplayManagement.Implementation {
     public interface IShapeFactoryEvents : IDependency {
@@ -12,8 +11,7 @@ namespace Orchard.DisplayManagement.Implementation {
         public IShapeFactory ShapeFactory { get; set; }
         public dynamic New { get; set; }
         public string ShapeType { get; set; }
-        public Type BaseType { get; set; }
-        public IList<IClayBehavior> Behaviors { get; set; }
+        public Func<dynamic> Create { get; set; }
         public IList<Action<ShapeCreatedContext>> OnCreated { get; set; }
     }
 

@@ -14,14 +14,15 @@ namespace Orchard.Core.Contents {
                     if (contentItem != null) {
                         // Alternates in order of specificity. 
                         // Display type > content type > specific content > display type for a content type > display type for specific content
+                        // BasicShapeTemplateHarvester.Adjust will then adjust the template name
 
-                        // Content__[DisplayType] e.g. Content.Summary
+                        // Content__[DisplayType] e.g. Content-Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + EncodeAlternateElement(displaying.ShapeMetadata.DisplayType));
 
-                        // Content__[ContentType] e.g. Content-BlogPost
+                        // Content__[ContentType] e.g. Content-BlogPost,
                         displaying.ShapeMetadata.Alternates.Add("Content__" + EncodeAlternateElement(contentItem.ContentType));
 
-                        // Content__[Id] e.g. Content-42
+                        // Content__[Id] e.g. Content-42,
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
 
                         // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary

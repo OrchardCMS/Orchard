@@ -15,6 +15,7 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
+using Orchard.Recipes.Events;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
     [TestFixture]
@@ -78,6 +79,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
+            builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
             builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();

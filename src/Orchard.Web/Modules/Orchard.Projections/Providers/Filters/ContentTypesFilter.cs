@@ -27,7 +27,7 @@ namespace Orchard.Projections.Providers.Filters {
         }
 
         public void ApplyFilter(FilterContext context) {
-            var contentTypes = Convert.ToString(context.State.ContentTypes);
+            var contentTypes = (string)context.State.ContentTypes;
             if (!String.IsNullOrEmpty(contentTypes)) {
                 context.Query = context.Query.ForType(contentTypes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
             }

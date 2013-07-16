@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -28,7 +29,7 @@ namespace Orchard.Indexing.Settings {
         public override IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel) {
             var model = new TypeIndexing();
             updateModel.TryUpdateModel(model, "TypeIndexing", null, null);
-            builder.WithSetting("TypeIndexing.Included", model.Included ? true.ToString() : null);
+            builder.WithSetting("TypeIndexing.Indexes", model.Indexes);
 
             CreateIndexingTasks();
             

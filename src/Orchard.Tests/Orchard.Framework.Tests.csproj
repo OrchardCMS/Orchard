@@ -71,10 +71,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
-    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
@@ -109,7 +105,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
@@ -178,6 +174,7 @@
     <Compile Include="ContentManagement\Handlers\EpsilonPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\GammaPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
+    <Compile Include="ContentManagement\ImportContentSessionTests.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReaderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriterTests.cs" />
@@ -217,8 +214,12 @@
     <Compile Include="Data\ProviderUtilities.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\ProvidersTests.cs" />
+    <Compile Include="Data\Bags\SettingsTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
+    <Compile Include="DisplayManagement\CompositeTests.cs" />
+    <Compile Include="DisplayManagement\NilTests.cs" />
+    <Compile Include="DisplayManagement\ZoneHoldingTests.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
+    <Compile Include="Services\JsonConverterTests.cs" />
     <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />

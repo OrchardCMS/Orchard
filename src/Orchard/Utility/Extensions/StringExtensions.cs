@@ -66,8 +66,8 @@ namespace Orchard.Utility.Extensions {
             var previousIsNotLetter = false;
             for (var i = 0; i < friendlier.Length; i++) {
                 char current = friendlier[i];
-                if (IsLetter(current)) {
-                    if(previousIsNotLetter && i != 0) {
+                if (IsLetter(current) || (Char.IsDigit(current) && cursor > 0)) {
+                    if (previousIsNotLetter && i != 0 && cursor > 0) {
                         result[cursor++] = '-';    
                     }
                     

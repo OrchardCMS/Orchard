@@ -141,18 +141,15 @@ namespace Orchard.Tests.DataMigration {
                 );
 
             // creating a new row should assign a default value to Firstname and Age
-            _schemaBuilder
-                .ExecuteSql("insert into TEST_User VALUES (DEFAULT, DEFAULT)");
+            _schemaBuilder.ExecuteSql("insert into TEST_User VALUES (DEFAULT, DEFAULT)");
 
             // ensure we have one record with the default value
-            var command = _session.Connection.CreateCommand();
-            command.CommandText = "SELECT count(*) FROM TEST_User WHERE Lastname = 'Doe'";
-            Assert.That(command.ExecuteScalar(), Is.EqualTo(1));
+            var query = _session.CreateSQLQuery("SELECT count(*) FROM TEST_User WHERE Lastname = 'Doe'");
+            Assert.That(query.UniqueResult<int>(), Is.EqualTo(1));
 
             // ensure this is not a false positive
-            command = _session.Connection.CreateCommand();
-            command.CommandText = "SELECT count(*) FROM TEST_User WHERE Lastname = 'Foo'";
-            Assert.That(command.ExecuteScalar(), Is.EqualTo(0));
+            query = _session.CreateSQLQuery("SELECT count(*) FROM TEST_User WHERE Lastname = 'Foo'");
+            Assert.That(query.UniqueResult<int>(), Is.EqualTo(0));
         }
 
         [Test]
@@ -232,15 +229,14 @@ namespace Orchard.Tests.DataMigration {
 
             _schemaBuilder
                 .CreateTable("Product", table => table
-                    .Column("Price", DbType.Decimal, column => column.WithPrecision(6).WithScale(9))
+                    .Column("Price", DbType.Decimal, column => column.WithPrecision(19).WithScale(9))
                     );
 
             _schemaBuilder
                 .ExecuteSql(String.Format("INSERT INTO TEST_Product (Price) VALUES ({0})", "123456.123456789"));
 
-            var command = _session.Connection.CreateCommand();
-            command.CommandText = "SELECT MAX(Price) FROM TEST_Product";
-            Assert.That(command.ExecuteScalar(), Is.EqualTo(123456.123456789m));
+            var query = _session.CreateSQLQuery("SELECT MAX(Price) FROM TEST_Product");
+            Assert.That(query.UniqueResult(), Is.EqualTo(123456.123456789m));
 
         }
     }

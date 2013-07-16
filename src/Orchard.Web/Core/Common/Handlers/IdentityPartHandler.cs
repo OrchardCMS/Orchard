@@ -8,7 +8,8 @@ using Orchard.ContentManagement.Handlers;
 namespace Orchard.Core.Common.Handlers {
     [UsedImplicitly]
     public class IdentityPartHandler : ContentHandler {
-        public IdentityPartHandler(IRepository<IdentityPartRecord> identityRepository) {
+        public IdentityPartHandler(IRepository<IdentityPartRecord> identityRepository,
+            IContentManager contentManager) {
             Filters.Add(StorageFilter.For(identityRepository));
             OnInitializing<IdentityPart>(AssignIdentity);
         }

@@ -1,0 +1,6 @@
+﻿@model Orchard.MediaProcessing.ViewModels.ImageProfileViewModel
+<fieldset>
+    @Html.LabelFor(m => m.Name, T("Name"))
+    @Html.TextBoxFor(m => m.Name, new {@class = "text"})
+    <span class="hint">@T("The technical name of the profile. Must be letters and numbers only (e.g. Thumbnail).")</span>
+</fieldset>

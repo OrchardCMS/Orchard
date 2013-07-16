@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.Logging;
-using Orchard.Mvc.ViewEngines.WebForms;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public class RazorViewEngineProvider : IViewEngineProvider, IShapeTemplateViewEngine {

@@ -59,9 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="ClaySharp">
-      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
-    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
@@ -74,7 +71,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>

@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Autofac.Integration.Mef</name>
+    </assembly>
+    <members>
+        <member name="T:Autofac.Integration.Mef.ContractBasedService">
+            <summary>
+            Identifies a service by the MEF contract name it supports.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ContractBasedService.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.Mef.ContractBasedService"/> class.
+            </summary>
+            <param name="contractName">The contract name.</param>
+            <param name="exportTypeIdentity">Type identity of the objects exported under the contract.</param>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ContractBasedService.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+            <returns>
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+            </returns>
+            <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ContractBasedService.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular ExportDefinition.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedService.ExportTypeIdentity">
+            <summary>
+            Type identity of the objects exported under the contract.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedService.ContractName">
+            <summary>
+            Gets or sets the name of the contract.
+            </summary>
+            <value>The name of the contract.</value>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedService.Description">
+            <summary>
+            Gets a human-readable description of the service.
+            </summary>
+            <value>The description.</value>
+        </member>
+        <member name="T:Autofac.Integration.Mef.ContractBasedServiceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedServiceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedServiceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.ContractBasedServiceResources.DescriptionFormat">
+            <summary>
+              Looks up a localized string similar to ContractName={0}.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.ExportConfigurationBuilder">
+            <summary>
+            Configures an Export on an Autofac component.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ExportConfigurationBuilder.As``1">
+            <summary>
+            Export the component under typed contract <typeparamref name="TContract"/>.
+            </summary>
+            <typeparam name="TContract">Contract type.</typeparam>
+            <returns>Builder for additional configuration.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ExportConfigurationBuilder.AsNamed``1(System.String)">
+            <summary>
+            Export the component under named contract <paramref name="name"/>.
+            </summary>
+            <typeparam name="TExportedValue">Exported value type.</typeparam>
+            <param name="name">Contract name.</param>
+            <returns>Builder for additional configuration.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ExportConfigurationBuilder.WithMetadata(System.String,System.Object)">
+            <summary>
+            Add metadata to the export.
+            </summary>
+            <param name="key">Metadata key.</param>
+            <param name="value">Metadata value.</param>
+            <returns>Builder for additional configuration.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.ExportConfigurationBuilder.WithMetadata(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.Object}})">
+            <summary>
+            Add metadata to the export.
+            </summary>
+            <param name="metadata">Metadata.</param>
+            <returns>Builder for additional configuration.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="metadata"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="T:Autofac.Integration.Mef.IMetadataConfiguration">
+            <summary>
+            Implementors are able to provide metadata for a component.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.IMetadataConfiguration.Properties">
+            <summary>
+            Gets the metadata properties and values.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.LazyWithMetadataRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.LazyWithMetadataRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.LazyWithMetadataRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.LazyWithMetadataRegistrationSourceResources.LazyWithMetadataRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Lazy&lt;T, TMetadata&gt; Support.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.LazyWithMetadataRegistrationSource">
+            <summary>
+            Support the <see cref="T:System.Lazy`2"/>
+            types automatically whenever type T is registered with the container.
+            Metadata values come from the component registration's metadata.
+            When a dependency of a lazy type is used, the instantiation of the underlying
+            component will be delayed until the Value property is first accessed.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSource">
+            <summary>
+            Support the <see cref="T:Autofac.Features.Metadata.Meta`2"/>
+            types automatically whenever type T is registered with the container.
+            Metadata values come from the component registration's metadata.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.Util.ReflectionExtensions">
+            <summary>
+            Extension methods for reflection-related types.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mef.Util.ReflectionExtensions.TryGetDeclaringProperty(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo@)">
+            <summary>
+            Maps from a property-set-value parameter to the declaring property.
+            </summary>
+            <param name="pi">Parameter to the property setter.</param>
+            <param name="prop">The property info on which the setter is specified.</param>
+            <returns>True if the parameter is a property setter.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.Util.ReflectionExtensions.GetProperty``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Get a PropertyInfo object from an expression of the form
+            x =&gt; x.P.
+            </summary>
+            <typeparam name="TDeclaring">Type declaring the property.</typeparam>
+            <typeparam name="TProperty">The type of the property.</typeparam>
+            <param name="propertyAccessor">Expression mapping an instance of the
+            declaring type to the property value.</param>
+            <returns>Property info.</returns>
+        </member>
+        <member name="T:Autofac.Integration.Mef.Util.ReflectionExtensionsResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.Util.ReflectionExtensionsResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.Util.ReflectionExtensionsResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.Util.ReflectionExtensionsResources.ExpressionNotPropertyAccessor">
+            <summary>
+              Looks up a localized string similar to The provided expression must be of the form x =&gt;x.P, but the provided expression was {0}..
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSourceResources.StronglyTypedMetaRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Meta&lt;T, TMetadata&gt; Support.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.Mef.RegistrationExtensions">
+            <summary>
+            Extension methods that add MEF hosting capabilities to the container building classes.
+            </summary>
+        </member>
+        <member name="F:Autofac.Integration.Mef.RegistrationExtensions._contractNameServices">
+            <summary>
+            Reference to the internal <see cref="T:System.Type"/> for <c>System.ComponentModel.Composition.ContractNameServices</c>,
+            which is responsible for mapping types to MEF contract names.
+            </summary>
+        </member>
+        <member name="F:Autofac.Integration.Mef.RegistrationExtensions._typeIdentityCache">
+            <summary>
+            Reference to the property <c>System.ComponentModel.Composition.ContractNameServices.TypeIdentityCache</c>,
+            which holds the dictionary of <see cref="T:System.Type"/> to <see cref="T:System.String"/> contract name mappings.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterMetadataRegistrationSources(Autofac.ContainerBuilder)">
+            <summary>
+            Registers the <see cref="T:Autofac.Integration.Mef.LazyWithMetadataRegistrationSource"/> and 
+            <see cref="T:Autofac.Integration.Mef.StronglyTypedMetaRegistrationSource"/> registration sources.
+            </summary>
+            <param name="builder">The container builder.</param>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.Exported``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Action{Autofac.Integration.Mef.ExportConfigurationBuilder})">
+            <summary>
+            Expose the registered service to MEF parts as an export.
+            </summary>
+            <param name="registration">The component being registered.</param>
+            <param name="configurationAction">Action on an object that configures the export.</param>
+            <returns>A registration allowing registration to continue.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartType(Autofac.ContainerBuilder,System.Type)">
+            <summary>
+            Register a MEF-attributed type as a component.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="partType">The attributed type to register.</param>
+            <remarks>
+            A simple heuristic/type scanning technique will be used to determine which MEF exports
+            are exposed to other components in the Autofac container.
+            </remarks>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartType(Autofac.ContainerBuilder,System.Type,System.Func{System.ComponentModel.Composition.Primitives.ExportDefinition,System.Collections.Generic.IEnumerable{Autofac.Core.Service}})">
+            <summary>
+            Register a MEF-attributed type as a component.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="partType">The attributed type to register.</param>
+            <param name="exposedServicesMapper">A mapping function to transform ExportDefinitions into Services.</param>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartCatalog(Autofac.ContainerBuilder,System.ComponentModel.Composition.Primitives.ComposablePartCatalog)">
+            <summary>
+            Register a MEF catalog.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="catalog">The catalog to register.</param>
+            <remarks>
+            A simple heuristic/type scanning technique will be used to determine which MEF exports
+            are exposed to other components in the Autofac container.
+            </remarks>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartCatalog(Autofac.ContainerBuilder,System.ComponentModel.Composition.Primitives.ComposablePartCatalog,Autofac.Core.Service[])">
+            <summary>
+            Register a MEF catalog.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="catalog">The catalog to register.</param>
+            <param name="interchangeServices">The services that will be exposed to other components in the container.</param>
+            <remarks>
+            Named and typed services only can be matched in the <paramref name="interchangeServices"/> collection.
+            </remarks>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartCatalog(Autofac.ContainerBuilder,System.ComponentModel.Composition.Primitives.ComposablePartCatalog,System.Func{System.ComponentModel.Composition.Primitives.ExportDefinition,System.Collections.Generic.IEnumerable{Autofac.Core.Service}})">
+            <summary>
+            Register a MEF catalog.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="catalog">The catalog to register.</param>
+            <param name="exposedServicesMapper">A mapping function to transform ExportDefinitions into Services.</param>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.RegisterComposablePartDefinition(Autofac.ContainerBuilder,System.ComponentModel.Composition.Primitives.ComposablePartDefinition,System.Func{System.ComponentModel.Composition.Primitives.ExportDefinition,System.Collections.Generic.IEnumerable{Autofac.Core.Service}})">
+            <summary>
+            Register a MEF part definition.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="partDefinition">The part definition to register.</param>
+            <param name="exposedServicesMapper">A mapping function to transform ExportDefinitions into Services.</param>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.ResolveExports``1(Autofac.IComponentContext)">
+            <summary>
+            Locate all of the MEF exports registered as supplying contract type T.
+            </summary>
+            <typeparam name="T">The contract type.</typeparam>
+            <param name="context">The context to resolve exports from.</param>
+            <returns>A list of exports.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mef.RegistrationExtensions.ResolveExports``1(Autofac.IComponentContext,System.String)">
+            <summary>
+            Locate all of the MEF exports registered as supplying contract type T.
+            </summary>
+            <param name="contractName">The contract name.</param>
+            <param name="context">The context to resolve exports from.</param>
+            <returns>A list of exports.</returns>
+        </member>
+        <member name="T:Autofac.Integration.Mef.RegistrationExtensionsResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.RegistrationExtensionsResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.RegistrationExtensionsResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mef.RegistrationExtensionsResources.ContractBasedOnly">
+            <summary>
+              Looks up a localized string similar to Import &apos;{0}&apos; is not supported: only contract-based imports are supported..
+            </summary>
+        </member>
+    </members>
+</doc>

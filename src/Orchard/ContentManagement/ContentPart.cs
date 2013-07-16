@@ -2,19 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Web.Mvc;
-using ClaySharp;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 using Orchard.UI;
 
 namespace Orchard.ContentManagement {
-    public class ContentPart : IContent, IContentBehavior, IDynamicMetaObjectProvider {
+    public class ContentPart : DynamicObject, IContent {
         private readonly IList<ContentField> _fields;
 
         public ContentPart() {
-            _behavior = new ClayBehaviorCollection(new[] { new ContentPartBehavior(this) });
             _fields = new List<ContentField>();
         }
 
@@ -27,14 +24,6 @@ namespace Orchard.ContentManagement {
             get {
                 return _zones;
             }
-        }
-
-        private readonly IClayBehavior _behavior;
-        IClayBehavior IContentBehavior.Behavior {
-            get { return _behavior; }
-        }
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) {
-            return new ClayMetaObject(this, parameter, ex => Expression.Property(Expression.Convert(ex, typeof(IContentBehavior)), "Behavior"));
         }
 
         /// <summary>
@@ -54,17 +43,39 @@ namespace Orchard.ContentManagement {
 
 
         public bool Has(Type fieldType, string fieldName) {
-            return _fields.Any(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
+            return _fields.Any(field => field.Name == fieldName && fieldType.IsInstanceOfType(field));
         }
 
         public ContentField Get(Type fieldType, string fieldName) {
-            return _fields.FirstOrDefault(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
+            return _fields.FirstOrDefault(field => field.Name == fieldName && fieldType.IsInstanceOfType(field));
         }
 
         public void Weld(ContentField field) {
             _fields.Add(field);
         }
 
+        public override bool TryGetMember(GetMemberBinder binder, out object result) {
+
+            var found = base.TryGetMember(binder, out result);
+            if (!found) {
+                foreach (var part in ContentItem.Parts) {
+                    if (part.PartDefinition.Name == binder.Name) {
+                        result = part;
+                        return true;
+                    }
+                }
+
+                foreach (var field in Fields) {
+                    if (field.PartFieldDefinition.Name == binder.Name) {
+                        result = field;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            return true;
+        }
 
     }
 

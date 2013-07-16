@@ -12,7 +12,6 @@ namespace Orchard.Azure.FileSystems.Media {
 
         public AzureBlobStorageProvider(ShellSettings shellSettings, CloudStorageAccount storageAccount) : base("media", shellSettings.Name, false, storageAccount) { }
 
-
         public bool TrySaveStream(string path, Stream inputStream) {
             try {
                 SaveStream(path, inputStream);
@@ -39,5 +38,23 @@ namespace Orchard.Azure.FileSystems.Media {
                 }
             }
         }
+
+        /// <summary>
+        /// Retrieves the local path for a given url within the storage provider.
+        /// </summary>
+        /// <param name="url">The public url of the media.</param>
+        /// <returns>The local path.</returns>
+        public string GetStoragePath(string url) {
+            if (url.StartsWith(_absoluteRoot)) {
+                return url.Substring(Combine(_absoluteRoot, "/").Length);
+            }
+
+            return null;
+        }
+
+        public string GetRelativePath(string path) {
+            return GetPublicUrl(path);
+        }
+
     }
 }

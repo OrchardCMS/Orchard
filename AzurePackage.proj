@@ -16,8 +16,9 @@
   </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets')"/>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\1.7\Microsoft.WindowsAzure.targets')"/>
+  <!-- look for C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v11.0\Windows Azure Tools -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\2.0\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\2.0\Microsoft.WindowsAzure.targets')"/>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\2.0\Microsoft.WindowsAzure.targets" Condition="exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v11.0\Windows Azure Tools\2.0\Microsoft.WindowsAzure.targets')"/>
 
   <!-- Coordinating Targets -->
 
@@ -142,7 +143,7 @@
   
   <Target Name="Package-Stage">
     <Exec
-        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(MsDeployFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(MsDeployFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(CloudRootFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
+        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(MsDeployFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(MsDeployFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(CloudRootFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
         WorkingDirectory="$(MsDeployFolder)" 
       />
   </Target>

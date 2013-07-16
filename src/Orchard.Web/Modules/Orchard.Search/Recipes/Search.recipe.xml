@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Search</Name>
+    <Description>Configures a default search index and search settings using the Lucene engine.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Search,Lucene" />
+  
+  <Metadata>
+    <Types>
+      <Page TypeIndexing.Indexes="Search">
+      </Page>
+      <BlogPost TypeIndexing.Indexes="Search">
+      </BlogPost>
+    </Types>
+  </Metadata>
+
+  <Migration features="*" />
+  
+  <Command>
+    index create Search
+    index update Search
+    search use Search
+  </Command>
+</Orchard>

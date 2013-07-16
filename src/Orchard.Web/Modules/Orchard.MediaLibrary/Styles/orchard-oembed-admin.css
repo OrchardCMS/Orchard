@@ -1,0 +1,49 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+#oembed-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    overflow: auto;
+}
+
+#query {
+    margin-bottom: 10px;
+    margin-right: 40px;
+}
+
+    #query input {
+        width: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        height: 28px;
+    }
+
+#icon {
+    float: right;
+    width:40px;
+}
+
+#icon button {
+    height: 28px;
+    width: 40px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background-color:black;
+    margin-bottom: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    font-size: 18px;
+}

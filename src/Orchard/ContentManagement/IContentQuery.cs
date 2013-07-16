@@ -13,6 +13,7 @@ namespace Orchard.ContentManagement {
     public interface IContentQuery<TPart> : IContentQuery where TPart : IContent {
         IContentQuery<TPart> ForType(params string[] contentTypes);
         IContentQuery<TPart> ForVersion(VersionOptions options);
+        IContentQuery<TPart> ForContentItems(IEnumerable<int> ids);
 
         IEnumerable<TPart> List();
         IEnumerable<TPart> Slice(int skip, int count);

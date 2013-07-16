@@ -1,0 +1,8 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    AudioPart audioPart = Model.ContentPart;
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+}
+
+<audio width="100%" src="@mediaPart.MediaUrl" controls></audio>

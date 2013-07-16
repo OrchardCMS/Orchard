@@ -94,18 +94,14 @@ namespace Orchard.Autoroute.Drivers {
                 }
 
                 if (!_autorouteService.IsPathValid(part.DisplayAlias)) {
-                    var path = (part.DisplayAlias ?? String.Empty);
-                    if (path.StartsWith(".") || path.EndsWith("."))
-                        updater.AddModelError("CurrentUrl", T("The \".\" can't be used at either end of the permalink."));
-                    else
-                        updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\". No spaces are allowed (please use dashes or underscores instead)."));
+                    updater.AddModelError("CurrentUrl", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\", \"|\", \"%\", \".\". No spaces are allowed (please use dashes or underscores instead)."));
                 }
 
                 // if CurrentUrl is set, the handler won't try to create an alias for it
                 // but instead keep the value
 
                 // if home page is requested, use "/" to have the handler create a homepage alias
-                if(_authorizer.Authorize(Permissions.SetHomePage) && viewModel.PromoteToHomePage) {
+                if(viewModel.PromoteToHomePage) {
                     part.DisplayAlias = "/";
                 }
             }

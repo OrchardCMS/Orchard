@@ -59,6 +59,7 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestTokenEscapeSequences() {
             Assert.That(_tokenizer.Replace("{{escaped}} {Site.Global1} }}{{ {{{{ }}}}", null), Is.EqualTo("{escaped} [global1] }{ {{ }}"));
+            Assert.That(_tokenizer.Replace("{{{Site.Global1}}}", null), Is.EqualTo("{[global1]}"));
             Assert.That(_tokenizer.Replace("{Date.Now.{{yyyy}}}", null), Is.EqualTo(DateTime.UtcNow.ToString("{yyyy}")));
         }
 
@@ -75,6 +76,31 @@ namespace Orchard.Tokens.Tests {
         [Test]
         public void TestPredicate() {
             Assert.That(_tokenizer.Replace("{Site.Global1}{Site.Global2}", null, new ReplaceOptions { Predicate = token => token == "Site.Global2" }), Is.EqualTo("{Site.Global1}[global2]"));
+        }
+
+        [Test]
+        public void HashTokenShouldBeReplaced() {
+            Assert.That(_tokenizer.Replace("foo #{Site.Global1}", null), Is.EqualTo("foo [global1]"));
+            Assert.That(_tokenizer.Replace("#{Site.Global1}#{Site.Global2}", null), Is.EqualTo("[global1][global2]"));
+        }
+
+        [Test]
+        public void HashInsideTokenShouldBeIgnored() {
+            Assert.That(_tokenizer.Replace("{Site.Global1.#}", null), Is.EqualTo(""));
+            Assert.That(_tokenizer.Replace("#{Site.Global1.#}", null), Is.EqualTo(""));
+        }
+
+        [Test]
+        public void SimplePatterShouldBeIgnoredWhenHashIsPresent() {
+            Assert.That(_tokenizer.Replace("#{Site.Global1}", null), Is.EqualTo("[global1]"));
+            Assert.That(_tokenizer.Replace("{#{Site.Global1}}", null), Is.EqualTo("{[global1]}"));
+            Assert.That(_tokenizer.Replace("{Site.Global1}#{Site.Global1}", null), Is.EqualTo("{Site.Global1}[global1]"));
+        }
+
+        [Test]
+        public void HashPatternCanBeEscaped() {
+            Assert.That(_tokenizer.Replace("##{Site.Global1}", null), Is.EqualTo("#[global1]"));
+            Assert.That(_tokenizer.Replace("#{{Site.Global1}}", null), Is.EqualTo("#{Site.Global1}"));
         }
     }
 }

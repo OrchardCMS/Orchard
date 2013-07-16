@@ -1,0 +1,19 @@
+﻿@using Orchard.Comments.Models;
+@using Orchard.ContentManagement
+@using Orchard.Utility.Extensions
+
+@{
+    CommentPart comment = Model.ContentPart;
+    var settings = WorkContext.CurrentSite.As<CommentSettingsPart>();
+}
+
+@if(settings.ModerateComments) {
+
+     if (comment.Status != CommentStatus.Pending) {
+         @Html.Link(@T("Approve").Text, Url.Action("Approve", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+     }
+     else {
+         @Html.Link(@T("Unapprove").Text, Url.Action("Unapprove", "Admin", new {area = "Orchard.Comments", comment.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
+     }
+    @T(" | ")
+}

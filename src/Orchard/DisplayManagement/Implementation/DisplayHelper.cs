@@ -1,17 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ClaySharp;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {
 
-    /// <summary>
-    /// Refactor: I this doesn't really need to exist, does it? 
-    /// It can all be an aspect of a display helper behavior implementation...
-    /// Or should this remain a CLR type for clarity?
-    /// </summary>
-    public class DisplayHelper {
+    public class DisplayHelper : DynamicObject {
         private readonly IDisplayManager _displayManager;
         private readonly IShapeFactory _shapeFactory;
 
@@ -28,6 +24,16 @@ namespace Orchard.DisplayManagement.Implementation {
 
         public ViewContext ViewContext { get; set; }
         public IViewDataContainer ViewDataContainer { get; set; }
+
+        public override bool TryInvoke(InvokeBinder binder, object[] args, out object result) {
+            result = Invoke(null, Arguments.From(args, binder.CallInfo.ArgumentNames));
+            return true;
+        }
+
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result) {
+            result = Invoke(binder.Name, Arguments.From(args, binder.CallInfo.ArgumentNames));
+            return true;
+        }
 
         public object Invoke(string name, INamedEnumerable<object> parameters) {
             if (!string.IsNullOrEmpty(name)) {
@@ -66,7 +72,16 @@ namespace Orchard.DisplayManagement.Implementation {
             return ShapeExecute(shape);
         }
 
+        public object ShapeExecute(Shape shape) {
+            // disambiguates the call to ShapeExecute(object) as Shape also implements IEnumerable
+            return ShapeExecute((object) shape);
+        }
+
         public object ShapeExecute(object shape) {
+            if (shape == null) {
+                return new HtmlString(string.Empty);
+            }
+
             var context = new DisplayContext { Display = this, Value = shape, ViewContext = ViewContext, ViewDataContainer = ViewDataContainer };
             return _displayManager.Execute(context);
         }

@@ -6,7 +6,6 @@ using System.Text;
 using System.Web;
 using Orchard.AntiSpam.Models;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.AntiSpam.Services {
     public class AkismetApiSpamFilter : ISpamFilter {
@@ -26,9 +25,9 @@ namespace Orchard.AntiSpam.Services {
 
         public ILogger Logger { get; set; }
 
-        public SpamStatus CheckForSpam(string text) {
+        public SpamStatus CheckForSpam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(text, "comment-check");
+                var result = ExecuteValidateRequest(context, "comment-check");
 
                 if (HandleValidateResponse(_context, result)) {
                     return SpamStatus.Spam;
@@ -42,25 +41,25 @@ namespace Orchard.AntiSpam.Services {
             }
         }
 
-        public void ReportSpam(string text) {
+        public void ReportSpam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(text, "submit-spam");
+                var result = ExecuteValidateRequest(context, "submit-spam");
             }
             catch (Exception e) {
                 Logger.Error(e, "An error occured while reporting spam");
             }
         }
 
-        public void ReportHam(string text) {
+        public void ReportHam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(text, "submit-ham");
+                var result = ExecuteValidateRequest(context, "submit-ham");
             }
             catch (Exception e) {
                 Logger.Error(e, "An error occured while reporting ham");
             }
         }
 
-        private string ExecuteValidateRequest(string text, string action) {
+        private string ExecuteValidateRequest(CommentCheckContext context, string action) {
             var uri = String.Format(AkismetApiPattern, _apiKey, _endpoint, action);
 
             WebRequest request = WebRequest.Create(uri);
@@ -68,13 +67,16 @@ namespace Orchard.AntiSpam.Services {
             request.Timeout = 5000; //milliseconds
             request.ContentType = "application/x-www-form-urlencoded";
 
-            var postData = String.Format(CultureInfo.InvariantCulture, "blog={0}&user_ip={1}&user_agent={2}&referrer={3}&comment_content={4}",
-                HttpUtility.UrlEncode(_context.Request.ToApplicationRootUrlString()),
-                HttpUtility.UrlEncode(_context.Request.ServerVariables["REMOTE_ADDR"]),
-                HttpUtility.UrlEncode(_context.Request.UserAgent),
-                HttpUtility.UrlEncode(Convert.ToString(_context.Request.UrlReferrer)),
-                HttpUtility.UrlEncode(text)
-            );
+            var postData = "blog=" + HttpUtility.UrlEncode(context.Url)
+                           + "&user_ip=" + HttpUtility.UrlEncode(context.UserIp)
+                           + "&user_agent=" + HttpUtility.UrlEncode(context.UserAgent)
+                           + "&referrer=" + HttpUtility.UrlEncode(context.Referrer)
+                           + "&permalink=" + HttpUtility.UrlEncode(context.Permalink)
+                           + "&comment_type=" + HttpUtility.UrlEncode(context.CommentType)
+                           + "&comment_author=" + HttpUtility.UrlEncode(context.CommentAuthor)
+                           + "&comment_author_email=" + HttpUtility.UrlEncode(context.CommentAuthorEmail)
+                           + "&comment_author_url=" + HttpUtility.UrlEncode(context.CommentAuthorUrl)
+                           + "&comment_content=" + HttpUtility.UrlEncode(context.CommentContent);
 
             byte[] content = Encoding.UTF8.GetBytes(postData);
             using (Stream stream = request.GetRequestStream()) {

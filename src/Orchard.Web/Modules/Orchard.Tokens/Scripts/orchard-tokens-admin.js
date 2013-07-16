@@ -39,13 +39,13 @@ jQuery(function ($) {
                     return false;
                 }
             }).each(function () {
-                $(this).data('autocomplete')._renderItem = function (ul, item) {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                     var result = item.value == '' ? $('<li class="accategory"></li>') : $("<li></li>");
 
                     var desc = item.desc.length > 50 ? item.desc.substring(0, 50) + "..." : item.desc;
 
                     return result
-                        .data("item.autocomplete", item)
+                        .data("ui-autocomplete-item", item)
                         .append('<a ><span class="aclabel">' + item.label + ' </span><span class="acvalue">' + item.value + ' </span><span class="acdesc">' + desc + "</span></a>")
                         .appendTo(ul);
                 };

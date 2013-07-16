@@ -5,11 +5,13 @@ using System.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Tags.Handlers;
 using Orchard.Tags.Models;
@@ -37,6 +39,8 @@ namespace Orchard.Tests.Modules.Tags.Services {
             builder.RegisterType<TagsPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
         }
 

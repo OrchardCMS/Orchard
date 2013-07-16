@@ -32,6 +32,9 @@ namespace Orchard.Widgets.Handlers {
             if (content.ContentItem.ContentType != "Page")
                 return;
 
+            if (!Services.Authorizer.Authorize(Permissions.ManageWidgets))
+                return;
+
             var urlHelper = new UrlHelper(_requestContext);
             var pathForLayer = "~/" + path;
             var title = content.ContentItem.ContentManager.GetItemMetadata(content).DisplayText;

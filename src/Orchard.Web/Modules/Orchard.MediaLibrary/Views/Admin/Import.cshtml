@@ -1,0 +1,62 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.MediaLibrary.ViewModels.MediaManagerImportViewModel
+@{
+    Style.Require("MediaManagerAdmin");
+    Layout.Title = T("Media Library");
+
+
+    if (Model.ImageSets != null) {
+        foreach (var imageSet in Model.ImageSets) {
+            RegisterImageSet("menu." + imageSet, "mediaproviders" /* style */, 16 /* bounding box */);
+        }
+    }
+
+    Style.Require("FontAwesome");
+}
+
+
+<div id="media-library-import">
+    <div id="media-library-toolbar">
+    
+        <div id="media-library-toolbar-actions">
+            <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
+        </div>
+        
+        @T("Media Folders") @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
+        
+    </div>
+
+    <div id="media-library-main">
+        <div id="media-library-main-navigation">
+        @foreach (var menuItem in Model.Menu) {
+            string sectionHeaderTextHint = menuItem.Text.TextHint;
+            var itemClassName = "navicon-" + sectionHeaderTextHint.HtmlClassify();
+                    
+            <div class="import-provider"><a class="navicon @itemClassName" href="@menuItem.Href/Index?folderPath=@HttpUtility.UrlEncode(Model.FolderPath)">@menuItem.Text</a></div>    
+        }
+        </div>
+        <div id="media-library-main-list-wrapper">
+            <div id="media-library-main-list">
+                <iframe id="media-library-main-list-frame">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $("#media-library-main-navigation a").click(function () {
+            var self = $(this);
+            $("#media-library-main-list-frame").attr("src", self.attr("href"));
+            return false;
+        });
+    })
+//]]>
+</script>
+}

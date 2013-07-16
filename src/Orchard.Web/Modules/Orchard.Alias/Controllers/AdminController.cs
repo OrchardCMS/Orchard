@@ -8,6 +8,8 @@ using Orchard.Alias.ViewModels;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -27,10 +29,12 @@ namespace Orchard.Alias.Controllers {
             _aliasHolder = aliasHolder;
             Services = orchardServices;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index(AdminIndexOptions options, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
@@ -118,15 +122,12 @@ namespace Orchard.Alias.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
-            if (aliasPath == "/") {
-                aliasPath = String.Empty;
+            aliasPath = aliasPath.TrimStart('/', '\\');
+            if (String.IsNullOrWhiteSpace(aliasPath)) {
+                aliasPath = "/";
             }
 
-            if (String.IsNullOrWhiteSpace(aliasPath)) {
-                ModelState.AddModelError("Path", T("Path can't be empty").Text);
-            }
-
-            if (String.IsNullOrWhiteSpace(aliasPath)) {
+            if (String.IsNullOrWhiteSpace(routePath)) {
                 ModelState.AddModelError("Route", T("Route can't be empty").Text);
             }
 
@@ -134,12 +135,18 @@ namespace Orchard.Alias.Controllers {
                 return View();
             }
 
-            try {
-                _aliasService.Set(aliasPath, routePath, String.Empty);
+            // Checking if the new alias won't overwrite any existing one.
+            if (CheckAndWarnIfAliasExists(aliasPath)) {
+                return View();
             }
-            catch {
+
+            try {
+                _aliasService.Set(aliasPath, routePath, "Custom");
+            }
+            catch(Exception ex) {
                 Services.TransactionManager.Cancel();
-                Services.Notifier.Error(T("An error occured while creating the alias. Please check the values are correct.", aliasPath));
+                Services.Notifier.Error(T("An error occured while creating the alias {0}: {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occured while creating the alias {0}", aliasPath).Text);
 
                 ViewBag.Path = aliasPath;
                 ViewBag.Route = routePath;
@@ -179,13 +186,43 @@ namespace Orchard.Alias.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
-            // TODO: (PH:Autoroute) This could overwrite an existing Alias without warning, should handle this
-            _aliasService.Set(aliasPath, routePath, "Custom");
+            aliasPath = aliasPath.TrimStart('/', '\\');
+            if (String.IsNullOrWhiteSpace(aliasPath)) {
+                aliasPath = "/";
+            }
+
+            if (String.IsNullOrWhiteSpace(routePath)) {
+                ModelState.AddModelError("Route", T("Route can't be empty").Text);
+            }
+
+            if (!ModelState.IsValid) {
+                return View();
+            }
+
+            // Checking if the new alias won't overwrite any existing one.
+            if (aliasPath != path && CheckAndWarnIfAliasExists(aliasPath)) {
+                return View();
+            }
+
+            try {
+                _aliasService.Set(aliasPath, routePath, "Custom");
+            }
+            catch (Exception ex)
+            {
+                Services.TransactionManager.Cancel();
+                Services.Notifier.Error(T("An error occured while editing the alias '{0}': {1}. Please check the values are correct.", aliasPath, ex.Message));
+                Logger.Error(ex, T("An error occured while creating the alias '{0}'", aliasPath).Text);
+
+                ViewBag.Path = aliasPath;
+                ViewBag.Route = routePath;
+
+                return View();
+            }
 
             // Remove previous alias
             if (path != aliasPath) {
                 // TODO: (PH:Autoroute) Ability to fire an "AliasChanged" event so we make a redirect
-                _aliasService.Delete(path);
+                _aliasService.Delete(path == "/" ? String.Empty : path);
             }
 
             Services.Notifier.Information(T("Alias {0} updated", path));
@@ -194,7 +231,7 @@ namespace Orchard.Alias.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(string path) {
+        public ActionResult Delete(string path, string returnUrl) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage aliases")))
                 return new HttpUnauthorizedResult();
 
@@ -206,7 +243,38 @@ namespace Orchard.Alias.Controllers {
 
             Services.Notifier.Information(T("Alias {0} deleted", path));
 
-            return RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, Url.Action("Index"));
+        }
+
+        private string GetExistingPathForAlias(string aliasPath)
+        {
+            var routeValues = _aliasService.Get(aliasPath.TrimStart('/', '\\'));
+            if (routeValues == null) return null;
+
+            return _aliasService.LookupVirtualPaths(routeValues, HttpContext)
+                .Select(vpd => vpd.VirtualPath)
+                .FirstOrDefault();
+        }
+
+        private bool CheckAndWarnIfAliasExists(string aliasPath)
+        {
+            var routePath = GetExistingPathForAlias(aliasPath);
+            if (routePath == null) return false;
+
+            var editUrl = Url.Action("Edit", new { path = aliasPath == String.Empty ? "/" : aliasPath });
+            var deleteUrl = Url.Action("Delete", new { path = aliasPath == String.Empty ? "/" : aliasPath, returnUrl = HttpContext.Request.RawUrl });
+
+            var routePathLink = T("<a href=\"{0}\">{0}</a>", routePath == String.Empty ? "/" : "/" + routePath.TrimStart('/'));
+            var changeLink = T("<a href=\"{0}\">change</a>", editUrl);
+            var deleteLink = T("<a href=\"{0}\" itemprop=\"UnsafeUrl RemoveUrl\">delete</a>", deleteUrl);
+
+            Services.Notifier.Error(T("Cannot save alias <i>{0}</i>. It conflicts with existing one pointing to {1}. Please {2} or {3} the existing alias first.", 
+                aliasPath, 
+                routePathLink,
+                changeLink,
+                deleteLink));
+
+            return true;
         }
     }
 }

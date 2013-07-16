@@ -21,6 +21,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +45,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -61,8 +64,11 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Services\ContentTypePlacementStrategy.cs" />
+    <Compile Include="Services\DefaultStereotypesProvider.cs" />
     <Compile Include="Services\IPlacementService.cs" />
+    <Compile Include="Services\IStereotypesProvider.cs" />
     <Compile Include="Services\PlacementService.cs" />
+    <Compile Include="Services\StereotypeService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="Settings\PlacementSettings.cs" />
     <Compile Include="ViewModels\AddPartsViewModel.cs" />
@@ -90,7 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\admin-contenttypes.js" />
+    <Content Include="Styles\Images\menu.contenttypes.png" />
     <Content Include="Styles\Images\move.gif" />
+    <Content Include="Styles\menu.contenttypes-admin.css" />
     <Content Include="Styles\orchard-contenttypes-admin.css" />
     <Content Include="Views\Admin\AddFieldTo.cshtml" />
     <Content Include="Views\Admin\AddPartsTo.cshtml" />
@@ -148,6 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\ContentPartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

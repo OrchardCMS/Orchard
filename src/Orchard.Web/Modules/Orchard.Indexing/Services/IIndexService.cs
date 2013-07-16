@@ -11,6 +11,7 @@ namespace Orchard.Indexing.Services {
     }
 
     public interface IIndexingService : IDependency {
+        void DeleteIndex(string indexName);
         void RebuildIndex(string indexName);
         void UpdateIndex(string indexName);
         IndexEntry GetIndexEntry(string indexName);

@@ -20,18 +20,21 @@ namespace Orchard.Data.Migration {
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly ITransactionManager _transactionManager;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
             IDataMigrationInterpreter interpreter,
-            IContentDefinitionManager contentDefinitionManager) {
+            IContentDefinitionManager contentDefinitionManager,
+            ITransactionManager transactionManager) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
             _contentDefinitionManager = contentDefinitionManager;
+            _transactionManager = transactionManager;
 
             Logger = NullLogger.Instance;
         }
@@ -76,7 +79,7 @@ namespace Orchard.Data.Migration {
 
             // apply update methods to each migration class for the module
             foreach ( var migration in migrations ) {
-                // copy the objet for the Linq query
+                // copy the object for the Linq query
                 var tempMigration = migration;
                 
                 // get current version for this migration
@@ -87,39 +90,50 @@ namespace Orchard.Data.Migration {
                     current = dataMigrationRecord.Version.Value;
                 }
 
-                // do we need to call Create() ?
-                if(current == 0) {
-                    // try to resolve a Create method
+                try {
+                    _transactionManager.RequireNew();
 
-                    var createMethod = GetCreateMethod(migration);
-                    if(createMethod != null) {
-                        current = (int)createMethod.Invoke(migration, new object[0]);
+                    // do we need to call Create() ?
+                    if (current == 0) {
+                        // try to resolve a Create method
+
+                        var createMethod = GetCreateMethod(migration);
+                        if (createMethod != null) {
+                            current = (int) createMethod.Invoke(migration, new object[0]);
+                        }
                     }
-                }
 
-                var lookupTable = CreateUpgradeLookupTable(migration);
+                    var lookupTable = CreateUpgradeLookupTable(migration);
 
-                while(lookupTable.ContainsKey(current)) {
-                    try {
-                        Logger.Information("Applying migration for {0} from version {1}", feature, current);
-                        current = (int)lookupTable[current].Invoke(migration, new object[0]);
+                    while (lookupTable.ContainsKey(current)) {
+                        try {
+                            Logger.Information("Applying migration for {0} from version {1}", feature, current);
+                            current = (int) lookupTable[current].Invoke(migration, new object[0]);
+                        }
+                        catch (Exception ex) {
+                            Logger.Error(ex, "An unexpected error occurred while applying migration on {0} from version {1}", feature, current);
+                            throw;
+                        }
                     }
-                    catch (Exception ex) {
-                        Logger.Error(ex, "An unexpected error orccured while applying migration on {0} from version {1}", feature, current);
-                        throw;
+
+                    // if current is 0, it means no upgrade/create method was found or succeeded 
+                    if (current == 0) {
+                        continue;
                     }
+                    if (dataMigrationRecord == null) {
+                        _dataMigrationRepository.Create(new DataMigrationRecord { Version = current, DataMigrationClass = migration.GetType().FullName });
+                    }
+                    else {
+                        dataMigrationRecord.Version = current;
+                    }
+
+                    _transactionManager.RequireNew();
+                }
+                catch(Exception e) {
+                    Logger.Error(e, "Error while running migration version {0} for {1}", current, feature);
+                    _transactionManager.Cancel();
                 }
 
-                // if current is 0, it means no upgrade/create method was found or succeeded 
-                if (current == 0) {
-                    continue;
-                }
-                if (dataMigrationRecord == null) {
-                    _dataMigrationRepository.Create(new DataMigrationRecord {Version = current, DataMigrationClass = migration.GetType().FullName});
-                }
-                else {
-                    dataMigrationRecord.Version = current;
-                }
             }
         }
 

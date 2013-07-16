@@ -36,6 +36,12 @@ namespace Orchard.ContentManagement.MetaData.Services {
             // Merge name
             contentTypeDefinitionBuilder.Named(XmlConvert.DecodeName(element.Name.LocalName));
 
+
+            // Merge display name
+            if (element.Attribute("DisplayName") != null) {
+                contentTypeDefinitionBuilder.DisplayedAs(element.Attribute("DisplayName").Value);
+            }
+
             // Merge settings
             foreach (var setting in _settingsFormatter.Map(element)) {
                 contentTypeDefinitionBuilder.WithSetting(setting.Key, setting.Value);

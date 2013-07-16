@@ -41,28 +41,36 @@ namespace Orchard.Tokens.Implementation {
         }
 
         public string Replace(string text, IDictionary<string, object> data, ReplaceOptions options) {
-            var tokenset = Parse(text);
+            if (String.IsNullOrEmpty(text)) {
+                return String.Empty;
+            }
+
+            // do we have to replace tokens with hashes ?
+            bool hashMode = text.Contains("#{");
+
+            var tokenset = Parse(text, hashMode);
             var tokens = tokenset.Item2;
             var replacements = Evaluate(options.Predicate == null ? tokens : tokens.Where(options.Predicate), data);
 
             return replacements.Aggregate(tokenset.Item1,
-                (current, replacement) => current.Replace("{" + replacement.Key + "}", (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value)));
+                (current, replacement) => current.Replace((hashMode ? "#{" : "{") + replacement.Key + "}", (options.Encoding ?? ReplaceOptions.NoEncode)(replacement.Key, replacement.Value)));
         }
 
-        private static Tuple<string, IEnumerable<string>> Parse(string text) {
+        private static Tuple<string, IEnumerable<string>> Parse(string text, bool hashMode) {
             var tokens = new List<string>();
-            if (!string.IsNullOrEmpty(text)) {
+            if (!String.IsNullOrEmpty(text)) {
                 var inToken = false;
                 var tokenStart = 0;
                 for (var i = 0; i < text.Length; i++) {
                     var c = text[i];
+
                     if (c == '{') {
                         if (i + 1 < text.Length && text[i + 1] == '{') {
                             text = text.Substring(0, i) + text.Substring(i + 1);
                             continue;
                         }
                     }
-                    else if (c == '}') {
+                    else if (c == '}' && !(inToken)) {
                         if (i + 1 < text.Length && text[i + 1] == '}') {
                             text = text.Substring(0, i) + text.Substring(i + 1);
                             continue;
@@ -76,9 +84,15 @@ namespace Orchard.Tokens.Implementation {
                             tokens.Add(token);
                         }
                     }
-                    else if (c == '{') {
+                    else if (!hashMode && c == '{') {
                         inToken = true;
                         tokenStart = i;
+                    }
+                    else if (hashMode && c == '#' 
+                        && i + 1 < text.Length && text[i + 1] == '{'
+                        && (i + 2 > text.Length || text[i + 2] != '{') ) {
+                        inToken = true;
+                        tokenStart = i+1;
                     }
                 }
             }

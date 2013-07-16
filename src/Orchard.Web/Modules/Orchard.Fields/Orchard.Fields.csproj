@@ -66,13 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\hint.js" />
+    <Content Include="Styles\media-gallery-admin.css" />
     <Content Include="Styles\datetime.css" />
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -114,14 +115,12 @@
   <ItemGroup>
     <Compile Include="Drivers\BooleanFieldDriver.cs" />
     <Compile Include="Drivers\InputFieldDriver.cs" />
-    <Compile Include="Drivers\MediaPickerFieldDriver.cs" />
     <Compile Include="Drivers\NumericFieldDriver.cs" />
     <Compile Include="Drivers\DateTimeFieldDriver.cs" />
     <Compile Include="Drivers\EnumerationFieldDriver.cs" />
     <Compile Include="Drivers\LinkFieldDriver.cs" />
     <Compile Include="Fields\BooleanField.cs" />
     <Compile Include="Fields\InputField.cs" />
-    <Compile Include="Fields\MediaPickerField.cs" />
     <Compile Include="Fields\NumericField.cs" />
     <Compile Include="Fields\DateTimeField.cs" />
     <Compile Include="Fields\EnumerationField.cs" />
@@ -130,8 +129,6 @@
     <Compile Include="Settings\BooleanFieldSettings.cs" />
     <Compile Include="Settings\InputFieldEditorEvents.cs" />
     <Compile Include="Settings\InputFieldSettings.cs" />
-    <Compile Include="Settings\MediaPickerFieldEditorEvents.cs" />
-    <Compile Include="Settings\MediaPickerFieldSettings.cs" />
     <Compile Include="Settings\NumericFieldEditorEvents.cs" />
     <Compile Include="Settings\NumericFieldSettings.cs" />
     <Compile Include="Settings\LinkFieldEditorEvents.cs" />
@@ -147,15 +144,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\MediaPickerFieldSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Fields\MediaPicker.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Fields\MediaPicker.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields\Input.cshtml" />

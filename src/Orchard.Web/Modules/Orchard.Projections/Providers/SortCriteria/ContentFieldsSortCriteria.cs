@@ -66,7 +66,7 @@ namespace Orchard.Projections.Providers.SortCriteria {
         }
 
         public void ApplySortCriterion(SortCriterionContext context, IFieldTypeEditor fieldTypeEditor, string storageName, Type storageType, ContentPartDefinition part, ContentPartFieldDefinition field) {
-            bool ascending = Convert.ToBoolean(context.State.Sort);
+            bool ascending = (bool)context.State.Sort;
             var propertyName = String.Join(".", part.Name, field.Name, storageName ?? "");
 
             // use an alias with the join so that two filters on the same Field Type wont collide
@@ -87,7 +87,7 @@ namespace Orchard.Projections.Providers.SortCriteria {
         }
 
         public LocalizedString DisplaySortCriterion(SortCriterionContext context, ContentPartDefinition part, ContentPartFieldDefinition fieldDefinition) {
-            bool ascending = Convert.ToBoolean(context.State.Sort);
+            bool ascending = (bool)context.State.Sort;
 
             return ascending
                        ? T("Ordered by field {0}, ascending", fieldDefinition.Name)

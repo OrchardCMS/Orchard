@@ -12,5 +12,10 @@ namespace Orchard.Search.Models {
             get { return Record.FilterCulture; }
             set { Record.FilterCulture = value; }
         }
+
+        public string SearchIndex {
+            get { return Record.SearchIndex; }
+            set { Record.SearchIndex = value; }
+        }
     }
 }

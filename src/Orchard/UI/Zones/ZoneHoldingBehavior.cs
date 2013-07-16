@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ClaySharp;
-using ClaySharp.Behaviors;
+using System.Linq.Expressions;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.UI.Zones {
     /// <summary>
@@ -17,102 +17,188 @@ namespace Orchard.UI.Zones {
     /// Foo.Alpha :same
     /// 
     /// </summary>
-    public class ZoneHoldingBehavior : ClayBehavior {
+    public class ZoneHolding : Shape {
         private readonly Func<dynamic> _zoneFactory;
-        private readonly dynamic _layoutShape;
 
-        public ZoneHoldingBehavior(Func<dynamic> zoneFactory, dynamic layoutShape) {
+        public ZoneHolding(Func<dynamic> zoneFactory) {
             _zoneFactory = zoneFactory;
-            _layoutShape = layoutShape;
         }
 
-        public override object GetMember(Func<object> proceed, object self, string name) {
-            if (name == "Zones") {
-                // provide a robot for zone manipulation on parent object
-                return ClayActivator.CreateInstance(new IClayBehavior[] {                
-                    new InterfaceProxyBehavior(),
-                    new ZonesBehavior(_zoneFactory, self, _layoutShape) 
-                });
+        private Zones _zones;
+        public Zones Zones {
+            get {
+                if (_zones == null) {
+                    return _zones = new Zones(_zoneFactory, this);
+                }
+
+                return _zones;
             }
+        }
 
-            var result = proceed();
-            if (((dynamic)result) == null) {
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+            var name = binder.Name;
 
+            if (!base.TryGetMember(binder, out result) || (null == result)) {
                 // substitute nil results with a robot that turns adds a zone on
                 // the parent when .Add is invoked
-                return ClayActivator.CreateInstance(new IClayBehavior[] { 
-                    new InterfaceProxyBehavior(),
-                    new NilBehavior(),
-                    new ZoneOnDemandBehavior(_zoneFactory, self, name) 
-                });
+                result = new ZoneOnDemand(_zoneFactory, this, name);
+                TrySetMemberImpl(name, result);
             }
-            return result;
+
+            return true;
         }
 
-        public class ZonesBehavior : ClayBehavior {
-            private readonly Func<dynamic> _zoneFactory;
-            private object _parent;
-            private readonly dynamic _layoutShape;
+    }
 
-            public ZonesBehavior(Func<dynamic> zoneFactory, object parent, dynamic layoutShape) {
-                _zoneFactory = zoneFactory;
-                _parent = parent;
-                _layoutShape = layoutShape;
+    /// <remarks>
+    /// InterfaceProxyBehavior()
+    /// ZonesBehavior(_zoneFactory, self, _layoutShape) => Create ZoneOnDemand if member access
+    /// </remarks>
+    public class Zones : Composite {
+        private readonly Func<dynamic> _zoneFactory;
+        private readonly object _parent;
+
+        public Zones(Func<dynamic> zoneFactory, object parent) {
+            _zoneFactory = zoneFactory;
+            _parent = parent;
+        }
+
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+            return TryGetMemberImpl(binder.Name, out result);
+        }
+
+        protected override bool TryGetMemberImpl(string name, out object result) {
+
+            var parentMember = ((dynamic)_parent)[name];
+            if (parentMember == null) {
+                result = new ZoneOnDemand(_zoneFactory, _parent, name);
+                return true;
             }
 
-            public override object GetMember(Func<object> proceed, object self, string name) {
-                var parentMember = ((dynamic)_parent)[name];
-                if (parentMember == null) {
-                    return ClayActivator.CreateInstance(new IClayBehavior[] { 
-                        new InterfaceProxyBehavior(),
-                        new NilBehavior(),
-                        new ZoneOnDemandBehavior(_zoneFactory, _parent, name) 
-                    });
-                }
-                return parentMember;
-            }
-            public override object GetIndex(Func<object> proceed, object self, System.Collections.Generic.IEnumerable<object> keys) {
-                if (keys.Count() == 1) {
-                    var key = System.Convert.ToString(keys.Single());
+            result = parentMember;
+            return true;
+        }
 
-                    return GetMember(proceed, null, key);
-                }
-                return proceed();
+
+        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result) {
+
+            if (indexes.Count() == 1) {
+                var key = Convert.ToString(indexes.Single());
+
+                return TryGetMemberImpl(key, out result);
+            }
+
+            return base.TryGetIndex(binder, indexes, out result);
+        }
+    }
+
+    /// <remarks>
+    /// InterfaceProxyBehavior()
+    /// NilBehavior() => return Nil on GetMember and GetIndex in all cases
+    /// ZoneOnDemandBehavior(_zoneFactory, _parent, name)  => when a zone (Shape) is 
+    /// created, replace itself with the zone so that Layout.ZoneName is no more equal to Nil
+    /// </remarks>
+    public class ZoneOnDemand : Shape {
+
+        private readonly Func<dynamic> _zoneFactory;
+        private readonly object _parent;
+        private readonly string _potentialZoneName;
+
+        public ZoneOnDemand(Func<dynamic> zoneFactory, object parent, string potentialZoneName) {
+            _zoneFactory = zoneFactory;
+            _parent = parent;
+            _potentialZoneName = potentialZoneName;
+        }
+
+        public override bool TryGetMember(System.Dynamic.GetMemberBinder binder, out object result) {
+            // NilBehavior
+            result = Nil.Instance;
+            return true;
+        }
+
+        public override bool TryGetIndex(System.Dynamic.GetIndexBinder binder, object[] indexes, out object result) {
+            // NilBehavior
+            result = Nil.Instance;
+            return true;
+        }
+
+        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result) {
+            var name = binder.Name;
+
+            // NilBehavior
+            if (!args.Any() && name != "ToString") {
+                result = Nil.Instance;    
+                return true;
+            }
+            
+            return base.TryInvokeMember(binder, args, out result);
+        }
+
+        public override string ToString() {
+            return String.Empty;
+        }
+
+        public override bool TryConvert(System.Dynamic.ConvertBinder binder, out object result) {
+            if (binder.ReturnType == typeof (string)) {
+                result = null;
+            }
+            else if (binder.ReturnType.IsValueType) {
+                result = Activator.CreateInstance(binder.ReturnType);
+            }
+            else {
+                result = null;
+            }
+
+            return true;
+        }
+
+        public static bool operator ==(ZoneOnDemand a, object b) {
+            // if ZoneOnDemand is compared to null it must return true
+            return b == null || ReferenceEquals(b, Nil.Instance);
+        }
+
+        public static bool operator !=(ZoneOnDemand a, object b) {
+            // if ZoneOnDemand is compared to null it must return true
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) {
+                return true;
+            }
+            
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                int hashCode = (_parent != null ? _parent.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_potentialZoneName != null ? _potentialZoneName.GetHashCode() : 0);
+                return hashCode;
             }
         }
 
-        public class ZoneOnDemandBehavior : ClayBehavior {
-            private readonly Func<dynamic> _zoneFactory;
-            private readonly object _parent;
-            private readonly string _potentialZoneName;
-
-            public ZoneOnDemandBehavior(Func<dynamic> zoneFactory, object parent, string potentialZoneName) {
-                _zoneFactory = zoneFactory;
-                _parent = parent;
-                _potentialZoneName = potentialZoneName;
-            }
-
-            public override object InvokeMember(Func<object> proceed, object self, string name, INamedEnumerable<object> args) {
-                var argsCount = args.Count();
-                if (name == "Add" && (argsCount == 1 || argsCount == 2)) {
-                    // pszmyd: Ignore null shapes
-                    if (args.First() == null)
-                        return _parent;
-
-                    dynamic parent = _parent;
-
-                    dynamic zone = _zoneFactory();
-                    zone.Parent = _parent;
-                    zone.ZoneName = _potentialZoneName;
-                    parent[_potentialZoneName] = zone;
-
-                    if (argsCount == 1)
-                        return zone.Add(args.Single());
-
-                    return zone.Add(args.First(), (string)args.Last());
+        public override Shape Add(object item, string position = null) {
+                if (item == null) {
+                    return (Shape)_parent;
                 }
-                return proceed();
-            }
+
+                dynamic parent = _parent;
+
+                dynamic zone = _zoneFactory();
+                zone.Parent = _parent;
+                zone.ZoneName = _potentialZoneName;
+                parent[_potentialZoneName] = zone;
+
+                if (position == null) {
+                    return zone.Add(item);
+                }
+
+                return zone.Add(item, position);
         }
     }
 }

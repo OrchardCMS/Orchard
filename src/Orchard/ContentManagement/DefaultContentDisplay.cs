@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
-using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
@@ -27,7 +26,6 @@ namespace Orchard.ContentManagement {
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
-
             _handlers = handlers;
             _shapeFactory = shapeFactory;
             _shapeTableLocator = shapeTableLocator;
@@ -76,12 +74,13 @@ namespace Orchard.ContentManagement {
 
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
-
+            
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
 
+            
             return context.Shape;
         }
 
@@ -101,6 +100,9 @@ namespace Orchard.ContentManagement {
             var theme = workContext.CurrentTheme;
             var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
 
+            // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
+            ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
+
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
@@ -110,8 +112,7 @@ namespace Orchard.ContentManagement {
         }
 
         private dynamic CreateItemShape(string actualShapeType) {
-            var zoneHoldingBehavior = new ZoneHoldingBehavior((Func<dynamic>)(() => _shapeFactory.Create("ContentZone", Arguments.Empty())), _workContextAccessor.GetContext().Layout);
-            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
+            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), () => new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty())));
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {

@@ -1,0 +1,13 @@
+﻿@using Orchard.Utility.Extensions
+
+@{
+  string name = Model.Name;
+  string actions = Model.State.Outcomes;
+  var outcomes = String.Join(",", actions == null ? new string[0] : actions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => "'" + x.Trim() + "'").ToArray());
+}
+
+<div data-outcomes="@outcomes">
+  <div class="diamond"></div>
+  @*@name.CamelFriendly()*@
+</div>
+

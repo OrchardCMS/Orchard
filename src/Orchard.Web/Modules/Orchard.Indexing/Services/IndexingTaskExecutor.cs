@@ -58,6 +58,17 @@ namespace Orchard.Indexing.Services {
 
         public ILogger Logger { get; set; }
 
+        public bool RebuildIndex(string indexName) {
+
+            if (DeleteIndex(indexName)) {
+                var searchProvider = _indexManager.GetSearchIndexProvider();
+                searchProvider.CreateIndex(indexName);
+                return true;
+            }
+
+            return false;
+        }
+
         public bool DeleteIndex(string indexName) {
             ILockFile lockFile = null;
             var settingsFilename = GetSettingsFileName(indexName);
@@ -140,10 +151,10 @@ namespace Orchard.Indexing.Services {
 
                 // load all content items
                 var contentItems = _contentRepository
-                    .Fetch(
-                        versionRecord => versionRecord.Published && versionRecord.Id > indexSettings.LastContentId,
-                        order => order.Asc(versionRecord => versionRecord.Id))
+                    .Table.Where(versionRecord => versionRecord.Published && versionRecord.Id > indexSettings.LastContentId)
+                    .OrderBy(versionRecord => versionRecord.Id)
                     .Take(ContentItemsPerLoop)
+                    .ToList()
                     .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
                     .Distinct()
                     .ToList();
@@ -155,10 +166,15 @@ namespace Orchard.Indexing.Services {
 
                 foreach (var item in contentItems) {
                     try {
-                        IDocumentIndex documentIndex = ExtractDocumentIndex(item);
 
-                        if (documentIndex != null && documentIndex.IsDirty) {
-                            addToIndex.Add(documentIndex);
+                        // skip items from types which are not indexed
+                        var settings = GetTypeIndexingSettings(item);
+                        if (settings.List.Contains(indexName)) {
+                            IDocumentIndex documentIndex = ExtractDocumentIndex(item);
+
+                            if (documentIndex != null && documentIndex.IsDirty) {
+                                addToIndex.Add(documentIndex);
+                            }
                         }
 
                         indexSettings.LastContentId = item.VersionRecord.Id;
@@ -174,9 +190,10 @@ namespace Orchard.Indexing.Services {
                 _indexingStatus = IndexingStatus.Updating;
 
                 var indexingTasks = _taskRepository
-                    .Fetch(x => x.Id > indexSettings.LastIndexedId)
+                    .Table.Where(x => x.Id > indexSettings.LastIndexedId)
                     .OrderBy(x => x.Id)
                     .Take(ContentItemsPerLoop)
+                    .ToList()
                     .GroupBy(x => x.ContentItemRecord.Id)
                     .Select(group => new {TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
                     .OrderBy(x => x.TaskId)
@@ -184,8 +201,17 @@ namespace Orchard.Indexing.Services {
 
                 foreach (var item in indexingTasks) {
                     try {
+
+                        IDocumentIndex documentIndex = null;
+
                         // item.ContentItem can be null if the content item has been deleted
-                        IDocumentIndex documentIndex = ExtractDocumentIndex(item.ContentItem);
+                        if (item.ContentItem != null) {
+                            // skip items from types which are not indexed
+                            var settings = GetTypeIndexingSettings(item.ContentItem);
+                            if (settings.List.Contains(indexName)) {
+                                documentIndex = ExtractDocumentIndex(item.ContentItem);
+                            }
+                        }
 
                         if (documentIndex == null || item.Delete) {
                             deleteFromIndex.Add(item.Id);
@@ -273,12 +299,6 @@ namespace Orchard.Indexing.Services {
                 return null;
             }
 
-            // skip items from types which are not indexed
-            var settings = GetTypeIndexingSettings(contentItem);
-            if (!settings.Included) {
-                return null;
-            }
-
             var documentIndex = _indexProvider.New(contentItem.Id);
 
             // call all handlers to add content to index
@@ -290,7 +310,7 @@ namespace Orchard.Indexing.Services {
             if (contentItem == null ||
                 contentItem.TypeDefinition == null ||
                 contentItem.TypeDefinition.Settings == null) {
-                return new TypeIndexing {Included = false};
+                return new TypeIndexing {Indexes = ""};
             }
             return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
         }

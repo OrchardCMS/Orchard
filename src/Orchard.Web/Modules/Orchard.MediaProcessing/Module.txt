@@ -1,0 +1,9 @@
+﻿Name: Media Processing
+AntiForgery: enabled
+Author: John Murdock, Sébastien Ros
+Website: http://orchardproject.net
+Version: 1.7
+OrchardVersion: 1.7
+Description: Module for processing Media e.g. image resizing
+Category: Media
+Dependencies: Orchard.Forms

@@ -2,9 +2,9 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.6
-OrchardVersion: 1.4.1
-Description: The Messaging module adds messaging functionalities.
+Version: 1.7
+OrchardVersion: 1.7
+Description: This module provides the messaging infrastructure that module such as Workflows can use. It is only useful as a dependency for other modules that implement specific channels, such as e-mail or Twitter.
 FeatureDescription: Messaging services.
 Category: Messaging
 Dependencies: Settings

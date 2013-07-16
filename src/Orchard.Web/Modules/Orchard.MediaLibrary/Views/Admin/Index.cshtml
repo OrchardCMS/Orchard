@@ -1,0 +1,538 @@
+﻿@model Orchard.MediaLibrary.ViewModels.MediaManagerIndexViewModel
+
+@{
+    var viewModel = Model;
+
+    Script.Require("ShapesBase");
+    Style.Require("MediaManagerAdmin");
+    Script.Require("jQuery");
+    Script.Require("jQueryUI_Droppable");
+    Script.Include("knockout-2.3.0.js");
+    Script.Include("history.js");
+    Style.Require("FontAwesome");
+
+    Layout.Title = T("Media Library");
+}
+
+<div id="media-library">
+    <div id="media-library-toolbar">
+        <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
+        <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
+        <a href="#" data-bind="attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Create", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed() ? displayed() : '') }" class="button"  id="button-create-folder">@T("Create Folder")</a>
+
+        <label for="filterMediaType">@T("Show")</label>
+        <select id="filterMediaType" name="FilteredMediaType" data-bind="selectedOptions: mediaType">
+            @Html.SelectOption("", true, T("Any (show all)").ToString())
+            @foreach(var mediaType in Model.MediaTypes) {
+                @Html.SelectOption(mediaType, false, mediaType)
+            }
+        </select>
+
+        <label for="orderMedia">@T("Ordered by")</label>
+        <select data-bind="selectedOptions: orderMedia" id="orderMedia" name="OrderMedia">
+            @Html.SelectOption("title", false, T("title").ToString())
+            @Html.SelectOption("created", true, T("recently created").ToString())
+            @Html.SelectOption("published", false, T("recently published").ToString())
+            @Html.SelectOption("modified", false, T("recently modified").ToString())
+        </select>
+
+        <div id="media-library-toolbar-actions">
+            
+        </div>
+    </div>
+    <div id="media-library-main">
+        <div id="media-library-main-navigation">
+            <ul>
+                <li><a href="#" data-bind="click: selectRecent, css: { selected: !displayed() }" id="button-recent"><i class="icon-time"></i>@T("Recent")</a>
+                <li id="media-library-main-navigation-tree">
+                    <ul>
+                        @foreach (var folder in viewModel.Folders) {
+                            <li>
+                                @Display.Partial(TemplateName: "MediaManagerFolder", Model: folder)
+                            </li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="media-library-main-list-wrapper">
+            <div id="media-library-main-list" data-bind="event: { scroll: scrolled }, css: { pending: pendingRequest() }">
+                <ul data-bind="foreach: results">
+                    <li data-bind="css: cssClass">
+                        <div class="thumbnail" data-bind="html: data.thumbnail">
+                        </div>
+                        <div class="media-library-main-list-overlay">
+                            <p class="title" data-bind="text: data.title"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="media-library-main-editor">
+            <div id="media-library-main-editor-focus" data-bind="with: focus">
+                <h1>@T("PROPERTIES")</h1>
+                <div class="summary" data-bind="html: summary">
+                    
+                </div>
+            </div>
+            <article>
+                <header>
+                    <div id="media-library-main-selection" data-bind="visible: selection().length > 0">
+                        <h1>@T("SELECTION")</h1>
+                        <ul data-bind="foreach: selection">
+                            <li data-bind="css: cssClass">
+                                <div class="thumbnail selection" data-bind="html: data.thumbnail, click: $parent.focus">
+                                </div>
+                            </li>
+                        </ul>
+                        <div id="media-library-main-selection-actions">
+                            <button id="delete-selection-button">@T("Delete")</button>
+                        </div>
+                    </div>
+                </header>
+                <footer>
+                    <div id="media-library-main-selection-select">
+                        <button class="button-select" data-bind="visible: selection().length > 0">@T("Select")</button>
+                        <button class="button-cancel">@T("Cancel")</button>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+    @using(Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+ 
+        $(function () {
+            
+            function MediaPartViewModel(data) {
+                var self = this;
+                
+                // values
+                self.data = data;
+                
+                //id,
+                //contentType,
+                //contentTypeClass,
+                //title,
+                //alternateText,
+                //caption,
+                //resource,
+                //mimeType,
+                //mimeTypeClass,
+                //thumbnail,
+                //editLink,
+
+                self.hasFocus = ko.observable();
+                self.selected = ko.observable();
+                self.status = ko.observable('');
+                self.summary = ko.observable('');
+                self.cssClass = ko.computed(function() {
+                    var css = '';
+                    if (self.selected()) {
+                        css += ' selected';
+                    }
+                    
+                    if (self.hasFocus()) {
+                        css += ' has-focus';
+                    }
+
+                    return css;
+                });
+                    
+                // operations
+                self.setData = function (value) {
+                    self.data = value;
+                };
+            }
+            
+            function MediaIndexViewModel() {
+                var self = this;
+                
+                // values
+                self.selection = ko.observableArray([]);
+                self.focus = ko.observable();
+                self.results = ko.observableArray();
+                self.displayed = ko.observable();
+                self.pendingRequest = ko.observable(false);
+                self.mediaItemsCount = 0;
+                self.orderMedia = ko.observableArray(['created']);
+                self.mediaType = ko.observableArray([]);
+
+                self.getMediaItems = function (folderPath, max) {
+                    if (self.pendingRequest()) {
+                        return;
+                    }
+                    
+                    if (self.results().length > 0 && self.results().length >= self.mediaItemsCount) {
+                        return;
+                    }
+
+                    self.pendingRequest(true);
+
+                    var url = folderPath
+                        ? '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Admin"))?folderPath=' + encodeURIComponent(folderPath) + '&skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType()
+                        : '@HttpUtility.JavaScriptStringEncode(Url.Action("RecentMediaItems", "Admin"))?skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType();
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                    }).done(function (data) {
+                        var mediaItems = data.mediaItems;
+                        self.mediaItemsCount = data.mediaItemsCount;
+                        for (var i = 0; i < mediaItems.length; i++) {
+                            var item = new MediaPartViewModel(mediaItems[i]);
+                            self.results.push(item);
+
+                            // pre-select result which are already part of the selection
+                            var selection = self.selection();
+                            for (var j = 0; j < selection.length; j++) {
+                                if (selection[j].data.id == item.data.id) {
+                                    viewModel.toggleSelect(item, true);
+                                }
+                            }
+                        }
+                    }).fail(function(data) {
+                        console.error(data);
+                    }).always(function () {
+                         self.pendingRequest(false);
+                    });
+                };
+                
+                self.clearSelection = function () {
+                    this.focus(null);
+                    // unselect previous elements
+                    self.selection().forEach(function (item) {
+                        item.selected(false);
+                    });
+
+                    self.selection([]);
+                };
+
+                self.focus.subscribe(function(oldValue) {
+                    if (oldValue) {
+                        oldValue.hasFocus(false);
+                    }
+                }, this, "beforeChange");
+                
+                self.focus.subscribe(function(newValue) {
+                    if (newValue) {
+                        newValue.hasFocus(true);
+
+                        // load summary admin if not alreay done
+                        if (newValue.summary() == '') {
+                            var id = newValue.data.id;
+                            var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))/' + id;
+
+                            $.ajax({
+                                type: "GET",
+                                url: url,
+                            }).done(function(data) {
+                                newValue.summary(data);
+                            });
+                        }
+                    }
+                });
+                
+                self.displayFolder = function (folderPath) {
+                    
+                    self.results([]);
+
+                    self.getMediaItems(folderPath, 20);
+                    self.displayed(folderPath);
+                };
+
+                self.selectFolder = function (folderPath) {
+                    window.history.pushState({ action: 'displayFolder', folderPath: folderPath }, '', '?folderPath=' + folderPath);
+                    self.displayFolder(folderPath);
+                };
+
+                self.selectRecent = function () {
+                    window.history.pushState({ action: 'selectRecent' }, '', '?recent');
+                    
+                    self.results([]);
+                    self.displayed(null);
+                    var max = 20;
+
+                    if (self.pendingRequest()) {
+                        return;
+                    }
+                    
+                    if (self.results().length > 0 && self.results().length >= self.mediaItemsCount) {
+                        console.log('no more content, mediaItemsCount: ' + self.mediaItemsCount);
+                        return;
+                    }
+
+                    self.pendingRequest(true);
+
+                    var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("RecentMediaItems", "Admin"))?skip=' + self.results().length + '&count=' + max + '&order=' + self.orderMedia() + '&mediaType=' + self.mediaType();
+
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                    }).done(function (data) {
+                        var mediaItems = data.mediaItems;
+                        self.mediaItemsCount = data.mediaItemsCount;
+                        for (var i = 0; i < mediaItems.length; i++) {
+                            var item = new MediaPartViewModel(mediaItems[i]);
+                            self.results.push(item);
+
+                            // pre-select result which are already part of the selection
+                            var selection = self.selection();
+                            for (var j = 0; j < selection.length; j++) {
+                                if (selection[j].data.id == item.data.id) {
+                                    viewModel.toggleSelect(item, true);
+                                }
+                            }
+                        }
+                    }).fail(function(data) {
+                        console.error(data);
+                    }).always(function () {
+                        self.pendingRequest(false);
+                    });
+                }
+                
+                self.toggleSelect = function (searchResult, force) {
+                    var index = $.inArray(searchResult, self.selection());
+                    if (index == -1 || force) {
+                        self.selection.remove(function(item) { return item.data.id == searchResult.data.id; });
+                        self.selection.push(searchResult);
+                        searchResult.selected(true);
+                    } else {
+                        self.selection.remove(searchResult);
+                        searchResult.selected(false);
+                    }
+                    
+                    this.focus(searchResult);
+                };
+                
+                self.select = function (searchResult) {
+                    var index = $.inArray(searchResult, self.selection());
+                    if (index == -1) {
+                        self.clearSelection();
+                        self.selection([searchResult]);
+                        searchResult.selected(true);
+                    }
+                    
+                    this.focus(searchResult);
+                };
+
+                self.scrolled = function(data, event) {
+                    var elem = event.target;
+                    if (elem.scrollTop > (elem.scrollHeight - elem.offsetHeight - 300)) {
+                        if(self.displayed()) {
+                            self.getMediaItems(self.displayed(), 20);
+                        }
+                        else {
+                            self.getMediaItems(null, 20);
+                        }
+
+                    }
+                };
+
+                self.importMedia = function() {
+                    var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))?folderPath=' + encodeURIComponent(self.displayed());
+                    window.location = url;
+                };
+
+                self.orderMedia.subscribe(function (newValue) {
+                    if(self.displayed()) {
+                        self.selectFolder(self.displayed());
+                    }
+                    else {
+                        self.selectRecent();
+                    }
+                });
+                
+                self.mediaType.subscribe(function (newValue) {
+                    if(self.displayed()) {
+                        self.selectFolder(self.displayed());
+                    }
+                    else {
+                        self.selectRecent();
+                    }
+                });
+            };
+
+            var viewModel = new MediaIndexViewModel();
+            ko.applyBindings(viewModel);
+            
+            @if (viewModel.FolderPath != null) {
+            <text>
+            viewModel.displayFolder('@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)');
+            window.history.pushState({ action: 'displayFolder', folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)' }, '', '?folderPath=@HttpUtility.UrlEncode(viewModel.FolderPath)');
+            </text>
+            }
+            else {
+                <text>
+                viewModel.selectRecent();
+                window.history.pushState({ action: 'selectRecent' }, '', '?recent');
+                </text>
+            }
+            
+            window.onpopstate = function (event) {
+                if (event && event.state && event.state.action == 'displayFolder') {
+                    viewModel.displayFolder(event.state.folder);
+                }
+
+                if (event && event.state && event.state.action == 'selectRecent') {
+                    viewModel.selectRecent();
+                }
+            };
+
+            $("#media-library-main-list").on("mousedown", "li", function (e) {
+                // only for left click
+                if (e.which != 1) {
+                    return;
+                }
+                
+                var searchResult = ko.dataFor(this);
+                if (e.ctrlKey) {
+                    viewModel.toggleSelect(searchResult);
+                } else {
+                    viewModel.select(searchResult);
+                }
+            }).on("contextmenu", "li", function(e) {
+                var searchResult = ko.dataFor(this);
+                viewModel.toggleSelect(searchResult);
+                return false;
+            });
+
+            $("#media-library-main-selection-select > .button-select").on('click', function() {
+                if (parent.$.colorbox) {
+                    var selectedData = [];
+                    for (var i = 0; i < viewModel.selection().length; i++) {
+                        var selection = viewModel.selection()[i];
+                        selectedData.push(selection.data);
+                    }
+                    parent.$.colorbox.selectedData = selectedData;
+                    parent.$.colorbox.close();
+                };
+            });
+
+            $("#media-library-main-selection-select > .button-cancel").on('click', function() {
+                if (parent.$.colorbox) {
+                    parent.$.colorbox.selectedData = null;
+                    parent.$.colorbox.close();
+                };
+            });
+
+            $(".media-library-folder-title").droppable({
+                accept: function(draggable) {
+                    var targetId = $(this).data('term-id');
+                    return targetId != viewModel.displayed();
+                },
+                over: function(event, ui) {
+                    $(ui.helper).addClass('over');
+                    $(this).addClass('dropping');
+                },
+                out: function(event, ui) {
+                    $(ui.helper).removeClass('over');
+                    $(this).removeClass('dropping');
+                },
+                tolerance: "pointer",
+                drop: function(event, ui) {
+                    $(this).removeClass('dropping');
+                    var folderPath = $(this).data('media-path');
+
+                    if (folderPath == viewModel.displayed()) {
+                        return;
+                    }
+                    
+                    var ids = [];
+                    viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
+                    var url = '@Url.Action("Move", "Folder", new { area = "Orchard.MediaLibrary" })';
+
+                    console.log(folderPath);
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        dataType: "json",
+                        traditional: true,
+                        data: {
+                            folderPath: folderPath,
+                            mediaItemIds: ids,
+                            __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                        },
+                    }).done(function (result) {
+                        if (result) {
+                            if(viewModel.displayed()) {
+                                viewModel.results.remove(function(item) {
+                                    return ids.indexOf(item.data.id) != -1;
+                                });
+                            }
+
+                            viewModel.clearSelection();
+                        } else {
+                            console.log('failed to move media items');
+                        }
+                    });
+                }
+            });
+
+            $("#media-library-main-list").on("mouseover", ".media-thumbnail", function() {
+                if (!$(this).hasClass("ui-draggable")) { 
+                    $(this).draggable({
+                        revert: 'invalid',
+                        //containment: 'li',
+                        helper: function(event) {
+                            var clone = $(event.currentTarget).clone().removeAttr('id');
+                            clone.removeClass('selected');
+                            clone.addClass('dragged-selection');
+                            
+                            if (viewModel.selection().length > 1) {
+                                clone.append($('<div class="draggable-selection"><p>' + viewModel.selection().length + '</p></div>'));
+                            }
+
+                            return clone;
+
+                        },
+                        cursor: 'move',
+                        distance: 10, 
+                        appendTo: 'body',
+                        create: function() {
+                            // position the handler a little left to the center to let the number of selected items to appear
+                            $(this).draggable("option", "cursorAt", { left: $(this).width() / 2 - 20, top: $(this).height() / 2 });
+                        }
+                    });
+                }
+            });
+
+            $('#delete-selection-button').click(function() {
+                if (!confirm('@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)')) {
+                    return false;
+                }
+                
+                var ids = [];
+                viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
+                var url = '@Url.Action("Delete", "Admin", new { area = "Orchard.MediaLibrary" })';
+                    
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: "json",
+                    traditional: true,
+                    data: {
+                        mediaItemIds: ids,
+                        __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
+                    }
+                }).done(function (result) {
+                    if (result) {
+                        viewModel.results.remove(function(item) {
+                            return ids.indexOf(item.data.id) != -1;
+                        });
+
+                        viewModel.clearSelection();
+                    } else {
+                        console.log('failed to delete media items');
+                    }
+                });
+            });
+        })
+    //]]>
+    </script>
+    }

@@ -3,30 +3,36 @@
     var items = Enumerable.Cast<dynamic>((System.Collections.IEnumerable)Model);
 }
 @{
-if (!HasText(Model.Text)) {
-    @DisplayChildren(Model)
-} else {
-    string requestUrl = Request.Path.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-    string modelUrl = Model.Href.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-    if (requestUrl == modelUrl || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/"))) { 
-	    Model.Classes.Add("current");
-    }
-    if(items.Any()) {
-        Model.Classes.Add("dropdown");
-    }
-    var tag = Tag(Model, "li");
-    @tag.StartElement
-            
-    @* morphing the shape to keep Model untouched*@
-    Model.Metadata.Alternates.Clear(); 
-    Model.Metadata.Type = "MenuItemLink";
-    @Display(Model)
-    
-    if (items.Any()) {
-        <ul>
+    if (!HasText(Model.Text)) {
         @DisplayChildren(Model)
-        </ul>
     }
-    @tag.EndElement
+    else {
+        if ((bool) Model.Selected) {
+            Model.Classes.Add("current");
+        }
+
+        if (items.Any()) {
+            Model.Classes.Add("dropdown");
+        }
+
+        @* morphing the shape to keep Model untouched*@
+        Model.Metadata.Alternates.Clear();
+        Model.Metadata.Type = "MenuItemLink";
+
+        @* render the menu item only if it has some content *@
+        var renderedMenuItemLink = Display(Model);
+        if (HasText(renderedMenuItemLink)) {
+            var tag = Tag(Model, "li");
+            @tag.StartElement
+            @renderedMenuItemLink
+
+            if (items.Any()) {
+                <ul>
+                    @DisplayChildren(Model)
+                </ul>
+            }
+    
+            @tag.EndElement
+        }
     }
 }

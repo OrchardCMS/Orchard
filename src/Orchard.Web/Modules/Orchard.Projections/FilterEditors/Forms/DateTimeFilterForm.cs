@@ -146,7 +146,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     max = ApplyDelta(now, formState.MinUnit, Int32.Parse(formState.Min));
                 }
                 else {
-                    min = max = ApplyDelta(now, formState.ValueUnit, Int32.Parse(formState.Value));
+                    min = max = ApplyDelta(now, Convert.ToString(formState.ValueUnit), Convert.ToInt32(formState.Value));
                 }
             }
 

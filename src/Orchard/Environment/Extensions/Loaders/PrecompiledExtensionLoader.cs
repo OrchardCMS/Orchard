@@ -37,6 +37,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public ILogger Logger { get; set; }
         public bool Disabled { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public override int Order { get { return 30; } }
 
@@ -125,6 +126,9 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return;
 
+            if (DisableMonitoring)
+                return;
+
             // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {
@@ -193,7 +197,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
                 Loader = this,
-                Priority = 80,
                 VirtualPath = assemblyPath,
                 VirtualPathDependencies = new[] { assemblyPath },
             };

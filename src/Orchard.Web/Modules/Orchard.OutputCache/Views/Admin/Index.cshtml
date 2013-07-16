@@ -1,0 +1,78 @@
+﻿@model Orchard.OutputCache.ViewModels.IndexViewModel
+           
+@{
+    Layout.Title = T("Cache Settings");
+
+    // group configurations by feature name
+    var featureRouteConfigurations = Model.RouteConfigurations
+                        .GroupBy(x => x.FeatureName)
+                        .ToDictionary(x => x.Key, x => x.Select(y => y));
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <label>@T("Default Cache Duration")</label>
+        @Html.TextBoxFor(m => m.DefaultCacheDuration, new { @class = "text-small" })
+        <span class="hint">@T("Number of seconds the pages should be kept in cache on the server.")</span>
+    </fieldset>
+    
+    <fieldset>
+        <label>@T("Max Age")</label>
+        @Html.TextBoxFor(m => m.DefaultMaxAge, new { @class = "text-small" })
+        <span class="hint">@T("When defined, a cache-control header with a max-age property will be added. Use this in order to enable kernel cache on IIS.")</span>
+    </fieldset>    
+    
+    <fieldset>
+        <label>@T("Vary Query String Parameters")</label>
+        @Html.TextBoxFor(m => m.VaryQueryStringParameters, new { @class = "textMedium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary via specified query string parameters")</span>
+    </fieldset>
+    
+    <fieldset>
+        <label>@T("Ignored urls")</label>
+        @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "textMedium" })
+        <span class="hint">@T("This must be a set of relative paths, e.g., /, /About. Please ensure that you enter only one path per line.")</span>
+        <span class="hint">@T("You can add comments by starting the line with #.")</span>
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Culture")</label>
+        @Html.CheckBoxFor(m => m.ApplyCulture) <label for="@Html.FieldIdFor(m => m.ApplyCulture)" class="forcheckbox">@T("Differentiate cultures")</label>
+        <span class="hint">@T("When checked, the cached content will differ per culture too. For better performance, leave this unchecked if your website uses only one culture.")</span>
+    </fieldset>    
+    
+    <fieldset>
+        <label>@T("Debug mode")</label>
+        @Html.CheckBoxFor(m => m.DebugMode) <label for="@Html.FieldIdFor(m => m.DebugMode)" class="forcheckbox">@T("Render caching information in cached pages")</label>
+    </fieldset>    
+    
+    foreach (var feature in featureRouteConfigurations.Keys) {
+        <h2>@T(feature)</h2>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Route")</th>
+                    <th scope="col">@T("Priority")</th>
+                    <th scope="col">@T("Duration")</th>
+                </tr>
+            </thead>
+            @foreach (var routeConfiguration in featureRouteConfigurations[feature]) {
+                var index = Model.RouteConfigurations.IndexOf(routeConfiguration);
+            <tr>
+                <td>@routeConfiguration.Url</td>
+                <td style="width:60px;">@routeConfiguration.Priority</td>    
+                <td style="width:500px;">
+                    @Html.TextBoxFor(m => m.RouteConfigurations[index].Duration, new { @class = "text-small" })
+                    <span class="hint">@T("Leave empty to use default duration, 0 to disable caching on this route.")</span>
+                </td>
+                @Html.HiddenFor(m => m.RouteConfigurations[index].RouteKey)
+            </tr>
+            }
+        </table>
+    }
+
+    <button class="primaryAction" type="submit">@T("Save")</button>
+}

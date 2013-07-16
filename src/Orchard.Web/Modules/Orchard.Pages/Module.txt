@@ -2,9 +2,9 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.6
+Version: 1.7
 OrchardVersion: 1.5
 Description: Introduces a preconfigured page content type.
 FeatureDescription: A basic page content type.
-Dependencies: Contents
+Dependencies: Contents, Orchard.ContentPicker
 Category: Content

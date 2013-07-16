@@ -1,0 +1,8 @@
+﻿<div>
+    @if (Model.State.Url != null && !String.IsNullOrWhiteSpace(Model.State.Url.Value)) {
+        <div>@T("Redirect to {0}", Model.State.Url.Value)</div>
+    }
+    else {
+        <div>@T("Redirect")</div>
+    }
+</div>

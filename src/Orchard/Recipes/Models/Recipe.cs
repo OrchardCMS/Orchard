@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.Recipes.Models {
     public class Recipe {
@@ -7,6 +8,7 @@ namespace Orchard.Recipes.Models {
         public string Author { get; set; }
         public string WebSite { get; set; }
         public string Version { get; set; }
+        public DateTime? ExportUtc { get; set; }
         public string Tags { get; set; }
         public IEnumerable<RecipeStep> RecipeSteps { get; set; }
     }

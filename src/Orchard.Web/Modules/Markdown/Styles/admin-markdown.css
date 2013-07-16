@@ -12,7 +12,7 @@
 .wmd-button > span {
     background-image: url(../Content/Admin/Images/wmd-buttons.png);
     background-repeat: no-repeat;
-    background-position: 0px 0px;
+    background-position: 0 0;
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -21,26 +21,57 @@
 .wmd-button-row 
 {
     position: relative; 
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    margin-top: 10px;
-    padding: 0px;  
+    margin: 10px 5px 5px 5px;
+    padding: 0;  
     height: 20px;
 }
 
 .wmd-input {
     font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-    width: 660px;
     padding: 3px;
-    height: 200px;
     line-height: 1.2;
+}
+
+#main .wmd-editor-box textarea.wmd-input {
+    display:block;
+    margin-bottom: 0;
+    width: 97%;
+    min-width: 400px;
+    height: 80%;
+    resize: horizontal;
+}
+
+.wmd-box {
+    display: table;
+    position: relative;
+    height: 400px;
+    width: 99%;
+}
+.wmd-innerbox {
+    height: 100%;
+    display: table-row;
+}
+.wmd-editor-box {
+    width: 49%;
+    display: table-cell;
+    height: 100%;
+    vertical-align: top;
+}
+.wmd-preview-box {
+    width: 49%;
+    display: table-cell;
+    padding: 0;
+    height: 100%;
+    vertical-align: top;
 }
 
 .wmd-preview  {
     border: 2px dotted #CCC;
     padding: 3px;
-    margin-top: 6px;
+    margin-top: 34px;
+    height: 80%;
+    overflow-x: auto;
+    overflow-y: scroll;
 }
 
 .wmd-preview ol {
@@ -70,15 +101,20 @@
 
 .wmd-preview pre code {
     border: none;
-    margin-left: 0px;
-    padding-left: 0px;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 
 .wmd-preview p code {
     border: none;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
+}
+
+.wmd-prompt-dialog {
+border: solid 1px #ccc;
+background-color: white;
 }
 
 /* Grippie */
@@ -87,15 +123,9 @@ div.grippie {
     background:#EEEEEE url(../Content/Admin/Images/grippie.png) no-repeat scroll center 2px;
     border-color:#DDDDDD;
     border-style:solid;
-    border-width:0pt 1px 1px;
+    border-width: 0 1px 1px;
     cursor:s-resize;
     height:9px;
+    margin-top: 9px;
     overflow:hidden;
-}
-
-.resizable-textarea textarea {
-    display:block;
-    margin-bottom:0pt;
-    width:95%;
-    height: 20%;
 }

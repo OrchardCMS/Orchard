@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="OrchardCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2012-05.1.7">
+<ServiceDefinition name="OrchardCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-03.2.0">
   <WebRole name="Orchard.Azure.Web">
     <Sites>
       <Site name="Web">
@@ -20,16 +20,13 @@
     <Startup>
       <Task commandLine="Startup\ConfigureIIS.cmd" executionContext="elevated" taskType="simple">
         <Environment>
-
           <!-- Create the environment variable that informs the startup task whether it is running 
                in the Compute Emulator or in the cloud. "%ComputeEmulatorRunning%"=="true" when 
                running in the Compute Emulator, "%ComputeEmulatorRunning%"=="false" when running 
                in the cloud. -->
-
           <Variable name="ComputeEmulatorRunning">
             <RoleInstanceValue xpath="/RoleEnvironment/Deployment/@emulated" />
           </Variable>
-
         </Environment>
       </Task>
     </Startup>

@@ -40,5 +40,7 @@
            break;
     }
     @Html.ValidationMessageFor(m => m.Value)
+    @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
+    }
 </fieldset>

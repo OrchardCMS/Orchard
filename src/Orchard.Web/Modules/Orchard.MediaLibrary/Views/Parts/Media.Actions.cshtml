@@ -1,0 +1,20 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Core.Contents;
+@{
+    ContentItem contentItem = Model.ContentItem;
+}
+
+@if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+    @Html.Link(T("Edit").Text, Url.ItemEditUrl(contentItem), new {@class = "button", id="edit-media-link"})
+}
+
+<script type="text/javascript">
+    //<![CDATA[
+    // update the returnUrl from javascript to get the main window's location
+    $('#edit-media-link').each(function() {
+        var self = $(this);
+        var returnUrl = self.attr('href') + '?returnUrl=' + encodeURIComponent(window.location);
+        self.attr('href', returnUrl);
+    });
+//]]>
+</script>

@@ -46,7 +46,7 @@ namespace Orchard.UI.Navigation {
             }
 
             // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, routeData);
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, workContext.HttpContext.Request, routeData);
 
             // Populate main nav
             dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);

@@ -550,7 +550,7 @@ jQuery(function ($) {
 
         var text = shapeNode.type;
         // add the hint to the tree node if available
-        if (shapeNode.hint != '') {
+        if (shapeNode.hint && shapeNode.hint != '') {
             text += ' [' + shapeNode.hint + ']';
         }
 

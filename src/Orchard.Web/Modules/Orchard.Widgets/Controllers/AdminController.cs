@@ -49,6 +49,12 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId) {
+            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
+            if (currentTheme == null) {
+                Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
+                return RedirectToAction("Index", "Admin", new { area = "Dashboard" });
+            }
+
             IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
 
             if (!layers.Any()) {
@@ -65,7 +71,6 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             IEnumerable<string> allZones = _widgetsService.GetZones();
             IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
 
@@ -105,7 +110,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         private bool IsAuthorizedToManageWidgets() {
-            return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets"));
+            return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets."));
         }
 
 
@@ -165,7 +170,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST(int layerId, string widgetType, string returnUrl) {
+        public ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 

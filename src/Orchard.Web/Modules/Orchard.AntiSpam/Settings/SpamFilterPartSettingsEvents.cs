@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -29,7 +30,13 @@ namespace Orchard.AntiSpam.Settings {
 
             if (updateModel.TryUpdateModel(settings, "SpamFilterPartSettings", null, null)) {
                 builder.WithSetting("SpamFilterPartSettings.Action", settings.Action.ToString());
-                builder.WithSetting("SpamFilterPartSettings.Pattern", settings.Pattern);
+                builder.WithSetting("SpamFilterPartSettings.DeleteSpam", settings.DeleteSpam.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("SpamFilterPartSettings.UrlPattern", settings.UrlPattern);
+                builder.WithSetting("SpamFilterPartSettings.PermalinkPattern", settings.PermalinkPattern);
+                builder.WithSetting("SpamFilterPartSettings.CommentAuthorPattern", settings.CommentAuthorPattern);
+                builder.WithSetting("SpamFilterPartSettings.CommentAuthorUrlPattern", settings.CommentAuthorUrlPattern);
+                builder.WithSetting("SpamFilterPartSettings.CommentAuthorEmailPattern", settings.CommentAuthorEmailPattern);
+                builder.WithSetting("SpamFilterPartSettings.CommentContentPattern", settings.CommentContentPattern);
             }
 
             yield return DefinitionTemplate(settings);

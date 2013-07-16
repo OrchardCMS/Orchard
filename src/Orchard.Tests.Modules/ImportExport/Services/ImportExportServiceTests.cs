@@ -20,6 +20,7 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.ImportExport.Services;
+using Orchard.Recipes.Events;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.ContentManagement;
@@ -73,6 +74,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterInstance(new Mock<ISettingsFormatter>().Object);
+            builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 

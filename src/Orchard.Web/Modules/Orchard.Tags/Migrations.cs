@@ -28,5 +28,12 @@ namespace Orchard.Tags {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("TagsPart", builder => builder
+                .WithDescription("Allows to describe your content using non-hierarchical keywords."));
+
+            return 2;
+        }
     }
 }

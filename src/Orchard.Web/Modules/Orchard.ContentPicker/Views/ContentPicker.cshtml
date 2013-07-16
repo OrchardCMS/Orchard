@@ -4,7 +4,7 @@
     Style.Require("jQueryUI_Orchard").AtHead();
     Script.Require("jQueryUI_Tabs").AtHead();
 
-    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
     Style.Include("~/themes/theadmin/styles/site.css");
 	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
 	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
@@ -70,6 +70,16 @@
         // n.b., pagers already append it
         if (url.length == 1 || query("callback", "?" + url[1]).length == 0) {
             link = link + "?callback=" + query("callback");
+            self.attr("href", link);
+        }
+        
+        if (url.length == 1 || query("part", "?" + url[1]).length == 0) {
+            link = link + "&part=" + query("part");
+            self.attr("href", link);
+        }
+
+        if (url.length == 1 || query("field", "?" + url[1]).length == 0) {
+            link = link + "&field=" + query("field");
             self.attr("href", link);
         }
     });

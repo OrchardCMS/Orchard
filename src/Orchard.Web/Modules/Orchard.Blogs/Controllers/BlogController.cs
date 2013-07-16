@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Themes;
@@ -20,7 +20,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IFeedManager _feedManager;
         private readonly ISiteService _siteService;
 
@@ -28,25 +27,27 @@ namespace Orchard.Blogs.Controllers {
             IOrchardServices services, 
             IBlogService blogService,
             IBlogPostService blogPostService,
-            IBlogPathConstraint blogPathConstraint,
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
             ISiteService siteService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _blogPathConstraint = blogPathConstraint;
             _feedManager = feedManager;
             _siteService = siteService;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         dynamic Shape { get; set; }
         protected ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+            var blogs = _blogService.Get()
+                .Where(b => _services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent,b))
+                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -64,6 +65,11 @@ namespace Orchard.Blogs.Controllers {
             var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
             if (blogPart == null)
                 return HttpNotFound();
+
+            if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent, blogPart, T("Cannot view content"))) {
+                return new HttpUnauthorizedResult();
+            }
+
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)

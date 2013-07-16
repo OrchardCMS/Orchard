@@ -26,27 +26,36 @@ namespace Orchard.Comments {
                 .Column<string>("CommentText", column => column.Unlimited())
                 .Column<int>("CommentedOn")
                 .Column<int>("CommentedOnContainer")
+                .Column<int>("RepliedOn", c => c.WithDefault(null))
+                .Column<decimal>("Position")
                 .Column<int>("CommentsPartRecord_id")
                 );
 
             SchemaBuilder.CreateTable("CommentSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("ModerateComments")
-                .Column<bool>("EnableSpamProtection")
-                .Column<string>("AkismetKey")
-                .Column<string>("AkismetUrl")
                );
 
             SchemaBuilder.CreateTable("CommentsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("CommentsShown")
                 .Column<bool>("CommentsActive")
+                .Column<bool>("ThreadedComments")
                 );
+
+            ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
+                .WithDescription("Used by the Comment content type."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsContainerPart", part => part
+                .WithDescription("Adds support to a content type to contain comments."));
 
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("CommentPart")
-                   .WithPart("CommonPart")
+                   .WithPart("CommonPart", 
+                        p => p
+                            .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
+                            .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                    .WithPart("IdentityPart")
                 );
 
@@ -55,9 +64,11 @@ namespace Orchard.Comments {
                    .WithPart("CommentsContainerPart")
                 );
 
-            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder
+                .Attachable()
+                .WithDescription("Allows content items to be commented on."));
 
-            return 3;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -83,6 +94,65 @@ namespace Orchard.Comments {
             }
             
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("Comment",
+               cfg => cfg
+                   .WithPart("CommonPart",
+                        p => p
+                            .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
+                            .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
+                );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("AkismetKey")
+               );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("AkismetUrl")
+               );
+
+            SchemaBuilder.AlterTable("CommentSettingsPartRecord", table => table
+                .DropColumn("EnableSpamProtection")
+               );
+
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<int>("RepliedOn", c => c.WithDefault(null))
+            );
+
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<decimal>("Position")
+            );
+
+            SchemaBuilder.AlterTable("CommentsPartRecord", table => table
+                .AddColumn<bool>("ThreadedComments")
+                );
+
+            // define the default value for positions
+            foreach (var comment in _commentService.GetComments().List()) {
+                comment.Position = comment.Id;
+
+                // migrating the Spam value which is now deprecated
+                if (comment.Status != CommentStatus.Approved) {
+                    comment.Status = CommentStatus.Pending;
+                }
+            }
+            
+            return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
+                .WithDescription("Used by the Comment content type."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsContainerPart", part => part
+                .WithDescription("Adds support to a content type to contain comments."));
+
+            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder
+                .WithDescription("Allows content items to be commented on."));
+
+            return 5;
         }
     }
 }

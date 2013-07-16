@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 
@@ -48,6 +49,41 @@ namespace Orchard.Forms.Services {
             return formShape;
         }
 
+        public string Export(string formName, string state, ExportContentContext exportContext) {
+            var describeContext = new DescribeContext();
+            foreach (var provider in _formProviders) {
+                provider.Describe(describeContext);
+            }
+
+            var descriptor = describeContext.Describe().FirstOrDefault(x => x.Name == formName);
+
+            if (descriptor == null || descriptor.Export == null) {
+                return state;
+            }
+
+            var dynamicState = FormParametersHelper.ToDynamic(state);
+            descriptor.Export(dynamicState, exportContext);
+
+            return FormParametersHelper.ToString(dynamicState);
+        }
+
+        public string Import(string formName, string state, ImportContentContext importContext) {
+            var describeContext = new DescribeContext();
+            foreach (var provider in _formProviders) {
+                provider.Describe(describeContext);
+            }
+
+            var descriptor = describeContext.Describe().FirstOrDefault(x => x.Name == formName);
+
+            if (descriptor == null || descriptor.Import == null) {
+                return state;
+            }
+
+            var dynamicState = FormParametersHelper.ToDynamic(state);
+            descriptor.Import(dynamicState, importContext);
+
+            return FormParametersHelper.ToString(dynamicState);
+        }
 
         private static void BindValue(dynamic shape, IValueProvider valueProvider, string prefix) {
             // if the shape has a Name property, look for a value in

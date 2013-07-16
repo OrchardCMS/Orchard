@@ -46,11 +46,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -84,6 +79,7 @@
     <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Routes.cs" />
+    <Compile Include="Common\Services\IdentifierResolverSelector.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
@@ -137,22 +133,19 @@
     <Compile Include="Dashboard\Services\CompilationErrorBanner.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
-    <Compile Include="Navigation\Drivers\NavigationPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
+    <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
-    <Compile Include="Navigation\Handlers\ContentMenuItemPartHandler.cs" />
-    <Compile Include="Navigation\Handlers\NavigationPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
+    <Compile Include="Navigation\Handlers\ShapeMenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
-    <Compile Include="Navigation\Models\ContentMenuItemPartRecord.cs" />
-    <Compile Include="Navigation\Models\ContentMenuItemPart.cs" />
-    <Compile Include="Navigation\Models\NavigationPart.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
-    <Compile Include="Navigation\Security\ContentMenuItemAuthorizationEventHandler.cs" />
+    <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
+    <Compile Include="Navigation\Models\ShapeMenuItemPartRecord.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
@@ -161,8 +154,6 @@
     <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
-    <Compile Include="Navigation\ViewModels\ContentMenuItemEditViewModel.cs" />
-    <Compile Include="Navigation\ViewModels\NavigationPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuPartViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuWidgetViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
@@ -206,7 +197,6 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
-    <Compile Include="Navigation\Drivers\ContentMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\MenuPart.cs" />
     <Compile Include="Navigation\Drivers\MenuPartDriver.cs" />
@@ -544,15 +534,6 @@
     <Content Include="Navigation\Views\MenuItemLink-HtmlMenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Navigation\Views\EditorTemplates\Parts.ContentMenuItem.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\MenuItemLink-ContentMenuItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Navigation\Views\Content-Menu.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -560,6 +541,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\Menu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.ShapeMenuItemPart.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\MenuItemLink-ShapeMenuItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Parts.Contents.Clone.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Display.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Contents\Views\Item\Preview.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

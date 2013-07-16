@@ -27,11 +27,11 @@ namespace Orchard.Core.Settings.Tokens {
         public void Describe(dynamic context) {
 
             context.For("Site", T("Site Settings"), T("Tokens for Site Settings"))
-                .Token("SiteName", T("Site Name"), T("The name of the site."))
-                .Token("SuperUser", T("Super User"), T("The name of the super user."))
-                .Token("Culture", T("Site Culture"), T("The current culture of the site."))
-                .Token("BaseUrl", T("Base Url"), T("The base url the site."))
-                .Token("TimeZone", T("Time Zone"), T("The current time zone of the site."))
+                .Token("SiteName", T("Site Name"), T("The name of the site."), "Text")
+                .Token("SuperUser", T("Super User"), T("The name of the super user."), "Text")
+                .Token("Culture", T("Site Culture"), T("The current culture of the site."), "Text")
+                .Token("BaseUrl", T("Base Url"), T("The base url the site."), "Text")
+                .Token("TimeZone", T("Time Zone"), T("The current time zone of the site."), "Text")
                 ;
 
             // Token descriptors for fields
@@ -54,10 +54,15 @@ namespace Orchard.Core.Settings.Tokens {
 
             forContent
                 .Token("SiteName", (Func<ISite, object>)(content => content.SiteName))
+                .Chain("SiteName", "Text", (Func<ISite, object>)(content => content.SiteName))
                 .Token("SuperUser", (Func<ISite, object>)(content => content.SuperUser))
-                .Token("Culture", (Func<ISite, object>) (content => content.SiteCulture))
-                .Token("BaseUrl", (Func<ISite, object>) (content => content.BaseUrl))
-                .Token("TimeZone", (Func<ISite, object>) (content => content.SiteTimeZone))
+                .Chain("SuperUser", "Text", (Func<ISite, object>)(content => content.SuperUser))
+                .Token("Culture", (Func<ISite, object>)(content => content.SiteCulture))
+                .Chain("Culture", "Text", (Func<ISite, object>)(content => content.SiteCulture))
+                .Token("BaseUrl", (Func<ISite, object>)(content => content.BaseUrl))
+                .Chain("BaseUrl", "Text", (Func<ISite, object>)(content => content.BaseUrl))
+                .Token("TimeZone", (Func<ISite, object>)(content => content.SiteTimeZone))
+                .Chain("TimeZone", "Text", (Func<ISite, object>)(content => content.SiteTimeZone))
                 ;
 
             if (context.Target == "Site") {

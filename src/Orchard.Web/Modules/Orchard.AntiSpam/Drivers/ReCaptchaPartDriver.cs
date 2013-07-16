@@ -5,11 +5,11 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Orchard.AntiSpam.Models;
-using Orchard.AntiSpam.Settings;
 using Orchard.AntiSpam.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
+using Orchard.UI.Admin;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
@@ -25,10 +25,22 @@ namespace Orchard.AntiSpam.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
+            var workContext = _workContextAccessor.GetContext();
+
+            // don't display the part in the admin
+            if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
+                return null;
+            }
+
             return ContentShape("Parts_ReCaptcha_Fields", () => {
-                var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
+                var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
+
+                if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
+                    return null;
+                }
+
                 var viewModel = new ReCaptchaPartEditViewModel {
-                    PublicKey =  settings.PublicKey
+                    PublicKey = settings.PublicKey
                 };
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.ReCaptcha.Fields", Model: viewModel, Prefix: Prefix);
@@ -36,12 +48,22 @@ namespace Orchard.AntiSpam.Drivers {
         }
 
         protected override DriverResult Editor(ReCaptchaPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var workContext = _workContextAccessor.GetContext();
+            var settings = workContext.CurrentSite.As<ReCaptchaSettingsPart>();
+
+            // don't display the part in the admin
+            if (AdminFilter.IsApplied(workContext.HttpContext.Request.RequestContext)) {
+                return null;
+            }
+
+            if (settings.TrustAuthenticatedUsers && workContext.CurrentUser != null) {
+                return null;
+            }
 
             var submitViewModel = new ReCaptchaPartSubmitViewModel();
 
             if(updater.TryUpdateModel(submitViewModel, String.Empty, null, null)) {
-                var settings = part.TypePartDefinition.Settings.GetModel<ReCaptchaPartSettings>();
-                var context = _workContextAccessor.GetContext().HttpContext;
+                var context = workContext.HttpContext;
 
                 var result = ExecuteValidateRequest(
                     settings.PrivateKey, 
@@ -51,10 +73,9 @@ namespace Orchard.AntiSpam.Drivers {
                     );
 
                 if(!HandleValidateResponse(context, result)) {
-                    updater.AddModelError("Parts_ReCaptcha_Fields", T("Incorrect word"));
+                    updater.AddModelError("Parts_ReCaptcha_Fields", T("The text you entered in the Captcha field does not match the image"));
                 }
             }
-
 
             return Editor(part, shapeHelper);
         }

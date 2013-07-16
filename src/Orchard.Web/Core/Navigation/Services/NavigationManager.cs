@@ -40,17 +40,20 @@ namespace Orchard.Core.Navigation.Services {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Reduce(Merge(sources), menuName == "admin").ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Merge(sources), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
             var sources = GetSources(menu);
-            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -87,10 +90,12 @@ namespace Orchard.Core.Navigation.Services {
                 if (url.StartsWith("~/")) {
                     url = url.Substring(2);
                 }
-                var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
-                if (appPath == "/")
-                    appPath = "";
-                url = string.Format("{0}/{1}", appPath, url);
+                if (!url.StartsWith("#")) {
+                    var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+                    if (appPath == "/")
+                        appPath = "";
+                    url = string.Format("{0}/{1}", appPath, url);
+                }
             }
             return url;
         }
@@ -98,36 +103,20 @@ namespace Orchard.Core.Navigation.Services {
         /// <summary>
         /// Updates the items by checking for permissions
         /// </summary>
-        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu) {
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-
-            foreach (var item in items) {
-                if (
-                    // debug flag is on
-                    hasDebugShowAllMenuItems ||
-
-                    // a content item is linked and the user can view it
-                    item.Content != null && item.Permissions.Concat(new[] { Contents.Permissions.ViewContent }).Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, item.Content)) ||
-
-                    // it's the admin menu and permissions are effective
-                    isAdminMenu && (!item.Permissions.Any() || item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) ) {
-
-                    yield return new MenuItem {
-                        Items = Reduce(item.Items, isAdminMenu),
-                        Permissions = item.Permissions,
-                        Position = item.Position,
-                        RouteValues = item.RouteValues,
-                        LocalNav = item.LocalNav,
-                        Culture = item.Culture,
-                        Text = item.Text,
-                        IdHint = item.IdHint,
-                        Classes = item.Classes,
-                        Url = item.Url,
-                        LinkToFirstChild = item.LinkToFirstChild,
-                        Href = item.Href,
-                        Content = item.Content
-                    };
-                }
+        private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items, bool isAdminMenu, bool hasDebugShowAllMenuItems) {
+            foreach (var item in items.Where(item => 
+                // debug flag is on
+                hasDebugShowAllMenuItems ||
+                // or item does not have any permissions set
+                !item.Permissions.Any() ||
+                // or user has permission (either based on the linked item or global, if there's no linked item)
+                item.Permissions.Any(x => _authorizationService.TryCheckAccess(
+                    x, 
+                    _orchardServices.WorkContext.CurrentUser, 
+                    item.Content == null || isAdminMenu ? null : item.Content))))
+            {
+                item.Items = Reduce(item.Items, isAdminMenu, hasDebugShowAllMenuItems);
+                yield return item;
             }
         }
 
@@ -210,12 +199,14 @@ namespace Orchard.Core.Navigation.Services {
             var index = new Dictionary<string, MenuItem>();
 
             foreach (var item in items) {
-                MenuItem parent = null;
+                MenuItem parent;
                 var parentPosition = String.Empty;
 
-                var lastSegment = item.Position.LastIndexOf('.');
+                var position = item.Position ?? String.Empty;
+
+                var lastSegment = position.LastIndexOf('.');
                 if (lastSegment != -1) {
-                    parentPosition = item.Position.Substring(0, lastSegment);
+                    parentPosition = position.Substring(0, lastSegment);
                 }
 
                 if (index.TryGetValue(parentPosition, out parent)) {
@@ -225,9 +216,9 @@ namespace Orchard.Core.Navigation.Services {
                     result.Add(item);
                 }
 
-                if (!index.ContainsKey(item.Position)) {
+                if (!index.ContainsKey(position)) {
                     // prevent invalid positions
-                    index.Add(item.Position, item);    
+                    index.Add(position, item);    
                 }
             }
 

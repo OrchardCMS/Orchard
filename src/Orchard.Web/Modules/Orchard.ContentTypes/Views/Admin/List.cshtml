@@ -1,14 +1,22 @@
 @model Orchard.ContentTypes.ViewModels.ListContentTypesViewModel
 @{
     Style.Require("ContentTypesAdmin");
+    Script.Require("jQuery");
+    Script.Include("admin-contenttypes.js");
     Layout.Title = T("Manage Content Types").ToString();
 }
 
 <div class="manage">
     @Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
 </div>
-@Html.UnorderedList(
-    Model.Types,
-    (t,i) => Html.DisplayFor(m => t),
-    "contentItems"
-    )
+<fieldset class="bulk-actions">
+    <label for="search-box">@T("Filter:")</label>
+    <input id="search-box" class="text-box" type="text" />
+</fieldset>
+<ul class="contentItems">
+    @foreach (var type in Model.Types) {
+    <li data-record-text="@type.DisplayName">
+        @Html.DisplayFor(m => type)
+    </li>
+    }
+</ul>

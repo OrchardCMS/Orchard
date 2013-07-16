@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -23,6 +24,7 @@ using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Tests;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Projections.Tests.Services {
     public class FieldIndexStorageTests : DatabaseEnabledTestsBase {
@@ -47,6 +49,7 @@ namespace Orchard.Projections.Tests.Services {
             // ContentDefinitionManager
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
@@ -176,7 +179,6 @@ namespace Orchard.Projections.Tests.Services {
             Set("double2", (double)-123456.123456);
 
             _contentManager.Publish(_contentItem);
-            _contentManager.Flush();
 
             Assert.That(Get<string>("string"), Is.EqualTo("one"));
             Assert.That(Get<int>("int1"), Is.EqualTo(int.MaxValue));
@@ -198,7 +200,6 @@ namespace Orchard.Projections.Tests.Services {
             Set("string", new string('x', 8000));
 
             _contentManager.Publish(_contentItem);
-            _contentManager.Flush();
 
             Assert.That(Get<string>("string"), Is.EqualTo(new String('x', 4000)));
         }

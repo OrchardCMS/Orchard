@@ -1,4 +1,5 @@
 ﻿@model Orchard.ContentPicker.ViewModels.ContentPickerFieldViewModel
+@using Orchard.Environment.Configuration
 @using Orchard.Utility.Extensions;
 @using Orchard.ContentPicker.Settings;
 
@@ -8,6 +9,7 @@
     Style.Include("content-picker-admin.css");
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<ContentPickerFieldSettings>();
+    var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
 }
 
 <fieldset>
@@ -87,11 +89,13 @@
                     refreshIds();
                     $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
                 },
-                baseUrl: '@Url.Content("~/")'
+                baseUrl: '@baseUrl',
+                part: '@HttpUtility.JavaScriptStringEncode(Model.Part.PartDefinition.Name)',
+                field: '@HttpUtility.JavaScriptStringEncode(Model.Field.PartFieldDefinition.Name)'
             });
         });
 
-        $('#content-picker-@Html.FieldIdFor(m => m.Field.Ids) .content-picker-remove').live("click", function() {
+        $(document).on("click",'#content-picker-@Html.FieldIdFor(m => m.Field.Ids) .content-picker-remove',function() {
             $(this).closest('tr').remove();
             refreshIds();
             $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();

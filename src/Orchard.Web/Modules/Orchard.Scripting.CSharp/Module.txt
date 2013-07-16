@@ -1,0 +1,16 @@
+﻿Name: C# Scripting
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.7
+OrchardVersion: 1.7
+Description: Description for the module
+Features:
+    Orchard.Scripting.CSharp:
+        Description: Provides C# compiler services.
+		Category: Scripting
+	Orchard.Scripting.CSharp.Validation
+		Description: Provides a Script Validation part.
+		Name: Script Validation
+		Category: Scripting
+		Dependencies: Orchard.Scripting.CSharp

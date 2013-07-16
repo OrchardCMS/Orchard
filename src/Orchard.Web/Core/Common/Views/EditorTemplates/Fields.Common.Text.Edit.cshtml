@@ -9,5 +9,7 @@
     else {
         @Display.Body_Editor(Text: Model.Text, EditorFlavor: Model.Settings.Flavor)
     }
+    @if (HasText(Model.Settings.Hint)) {
     <span class="hint">@Model.Settings.Hint</span>
+    }
 </fieldset>

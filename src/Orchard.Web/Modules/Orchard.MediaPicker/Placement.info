@@ -1,0 +1,21 @@
+﻿<Placement>
+  <!-- MediaPicker -->
+  <Place Fields_MediaPicker_Edit="Content:2.3"/>
+  <Place Fields_MediaPicker="Content:after"/>
+
+  <!-- MediaGallery -->
+  <Place Fields_MediaGallery_Edit="Content:2.3"/>
+  <Place Fields_MediaGallery="Content:after"/>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_MediaPicker="-"/>
+    <Place Fields_MediaGallery="-"/>
+    <Place Fields_MediaGallery_SummaryAdmin="Content:after"/>
+  </Match>
+
+  <Match DisplayType="Summary">
+    <Place Fields_MediaPicker="-"/>
+    <Place Fields_MediaGallery="-"/>
+  </Match>
+
+</Placement>

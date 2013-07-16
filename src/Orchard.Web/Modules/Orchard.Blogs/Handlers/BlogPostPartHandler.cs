@@ -42,7 +42,6 @@ namespace Orchard.Blogs.Handlers {
                     _blogService.Get(commonPart.Record.Container.Id, VersionOptions.Published).As<BlogPart>();
 
                 // Ensure the "right" set of published posts for the blog is obtained
-                blogPart.ContentItem.ContentManager.Flush();
                 blogPart.PostCount = _blogPostService.PostCount(blogPart);
             }
         }

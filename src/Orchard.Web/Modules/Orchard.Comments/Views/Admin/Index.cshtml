@@ -1,8 +1,9 @@
-﻿@model Orchard.Comments.ViewModels.CommentsIndexViewModel
-@using Orchard.Comments.Models;
+﻿@model CommentsIndexViewModel
+@using Orchard.Comments.Models
 @using Orchard.Comments.ViewModels;
 @using Orchard.Mvc.Html;
-@using Orchard.Utility.Extensions;
+@using Orchard.Utility.Extensions
+
 @{
     Style.Require("Admin");
     Script.Require("ShapesBase");
@@ -18,7 +19,6 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString()) 
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Unapprove, T("Unapprove").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
@@ -29,7 +29,6 @@
             @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
-            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, T("Spam").ToString())
         </select>
         <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
@@ -65,8 +64,7 @@
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
                 </td>
                 <td>
-                    @if (commentEntry.Comment.Status == CommentStatus.Spam) { @T("Spam") } 
-                    else if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } 
+                    @if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } 
                     else { @T("Approved") }
                 </td>
                 <td>
@@ -90,20 +88,16 @@
                 <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
                 <td>
                     <div class="actions">
-                        @if (commentEntry.Comment.Status != CommentStatus.Spam) {
-                            <a href="@Url.Action("MarkAsSpam", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Spam")</a>@T(" | ")
-                        }
                         @if (commentEntry.Comment.Status != CommentStatus.Approved) {
-                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
+                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
                         }
                         else {
-                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
+                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
                         }
                         <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
                         <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                     </div>
-                </td>
-            </tr>
+                </td>            </tr>
             commentIndex = commentIndex + 1;
             } 
         </table>

@@ -62,9 +62,6 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="ClaySharp">
-      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
-    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
@@ -99,7 +96,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
@@ -140,6 +137,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autoroute\DefaultSlugServiceTests.cs" />
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
     <Compile Include="Email\EmailChannelTests.cs" />
@@ -199,6 +197,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
       <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
       <Name>Lucene</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
       <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>

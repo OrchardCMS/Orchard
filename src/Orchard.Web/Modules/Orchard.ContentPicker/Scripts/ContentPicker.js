@@ -18,13 +18,22 @@
         var baseUrl = data.baseUrl;
 
         // remove trailing slash if any
-        if (baseUrl.substr(-1) == '/')
+        if (baseUrl.slice(-1) == '/')
             baseUrl = baseUrl.substr(0, baseUrl.length - 1);
-        
+
         var url = baseUrl
             + "/Admin/Orchard.ContentPicker?"
             + "callback=" + callbackName
             + "&" + (new Date() - 0);
+
+        if (data.part) {
+            url += "&part=" + encodeURIComponent(data.part);
+        }
+
+        if (data.field) {
+            url += "&field=" + encodeURIComponent(data.field);
+        }
+
         var w = window.open(url, "_blank", data.windowFeatures || "width=685,height=700,status=no,toolbar=no,location=no,menubar=no,resizable=no,scrollbars=yes");
     });
 });

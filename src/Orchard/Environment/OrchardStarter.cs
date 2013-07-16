@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Compilers;
@@ -48,9 +49,8 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultParallelCacheContext>().As<IParallelCacheContext>().SingleInstance();
             builder.RegisterType<DefaultAsyncTokenProvider>().As<IAsyncTokenProvider>().SingleInstance();
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
-            builder.RegisterType<DefaultHostLocalRestart>().As<IHostLocalRestart>().SingleInstance();
+            builder.RegisterType<DefaultHostLocalRestart>().As<IHostLocalRestart>().Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name).SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
-            builder.RegisterType<WebFormVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
             builder.RegisterType<DynamicModuleVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
             builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
             builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
@@ -76,7 +76,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
 
-            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name).SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 
@@ -119,13 +119,13 @@ namespace Orchard.Environment {
             registrations(builder);
 
 
-            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
+            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReaderConstants.DefaultSectionName);
             if (autofacSection != null)
                 builder.RegisterModule(new ConfigurationSettingsReader());
 
             var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Host.config");
             if (File.Exists(optionalHostConfig))
-                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
+                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalHostConfig));
 
             var optionalComponentsConfig = HostingEnvironment.MapPath("~/Config/HostComponents.config");
             if (File.Exists(optionalComponentsConfig))

@@ -1,0 +1,8 @@
+﻿<Placement>   
+  <Match DisplayType="SummaryAdmin">
+    <Place Parts_Workflow_SummaryAdmin="Meta:2"/>
+  </Match>
+
+  <Place UserTask_ActionButton="Sidebar:24.1"/>
+  
+</Placement>

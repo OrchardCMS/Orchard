@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
+using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Core.Lifetime;
 using Autofac.Core.Resolving;

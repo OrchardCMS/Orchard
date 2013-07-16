@@ -10,6 +10,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Layout;
 using Orchard.Projections.Descriptors.Property;
@@ -62,15 +63,16 @@ namespace Orchard.Projections.Drivers {
             var pageKey = String.IsNullOrWhiteSpace(part.Record.PagerSuffix) ? "page" : "page-" + part.Record.PagerSuffix;
             var page = 0;
 
-            if(queryString.AllKeys.Contains(pageKey)) {
+            // default page size
+            int pageSize = part.Record.Items;
+
+            // don't try to page if not necessary
+            if (part.Record.DisplayPager && queryString.AllKeys.Contains(pageKey)) {
                 Int32.TryParse(queryString[pageKey], out page);
             }
 
-            // default page size
-            int pageSize = part.Record.Items;
-            
-            // if 0, then assume "All"
-            if (pageSize == 0) {
+            // if 0, then assume "All", limit to 128 by default
+            if (pageSize == 128) {
                 pageSize = Int32.MaxValue;
             }
 
@@ -120,7 +122,8 @@ namespace Orchard.Projections.Drivers {
 
                     // create pager shape
                     if (part.Record.DisplayPager) {
-                        var contentItemsCount = _projectionManager.GetCount(query.Id);
+                        var contentItemsCount = _projectionManager.GetCount(query.Id) - part.Record.Skip;
+                        contentItemsCount = Math.Max(0, contentItemsCount);
                         pagerShape.TotalItemCount(contentItemsCount);
                     }
 
@@ -133,21 +136,19 @@ namespace Orchard.Projections.Drivers {
                         return list;
                     }
 
-                    var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
                     var allFielDescriptors = _projectionManager.DescribeProperties().ToList();
                     var fieldDescriptors = layout.Properties.OrderBy(p => p.Position).Select(p => allFielDescriptors.SelectMany(x => x.Descriptors).Select(d => new { Descriptor = d, Property = p }).FirstOrDefault(x => x.Descriptor.Category == p.Category && x.Descriptor.Type == p.Type)).ToList();
-                    var tokenizedDescriptors = fieldDescriptors.Select(fd => new { fd.Descriptor, fd.Property, State = FormParametersHelper.ToDynamic(_tokenizer.Replace(fd.Property.State, tokens)) }).ToList();
 
                     var layoutComponents = contentItems.Select(
                         contentItem => {
 
                             var contentItemMetadata = Services.ContentManager.GetItemMetadata(contentItem);
 
-                            var propertyDescriptors = tokenizedDescriptors.Select(
+                            var propertyDescriptors = fieldDescriptors.Select(
                                 d => {
                                     var fieldContext = new PropertyContext {
-                                        State = d.State,
-                                        Tokens = tokens
+                                        State = FormParametersHelper.ToDynamic(d.Property.State),
+                                        Tokens = new Dictionary<string, object> { { "Content", contentItem } }
                                     };
 
                                     return new { d.Property, Shape = d.Descriptor.Property(fieldContext, contentItem) };
@@ -307,7 +308,10 @@ namespace Orchard.Projections.Drivers {
             if (query != null) {
                 part.Record.QueryPartRecord = context.GetItemFromSession(query).As<QueryPart>().Record;
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
-                if (layoutIndex != null && Int32.Parse(layoutIndex) != -1) {
+                int layoutIndexValue;
+                if (layoutIndex != null 
+                    && Int32.TryParse(layoutIndex, out layoutIndexValue) 
+                    && part.Record.QueryPartRecord.Layouts.Count >= layoutIndexValue + 1) {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
                 }
             }

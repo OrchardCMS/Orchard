@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,7 +70,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -90,11 +94,15 @@
     <Compile Include="Drivers\ReCaptchaPartDriver.cs" />
     <Compile Include="Drivers\SubmissionLimitPartDriver.cs" />
     <Compile Include="Handlers\AkismetSettingsPartHandler.cs" />
+    <Compile Include="Handlers\ReCaptchaSettingsPartHandler.cs" />
     <Compile Include="Handlers\TypePadSettingsPartHandler.cs" />
     <Compile Include="Handlers\SpamFilterPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AkismetSettingsPartRecord.cs" />
     <Compile Include="Models\AkismetSettingsPart.cs" />
+    <Compile Include="Models\CommentCheckContext.cs" />
+    <Compile Include="Models\ReCaptchaSettingsPart.cs" />
+    <Compile Include="Models\ReCaptchaSettingsPartRecord.cs" />
     <Compile Include="Models\TypePadSettingsPart.cs" />
     <Compile Include="Models\TypePadSettingsPartRecord.cs" />
     <Compile Include="Models\SpamFilterPart.cs" />
@@ -108,6 +116,7 @@
     <Compile Include="Services\AkismetApiSpamFilter.cs" />
     <Compile Include="Services\AkismetSpamFilterProvider.cs" />
     <Compile Include="Services\ISpamEventHandler.cs" />
+    <Compile Include="Services\MissingFilterBanner.cs" />
     <Compile Include="Services\TypePadSpamFilterProvider.cs" />
     <Compile Include="Services\DefaultSpamFilterProvider.cs" />
     <Compile Include="Services\NullSpamFilterProvider.cs" />
@@ -117,8 +126,6 @@
     <Compile Include="Services\ISpamService.cs" />
     <Compile Include="Settings\SpamFilterPartSettings.cs" />
     <Compile Include="Settings\SpamFilterPartSettingsEvents.cs" />
-    <Compile Include="Settings\ReCaptchaPartSettings.cs" />
-    <Compile Include="Settings\ReCaptchaPartSettingsEvents.cs" />
     <Compile Include="Settings\SubmissionLimitPartSettings.cs" />
     <Compile Include="Settings\SubmissionLimitPartSettingsEvents.cs" />
     <Compile Include="ViewModels\SpamIndexViewModel.cs" />
@@ -126,9 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\DefinitionTemplates\ReCaptchaPartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\SubmissionLimitPartSettings.cshtml" />
@@ -156,7 +160,12 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\AntiSpam.TypePadSettings.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Parts\SpamFilter.Metadata.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\AntiSpam.ReCaptchaSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

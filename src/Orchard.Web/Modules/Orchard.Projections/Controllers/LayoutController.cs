@@ -61,7 +61,9 @@ namespace Orchard.Projections.Controllers {
 
             var queryId = layout.QueryPartRecord.Id;
 
+            layout.QueryPartRecord.Layouts.Remove(layout);
             _repository.Delete(layout);
+
             Services.Notifier.Information(T("Layout deleted"));
 
             return RedirectToAction("Edit", "Admin", new { id = queryId });
@@ -117,10 +119,9 @@ namespace Orchard.Projections.Controllers {
                 layoutRecord.Display = model.Display;
                 layoutRecord.DisplayType = model.DisplayType;
 
-                Services.ContentManager.Flush();
-
                 Services.Notifier.Information(T("Layout Created"));
 
+                _repository.Create(layoutRecord);
                 return RedirectToAction("Edit", new { id = layoutRecord.Id });
             }
 
@@ -213,11 +214,9 @@ namespace Orchard.Projections.Controllers {
                 layoutRecord.DisplayType = model.DisplayType;
                 layoutRecord.GroupProperty = layoutRecord.Properties.FirstOrDefault(x => x.Id == model.GroupPropertyId);
 
-                Services.ContentManager.Flush();
-                
                 Services.Notifier.Information(T("Layout Saved"));
 
-                return RedirectToAction("Edit", layoutRecord.Id);
+                return RedirectToAction("Edit", new { id = layoutRecord.Id });
             }
 
             #region Load Fields

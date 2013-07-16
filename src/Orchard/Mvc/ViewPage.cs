@@ -77,8 +77,26 @@ namespace Orchard.Mvc {
             Html.GetWorkContext().Resolve<IResourceManager>().RegisterLink(link);
         }
 
-        public void SetMeta(string name, string content) {
-            SetMeta(new MetaEntry { Name = name, Content = content });
+        public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
+            var metaEntry = new MetaEntry();
+
+            if (!String.IsNullOrEmpty(name)) {
+                metaEntry.Name = name;
+            }
+
+            if (!String.IsNullOrEmpty(content)) {
+                metaEntry.Content = content;
+            }
+
+            if (!String.IsNullOrEmpty(httpEquiv)) {
+                metaEntry.HttpEquiv = httpEquiv;
+            }
+
+            if (!String.IsNullOrEmpty(charset)) {
+                metaEntry.Charset = charset;
+            }
+
+            SetMeta(metaEntry);
         }
 
         public virtual void SetMeta(MetaEntry meta) {
@@ -119,6 +137,10 @@ namespace Orchard.Mvc {
 
         public IDisposable Capture(Action<IHtmlString> callback) {
             return new CaptureScope(Writer, callback);
+        }
+
+        public IDisposable Capture(dynamic zone, string position = null) {
+            return new CaptureScope(Writer, html => zone.Add(html, position));
         }
 
         public class CaptureScope : IDisposable {

@@ -5,19 +5,23 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Data.Providers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -47,9 +51,14 @@ namespace Orchard.Tests.ContentManagement {
 
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
+            builder.RegisterType<SqlCeStatementProvider>().As<ISqlStatementProvider>();
+            builder.RegisterType<MySqlStatementProvider>().As<ISqlStatementProvider>();
 
             builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
             builder.RegisterType<BetaPartHandler>().As<IContentHandler>();
@@ -66,6 +75,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
@@ -145,6 +155,9 @@ namespace Orchard.Tests.ContentManagement {
 
             result = queryWhere(x => x.Like("StringStuff", "bc", HqlMatchMode.Anywhere));
             Assert.That(result.Count(), Is.EqualTo(1));
+
+            result = queryWhere(x => x.Like("StringStuff", "bc'", HqlMatchMode.Anywhere));
+            Assert.That(result.Count(), Is.EqualTo(0));
 
             result = queryWhere(x => x.Like("StringStuff", "ab", HqlMatchMode.Anywhere));
             Assert.That(result.Count(), Is.EqualTo(1));
@@ -921,8 +934,6 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void ShouldSortRandomly() {
-            var dt = new DateTime(1980, 1, 1);
-
             _manager.Create<LambdaPart>("lambda", init => {
                 init.Record.IntegerStuff = 1;
             });
@@ -947,6 +958,51 @@ namespace Orchard.Tests.ContentManagement {
             }
 
             Assert.That(firstResults.Distinct().Count(), Is.GreaterThan(1));
+        }
+
+        [Test]
+        public void ShouldPageResults() {
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 1;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 2;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 3;
+            });
+            _session.Flush();
+
+            var results = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).Slice(1,1);
+            Assert.That(results.Count(), Is.EqualTo(1));
+            Assert.That(results.Single().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ShouldSortByProperty() {
+            var dt = new DateTime(1980, 1, 1);
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 1;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 2;
+            });
+
+            _manager.Create<LambdaPart>("lambda", init => {
+                init.Record.IntegerStuff = 3;
+            });
+            _session.Flush();
+
+            var results =_manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.ContentPartRecord<LambdaRecord>(), order => order.Asc("IntegerStuff")).List();
+            Assert.That(results.Count(), Is.EqualTo(3));
+
+            Assert.That(results.Skip(0).First().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(1));
+            Assert.That(results.Skip(1).First().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(2));
+            Assert.That(results.Skip(2).First().As<LambdaPart>().Record.IntegerStuff, Is.EqualTo(3));
         }
 
         [Test]

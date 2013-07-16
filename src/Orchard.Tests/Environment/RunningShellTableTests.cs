@@ -135,6 +135,7 @@ namespace Orchard.Tests.Environment {
 
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/bar/foo", "wiki.example.com")), Is.EqualTo(settingsB).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/baaz", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.EqualTo(settings).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/bar/foo", "www.example.com")), Is.EqualTo(settings).Using(new ShellComparer()));
@@ -149,6 +150,21 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/yarg", "a.example.com")), Is.Null);
         }
 
+        [Test]
+        public void PathAndHostMustMatchOnFullUrl() {
+            var table = (IRunningShellTable)new RunningShellTable();
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com", };
+            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "bar" };
+            var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
+            table.Add(settings);
+            table.Add(settingsB);
+            table.Add(settingsG);
+
+            Assert.That(table.Match(new StubHttpContext("~/bar/foo", "wiki.example.com")), Is.EqualTo(settingsB).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/baaz", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/barbaz", "wiki.example.com")), Is.EqualTo(settingsG).Using(new ShellComparer()));
+        }
         [Test]
         public void PathAloneWillMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
@@ -239,7 +255,7 @@ namespace Orchard.Tests.Environment {
                     x.Name == y.Name &&
                     x.RequestUrlHost == y.RequestUrlHost &&
                     x.RequestUrlPrefix == y.RequestUrlPrefix &&
-                    x.State.CurrentState == y.State.CurrentState
+                    x.State == y.State
                     );
             }
 

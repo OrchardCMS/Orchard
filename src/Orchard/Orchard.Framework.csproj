@@ -71,11 +71,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
@@ -89,12 +84,20 @@
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.Linq">
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate.Linq, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate.linq\NHibernate.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.SqlAzure">
+      <HintPath>..\..\lib\nhibernate.sqlazure\NHibernate.SqlAzure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -152,9 +155,8 @@
     <Compile Include="ContentManagement\Aspects\ITitleAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
-    <Compile Include="ContentManagement\ContentItemBehavior.cs" />
-    <Compile Include="ContentManagement\ContentPartBehavior.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\Handlers\TemplateFilterForPart.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
     <Compile Include="ContentManagement\IHqlQuery.cs" />
@@ -167,17 +169,35 @@
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
-    <Compile Include="ContentManagement\IContentBehavior.cs" />
+    <Compile Include="ContentManagement\IIdentityResolverSelector.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
+    <Compile Include="Data\AbstractSessionInterceptor.cs" />
+    <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="Data\FetchRequest.cs" />
+    <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
+    <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
+    <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
+    <Compile Include="DisplayManagement\Arguments.cs" />
+    <Compile Include="Data\Bags\SConvert.cs" />
+    <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
+    <Compile Include="Data\Bags\Serialization\XmlSettingsSerializer.cs" />
+    <Compile Include="Data\Bags\SItem.cs" />
+    <Compile Include="Data\Bags\SObject.cs" />
+    <Compile Include="Data\Bags\StateValueProvider.cs" />
+    <Compile Include="Data\Bags\SValue.cs" />
     <Compile Include="Data\Conventions\AggregateAttribute.cs" />
-    <Compile Include="Data\Conventions\CacheConvention.cs" />
+    <Compile Include="Data\Conventions\CacheConventions.cs" />
     <Compile Include="Data\DefaultDatabaseCacheConfiguration.cs" />
     <Compile Include="Data\IDatabaseCacheConfiguration.cs" />
     <Compile Include="Data\Migration\AutomaticDataMigrations.cs" />
     <Compile Include="Data\Migration\Interpreters\SqlCeCommandInterpreter.cs" />
+    <Compile Include="Data\ISessionConfigurationEvents.cs" />
+    <Compile Include="Data\ISessionInterceptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -191,8 +211,11 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeTableLocator.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
+    <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\AutofacUtil\ConfigurationSettingsReaderConstants.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />
@@ -214,11 +237,13 @@
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
     <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
+    <Compile Include="Environment\IWorkContextEvents.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="Events\DelegateHelper.cs" />
     <Compile Include="Exceptions\DefaultExceptionPolicy.cs" />
     <Compile Include="Exceptions\ExceptionExtensions.cs" />
     <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />
@@ -229,7 +254,10 @@
     <Compile Include="FileSystems\LockFile\ILockFileManager.cs" />
     <Compile Include="FileSystems\LockFile\LockFile.cs" />
     <Compile Include="FileSystems\LockFile\DefaultLockFileManager.cs" />
+    <Compile Include="FileSystems\Media\ConfigurationMimeTypeProvider.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
+    <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
+    <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
@@ -249,7 +277,9 @@
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeViewLocationCache.cs" />
     <Compile Include="OrchardFatalException.cs" />
+    <Compile Include="Recipes\Events\IRecipeExecuteEventHandler.cs" />
     <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
     <Compile Include="Recipes\Models\Recipe.cs" />
     <Compile Include="Recipes\Models\RecipeContext.cs" />
@@ -268,6 +298,8 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Services\Clock.cs" />
+    <Compile Include="Services\DefaultJsonConverter.cs" />
+    <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
@@ -648,8 +680,6 @@
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
     <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
-    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
-    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualFile.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
@@ -775,7 +805,6 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -848,7 +877,6 @@
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />

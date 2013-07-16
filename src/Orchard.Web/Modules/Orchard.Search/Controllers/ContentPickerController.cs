@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Collections;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Indexing;
@@ -10,7 +10,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Search.Models;
-using Orchard.Search.Services;
+using Orchard.Search.Settings;
 using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -21,15 +21,18 @@ namespace Orchard.Search.Controllers {
     [Admin]
     [OrchardFeature("Orchard.Search.ContentPicker")]
     public class ContentPickerController : Controller {
-        private readonly ISearchService _searchService;
         private readonly ISiteService _siteService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IIndexManager _indexManager;
 
         public ContentPickerController(
             IOrchardServices orchardServices,
-            ISearchService searchService,
-            ISiteService siteService) {
-            _searchService = searchService;
+            ISiteService siteService,
+            IContentDefinitionManager contentDefinitionManager,
+            IIndexManager indexManager) {
             _siteService = siteService;
+            _contentDefinitionManager = contentDefinitionManager;
+            _indexManager = indexManager;
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -40,35 +43,69 @@ namespace Orchard.Search.Controllers {
         public Localizer T { get; set; }
 
         [Themed(false)]
-        public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string part, string field, string searchText = "") {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
-            IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
-            try {
+            int totalCount = 0;
+            int[] foundIds = new int[0];
 
-                searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                  searchFields,
-                                                  searchHit => searchHit);
-            }
-            catch (Exception exception) {
-                Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
-                Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
+            if (!String.IsNullOrWhiteSpace(searchText)) {
+                ContentPickerSearchFieldSettings settings = null;
+                // if the picker is loaded for a specific field, apply custom settings
+                if (!String.IsNullOrEmpty(part) && !String.IsNullOrEmpty(field)) {
+                    var definition = _contentDefinitionManager.GetPartDefinition(part).Fields.FirstOrDefault(x => x.Name == field);
+                    if (definition != null) {
+                        settings = definition.Settings.GetModel<ContentPickerSearchFieldSettings>();
+                    }
+                }
+
+                if (!_indexManager.HasIndexProvider()) {
+                    return View("NoIndex");
+                }
+
+                var builder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchIndex);
+
+                try {
+                    builder.Parse(searchFields, searchText);
+
+                    if (settings != null && !String.IsNullOrEmpty(settings.DisplayedContentTypes)) {
+                        var rawTypes = settings.DisplayedContentTypes.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        var contentTypes = _contentDefinitionManager
+                            .ListTypeDefinitions()
+                            .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)))
+                            .ToArray();
+
+
+                        foreach (string type in contentTypes.Select(x => x.Name)) {
+                            builder.WithField("type", type).AsFilter();
+                        }
+                    }
+
+                    totalCount = builder.Count();
+                    builder = builder.Slice((pager.Page > 0 ? pager.Page - 1 : 0) * pager.PageSize, pager.PageSize);
+                    var searchResults = builder.Search();
+
+                    foundIds = searchResults.Select(searchHit => searchHit.ContentItemId).ToArray();
+                }
+                catch (Exception exception) {
+                    Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
+                    Services.Notifier.Error(T("Invalid search query: {0}", exception.Message));
+                }
             }
 
             var list = Services.New.List();
-            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Published, QueryHints.Empty)) {
+            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(foundIds, VersionOptions.Published, QueryHints.Empty)) {
                 // ignore search results which content item has been removed or unpublished
                 if (contentItem == null) {
-                    searchHits.TotalItemCount--;
+                    totalCount--;
                     continue;
                 }
 
                 list.Add(Services.ContentManager.BuildDisplay(contentItem, "SummaryAdmin"));
             }
 
-            var pagerShape = Services.New.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
+            var pagerShape = Services.New.Pager(pager).TotalItemCount(totalCount);
 
 
             foreach(IShape item in list.Items) {

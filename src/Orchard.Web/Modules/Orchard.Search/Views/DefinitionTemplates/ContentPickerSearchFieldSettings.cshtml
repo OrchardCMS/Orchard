@@ -1,0 +1,30 @@
+﻿@using Orchard.Indexing
+@model Orchard.Search.Settings.ContentPickerSearchFieldSettings
+@{
+    var indexManager = WorkContext.Resolve<IIndexManager>();
+    var indexProvider = indexManager.GetSearchIndexProvider();
+}
+
+<fieldset>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowSearchTab) <label for="@Html.FieldIdFor(m => m.ShowSearchTab)" class="forcheckbox">@T("Show Search tab")</label>
+        <span class="hint">@T("Uncheck to hide the Search tab from the picker window.")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.SearchIndex)">@T("Search index")</label>
+        <select name="@Html.FieldNameFor(m => m.SearchIndex)" >
+            @foreach (string index in indexProvider.List()) {
+                @Html.SelectOption(Model.SearchIndex, index, index) 
+            }    
+        </select>
+        <span class="hint">@T("The index to use when displaying this tab.")</span>
+    </div>
+
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DisplayedContentTypes)">@T("Content Types and Parts")</label>
+        @Html.TextBoxFor(m => m.DisplayedContentTypes) 
+        <span class="hint">@T("A comma separated value of all the content types or content parts to display.")</span>
+    </div>
+</fieldset>

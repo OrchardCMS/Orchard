@@ -1,0 +1,16 @@
+﻿@model Orchard.MediaLibrary.Models.FolderHierarchy
+
+<div class="media-library-folder">
+    <div class="media-library-folder-title" data-bind="click: function(data, event) { selectFolder('@HttpUtility.JavaScriptStringEncode(Model.Root.MediaPath)'); }, css: { selected: displayed() == $element.getAttribute('data-media-path') }" data-media-path="@Model.Root.MediaPath" >
+        <a data-bind="disable: $root.pendingRequest" href="#" class="media-library-navigation-folder-link" data-mediapath="@Model.Root.MediaPath"><i class="icon-folder-close-alt"></i>@Model.Root.Name</a>
+    </div>
+    @if (Model.Children.Any()) {
+        <ul>
+            @foreach (var folder in Model.Children) {
+                <li>
+                    @Display.Partial(TemplateName: "MediaManagerFolder", Model: folder)
+                </li>
+            }
+        </ul>
+    }
+</div>

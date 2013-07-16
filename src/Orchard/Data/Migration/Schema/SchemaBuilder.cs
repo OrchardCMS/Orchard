@@ -13,6 +13,18 @@ namespace Orchard.Data.Migration.Schema {
             _formatPrefix = formatPrefix ?? (s => s ?? String.Empty);
         }
 
+        public IDataMigrationInterpreter Interpreter {
+            get { return _interpreter; }
+        }
+      
+        public string FeaturePrefix {
+            get { return _featurePrefix; }
+        }
+      
+        public Func<string, string> FormatPrefix {
+            get { return _formatPrefix; }
+        }
+      
         public SchemaBuilder CreateTable(string name, Action<CreateTableCommand> table) {
             var createTable = new CreateTableCommand(String.Concat(_formatPrefix(_featurePrefix), name));
             table(createTable);

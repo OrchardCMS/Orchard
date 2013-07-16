@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
 using Orchard.ContentManagement.Records;
@@ -75,7 +74,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 Visit(builder, createColumn);
             }
 
-            var primaryKeys = command.TableCommands.OfType<CreateColumnCommand>().Where(ccc => ccc.IsPrimaryKey).Select(ccc => ccc.ColumnName);
+            var primaryKeys = command.TableCommands.OfType<CreateColumnCommand>().Where(ccc => ccc.IsPrimaryKey).Select(ccc => ccc.ColumnName).ToArray();
             if (primaryKeys.Any()) {
                 if (appendComma) {
                     builder.Append(", ");
@@ -191,7 +190,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             // type
             if (command.DbType != DbType.Object) {
-                builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
+                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
             }
             else {
                 if(command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
@@ -278,23 +277,12 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        private string GetTypeName(DbType dbType, int? length, byte precision, byte scale) {
-
-            // NHibernate has a bug in MsSqlCeDialect, as it's declaring the decimal type as this:
-            // NUMERIC(19, $1), where $1 is the Length parameter, and it's wrong. It should be 
-            // NUMERIC(19, $s) in order to use the Scale parameter, as it's done for SQL Server dialects
-            // https://nhibernate.jira.com/browse/NH-2979
-            if (_dialect is NHibernate.Dialect.MsSqlCeDialect
-                && dbType == DbType.Decimal
-                && scale != 0) {
-                return _dialect.GetTypeName(new SqlType(dbType), scale, precision, scale);
-            }
-
+        public static string GetTypeName(Dialect dialect, DbType dbType, int? length, byte precision, byte scale) {
             return precision > 0
-                       ? _dialect.GetTypeName(new SqlType(dbType, precision, scale))
+                       ? dialect.GetTypeName(new SqlType(dbType, precision, scale))
                        : length.HasValue
-                             ? _dialect.GetTypeName(new SqlType(dbType, length.Value))
-                             : _dialect.GetTypeName(new SqlType(dbType));
+                             ? dialect.GetTypeName(new SqlType(dbType, length.Value))
+                             : dialect.GetTypeName(new SqlType(dbType));
         }
 
         private void Visit(StringBuilder builder, CreateColumnCommand command) {
@@ -306,7 +294,7 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.Append(_dialect.QuoteForColumnName(command.ColumnName)).Append(Space);
 
             if (!command.IsIdentity || _dialect.HasDataTypeInIdentityColumn) {
-                builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
+                builder.Append(GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
             }
 
             // append identity if handled
@@ -337,16 +325,14 @@ namespace Orchard.Data.Migration.Interpreters {
         private void RunPendingStatements() {
 
             var session = _sessionLocator.For(typeof(ContentItemRecord));
-            var connection = session.Connection;
 
             try {
                 foreach (var sqlStatement in _sqlStatements) {
                     Logger.Debug(sqlStatement);
-                    using (var command = connection.CreateCommand()) {
-                        command.CommandText = sqlStatement;
-                        command.ExecuteNonQuery();
-                    }
 
+                    var query = session.CreateSQLQuery(sqlStatement);
+                    query.ExecuteUpdate();
+                 
                     _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
                 }
             }
@@ -370,7 +356,7 @@ namespace Orchard.Data.Migration.Interpreters {
             return false;
         }
 
-        private static string ConvertToSqlValue(object value) {
+        public static string ConvertToSqlValue(object value) {
             if ( value == null ) {
                 return "null";
             }

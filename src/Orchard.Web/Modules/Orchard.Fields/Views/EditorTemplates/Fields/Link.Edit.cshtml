@@ -17,8 +17,9 @@
 }
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Value)">@Model.DisplayName</label>
+    @if (HasText(settings.Hint)) {
     <span class="hint">@settings.Hint</span>
-
+    }
     <div class="editor-label">
         <label for="@Html.FieldIdFor(m => m.Value)" @if(settings.Required) { <text>class="required"</text> }>@T("Url")</label>
     </div>
@@ -46,6 +47,6 @@
         </div>
     }
     else {
-        @Html.Hidden(Html.FieldNameFor(m => m.Target), target)
+        @Html.Hidden("Target", target)
     }
 </fieldset>

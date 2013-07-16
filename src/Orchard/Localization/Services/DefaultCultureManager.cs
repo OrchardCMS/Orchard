@@ -54,7 +54,7 @@ namespace Orchard.Localization.Services {
                 .Where(x => x != null)
                 .OrderByDescending(x => x.Priority);
 
-            if ( requestCulture.Count() < 1 )
+            if ( !requestCulture.Any() )
                 return String.Empty;
 
             foreach (var culture in requestCulture) {

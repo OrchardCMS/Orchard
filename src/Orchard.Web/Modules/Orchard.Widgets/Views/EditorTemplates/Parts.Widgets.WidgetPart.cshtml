@@ -7,7 +7,7 @@
 <fieldset>
     @Html.LabelFor(widget => widget.LayerId, T("Layer"))
     @Html.DropDownListFor(widget => widget.LayerId, new SelectList(Model.AvailableLayers, "Id", "Name"))
-    <span class="hint">@T("The Layer where the Widget when be rendered.")</span>
+    <span class="hint">@T("The Layer where the Widget will be rendered.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Position, T("Position"))

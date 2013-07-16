@@ -274,5 +274,25 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             Assert.That(file.Properties.ContentType, Is.EqualTo("application/unknown"));
         }
 
+
+        [Test]
+        public void GetStoragePathShouldReturnAValidLocalPath()
+        {
+            _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
+            var publicPath = _azureBlobStorageProvider.GetPublicUrl("folder1/foo.txt");
+            var storagePath = _azureBlobStorageProvider.GetStoragePath(publicPath);
+
+            Assert.IsNotNull(storagePath);
+            Assert.That(storagePath, Is.EqualTo("folder1/foo.txt"));
+        }
+
+        [Test]
+        public void GetStoragePathShouldReturnNullIfPathIsNotLocal()
+        {
+            var storagePath = _azureBlobStorageProvider.GetStoragePath("foo");
+
+            Assert.IsNull(storagePath);
+        }
+
     }
 }

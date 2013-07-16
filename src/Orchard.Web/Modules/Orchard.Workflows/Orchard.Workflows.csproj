@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7059493C-8251-4764-9C1E-2368B8B485BC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Workflows</RootNamespace>
+    <AssemblyName>Orchard.Workflows</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Orchard.Forms\bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetwebapi\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.jsPlumb-1.4.1-all-min.js" />
+    <Content Include="Scripts\orchard-workflows-serialize.js" />
+    <Content Include="Scripts\orchard-workflows.js" />
+    <Content Include="Styles\images\menu.workflows.png" />
+    <Content Include="Styles\menu.workflows-admin.css" />
+    <Content Include="Styles\workflows-activity.css" />
+    <Content Include="Styles\images\cog.png" />
+    <Content Include="Styles\workflows-activity-delete-publish.css" />
+    <Content Include="Styles\workflows-activity-timer.css" />
+    <Content Include="Styles\workflows-activity-branch.css" />
+    <Content Include="Styles\orchard-workflows-admin.css" />
+    <Content Include="Styles\admin-usertask.css" />
+    <Content Include="Styles\workflows-activity-isinrole.css" />
+    <Content Include="Styles\workflows-activity-usertask.css" />
+    <Content Include="Styles\workflows-activity-notify.css" />
+    <Content Include="Styles\workflows-activity-publish.css" />
+    <Content Include="Styles\workflows-activity-sendemail.css" />
+    <Content Include="Styles\workflows-activity-contentremoved.css" />
+    <Content Include="Styles\workflows-activity-contentpublished.css" />
+    <Content Include="Styles\workflows-activity-contentversioned.css" />
+    <Content Include="Styles\workflows-activity-contentcreated.css" />
+    <Content Include="Styles\workflows-activity-decision.css" />
+    <Content Include="Web.config" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Comments\Orchard.Comments.csproj">
+      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
+      <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activities\ContentActivity.cs" />
+    <Compile Include="Activities\BranchActivity.cs" />
+    <Compile Include="Activities\AssignRoleActivity.cs" />
+    <Compile Include="Activities\CloseCommentsActivity.cs" />
+    <Compile Include="Activities\TriggerActivity.cs" />
+    <Compile Include="Activities\SignalActivity.cs" />
+    <Compile Include="Activities\MergeBranchActivity.cs" />
+    <Compile Include="Activities\DeleteActivity.cs" />
+    <Compile Include="Activities\ExclusiveBranchActivity.cs" />
+    <Compile Include="Activities\IsInRoleActivity.cs" />
+    <Compile Include="Activities\MailActivity.cs" />
+    <Compile Include="Activities\RedirectActivity.cs" />
+    <Compile Include="Activities\TimerActivity.cs" />
+    <Compile Include="Activities\WebRequestActivity.cs" />
+    <Compile Include="Controllers\SignalController.cs" />
+    <Compile Include="Forms\DecisionForms.cs" />
+    <Compile Include="Forms\SignalForms.cs" />
+    <Compile Include="Forms\RedirectActionForm.cs" />
+    <Compile Include="Forms\TimerForms.cs" />
+    <Compile Include="Forms\BranchForms.cs" />
+    <Compile Include="Forms\MailForms.cs" />
+    <Compile Include="Activities\PublishActivity.cs" />
+    <Compile Include="Activities\UserTaskActivity.cs" />
+    <Compile Include="Activities\DecisionActivity.cs" />
+    <Compile Include="Activities\NotificationActivity.cs" />
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\UserTaskDriver.cs" />
+    <Compile Include="Drivers\WorkflowDriver.cs" />
+    <Compile Include="Forms\WebRequestForm.cs" />
+    <Compile Include="Handlers\ContentHandler.cs" />
+    <Compile Include="Handlers\WorkflowHandler.cs" />
+    <Compile Include="ImportExport\WorkflowsCustomExportStep.cs" />
+    <Compile Include="ImportExport\WorkflowsExportEventHandler.cs" />
+    <Compile Include="ImportExport\WorkflowsRecipeHandler.cs" />
+    <Compile Include="Models\AwaitingActivityRecord.cs" />
+    <Compile Include="Models\CancellationToken.cs" />
+    <Compile Include="Models\ActivityContext.cs" />
+    <Compile Include="Models\WorkflowContext.cs" />
+    <Compile Include="Models\ActivityRecord.cs" />
+    <Compile Include="Models\TransitionRecord.cs" />
+    <Compile Include="Models\WorkflowRecord.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\WorkflowDefinitionRecord.cs" />
+    <Compile Include="Forms\ContentActivityForms.cs" />
+    <Compile Include="Forms\SelectRolesForms.cs" />
+    <Compile Include="Forms\UserTaskForms.cs" />
+    <Compile Include="Forms\NotificationActivityForms.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\GenericEventService.cs" />
+    <Compile Include="Services\ISignalService.cs" />
+    <Compile Include="Services\Task.cs" />
+    <Compile Include="Services\Event.cs" />
+    <Compile Include="Services\IActivity.cs" />
+    <Compile Include="Services\ActivitiesManager.cs" />
+    <Compile Include="Services\IActivitiesManager.cs" />
+    <Compile Include="Services\IWorkflowManager.cs" />
+    <Compile Include="Services\WorkflowManager.cs" />
+    <Compile Include="Tokens\SignalTokens.cs" />
+    <Compile Include="ViewModels\AdminEditViewModel.cs" />
+    <Compile Include="ViewModels\AdminIndexViewModel.cs" />
+    <Compile Include="ViewModels\WorkflowDefinitionViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\EditActivity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ActivityToolbox.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Notify.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Decision.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Workflow.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserTask.ActionButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-UserTask.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-IsInRole.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-SendEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Branch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Timer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-ExclusiveBranch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-MergeBranch.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Publish.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-Redirect.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

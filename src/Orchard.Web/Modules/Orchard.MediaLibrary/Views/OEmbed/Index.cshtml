@@ -1,0 +1,79 @@
+﻿@model Orchard.MediaLibrary.ViewModels.OEmbedViewModel
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @{
+        Script.Require("jQuery");
+        Script.Require("jQueryUI");
+
+        Style.Include("orchard-medialibrary-admin.css");
+        Style.Include("orchard-mediaproviders-admin.css");
+
+        Style.Require("FontAwesome");
+        Style.Include("orchard-oembed-admin.css");
+    }
+
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body>
+    
+    <div id="oembed-main">
+        <div class="query-container">
+        @using (Html.BeginFormAntiForgeryPost()) {
+            <div id="icon">
+                <button type="submit" class="icon-download"></button>    
+            </div>
+            <div id="query">
+                <input name="url" type="text" autofocus placeholder="@T("media url")" value="@Model.Url"/>
+            </div>
+        }
+        </div>
+
+        @if (Model.Content != null) {
+            var oembed = Model.Content.Root;
+            var type = oembed.Element("type").Value;
+
+            switch (oembed.Element("type").Value) {
+                case "photo":
+                <img src="@oembed.Element("url").Value" width="@oembed.Element("width").Value" height="@oembed.Element("height").Value" />
+                    break;
+                case "video":
+                @Html.Raw(oembed.Element("html").Value)
+                    break;
+                case "link":
+                <a href="@oembed.Element("url").Value">oembed.Element("title").Value</a>
+                    break;
+                case "rich":
+                @Html.Raw(oembed.Element("html").Value)
+                    break;
+            }
+
+            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+                @Html.Hidden("url", Model.Url)
+                @Html.Hidden("folderPath", Model.FolderPath)
+                @Html.Hidden("document", Model.Content.ToString())
+
+                <button type="submit">@("Import")</button>
+            }
+        }
+
+    </div>
+    
+    
+    @using (Script.Foot()) {
+    <script type="text/javascript">
+    //<![CDATA[
+        $(function () {
+
+        })
+    //]]>
+    </script>
+    }
+    
+    @Display.FootScripts()
+</body>
+</html>

@@ -131,7 +131,7 @@ namespace Orchard.UI.Resources {
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath) {
-            return Include(resourceType, resourcePath, null, null);
+            return Include(resourceType, resourcePath, resourceDebugPath, null);
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath, string relativeFromPath) {
@@ -142,10 +142,14 @@ namespace Orchard.UI.Resources {
                 throw new ArgumentNullException("resourcePath");
             }
 
+            // ~/ ==> convert to absolute path (e.g. /orchard/..)
             if (VirtualPathUtility.IsAppRelative(resourcePath)) {
-                // ~/ ==> convert to absolute path (e.g. /orchard/..)
                 resourcePath = VirtualPathUtility.ToAbsolute(resourcePath);
             }
+            if (resourceDebugPath != null && VirtualPathUtility.IsAppRelative(resourceDebugPath)) {
+                resourceDebugPath = VirtualPathUtility.ToAbsolute(resourceDebugPath);
+            }
+
             resourcePath = FixPath(resourcePath, relativeFromPath);
             resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
             return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
@@ -296,21 +300,31 @@ namespace Orchard.UI.Resources {
         }
 
         public void SetMeta(MetaEntry meta) {
-            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+            if (meta == null) {
                 return;
             }
-            _metas[meta.Name] = meta;
+
+            var index = meta.Name ?? meta.HttpEquiv ?? "charset";
+
+            _metas[index] = meta;
         }
 
         public void AppendMeta(MetaEntry meta, string contentSeparator) {
-            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+            if (meta == null) {
                 return;
             }
+
+            var index = meta.Name ?? meta.HttpEquiv;
+            
+            if (String.IsNullOrEmpty(index)) {
+                return;
+            }
+
             MetaEntry existingMeta;
-            if (_metas.TryGetValue(meta.Name, out existingMeta)) {
+            if (_metas.TryGetValue(index, out existingMeta)) {
                 meta = MetaEntry.Combine(existingMeta, meta, contentSeparator);
             }
-            _metas[meta.Name] = meta;
+            _metas[index] = meta;
         }
 
     }

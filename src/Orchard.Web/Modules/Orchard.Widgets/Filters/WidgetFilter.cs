@@ -3,25 +3,31 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
+using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Filters {
     public class WidgetFilter : FilterProvider, IResultFilter {
-        private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;
+        private readonly IOrchardServices _orchardServices;
 
-        public WidgetFilter(IContentManager contentManager, IWorkContextAccessor workContextAccessor, IRuleManager ruleManager, IWidgetsService widgetsService) {
-            _contentManager = contentManager;
+        public WidgetFilter(
+            IWorkContextAccessor workContextAccessor, 
+            IRuleManager ruleManager, 
+            IWidgetsService widgetsService,
+            IOrchardServices orchardServices) {
             _workContextAccessor = workContextAccessor;
             _ruleManager = ruleManager;
             _widgetsService = widgetsService;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -40,13 +46,14 @@ namespace Orchard.Widgets.Filters {
             if (workContext == null ||
                 workContext.Layout == null ||
                 workContext.CurrentSite == null ||
-                AdminFilter.IsApplied(filterContext.RequestContext)) {
+                AdminFilter.IsApplied(filterContext.RequestContext) ||
+                !ThemeFilter.IsApplied(filterContext.RequestContext)) {
                 return;
             }
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<LayerPart> activeLayers = _contentManager.Query<LayerPart, LayerPartRecord>().List();
+            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart, LayerPartRecord>().List();
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
@@ -65,6 +72,9 @@ namespace Orchard.Widgets.Filters {
 
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
+            var defaultCulture = workContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
+            var currentCulture = workContext.CurrentCulture;
+
             foreach (var widgetPart in widgetParts) {
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
@@ -74,11 +84,25 @@ namespace Orchard.Widgets.Filters {
 
                 // ignore widget for different cultures
                 var localizablePart = widgetPart.As<ILocalizableAspect>();
-                if (localizablePart != null && localizablePart.Culture != workContext.CurrentCulture) {
+                if (localizablePart != null) {
+                    // if localized culture is null then show if current culture is the default
+                    // this allows a user to show a content item for the default culture only
+                    if (localizablePart.Culture == null && defaultCulture != currentCulture) {
+                        continue;
+                    }
+
+                    // if culture is set, show only if current culture is the same
+                    if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
+                        continue;
+                    }
+                }
+
+                // check permissions
+                if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
                     continue;
                 }
 
-                var widgetShape = _contentManager.BuildDisplay(widgetPart);
+                var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
                 zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
             }
         }

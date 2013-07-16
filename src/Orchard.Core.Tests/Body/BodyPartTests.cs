@@ -5,6 +5,7 @@ using Autofac;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -22,6 +23,7 @@ using Orchard.Security;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Core.Tests.Body {
     [TestFixture]
@@ -29,6 +31,8 @@ namespace Orchard.Core.Tests.Body {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
@@ -46,6 +50,8 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
+
         }
 
         [Test]

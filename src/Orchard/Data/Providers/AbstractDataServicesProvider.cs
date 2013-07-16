@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using FluentNHibernate;
 using FluentNHibernate.Automapping;
@@ -9,7 +10,6 @@ using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Diagnostics;
 using NHibernate;
-using NHibernate.Cfg;
 using NHibernate.Engine;
 using NHibernate.Event;
 using NHibernate.Event.Default;
@@ -17,6 +17,8 @@ using NHibernate.Persister.Entity;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Logging;
+using Configuration = NHibernate.Cfg.Configuration;
 
 namespace Orchard.Data.Providers {
     [Serializable]
@@ -24,16 +26,30 @@ namespace Orchard.Data.Providers {
 
         public abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
 
+        protected AbstractDataServicesProvider() {
+            Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; set; }
+
         public Configuration BuildConfiguration(SessionFactoryParameters parameters) {
             var database = GetPersistenceConfigurer(parameters.CreateDatabase);
             var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors.ToList());
 
-            return Fluently.Configure()
-                .Database(database)
-                .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                .ExposeConfiguration(cfg => cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] { new OrchardLoadEventListener() })
-                .BuildConfiguration()
-                ;
+            var config = Fluently.Configure();
+
+            parameters.Configurers.Invoke(c => c.Created(config, persistenceModel), Logger);
+
+            config = config.Database(database)
+                           .Mappings(m => m.AutoMappings.Add(persistenceModel))
+                           .ExposeConfiguration(cfg => {
+                               cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] {new OrchardLoadEventListener()};
+                               parameters.Configurers.Invoke(c => c.Building(cfg), Logger);
+                           });
+
+            parameters.Configurers.Invoke(c => c.Prepared(config), Logger);
+
+            return config.BuildConfiguration();
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {
@@ -46,7 +62,7 @@ namespace Orchard.Data.Providers {
                 // identical type names from different namespaces can be mapped without ambiguity
                 .Conventions.Setup(x => x.Add(AutoImport.Never()))
                 .Conventions.Add(new RecordTableNameConvention(recordDescriptors))
-                .Conventions.Add(new CacheConvention(recordDescriptors))
+                .Conventions.Add(new CacheConventions(recordDescriptors))
                 .Alterations(alt => {
                     foreach (var recordAssembly in recordDescriptors.Select(x => x.Type.Assembly).Distinct()) {
                         alt.Add(new AutoMappingOverrideAlteration(recordAssembly));

@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using System.Text.RegularExpressions;
 using Orchard.Utility.Extensions;
+using System;
 
 namespace Orchard.Autoroute.Services {
 
@@ -16,7 +17,7 @@ namespace Orchard.Autoroute.Services {
 
         public string Slugify(IContent content) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata == null) return null;
+            if (metadata == null || String.IsNullOrEmpty(metadata.DisplayText)) return null;
             var title = metadata.DisplayText.Trim();
             return Slugify(new FillSlugContext(content,title));
         }
@@ -25,10 +26,12 @@ namespace Orchard.Autoroute.Services {
             _slugEventHandler.FillingSlugFromTitle(slugContext);
 
             if (!slugContext.Adjusted) {
-                
-                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|]+");
 
-                slugContext.Slug = disallowed.Replace(slugContext.Title, "-").Trim('-','.');
+                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+");
+
+                var cleanedSlug = disallowed.Replace(slugContext.Title, "-").Trim('-','.');
+
+                slugContext.Slug = Regex.Replace(cleanedSlug, @"\-{2,}", "-");
 
                 if (slugContext.Slug.Length > 1000)
                     slugContext.Slug = slugContext.Slug.Substring(0, 1000).Trim('-', '.');

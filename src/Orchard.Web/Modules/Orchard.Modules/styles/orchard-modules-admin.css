@@ -80,8 +80,11 @@ html.dyn #main ul.features button { display:none; }
     padding-right:0;
 }
 #main .features.summary-view .description {
-    display:none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 #main .features.detail-view .description {
     display:inline;
     margin:0 0 1em .5ex;

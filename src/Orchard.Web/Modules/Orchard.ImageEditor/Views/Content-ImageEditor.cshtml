@@ -1,0 +1,56 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Utility.Extensions
+@model dynamic
+@{
+    Script.Require("jQuery");
+    Script.Require("jQueryUI");
+    Style.Require("jQueryUI_Orchard");
+    Script.Include("~/Modules/Orchard.ImageEditor/Scripts/image.editor.js");
+    Style.Include("~/Modules/Orchard.ImageEditor/Styles/image.editor.css");
+
+    ContentItem media = Model.MediaContentItem;
+    var mediaPart = media.As<MediaPart>();
+    var imagePart = media.As<ImagePart>();
+
+    var returnUrl = Request.QueryString["returnUrl"];
+    if (!Request.IsLocalUrl(returnUrl)) {
+        returnUrl = Url.Content("~/");
+    }
+}
+
+<input type="hidden" id="image-editor-url" value="@Url.Content(mediaPart.MediaUrl)"/>
+<input type="hidden" id="image-editor-callback" value="@Model.CallBack"/>
+
+<div id="image-editor">
+
+    <div id="image-editor-toolbar">
+        @if (Model.Buttons != null) {
+            @Display(Model.Buttons)
+        }
+    </div>
+    
+    <div id="image-editor-options-container">
+        <div id="image-editor-options">
+            @if (Model.Options != null) {
+                @Display(Model.Options)
+            }
+        </div>
+    </div>
+
+    <div id="image-editor-container" class="editor-shadow">
+        <div id="image-editor-image-wrapper" >
+            @*<canvas id="image-editor-image" class="canvas-shadow"></canvas>*@        
+            <img id="image-editor-image" class="canvas-shadow" src="@Url.Content(mediaPart.MediaUrl)">    
+        </div>
+    </div>
+    
+</div>
+<fieldset id="buttons-manage">
+    <button id="button-save">@T("Save")</button>
+    <a id="button-cancel" href="@returnUrl" class="button">@T("Close")</a>
+</fieldset>
+
+<input type="hidden" id="upload-image-url" value="@Url.Action("Upload", "Admin", new { id = media.Id })"/>
+@Html.AntiForgeryTokenOrchard()
+

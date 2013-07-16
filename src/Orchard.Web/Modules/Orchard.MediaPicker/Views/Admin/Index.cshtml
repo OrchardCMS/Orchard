@@ -1,5 +1,4 @@
-﻿@model Orchard.Media.ViewModels.MediaFolderEditViewModel
-@using Orchard.Media.Extensions;
+﻿@using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Services;
 @using Orchard.Media.Models;
@@ -11,11 +10,11 @@
     Script.Require("jQueryUI_Tabs").AtHead();
     Script.Include("MediaBrowser.js").AtHead();
 
-    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
     Style.Include("~/themes/theadmin/styles/site.css");
-	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
-	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
-	Style.Include("mediapicker.css");
+    Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
+    Style.Include("mediapicker.css");
 
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -41,10 +40,10 @@
         <li><a href="#tab-gallery">@T("Browse Media")</a></li>
     </ul>
     <div id="tab-url">
-@Html.Partial("Tab_Url", Model)
+@Html.Partial("Tab_Url", (object)Model)
     </div>
     <div id="tab-gallery">
-@Html.Partial("Tab_Gallery", Model)
+@Html.Partial("Tab_Gallery", (object)Model)
     </div>
 </div>
 

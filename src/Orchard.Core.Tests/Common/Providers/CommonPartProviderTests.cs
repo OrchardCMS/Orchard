@@ -39,6 +39,7 @@ using Orchard.Tests.Modules;
 using System.Web.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
@@ -50,6 +51,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
@@ -75,6 +77,7 @@ namespace Orchard.Core.Tests.Common.Providers {
                 CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
             builder.RegisterInstance<DefaultDisplayManagerTests.TestWorkContextAccessor>(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             DefaultShapeTableManagerTests.TestShapeProvider.FeatureShapes = new Dictionary<Feature, IEnumerable<string>> {

@@ -63,6 +63,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ControlWrapper.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
+    <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
     <Compile Include="Handlers\LayerHintHandler.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />
     <Compile Include="Migrations.cs" />
@@ -78,11 +79,13 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
     <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
+    <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
     <Compile Include="RuleEngine\RuleManager.cs" />
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
     <Compile Include="Services\IRuleManager.cs" />
     <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
+    <Compile Include="Services\LayerResolverSelector.cs" />
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />

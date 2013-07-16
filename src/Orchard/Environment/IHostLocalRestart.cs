@@ -29,6 +29,7 @@ namespace Orchard.Environment {
             if (!_appDataFolder.FileExists(fileName))
                 TouchFile();
 
+            Logger.Debug("Monitoring virtual path \"{0}\"", fileName);
             monitor(_appDataFolder.WhenPathChanges(fileName));
         }
 

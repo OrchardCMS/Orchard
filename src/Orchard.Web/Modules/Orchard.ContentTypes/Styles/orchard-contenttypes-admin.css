@@ -3,6 +3,14 @@
     border-bottom:1px solid #ccc;
 }
 
+.orchard-contenttypes .summary .properties h3 {
+    display: inline;
+}
+
+.orchard-contenttypes .summary .properties .stereotype {
+    color: #7c7c7c;
+}
+
 #main .properties p {
     margin:0;
 }
@@ -66,6 +74,13 @@
     margin:0 0 0 15px;
     padding-left:0;
 }
+
+.manage-part .description {
+    color: #7c7c7c;
+    font-size: 0.8em;
+    margin-right: 50px;
+}
+
 .manage-part .settings {
     overflow:auto;
 }
@@ -109,6 +124,13 @@ fieldset.action {
 .manage-part dd dd {
     float:left;
     padding-left:.5em;
+}
+
+.available-parts .part.hint {
+    display: block;
+    margin-left: 29px;
+    line-height: 16px;
+    margin-bottom: 2px;
 }
 
 

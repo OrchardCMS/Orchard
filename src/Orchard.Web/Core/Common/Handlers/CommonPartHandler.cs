@@ -48,13 +48,15 @@ namespace Orchard.Core.Common.Handlers {
 
             OnPublishing<CommonPart>(AssignPublishingDates);
 
-            OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
-                                                    .Add("type", commonPart.ContentItem.ContentType).Analyze().Store()
-                                                    .Add("author", commonPart.Owner.UserName).Analyze().Store()
-                                                    .Add("created", commonPart.CreatedUtc ?? _clock.UtcNow).Store()
-                                                    .Add("published", commonPart.PublishedUtc ?? _clock.UtcNow).Store()
-                                                    .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store()
-                                                    );
+            OnIndexing<CommonPart>((context, commonPart) => {
+                context.DocumentIndex
+                    .Add("type", commonPart.ContentItem.ContentType).Analyze().Store()
+                    .Add("created", commonPart.CreatedUtc ?? _clock.UtcNow).Store()
+                    .Add("published", commonPart.PublishedUtc ?? _clock.UtcNow).Store()
+                    .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store();
+
+                if (commonPart.Owner != null) context.DocumentIndex.Add("author", commonPart.Owner.UserName).Analyze().Store();
+            });
         }
 
 

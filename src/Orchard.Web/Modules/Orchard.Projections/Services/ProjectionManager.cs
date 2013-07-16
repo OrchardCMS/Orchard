@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Forms.Services;
 using Orchard.Projections.Descriptors;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Property;
@@ -77,6 +77,30 @@ namespace Orchard.Projections.Services {
                 provider.Describe(context);
             }
             return context.Describe();
+        }
+
+        public FilterDescriptor GetFilter(string category, string type) {
+            return DescribeFilters()
+                .SelectMany(x => x.Descriptors)
+                .FirstOrDefault(x => x.Category == category && x.Type == type);
+        }
+
+        public SortCriterionDescriptor GetSortCriterion(string category, string type) {
+            return DescribeSortCriteria()
+                .SelectMany(x => x.Descriptors)
+                .FirstOrDefault(x => x.Category == category && x.Type == type);
+        }
+
+        public LayoutDescriptor GetLayout(string category, string type) {
+            return DescribeLayouts()
+                .SelectMany(x => x.Descriptors)
+                .FirstOrDefault(x => x.Category == category && x.Type == type);
+        }
+
+        public PropertyDescriptor GetProperty(string category, string type) {
+            return DescribeProperties()
+                .SelectMany(x => x.Descriptors)
+                .FirstOrDefault(x => x.Category == category && x.Type == type);
         }
 
         public int GetCount(int queryId) {

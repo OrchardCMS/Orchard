@@ -32,7 +32,7 @@
 
   <Settings>
     <SiteSettingsPart PageSize="30" />
-    <CommentSettingsPart enableSpamProtection="true" />
+    <CommentSettingsPart />
   </Settings>
 
   <Migration features="f2,f4"/>

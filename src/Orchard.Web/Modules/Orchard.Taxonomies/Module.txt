@@ -1,0 +1,13 @@
+﻿Name: Taxonomies
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.7
+OrchardVersion: 1.7
+Description: The taxonomy module is providing custom categorization of arbitrary content types. 
+Features:
+    Orchard.Taxonomies:
+        Name: Taxonomies
+        Description: Categorize a content item.
+        Category: Content
+        Dependencies: Orchard.Autoroute, Title, Contents, Orchard.Tokens

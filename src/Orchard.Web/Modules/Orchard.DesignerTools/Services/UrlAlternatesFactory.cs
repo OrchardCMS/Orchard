@@ -45,24 +45,27 @@ namespace Orchard.DesignerTools.Services {
 
         public override void Displaying(ShapeDisplayingContext context) {
 
+            context.ShapeMetadata.OnDisplaying(displayedContext => {
+
                 if (_urlAlternates.Value == null || !_urlAlternates.Value.Any()) {
                     return;
                 }
 
                 // prevent applying alternate again, c.f. http://orchard.codeplex.com/workitem/18298
-                if (context.ShapeMetadata.Alternates.Any(x => x.Contains("__url__"))) {
+                if(displayedContext.ShapeMetadata.Alternates.Any(x => x.Contains("__url__"))) {
                     return;
                 }
 
                 // appends Url alternates to current ones
-                context.ShapeMetadata.Alternates = context.ShapeMetadata.Alternates.SelectMany(
+                displayedContext.ShapeMetadata.Alternates = displayedContext.ShapeMetadata.Alternates.SelectMany(
                     alternate => new [] { alternate }.Union(_urlAlternates.Value.Select(a => alternate + "__url__" + a))
                     ).ToList();
 
                 // appends [ShapeType]__url__[Url] alternates
-                context.ShapeMetadata.Alternates = _urlAlternates.Value.Select(url => context.ShapeMetadata.Type + "__url__" + url)
-                    .Union(context.ShapeMetadata.Alternates)
+                displayedContext.ShapeMetadata.Alternates = _urlAlternates.Value.Select(url => displayedContext.ShapeMetadata.Type + "__url__" + url)
+                    .Union(displayedContext.ShapeMetadata.Alternates)
                     .ToList();
+            });
 
         }
     }

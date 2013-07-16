@@ -1,0 +1,100 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    height: 100%;
+    max-height: 100%;
+}
+
+#clientstorage-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 0;
+    overflow: auto;
+
+}
+
+#fileupload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 10px 15px 15px 10px;
+}
+
+#fileupload input{
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    /*bottom: 0;*/
+    width: 0;
+    height: 0;
+    cursor: none;
+    z-index: 1000;
+}
+
+#fileupload ul {
+    width: 100%;
+    z-index: 2000;
+}
+
+#clientstorage-main li {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    float: left;
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+#message {
+    position: fixed;
+    top: 33%;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    font-size: 36px;
+    color: grey;
+    font-weight: bold;
+    text-align: center;
+}
+
+#clientstorage-main:hover {
+    background-color: #e0e0e0;
+}
+.media-thumbnail > div {
+    width: 200px;
+    height: 200px;
+}
+
+li.transfer {
+    background: white;
+}
+
+li.transition {
+    border: 1px solid #e0e0e0;
+}
+
+.ui-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+}
+
+.ui-progress {
+    height: 5px;
+    background-color: rgb(0,176,240);
+    width: 0;
+}
+
+.ui-label {
+    padding-left: 5px;
+}

@@ -1,0 +1,3 @@
+﻿@using Orchard.Utility.Extensions;
+
+<a href="@Url.Action("Clone", "Admin", new { Id = Model.ContentItem.Id, ReturnUrl = Request.ToUrlString(), Area = "Contents" })" itemprop="UnsafeUrl">@T("Clone")</a>@T(" | ")

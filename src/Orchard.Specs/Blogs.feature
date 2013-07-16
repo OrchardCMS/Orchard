@@ -273,3 +273,22 @@ Scenario: I can create browse blog posts on several pages
         And I should see "<h1[^>]*>.*?My Post 1.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post 2.*?</h1>"
         And I should not see "<h1[^>]*>.*?My Post 3.*?</h1>"
+
+Scenario: I can create a new blog with a percent sign in the title and it gets stripped out of the slug
+	   Given I have installed Orchard
+	   When I go to "admin/blogs/create"
+	   And I fill in
+	     | name        | value   |
+	     | Title.Title | My Blog |
+	   And I hit "Save"
+	   And I go to "admin/blogs"
+	   And I follow "My Blog"
+	   And I follow "New Post" where class name has "primaryAction"
+	   And I fill in
+	     | name        | value                 |
+	     | Title.Title | My Post with a % Sign |
+	     | Body.Text   | Hi there.             |
+	   And I hit "Publish Now"
+	   And I go to "my-blog/my-post-with-a-sign"
+	   Then I should see "<h1[^>]*>.*?My Post with a % Sign.*?</h1>"
+ 	   And I should see "Hi there."

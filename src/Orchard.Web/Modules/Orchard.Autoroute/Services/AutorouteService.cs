@@ -166,7 +166,7 @@ namespace Orchard.Autoroute.Services {
         }
 
         public bool IsPathValid(string slug) {
-            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>\\\|]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%]+$");
         }
 
         public bool ProcessPath(AutoroutePart part) {

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
@@ -27,9 +25,11 @@ using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Security.Providers;
+using Orchard.Tests.ContentManagement;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
+using Orchard.Users.Events;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
@@ -58,14 +58,17 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
             builder.RegisterType<DefaultMessageManager>().As<IMessageManager>();
+
             builder.RegisterInstance(_channel = new MessagingChannelStub()).As<IMessagingChannel>();
             builder.RegisterInstance(new Mock<IMessageEventHandler>().Object);
             builder.RegisterInstance(new Mock<IAuthenticationService>().Object);
+            builder.RegisterInstance(new Mock<IUserEventHandler>().Object);
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
-            builder.RegisterType<TransactionManager>().As<ITransactionManager>();
+
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
@@ -201,7 +204,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                 @"""Austin@Powers""@example.com",
                 @"Ima.Fool@example.com",
                 @"""Ima.Fool""@example.com",
-                @"""Ima Fool""@example.com"
+                @"""Ima Fool""@example.com",
+                "2xxx1414@i.ua"
                 )]
             string email)
         {

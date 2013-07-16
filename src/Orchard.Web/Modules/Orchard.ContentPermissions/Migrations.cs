@@ -18,9 +18,18 @@ namespace Orchard.ContentPermissions {
                 .Column<string>("DeleteOwnContent", c => c.Unlimited())
                 );
 
-            ContentDefinitionManager.AlterPartDefinition("ContentPermissionsPart", p => p.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("ContentPermissionsPart", p => p
+                .Attachable()
+                .WithDescription("Provides access control configuration on a per content item level."));
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("ContentPermissionsPart", p => p
+                .WithDescription("Provides access control configuration on a per content item level."));
+
+            return 2;
         }
     }
 }

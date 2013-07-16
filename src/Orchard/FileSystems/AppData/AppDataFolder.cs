@@ -99,7 +99,8 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public IVolatileToken WhenPathChanges(string path) {
-            return _virtualPathMonitor.WhenPathChanges(GetVirtualPath(path));
+            var virtualPath = GetVirtualPath(path);
+            return _virtualPathMonitor.WhenPathChanges(virtualPath);
         }
 
         public string GetVirtualPath(string path) {
@@ -137,7 +138,7 @@ namespace Orchard.FileSystems.AppData {
 
             var destinationFileName = CombineToPhysicalPath(destinationPath);
             MakeDestinationFileNameAvailable(destinationFileName);
-            File.Copy(sourceFileName, destinationFileName);
+            File.Copy(sourceFileName, destinationFileName, true);
         }
 
         public void DeleteFile(string path) {

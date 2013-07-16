@@ -2,9 +2,12 @@
            
 @using Orchard.Alias
 @using Orchard.Alias.ViewModels
+@using Orchard.Environment.Configuration
 @using Orchard.Utility.Extensions
 
 @{
+    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    
     Layout.Title = T("Manage Aliases").Text;
     var aliasService = WorkContext.Resolve<IAliasService>();
     AdminIndexOptions options = Model.Options;
@@ -70,10 +73,10 @@
                     <input type="checkbox" value="true" name="@Html.FieldNameFor(m => Model.AliasEntries[index].IsChecked)"/>
                 </td>
                 <td>
-                    @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + alias.Path))
+                    @Html.Link(alias.Path == String.Empty ? "/" : alias.Path, Href("~/" + urlPrefix + alias.Path))
                 </td>
                 <td>
-                    @Html.Link(url, Href("~/" + url))
+                    @Html.Link(url, Href("~/" + urlPrefix + "/" + url))
                 </td>
                 <td>
                     @Html.ActionLink(T("Edit").Text, "Edit", new { path = alias.Path == String.Empty ? "/" : alias.Path })

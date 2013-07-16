@@ -5,6 +5,7 @@ using Orchard.Blogs.Models;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentPicker.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Security;
@@ -13,7 +14,6 @@ using Orchard.Core.Navigation.Services;
 using Orchard.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.UI.Navigation;
-using Orchard.Utility;
 
 namespace Orchard.Blogs.Commands {
     public class BlogCommands : DefaultOrchardCommandHandler {
@@ -23,6 +23,7 @@ namespace Orchard.Blogs.Commands {
         private readonly IMenuService _menuService;
         private readonly ISiteService _siteService;
         private readonly INavigationManager _navigationManager;
+        private readonly IArchiveService _archiveService;
 
         public BlogCommands(
             IContentManager contentManager,
@@ -30,13 +31,15 @@ namespace Orchard.Blogs.Commands {
             IBlogService blogService,
             IMenuService menuService,
             ISiteService siteService,
-            INavigationManager navigationManager) {
+            INavigationManager navigationManager,
+            IArchiveService archiveService) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _blogService = blogService;
             _menuService = menuService;
             _siteService = siteService;
             _navigationManager = navigationManager;
+            _archiveService = archiveService;
         }
 
         [OrchardSwitch]
@@ -158,5 +161,19 @@ namespace Orchard.Blogs.Commands {
             Context.Output.WriteLine(T("Import feed completed."));
         }
 
+        [CommandName("blog build archive")]
+        [CommandHelp("blog build archive /BlogId:<id> \r\n\t" + "Rebuild the archive information for the blog specified by <id>")]
+        [OrchardSwitches("BlogId")]
+        public void BuildArchive() {
+
+            var blog = _blogService.Get(BlogId, VersionOptions.Latest);
+
+            if (blog == null) {
+                Context.Output.WriteLine(T("Blog not found with specified Id: {0}", BlogId));
+                return;
+            }
+
+            _archiveService.RebuildArchive(blog.As<BlogPart>());
+        }
     }
 }

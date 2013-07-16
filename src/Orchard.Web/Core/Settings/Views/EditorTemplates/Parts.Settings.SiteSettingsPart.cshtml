@@ -2,10 +2,10 @@
 @using Orchard.Settings;
 @{
     var resourceDebugMode = new SelectList(new object[] {
-        new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },
-        new { Id = (int)ResourceDebugMode.Enabled, Text = "Enabled" },
-        new { Id = (int)ResourceDebugMode.Disabled, Text = "Disabled" },
-    }, "Id", "Text", (int)Model.ResourceDebugMode);
+        new { Id = ResourceDebugMode.FromAppSetting, Text = T("Use web.config setting").Text },
+        new { Id = ResourceDebugMode.Enabled, Text = T("Enabled").Text },
+        new { Id = ResourceDebugMode.Disabled, Text = T("Disabled").Text },
+    }, "Id", "Text", Model.ResourceDebugMode);
 }
 <fieldset>
     <legend>@T("General")</legend>

@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    DocumentPart documentPart = Model.ContentPart;
+    var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+}
+
+<a href="@mediaPart.MediaUrl">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAYCAYAAAD6S912AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAN5JREFUSEvdlcENwyAMAIn64NkROkSePMoKzJERMgEzZMwoH1DkYhSiJDJgIvXRPk4Cy1xsS1bENE3Q9z2LYRjAOScAIIswxpCPc2itYVkWUoZE4ZYU7mSS9N6fPlyScoQiCZVSse2StEmIefM8wziOWWmzEPPWdRU5KVfYXfOC9E1Jb1WY4lSlTUJ8WMJaCywhwlkA9HCFz0B3ie0cR8KusMT/CiURi/x2y9m2SpSEry3pcThXCcJ917/eMvmgRq1CXLHjLNMdR5DGkM4xLwjlSUgt+h2isOU3WsNaCx9FtNaZP8PEygAAAABJRU5ErkJggg=="/>
+    <span>@T("Download")</span>
+</a>

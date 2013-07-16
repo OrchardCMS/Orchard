@@ -20,7 +20,7 @@ namespace Orchard.Mvc {
         IDisposable Capture(Action<IHtmlString> callback);
 
         void RegisterLink(LinkEntry link);
-        void SetMeta(string name, string content);
+        void SetMeta(string name, string content, string httpEquiv, string charset);
         void SetMeta(MetaEntry meta);
         void AppendMeta(string name, string content, string contentSeparator);
         void AppendMeta(MetaEntry meta, string contentSeparator);

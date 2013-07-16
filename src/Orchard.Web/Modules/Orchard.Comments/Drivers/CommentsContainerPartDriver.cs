@@ -20,7 +20,6 @@ namespace Orchard.Comments.Drivers {
             Func<int> approvedCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count();
             
             return Combined(
-
                 ContentShape("Parts_Comments_Count",
                     () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount(), PendingCount: pendingCount())),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",

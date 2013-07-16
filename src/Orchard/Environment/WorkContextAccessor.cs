@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Web;
 using Autofac;
+using Orchard.Logging;
 using Orchard.Mvc;
 
 namespace Orchard.Environment {
@@ -40,7 +42,11 @@ namespace Orchard.Environment {
             var workLifetime = _lifetimeScope.BeginLifetimeScope("work");
             workLifetime.Resolve<WorkContextProperty<HttpContextBase>>().Value = httpContext;
 
+            var events = workLifetime.Resolve<IEnumerable<IWorkContextEvents>>();
+            events.Invoke(e => e.Started(), NullLogger.Instance);
+
             return new HttpContextScopeImplementation(
+                events,
                 workLifetime,
                 httpContext,
                 _workContextKey);
@@ -52,8 +58,14 @@ namespace Orchard.Environment {
             if (httpContext != null)
                 return CreateWorkContextScope(httpContext);
 
+            var workLifetime = _lifetimeScope.BeginLifetimeScope("work");
+
+            var events = workLifetime.Resolve<IEnumerable<IWorkContextEvents>>();
+            events.Invoke(e => e.Started(), NullLogger.Instance);
+
             return new ThreadStaticScopeImplementation(
-                _lifetimeScope.BeginLifetimeScope("work"),
+                events,
+                workLifetime,
                 EnsureThreadStaticContexts(),
                 _workContextKey);
         }
@@ -67,10 +79,13 @@ namespace Orchard.Environment {
             readonly WorkContext _workContext;
             readonly Action _disposer;
 
-            public HttpContextScopeImplementation(ILifetimeScope lifetimeScope, HttpContextBase httpContext, object workContextKey) {
+            public HttpContextScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, HttpContextBase httpContext, object workContextKey) {
                 _workContext = lifetimeScope.Resolve<WorkContext>();
                 httpContext.Items[workContextKey] = _workContext;
+
                 _disposer = () => {
+                    events.Invoke(e => e.Finished(), NullLogger.Instance);
+
                     httpContext.Items.Remove(workContextKey);
                     lifetimeScope.Dispose();
                 };
@@ -97,10 +112,13 @@ namespace Orchard.Environment {
             readonly WorkContext _workContext;
             readonly Action _disposer;
 
-            public ThreadStaticScopeImplementation(ILifetimeScope lifetimeScope, ConcurrentDictionary<object, WorkContext> contexts, object workContextKey) {
+            public ThreadStaticScopeImplementation(IEnumerable<IWorkContextEvents> events, ILifetimeScope lifetimeScope, ConcurrentDictionary<object, WorkContext> contexts, object workContextKey) {
                 _workContext = lifetimeScope.Resolve<WorkContext>();
                 contexts.AddOrUpdate(workContextKey, _workContext, (a, b) => _workContext);
+
                 _disposer = () => {
+                    events.Invoke(e => e.Finished(), NullLogger.Instance);
+  
                     WorkContext removedContext;
                     contexts.TryRemove(workContextKey, out removedContext);
                     lifetimeScope.Dispose();

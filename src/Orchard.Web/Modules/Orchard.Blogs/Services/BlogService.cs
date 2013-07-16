@@ -23,7 +23,8 @@ namespace Orchard.Blogs.Services {
         }
 
         public ContentItem Get(int id, VersionOptions versionOptions) {
-            return _contentManager.Get(id, versionOptions);
+            var blogPart = _contentManager.Get<BlogPart>(id, versionOptions);
+            return blogPart == null ? null : blogPart.ContentItem;
         }
 
         public IEnumerable<BlogPart> Get() {

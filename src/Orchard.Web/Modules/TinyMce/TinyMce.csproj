@@ -60,6 +60,12 @@
     <Content Include="Scripts\orchard-tinymce.js" />
     <Content Include="Scripts\plugins\autoresize\editor_plugin.js" />
     <Content Include="Scripts\plugins\autoresize\editor_plugin_src.js" />
+    <Content Include="Scripts\plugins\medialibrary\editor_plugin.js" />
+    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.js" />
+    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.min.js">
+      <DependentUpon>editor_plugin_src.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
     <Content Include="Scripts\plugins\fullscreen\editor_plugin.js" />
     <Content Include="Scripts\plugins\fullscreen\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\fullscreen\fullscreen.htm" />
@@ -174,7 +180,11 @@
   <ItemGroup>
     <Content Include="web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.min.js.map">
+      <DependentUpon>editor_plugin_src.js</DependentUpon>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

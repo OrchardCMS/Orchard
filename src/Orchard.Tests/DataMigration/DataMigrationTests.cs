@@ -32,6 +32,7 @@ namespace Orchard.Tests.DataMigration {
 
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private ITransactionManager _transactionManager;
 
         [TestFixtureSetUp]
         public void CreateDb() {
@@ -71,7 +72,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             _session = _sessionFactory.OpenSession();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>().As<ITransactionManager>();
             foreach(var type in dataMigrations) {
                 builder.RegisterType(type).As<IDataMigration>();
             }
@@ -79,7 +80,7 @@ namespace Orchard.Tests.DataMigration {
             _container.Resolve<IExtensionManager>();
             _dataMigrationManager = _container.Resolve<IDataMigrationManager>();
             _repository = _container.Resolve<IRepository<DataMigrationRecord>>();
-
+            _transactionManager = _container.Resolve<ITransactionManager>();
             InitDb();
         }
 
@@ -210,6 +211,29 @@ namespace Orchard.Tests.DataMigration {
 
             public int UpdateFrom42() {
                 return 999;
+            }
+        }
+
+
+        public class DataMigrationTransactional : DataMigrationImpl {
+            public override Feature Feature {
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
+            }
+
+            public int Create() {
+                SchemaBuilder.CreateTable("FOO", table =>
+                    table.Column("Id", DbType.Int32, column =>
+                        column.PrimaryKey().Identity()));
+
+                return 1;
+            }
+
+            public int UpdateFrom1() {
+                throw new Exception();
+            }
+
+            public int UpdateFrom2() {
+                return 3;
             }
         }
         
@@ -433,5 +457,22 @@ Features:
             _dataMigrationManager.Update("Feature1");
         }
 
+        [Test]
+        public void DataMigrationShouldBeTransactional() {
+            Init(new[] { typeof(DataMigrationTransactional) });
+
+            _folders.Manifests.Add("Module1", @"
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
+    Feature1: 
+        Description: Feature
+");
+
+            _dataMigrationManager.Update("Feature1");
+            Assert.That(_repository.Table.Count(), Is.EqualTo(0));
+            _dataMigrationManager.Update("Feature1");
+        }
     }
 }

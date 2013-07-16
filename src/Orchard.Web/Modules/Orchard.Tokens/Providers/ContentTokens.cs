@@ -22,6 +22,7 @@ namespace Orchard.Tokens.Providers {
         }
 
         public Localizer T { get; set; }
+        private UrlHelper UrlHelper { get { return new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext); } }
 
         public void Describe(DescribeContext context) {
             context.For("Content", T("Content Items"), T("Content Items"))
@@ -30,17 +31,17 @@ namespace Orchard.Tokens.Providers {
                 .Token("Date", T("Content Date"), T("Date the content was created."), "DateTime")
                 .Token("Identity", T("Identity"), T("Identity of the content."))
                 .Token("ContentType", T("Content Type"), T("The name of the item Content Type."), "TypeDefinition")
-                .Token("DisplayText", T("Display Text"), T("Title of the content."),"Text")
+                .Token("DisplayText", T("Display Text"), T("Title of the content."), "Text")
                 .Token("DisplayUrl", T("Display Url"), T("Url to display the content."), "Url")
                 .Token("EditUrl", T("Edit Url"), T("Url to edit the content."), "Url")
                 .Token("Container", T("Container"), T("The container Content Item."), "Content")
                 ;
 
             // Token descriptors for fields
-            foreach(var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
+            foreach (var typeDefinition in _contentManager.GetContentTypeDefinitions()) {
                 foreach (var typePart in typeDefinition.Parts) {
-                    
-                    if(!typePart.PartDefinition.Fields.Any()) {
+
+                    if (!typePart.PartDefinition.Fields.Any()) {
                         continue;
                     }
 
@@ -59,7 +60,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("Length", T("Length"), T("The length of the field."));
 
             context.For("Url", T("Url"), T("Tokens for Urls"))
-                .Token("Absolute", T("Absolute"), T("Absolute url."));
+                .Token("Absolute", T("Absolute"), T("Absolute url."), "Text");
 
             context.For("TypeDefinition", T("Type Definition"), T("Tokens for Content Types"))
                 .Token("Name", T("Name"), T("Name of the content type."))
@@ -70,28 +71,22 @@ namespace Orchard.Tokens.Providers {
 
         public void Evaluate(EvaluateContext context) {
             context.For<IContent>("Content")
-                .Token("Id", content => content.Id)
+                .Token("Id", content => content != null ? content.Id : 0)
                 .Token("Author", AuthorName)
-                .Chain("Author", "User", content => content.As<ICommonPart>().Owner)
-                .Token("Date", content => content.As<ICommonPart>().CreatedUtc)
-                .Chain("Date", "Date", content => content.As<ICommonPart>().CreatedUtc)
-                .Token("Identity", content => _contentManager.GetItemMetadata(content).Identity.ToString())
-                .Token("ContentType", content => content.ContentItem.TypeDefinition.DisplayName)
-                .Chain("ContentType", "TypeDefinition", content => content.ContentItem.TypeDefinition)
-                .Token("DisplayText", content => _contentManager.GetItemMetadata(content).DisplayText)
-                .Chain("DisplayText", "Text", content => _contentManager.GetItemMetadata(content).DisplayText)
-                .Token("DisplayUrl", content => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues))
-                .Chain("DisplayUrl", "Url", content => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues))
-                .Token("EditUrl", content => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues))
-                .Chain("EditUrl", "Url", content => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues))
-                .Token("Container", content => {
-                    var container = Container(content);
-                    if(container == null) {
-                        return string.Empty;
-                    }
-                    return _contentManager.GetItemMetadata(container).DisplayText;
-                })
-                .Chain("Container", "Content", content => Container(content))
+                .Chain("Author", "User", content => content != null ? content.As<ICommonPart>().Owner : null)
+                .Token("Date", Date)
+                .Chain("Date", "Date", Date)
+                .Token("Identity", content => content != null ? _contentManager.GetItemMetadata(content).Identity.ToString() : String.Empty)
+                .Token("ContentType", content => content != null ? content.ContentItem.TypeDefinition.DisplayName : String.Empty)
+                .Chain("ContentType", "TypeDefinition", content => content != null ? content.ContentItem.TypeDefinition : null)
+                .Token("DisplayText", DisplayText)
+                .Chain("DisplayText", "Text", DisplayText)
+                .Token("DisplayUrl", DisplayUrl)
+                .Chain("DisplayUrl", "Url", DisplayUrl)
+                .Token("EditUrl", EditUrl)
+                .Chain("EditUrl", "Url", EditUrl)
+                .Token("Container", content => DisplayText(Container(content)))
+                .Chain("Container", "Content", Container)
                 ;
 
             if (context.Target == "Content") {
@@ -116,7 +111,9 @@ namespace Orchard.Tokens.Providers {
             }
 
             context.For<string>("Url")
-                .Token("Absolute", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url));
+                   .Token("Absolute", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url))
+                   .Chain("Absolute", "Text", url => new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url))
+                ;
 
             context.For<TextField>("TextField")
                 .Token("Length", field => (field.Value ?? "").Length)
@@ -133,6 +130,10 @@ namespace Orchard.Tokens.Providers {
         }
 
         private IHtmlString AuthorName(IContent content) {
+            if (content == null) {
+                return new HtmlString(String.Empty); // Null content isn't "Anonymous"
+            }
+
             var commonPart = content.As<ICommonPart>();
             var author = commonPart != null ? commonPart.Owner : null;
             // todo: encoding should be done at a higher level automatically and should be configurable via an options param
@@ -149,11 +150,39 @@ namespace Orchard.Tokens.Providers {
 
         private IContent Container(IContent content) {
             var commonPart = content.As<ICommonPart>();
-            if(commonPart == null) {
+            if (commonPart == null) {
                 return null;
             }
 
             return commonPart.Container;
+        }
+
+        private string DisplayText(IContent content) {
+            if (content == null) {
+                return String.Empty;
+            }
+
+            return _contentManager.GetItemMetadata(content).DisplayText;
+        }
+
+        private object Date(IContent content) {
+            return content != null ? content.As<ICommonPart>().CreatedUtc : null;
+        }
+
+        private string DisplayUrl(IContent content) {
+            if (content == null) {
+                return String.Empty;
+            }
+
+            return UrlHelper.RouteUrl(_contentManager.GetItemMetadata(content).DisplayRouteValues);
+        }
+
+        private string EditUrl(IContent content) {
+            if (content == null) {
+                return String.Empty;
+            }
+
+            return UrlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
         }
     }
 }

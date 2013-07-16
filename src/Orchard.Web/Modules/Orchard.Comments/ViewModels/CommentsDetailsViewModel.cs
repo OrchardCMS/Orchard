@@ -18,14 +18,12 @@ namespace Orchard.Comments.ViewModels {
         None,
         Unapprove,
         Approve,
-        MarkAsSpam,
-        Delete,
+        Delete
     }
 
     public enum CommentDetailsFilter {
         All,
         Pending,
-        Approved,
-        Spam,
+        Approved
     }
 }

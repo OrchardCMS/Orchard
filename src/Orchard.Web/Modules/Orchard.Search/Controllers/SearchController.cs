@@ -46,14 +46,20 @@ namespace Orchard.Search.Controllers {
 
         public ActionResult Index(PagerParameters pagerParameters, string q = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
+            var searchSettingPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+
+            if (String.IsNullOrEmpty(searchSettingPart.SearchIndex)) {
+                Services.Notifier.Error(T("Please define a default search index"));
+                return HttpNotFound();
+            }
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
                 searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
                                                   Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                  searchFields,
+                                                  searchSettingPart.SearchIndex,
+                                                  searchSettingPart.SearchedFields,
                                                   searchHit => searchHit);
             } catch(Exception exception) {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);

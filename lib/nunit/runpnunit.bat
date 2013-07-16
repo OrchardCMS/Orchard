@@ -1,3 +1,2 @@
-start pnunit-agent 8080 .
-start pnunit-agent 8081 .
+start pnunit-agent agent.conf
 pnunit-launcher test.conf

@@ -13,11 +13,12 @@
     }
 })();
 
-(function ($) {
-       $("select.recipe").change(function () { // class="recipe" on the select element 
-              var description = $(this).find(":selected").attr("recipedescription"); // reads the html attribute of the selected option
-              $("#recipedescription").text(description); // make the contents of <div id="recipe-description"></div> be the escaped description string
-       });
+(function($) {
+    $(document).ready(function() {
+        $("select.recipe").change(function() { // class="recipe" on the select element 
+            var description = $(this).find(":selected").attr("recipedescription"); // reads the html attribute of the selected option
+            $("#recipedescription").text(description); // make the contents of <div id="recipe-description"></div> be the escaped description string
+        });
+        $(".data").find('input[name=DatabaseProvider]:checked').click();
+    });
 })(jQuery);
-
-

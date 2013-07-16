@@ -208,7 +208,7 @@ namespace Orchard.Commands {
             }
             else {
                 // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
-                var settings = new ShellSettings { Name = ShellSettings.DefaultName, State = new TenantState("Uninitialized") };
+                var settings = new ShellSettings { Name = ShellSettings.DefaultName, State = TenantState.Uninitialized };
                 return host.CreateStandaloneEnvironment(settings);
             }
         }

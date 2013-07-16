@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
@@ -17,6 +18,7 @@ using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
+using Orchard.UI.PageClass;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -33,7 +35,10 @@ namespace Orchard.Core.Tests.Scheduling {
         public override void Register(ContainerBuilder builder) {
             _handler = new StubTaskHandler();
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
+            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
@@ -45,6 +50,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 

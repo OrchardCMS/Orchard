@@ -88,6 +88,16 @@ namespace Orchard.Tests.Utility.Extensions {
             Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));
         }
         [Test]
+        public void HtmlClassify_NumbersAreMaintainedIfNotAtStart() {
+            const string toClassify = "some4class5";
+            Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));
+        }
+        [Test]
+        public void HtmlClassify_NumbersAreStrippedAtStart() {
+            const string toClassify = "5someClass";
+            Assert.That(toClassify.HtmlClassify(), Is.StringMatching("some-class"));
+        }
+        [Test]
         public void HtmlClassify_ValidSimpleClassNameReturnsSame() {
             const string toClassify = "some-class";
             Assert.That(toClassify.HtmlClassify(), Is.StringMatching(toClassify));

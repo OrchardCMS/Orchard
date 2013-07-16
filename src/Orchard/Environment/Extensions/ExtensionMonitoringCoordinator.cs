@@ -43,7 +43,9 @@ namespace Orchard.Environment.Extensions {
         public void MonitorExtensionsWork(Action<IVolatileToken> monitor) {
             Logger.Information("Start monitoring extension files...");
             // Monitor add/remove of any module/theme
+            Logger.Debug("Monitoring virtual path \"{0}\"", "~/Modules");
             monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
+            Logger.Debug("Monitoring virtual path \"{0}\"", "~/Themes");
             monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
 
             // Give loaders a chance to monitor any additional changes

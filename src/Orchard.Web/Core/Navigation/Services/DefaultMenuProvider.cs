@@ -30,21 +30,11 @@ namespace Orchard.Core.Navigation.Services {
                     if (localized != null) {
                         culture = localized.Culture;
                     }
-                    else {
-                        // fetch the culture of the content menu item, if any
-                        var contentMenuItemPart = part.As<ContentMenuItemPart>();
-                        if (contentMenuItemPart != null) {
-                            localized = contentMenuItemPart.Content.As<ILocalizableAspect>();
-                            if (localized != null) {
-                                culture = localized.Culture;
-                            }
-                        }
-                    }
 
                     if (part.Is<MenuItemPart>())
-                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Url(part.As<MenuItemPart>().Url).Content(part).Culture(culture));
+                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Url(part.As<MenuItemPart>().Url).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
                     else
-                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues).Content(part).Culture(culture));
+                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues).Content(part).Culture(culture).Permission(Contents.Permissions.ViewContent));
                 }
             }
         }

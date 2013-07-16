@@ -1,12 +1,6 @@
-﻿@*
-    Model:
-      ContentPart
-*@
-
-@using Orchard.Comments.Models;
-@using Orchard.Utility.Extensions;
+﻿@using Orchard.Comments.Models
 @{
-    var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
+    CommentPart comment = Model.ContentPart;
 }
 
-@T("said") <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link((string)Display.DateTimeRelative(dateTimeUtc: comment.Record.CommentDateUtc.GetValueOrDefault()).ToString(), "#comment-" + comment.Id)</time>
+@T("said") <time datetime="@comment.CommentDateUtc.GetValueOrDefault().ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz")">@Html.Link((string)Display.DateTimeRelative(dateTimeUtc: comment.CommentDateUtc.GetValueOrDefault()).ToString(), @Url.RouteUrl(comment.CommentedOnContentItemMetadata.DisplayRouteValues) + "#comment-" + comment.Id)</time>

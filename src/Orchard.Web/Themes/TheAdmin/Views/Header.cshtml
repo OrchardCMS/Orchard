@@ -1,5 +1,13 @@
-﻿@model dynamic
+﻿@using Orchard.Environment.Configuration
+@model dynamic
+           
+@{
+    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+    var siteName = WorkContext.CurrentSite.SiteName;
+    var siteLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Your site").Text;
+    var appLinkText = !string.IsNullOrWhiteSpace(siteName) ? siteName : T("Project Orchard").Text;
+}
 <div id="branding">
-<div id="app">@Html.Link(T("Project Orchard").ToString(), Url.Content("~/"))</div>
-<div id="site">@Html.Link(T("Your Site").ToString(), Url.Content("~/"))</div>
+<div id="app">@Html.Link(appLinkText, Url.Content("~/" + urlPrefix))</div>
+<div id="site">@Html.Link(siteLinkText, Url.Content("~/" + urlPrefix))</div>
 </div>

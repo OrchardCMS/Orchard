@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using System.Web.Security;
+using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Mvc;
@@ -8,13 +9,15 @@ using Orchard.Services;
 
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {
+        private readonly ShellSettings _settings;
         private readonly IClock _clock;
         private readonly IContentManager _contentManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IUser _signedInUser;
-        private bool _isAuthenticated = false;
+        private bool _isAuthenticated;
 
-        public FormsAuthenticationService(IClock clock, IContentManager contentManager, IHttpContextAccessor httpContextAccessor) {
+        public FormsAuthenticationService(ShellSettings settings, IClock clock, IContentManager contentManager, IHttpContextAccessor httpContextAccessor) {
+            _settings = settings;
             _clock = clock;
             _contentManager = contentManager;
             _httpContextAccessor = httpContextAccessor;
@@ -43,10 +46,24 @@ namespace Orchard.Security.Providers {
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            cookie.HttpOnly = true;
-            cookie.Secure = FormsAuthentication.RequireSSL;
-            cookie.Path = FormsAuthentication.FormsCookiePath;
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
+                HttpOnly = true, 
+                Secure = FormsAuthentication.RequireSSL, 
+                Path = FormsAuthentication.FormsCookiePath
+            };
+
+            var httpContext = _httpContextAccessor.Current();
+
+            if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
+                var cookiePath = httpContext.Request.ApplicationPath;
+                if (cookiePath != null && cookiePath.Length > 1) {
+                    cookiePath += '/';
+                }
+
+                cookiePath += _settings.RequestUrlPrefix;
+                cookie.Path = cookiePath;
+            }
+
             if (FormsAuthentication.CookieDomain != null) {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
@@ -54,8 +71,7 @@ namespace Orchard.Security.Providers {
             if (createPersistentCookie) {
                 cookie.Expires = ticket.Expiration;
             }
-
-            var httpContext = _httpContextAccessor.Current();
+            
             httpContext.Response.Cookies.Add(cookie);
 
             _isAuthenticated = true;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.FieldStorage;
@@ -35,8 +34,6 @@ namespace Orchard.Projections.Handlers {
 
         protected override void Activating(ActivatingContentContext context) {
             base.Activating(context);
-
-            context.Builder.Weld<FieldIndexPart>();
 
             // weld the FieldIndexPart dynamically, if a field has been assigned to one of its parts
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);

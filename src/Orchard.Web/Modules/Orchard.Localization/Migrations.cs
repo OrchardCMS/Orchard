@@ -17,5 +17,12 @@ namespace Orchard.Localization {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition("LocalizationPart", builder => builder
+                .WithDescription("Provides the user interface to localize content items."));
+
+            return 2;
+        }
     }
 }

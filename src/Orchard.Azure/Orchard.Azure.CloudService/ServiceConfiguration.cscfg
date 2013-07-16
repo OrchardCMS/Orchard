@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="OrchardCloudService" osFamily="1" osVersion="*" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" schemaVersion="2012-05.1.7">
+<ServiceConfiguration serviceName="OrchardCloudService" osFamily="3" osVersion="*" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" schemaVersion="2013-03.2.0">
   <Role name="Orchard.Azure.Web">
     <Instances count="1" />
     <ConfigurationSettings>

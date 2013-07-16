@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.Wrappers;
@@ -20,7 +21,7 @@ namespace Orchard.Alias.Implementation {
 
             var lookupContext = new LookupHttpContext(httpContext, routePathNoQueryString);
             var matches = routeDescriptors
-                .Select(routeDescriptor => routeDescriptor.Route.GetRouteData(lookupContext))
+                .Invoke(routeDescriptor => routeDescriptor.Route.GetRouteData(lookupContext), NullLogger.Instance)
                 .Where(routeData => routeData != null)
                 .Select(data => ToRouteValues(data, queryString));
 
@@ -38,7 +39,7 @@ namespace Orchard.Alias.Implementation {
                 areaName = Convert.ToString(value, CultureInfo.InvariantCulture);
 
             var virtualPathDatas = routeDescriptors.Where(r2 => r2.Route.GetAreaName() == areaName)
-                .Select(r2 => r2.Route.GetVirtualPath(httpContext.Request.RequestContext, routeValues))
+                .Invoke(r2 => r2.Route.GetVirtualPath(httpContext.Request.RequestContext, routeValues), NullLogger.Instance)
                 .Where(vp => vp != null)
                 .ToArray();
 
@@ -53,7 +54,7 @@ namespace Orchard.Alias.Implementation {
 
             var routeValueDictionary = new RouteValueDictionary(routeValues.ToDictionary(kv => RemoveDash(kv.Key), kv => (object)kv.Value));
             var virtualPathDatas = routeDescriptors.Where(r2 => r2.Route.GetAreaName() == areaName)
-                .Select(r2 => r2.Route.GetVirtualPath(httpContext.Request.RequestContext, routeValueDictionary))
+                .Invoke(r2 => r2.Route.GetVirtualPath(httpContext.Request.RequestContext, routeValueDictionary), NullLogger.Instance)
                 .Where(vp => vp != null)
                 .ToArray();
 
@@ -128,6 +129,25 @@ namespace Orchard.Alias.Implementation {
                     _path = path;
                 }
 
+                public override string RawUrl {
+                    get { return Path; }
+                }
+
+                public override Uri Url {
+                    get { return new Uri(Path, UriKind.Relative); }
+                }
+
+                public override Uri UrlReferrer {
+                    get { return null; }
+                }
+
+                public override string CurrentExecutionFilePath {
+                    get { return Path; }
+                }
+
+                public override string FilePath {
+                    get { return Path; }
+                }
 
                 public override string AppRelativeCurrentExecutionFilePath {
                     get { return "~/" + _path; }

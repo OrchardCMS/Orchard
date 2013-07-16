@@ -22,12 +22,19 @@ namespace Orchard.ContentTypes.ViewModels {
 
         public string Prefix { get { return "PartDefinition"; } }
         public string Name { get; set; }
+        
         private string _displayName;
         [Required]
         public string DisplayName {
             get { return !string.IsNullOrWhiteSpace(_displayName) ? _displayName : Name.TrimEnd("Part").CamelFriendly(); }
             set { _displayName = value; }
         }
+
+        public string Description {
+            get { return Settings.ContainsKey("ContentPartSettings.Description") ? Settings["ContentPartSettings.Description"] : null; }
+            set { Settings["ContentPartSettings.Description"] = value;}
+        }
+
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public SettingsDictionary Settings { get; set; }

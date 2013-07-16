@@ -7,12 +7,6 @@ The Outercurve Foundation (http://www.outercurve.org/).
 
 Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
-Akismet.Net
------
-Website:      http://www.codeplex.com/wikipage?ProjectName=AkismetApi
-Copyright:    Copyright (c) 2006, Joel Thoms
-License:      New BSD
-
 Antlr
 -----
 Website:      http://www.antlr.org/
@@ -93,6 +87,18 @@ Website:      http://fluentpath.codeplex.com/
 Copyright:    Copyright (c) 2011 Bertrand Le Roy
 License:      MS-PL
 
+Font Awesome
+-----
+Author: 			Dave Gandy
+Website: 			http://fontawesome.io
+License: 			MIT License
+
+History.js
+-----
+Website:      https://github.com/browserstate/history.js
+Copyright:    Copyright (c) 2011, Benjamin Arthur Lupton
+Licence:      BSD
+
 Html Agility Pack
 -----
 Website:      http://htmlagilitypack.codeplex.com/
@@ -111,10 +117,23 @@ Copyright:    Copyright (c) 2002-2004 Jason Smith
 License:      http://www.codeproject.com/info/Licenses.aspx
               distributed with NHibernate under LGPL 2.1
 
+Image Resizer
+-----
+Author:       Brice Lambson
+Website:      https://imageresizer.codeplex.com
+Copyright:    Copyright (c) 2012 Imazen
+License:      Freedom license
+  
 jQuery
 -----
 Website:      http://jquery.com
 Copyright:    Copyright (c) 2010 John Resig, http://jquery.com
+License:      MIT
+
+jQuery Colorbox 
+-----
+Website:      http://www.jacklmoore.com/colorbox/
+Copyright:    (c) 2013 Jack Moore - jacklmoore.com/colorbox
 License:      MIT
 
 jQuery UI (Core, Widget, Datepicker)
@@ -135,6 +154,18 @@ Website:      http://flesler.blogspot.com
 Copyright:    Copyright (c) 2007-2009 Ariel Flesler
 License:      MIT
 
+jsPlumb
+-----
+Website:      http://jsplumb.org
+Copyright:    Copyright (c) 2010 - 2013 Simon Porritt (http://jsplumb.org)
+License:      MIT
+
+Knockout
+-----
+Website:      http://knockoutjs.com/
+Copyright:    Copyright (c) Steven Sanderson
+License:      MIT
+
 Log4Net
 -----
 Website:      http://logging.apache.org/log4net/index.html
@@ -146,6 +177,18 @@ Lucene.net
 Website:      http://incubator.apache.org/projects/lucene.net.html
 Copyright:    Copyright (c) 2009 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
+
+Mono Class Library
+-----
+Website:      http://www.mono-project.com/The_Class_Library
+Copyright:    Xamarin
+License:      MIT
+
+Moq
+-----
+Website:      http://code.google.com/p/moq/
+Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+License:      New BSD
  
 MySQL Connectors
 -----
@@ -153,12 +196,6 @@ Copyright:    Copyright (c) 2004, 2011, Oracle and/or its affiliates
 License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracle’s Free and Open Source Software ("FOSS") License Exception
 
 In order to comply with Section 2(a) of the FOSS License Exception, Outercurve Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
-
-Moq
------
-Website:      http://code.google.com/p/moq/
-Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
-License:      New BSD
 
 NHibernate, NHibernate Linq
 -----

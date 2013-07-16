@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Compilers {
     public class DefaultProjectFileParser : IProjectFileParser {
@@ -14,12 +15,21 @@ namespace Orchard.Environment.Extensions.Compilers {
         public DefaultProjectFileParser(IWebSiteFolder webSiteFolder, ICacheManager cacheManager) {
             _webSiteFolder = webSiteFolder;
             _cacheManager = cacheManager;
+
+            Logger = NullLogger.Instance;
         }
+
+        ILogger Logger { get; set; }
+        public bool DisableMonitoring { get; set; }
 
         public ProjectFileDescriptor Parse(string virtualPath) {
             return _cacheManager.Get(virtualPath,
                 ctx => {
-                    ctx.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
+                    if (!DisableMonitoring) {
+                        Logger.Debug("Monitoring virtual path \"{0}\"", virtualPath);
+                        ctx.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
+                    }
+
                     string content = _webSiteFolder.ReadFile(virtualPath);
                     using (var reader = new StringReader(content)) {
                         return Parse(reader);

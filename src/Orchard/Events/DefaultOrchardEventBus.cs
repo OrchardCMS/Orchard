@@ -4,16 +4,17 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Autofac.Features.Indexed;
 using Orchard.Exceptions;
 using Orchard.Localization;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
-        private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
+        private readonly IIndex<string, IEnumerable<IEventHandler>> _eventHandlers;
         private readonly IExceptionPolicy _exceptionPolicy;
-        private static readonly ConcurrentDictionary<string, MethodInfo> _interfaceMethodsCache = new ConcurrentDictionary<string, MethodInfo>();  
+        private static readonly ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>> _delegateCache = new ConcurrentDictionary<string, Tuple<ParameterInfo[], Func<IEventHandler, object[], object>>>();
 
-        public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers, IExceptionPolicy exceptionPolicy) {
+        public DefaultOrchardEventBus(IIndex<string, IEnumerable<IEventHandler>> eventHandlers, IExceptionPolicy exceptionPolicy) {
             _eventHandlers = eventHandlers;
             _exceptionPolicy = exceptionPolicy;
             T = NullLocalizer.Instance;
@@ -34,7 +35,7 @@ namespace Orchard.Events {
             string interfaceName = parameters[0];
             string methodName = parameters[1];
 
-            var eventHandlers = _eventHandlers();
+            var eventHandlers = _eventHandlers[interfaceName];
             foreach (var eventHandler in eventHandlers) {
                 IEnumerable returnValue;
                 if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue)) {
@@ -49,7 +50,7 @@ namespace Orchard.Events {
 
         private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
             try {
-                return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
+                return TryInvoke(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue);
             }
             catch (Exception exception) {
                 if (!_exceptionPolicy.HandleException(this, exception)) {
@@ -61,31 +62,30 @@ namespace Orchard.Events {
             }
         }
 
-        private static bool TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            Type type = eventHandler.GetType();
-            foreach (var interfaceType in type.GetInterfaces()) {
-                if (String.Equals(interfaceType.Name, interfaceName, StringComparison.OrdinalIgnoreCase)) {
-                    return TryInvokeMethod(eventHandler, interfaceType, methodName, arguments, out returnValue);
-                }
-            }
-            returnValue = null;
-            return false;
+        private static bool TryInvoke(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
+            var matchingInterface = eventHandler.GetType().GetInterface(interfaceName);
+            return TryInvokeMethod(eventHandler, matchingInterface, messageName, interfaceName, methodName, arguments, out returnValue);
         }
 
-        private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            MethodInfo method = _interfaceMethodsCache.GetOrAdd(String.Concat(eventHandler.GetType().FullName + "_" + interfaceType.Name, "_", methodName, "_", String.Join("_", arguments.Keys)), GetMatchingMethod(eventHandler, interfaceType, methodName, arguments));
+        private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string messageName, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
+            var key = eventHandler.GetType().FullName + "_" + messageName + "_" + String.Join("_", arguments.Keys);
+            var cachedDelegate = _delegateCache.GetOrAdd(key, k => {
+                var method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
+                return method != null
+                    ? Tuple.Create(method.GetParameters(), DelegateHelper.CreateDelegate<IEventHandler>(eventHandler.GetType(), method))
+                    : null;
+            });
 
-            if (method != null) {
-                var parameters = new List<object>();
-                foreach (var methodParameter in method.GetParameters()) {
-                    parameters.Add(arguments[methodParameter.Name]);
-                }
-                var result = method.Invoke(eventHandler, parameters.ToArray());
+            if (cachedDelegate != null) {
+                var args = cachedDelegate.Item1.Select(methodParameter => arguments[methodParameter.Name]).ToArray();
+                var result = cachedDelegate.Item2(eventHandler, args);
+
                 returnValue = result as IEnumerable;
-                if (returnValue == null && result != null)
+                if (result != null && (returnValue == null || result is string))
                     returnValue = new[] { result };
                 return true;
             }
+
             returnValue = null;
             return false;
         }
@@ -107,6 +107,11 @@ namespace Orchard.Events {
                 else {
                     candidates.Remove(method);
                 }
+            }
+
+            // treating common case separately
+            if (candidates.Count == 1) {
+                return candidates[0];
             }
 
             if (candidates.Count != 0) {

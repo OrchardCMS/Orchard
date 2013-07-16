@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
@@ -84,6 +85,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
         }
 
+        private IContentManager _contentManager;
+        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
+            if (_contentManager == null) {
+                _contentManager = _workContext.Resolve<IContentManager>();
+            }
+
+            return _contentManager.BuildDisplay(content, displayType, groupId);
+        }
+
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
@@ -116,8 +126,26 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             ResourceManager.RegisterLink(link);
         }
 
-        public void SetMeta(string name, string content) {
-            SetMeta(new MetaEntry { Name = name, Content = content });
+        public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
+            var metaEntry = new MetaEntry();
+            
+            if (!String.IsNullOrEmpty(name)) {
+                metaEntry.Name = name;
+            }
+
+            if (!String.IsNullOrEmpty(content)) {
+                metaEntry.Content = content;
+            }
+
+            if (!String.IsNullOrEmpty(httpEquiv)) {
+                metaEntry.HttpEquiv = httpEquiv;
+            }
+
+            if (!String.IsNullOrEmpty(charset)) {
+                metaEntry.Charset = charset;
+            }
+
+            SetMeta(metaEntry);
         }
 
         public virtual void SetMeta(MetaEntry meta) {
@@ -163,6 +191,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public IDisposable Capture(Action<IHtmlString> callback) {
             return new CaptureScope(this, callback);
+        }
+
+        public IDisposable Capture(dynamic zone, string position = null) {
+            return new CaptureScope(this, html => zone.Add(html, position));
         }
 
         class CaptureScope : IDisposable {

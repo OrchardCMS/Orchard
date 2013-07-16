@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -38,8 +39,10 @@ namespace Orchard.ContentPicker.Services {
 
             IEnumerable<MenuItem> menuItems = _navigationManager.Value.BuildMenu("content-picker");
 
+            var request = _workContext.Value.HttpContext.Request;
+
             // Set the currently selected path
-            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, _workContext.Value.HttpContext.Request.RequestContext.RouteData);
+            Stack<MenuItem> selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, request.RequestContext.RouteData);
 
             dynamic shapeFactory = _shapeFactory.Value;
 

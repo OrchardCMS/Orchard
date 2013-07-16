@@ -14,6 +14,8 @@ namespace Orchard.Comments.Models {
         public virtual string CommentText { get; set; }
         public virtual int CommentedOn { get; set; }
         public virtual int CommentedOnContainer { get; set; }
+        public virtual int? RepliedOn { get; set; }
+        public virtual decimal Position { get; set; }
 
         public virtual CommentsPartRecord CommentsPartRecord { get; set; }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace Orchard.Environment.Configuration {
     public class ShellSettingsSerializer {
@@ -18,7 +16,7 @@ namespace Orchard.Environment.Configuration {
             var settings = new StringReader(text);
             string setting;
             while ((setting = settings.ReadLine()) != null) {
-                if (string.IsNullOrWhiteSpace(setting)) continue; ;
+                if (string.IsNullOrWhiteSpace(setting)) continue;
                 var separatorIndex = setting.IndexOf(Separator);
                 if (separatorIndex == -1) {
                     continue;
@@ -26,7 +24,7 @@ namespace Orchard.Environment.Configuration {
                 string key = setting.Substring(0, separatorIndex).Trim();
                 string value = setting.Substring(separatorIndex + 1).Trim();
 
-                if (value != EmptyValue) {
+                if (!value.Equals(EmptyValue, StringComparison.OrdinalIgnoreCase)) {
                     switch (key) {
                         case "Name":
                             shellSettings.Name = value;
@@ -35,7 +33,8 @@ namespace Orchard.Environment.Configuration {
                             shellSettings.DataProvider = value;
                             break;
                         case "State":
-                            shellSettings.State = new TenantState(value);
+                            TenantState state;
+                            shellSettings.State = Enum.TryParse(value, true, out state) ? state : TenantState.Uninitialized;
                             break;
                         case "DataConnectionString":
                             shellSettings.DataConnectionString = value;
@@ -64,6 +63,9 @@ namespace Orchard.Environment.Configuration {
                         case "Themes":
                             shellSettings.Themes = value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                             break;
+                        default:
+                            shellSettings[key] = value;
+                            break;
                     }
                 }
             }
@@ -75,20 +77,12 @@ namespace Orchard.Environment.Configuration {
             if (settings == null)
                 return "";
 
-            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nHashAlgorithm: {9}\r\nHashKey: {10}\r\nThemes: {11}\r\n",
-                                 settings.Name,
-                                 settings.DataProvider,
-                                 settings.DataConnectionString ?? EmptyValue,
-                                 settings.DataTablePrefix ?? EmptyValue,
-                                 settings.RequestUrlHost ?? EmptyValue,
-                                 settings.RequestUrlPrefix ?? EmptyValue,
-                                 settings.State != null ? settings.State.ToString() : String.Empty,
-                                 settings.EncryptionAlgorithm ?? EmptyValue,
-                                 settings.EncryptionKey ?? EmptyValue,
-                                 settings.HashAlgorithm ?? EmptyValue,
-                                 settings.HashKey ?? EmptyValue,
-                                 String.Join(";", settings.Themes ?? new string[0])
-                );
+            var sb = new StringBuilder();
+            foreach (var key in settings.Keys) {
+                sb.AppendLine(key + ": " + (settings[key] ?? EmptyValue));
+            }
+
+            return sb.ToString();
         }
     }
 }

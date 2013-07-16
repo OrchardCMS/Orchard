@@ -1,0 +1,23 @@
+﻿@using Orchard.MediaPicker.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaGalleryField) Model.ContentField;
+    string name = field.DisplayName;
+    var items = field.Items;
+}
+<p class="media-gallery-field media-gallery-field-@name.HtmlClassify()">
+    <span class="name">@name:</span>
+    @if (items.Any()) {
+        foreach (var item in items) {
+            <span class="value"><a href="@Url.Content(item.Url)">@item.Url</a></span>
+            if(item != items.Last()) {
+                <span>,</span>
+            }
+        }
+    }
+    else {
+        <span class="value">@T("No media.")</span>
+    }
+</p>
+
