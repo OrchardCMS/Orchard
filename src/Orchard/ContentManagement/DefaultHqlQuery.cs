@@ -294,7 +294,7 @@ namespace Orchard.ContentManagement {
             // no order clause was specified, use a default sort order, unless it's a count
             // query hence it doesn't need one
             if (firstSort && !count) {
-                sb.Append("order by Id");
+                sb.Append("order by civ.Id");
             }
 
             return sb.ToString();
