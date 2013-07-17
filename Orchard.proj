@@ -274,9 +274,9 @@
 
 		<!-- disable all file monitoring but ExtensionMonitoringCorrdinator to detect new modules/themes -->
     <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
-      XPath="/HostComponents/Components/Component/Properties/Property[@Name='DisableMonitoring']/@Value"
+      XPath="/HostComponents/Components/Component[@Type != 'Orchard.Environment.Extensions.Folders.ExtensionHarvester']/Properties/Property[@Name='DisableMonitoring']/@Value"
       Value="true" />
-    
+
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
