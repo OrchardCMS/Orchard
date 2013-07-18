@@ -3,8 +3,7 @@ using Orchard.Localization;
 using Orchard.UI.Notify;
 using Orchard.Validation;
 
-namespace Orchard.Indexing.Services
-{
+namespace Orchard.Indexing.Services {
     public class IndexingService : IIndexingService {
         private readonly IIndexManager _indexManager;
         private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;

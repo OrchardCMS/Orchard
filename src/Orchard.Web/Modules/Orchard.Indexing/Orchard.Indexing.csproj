@@ -78,9 +78,9 @@
     <Compile Include="Services\IndexingBackgroundTask.cs" />
     <Compile Include="Services\IndexingTaskExecutor.cs" />
     <Compile Include="Services\IndexingTaskManager.cs" />
-    <Compile Include="Services\IIndexService.cs" />
+    <Compile Include="Services\IIndexingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IndexService.cs" />
+    <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="Settings\FieldIndexing.cs" />
     <Compile Include="Settings\TypeIndexing.cs" />
