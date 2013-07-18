@@ -44,7 +44,7 @@ namespace Orchard.Projections.Providers.Layouts {
                             _ItemTag: Shape.TextBox(
                                 Id: "item-tag", Name: "ItemTag",
                                 Title: T("Item tag"),
-                                Description: T("The tag of each item. Leave empty for tag."),
+                                Description: T("The tag of each item. Leave empty for no tag."),
                                 Classes: new[] { "textMedium", "tokenized" }
                                 ),
                             _ItemClass: Shape.TextBox(
