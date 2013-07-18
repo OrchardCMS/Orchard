@@ -51,6 +51,12 @@ Website:      http://codemirror.net/2/
 Copyright:    Copyright (C) 2011 by Marijn Haverbeke
 License:      MIT
 
+Console Shim
+-----
+Website:      https://github.com/kayahr/console-shim
+Copyright:    Copyright (C) 2011 Klaus Reimer <k@ailis.de>
+License:      MIT
+
 DLR
 ---
 Website:      http://dlr.codeplex.com
