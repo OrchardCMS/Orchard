@@ -534,6 +534,30 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public virtual ContentItem Clone(ContentItem contentItem) {
+            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
+            var importContentSession = new ImportContentSession(this);
+
+            var element = Export(contentItem);
+
+            // If a handler prevents this element from being exported, it can't be cloned
+            if (element == null) {
+                throw new InvalidOperationException("The content item couldn't be cloned because a handler prevented it from being exported.");
+            }
+
+            var elementId = element.Attribute("Id");
+            var copyId = elementId.Value + "-copy";
+            elementId.SetValue(copyId);
+            var status = element.Attribute("Status");
+            if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
+
+            importContentSession.Set(copyId, element.Name.LocalName);
+
+            Import(element, importContentSession);
+
+            return importContentSession.Get(copyId, element.Name.LocalName);
+        }
+
         /// <summary>
         /// Lookup for a content item based on a <see cref="ContentIdentity"/>. If multiple 
         /// resolvers can give a result, the one with the highest priority is used. As soon as 

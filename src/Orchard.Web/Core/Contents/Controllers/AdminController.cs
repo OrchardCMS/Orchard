@@ -331,7 +331,6 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Clone(int id, string returnUrl) {
-            // Mostly taken from: http://orchard.codeplex.com/discussions/396664
             var contentItem = _contentManager.GetLatest(id);
 
             if (contentItem == null)
@@ -340,25 +339,13 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't clone content")))
                 return new HttpUnauthorizedResult();
 
-            var importContentSession = new ImportContentSession(_contentManager);
-
-            var element = _contentManager.Export(contentItem);
-
-            // if a handler prevents this element from being exported, it can't be cloned
-            if (element == null) {
+            try {
+                Services.ContentManager.Clone(contentItem);
+            }
+            catch (InvalidOperationException) {
                 Services.Notifier.Warning(T("Could not clone the content item."));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
             }
-
-            var elementId = element.Attribute("Id");
-            var copyId = elementId.Value + "-copy";
-            elementId.SetValue(copyId);
-            var status = element.Attribute("Status");
-            if (status != null) status.SetValue("Draft"); // So the copy is always a draft.
-
-            importContentSession.Set(copyId, element.Name.LocalName);
-
-            _contentManager.Import(element, importContentSession);
 
             Services.Notifier.Information(T("Successfully cloned. The clone was saved as a draft."));
 

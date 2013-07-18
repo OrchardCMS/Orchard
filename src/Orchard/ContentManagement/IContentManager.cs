@@ -35,6 +35,14 @@ namespace Orchard.ContentManagement {
 
 
         /// <summary>
+        /// Makes a clone of the content item
+        /// </summary>
+        /// <param name="contentItem">The content item to clone</param>
+        /// <returns>Clone of the item</returns>
+        ContentItem Clone(ContentItem contentItem);
+
+
+        /// <summary>
         /// Gets the content item with the specified id
         /// </summary>
         /// <param name="id">Numeric id of the content item</param>
