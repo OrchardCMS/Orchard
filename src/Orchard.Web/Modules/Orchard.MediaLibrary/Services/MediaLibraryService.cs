@@ -36,7 +36,7 @@ namespace Orchard.MediaLibrary.Services {
 
         public IEnumerable<string> GetMediaTypes() {
             return _orchardServices.ContentManager.GetContentTypeDefinitions()
-                .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Widget")
+                .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Media")
                 .Select(contentTypeDefinition => contentTypeDefinition.Name);
         }
 
