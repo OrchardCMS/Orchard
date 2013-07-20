@@ -63,5 +63,28 @@ namespace Orchard.MediaLibrary {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("Image", td => td
+                .WithPart("IdentityPart")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("Video", td => td
+                .WithPart("IdentityPart")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("Audio", td => td
+                .WithPart("IdentityPart")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("Document", td => td
+                .WithPart("IdentityPart")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("OEmbed", td => td
+                .WithPart("IdentityPart")
+            );
+
+            return 3;
+        }
     }
 }
