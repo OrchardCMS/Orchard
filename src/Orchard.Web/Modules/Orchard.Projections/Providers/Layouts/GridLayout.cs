@@ -42,16 +42,25 @@ namespace Orchard.Projections.Providers.Layouts {
         public dynamic RenderLayout(LayoutContext context, IEnumerable<LayoutComponentResult> layoutComponentResults) {
             int columns = Convert.ToInt32(context.State.Columns);
             bool horizontal = Convert.ToString(context.State.Alignment) != "vertical"; 
-            string rowClass = context.State.RowClass;
-            string gridClass = context.State.GridClass;
-            string gridId = context.State.GridId;
+            
+            string gridTag = Convert.ToString(context.State.GridTag);
+            string gridClass = Convert.ToString(context.State.GridClass);
+            string gridId = Convert.ToString(context.State.GridId);
+
+            string rowTag = Convert.ToString(context.State.RowTag);
+            string rowClass = Convert.ToString(context.State.RowClass);
+
+            string cellTag = Convert.ToString(context.State.CellTag);
+            string cellClass = Convert.ToString(context.State.CellClass);
+
+            string emptyCell = Convert.ToString(context.State.EmptyCell);
 
             IEnumerable<dynamic> shapes =
                context.LayoutRecord.Display == (int)LayoutRecord.Displays.Content
                    ? layoutComponentResults.Select(x => _contentManager.BuildDisplay(x.ContentItem, context.LayoutRecord.DisplayType))
                    : layoutComponentResults.Select(x => x.Properties);
 
-            return Shape.Grid(Id: gridId, Horizontal: horizontal, Columns: columns, Items: shapes, Classes: new [] { gridClass }, RowClasses: new [] { rowClass });
+            return Shape.Grid(Id: gridId, Horizontal: horizontal, Columns: columns, Items: shapes, Tag: gridTag, Classes: new[] { gridClass }, RowTag: rowTag, RowClasses: new[] { rowClass }, CellTag: cellTag, CellClasses: new[] { cellClass }, EmptyCell: emptyCell);
         }
     }
 }

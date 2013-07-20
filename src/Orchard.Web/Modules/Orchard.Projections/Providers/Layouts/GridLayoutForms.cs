@@ -43,23 +43,53 @@ namespace Orchard.Projections.Providers.Layouts {
                                 )
                             ),
                         _HtmlProperties: Shape.Fieldset(
-                            Title: T("Html properties"), 
-                            _ListId: Shape.TextBox(
+                            Title: T("Html properties"),
+                            _GridTag: Shape.TextBox(
+                                Id: "grid-tag", Name: "GridTag",
+                                Title: T("Grid tag"),
+                                Description: T("The tag of the grid. Leave empty for no tag. (e.g., table)"),
+                                Classes: new[] { "textMedium", "tokenized" }
+                                ),
+                            _GridId: Shape.TextBox(
                                 Id: "grid-id", Name: "GridId",
                                 Title: T("Grid id"),
-                                Description: T("The id to provide on the table element."),
+                                Description: T("The id to provide on the grid element."),
                                 Classes: new[] { "textMedium", "tokenized" }
                                 ),
-                            _ListClass: Shape.TextBox(
+                            _GridClass: Shape.TextBox(
                                 Id: "grid-class", Name: "GridClass",
                                 Title: T("Grid class"),
-                                Description: T("The class to provide on the table element."),
+                                Description: T("The class to provide on the grid element."),
                                 Classes: new[] { "textMedium", "tokenized" }
                                 ),
-                            _ItemClass: Shape.TextBox(
+                            _RowTag: Shape.TextBox(
+                                Id: "row-tag", Name: "RowTag",
+                                Title: T("Row tag"),
+                                Description: T("The tag of a row. Leave empty for no tag. (e.g., tr)"),
+                                Classes: new[] { "textMedium", "tokenized" }
+                                ),
+                            _RowClass: Shape.TextBox(
                                 Id: "row-class", Name: "RowClass",
                                 Title: T("Row class"),
                                 Description: T("The class to provide on each row."),
+                                Classes: new[] { "textMedium", "tokenized" }
+                                ),
+                            _CellTag: Shape.TextBox(
+                                Id: "cell-tag", Name: "CellTag",
+                                Title: T("Cell tag"),
+                                Description: T("The tag of a cell. Leave empty for no tag. (e.g., td)"),
+                                Classes: new[] { "textMedium", "tokenized" }
+                                ),
+                            _CellClass: Shape.TextBox(
+                                Id: "cell-class", Name: "CellClass",
+                                Title: T("Cell class"),
+                                Description: T("The class to provide on each cell."),
+                                Classes: new[] { "textMedium", "tokenized" }
+                                ),
+                            _EmptyCell: Shape.TextBox(
+                                Id: "empty-cell", Name: "EmptyCell",
+                                Title: T("Empty Cell"),
+                                Description: T("The HTML to render as empty cells to fill a row. (e.g., <td>&nbsp;</td>"),
                                 Classes: new[] { "textMedium", "tokenized" }
                                 )
                             )
