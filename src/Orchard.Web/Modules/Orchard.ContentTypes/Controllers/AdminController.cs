@@ -14,6 +14,7 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.UI;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;

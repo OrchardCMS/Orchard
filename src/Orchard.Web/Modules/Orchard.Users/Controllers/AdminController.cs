@@ -8,6 +8,7 @@ using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;

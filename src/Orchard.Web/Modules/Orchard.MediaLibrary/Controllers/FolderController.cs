@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
+using Orchard.Mvc;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 

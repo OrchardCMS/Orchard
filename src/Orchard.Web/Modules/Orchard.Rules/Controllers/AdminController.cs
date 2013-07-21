@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Forms.Services;
+using Orchard.Mvc;
 using Orchard.Rules.Models;
 using Orchard.Rules.Services;
 using Orchard.Rules.ViewModels;

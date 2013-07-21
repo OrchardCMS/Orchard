@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -295,19 +296,6 @@ namespace Orchard.Comments.Controllers {
                 CommentedOn = _commentService.GetCommentedContent(item.CommentedOn),
                 IsChecked = false,
             };
-        }
-
-        public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
-            private readonly string _submitButtonName;
-
-            public FormValueRequiredAttribute(string submitButtonName) {
-                _submitButtonName = submitButtonName;
-            }
-
-            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
-                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
-                return !string.IsNullOrEmpty(value);
-            }
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

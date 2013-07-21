@@ -9,6 +9,7 @@ using Orchard.Logging;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
+using Orchard.Mvc;
 using Orchard.UI.Notify;
 
 namespace Orchard.Media.Controllers {

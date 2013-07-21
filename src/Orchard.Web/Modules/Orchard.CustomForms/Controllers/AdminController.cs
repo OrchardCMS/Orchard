@@ -9,6 +9,7 @@ using Orchard.CustomForms.Models;
 using Orchard.CustomForms.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Security;
 using System;
 using Orchard.Settings;
@@ -80,7 +81,7 @@ namespace Orchard.CustomForms.Controllers {
         }
 
         [HttpPost]
-        [Core.Contents.Controllers.FormValueRequired("submit.BulkEdit")]
+        [FormValueRequired("submit.BulkEdit")]
         public ActionResult Index(FormCollection input) {
             if (!Services.Authorizer.Authorize(Permissions.ManageForms, T("Not authorized to manage customForm")))
                 return new HttpUnauthorizedResult();

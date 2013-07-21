@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.Mvc.Extensions;
@@ -95,7 +96,7 @@ namespace Orchard.AntiSpam.Controllers {
         }
 
         [HttpPost]
-        [Core.Contents.Controllers.FormValueRequired("submit.BulkEdit")]
+        [FormValueRequired("submit.BulkEdit")]
         public ActionResult Index(SpamIndexOptions options, IEnumerable<int> itemIds) {
             if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
                 return new HttpUnauthorizedResult();

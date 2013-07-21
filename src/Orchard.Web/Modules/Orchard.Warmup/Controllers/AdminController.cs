@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Warmup.Models;
 using Orchard.UI.Notify;

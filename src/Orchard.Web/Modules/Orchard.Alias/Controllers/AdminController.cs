@@ -9,6 +9,7 @@ using Orchard.Core.Contents.Controllers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.UI.Navigation;

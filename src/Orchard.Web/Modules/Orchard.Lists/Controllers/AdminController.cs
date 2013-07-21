@@ -14,6 +14,7 @@ using Orchard.DisplayManagement;
 using Orchard.Lists.ViewModels;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Settings;
 using Orchard.UI.Navigation;

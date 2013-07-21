@@ -12,6 +12,7 @@ using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Models;
 using Orchard.MediaProcessing.Services;
 using Orchard.MediaProcessing.ViewModels;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Navigation;

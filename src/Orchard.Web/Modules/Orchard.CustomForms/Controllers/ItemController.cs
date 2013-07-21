@@ -12,6 +12,7 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Themes;
 using Orchard.Tokens;
@@ -179,19 +180,6 @@ namespace Orchard.CustomForms.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
-        }
-    }
-
-    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
-        private readonly string _submitButtonName;
-
-        public FormValueRequiredAttribute(string submitButtonName) {
-            _submitButtonName = submitButtonName;
-        }
-
-        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
-            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
-            return !string.IsNullOrEmpty(value);
         }
     }
 }

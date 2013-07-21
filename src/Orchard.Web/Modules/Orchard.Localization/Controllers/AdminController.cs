@@ -9,6 +9,7 @@ using Orchard.DisplayManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Localization.ViewModels;
+using Orchard.Mvc;
 using Orchard.UI.Notify;
 
 namespace Orchard.Localization.Controllers {
