@@ -79,10 +79,15 @@
                 <div class="summary">
                     <div class="properties">
                         <h3>
-                            <label>
-                                <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id"/>
+                            @if ((showEnable && !feature.IsEnabled) || (showDisable && feature.IsEnabled)) {
+                                <label>
+                                    <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id"/>
+                                    @featureName
+                                </label>
+                            }
+                            else {
                                 @featureName
-                            </label>
+                            }
                         </h3>
                         <p class="description" title="@feature.Descriptor.Description">@feature.Descriptor.Description</p>
                         @if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
