@@ -1,9 +1,6 @@
 ﻿@model Orchard.Modules.ViewModels.ModulesIndexViewModel
-@using Orchard.Localization;
 @using Orchard.Modules.Models;
-@using Orchard.Modules.Extensions;
 @using Orchard.Mvc.Html;
-@using Orchard.Utility.Extensions;
 
 @{
     Style.Require("ModulesAdmin");
@@ -23,7 +20,7 @@
     <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
 }
 
-    if (Model.Modules.Count() > 0) {
+    if (Model.Modules.Any()) {
         <ul class="contentItems">
             @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
                 <li>@Display.ModuleEntry(ContentPart: module)</li>

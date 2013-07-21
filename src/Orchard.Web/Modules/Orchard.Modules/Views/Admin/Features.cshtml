@@ -9,25 +9,46 @@
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
     Script.Require("Switchable");
+    Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
 
     Layout.Title = T("Modules").ToString();
 }
 
-@if (Model.Features.Count() > 0) {
-<ul class="features summary-view switchable">@{
-    var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
-    foreach (var featureGroup in featureGroups) {
-        var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
-        var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
-        if (featureGroup == featureGroups.First()) {
-            categoryClassName += " first";
-        }
-        if (featureGroup == featureGroups.Last()) {
-            categoryClassName += " last";
-        }
+@if (Model.Features.Any()) {
+    using (Html.BeginFormAntiForgeryPost()) {
+    @Html.Hidden("submit.BulkExecute")
+    @Html.Hidden("force", true)
+    @Html.Hidden("featureIds")
+    <div class="bulk-actions-wrapper">
+        <fieldset class="bulk-actions">
+            <label for="search-box">@T("Filter:")</label>
+            <input id="search-box" class="text-box" type="text" />
+        </fieldset>
+        <fieldset class="bulk-actions">
+            <label for="publishActions">@T("Actions:")</label>
+            <select id="publishActions" name="bulkAction">
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
+            </select>
+            <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
+        </fieldset>
+    </div>
+        
+    <ul class="features summary-view switchable">@{
+        var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category).ToList();
+        foreach (var featureGroup in featureGroups) {
+            var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
+            var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
+            if (featureGroup == featureGroups.First()) {
+                categoryClassName += " first";
+            }
+            if (featureGroup == featureGroups.Last()) {
+                categoryClassName += " last";
+            }
 
-        bool showEnable, showDisable;
-    <li class="@categoryClassName">
+        <li class="@categoryClassName">
         <h2>@categoryName</h2>
         <ul>@{
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
@@ -52,12 +73,17 @@
                                     select (from f in Model.Features where f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase) select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
-                showDisable = categoryName.ToString() != "Core";
-                showEnable = !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
-            <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
+                var showDisable = categoryName.ToString() != "Core";
+                var showEnable = !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
+                <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
-                        <h3>@featureName</h3>
+                        <h3>
+                            <label>
+                                <input type="checkbox" name="featureIds" value="@feature.Descriptor.Id"/>
+                                @featureName
+                            </label>
+                        </h3>
                         <p class="description" title="@feature.Descriptor.Description">@feature.Descriptor.Description</p>
                         @if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
                         <div class="dependencies">
@@ -76,26 +102,15 @@
                     </div>
                     <div class="actions">
                         @if (showDisable && feature.IsEnabled) {
-                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                                @Html.Hidden("id", feature.Descriptor.Id, new {id = ""})
-                                @Html.Hidden("force", true)
-                                <button type="submit">@T("Disable")</button> 
-                            }
+                            <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true">@T("Disable")</a> 
                         }
 
-                        @if(showEnable && !feature.IsEnabled) {
-                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                                @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
-                                @Html.Hidden("force", true)
-                                <button type="submit">@T("Enable")</button> 
-                            }
+                        @if (showEnable && !feature.IsEnabled) {
+                            <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Enable"  data-feature-force="true">@T("Enable")</a> 
                         }
 
-                        @if(feature.NeedsUpdate){
-                                using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                                @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
-                                <button type="submit" class="update">@T("Update")</button> 
-                            }
+                        @if (feature.NeedsUpdate) {
+                            <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Update"  data-feature-force="false">@T("Update")</a> 
                         }
                     </div>
                 </div>
@@ -103,36 +118,4 @@
         }</ul>
     </li>}
 }</ul>}
-      
-@using(Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    $(function () {
-        var searchBox = $("<fieldset class=\"bulk-actions\"><label for=\"search-box\">@T("Filter:")</label> <input id=\"search-box\" class=\"text-box\" type=\"text\" /></fieldset>");
-        var theSwitch = $(".switch-for-switchable");
-        theSwitch.prepend(searchBox);
-        $("#search-box").focus().keyup(function () {
-            var text = $(this).val();
-
-            if (text == '') {
-                $("li.category").show();
-                $("li.feature:hidden").show();
-                return;
-            }
-
-            $("li.feature").each(function () {
-                var elt = $(this);
-                var value = elt.find('h3:first').text();
-                if (value.toLowerCase().indexOf(text.toLowerCase()) >= 0)
-                    elt.show();
-                else
-                    elt.hide();
-            });
-
-            $("li.category:hidden").show();
-            var toHide = $("li.category:not(:has(li.feature:visible))").hide();
-        });
-    })
-//]]>
-</script>
 }

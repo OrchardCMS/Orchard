@@ -14,13 +14,14 @@ using Orchard.Modules.Events;
 using Orchard.Modules.Models;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
+using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
@@ -178,46 +179,52 @@ namespace Orchard.Modules.Controllers {
             return View(new FeaturesViewModel { Features = features });
         }
 
-        [HttpPost]
-        public ActionResult Enable(string id, bool? force) {
+        [HttpPost, ActionName("Features")]
+        [FormValueRequired("submit.BulkExecute")]
+        public ActionResult FeaturesPOST(FeaturesBulkAction bulkAction, IList<string> featureIds, bool? force) {
+
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            if (string.IsNullOrEmpty(id))
-                return HttpNotFound();
+            if (featureIds == null || !featureIds.Any()) {
+                ModelState.AddModelError("featureIds", T("Please select one or more features."));
+            }
 
-            _moduleService.EnableFeatures(new[] { id }, force != null && (bool)force);
+            if (ModelState.IsValid) {
+                var availableFeatures = _moduleService.GetAvailableFeatures().ToList();
+                var selectedFeatures = availableFeatures.Where(x => featureIds.Contains(x.Descriptor.Id)).ToList();
+                var enabledFeatures = availableFeatures.Where(x => x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
+                var disabledFeatures = availableFeatures.Where(x => !x.IsEnabled && featureIds.Contains(x.Descriptor.Id)).Select(x => x.Descriptor.Id).ToList();
 
-            return RedirectToAction("Features");
-        }
-
-        [HttpPost]
-        public ActionResult Disable(string id, bool? force) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
-                return new HttpUnauthorizedResult();
-
-            if (string.IsNullOrEmpty(id))
-                return HttpNotFound();
-
-            _moduleService.DisableFeatures(new[] { id }, force != null && (bool)force);
-
-            return RedirectToAction("Features");
-        }
-
-        [HttpPost]
-        public ActionResult Update(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
-                return new HttpUnauthorizedResult();
-
-            if (string.IsNullOrEmpty(id))
-                return HttpNotFound();
-
-            try {
-                _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
-                _dataMigrationManager.Update(id);
-                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
-            } catch (Exception exception) {
-                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));
+                switch (bulkAction) {
+                    case FeaturesBulkAction.None:
+                        break;
+                    case FeaturesBulkAction.Enable:
+                        _moduleService.EnableFeatures(disabledFeatures, force == true);
+                        break;
+                    case FeaturesBulkAction.Disable:
+                        _moduleService.DisableFeatures(enabledFeatures, force == true);
+                        break;
+                    case FeaturesBulkAction.Toggle:
+                        _moduleService.EnableFeatures(disabledFeatures, force == true);
+                        _moduleService.DisableFeatures(enabledFeatures, force == true);
+                        break;
+                    case FeaturesBulkAction.Update:
+                        foreach (var feature in selectedFeatures.Where(x => x.NeedsUpdate)) {
+                            var id = feature.Descriptor.Id;
+                            try {
+                                _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
+                                _dataMigrationManager.Update(id);
+                                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
+                            }
+                            catch (Exception exception) {
+                                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, exception.Message));
+                            }
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             return RedirectToAction("Features");

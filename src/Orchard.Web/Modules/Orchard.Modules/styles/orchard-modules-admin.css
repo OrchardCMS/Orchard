@@ -36,6 +36,7 @@ html.dyn #main ul.features button { display:none; }
 
 .features.detail-view .feature {
     padding:.25em 0;
+    border-bottom:1px solid #CCC;
 }
 .features .enabled.feature {
     background:#FFF;
@@ -43,6 +44,9 @@ html.dyn #main ul.features button { display:none; }
 .features.summary-view .enabled.feature, .features.summary-view .disabled.feature {
     border-color:#cfe493;
     overflow:hidden;
+}
+.features.summary-view .enabled.selected.feature, .features.summary-view .disabled.selected.feature {
+    border-color:rgb(60,130,46);
 }
 .features .disabled.feature {
     background:#f3f3f3;
@@ -56,17 +60,22 @@ html.dyn #main ul.features button { display:none; }
 .features.summary-view .update.feature {
     border-color:#E77;
 }
-.features.detail-view .feature {
-    border-bottom:1px solid #CCC;
-}
 .features.detail-view .last.feature {
     border:0;
 }
 
 .features .feature .summary {
-    overflow:hidden;
-    padding:.4em .5em;
-    position:relative;
+    overflow: hidden;
+    padding: .4em .5em;
+    position: relative;
+    cursor: default;
+}
+.features .feature .summary .properties h3 label {
+    padding: 0;
+    cursor: pointer;
+}
+.features .feature .summary .properties h3 label input {
+    vertical-align: 5%;
 }
 .features.detail-view .feature .summary {
     overflow:visible;
@@ -154,4 +163,10 @@ h2.recentlyInstalledModule {padding:0 0 0 40px;}
 
 .manage {
     float: right;
+}
+.orchard-modules .bulk-actions-wrapper {
+    display: none;
+}
+.orchard-modules .bulk-actions-wrapper.visible {
+    display: inline;
 }
