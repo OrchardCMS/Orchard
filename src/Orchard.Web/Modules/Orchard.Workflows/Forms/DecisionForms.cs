@@ -20,12 +20,12 @@ namespace Orchard.Workflows.Forms {
                 _Message: Shape.Textbox(
                   Id: "outcomes", Name: "Outcomes",
                   Title: T("Possible Outcomes."),
-                  Description: T("A comma separated list of possible outcomes."),
+                  Description: T("A comma-separated list of possible outcomes."),
                   Classes: new[] { "textMedium" }),
                 _Script: Shape.TextArea(
                   Id: "Script", Name: "Script",
                   Title: T("Script"),
-                  Description: T("The script to run every time the Decision Activity is invoked. You can use ContentItem, Services, WorkContext, and T().  Return type must be a string."),
+                  Description: T("The script to run every time the Decision Activity is invoked. You can use ContentItem, Services, WorkContext, and T(). Return type must be a string."),
                   Classes: new[] { "tokenized" }
                   )
                 );

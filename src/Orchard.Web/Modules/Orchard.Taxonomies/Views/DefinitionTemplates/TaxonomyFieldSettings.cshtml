@@ -19,7 +19,7 @@
         <div class="content">
             @Html.CheckBoxFor(m => m.LeavesOnly) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.LeavesOnly)">@T("Restrict selectable elements to leaves (parent / child terms) only")</label>  
         </div>
-        <a class="help" title="@T("A leave is the last descendant in a parent/child hierarchy")"></a>
+        <a class="help" title="@T("A leaf is the last descendant in a parent/child hierarchy")"></a>
     </div>
     @Html.CheckBoxFor(m => m.SingleChoice) <label class="forcheckbox" for="@Html.FieldIdFor(m => m.SingleChoice)">@T("Allow only one term to be selected")</label>
 </fieldset>
