@@ -179,7 +179,7 @@ namespace Orchard.Workflows.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage workflows")))
                 return new HttpUnauthorizedResult();
 
             var workflowDefinition = _workflowDefinitionRecords.Get(id);
@@ -194,7 +194,7 @@ namespace Orchard.Workflows.Controllers {
 
         [HttpPost]
         public ActionResult DeleteWorkflow(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage rules")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage workflows")))
                 return new HttpUnauthorizedResult();
 
             var workflow = _workflowRecords.Get(id);
