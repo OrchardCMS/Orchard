@@ -86,7 +86,7 @@ namespace Orchard.Workflows.Activities {
 
 
         public override LocalizedString Description {
-            get { return T("Content is  versioned."); }
+            get { return T("Content is versioned."); }
         }
     }
 
@@ -96,7 +96,7 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Content is  removed."); }
+            get { return T("Content is removed."); }
         }
     }
 }
