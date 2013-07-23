@@ -129,6 +129,7 @@ namespace Orchard.OutputCache.Filters {
                 return;
             }
 
+
             // caches the default cache duration to prevent a query to the settings
             _cacheDuration = _cacheManager.Get("CacheSettingsPart.Duration",
                 context => {
@@ -171,13 +172,18 @@ namespace Orchard.OutputCache.Filters {
                 }
             );
 
-            // caches the ignored urls to prevent a query to the settings
+            // caches the debug mode
             _debugMode = _cacheManager.Get("CacheSettingsPart.DebugMode",
                 context => {
                     context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
                     return _workContext.CurrentSite.As<CacheSettingsPart>().DebugMode;
                 }
             );
+            
+            // don't cache ignored url ?
+            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, _ignoredUrls)) {
+                return;
+            }
 
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             var parameters = new Dictionary<string, object>(filterContext.ActionParameters);
@@ -351,11 +357,6 @@ namespace Orchard.OutputCache.Filters {
                 return;
             }
 
-            // ignored url ?
-            if (IsIgnoredUrl(filterContext.RequestContext.HttpContext.Request.AppRelativeCurrentExecutionFilePath, _ignoredUrls)) {
-                return;
-            }
-
             // flush here to force the Filter to get the rendered content
             if (response.IsClientConnected)
                 response.Flush();
@@ -368,7 +369,7 @@ namespace Orchard.OutputCache.Filters {
 
             response.Filter = null;
             response.Write(output);
-
+            
             // default duration of specific one ?
             var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
 
