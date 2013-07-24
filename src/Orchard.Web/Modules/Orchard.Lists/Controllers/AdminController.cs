@@ -8,7 +8,6 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.DisplayManagement;
 using Orchard.Lists.ViewModels;

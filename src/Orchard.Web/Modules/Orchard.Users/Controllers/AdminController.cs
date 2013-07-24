@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;

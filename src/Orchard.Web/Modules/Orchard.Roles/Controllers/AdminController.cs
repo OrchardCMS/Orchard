@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -12,7 +11,6 @@ using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Roles.Controllers {
     [ValidateInput(false)]

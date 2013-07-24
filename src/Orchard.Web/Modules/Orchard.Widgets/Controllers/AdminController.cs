@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;

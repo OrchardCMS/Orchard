@@ -12,7 +12,6 @@ using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Projections.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.UI.Notify;

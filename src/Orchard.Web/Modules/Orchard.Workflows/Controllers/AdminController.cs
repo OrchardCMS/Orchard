@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;

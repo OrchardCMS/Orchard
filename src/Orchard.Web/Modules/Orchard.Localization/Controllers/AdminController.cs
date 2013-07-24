@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.DisplayManagement;
 using Orchard.Localization.Models;

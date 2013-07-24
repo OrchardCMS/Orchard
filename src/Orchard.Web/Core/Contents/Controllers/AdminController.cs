@@ -16,7 +16,6 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
@@ -110,7 +109,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("List")]
-        [FormValueRequired("submit.Filter")]
+        [Mvc.FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
@@ -127,7 +126,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("List")]
-        [FormValueRequired("submit.BulkEdit")]
+        [Mvc.FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             if (itemIds != null) {
                 var checkedContentItems = _contentManager.GetMany<ContentItem>(itemIds, VersionOptions.Latest, QueryHints.Empty);
@@ -204,7 +203,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        [FormValueRequired("submit.Save")]
+        [Mvc.FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(string id, string returnUrl) {
             return CreatePOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
@@ -213,7 +212,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        [FormValueRequired("submit.Publish")]
+        [Mvc.FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
 
             // pass a dummy content to the authorization check to check for "own" variations
@@ -267,7 +266,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired("submit.Save")]
+        [Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
             return EditPOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
@@ -276,7 +275,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired("submit.Publish")]
+        [Mvc.FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl) {
             var content = _contentManager.Get(id, VersionOptions.Latest);
 
@@ -408,6 +407,20 @@ namespace Orchard.Core.Contents.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+    }
+
+    [Obsolete("Use Orchard.Mvc.FormValueRequiredAttribute instead.")]
+    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+        private readonly string _submitButtonName;
+
+        public FormValueRequiredAttribute(string submitButtonName) {
+            _submitButtonName = submitButtonName;
+        }
+
+        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+            return !string.IsNullOrEmpty(value);
         }
     }
 }

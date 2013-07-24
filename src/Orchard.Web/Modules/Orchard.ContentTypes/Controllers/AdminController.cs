@@ -9,7 +9,6 @@ using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.Settings;
 using Orchard.ContentTypes.ViewModels;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;

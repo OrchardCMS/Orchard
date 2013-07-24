@@ -8,7 +8,6 @@ using Orchard.Rules.Models;
 using Orchard.Rules.Services;
 using Orchard.Rules.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Controllers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
