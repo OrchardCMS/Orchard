@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -78,28 +82,45 @@ namespace Orchard.MediaPicker.Drivers {
             return Editor(part, field, shapeHelper);
         }
 
-        //protected override void Importing(ContentPart part, Fields.MediaGalleryField field, ImportContentContext context) {
-        //    var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
-        //    if (contentItemIds != null) {
-        //        field.Ids = contentItemIds.Split(',')
-        //            .Select(context.GetItemFromSession)
-        //            .Select(contentItem => contentItem.Id).ToArray();
-        //    }
-        //    else {
-        //        field.Ids = new int[0];
-        //    }
-        //}
+        protected override void Importing(ContentPart part, MediaGalleryField field, ImportContentContext context) {
+            var mediaItems = new List<MediaGalleryItem>();
+            var root = context.Data.Element(field.FieldDefinition.Name + "." + field.Name);
 
-        //protected override void Exporting(ContentPart part, Fields.MediaGalleryField field, ExportContentContext context) {
-        //    if (field.Ids.Any()) {
-        //        var contentItemIds = field.Ids
-        //            .Select(x => _contentManager.Get(x))
-        //            .Select(x => _contentManager.GetItemMetadata(x).Identity.ToString())
-        //            .ToArray();
+            if (root == null) {
+                return;
+            }
 
-        //        context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("ContentItems", string.Join(",", contentItemIds));
-        //    }
-        //}
+            foreach (var element in root.Elements("MediaItem")) {
+                mediaItems.Add(new MediaGalleryItem {
+                    Url = element.Attribute("Url").Value,
+                    AlternateText = element.Attribute("AlternateText").Value,
+                    Class = element.Attribute("Class").Value,
+                    Style = element.Attribute("Style").Value,
+                    Alignment = element.Attribute("Alignment").Value,
+                    Width = int.Parse(element.Attribute("Width").Value, CultureInfo.InvariantCulture),
+                    Height = int.Parse(element.Attribute("Height").Value, CultureInfo.InvariantCulture),
+                });
+            }
+
+            field.SelectedItems = mediaItems.Any() ? _jsonConverter.Serialize(mediaItems.ToArray()) : "[]";
+        }
+
+        protected override void Exporting(ContentPart part, MediaGalleryField field, ExportContentContext context) {
+            var element = context.Element(field.FieldDefinition.Name + "." + field.Name);
+
+            foreach (var mediaItem in field.Items) {
+                element.Add(new XElement("MediaItem",
+                    new XAttribute("Url", mediaItem.Url),
+                    new XAttribute("AlternateText", mediaItem.AlternateText),
+                    new XAttribute("Class", mediaItem.Class),
+                    new XAttribute("Style", mediaItem.Style),
+                    new XAttribute("Alignment", mediaItem.Alignment),
+                    new XAttribute("Width", mediaItem.Width),
+                    new XAttribute("Height", mediaItem.Height)
+                    )
+                );
+            }
+        }
 
         protected override void Describe(DescribeMembersContext context) {
             context
