@@ -21,7 +21,7 @@ License:      MICROSOFT ASP.NET MODEL VIEW CONTROLLER 3 EULA
               http://go.microsoft.com/fwlink/?LinkID=207621
 
 Autofac
------
+-------
 Website:      http://code.google.com/p/autofac/
 Copyright:    Copyright (c) 2007-2008 Autofac Contributors
               http://code.google.com/p/autofac/wiki/Contributing
