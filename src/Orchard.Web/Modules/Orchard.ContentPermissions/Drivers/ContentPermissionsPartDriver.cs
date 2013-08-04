@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
@@ -134,6 +136,30 @@ namespace Orchard.ContentPermissions.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Exporting(ContentPermissionsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Enabled", part.Enabled);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ViewContent", part.ViewContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("EditContent", part.EditContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PublishContent", part.PublishContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteContent", part.DeleteContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ViewOwnContent", part.ViewOwnContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("EditOwnContent", part.EditOwnContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PublishOwnContent", part.PublishOwnContent);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DeleteOwnContent", part.DeleteOwnContent);
+        }
+
+        protected override void Importing(ContentPermissionsPart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "Enabled", s => part.Enabled = XmlConvert.ToBoolean(s));
+            context.ImportAttribute(part.PartDefinition.Name, "ViewContent", s => part.ViewContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "EditContent", s => part.EditContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "PublishContent", s => part.PublishContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "DeleteContent", s => part.DeleteContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "ViewOwnContent", s => part.ViewOwnContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "EditOwnContent", s => part.EditOwnContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "PublishOwnContent", s => part.PublishOwnContent = s);
+            context.ImportAttribute(part.PartDefinition.Name, "DeleteOwnContent", s => part.DeleteOwnContent = s);
         }
 
         private void OverrideDefaultPermissions(ContentPermissionsPart part, List<string> allRoles, ContentPermissionsPartSettings settings) {
