@@ -107,7 +107,7 @@
         //<![CDATA[
  
         $(function () {
-            
+
             function MediaPartViewModel(data) {
                 var self = this;
                 
@@ -246,12 +246,12 @@
                 };
 
                 self.selectFolder = function (folderPath) {
-                    window.history.pushState({ action: 'displayFolder', folderPath: folderPath }, '', '?folderPath=' + folderPath);
+                    History.pushState({ action: 'displayFolder', folderPath: folderPath }, '', '?folderPath=' + folderPath);
                     self.displayFolder(folderPath);
                 };
 
                 self.selectRecent = function () {
-                    window.history.pushState({ action: 'selectRecent' }, '', '?recent');
+                    History.pushState({ action: 'selectRecent' }, '', '?recent');
                     
                     self.results([]);
                     self.displayed(null);
@@ -363,13 +363,13 @@
             @if (viewModel.FolderPath != null) {
             <text>
             viewModel.displayFolder('@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)');
-            window.history.pushState({ action: 'displayFolder', folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)' }, '', '?folderPath=@HttpUtility.UrlEncode(viewModel.FolderPath)');
+            History.pushState({ action: 'displayFolder', folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)' }, '', '?folderPath=@HttpUtility.UrlEncode(viewModel.FolderPath)');
             </text>
             }
             else {
                 <text>
                 viewModel.selectRecent();
-                window.history.pushState({ action: 'selectRecent' }, '', '?recent');
+                History.pushState({ action: 'selectRecent' }, '', '?recent');
                 </text>
             }
             
