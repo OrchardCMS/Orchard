@@ -9,6 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Core.Feeds.Rss;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.Caching;
@@ -254,6 +255,11 @@ namespace Orchard.OutputCache.Filters {
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
 
+            // only cache view results, but don't return already as we still need to process redirections
+            if (!(filterContext.Result is ViewResultBase) && !(filterContext.Result is RssResult)) {
+                _filter = null;
+            }
+
             // ignore error results from cache
             if (filterContext.HttpContext.Response.StatusCode != (int)HttpStatusCode.OK) {
 
@@ -339,12 +345,6 @@ namespace Orchard.OutputCache.Filters {
 
             // save the result only if the content can be intercepted
             if (_filter == null) return;
-
-            // only for ViewResult right now, as we don't want to handle redirects, HttpNotFound, ...
-            if (filterContext.Result as ViewResultBase == null) {
-                Logger.Debug("Ignoring none ViewResult response");
-                return;
-            }
 
             // check if there is a specific rule not to cache the whole route
             var configurations = _cacheService.GetRouteConfigurations();
