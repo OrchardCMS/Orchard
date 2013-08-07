@@ -33,19 +33,16 @@ namespace Orchard.Azure {
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
             _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, containerName), root);
 
-            using (new HttpContextWeaver()) {
+            BlobClient = _storageAccount.CreateCloudBlobClient();
+            // Get and create the container if it does not exist
+            // The container is named with DNS naming restrictions (i.e. all lower case)
+            Container = BlobClient.GetContainerReference(ContainerName);
 
-                BlobClient = _storageAccount.CreateCloudBlobClient();
-                // Get and create the container if it does not exist
-                // The container is named with DNS naming restrictions (i.e. all lower case)
-                Container = BlobClient.GetContainerReference(ContainerName);
+            Container.CreateIfNotExist();
 
-                Container.CreateIfNotExist();
-
-                Container.SetPermissions(isPrivate
-                                             ? new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off }
-                                             : new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-            }
+            Container.SetPermissions(isPrivate
+                                            ? new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off }
+                                            : new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
 
         }
 
@@ -92,22 +89,16 @@ namespace Orchard.Azure {
 
             path = ConvertToRelativeUriPath(path);
 
-            using (new HttpContextWeaver()) {
-                Container.EnsureBlobExists(String.Concat(_root, path));
-                return new AzureBlobFileStorage(Container.GetBlockBlobReference(String.Concat(_root, path)), _absoluteRoot);
-            }
+            Container.EnsureBlobExists(String.Concat(_root, path));
+            return new AzureBlobFileStorage(Container.GetBlockBlobReference(String.Concat(_root, path)), _absoluteRoot);
         }
 
         public bool FileExists(string path) {
-            using (new HttpContextWeaver()) {
-                return Container.BlobExists(String.Concat(_root, path));
-            }
+            return Container.BlobExists(String.Concat(_root, path));
         }
 
         public bool FolderExists(string path) {
-            using (new HttpContextWeaver()) {
-                return Container.DirectoryExists(String.Concat(_root, path));
-            }
+            return Container.DirectoryExists(String.Concat(_root, path));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
@@ -120,14 +111,12 @@ namespace Orchard.Azure {
             if (!prefix.EndsWith("/"))
                 prefix += "/";
 
-            using (new HttpContextWeaver()) {
-                return BlobClient
-                        .ListBlobsWithPrefix(prefix)
-                        .OfType<CloudBlockBlob>()
-                        .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
-                        .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
-                        .ToArray();
-            }
+            return BlobClient
+                    .ListBlobsWithPrefix(prefix)
+                    .OfType<CloudBlockBlob>()
+                    .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
+                    .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
+                    .ToArray();
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
@@ -135,32 +124,29 @@ namespace Orchard.Azure {
             path = path ?? String.Empty;
             path = ConvertToRelativeUriPath(path);
 
-            using (new HttpContextWeaver()) {
-
-                // return root folders
-                if (String.Concat(_root, path) == String.Empty) {
-                    return Container.ListBlobs()
-                        .OfType<CloudBlobDirectory>()
-                        .Select<CloudBlobDirectory, IStorageFolder>(d => new AzureBlobFolderStorage(d, _absoluteRoot))
-                        .ToList();
-                }
-
-                if (!Container.DirectoryExists(String.Concat(_root, path))) {
-                    try {
-                        CreateFolder(path);
-                    }
-                    catch (Exception ex) {
-                        throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}",
-                                                                  path, ex));
-                    }
-                }
-
-                return Container.GetDirectoryReference(String.Concat(_root, path))
-                    .ListBlobs()
+            // return root folders
+            if (String.Concat(_root, path) == String.Empty) {
+                return Container.ListBlobs()
                     .OfType<CloudBlobDirectory>()
                     .Select<CloudBlobDirectory, IStorageFolder>(d => new AzureBlobFolderStorage(d, _absoluteRoot))
                     .ToList();
             }
+
+            if (!Container.DirectoryExists(String.Concat(_root, path))) {
+                try {
+                    CreateFolder(path);
+                }
+                catch (Exception ex) {
+                    throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}",
+                                                                path, ex));
+                }
+            }
+
+            return Container.GetDirectoryReference(String.Concat(_root, path))
+                .ListBlobs()
+                .OfType<CloudBlobDirectory>()
+                .Select<CloudBlobDirectory, IStorageFolder>(d => new AzureBlobFolderStorage(d, _absoluteRoot))
+                .ToList();
         }
 
         public bool TryCreateFolder(string path) {
@@ -180,18 +166,16 @@ namespace Orchard.Azure {
 
         public void CreateFolder(string path) {
             path = ConvertToRelativeUriPath(path);
-            using (new HttpContextWeaver()) {
-                Container.EnsureDirectoryDoesNotExist(String.Concat(_root, path));
+            Container.EnsureDirectoryDoesNotExist(String.Concat(_root, path));
 
-                // Creating a virtually hidden file to make the directory an existing concept
-                CreateFile(Combine(path, FolderEntry));
+            // Creating a virtually hidden file to make the directory an existing concept
+            CreateFile(Combine(path, FolderEntry));
 
-                int lastIndex;
-                while ((lastIndex = path.LastIndexOf('/')) > 0) {
-                    path = path.Substring(0, lastIndex);
-                    if (!Container.DirectoryExists(String.Concat(_root, path))) {
-                        CreateFile(Combine(path, FolderEntry));
-                    }
+            int lastIndex;
+            while ((lastIndex = path.LastIndexOf('/')) > 0) {
+                path = path.Substring(0, lastIndex);
+                if (!Container.DirectoryExists(String.Concat(_root, path))) {
+                    CreateFile(Combine(path, FolderEntry));
                 }
             }
         }
@@ -199,15 +183,13 @@ namespace Orchard.Azure {
         public void DeleteFolder(string path) {
             path = ConvertToRelativeUriPath(path);
 
-            using (new HttpContextWeaver()) {
-                Container.EnsureDirectoryExists(String.Concat(_root, path));
-                foreach (var blob in Container.GetDirectoryReference(String.Concat(_root, path)).ListBlobs()) {
-                    if (blob is CloudBlob)
-                        ((CloudBlob)blob).Delete();
+            Container.EnsureDirectoryExists(String.Concat(_root, path));
+            foreach (var blob in Container.GetDirectoryReference(String.Concat(_root, path)).ListBlobs()) {
+                if (blob is CloudBlob)
+                    ((CloudBlob)blob).Delete();
 
-                    if (blob is CloudBlobDirectory)
-                        DeleteFolder(blob.Uri.ToString().Substring(Container.Uri.ToString().Length + 1 + _root.Length));
-                }
+                if (blob is CloudBlobDirectory)
+                    DeleteFolder(blob.Uri.ToString().Substring(Container.Uri.ToString().Length + 1 + _root.Length));
             }
         }
 
@@ -220,21 +202,19 @@ namespace Orchard.Azure {
 
             if (!newPath.EndsWith("/"))
                 newPath += "/";
-            using (new HttpContextWeaver()) {
-                foreach (var blob in Container.GetDirectoryReference(_root + path).ListBlobs()) {
-                    if (blob is CloudBlob) {
-                        string filename = Path.GetFileName(blob.Uri.ToString());
-                        string source = String.Concat(path, filename);
-                        string destination = String.Concat(newPath, filename);
-                        RenameFile(source, destination);
-                    }
+            foreach (var blob in Container.GetDirectoryReference(_root + path).ListBlobs()) {
+                if (blob is CloudBlob) {
+                    string filename = Path.GetFileName(blob.Uri.ToString());
+                    string source = String.Concat(path, filename);
+                    string destination = String.Concat(newPath, filename);
+                    RenameFile(source, destination);
+                }
 
-                    if (blob is CloudBlobDirectory) {
-                        string foldername = blob.Uri.Segments.Last();
-                        string source = String.Concat(path, foldername);
-                        string destination = String.Concat(newPath, foldername);
-                        RenameFolder(source, destination);
-                    }
+                if (blob is CloudBlobDirectory) {
+                    string foldername = blob.Uri.Segments.Last();
+                    string source = String.Concat(path, foldername);
+                    string destination = String.Concat(newPath, foldername);
+                    RenameFolder(source, destination);
                 }
             }
         }
@@ -242,26 +222,22 @@ namespace Orchard.Azure {
         public void DeleteFile(string path) {
             path = ConvertToRelativeUriPath(path);
 
-            using (new HttpContextWeaver()) {
-                Container.EnsureBlobExists(Combine(_root, path));
-                var blob = Container.GetBlockBlobReference(Combine(_root, path));
-                blob.Delete();
-            }
+            Container.EnsureBlobExists(Combine(_root, path));
+            var blob = Container.GetBlockBlobReference(Combine(_root, path));
+            blob.Delete();
         }
 
         public void RenameFile(string path, string newPath) {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
 
-            using (new HttpContextWeaver()) {
-                Container.EnsureBlobExists(String.Concat(_root, path));
-                Container.EnsureBlobDoesNotExist(String.Concat(_root, newPath));
+            Container.EnsureBlobExists(String.Concat(_root, path));
+            Container.EnsureBlobDoesNotExist(String.Concat(_root, newPath));
 
-                var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
-                var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-                newBlob.CopyFromBlob(blob);
-                blob.Delete();
-            }
+            var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
+            var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
+            newBlob.CopyFromBlob(blob);
+            blob.Delete();
         }
 
         public IStorageFile CreateFile(string path) {
@@ -293,10 +269,8 @@ namespace Orchard.Azure {
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
 
-            using (new HttpContextWeaver()) {
-                Container.EnsureBlobExists(String.Concat(_root, path));
-                return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
-            }
+            Container.EnsureBlobExists(String.Concat(_root, path));
+            return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
         }
 
         /// <summary>
@@ -411,15 +385,11 @@ namespace Orchard.Azure {
             }
 
             public string GetPath() {
-                using (new HttpContextWeaver()) {
-                    return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
-                }
+                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
             }
 
             public long GetSize() {
-                using (new HttpContextWeaver()) {
-                    return GetDirectorySize(_blob);
-                }
+                return GetDirectorySize(_blob);
             }
 
             public DateTime GetLastUpdated() {
@@ -427,10 +397,8 @@ namespace Orchard.Azure {
             }
 
             public IStorageFolder GetParent() {
-                using (new HttpContextWeaver()) {
-                    if (_blob.Parent != null) {
-                        return new AzureBlobFolderStorage(_blob.Parent, _rootPath);
-                    }
+                if (_blob.Parent != null) {
+                    return new AzureBlobFolderStorage(_blob.Parent, _rootPath);
                 }
                 throw new ArgumentException("Directory " + _blob.Uri + " does not have a parent directory");
             }

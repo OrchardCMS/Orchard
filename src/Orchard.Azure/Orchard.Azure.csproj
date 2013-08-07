@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudBlobContainerExtensions.cs" />
-    <Compile Include="HttpContextWeaver.cs" />
     <Compile Include="Environment\Configuration\AzureShellSettingsManager.cs" />
     <Compile Include="FileSystems\Media\AzureBlobStorageProvider.cs" />
     <Compile Include="Logging\AzureAppender.cs" />
