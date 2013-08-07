@@ -289,12 +289,12 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     border:0;
     margin:0 10px 0 10px;
 }
-#menu .expando-glyph {
+#menu .expando-glyph-container .expando-glyph {
     background:transparent no-repeat 0 -19px;
     background-image:url(images/menu-glyph.png);
     left:160px;
 }
-#menu .expando-glyph:hover {
+#menu .expando-glyph-container .expando-glyph:hover {
     background-image:url(images/menu-glyph.png);
 }
 #menu .expando-glyph-container.closed .expando-glyph {
@@ -324,11 +324,13 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     font-size:14px;
     padding:0 0 0 10px;
 }
-#menu .menu-admin a {
+#menu .menu-admin a,
+#menu .menu-admin span {
     background-position:0 2px;
     background-repeat:no-repeat;
 }
-#menu .menu-admin li h3 a { /* only the h3 gets an icon by default */
+#menu .menu-admin li h3 a,
+#menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
     background-image:url(images/menu-default.png);
     padding:0 0 0 20px;
 }
