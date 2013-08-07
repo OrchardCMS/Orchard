@@ -11,16 +11,18 @@ namespace Orchard.Recipes.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly Lazy<IRecipeStepExecutor> _recipeStepExecutor;
+        private readonly IShellDescriptorManagerEventHandler _events;
 
         public RecipeScheduler(
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
             IShellDescriptorManager shellDescriptorManager,
-            Lazy<IRecipeStepExecutor> recipeStepExecutor) {
+            Lazy<IRecipeStepExecutor> recipeStepExecutor, IShellDescriptorManagerEventHandler events) {
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
             _recipeStepExecutor = recipeStepExecutor;
+            _events = events;
         }
 
         public void ScheduleWork(string executionId) {
@@ -38,7 +40,10 @@ namespace Orchard.Recipes.Services {
             var scheduleMore = _recipeStepExecutor.Value.ExecuteNextStep(executionId);
             if (scheduleMore)
                 ScheduleWork(executionId);
+            else
+                // https://orchard.codeplex.com/workitem/19844
+                // Because recipes execute in their own workcontext, we need to restart the shell, as signaling a cache won't work across workcontexts.
+                _events.Changed(_shellDescriptorManager.GetShellDescriptor(), _shellSettings.Name);
         }
     }
-
 }
