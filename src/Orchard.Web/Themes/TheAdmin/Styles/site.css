@@ -360,7 +360,12 @@ ul.disc {list-style:disc inside; margin:12px 0;}
      border-radius: 2px;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {background-color:rgba(101,107,85,0.5);}
+#menu .menu-admin .section-new .navicon-new {
+    background-image: none;
+    padding: 0;
+}
 ul.menuItems {margin:6px 0 0 0;}
+
 
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
