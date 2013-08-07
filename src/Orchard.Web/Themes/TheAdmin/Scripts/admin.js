@@ -71,8 +71,8 @@
         return confirm(confirmRemoveMessage);
     });
 	
-    $("#checkAll").change(function () {
-        $("table.items :checkbox").prop('checked', $(this).prop("checked"));
+    $(".check-all").change(function () {
+    	$(this).parents("table.items").find(":checkbox").prop('checked', $(this).prop("checked"));
  	}); 
 })(jQuery);
 
