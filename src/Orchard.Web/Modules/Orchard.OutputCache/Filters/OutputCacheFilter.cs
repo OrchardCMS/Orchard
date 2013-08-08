@@ -352,11 +352,6 @@ namespace Orchard.OutputCache.Filters {
             var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
             var configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
 
-            // do not cache ?
-            if (configuration != null && configuration.Duration == 0) {
-                return;
-            }
-
             // flush here to force the Filter to get the rendered content
             if (response.IsClientConnected)
                 response.Flush();
@@ -369,7 +364,12 @@ namespace Orchard.OutputCache.Filters {
 
             response.Filter = null;
             response.Write(output);
-            
+
+            // do not cache ?
+            if (configuration != null && configuration.Duration == 0) {
+                return;
+            }
+
             // default duration of specific one ?
             var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
 
