@@ -8,7 +8,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_Video_Metadata", () => shapeHelper.Parts_Video_Metadata()),
                 ContentShape("Parts_Video_SummaryAdmin", () => shapeHelper.Parts_Video_SummaryAdmin()),
                 ContentShape("Parts_Video_Summary", () => shapeHelper.Parts_Video_Summary()),
-                ContentShape("Parts_Video", () => shapeHelper.Parts_Video)
+                ContentShape("Parts_Video", () => shapeHelper.Parts_Video())
                 );
         }
 
