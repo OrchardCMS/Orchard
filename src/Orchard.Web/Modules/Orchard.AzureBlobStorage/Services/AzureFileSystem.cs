@@ -2,42 +2,68 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Orchard.FileSystems.Media;
 
 namespace Orchard.AzureBlobStorage.Services {
     public class AzureFileSystem {
-        private readonly IMimeTypeProvider _mimeTypeProvider;
         public const string FolderEntry = "$$$ORCHARD$$$.$$$";
+        
+        private readonly bool _isPrivate;
+        private readonly IMimeTypeProvider _mimeTypeProvider;
+        
+        protected string _root;
+        protected string _absoluteRoot;
+
+        private CloudStorageAccount _storageAccount;
+        private CloudBlobClient _blobClient;
+        private CloudBlobContainer _container;
 
         public string ContainerName { get; protected set; }
 
-        private readonly CloudStorageAccount _storageAccount;
-        protected readonly string _root;
-        protected readonly string _absoluteRoot;
-        public CloudBlobClient BlobClient { get; private set; }
-        public CloudBlobContainer Container { get; private set; }
+        public CloudBlobClient BlobClient {
+            get {
+                EnsureInitialized();
+                return _blobClient;
+            }
+        }
 
-        public AzureFileSystem(string containerName, string root, bool isPrivate, string storageConnectionString, IMimeTypeProvider mimeTypeProvider) {
+        public CloudBlobContainer Container {
+            get {
+                EnsureInitialized(); 
+                return _container;
+            }
+        }
+
+        public AzureFileSystem(string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
+            _isPrivate = isPrivate;
             _mimeTypeProvider = mimeTypeProvider;
-            // Setup the connection to custom storage accountm, e.g. Development Storage
-            _storageAccount = CloudStorageAccount.Parse(storageConnectionString);
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
-            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, containerName), root);
+        }
 
-            BlobClient = _storageAccount.CreateCloudBlobClient();
+        private void EnsureInitialized() {
+            if (_storageAccount != null) {
+                return;
+            }
+
+
+            _storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, ContainerName), _root);
+
+            _blobClient = _storageAccount.CreateCloudBlobClient();
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
-            Container = BlobClient.GetContainerReference(ContainerName);
+            _container = _blobClient.GetContainerReference(ContainerName);
 
-            Container.CreateIfNotExists();
+            _container.CreateIfNotExists();
 
-            Container.SetPermissions(isPrivate
+            _container.SetPermissions(_isPrivate
                                             ? new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off }
                                             : new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-
+            
         }
 
         private static string ConvertToRelativeUriPath(string path) {
