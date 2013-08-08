@@ -162,7 +162,7 @@
     <Compile Include="Drivers\UserTaskDriver.cs" />
     <Compile Include="Drivers\WorkflowDriver.cs" />
     <Compile Include="Forms\WebRequestForm.cs" />
-    <Compile Include="Handlers\RulePartHandler.cs" />
+    <Compile Include="Handlers\WorkflowContentHandler.cs" />
     <Compile Include="Handlers\WorkflowHandler.cs" />
     <Compile Include="ImportExport\WorkflowsCustomExportStep.cs" />
     <Compile Include="ImportExport\WorkflowsExportEventHandler.cs" />
