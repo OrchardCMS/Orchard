@@ -264,7 +264,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, object htmlAttributes) {
-            return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary(htmlAttributes));
+            return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
