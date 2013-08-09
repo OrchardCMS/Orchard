@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
@@ -26,19 +27,9 @@ namespace Orchard.Taxonomies.Handlers {
             OnUnpublished<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
             OnRemoved<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
 
-            // Tells how to load the field terms on demand
-            OnLoaded<TermsPart>((context, part) => {
-                foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
-                    var tempField = field.Name;
-                    var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
-                    field.TermsField.Loader(value => fieldTermRecordIds.Select(id => _contentManager.Get<TermPart>(id)).ToList());
-                }
-
-                part._termParts.Loader(value => 
-                    part.Terms.Select(
-                        x => new TermContentItemPart { Field = x.Field, TermPart = _contentManager.Get<TermPart>(x.TermRecord.Id) }
-                    ));
-            });
+            // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
+            OnLoaded<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnCreated<TermsPart>((context, part) => InitializerTermsLoader(part));
 
             OnIndexing<TermsPart>(
                 (context, part) => {
@@ -53,6 +44,19 @@ namespace Orchard.Taxonomies.Handlers {
                         }
                     }
                 });
+        }
+
+        private void InitializerTermsLoader(TermsPart part) {
+                foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
+                    var tempField = field.Name;
+                    var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
+                    field.TermsField.Loader(value => fieldTermRecordIds.Select(id => _contentManager.Get<TermPart>(id)).ToList());
+                }
+
+                part._termParts.Loader(value => 
+                    part.Terms.Select(
+                        x => new TermContentItemPart { Field = x.Field, TermPart = _contentManager.Get<TermPart>(x.TermRecord.Id) }
+                        ));
         }
 
         private static void RecalculateCount(ITaxonomyService taxonomyService, TermsPart part) {
