@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Fields;
+using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.Mvc.Extensions;
@@ -35,6 +36,7 @@ namespace Orchard.Tokens.Providers {
                 .Token("DisplayUrl", T("Display Url"), T("Url to display the content."), "Url")
                 .Token("EditUrl", T("Edit Url"), T("Url to edit the content."), "Url")
                 .Token("Container", T("Container"), T("The container Content Item."), "Content")
+                .Token("Body", T("Body"), T("The body text of the content item."), "Content")
                 ;
 
             // Token descriptors for fields
@@ -87,6 +89,8 @@ namespace Orchard.Tokens.Providers {
                 .Chain("EditUrl", "Url", EditUrl)
                 .Token("Container", content => DisplayText(Container(content)))
                 .Chain("Container", "Content", Container)
+                .Token("Body", Body)
+                .Chain("Body", "Text", Body)
                 ;
 
             if (context.Target == "Content") {
@@ -183,6 +187,19 @@ namespace Orchard.Tokens.Providers {
             }
 
             return UrlHelper.RouteUrl(_contentManager.GetItemMetadata(content).EditorRouteValues);
+        }
+
+        private string Body(IContent content) {
+            if (content == null) {
+                return String.Empty;
+            }
+
+            var bodyPart = content.As<BodyPart>();
+            if (bodyPart == null) {
+                return String.Empty;
+            }
+
+            return bodyPart.Text;
         }
     }
 }
