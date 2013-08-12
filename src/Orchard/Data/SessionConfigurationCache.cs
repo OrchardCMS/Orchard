@@ -154,7 +154,7 @@ namespace Orchard.Data {
                 if (recordType.BaseType != null)
                     hash.AddTypeReference(recordType.BaseType);
 
-                foreach (var property in recordType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public)) {
+                foreach (var property in recordType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)) {
                     hash.AddString(property.Name);
                     hash.AddTypeReference(property.PropertyType);
 
