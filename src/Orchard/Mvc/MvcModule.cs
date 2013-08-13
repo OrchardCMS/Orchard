@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
+using Orchard.ContentManagement;
+using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.Routes;
+using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
@@ -39,7 +46,21 @@ namespace Orchard.Mvc {
                 return new HttpContextWrapper(HttpContext.Current);
             }
 
-            return new HttpContextPlaceholder();
+            // this doesn't work in a background service, throws an exception in ContentManager.Handlers
+            //var siteService = context.Resolve<ISiteService>();
+            //var baseUrl = siteService.GetSiteSettings().BaseUrl;
+
+            var session = context.Resolve<ISessionLocator>().For(typeof(ContentItem));
+            var shellSettings = context.Resolve<ShellSettings>();
+
+            var tableName = "Settings_SiteSettings2PartRecord";
+            if (!string.IsNullOrEmpty(shellSettings.DataTablePrefix)) {
+                tableName = shellSettings.DataTablePrefix + "_" + tableName;
+            }
+            var query = session.CreateSQLQuery("SELECT BaseUrl FROM " + tableName);
+            var baseUrl = query.UniqueResult<string>();
+
+            return new HttpContextPlaceholder(baseUrl);
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
@@ -59,7 +80,7 @@ namespace Orchard.Mvc {
                 }
             }
             else {
-                httpContext = new HttpContextPlaceholder();
+                httpContext = HttpContextBaseFactory(context);
             }
 
             return new RequestContext(httpContext, new RouteData());
@@ -73,17 +94,39 @@ namespace Orchard.Mvc {
         /// standin context for background tasks.
         /// </summary>
         class HttpContextPlaceholder : HttpContextBase {
+            private readonly string _baseUrl;
+
+            public HttpContextPlaceholder(string baseUrl) {
+                _baseUrl = baseUrl;
+            }
+
             public override HttpRequestBase Request {
-                get { return new HttpRequestPlaceholder(); }
+                get { return new HttpRequestPlaceholder(new Uri(_baseUrl)); }
             }
 
             public override IHttpHandler Handler { get; set; }
+
+            public override HttpResponseBase Response {
+                get { return new HttpResponsePlaceholder(); }
+            }
+        }
+
+        private class HttpResponsePlaceholder : HttpResponseBase {
+            public override string ApplyAppPathModifier(string virtualPath) {
+                return virtualPath;
+            }
         }
 
         /// <summary>
         /// standin context for background tasks. 
         /// </summary>
         class HttpRequestPlaceholder : HttpRequestBase {
+            private readonly Uri _uri;
+
+            public HttpRequestPlaceholder(Uri uri) {
+                _uri = uri;
+            }
+
             /// <summary>
             /// anonymous identity provided for background task.
             /// </summary>
@@ -97,6 +140,41 @@ namespace Orchard.Mvc {
                     return new NameValueCollection();
                 }
             }
+
+            public override Uri Url {
+                get {
+                    return _uri;
+                }
+            }
+
+            public override NameValueCollection Headers {
+                get {
+                    return new NameValueCollection {{"Host", _uri.Authority}};
+                }
+            }
+
+            public override string AppRelativeCurrentExecutionFilePath {
+                get {
+                    return "~/";
+                }
+            }
+
+            public override string ApplicationPath {
+                get {
+                    return _uri.LocalPath;
+                }
+            }
+
+            public override NameValueCollection ServerVariables {
+                get {
+                    return new NameValueCollection {
+                        { "SERVER_PORT", _uri.Port.ToString(CultureInfo.InvariantCulture) },
+                        { "HTTP_HOST", _uri.Authority.ToString(CultureInfo.InvariantCulture) },
+                        
+                    };
+                }
+            }
+
         }
     }
 }

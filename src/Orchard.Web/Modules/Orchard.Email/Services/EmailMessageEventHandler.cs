@@ -1,4 +1,6 @@
-﻿using Orchard.Messaging.Events;
+﻿using System;
+using Orchard.Logging;
+using Orchard.Messaging.Events;
 using Orchard.ContentManagement;
 using Orchard.Messaging.Models;
 using Orchard.Security;
@@ -9,7 +11,11 @@ namespace Orchard.Email.Services {
 
         public EmailMessageEventHandler(IContentManager contentManager) {
             _contentManager = contentManager;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public void Sending(MessageContext context) {
             if (context.Recipients != null) {
@@ -27,7 +33,12 @@ namespace Orchard.Email.Services {
             }
 
             foreach (var address in context.Addresses) {
-                context.MailMessage.To.Add(address);
+                try {
+                    context.MailMessage.To.Add(address);
+                }
+                catch (Exception e) {
+                    Logger.Error(e, "Unexpected error while trying to send email.");
+                }
             }
         }
 
