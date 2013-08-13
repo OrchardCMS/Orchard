@@ -67,7 +67,6 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             var packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
             if (repository != null) {
-                enforceVersion = false;
                 packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
             }
 

@@ -20,6 +20,7 @@ using Orchard.Environment.Features;
 using Orchard.Environment.State;
 using Orchard.Events;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.RecipeHandlers;
@@ -35,14 +36,16 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
     [TestFixture]
     public class ThemeRecipeHandlerTest : DatabaseEnabledTestsBase {
         private ExtensionManagerTests.StubFolders _folders;
+        private ModuleRecipeHandlerTest.StubPackagingSourceManager _packagesInRepository;
+        private ModuleRecipeHandlerTest.StubPackageManager _packageManager;
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                                 typeof (ShellDescriptorRecord),
-                                 typeof (ShellFeatureRecord),
-                                 typeof (ShellParameterRecord),
-                             };
+                    typeof (ShellDescriptorRecord),
+                    typeof (ShellFeatureRecord),
+                    typeof (ShellParameterRecord),
+                };
             }
         }
 
@@ -52,6 +55,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterInstance(new ShellSettings { Name = "Default" });
 
             _folders = new ExtensionManagerTests.StubFolders();
+            _packagesInRepository = new ModuleRecipeHandlerTest.StubPackagingSourceManager();
+            _packageManager = new ModuleRecipeHandlerTest.StubPackageManager();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
@@ -60,8 +65,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ModuleRecipeHandlerTest.StubDataMigrationManager>().As<IDataMigrationManager>();
-            builder.RegisterType<ModuleRecipeHandlerTest.StubPackagingSourceManager>().As<IPackagingSourceManager>();
-            builder.RegisterType<ModuleRecipeHandlerTest.StubPackageManager>().As<IPackageManager>();
+            builder.RegisterInstance(_packagesInRepository).As<IPackagingSourceManager>();
+            builder.RegisterInstance(_packageManager).As<IPackageManager>();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterInstance(_testVirtualPathProvider).As<IVirtualPathProvider>();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
@@ -82,17 +87,24 @@ Features:
     SuperWiki: 
         Description: My super wiki theme for Orchard.
 ");
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+                Id = "Orchard.Theme.SuperWiki",
+                PackageType = DefaultExtensionTypes.Theme,
+                Title = "SuperWiki",
+                Version = "1.0.3",
+                IsLatestVersion = true,
+            });
 
             IShellDescriptorManager shellDescriptorManager = _container.Resolve<IShellDescriptorManager>();
             // No features enabled
             shellDescriptorManager.UpdateShellDescriptor(0,
-                Enumerable.Empty<ShellFeature>(),
-                Enumerable.Empty<ShellParameter>());
+                                                         Enumerable.Empty<ShellFeature>(),
+                                                         Enumerable.Empty<ShellParameter>());
 
             ThemeRecipeHandler themeRecipeHandler = _container.Resolve<ThemeRecipeHandler>();
 
             RecipeContext recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
-            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "SuperWiki"));
+            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Theme.SuperWiki"));
             recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
             IFeatureManager featureManager = _container.Resolve<IFeatureManager>();
@@ -130,7 +142,39 @@ Features:
             RecipeContext recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
             recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
-            Assert.Throws(typeof(InvalidOperationException), () => themeRecipeHandler.ExecuteRecipeStep(recipeContext));
+            Assert.Throws(typeof (InvalidOperationException), () => themeRecipeHandler.ExecuteRecipeStep(recipeContext));
+        }
+
+        [Test]
+        public void ExecuteRecipeStepWithRepositoryAndVersionNotLatestTest() {
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+                Id = "Orchard.Theme.SuperWiki",
+                PackageType = DefaultExtensionTypes.Theme,
+                Title = "SuperWiki",
+                Version = "1.0.3",
+                IsLatestVersion = true,
+            });
+            _packagesInRepository.AddPublishedPackage(new PublishedPackage {
+                Id = "Orchard.Theme.SuperWiki",
+                PackageType = DefaultExtensionTypes.Theme,
+                Title = "SuperWiki",
+                Version = "1.0.2",
+                IsLatestVersion = false,
+            });
+
+            ThemeRecipeHandler themeRecipeHandler = _container.Resolve<ThemeRecipeHandler>();
+
+            RecipeContext recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Theme", Step = new XElement("SuperWiki") } };
+            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Theme.SuperWiki"));
+            recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
+            recipeContext.RecipeStep.Step.Add(new XAttribute("version", "1.0.2"));
+
+            themeRecipeHandler.ExecuteRecipeStep(recipeContext);
+
+            var installedPackage = _packageManager.GetInstalledPackages().FirstOrDefault(info => info.ExtensionName == "Orchard.Theme.SuperWiki");
+            Assert.That(installedPackage, Is.Not.Null);
+            Assert.That(installedPackage.ExtensionVersion, Is.EqualTo("1.0.2"));
+            Assert.That(recipeContext.Executed, Is.True);
         }
 
         internal class StubSiteThemeService : ISiteThemeService {
