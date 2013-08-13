@@ -26,6 +26,13 @@ namespace Orchard.Core.Feeds.StandardQueries {
             if (containerIdValue == null)
                 return null;
 
+            var containerId = (int)containerIdValue.ConvertTo(typeof(int));
+            var container = _contentManager.Get(containerId);
+            
+            if (container == null) {
+                return null;
+            }
+            
             return new FeedQueryMatch { FeedQuery = this, Priority = -5 };
         }
 
@@ -42,6 +49,10 @@ namespace Orchard.Core.Feeds.StandardQueries {
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);
 
+            if (container == null) {
+                return;
+            }
+            
             var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilters);
             if (context.Format == "rss") {
                 var link = new XElement("link");
