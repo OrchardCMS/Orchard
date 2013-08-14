@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>2.0</ProductVersion>
+    <ProductVersion>2.1</ProductVersion>
     <ProjectGuid>{03c5327d-4e8e-45a7-acd1-e18e7caa3c4a}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -46,15 +46,77 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Orchard.Azure.WebContent\" />
+    <Folder Include="Orchard.Azure.WebContent\Bin" />
+    <Folder Include="Orchard.Azure.WebContent\Bin\Startup\" />
     <Folder Include="Profiles" />
   </ItemGroup>
   <ItemGroup>
-    <PublishProfile Include="Profiles\mip-cms-testProduction.azurePubxml" />
+    <Content Include="Orchard.Azure.WebContent\Bin\Startup\ConfigureIIS.cmd">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.0\</CloudExtensionsDir>
+    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.1\</CloudExtensionsDir>
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
+  <!-- The BeforeAddRoleContent override ensures that content in themes and modules get added
+	to the Azure package. The web role project Orchard.Azure.Web contains assembly references
+	to all themes and modules, but won't contain their content unless those are somehow
+	included in the output. This target override includes all the appropriate content files
+	from underneath the regular Orchard.Web project folder. -->
+  <PropertyGroup>
+    <LibFolder>$(MSBuildProjectDirectory)\..\..\..\lib</LibFolder>
+    <SrcFolder>$(MSBuildProjectDirectory)\..\..</SrcFolder>
+    <StagingFolder>$(MSBuildProjectDirectory)\Staging</StagingFolder>
+  </PropertyGroup>
+  <Target Name="BeforeAddRoleContent">
+    <!-- Clean the staging area.-->
+    <RemoveDir Directories="$(StagingFolder)" ContinueOnError="true" />
+    <!-- Copy all additional content to the staging area. -->
+    <ItemGroup>
+      <!-- Exclude project/compilation artifacts. -->
+      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.user;$(SrcFolder)\**\*.cs;$(SrcFolder)\**\*.csproj;$(SrcFolder)\**\.hg\**\*" />
+      <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
+      <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
+      <Stage-Modules Include="$(SrcFolder)\Orchard.Web\Modules\**\*" Exclude="@(Excluded)" />
+      <SqlCeBinariesx86 Include="$(LibFolder)\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(LibFolder)\sqlce\amd64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(StagingFolder)\Themes\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StagingFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StagingFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(StagingFolder)\SqlCe-x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(StagingFolder)\SqlCe-x64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <!-- Delete superfluous web.config files. -->
+    <ItemGroup>
+      <WebConfigFiles Include="$(StagingFolder)\Modules\*\web.config;$(StagingFolder)\Core\web.config" />
+    </ItemGroup>
+    <Delete Files="@(WebConfigFiles)" />
+    <!-- Include the folders in the packaged site content. -->
+    <ItemGroup>
+      <AzureRoleContent Include="$(StagingFolder)\Themes">
+        <RoleName>Orchard.Azure.Web</RoleName>
+        <Destination>..\sitesroot\0\Themes</Destination>
+      </AzureRoleContent>
+      <AzureRoleContent Include="$(StagingFolder)\Core">
+        <RoleName>Orchard.Azure.Web</RoleName>
+        <Destination>..\sitesroot\0\Core</Destination>
+      </AzureRoleContent>
+      <AzureRoleContent Include="$(StagingFolder)\Modules">
+        <RoleName>Orchard.Azure.Web</RoleName>
+        <Destination>..\sitesroot\0\Modules</Destination>
+      </AzureRoleContent>
+      <AzureRoleContent Include="$(StagingFolder)\SqlCe-x86">
+        <RoleName>Orchard.Azure.Web</RoleName>
+        <Destination>..\sitesroot\0\bin\x86</Destination>
+      </AzureRoleContent>
+      <AzureRoleContent Include="$(StagingFolder)\SqlCe-x64">
+        <RoleName>Orchard.Azure.Web</RoleName>
+        <Destination>..\sitesroot\0\bin\amd64</Destination>
+      </AzureRoleContent>
+    </ItemGroup>
+  </Target>
 </Project>

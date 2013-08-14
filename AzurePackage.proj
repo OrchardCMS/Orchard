@@ -103,23 +103,6 @@
 
     <Delete Files="@(WebConfigs)" />
 
-    <!-- extra processing of the staged config files -->
-    <XmlUpdate XmlFileName="$(MsDeployFolder)\web.config"
-      XPath="/configuration/system.web/compilation/@debug"
-      Value="false" />
-
-    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
-      XPath="/log4net/appender/immediateFlush/@value"
-      Value="false" />
-
-    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
-      XPath="/log4net/logger/priority/@value"
-      Value="ERROR" />
-
-    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
-      XPath="/log4net/root/priority/@value"
-      Value="ERROR" />
-
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
