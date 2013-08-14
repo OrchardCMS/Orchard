@@ -56,6 +56,9 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="ImportExport\RolesCustomExportStep.cs" />
+    <Compile Include="ImportExport\RolesExportEventHandler.cs" />
+    <Compile Include="ImportExport\RolesRecipeHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\UserRolesPartDriver.cs" />
     <Compile Include="DefaultRoleUpdater.cs" />
