@@ -182,7 +182,14 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
@@ -493,9 +500,8 @@
   <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
   </Target>
-  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
-    <MSBuild Projects="CopyModulesAndThemes.proj" Targets="Build" />
-  </Target>
+  <!--Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+  </Target-->
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
