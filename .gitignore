@@ -180,3 +180,4 @@ src/Orchard.Azure/Orchard.Azure.CloudService/csx/Debug/*
 src/Orchard.Web/Orchard.Web.Publish.xml
 src/TestResults/*
 src/Orchard.Web/Properties/PublishProfiles
+src/Orchard.Azure/Orchard.Azure.CloudService/Staging/
