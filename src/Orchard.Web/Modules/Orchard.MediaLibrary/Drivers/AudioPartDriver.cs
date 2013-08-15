@@ -11,5 +11,16 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_Audio", () => shapeHelper.Parts_Audio())
                 );
         }
+
+        protected override void Exporting(AudioPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Length", part.Length);
+        }
+
+        protected override void Importing(AudioPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var length = context.Attribute(part.PartDefinition.Name, "Length");
+            if (length != null) {
+                part.Length = int.Parse(length);
+            }
+        }
     }
 }

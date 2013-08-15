@@ -11,5 +11,16 @@ namespace Orchard.MediaLibrary.Drivers {
                 ContentShape("Parts_OEmbed", () => shapeHelper.Parts_OEmbed())
             );
         }
+
+        protected override void Exporting(OEmbedPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Source", part.Source);
+        }
+
+        protected override void Importing(OEmbedPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var source = context.Attribute(part.PartDefinition.Name, "Source");
+            if (source != null) {
+                part.Source = source;
+            }
+        }
     }
 }
