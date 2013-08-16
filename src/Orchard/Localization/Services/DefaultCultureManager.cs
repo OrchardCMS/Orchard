@@ -32,7 +32,14 @@ namespace Orchard.Localization.Services {
             if (!IsValidCulture(cultureName)) {
                 throw new ArgumentException("cultureName");
             }
-            _cultureRepository.Create(new CultureRecord { Culture = cultureName });
+
+            var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
+            
+            if (culture != null) {
+                return;
+            }
+
+            _cultureRepository.Create(new CultureRecord {Culture = cultureName});
             _signals.Trigger("culturesChanged");
         }
 
