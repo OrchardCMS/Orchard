@@ -1,11 +1,5 @@
 ﻿@{
-    SetMeta("IE=edge,chrome=1", httpEquiv: "X-UA-Compatible");
-    Style.Include("~/themes/theadmin/styles/site.css");
-    Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
-    Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
-
     Layout.Title = @T("Edit Activity");
-    //Script.Require("jQueryUI");
     Script.Include("orchard-workflows-serialize.js");
 }
 
