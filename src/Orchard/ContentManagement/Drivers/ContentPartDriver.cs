@@ -9,7 +9,7 @@ using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
-        protected virtual string Prefix { get { return ""; } }
+        protected virtual string Prefix { get { return typeof(TContent).Name; } }
 
         void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
             var part = context.ContentItem.As<TContent>();
