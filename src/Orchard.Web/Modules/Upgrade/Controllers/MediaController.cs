@@ -186,6 +186,14 @@ namespace Upgrade.Controllers {
                             if (media != null) {
                                 contentField.Url = "{" + media.Id + "}";
                             }
+                            else {
+                                // We don't want "broken" links left behind so instead want them converted to empty fields as broken links cause the page to crash
+                                // Because this might be run "twice", don't override already valid contentField Url's
+                                string contentFieldUrl = contentField.Url;
+                                if (!contentFieldUrl.StartsWith("{")) {
+                                    contentField.Url = "";
+                                }
+                            }
                         }
                     }
                 }
