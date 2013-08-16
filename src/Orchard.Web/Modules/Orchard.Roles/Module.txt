@@ -7,4 +7,4 @@ OrchardVersion: 1.7
 Description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
 FeatureDescription: Standard user roles.
 Category: Core
-Dependencies: Orchard.Users
+Dependencies: Orchard.Users, Orchard.Workflows

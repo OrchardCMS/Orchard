@@ -60,6 +60,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\CloseCommentsActivity.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
@@ -105,6 +106,7 @@
     <Content Include="Styles\images\menu.comments.png" />
     <Content Include="Styles\menu.comments-admin.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
+    <Content Include="Styles\workflows-activity-close-comments.css" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -120,6 +122,10 @@
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
+      <Name>Orchard.Workflows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

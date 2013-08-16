@@ -9,6 +9,7 @@ Features:
     Orchard.Scripting.CSharp:
         Description: Provides C# compiler services.
 		Category: Scripting
+		Dependencies: Orchard.Workflows
 	Orchard.Scripting.CSharp.Validation
 		Description: Provides a Script Validation part.
 		Name: Script Validation
