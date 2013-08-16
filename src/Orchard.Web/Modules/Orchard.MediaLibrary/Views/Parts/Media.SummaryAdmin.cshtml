@@ -1,16 +1,19 @@
 ﻿@using Orchard.MediaLibrary.Models
 @{
     MediaPart mediaPart = Model.ContentPart;
+    var mediaUrl = mediaPart.MediaUrl;
 }           
 
 <div class="title">
     <em>@T("Title:")</em>
     <span>@mediaPart.Title</span>
 </div>
+@if (HasText(mediaUrl)) {
 <div class="file-name">
     <em>@T("Filename:")</em>
-    <span>@Path.GetFileName(mediaPart.MediaUrl)</span>
+    <span><a href="@mediaUrl">@Path.GetFileName(mediaUrl)</a></span>
 </div>
+}
 <div class="mime-type">
     <em>@T("Mime Type:")</em>
     <span>@mediaPart.MimeType</span>
