@@ -46,7 +46,7 @@ jQuery(function ($) {
 
                     return result
                         .data("ui-autocomplete-item", item)
-                        .append('<a ><span class="aclabel">' + item.label + ' </span><span class="acvalue">' + item.value + ' </span><span class="acdesc">' + desc + "</span></a>")
+                        .append('<a ><span class="aclabel">' + $('<div/>').text(item.label).html() + ' </span><span class="acvalue">' + $('<div/>').text(item.value).html() + ' </span><span class="acdesc">' + $('<div/>').text(desc).html() + "</span></a>")
                         .appendTo(ul);
                 };
             });
