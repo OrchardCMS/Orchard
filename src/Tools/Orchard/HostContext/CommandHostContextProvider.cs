@@ -65,7 +65,8 @@ namespace Orchard.HostContext {
             LogInfo(context, "Virtual path: \"{0}\"", context.Arguments.VirtualPath);
 
             if (string.IsNullOrEmpty(context.Arguments.WorkingDirectory))
-                context.Arguments.WorkingDirectory = Environment.CurrentDirectory;
+                context.Arguments.WorkingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+
             LogInfo(context, "Working directory: \"{0}\"", context.Arguments.WorkingDirectory);
 
             LogInfo(context, "Detecting orchard installation root directory...");
