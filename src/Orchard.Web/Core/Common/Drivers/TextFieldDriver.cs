@@ -67,7 +67,7 @@ namespace Orchard.Core.Common.Drivers {
 
             if(updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
                 if (viewModel.Settings.Required && string.IsNullOrWhiteSpace(viewModel.Text)) {
-                    updater.AddModelError("Text", T("The field {0} is mandatory", field.DisplayName));
+                    updater.AddModelError("Text", T("The field {0} is mandatory", T(field.DisplayName)));
                     return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                                         () => shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: viewModel, Prefix: GetPrefix(field, part)));
                 }
