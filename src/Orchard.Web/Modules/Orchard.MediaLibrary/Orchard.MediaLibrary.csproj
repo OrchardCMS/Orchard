@@ -156,6 +156,7 @@
     <Compile Include="Services\IMediaLibraryService.cs" />
     <Compile Include="Services\MediaLibraryService.cs" />
     <Compile Include="Services\Shapes.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
     <Compile Include="ViewModels\MediaLibraryPickerFieldViewModel.cs" />
