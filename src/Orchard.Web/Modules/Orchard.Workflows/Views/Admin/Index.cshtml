@@ -14,7 +14,7 @@
 <h1>@Html.TitleForPage(T("Manage Workflow Definitions").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Create new Wokflow Definition").ToString(), "Create", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Html.ActionLink(T("Create new Workflow Definition").ToString(), "Create", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
