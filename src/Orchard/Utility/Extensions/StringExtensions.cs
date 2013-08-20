@@ -215,13 +215,12 @@ namespace Orchard.Utility.Extensions {
                 return subject;
             }
 
-            Array.Sort(stripped);
             var result = new char[subject.Length];
 
             var cursor = 0;
             for (var i = 0; i < subject.Length; i++) {
                 char current = subject[i];
-                if (Array.BinarySearch(stripped, current) < 0) {
+                if (Array.IndexOf(stripped, current) < 0) {
                     result[cursor++] = current;
                 }
             }
