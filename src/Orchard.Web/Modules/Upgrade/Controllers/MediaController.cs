@@ -175,7 +175,7 @@ namespace Upgrade.Controllers {
                 .Where(x => x.Field.FieldDefinition.Name == "MediaPickerField");
 
             foreach (var match in matches) {
-                foreach (var contentItem in _orchardServices.ContentManager.Query().ForType(match.Type.Name).List()) {
+                foreach (var contentItem in _orchardServices.ContentManager.Query().ForType(match.Type.Name).ForVersion(VersionOptions.AllVersions).List()) {
                     var contentPart = contentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == match.Part.PartDefinition.Name);
                     if (contentPart != null) {
                         dynamic contentField = contentPart.Fields.FirstOrDefault(x => x.Name == match.Field.Name);
