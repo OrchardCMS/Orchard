@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
-using Orchard.ContentManagement.Utilities;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Fields {
     public class MediaLibraryPickerField : ContentField {
         private static readonly char[] separator = new [] {'{', '}', ','};
-        internal LazyField<IEnumerable<MediaPart>> _contentItems = new LazyField<IEnumerable<MediaPart>>();
+        internal Lazy<IEnumerable<MediaPart>> _contentItems;
  
         public int[] Ids {
             get { return DecodeIds(Storage.Get<string>()); }

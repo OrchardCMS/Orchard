@@ -109,6 +109,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModalAdminFilter.cs" />
@@ -159,6 +163,7 @@
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
+    <Compile Include="Tokens\FieldTokens.cs" />
     <Compile Include="ViewModels\MediaLibraryPickerFieldViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerMediaItemsViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerFolderCreateViewModel.cs" />
