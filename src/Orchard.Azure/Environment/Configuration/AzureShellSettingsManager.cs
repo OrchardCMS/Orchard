@@ -5,58 +5,62 @@ using System.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Orchard.Environment.Configuration;
+using Orchard.Azure.FileSystems;
+using Microsoft.WindowsAzure.Storage;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure.Environment.Configuration {
 
-    public class AzureShellSettingsManager : IShellSettingsManager {
-        public const string ContainerName = "sites"; // container names must be lower cased
-        public const string SettingsFilename = "Settings.txt";
-        public const char Separator = ':';
-        public const string EmptyValue = "null";
+	public class AzureShellSettingsManager : IShellSettingsManager {
+		public const string ContainerName = "sites"; // container names must be lower cased
+		public const string SettingsFilename = "Settings.txt";
+		public const char Separator = ':';
+		public const string EmptyValue = "null";
 
-        private readonly IShellSettingsManagerEventHandler _events;
-        private readonly AzureFileSystem _fileSystem;
+		private readonly IShellSettingsManagerEventHandler _events;
+		private readonly AzureFileSystem _fileSystem;
 
-        public AzureShellSettingsManager(IShellSettingsManagerEventHandler events)
-            : this(CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString")), events) {}
+		public AzureShellSettingsManager(IShellSettingsManagerEventHandler events, IMimeTypeProvider mimeTypeProvider)
+			: this(CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString")), events, mimeTypeProvider) {}
 
-        public AzureShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events) {
-            _events = events;
-            _fileSystem = new AzureFileSystem(ContainerName, String.Empty, true, storageAccount);
-        }
+		public AzureShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events, IMimeTypeProvider mimeTypeProvider)
+		{
+			_events = events;
+			_fileSystem = new AzureFileSystem(ContainerName, String.Empty, true, mimeTypeProvider);
+		}
 
-        IEnumerable<ShellSettings> IShellSettingsManager.LoadSettings() {
-            var settings = LoadSettings().ToArray();
-            return settings;
-        }
+		IEnumerable<ShellSettings> IShellSettingsManager.LoadSettings() {
+			var settings = LoadSettings().ToArray();
+			return settings;
+		}
 
-        void IShellSettingsManager.SaveSettings(ShellSettings settings) {
-            var content = ShellSettingsSerializer.ComposeSettings(settings);
-            var filePath = _fileSystem.Combine(settings.Name, SettingsFilename);
+		void IShellSettingsManager.SaveSettings(ShellSettings settings) {
+			var content = ShellSettingsSerializer.ComposeSettings(settings);
+			var filePath = _fileSystem.Combine(settings.Name, SettingsFilename);
 
-            var file = _fileSystem.FileExists(filePath) 
-                ? _fileSystem.GetFile(filePath)
-                : _fileSystem.CreateFile(filePath);
+			var file = _fileSystem.FileExists(filePath) 
+				? _fileSystem.GetFile(filePath)
+				: _fileSystem.CreateFile(filePath);
 
-            using (var stream = file.OpenWrite()) {
-                using (var writer = new StreamWriter(stream)) {
-                    writer.Write(content);
-                }
-            }
+			using (var stream = file.OpenWrite()) {
+				using (var writer = new StreamWriter(stream)) {
+					writer.Write(content);
+				}
+			}
 
-            _events.Saved(settings);
-        }
+			_events.Saved(settings);
+		}
 
-        IEnumerable<ShellSettings> LoadSettings() {
-            foreach (var folder in _fileSystem.ListFolders(null))
-                foreach (var file in _fileSystem.ListFiles(folder.GetPath())) {
-                    if (!String.Equals(file.GetName(), SettingsFilename))
-                        continue;
+		IEnumerable<ShellSettings> LoadSettings() {
+			foreach (var folder in _fileSystem.ListFolders(null))
+				foreach (var file in _fileSystem.ListFiles(folder.GetPath())) {
+					if (!String.Equals(file.GetName(), SettingsFilename))
+						continue;
 
-                    using (var stream = file.OpenRead())
-                    using (var reader = new StreamReader(stream))
-                        yield return ShellSettingsSerializer.ParseSettings(reader.ReadToEnd());
-                }
-        }
-    }
+					using (var stream = file.OpenRead())
+					using (var reader = new StreamReader(stream))
+						yield return ShellSettingsSerializer.ParseSettings(reader.ReadToEnd());
+				}
+		}
+	}
 }

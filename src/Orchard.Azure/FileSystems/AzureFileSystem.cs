@@ -2,48 +2,68 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using Microsoft.Win32;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Orchard.FileSystems.Media;
 
-namespace Orchard.Azure {
+namespace Orchard.Azure.FileSystems {
     public class AzureFileSystem {
         public const string FolderEntry = "$$$ORCHARD$$$.$$$";
+        
+        private readonly bool _isPrivate;
+        private readonly IMimeTypeProvider _mimeTypeProvider;
+        
+        protected string _root;
+        protected string _absoluteRoot;
+
+        private CloudStorageAccount _storageAccount;
+        private CloudBlobClient _blobClient;
+        private CloudBlobContainer _container;
 
         public string ContainerName { get; protected set; }
 
-        private readonly CloudStorageAccount _storageAccount;
-        protected readonly string _root;
-        protected readonly string _absoluteRoot;
-        public CloudBlobClient BlobClient { get; private set; }
-        public CloudBlobContainer Container { get; private set; }
-
-        public AzureFileSystem(string containerName, string root, bool isPrivate)
-            : this(containerName, root, isPrivate, CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"))) {
+        public CloudBlobClient BlobClient {
+            get {
+                EnsureInitialized();
+                return _blobClient;
+            }
         }
 
-        public AzureFileSystem(string containerName, string root, bool isPrivate, CloudStorageAccount storageAccount) {
-            // Setup the connection to custom storage accountm, e.g. Development Storage
-            _storageAccount = storageAccount;
+        public CloudBlobContainer Container {
+            get {
+                EnsureInitialized(); 
+                return _container;
+            }
+        }
+
+        public AzureFileSystem(string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
+            _isPrivate = isPrivate;
+            _mimeTypeProvider = mimeTypeProvider;
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
-            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, containerName), root);
+        }
 
-            BlobClient = _storageAccount.CreateCloudBlobClient();
+        private void EnsureInitialized() {
+            if (_storageAccount != null) {
+                return;
+            }
+
+
+            _storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, ContainerName), _root);
+
+            _blobClient = _storageAccount.CreateCloudBlobClient();
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
-            Container = BlobClient.GetContainerReference(ContainerName);
+            _container = _blobClient.GetContainerReference(ContainerName);
 
-            Container.CreateIfNotExist();
+            _container.CreateIfNotExists();
 
-            Container.SetPermissions(isPrivate
+            _container.SetPermissions(_isPrivate
                                             ? new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off }
                                             : new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-
+            
         }
 
         private static string ConvertToRelativeUriPath(string path) {
@@ -89,16 +109,16 @@ namespace Orchard.Azure {
 
             path = ConvertToRelativeUriPath(path);
 
-            Container.EnsureBlobExists(String.Concat(_root, path));
-            return new AzureBlobFileStorage(Container.GetBlockBlobReference(String.Concat(_root, path)), _absoluteRoot);
+                Container.EnsureBlobExists(String.Concat(_root, path));
+                return new AzureBlobFileStorage(Container.GetBlockBlobReference(String.Concat(_root, path)), _absoluteRoot);
         }
 
         public bool FileExists(string path) {
-            return Container.BlobExists(String.Concat(_root, path));
+                return Container.BlobExists(String.Concat(_root, path));
         }
 
         public bool FolderExists(string path) {
-            return Container.DirectoryExists(String.Concat(_root, path));
+                return Container.DirectoryExists(String.Concat(_root, path));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
@@ -111,12 +131,11 @@ namespace Orchard.Azure {
             if (!prefix.EndsWith("/"))
                 prefix += "/";
 
-            return BlobClient
-                    .ListBlobsWithPrefix(prefix)
-                    .OfType<CloudBlockBlob>()
-                    .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
-                    .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
-                    .ToArray();
+            return BlobClient.ListBlobs(prefix, true)
+                        .OfType<CloudBlockBlob>()
+                        .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
+                        .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
+                        .ToArray();
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
@@ -185,8 +204,8 @@ namespace Orchard.Azure {
 
             Container.EnsureDirectoryExists(String.Concat(_root, path));
             foreach (var blob in Container.GetDirectoryReference(String.Concat(_root, path)).ListBlobs()) {
-                if (blob is CloudBlob)
-                    ((CloudBlob)blob).Delete();
+                if (blob is CloudBlockBlob)
+                    ((CloudBlockBlob)blob).Delete();
 
                 if (blob is CloudBlobDirectory)
                     DeleteFolder(blob.Uri.ToString().Substring(Container.Uri.ToString().Length + 1 + _root.Length));
@@ -203,7 +222,7 @@ namespace Orchard.Azure {
             if (!newPath.EndsWith("/"))
                 newPath += "/";
             foreach (var blob in Container.GetDirectoryReference(_root + path).ListBlobs()) {
-                if (blob is CloudBlob) {
+                if (blob is CloudBlockBlob) {
                     string filename = Path.GetFileName(blob.Uri.ToString());
                     string source = String.Concat(path, filename);
                     string destination = String.Concat(newPath, filename);
@@ -224,7 +243,7 @@ namespace Orchard.Azure {
 
             Container.EnsureBlobExists(Combine(_root, path));
             var blob = Container.GetBlockBlobReference(Combine(_root, path));
-            blob.Delete();
+            blob.DeleteIfExists();
         }
 
         public void RenameFile(string path, string newPath) {
@@ -233,11 +252,10 @@ namespace Orchard.Azure {
 
             Container.EnsureBlobExists(String.Concat(_root, path));
             Container.EnsureBlobDoesNotExist(String.Concat(_root, newPath));
-
+            
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
-            newBlob.CopyFromBlob(blob);
-            blob.Delete();
+            newBlob.StartCopyFromBlob(blob);
         }
 
         public IStorageFile CreateFile(string path) {
@@ -257,69 +275,20 @@ namespace Orchard.Azure {
             }
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
-            var contentType = GetContentType(path);
+            var contentType = _mimeTypeProvider.GetMimeType(path);
             if (!String.IsNullOrWhiteSpace(contentType)) {
                 blob.Properties.ContentType = contentType;
             }
 
-            blob.UploadByteArray(new byte[0]);
+            blob.UploadFromStream(new MemoryStream(new byte[0]));
             return new AzureBlobFileStorage(blob, _absoluteRoot);
         }
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
 
-            Container.EnsureBlobExists(String.Concat(_root, path));
-            return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
-        }
-
-        /// <summary>
-        /// Returns the mime-type of the specified file path, looking into IIS configuration and the Registry
-        /// </summary>
-        private string GetContentType(string path) {
-            string extension = Path.GetExtension(path);
-            if (String.IsNullOrWhiteSpace(extension)) {
-                return "application/unknown";
-            }
-
-            try {
-                try {
-                    string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
-                    string webConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(null).FilePath;
-
-                    // search for custom mime types in web.config and applicationhost.config
-                    foreach (var configFile in new[] { webConfig, applicationHost }) {
-                        if (File.Exists(configFile)) {
-                            var xdoc = XDocument.Load(configFile);
-                            var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
-                            if (mimeMap != null) {
-                                var mimeType = mimeMap.Attribute("mimeType");
-                                if (mimeType != null) {
-                                    return mimeType.Value;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch {
-                    // ignore issues with web.config to fall back to registry
-                }
-
-                // search into the registry
-                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(extension.ToLower());
-                if (regKey != null) {
-                    var contentType = regKey.GetValue("Content Type");
-                    if (contentType != null) {
-                        return contentType.ToString();
-                    }
-                }
-            }
-            catch {
-                // if an exception occured return application/unknown
-                return "application/unknown";
-            }
-
-            return "application/unknown";
+                Container.EnsureBlobExists(String.Concat(_root, path));
+                return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
@@ -344,7 +313,7 @@ namespace Orchard.Azure {
             }
 
             public DateTime GetLastUpdated() {
-                return _blob.Properties.LastModifiedUtc;
+                return _blob.Properties.LastModified.GetValueOrDefault().DateTime;
             }
 
             public string GetFileType() {
@@ -364,7 +333,7 @@ namespace Orchard.Azure {
                 // the file will be emptied, because Azure doesn't implement FileMode.Truncate
                 _blob.DeleteIfExists();
                 _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
-                _blob.OpenWrite().Dispose(); // force file creation
+                _blob.UploadFromStream(new MemoryStream(new byte[0]));
 
                 return OpenWrite();
             }
@@ -400,15 +369,15 @@ namespace Orchard.Azure {
                 if (_blob.Parent != null) {
                     return new AzureBlobFolderStorage(_blob.Parent, _rootPath);
                 }
-                throw new ArgumentException("Directory " + _blob.Uri + " does not have a parent directory");
+            throw new ArgumentException("Directory " + _blob.Uri + " does not have a parent directory");
             }
 
             private static long GetDirectorySize(CloudBlobDirectory directoryBlob) {
                 long size = 0;
 
                 foreach (var blobItem in directoryBlob.ListBlobs()) {
-                    if (blobItem is CloudBlob)
-                        size += ((CloudBlob)blobItem).Properties.Length;
+                    if (blobItem is CloudBlockBlob)
+                        size += ((CloudBlockBlob)blobItem).Properties.Length;
 
                     if (blobItem is CloudBlobDirectory)
                         size += GetDirectorySize((CloudBlobDirectory)blobItem);

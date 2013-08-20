@@ -3,8 +3,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.Storage;
 using Orchard.Environment;
 
 namespace Orchard.Azure.Web {
@@ -19,10 +19,6 @@ namespace Orchard.Azure.Web {
         }
 
         protected void Application_Start() {
-            CloudStorageAccount.SetConfigurationSettingPublisher(    
-                (configName, configSetter) =>    
-                    configSetter(RoleEnvironment.GetConfigurationSettingValue(configName))    
-                );
 
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
