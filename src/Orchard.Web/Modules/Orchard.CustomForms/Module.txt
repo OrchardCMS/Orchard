@@ -10,4 +10,4 @@ Features:
 		Name: Custom Forms
         Description: Create custom forms like contact forms or content contributions.
         Category: Forms
-        Dependencies: Contents, Orchard.Tokens
+        Dependencies: Contents, Orchard.Tokens, Orchard.Workflows

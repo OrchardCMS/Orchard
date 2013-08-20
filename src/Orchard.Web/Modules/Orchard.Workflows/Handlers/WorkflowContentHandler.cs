@@ -6,7 +6,6 @@ using Orchard.Workflows.Services;
 namespace Orchard.Workflows.Handlers {
 
     public class WorkflowContentHandler : ContentHandler {
-        private readonly HashSet<int> _contentCreated = new HashSet<int>();
 
         public WorkflowContentHandler(IWorkflowManager workflowManager) {
 
@@ -28,26 +27,15 @@ namespace Orchard.Workflows.Handlers {
                     context.BuildingContentItem,
                     () => new Dictionary<string, object> { { "Content", context.BuildingContentItem } }));
 
-            OnUpdated<ContentPart>(
-                (context, part) => {
-                    workflowManager.TriggerEvent("ContentUpdated",
-                        context.ContentItem,
-                        () => new Dictionary<string, object> { { "Content", context.ContentItem } });
-
-                    // Trigger the ContentCreated event only when its values have been updated
-                    if(_contentCreated.Contains(context.ContentItem.Id)) {
-                        workflowManager.TriggerEvent("ContentCreated",
-                            context.ContentItem,
-                            () => new Dictionary<string, object> {{"Content", context.ContentItem}});
-                    }
-                });
-
             OnCreated<ContentPart>(
-                // Flag the content item as "just created" but actually trigger the event
-                // when its content has been updated as it is what users would expect.
-                (context, part) => _contentCreated.Add(context.ContentItem.Id)
-            );
+                (context, part) =>
+                    workflowManager.TriggerEvent("ContentCreated", context.ContentItem,
+                    () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
+            OnUpdated<ContentPart>(
+                (context, part) =>
+                    workflowManager.TriggerEvent("ContentUpdated", context.ContentItem,
+                    () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
         }
     }
 }
