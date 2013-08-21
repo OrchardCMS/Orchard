@@ -26,8 +26,8 @@ namespace Orchard.CustomForms.Activities {
                         Id: "AnyOfCustomForms",
                         _Parts: Shape.SelectList(
                             Id: "customforms", Name: "CustomForms",
-                            Title: T("Content types"),
-                            Description: T("Select some content types."),
+                            Title: T("Custom Forms"),
+                            Description: T("Select some custom forms."),
                             Size: 10,
                             Multiple: true
                             )

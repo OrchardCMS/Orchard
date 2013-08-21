@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -19,14 +20,12 @@ namespace Orchard.CustomForms.Activities {
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             try {
 
-                var contentTypesState = activityContext.GetState<string>("ContentTypes");
+                var state = activityContext.GetState<string>("CustomForms");
 
                 // "" means 'any'
-                if (String.IsNullOrEmpty(contentTypesState)) {
+                if (String.IsNullOrEmpty(state)) {
                     return true;
                 }
-
-                string[] contentTypes = contentTypesState.Split(',');
 
                 var content = workflowContext.Content;
 
@@ -34,7 +33,12 @@ namespace Orchard.CustomForms.Activities {
                     return false;
                 }
 
-                return contentTypes.Any(contentType => content.ContentItem.TypeDefinition.Name == contentType);
+                var contentManager = content.ContentItem.ContentManager;
+                var identities = state.Split(',').Select(x => new ContentIdentity(x));
+                var customForms = identities.Select(contentManager.ResolveIdentity);
+
+                return customForms.Any(x => x == content);
+
             }
             catch {
                 return false;

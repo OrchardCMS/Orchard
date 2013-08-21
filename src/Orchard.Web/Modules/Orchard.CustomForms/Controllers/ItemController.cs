@@ -157,7 +157,7 @@ namespace Orchard.CustomForms.Controllers {
                     () => new Dictionary<string, object> { { "Content", contentItem } });
 
             // trigger any workflow
-            _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, contentItem,
+            _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, customForm.ContentItem,
                     () => new Dictionary<string, object> { { "Content", contentItem } });
 
             if (customForm.Redirect) {
