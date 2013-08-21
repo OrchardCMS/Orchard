@@ -45,18 +45,18 @@ namespace Orchard.Scripting.CSharp.Activities {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var properties = new Dictionary<string, string> {
-                {"Script", activityContext.GetState<string>("Script")} 
-            };
+            var script = activityContext.GetState<string>("Script");
+            object outcome = null;
 
             _csharpService.SetParameter("Services", _orchardServices);
             _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
             _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
             _csharpService.SetFunction("T", (Func<string, string>)(x => T(x).Text));
+            _csharpService.SetFunction("SetOutcome", (Action<object>)(x => outcome = x));
 
-            var scriptResult = _csharpService.Evaluate(properties["Script"]).ToString();
+            _csharpService.Run(script);
 
-            yield return T(scriptResult);
+            yield return T(Convert.ToString(outcome));
         }
 
         private IEnumerable<string> GetOutcomes(ActivityContext context) {

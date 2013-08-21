@@ -32,7 +32,15 @@ namespace Orchard.Scripting.CSharp.Services {
         public object Evaluate(string script) {
             DemandCompiler();
 
-            return Engine.Evaluate(script);
+            object result;
+            bool resultSet;
+
+            Engine.Evaluate(script, out result, out resultSet);
+            if (resultSet) {
+                return result;
+            }
+
+            return null;
         }
 
         private void DemandCompiler() {
