@@ -55,7 +55,13 @@ namespace Orchard.Core.Common.Handlers {
                     .Add("published", commonPart.PublishedUtc ?? _clock.UtcNow).Store()
                     .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store();
 
-                if (commonPart.Owner != null) context.DocumentIndex.Add("author", commonPart.Owner.UserName).Analyze().Store();
+                if (commonPart.Container != null) {
+                    context.DocumentIndex.Add("container-id", commonPart.Container.Id).Store();
+                }
+
+                if (commonPart.Owner != null) {
+                    context.DocumentIndex.Add("author", commonPart.Owner.UserName).Analyze().Store();
+                }
             });
         }
 
