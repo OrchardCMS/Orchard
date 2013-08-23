@@ -11,7 +11,6 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -23,7 +22,7 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
-        private readonly object _syncLock = new object();
+        private readonly static object _syncLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
         private IEnumerable<ShellSettings> _tenantsToRestart; 
@@ -54,13 +53,8 @@ namespace Orchard.Environment {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public IList<ShellContext> Current {
-            get { return BuildCurrent().ToReadOnlyCollection(); }
-        }
-
         public ShellContext GetShellContext(ShellSettings shellSettings) {
-            return Current
-                .Single(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
+            return BuildCurrent().SingleOrDefault(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
         }
 
         void IOrchardHost.Initialize() {
@@ -112,7 +106,7 @@ namespace Orchard.Environment {
         void StartUpdatedShells() {
             lock (_syncLock) {
                 if (_tenantsToRestart.Any()) {
-                    foreach (var settings in _tenantsToRestart.Distinct().ToList()) {
+                    foreach (var settings in _tenantsToRestart.ToList()) {
                         ActivateShell(settings);
                     }
 
@@ -155,7 +149,11 @@ namespace Orchard.Environment {
             Logger.Debug("Activating context for tenant {0}", context.Settings.Name); 
             context.Shell.Activate();
 
-            _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>()).Union(new [] {context});
+            _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
+                            .Where(c => c.Settings.Name != context.Settings.Name)
+                            .Concat(new[] { context })
+                            .ToArray(); 
+            
             _runningShellTable.Add(context.Settings);
         }
 
@@ -199,9 +197,13 @@ namespace Orchard.Environment {
             Logger.Information("Disposing active shell contexts");
 
             if (_shellContexts != null) {
-                foreach (var shellContext in _shellContexts) {
-                    shellContext.Shell.Terminate();
-                    shellContext.LifetimeScope.Dispose();
+                lock (_syncLock) {
+                    if (_shellContexts != null) {
+                        foreach (var shellContext in _shellContexts) {
+                            shellContext.Shell.Terminate();
+                            shellContext.LifetimeScope.Dispose();
+                        }
+                    }
                 }
                 _shellContexts = null;
             }
@@ -232,7 +234,9 @@ namespace Orchard.Environment {
                 
                 // if a tenant has been altered, and is not invalid, reload it
                 if (settings.State != TenantState.Invalid) {
-                    _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
+                    _tenantsToRestart = _tenantsToRestart
+                        .Where(x => x.Name != settings.Name)
+                        .Concat(new[] { settings });
                 }
             }
         }
@@ -284,12 +288,14 @@ namespace Orchard.Environment {
                     context = _shellContexts.First(x => x.Settings.Name == tenant);
                 }
 
-                // don't update the settings themselves here
+                // don't flag the tenant if already listed
                 if(_tenantsToRestart.Any(x => x.Name == tenant)) {
                     return;
                 }
 
-                _tenantsToRestart = _tenantsToRestart.Union(new[] { context.Settings });
+                _tenantsToRestart = _tenantsToRestart
+                    .Concat(new[] { context.Settings })
+                    .ToArray();
             }
         }
     }

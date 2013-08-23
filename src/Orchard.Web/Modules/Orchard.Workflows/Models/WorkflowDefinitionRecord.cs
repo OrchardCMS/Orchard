@@ -43,7 +43,7 @@ namespace Orchard.Workflows.Models {
         /// <summary>
         /// List of <see cref="WorkflowRecord"/> associated with this workflow definition.
         /// </summary>
-        [CascadeAllDeleteOrphan, Aggregate]
+        [CascadeAllDeleteOrphan]
         public virtual IList<WorkflowRecord> WorkflowRecords { get; set; }
     }
 }

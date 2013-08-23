@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using Orchard.Environment.Configuration;
 
@@ -17,34 +18,53 @@ namespace Orchard.Environment {
         private IEnumerable<ShellSettings> _shells = Enumerable.Empty<ShellSettings>();
         private IEnumerable<IGrouping<string, ShellSettings>> _shellsByHost = Enumerable.Empty<ShellSettings>().GroupBy(x => default(string));
         private ShellSettings _fallback;
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public void Add(ShellSettings settings) {
-            _shells = _shells
-                .Where(s => s.Name != settings.Name)
-                .Concat(new[] { settings })
-                .ToArray();
+            _lock.EnterWriteLock();
+            try {
+                _shells = _shells
+                    .Where(s => s.Name != settings.Name)
+                    .Concat(new[] {settings})
+                    .ToArray();
 
-            Organize();
+                Organize();
+            }
+            finally {
+                _lock.ExitWriteLock();
+            }
         }
 
         public void Remove(ShellSettings settings) {
-            _shells = _shells
-                .Where(s => s.Name != settings.Name)
-                .ToArray();
+            _lock.EnterWriteLock();
+            try {
+                _shells = _shells
+                    .Where(s => s.Name != settings.Name)
+                    .ToArray();
 
-            Organize();
+                Organize();
+            }
+            finally {
+                _lock.ExitWriteLock();
+            }
         }
 
         public void Update(ShellSettings settings) {
-            _shells = _shells
-                .Where(s => s.Name != settings.Name)
-                .ToArray();
+            _lock.EnterWriteLock();
+            try {
+                _shells = _shells
+                    .Where(s => s.Name != settings.Name)
+                    .ToArray();
 
-            _shells = _shells
-                .Concat(new[] { settings })
-                .ToArray();
+                _shells = _shells
+                    .Concat(new[] {settings})
+                    .ToArray();
 
-            Organize();
+                Organize();
+            }
+            finally {
+                _lock.ExitWriteLock();
+            }
         }
 
         private void Organize() {
@@ -86,19 +106,21 @@ namespace Orchard.Environment {
         }
 
         public ShellSettings Match(string host, string appRelativePath) {
-            // optimized path when only one tenant (Default)
-            if (!_shellsByHost.Any()) {
-                return _fallback;
-            }
+            _lock.EnterReadLock();
+            try {
+                // optimized path when only one tenant (Default), configured with no custom host
+                if (!_shellsByHost.Any() && _fallback != null) {
+                    return _fallback;
+                }
 
-            var hostLength = host.IndexOf(':');
-            if (hostLength != -1)
-                host = host.Substring(0, hostLength);
+                var hostLength = host.IndexOf(':');
+                if (hostLength != -1)
+                    host = host.Substring(0, hostLength);
 
-            var mostQualifiedMatch = _shellsByHost
-                .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
-                .SelectMany(group => group
-                    .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
+                var mostQualifiedMatch = _shellsByHost
+                    .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
+                    .SelectMany(group => group
+                                             .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
                     .FirstOrDefault(settings => {
                         if (settings.State == TenantState.Disabled) {
                             return false;
@@ -112,7 +134,11 @@ namespace Orchard.Environment {
                                || appRelativePath.Equals("~/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
                     });
 
-            return mostQualifiedMatch ?? _fallback;
+                return mostQualifiedMatch ?? _fallback;
+            }
+            finally {
+                _lock.ExitReadLock();
+            }
         }
     }
 }
