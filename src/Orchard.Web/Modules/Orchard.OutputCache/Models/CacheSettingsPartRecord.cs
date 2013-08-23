@@ -12,6 +12,9 @@ namespace Orchard.OutputCache.Models {
         public virtual string VaryQueryStringParameters { get; set; }
         
         [StringLengthMax]
+        public virtual string VaryRequestHeaders { get; set; }
+        
+        [StringLengthMax]
         public virtual string IgnoredUrls { get; set; }
     }
 }

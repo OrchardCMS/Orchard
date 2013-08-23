@@ -32,6 +32,12 @@
     </fieldset>
     
     <fieldset>
+        <label>@T("Vary Request Headers")</label>
+        @Html.TextBoxFor(m => m.VaryRequestHeaders, new { @class = "textMedium" })
+        <span class="hint">@T("When defined, using comma separated values, sets caching to vary via specified request headers.")</span>
+    </fieldset>
+    
+    <fieldset>
         <label>@T("Ignored urls")</label>
         @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "textMedium" })
         <span class="hint">@T("This must be a set of relative paths, e.g., /, /About. Please ensure that you enter only one path per line.")</span>

@@ -85,6 +85,7 @@ namespace Orchard.OutputCache.Controllers {
                 DefaultCacheDuration = settings.DefaultCacheDuration,
                 DefaultMaxAge = settings.DefaultMaxAge,
                 VaryQueryStringParameters = settings.VaryQueryStringParameters,
+                VaryRequestHeaders = settings.VaryRequestHeaders,
                 IgnoredUrls = settings.IgnoredUrls,
                 DebugMode = settings.DebugMode,
                 ApplyCulture = settings.ApplyCulture,
@@ -108,6 +109,7 @@ namespace Orchard.OutputCache.Controllers {
                 settings.DefaultCacheDuration = model.DefaultCacheDuration;
                 settings.DefaultMaxAge = model.DefaultMaxAge;
                 settings.VaryQueryStringParameters = model.VaryQueryStringParameters;
+                settings.VaryRequestHeaders = model.VaryRequestHeaders;
                 settings.IgnoredUrls = model.IgnoredUrls;
                 settings.DebugMode = model.DebugMode;
                 settings.ApplyCulture = model.ApplyCulture;

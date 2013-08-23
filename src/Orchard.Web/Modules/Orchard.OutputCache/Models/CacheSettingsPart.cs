@@ -19,6 +19,11 @@ namespace Orchard.OutputCache.Models {
             set { Record.VaryQueryStringParameters = value; }
         }
 
+        public string VaryRequestHeaders {
+            get { return Record.VaryRequestHeaders; }
+            set { Record.VaryRequestHeaders = value; }
+        }
+
         public string IgnoredUrls {
             get { return Record.IgnoredUrls; }
             set { Record.IgnoredUrls = value; }

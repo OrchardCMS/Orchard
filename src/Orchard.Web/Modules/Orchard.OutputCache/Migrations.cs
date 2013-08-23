@@ -10,6 +10,8 @@ namespace Orchard.OutputCache {
                     .Column<int>("DefaultCacheDuration")
                     .Column<int>("DefaultMaxAge")
                     .Column<string>("IgnoredUrls", c => c.Unlimited())
+                    .Column<string>("VaryQueryStringParameters", c => c.Unlimited())
+                    .Column<string>("VaryRequestHeaders", c => c.Unlimited())
                     .Column<bool>("DebugMode", c => c.WithDefault(false))
                     .Column<bool>("ApplyCulture", c => c.WithDefault(false))
                 );
@@ -22,7 +24,7 @@ namespace Orchard.OutputCache {
                         .Column<string>("RouteKey", c => c.WithLength(255))
                     );
 
-            return 4;
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -79,6 +81,16 @@ namespace Orchard.OutputCache {
                 );
 
             return 5;
+        }
+
+        public int UpdateFrom5() {
+
+            SchemaBuilder.AlterTable("CacheSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("VaryRequestHeaders", c => c.Unlimited())
+                );
+
+            return 6;
         }
     }
 }

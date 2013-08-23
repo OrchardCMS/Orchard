@@ -73,6 +73,7 @@ namespace Orchard.OutputCache.Filters {
         private string _actionName;
         private DateTime _now;
         private string[] _varyQueryStringParameters;
+        private ISet<string> _varyRequestHeaders;
 
 
         private WorkContext _workContext;
@@ -157,6 +158,27 @@ namespace Orchard.OutputCache.Filters {
                 }
             );
 
+            var varyRequestHeadersFromSettings = _cacheManager.Get("CacheSettingsPart.VaryRequestHeaders",
+                context => {
+                    context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
+                    var varyRequestHeaders = _workContext.CurrentSite.As<CacheSettingsPart>().VaryRequestHeaders;
+
+                    return string.IsNullOrWhiteSpace(varyRequestHeaders) ? null
+                        : varyRequestHeaders.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+                }
+            );
+
+            _varyRequestHeaders = (varyRequestHeadersFromSettings == null) ? new HashSet<string>() : new HashSet<string>(varyRequestHeadersFromSettings);
+
+            // different tenants with the same urls have different entries
+            _varyRequestHeaders.Add("HOST");
+
+            // Set the Vary: Accept-Encoding response header. 
+            // This instructs the proxies to cache two versions of the resource: one compressed, and one uncompressed. 
+            // The correct version of the resource is delivered based on the client request header. 
+            // This is a good choice for applications that are singly homed and depend on public proxies for user locality.
+            _varyRequestHeaders.Add("Accept-Encoding");
+
             // caches the ignored urls to prevent a query to the settings
             _ignoredUrls = _cacheManager.Get("CacheSettingsPart.IgnoredUrls",
                 context => {
@@ -187,12 +209,19 @@ namespace Orchard.OutputCache.Filters {
             }
 
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
+            var requestHeaders = filterContext.RequestContext.HttpContext.Request.Headers;
             var parameters = new Dictionary<string, object>(filterContext.ActionParameters);
 
             foreach (var key in queryString.AllKeys) {
                 if (key == null) continue;
 
                 parameters[key] = queryString[key];
+            }
+
+            foreach (var varyByRequestHeader in _varyRequestHeaders) {
+                if (requestHeaders.AllKeys.Contains(varyByRequestHeader)) {
+                    parameters["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
+                }
             }
 
             // compute the cache key
@@ -434,14 +463,9 @@ namespace Orchard.OutputCache.Filters {
                 }
             }
 
-            // different tenants with the same urls have different entries
-            response.Cache.VaryByHeaders["HOST"] = true;
-
-            // Set the Vary: Accept-Encoding response header. 
-            // This instructs the proxies to cache two versions of the resource: one compressed, and one uncompressed. 
-            // The correct version of the resource is delivered based on the client request header. 
-            // This is a good choice for applications that are singly homed and depend on public proxies for user locality.
-            response.Cache.VaryByHeaders["Accept-Encoding"] = true;
+            foreach (var varyRequestHeader in _varyRequestHeaders) {
+                response.Cache.VaryByHeaders[varyRequestHeader] = true;
+            }
 
             // create a unique cache per browser, in case a Theme is rendered differently (e.g., mobile)
             // c.f. http://msdn.microsoft.com/en-us/library/aa478965.aspx
