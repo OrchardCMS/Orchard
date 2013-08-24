@@ -16,6 +16,12 @@ namespace Orchard.Mvc.DataAnnotations {
                 { typeof(StringLengthAttribute),        (attribute, t) => new LocalizedStringLengthAttribute((StringLengthAttribute)attribute, t)},
                 { typeof(RegularExpressionAttribute),   (attribute, t) => new LocalizedRegularExpressionAttribute((RegularExpressionAttribute)attribute, t)}
             };
+
+            //Register Orchard's localized version of the validation attributes to the existing adapters.
+            RegisterAdapter(typeof(LocalizedRequiredAttribute), typeof(RequiredAttributeAdapter));
+            RegisterAdapter(typeof(LocalizedRangeAttribute), typeof(RangeAttributeAdapter));
+            RegisterAdapter(typeof(LocalizedStringLengthAttribute), typeof(StringLengthAttributeAdapter));
+            RegisterAdapter(typeof(LocalizedRegularExpressionAttribute), typeof(RegularExpressionAttributeAdapter));
         }
 
         protected override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context, IEnumerable<Attribute> attributes) {
