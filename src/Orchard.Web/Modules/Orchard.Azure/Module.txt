@@ -10,11 +10,11 @@ Features:
 		Name: Windows Azure Output Cache
 		Description: Activates an Orchard output cache provider that targets Windows Azure Cache.
 		Dependencies: Orchard.OutputCache
-		Category: Hosting
+		Category: Performance
 	Orchard.Azure.DatabaseCache:
 		Name: Windows Azure Database Cache
 		Description: Activates an NHibernate second-level cache provider that targets Windows Azure Cache.
-		Category: Hosting
+		Category: Performance
 	Orchard.Azure.MediaStorage:
 		Name: Windows Azure Media Storage
 		Description: Activates an Orchard media storage provider that targets Windows Azure Blob Storage.
