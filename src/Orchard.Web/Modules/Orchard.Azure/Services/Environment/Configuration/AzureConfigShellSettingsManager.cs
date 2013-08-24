@@ -63,7 +63,7 @@ namespace Orchard.Azure.Services.Environment.Configuration {
             var settingsList = base.LoadSettings();
             
             foreach (var settings in settingsList) {
-                foreach (var key in settings.Keys) {
+                foreach (var key in settings.Keys.ToArray()) {
                     var cloudConfigurationKey = String.Format("{0}.{1}.{2}", _prefix, settings.Name, key);
                     var cloudConfigurationValue = ParseValue(CloudConfigurationManager.GetSetting(cloudConfigurationKey));
                     if (cloudConfigurationValue != null)

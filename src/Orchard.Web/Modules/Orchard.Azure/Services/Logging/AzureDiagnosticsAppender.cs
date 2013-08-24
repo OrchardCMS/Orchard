@@ -2,6 +2,7 @@
 using Microsoft.WindowsAzure.Diagnostics;
 using log4net.Appender;
 using log4net.Core;
+using System.Diagnostics;
 
 namespace Orchard.Azure.Services.Logging {
 
@@ -11,7 +12,7 @@ namespace Orchard.Azure.Services.Logging {
     public class AzureDiagnosticsAppender : AppenderSkeleton {
 
         private const string _wadStorageAccountConnectionStringSettingName = "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString";
-        
+
         public AzureDiagnosticsAppender() {
             var defaultDiagnostics = DiagnosticMonitor.GetDefaultInitialConfiguration();
             var period = TimeSpan.FromMinutes(1d);
@@ -25,7 +26,7 @@ namespace Orchard.Azure.Services.Logging {
 
         protected override void Append(LoggingEvent loggingEvent) {
             var formattedMessage = RenderLoggingEvent(loggingEvent);
-            System.Diagnostics.Trace.WriteLine(formattedMessage);
+            Trace.WriteLine(formattedMessage);
         }
     }
 }
