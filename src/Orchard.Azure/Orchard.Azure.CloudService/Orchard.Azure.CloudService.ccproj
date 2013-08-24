@@ -55,6 +55,9 @@
     <Content Include="Orchard.Azure.WebContent\Bin\Startup\ConfigureIIS.cmd">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Orchard.Azure.WebContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
