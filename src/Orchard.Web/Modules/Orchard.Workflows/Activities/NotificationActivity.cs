@@ -43,7 +43,8 @@ namespace Orchard.Workflows.Activities {
             var notification = activityContext.GetState<string>("Notification");
             var message = activityContext.GetState<string>("Message");
 
-            var notificationType = (NotifyType)Enum.Parse(typeof(NotifyType), notification);
+            NotifyType notificationType;
+            Enum.TryParse(notification, true, out notificationType);
             _notifier.Add(notificationType, T(message));
 
             yield return T("Done");
