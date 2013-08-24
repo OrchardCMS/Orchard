@@ -25,7 +25,6 @@ namespace Orchard.FileSystems.Media {
         /// <returns>The storage path or <value>null</value> if the media is not in a correct format.</returns>
         string GetStoragePath(string url);
 
-
         /// <summary>
         /// Retrieves a file within the storage provider.
         /// </summary>

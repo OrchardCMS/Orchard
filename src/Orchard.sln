@@ -160,9 +160,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upgrade", "Orchard.Web\Modu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules.Deprecated", "Modules.Deprecated", "{902528F6-1444-42A3-8B75-A54B775B539C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.AzureBlobStorage", "Orchard.Web\Modules\Orchard.AzureBlobStorage\Orchard.AzureBlobStorage.csproj", "{CBC7993C-57D8-4A6C-992C-19E849DFE71D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure", "Orchard.Azure\Orchard.Azure.csproj", "{2505AA84-65A6-43D0-9C27-4F44FD576284}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure", "Orchard.Web\Modules\Orchard.Azure\Orchard.Azure.csproj", "{CBC7993C-57D8-4A6C-992C-19E849DFE71D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -902,16 +900,6 @@ Global
 		{CBC7993C-57D8-4A6C-992C-19E849DFE71D}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{CBC7993C-57D8-4A6C-992C-19E849DFE71D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBC7993C-57D8-4A6C-992C-19E849DFE71D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Coverage|Any CPU.Build.0 = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.FxCop|Any CPU.Build.0 = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2505AA84-65A6-43D0-9C27-4F44FD576284}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

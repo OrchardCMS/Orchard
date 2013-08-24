@@ -88,7 +88,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\Tools\Orchard\Orchard.csproj">
       <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
-      <Name>Orchard</Name>
+      <Name>Orchard %28Tools\Orchard%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Packaging\Orchard.Packaging.csproj">
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>

@@ -1,13 +1,16 @@
 ﻿using System.IO;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.FileSystems.Media;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.Azure.FileSystems.Media {
-    
+namespace Orchard.Azure.Services.FileSystems.Media {
+
+    [OrchardFeature("Orchard.Azure.MediaStorage")]
+    [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider) : base("media", shellSettings.Name, false, mimeTypeProvider) { }
+        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider) : base("media", shellSettings.Name, false, mimeTypeProvider)
+        { }
 
         public bool TrySaveStream(string path, Stream inputStream) {
             try {
@@ -21,13 +24,12 @@ namespace Orchard.Azure.FileSystems.Media {
         }
 
         public void SaveStream(string path, Stream inputStream) {
-            // Create the file.
-            // The CreateFile method will map the still relative path
+            // Create the file. The CreateFile() method will map the still relative path.
             var file = CreateFile(path);
 
-            using(var outputStream = file.OpenWrite()) {
+            using (var outputStream = file.OpenWrite()) {
                 var buffer = new byte[8192];
-                for (;;) {
+                while (true) {
                     var length = inputStream.Read(buffer, 0, buffer.Length);
                     if (length <= 0)
                         break;
@@ -37,10 +39,10 @@ namespace Orchard.Azure.FileSystems.Media {
         }
 
         /// <summary>
-        /// Retrieves the local path for a given url within the storage provider.
+        /// Retrieves the local path for a given URL within the storage provider.
         /// </summary>
-        /// <param name="url">The public url of the media.</param>
-        /// <returns>The local path.</returns>
+        /// <param name="url">The public URL of the media.</param>
+        /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
             if (url.StartsWith(_absoluteRoot)) {
                 return url.Substring(Combine(_absoluteRoot, "/").Length);
@@ -52,6 +54,5 @@ namespace Orchard.Azure.FileSystems.Media {
         public string GetRelativePath(string path) {
             return GetPublicUrl(path);
         }
-
     }
 }

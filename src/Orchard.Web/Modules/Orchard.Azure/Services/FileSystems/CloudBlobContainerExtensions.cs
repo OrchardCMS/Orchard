@@ -3,7 +3,8 @@ using System.Linq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Orchard.Azure.FileSystems {
+namespace Orchard.Azure.Services.FileSystems {
+
     public static class CloudBlobContainerExtensions {
 
         public static bool BlobExists(this CloudBlobContainer container, string path) {
