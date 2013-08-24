@@ -11,6 +11,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -52,6 +53,10 @@ namespace Orchard.Environment {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+
+        public IList<ShellContext> Current {
+            get { return BuildCurrent().ToReadOnlyCollection(); }
+        }
 
         public ShellContext GetShellContext(ShellSettings shellSettings) {
             return BuildCurrent().SingleOrDefault(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
