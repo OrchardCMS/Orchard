@@ -30,7 +30,8 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
-
+            Services.ContentManager.Create(comment);
+            
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
 
