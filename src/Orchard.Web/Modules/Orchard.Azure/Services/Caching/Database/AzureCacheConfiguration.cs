@@ -4,6 +4,7 @@ using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
+using System.Linq;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
@@ -14,12 +15,23 @@ namespace Orchard.Azure.Services.Caching.Database {
         public static string CacheHostIdentifier;
         public static string CacheName;
 
-        public AzureCacheConfiguration(ShellSettings shellSettings)
+        public AzureCacheConfiguration(IShellSettingsManager shellSettingsManager, ShellSettings shellSettings)
             : base() {
-            _shellSettings = shellSettings;
+
+            // Create default configuration to local role-based cache when feature is enabled.
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheHostIdentifierSettingName))
+                shellSettings[Constants.DatabaseCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheCacheNameSettingName))
+                shellSettings[Constants.DatabaseCacheCacheNameSettingName] = "DatabaseCache";
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheIsSharedCachingSettingName))
+                shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName] = "false";
+
+            shellSettingsManager.SaveSettings(shellSettings);
 
             CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
             CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];
+
+            _shellSettings = shellSettings;
         }
 
         private readonly ShellSettings _shellSettings;
@@ -28,7 +40,6 @@ namespace Orchard.Azure.Services.Caching.Database {
             cache.Provider<AzureCacheProvider>();
             cache.UseQueryCache = true;
             cache.RegionsPrefix = _shellSettings.Name;
-            //cache.RegionsPrefix = "Orchard";
 
             Logger.Information("Configured NHibernate cache provider '{0}' with regions prefix '{1}'.", typeof(AzureCacheProvider).Name, _shellSettings.Name);
         }

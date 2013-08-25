@@ -14,8 +14,18 @@ namespace Orchard.Azure.Services.Caching.Output {
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
     public class AzureOutputCacheStorageProvider : Component, IOutputCacheStorageProvider {
 
-        public AzureOutputCacheStorageProvider(ShellSettings shellSettings)
+        public AzureOutputCacheStorageProvider(IShellSettingsManager shellSettingsManager, ShellSettings shellSettings)
             : base() {
+
+            // Create default configuration to local role-based cache when feature is enabled.
+            if (!shellSettings.Keys.Contains(Constants.OutputCacheHostIdentifierSettingName))
+                shellSettings[Constants.OutputCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
+            if (!shellSettings.Keys.Contains(Constants.OutputCacheCacheNameSettingName))
+                shellSettings[Constants.OutputCacheCacheNameSettingName] = "OutputCache";
+            if (!shellSettings.Keys.Contains(Constants.OutputCacheIsSharedCachingSettingName))
+                shellSettings[Constants.OutputCacheIsSharedCachingSettingName] = "false";
+            
+            shellSettingsManager.SaveSettings(shellSettings);
 
             var cacheHostIdentifier = shellSettings[Constants.OutputCacheHostIdentifierSettingName];
             var cacheName = shellSettings[Constants.OutputCacheCacheNameSettingName];

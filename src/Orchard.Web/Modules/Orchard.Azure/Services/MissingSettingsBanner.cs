@@ -44,14 +44,6 @@ namespace Orchard.Azure.Services {
             }
 
             if (enabledFeatureNamesQuery.Contains(Constants.OutputCacheFeatureName)) {
-                // Create default configuration to local role-based cache when feature is enabled.
-                if (!_shellSettings.Keys.Contains(Constants.OutputCacheHostIdentifierSettingName))
-                    _shellSettings[Constants.OutputCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
-                if (!_shellSettings.Keys.Contains(Constants.OutputCacheCacheNameSettingName))
-                    _shellSettings[Constants.OutputCacheCacheNameSettingName] = "OutputCache";
-                if (!_shellSettings.Keys.Contains(Constants.OutputCacheIsSharedCachingSettingName))
-                    _shellSettings[Constants.OutputCacheIsSharedCachingSettingName] = "false";
-
                 if (String.IsNullOrWhiteSpace(_shellSettings[Constants.OutputCacheHostIdentifierSettingName]))
                     yield return new NotifyEntry {
                         Message = T("A cache cluster host identifier must be configured in the shell setting '{0}'.", Constants.OutputCacheHostIdentifierSettingName),
@@ -71,14 +63,6 @@ namespace Orchard.Azure.Services {
             }
 
             if (enabledFeatureNamesQuery.Contains(Constants.DatabaseCacheFeatureName)) {
-                // Create default configuration to local role-based cache when feature is enabled.
-                if (!_shellSettings.Keys.Contains(Constants.DatabaseCacheHostIdentifierSettingName))
-                    _shellSettings[Constants.DatabaseCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
-                if (!_shellSettings.Keys.Contains(Constants.DatabaseCacheCacheNameSettingName))
-                    _shellSettings[Constants.DatabaseCacheCacheNameSettingName] = "DatabaseCache";
-                if (!_shellSettings.Keys.Contains(Constants.DatabaseCacheIsSharedCachingSettingName))
-                    _shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName] = "false";
-
                 if (String.IsNullOrWhiteSpace(_shellSettings[Constants.DatabaseCacheHostIdentifierSettingName]))
                     yield return new NotifyEntry {
                         Message = T("A cache cluster host identifier must be configured in the shell setting '{0}'.", Constants.DatabaseCacheHostIdentifierSettingName),
