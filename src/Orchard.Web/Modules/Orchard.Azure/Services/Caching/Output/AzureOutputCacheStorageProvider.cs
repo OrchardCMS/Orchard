@@ -63,7 +63,7 @@ namespace Orchard.Azure.Services.Caching.Output {
             if (_usingSharedCaching)
                 _cache.Put(key, cacheItem);
             else
-                _cache.Put(key, cacheItem, _region);
+                _cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _region);
         }
 
         public void Remove(string key) {
