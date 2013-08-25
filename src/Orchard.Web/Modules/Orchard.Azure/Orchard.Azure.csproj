@@ -102,6 +102,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheClient.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheConfiguration.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheProvider.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Services\FileSystems\CloudBlobContainerExtensions.cs" />
     <Compile Include="Services\FileSystems\Media\AzureBlobStorageProvider.cs" />
     <Compile Include="Services\Logging\AzureDiagnosticsAppender.cs" />
+    <Compile Include="Services\MissingSettingsBanner.cs" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

@@ -7,7 +7,7 @@ using Orchard.Logging;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
-    [OrchardFeature("Orchard.Azure.DatabaseCache")]
+    [OrchardFeature(Constants.DatabaseCacheFeatureName)]
     [OrchardSuppressDependency("Orchard.Data.DefaultDatabaseCacheConfiguration")]
     public class AzureCacheConfiguration : Component, IDatabaseCacheConfiguration {
 
@@ -18,8 +18,8 @@ namespace Orchard.Azure.Services.Caching.Database {
             : base() {
             _shellSettings = shellSettings;
 
-            CacheHostIdentifier = shellSettings["Azure.DatabaseCache.HostIdentifier"];
-            CacheName = shellSettings["Azure.DatabaseCache.CacheName"];
+            CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
+            CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];
         }
 
         private readonly ShellSettings _shellSettings;

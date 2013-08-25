@@ -11,17 +11,17 @@ namespace Orchard.Azure.Services.Logging {
     /// </summary>
     public class AzureDiagnosticsAppender : AppenderSkeleton {
 
-        private const string _wadStorageAccountConnectionStringSettingName = "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString";
+        //private const string _wadStorageAccountConnectionStringSettingName = "Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString";
 
         public AzureDiagnosticsAppender() {
-            var defaultDiagnostics = DiagnosticMonitor.GetDefaultInitialConfiguration();
-            var period = TimeSpan.FromMinutes(1d);
+            //var defaultDiagnostics = DiagnosticMonitor.GetDefaultInitialConfiguration();
+            //var period = TimeSpan.FromMinutes(1d);
 
-            defaultDiagnostics.Directories.ScheduledTransferPeriod = period;
-            defaultDiagnostics.Logs.ScheduledTransferPeriod = period;
-            defaultDiagnostics.WindowsEventLog.ScheduledTransferPeriod = period;
+            //defaultDiagnostics.Directories.ScheduledTransferPeriod = period;
+            //defaultDiagnostics.Logs.ScheduledTransferPeriod = period;
+            //defaultDiagnostics.WindowsEventLog.ScheduledTransferPeriod = period;
 
-            DiagnosticMonitor.Start(_wadStorageAccountConnectionStringSettingName, defaultDiagnostics);
+            //DiagnosticMonitor.Start(_wadStorageAccountConnectionStringSettingName, defaultDiagnostics);
         }
 
         protected override void Append(LoggingEvent loggingEvent) {

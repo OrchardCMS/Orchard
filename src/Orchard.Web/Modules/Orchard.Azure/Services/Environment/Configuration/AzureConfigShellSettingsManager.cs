@@ -48,11 +48,7 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         private const string _prefix = "Orchard";
 
         public AzureConfigShellSettingsManager(IShellSettingsManagerEventHandler events, IMimeTypeProvider mimeTypeProvider)
-            : this(CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting(ConnectionStringSettingName)), events, mimeTypeProvider) {
-        }
-
-        public AzureConfigShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events, IMimeTypeProvider mimeTypeProvider)
-            : base(storageAccount, events, mimeTypeProvider) {
+            : base(events, mimeTypeProvider) {
             if (RoleEnvironment.IsAvailable) {
                 RoleEnvironment.Changing += RoleEnvironment_Changing;
                 RoleEnvironment.Changed += RoleEnvironment_Changed;
@@ -97,7 +93,7 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         }
 
         private string ParseValue(string value) {
-            if (value == EmptyValue || String.IsNullOrWhiteSpace(value))
+            if (value == EmptyValueString || String.IsNullOrWhiteSpace(value))
                 return null;
             return value;
         }

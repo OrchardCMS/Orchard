@@ -2,14 +2,15 @@
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 using Orchard.Environment.Extensions;
+using Microsoft.WindowsAzure;
 
 namespace Orchard.Azure.Services.FileSystems.Media {
 
-    [OrchardFeature("Orchard.Azure.MediaStorage")]
+    [OrchardFeature(Constants.MediaStorageFeatureName)]
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider) : base("media", shellSettings.Name, false, mimeTypeProvider)
+        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider) : base(CloudConfigurationManager.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName), Constants.MediaStorageContainerName, shellSettings.Name, false, mimeTypeProvider)
         { }
 
         public bool TrySaveStream(string path, Stream inputStream) {

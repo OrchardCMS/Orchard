@@ -23,6 +23,11 @@ namespace Orchard.Azure.Services.FileSystems {
         private CloudBlobClient _blobClient;
         private CloudBlobContainer _container;
 
+        public string StorageConnectionString {
+            get;
+            protected set;
+        }
+
         public string ContainerName {
             get;
             protected set;
@@ -42,9 +47,10 @@ namespace Orchard.Azure.Services.FileSystems {
             }
         }
 
-        public AzureFileSystem(string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
+        public AzureFileSystem(string storageConnectionString, string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
             _isPrivate = isPrivate;
             _mimeTypeProvider = mimeTypeProvider;
+            StorageConnectionString = storageConnectionString;
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
         }
@@ -54,7 +60,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return;
             }
 
-            _storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("Orchard.StorageConnectionString"));
+            _storageAccount = CloudStorageAccount.Parse(StorageConnectionString);
             _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, ContainerName), _root);
 
             _blobClient = _storageAccount.CreateCloudBlobClient();

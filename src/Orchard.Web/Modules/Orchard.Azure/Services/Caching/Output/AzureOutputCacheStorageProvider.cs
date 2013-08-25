@@ -10,15 +10,15 @@ using System.Web;
 
 namespace Orchard.Azure.Services.Caching.Output {
 
-    [OrchardFeature("Orchard.Azure.OutputCache")]
+    [OrchardFeature(Constants.OutputCacheFeatureName)]
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
     public class AzureOutputCacheStorageProvider : Component, IOutputCacheStorageProvider {
 
         public AzureOutputCacheStorageProvider(ShellSettings shellSettings)
             : base() {
 
-            var cacheHostIdentifier = shellSettings["Azure.OutputCache.HostIdentifier"];
-            var cacheName = shellSettings["Azure.OutputCache.CacheName"];
+            var cacheHostIdentifier = shellSettings[Constants.OutputCacheHostIdentifierSettingName];
+            var cacheName = shellSettings[Constants.OutputCacheCacheNameSettingName];
 
             var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration() {
                 AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, cacheHostIdentifier),
@@ -33,7 +33,7 @@ namespace Orchard.Azure.Services.Caching.Output {
             else
                 _cache = dataCacheFactory.GetDefaultCache();
 
-            _usingSharedCaching = Boolean.Parse(shellSettings["Azure.OutputCache.IsSharedCaching"]);
+            _usingSharedCaching = Boolean.Parse(shellSettings[Constants.OutputCacheIsSharedCachingSettingName]);
  
             if (!_usingSharedCaching)
             {

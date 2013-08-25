@@ -52,7 +52,7 @@
     <Folder Include="Profiles" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Orchard.Azure.WebContent\Bin\Startup\ConfigureIIS.cmd">
+    <Content Include="Orchard.Azure.WebContent\Bin\Startup\SetIdleTimeout.cmd">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Orchard.Azure.WebContent\diagnostics.wadcfg">
