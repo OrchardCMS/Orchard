@@ -21,7 +21,6 @@ namespace Orchard.Azure.Services.Logging {
                 Trace.TraceError(formattedMessage);
             else
                 Trace.WriteLine(formattedMessage);
-            }
         }
     }
 }
