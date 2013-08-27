@@ -19,14 +19,22 @@ namespace Orchard.Azure.Services.Caching.Database {
             : base() {
 
             // Create default configuration to local role-based cache when feature is enabled.
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheHostIdentifierSettingName))
+            var doSave = false;
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheHostIdentifierSettingName)) {
                 shellSettings[Constants.DatabaseCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheCacheNameSettingName))
+                doSave = true;
+            }
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheCacheNameSettingName)) {
                 shellSettings[Constants.DatabaseCacheCacheNameSettingName] = "DatabaseCache";
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheIsSharedCachingSettingName))
+                doSave = true;
+            }
+            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheIsSharedCachingSettingName)) {
                 shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName] = "false";
+                doSave = true;
+            }
 
-            shellSettingsManager.SaveSettings(shellSettings);
+            if (doSave)
+                shellSettingsManager.SaveSettings(shellSettings);
 
             CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
             CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];
