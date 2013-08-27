@@ -9,7 +9,6 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Core.Feeds.Rss;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.Caching;
@@ -35,6 +34,7 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
+        private static readonly string[] AuthorizedContentTypes = new [] { "text/html", "text/xml", "text/json" };
 
         private const string RefreshKey = "__r";
 
@@ -285,7 +285,7 @@ namespace Orchard.OutputCache.Filters {
         public void OnActionExecuted(ActionExecutedContext filterContext) {
 
             // only cache view results, but don't return already as we still need to process redirections
-            if (!(filterContext.Result is ViewResultBase) && !(filterContext.Result is RssResult)) {
+            if (!(filterContext.Result is ViewResultBase) && !( AuthorizedContentTypes.Contains(filterContext.HttpContext.Response.ContentType))) {
                 _filter = null;
             }
 
