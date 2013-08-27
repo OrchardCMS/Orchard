@@ -21,7 +21,7 @@ namespace Orchard.Environment.Configuration {
         }
 
         public ShellSettings(ShellSettings settings) {
-            _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _values = new Dictionary<string, string>(settings._values, StringComparer.OrdinalIgnoreCase);
 
             Name = settings.Name;
             DataProvider = settings.DataProvider;
