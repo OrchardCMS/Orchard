@@ -147,7 +147,6 @@
     <Compile Include="Services\Caching\Database\AzureCacheConfiguration.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheProvider.cs" />
     <Compile Include="Services\Caching\Output\AzureOutputCacheStorageProvider.cs" />
-    <Compile Include="Services\Environment\Configuration\AzureConfigShellSettingsManager.cs" />
     <Compile Include="Services\Environment\Configuration\AzureBlobShellSettingsManager.cs" />
     <Compile Include="Services\FileSystems\AzureFileSystem.cs" />
     <Compile Include="Services\FileSystems\CloudBlobContainerExtensions.cs" />
