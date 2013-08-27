@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
 using Orchard.Azure.Services.FileSystems;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
@@ -22,28 +21,36 @@ namespace Orchard.Azure.Services.Environment.Configuration {
     /// </remarks>
     public class AzureBlobShellSettingsManager : Component, IShellSettingsManager {
 
-        protected readonly IShellSettingsManagerEventHandler Events;
-        protected readonly AzureFileSystem FileSystem;
+        private readonly AzureFileSystem _fileSystem;
+        private readonly IShellSettingsManagerEventHandler _events;
 
-        public AzureBlobShellSettingsManager(IShellSettingsManagerEventHandler events, IMimeTypeProvider mimeTypeProvider) {
-            Events = events;
-            FileSystem = new AzureFileSystem(CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName), Constants.ShellSettingsContainerName, String.Empty, true, mimeTypeProvider);
-            if (RoleEnvironment.IsAvailable) {
-                RoleEnvironment.Changing += RoleEnvironment_Changing;
-                RoleEnvironment.Changed += RoleEnvironment_Changed;
-            }
+        public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events) {
+            _fileSystem = new AzureFileSystem(CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName), Constants.ShellSettingsContainerName, String.Empty, true, mimeTypeProvider);
+            _events = events;
         }
 
         public virtual IEnumerable<ShellSettings> LoadSettings() {
-            var settings = LoadSettingsInternal().ToArray();
-            PlatformShellSettings.ApplyTo(settings); // Apply platform configuration overrides.
-            return settings;
+            Logger.Debug("Reading ShellSettings...");
+            var settingsList = LoadSettingsInternal().ToArray();
+
+            var tenantNamesQuery =
+                from settings in settingsList
+                select settings.Name;
+            Logger.Debug("Returning {0} ShellSettings objects for tenants {1}.", tenantNamesQuery.Count(), String.Join(", ", tenantNamesQuery));
+
+            return settingsList;
         }
 
         public virtual void SaveSettings(ShellSettings settings) {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+            if (String.IsNullOrEmpty(settings.Name))
+                throw new ArgumentException("The Name property of the supplied ShellSettings object is null or empty; the settings cannot be saved.", "settings");
+
+            Logger.Debug("Saving ShellSettings for tenant '{0}'...", settings.Name);
             var content = ShellSettingsSerializer.ComposeSettings(settings);
-            var filePath = FileSystem.Combine(settings.Name, Constants.ShellSettingsFileName);
-            var file = FileSystem.FileExists(filePath) ? FileSystem.GetFile(filePath) : FileSystem.CreateFile(filePath);
+            var filePath = _fileSystem.Combine(settings.Name, Constants.ShellSettingsFileName);
+            var file = _fileSystem.FileExists(filePath) ? _fileSystem.GetFile(filePath) : _fileSystem.CreateFile(filePath);
 
             using (var stream = file.OpenWrite()) {
                 using (var writer = new StreamWriter(stream)) {
@@ -51,34 +58,13 @@ namespace Orchard.Azure.Services.Environment.Configuration {
                 }
             }
 
-            Events.Saved(settings);
-        }
-
-        void RoleEnvironment_Changing(object sender, RoleEnvironmentChangingEventArgs e) {
-            // Indicate to the fabric controller that we can handle any changes.
-            e.Cancel = false;
-        }
-
-        private void RoleEnvironment_Changed(object sender, RoleEnvironmentChangedEventArgs e) {
-            Logger.Debug("Handling RoleEnvironmentChanged event.");
-
-            var configurationChangeQuery =
-                from c in e.Changes
-                where c is RoleEnvironmentConfigurationSettingChange
-                select c;
-
-            // If there's a configuration settings change, inform all Orchard tenants.
-            if (configurationChangeQuery.Any()) {
-                Logger.Information("Role configuration settings changed; refreshing Orchard shell settings.");
-                var settingsList = LoadSettings();
-                foreach (var settings in settingsList)
-                    Events.Saved(settings);
-            }
+            Logger.Debug("ShellSettings saved successfully; flagging tenant '{0}' for restart.", settings.Name);
+            _events.Saved(settings);
         }
 
         private IEnumerable<ShellSettings> LoadSettingsInternal() {
-            foreach (var folder in FileSystem.ListFolders(null)) {
-                foreach (var file in FileSystem.ListFiles(folder.GetPath())) {
+            foreach (var folder in _fileSystem.ListFolders(null)) {
+                foreach (var file in _fileSystem.ListFiles(folder.GetPath())) {
                     if (!String.Equals(file.GetName(), Constants.ShellSettingsFileName))
                         continue;
                     using (var stream = file.OpenRead()) {
