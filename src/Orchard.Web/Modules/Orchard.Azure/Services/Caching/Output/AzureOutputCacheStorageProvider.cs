@@ -89,7 +89,7 @@ namespace Orchard.Azure.Services.Caching.Output {
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
             if (_usingSharedCaching)
-                throw new NotSupportedException("The GetCacheItems() method is not supported with Windows Azure Shared Caching.");
+                return Enumerable.Empty<CacheItem>(); // Enumeration not supported with Shared Caching.
             
             return _cache.GetObjectsInRegion(_region).AsParallel()
                 .Select(x => x.Value)
@@ -101,7 +101,7 @@ namespace Orchard.Azure.Services.Caching.Output {
 
         public int GetCacheItemsCount() {
             if (_usingSharedCaching)
-                throw new NotSupportedException("The GetCacheItemsCount() method is not supported with Windows Azure Shared Caching.");
+                return 0; // Enumeration not supported with Shared Caching.
 
             return _cache.GetObjectsInRegion(_region).AsParallel()
                 .Select(x => x.Value)
