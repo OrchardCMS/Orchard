@@ -14,8 +14,8 @@ namespace Orchard.Blogs {
         public static readonly Permission DeleteBlogPost = new Permission { Description = "Delete blog post for others", Name = "DeleteBlogPost", ImpliedBy = new[] { ManageBlogs } };
         public static readonly Permission DeleteOwnBlogPost = new Permission { Description = "Delete own blog post", Name = "DeleteOwnBlogPost", ImpliedBy = new[] { DeleteBlogPost, ManageOwnBlogs } };
 
-        public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost } };
-        public static readonly Permission MetaListOwnBlogs = new Permission { ImpliedBy = new[] { EditOwnBlogPost, PublishOwnBlogPost, DeleteOwnBlogPost } };
+        public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost }, Name = "MetaListBlogs"};
+        public static readonly Permission MetaListOwnBlogs = new Permission { ImpliedBy = new[] { EditOwnBlogPost, PublishOwnBlogPost, DeleteOwnBlogPost }, Name = "MetaListOwnBlogs" };
 
         public virtual Feature Feature { get; set; }
 

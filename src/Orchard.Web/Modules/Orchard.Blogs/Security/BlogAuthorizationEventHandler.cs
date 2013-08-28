@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Web.UI.WebControls;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
@@ -13,7 +14,12 @@ namespace Orchard.Blogs.Security {
         public void Adjust(CheckAccessContext context) {
             if (!context.Granted &&
                 context.Content.Is<ICommonPart>()) {
-                if (OwnerVariationExists(context.Permission) &&
+
+                if (context.Permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name && context.Content.ContentItem.ContentType == "BlogPost") {
+                    context.Adjusted = true;
+                    context.Permission = Permissions.PublishBlogPost;
+                }
+                else if (OwnerVariationExists(context.Permission) &&
                     HasOwnership(context.User, context.Content)) {
                     context.Adjusted = true;
                     context.Permission = GetOwnerVariation(context.Permission);
@@ -64,6 +70,9 @@ namespace Orchard.Blogs.Security {
                 return Permissions.DeleteOwnBlogPost;
             if (permission.Name == Core.Contents.Permissions.ViewContent.Name)
                 return Core.Contents.Permissions.ViewOwnContent;
+            if (permission.Name == Permissions.MetaListBlogs.Name)
+                return Permissions.MetaListOwnBlogs;
+
             return null;
         }
     }
