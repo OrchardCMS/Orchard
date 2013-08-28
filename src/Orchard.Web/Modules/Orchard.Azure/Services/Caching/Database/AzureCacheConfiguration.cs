@@ -1,10 +1,11 @@
-﻿using NHibernate.Cfg.Loquacious;
+﻿using System;
+using System.Linq;
+using NHibernate.Cfg.Loquacious;
 using Orchard;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
-using System.Linq;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
@@ -14,6 +15,7 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         public static string CacheHostIdentifier;
         public static string CacheName;
+        public static bool IsSharedCaching;
 
         public AzureCacheConfiguration(IShellSettingsManager shellSettingsManager, ShellSettings shellSettings)
             : base() {
@@ -40,6 +42,7 @@ namespace Orchard.Azure.Services.Caching.Database {
 
             CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
             CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];
+            IsSharedCaching = Boolean.Parse(shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName]);
 
             _shellSettings = shellSettings;
         }

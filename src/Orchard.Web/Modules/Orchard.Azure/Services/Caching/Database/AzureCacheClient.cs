@@ -9,49 +9,36 @@ namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheClient : ICache {
 
-        public AzureCacheClient(string cacheHostIdentifier, string cacheName, string region, bool enableCompression, TimeSpan? expirationTime) {
-
-            var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration() {
-                AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, cacheHostIdentifier),
-                MaxConnectionsToServer = 32,
-                UseLegacyProtocol = false,
-                IsCompressionEnabled = enableCompression
-            };
-
-            var dataCacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
-
+        public AzureCacheClient(DataCache cache, bool isSharedCaching, string region, TimeSpan? expirationTime) {
             _logger = LoggerProvider.LoggerFor(typeof(AzureCacheClient));
+            _cache = cache;
+            _isSharedCaching = isSharedCaching;
             _region = region ?? _defaultRegion;
-
             // Azure Cache supports only alphanumeric strings for regions and
             // Orchard can get a lot more creative than that. Remove all non
             // alphanumering characters from the region, and append the hash code
             // of the original string to mitigate the risk of two distinct original
             // region strings yielding the same transformed region string.
             _regionAlphaNumeric = new String(Array.FindAll(_region.ToCharArray(), c => Char.IsLetterOrDigit(c))) + _region.GetHashCode().ToString();
-
             _expirationTime = expirationTime;
-
-            if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("Creating cache with CacheName='{0}' and Region='{1}' (original Region='{2}').", cacheName, _regionAlphaNumeric, _region);
-
-            if (!String.IsNullOrEmpty(cacheName))
-                _cache = dataCacheFactory.GetCache(cacheName);
-            else
-                _cache = dataCacheFactory.GetDefaultCache();
-
-            _cache.CreateRegion(_regionAlphaNumeric);
+            
+            if (!isSharedCaching)
+                _cache.CreateRegion(_regionAlphaNumeric);
 
             //_lockHandleDictionary = new ConcurrentDictionary<object, DataCacheLockHandle>();
             //_lockTimeout = TimeSpan.FromSeconds(30);
+
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Created an AzureCacheClient for region '{0}' (original region '{1}').", _regionAlphaNumeric, _region);
         }
 
         private const string _defaultRegion = "NHibernate";
         private readonly IInternalLogger _logger;
+        private readonly DataCache _cache;
+        private readonly bool _isSharedCaching;
         private readonly string _region;
         private readonly string _regionAlphaNumeric;
         private readonly TimeSpan? _expirationTime;
-        private readonly DataCache _cache;
         //private readonly ConcurrentDictionary<object, DataCacheLockHandle> _lockHandleDictionary;
         //private readonly TimeSpan _lockTimeout;
 
@@ -63,6 +50,9 @@ namespace Orchard.Azure.Services.Caching.Database {
 
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Get() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+
+            if (_isSharedCaching)
+                return _cache.Get(GetSharedCachingKey(key));
 
             return _cache.Get(key.ToString(), _regionAlphaNumeric);
         }
@@ -76,7 +66,9 @@ namespace Orchard.Azure.Services.Caching.Database {
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Put() invoked with key='{0}' and value='{1}' in region '{2}'.", key, value, _regionAlphaNumeric);
 
-            if (_expirationTime.HasValue)
+            if (_isSharedCaching)
+                _cache.Put(GetSharedCachingKey(key), value);
+            else if (_expirationTime.HasValue)
                 _cache.Put(key.ToString(), value, _expirationTime.Value, _regionAlphaNumeric);
             else
                 _cache.Put(key.ToString(), value, _regionAlphaNumeric);
@@ -89,12 +81,18 @@ namespace Orchard.Azure.Services.Caching.Database {
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Remove() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
 
+            if (_isSharedCaching)
+                _cache.Remove(key.ToString());
+
             _cache.Remove(key.ToString(), _regionAlphaNumeric);
         }
 
         public void Clear() {
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Clear() invoked in region '{0}'.", _regionAlphaNumeric);
+ 
+            if (_isSharedCaching)
+                return; // Can't remove an individual region with Shared Caching.
 
             _cache.ClearRegion(_regionAlphaNumeric);
         }
@@ -184,5 +182,9 @@ namespace Orchard.Azure.Services.Caching.Database {
         }
 
         #endregion
+
+        private string GetSharedCachingKey(object key) {
+            return String.Format("{0}_{1}", _region, key);
+        }
     }
 }
