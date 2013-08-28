@@ -9,12 +9,13 @@ namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheClient : ICache {
 
-        public AzureCacheClient(string cacheHostIdentifier, string cacheName, string region) {
+        public AzureCacheClient(string cacheHostIdentifier, string cacheName, string region, bool enableCompression, TimeSpan? expirationTime) {
 
             var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration() {
                 AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, cacheHostIdentifier),
                 MaxConnectionsToServer = 32,
-                UseLegacyProtocol = false
+                UseLegacyProtocol = false,
+                IsCompressionEnabled = enableCompression
             };
 
             var dataCacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
@@ -29,6 +30,8 @@ namespace Orchard.Azure.Services.Caching.Database {
             // region strings yielding the same transformed region string.
             _regionAlphaNumeric = new String(Array.FindAll(_region.ToCharArray(), c => Char.IsLetterOrDigit(c))) + _region.GetHashCode().ToString();
 
+            _expirationTime = expirationTime;
+
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Creating cache with CacheName='{0}' and Region='{1}' (original Region='{2}').", cacheName, _regionAlphaNumeric, _region);
 
@@ -39,17 +42,18 @@ namespace Orchard.Azure.Services.Caching.Database {
 
             _cache.CreateRegion(_regionAlphaNumeric);
 
-            _lockHandleDictionary = new ConcurrentDictionary<object, DataCacheLockHandle>();
-            _lockTimeout = TimeSpan.FromSeconds(30);
+            //_lockHandleDictionary = new ConcurrentDictionary<object, DataCacheLockHandle>();
+            //_lockTimeout = TimeSpan.FromSeconds(30);
         }
 
         private const string _defaultRegion = "NHibernate";
         private readonly IInternalLogger _logger;
         private readonly string _region;
         private readonly string _regionAlphaNumeric;
+        private readonly TimeSpan? _expirationTime;
         private readonly DataCache _cache;
-        private readonly ConcurrentDictionary<object, DataCacheLockHandle> _lockHandleDictionary;
-        private readonly TimeSpan _lockTimeout;
+        //private readonly ConcurrentDictionary<object, DataCacheLockHandle> _lockHandleDictionary;
+        //private readonly TimeSpan _lockTimeout;
 
         #region ICache Members
 
@@ -72,7 +76,10 @@ namespace Orchard.Azure.Services.Caching.Database {
             if (_logger.IsDebugEnabled)
                 _logger.DebugFormat("Put() invoked with key='{0}' and value='{1}' in region '{2}'.", key, value, _regionAlphaNumeric);
 
-            _cache.Put(key.ToString(), value, _regionAlphaNumeric);
+            if (_expirationTime.HasValue)
+                _cache.Put(key.ToString(), value, _expirationTime.Value, _regionAlphaNumeric);
+            else
+                _cache.Put(key.ToString(), value, _regionAlphaNumeric);
         }
 
         public void Remove(object key) {
@@ -112,44 +119,44 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         // TODO: Try to understand how it's used, and make locking more robust.
         public void Lock(object key) {
-            if (key == null)
-                throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
+            //if (key == null)
+            //    throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
 
-            if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("Lock() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            //if (_logger.IsDebugEnabled)
+            //    _logger.DebugFormat("Lock() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
 
-            try {
-                DataCacheLockHandle lockHandle = null;
-                _cache.GetAndLock(key.ToString(), _lockTimeout, out lockHandle, _regionAlphaNumeric);
-                _lockHandleDictionary.TryAdd(key, lockHandle);
-            }
-            catch (Exception ex) {
-                if (_logger.IsErrorEnabled)
-                    _logger.Error("Exception thrown while trying to lock object in cache.", ex);
+            //try {
+            //    DataCacheLockHandle lockHandle = null;
+            //    _cache.GetAndLock(key.ToString(), _lockTimeout, out lockHandle, _regionAlphaNumeric);
+            //    _lockHandleDictionary.TryAdd(key, lockHandle);
+            //}
+            //catch (Exception ex) {
+            //    if (_logger.IsErrorEnabled)
+            //        _logger.Error("Exception thrown while trying to lock object in cache.", ex);
 
-                throw;
-            }
+            //    throw;
+            //}
         }
 
         // TODO: Try to understand how it's used, and make locking more robust.
         public void Unlock(object key) {
-            if (key == null)
-                throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
+            //if (key == null)
+            //    throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
 
-            if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("Unlock() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            //if (_logger.IsDebugEnabled)
+            //    _logger.DebugFormat("Unlock() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
 
-            try {
-                DataCacheLockHandle lockHandle = null;
-                if (_lockHandleDictionary.TryRemove(key, out lockHandle))
-                    _cache.Unlock(key.ToString(), lockHandle, _regionAlphaNumeric);
-            }
-            catch (Exception ex) {
-                if (_logger.IsErrorEnabled)
-                    _logger.Error("Exception thrown while trying to unlock object in cache.", ex);
+            //try {
+            //    DataCacheLockHandle lockHandle = null;
+            //    if (_lockHandleDictionary.TryRemove(key, out lockHandle))
+            //        _cache.Unlock(key.ToString(), lockHandle, _regionAlphaNumeric);
+            //}
+            //catch (Exception ex) {
+            //    if (_logger.IsErrorEnabled)
+            //        _logger.Error("Exception thrown while trying to unlock object in cache.", ex);
 
-                throw;
-            }
+            //    throw;
+            //}
         }
 
         // TODO: Try to understand what this is for and how it's used.
@@ -163,7 +170,8 @@ namespace Orchard.Azure.Services.Caching.Database {
         // TODO: Try to understand what this is for and how it's used.
         public int Timeout {
             get {
-                return Timestamper.OneMs * (int)_lockTimeout.TotalMilliseconds;
+                //return Timestamper.OneMs * (int)_lockTimeout.TotalMilliseconds;
+                return Timestamper.OneMs * 60000;
             }
         }
 
