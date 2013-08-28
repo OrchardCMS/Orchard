@@ -33,8 +33,10 @@ namespace Orchard.Azure.Services.Caching.Database {
                 doSave = true;
             }
 
-            if (doSave)
+            if (doSave) {
+                Logger.Information("Added missing shell settings; calling IShellSettingsManager.SaveSettings().");
                 shellSettingsManager.SaveSettings(shellSettings);
+            }
 
             CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
             CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];

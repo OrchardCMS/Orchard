@@ -1,12 +1,12 @@
-﻿using Microsoft.ApplicationServer.Caching;
-using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
-using Orchard.OutputCache.Models;
-using Orchard.OutputCache.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Microsoft.ApplicationServer.Caching;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Logging;
+using Orchard.OutputCache.Models;
+using Orchard.OutputCache.Services;
 
 namespace Orchard.Azure.Services.Caching.Output {
 
@@ -31,12 +31,16 @@ namespace Orchard.Azure.Services.Caching.Output {
                 shellSettings[Constants.OutputCacheIsSharedCachingSettingName] = "false";
                 doSave = true;
             }
-            
-            if (doSave)
+
+            if (doSave) {
+                Logger.Information("Added missing shell settings; calling IShellSettingsManager.SaveSettings().");
                 shellSettingsManager.SaveSettings(shellSettings);
+            }
 
             var cacheHostIdentifier = shellSettings[Constants.OutputCacheHostIdentifierSettingName];
             var cacheName = shellSettings[Constants.OutputCacheCacheNameSettingName];
+
+            Logger.Debug("Creating cache with HostIdentifier='{0}', CacheName='{1}'.", cacheHostIdentifier, cacheName);
 
             var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration() {
                 AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, cacheHostIdentifier),
@@ -52,15 +56,16 @@ namespace Orchard.Azure.Services.Caching.Output {
                 _cache = dataCacheFactory.GetDefaultCache();
 
             _usingSharedCaching = Boolean.Parse(shellSettings[Constants.OutputCacheIsSharedCachingSettingName]);
- 
-            if (!_usingSharedCaching)
-            {
+
+            if (!_usingSharedCaching) {
                 // If not using Windows Azure Shared Caching we can enable additional features by
                 // storing all cache items in a region. This enables enumerating and counting all
                 // items currently in the cache.
                 _region = shellSettings.Name;
-                _cache.CreateRegion(_region);           
+                _cache.CreateRegion(_region);
             }
+            else
+                Logger.Debug("Configured to use Shared Caching.");
         }
 
         private readonly DataCache _cache;
@@ -68,6 +73,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         private readonly string _region;
 
         public void Set(string key, CacheItem cacheItem) {
+            Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _region);
             if (_usingSharedCaching)
                 _cache.Put(key, cacheItem);
             else
@@ -75,6 +81,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public void Remove(string key) {
+            Logger.Debug("Remove() invoked with key='{0}' in region '{1}'.", key, _region);
             if (_usingSharedCaching)
                 _cache.Remove(key);
             else
@@ -82,6 +89,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public void RemoveAll() {
+            Logger.Debug("RemoveAll() invoked in region '{0}'.", _region);
             if (_usingSharedCaching)
                 _cache.Clear();
             else
@@ -89,6 +97,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public CacheItem GetCacheItem(string key) {
+            Logger.Debug("GetCacheItem() invoked with key='{0}' in region '{1}'.", key, _region);
             if (_usingSharedCaching)
                 return _cache.Get(key) as CacheItem;
             else
@@ -96,8 +105,11 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
-            if (_usingSharedCaching)
+            Logger.Debug("GetCacheItems() invoked in region '{0}'.", _region);
+            if (_usingSharedCaching) {
+                Logger.Debug("Enumeration not supported with Shared Caching; returning empty enumerable.");
                 return Enumerable.Empty<CacheItem>(); // Enumeration not supported with Shared Caching.
+            }
             
             return _cache.GetObjectsInRegion(_region).AsParallel()
                 .Select(x => x.Value)
@@ -108,8 +120,11 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public int GetCacheItemsCount() {
-            if (_usingSharedCaching)
+            Logger.Debug("GetCacheItemsCount() invoked in region '{0}'.", _region);
+            if (_usingSharedCaching) {
+                Logger.Debug("Enumeration not supported with Shared Caching; returning zero.");
                 return 0; // Enumeration not supported with Shared Caching.
+            }
 
             return _cache.GetObjectsInRegion(_region).AsParallel()
                 .Select(x => x.Value)

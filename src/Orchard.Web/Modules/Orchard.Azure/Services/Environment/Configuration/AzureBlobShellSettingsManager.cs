@@ -24,7 +24,8 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         private readonly AzureFileSystem _fileSystem;
         private readonly IShellSettingsManagerEventHandler _events;
 
-        public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events) {
+        public AzureBlobShellSettingsManager(IMimeTypeProvider mimeTypeProvider, IShellSettingsManagerEventHandler events)
+            : base() {
             _fileSystem = new AzureFileSystem(CloudConfigurationManager.GetSetting(Constants.ShellSettingsStorageConnectionStringSettingName), Constants.ShellSettingsContainerName, String.Empty, true, mimeTypeProvider);
             _events = events;
         }

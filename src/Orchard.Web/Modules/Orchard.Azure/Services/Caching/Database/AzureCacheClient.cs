@@ -30,7 +30,7 @@ namespace Orchard.Azure.Services.Caching.Database {
             _regionAlphaNumeric = new String(Array.FindAll(_region.ToCharArray(), c => Char.IsLetterOrDigit(c))) + _region.GetHashCode().ToString();
 
             if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("Creating instance with CacheName='{0}' and Region='{1}' (original Region='{2}').", cacheName, _regionAlphaNumeric, _region);
+                _logger.DebugFormat("Creating cache with CacheName='{0}' and Region='{1}' (original Region='{2}').", cacheName, _regionAlphaNumeric, _region);
 
             if (!String.IsNullOrEmpty(cacheName))
                 _cache = dataCacheFactory.GetCache(cacheName);
@@ -101,7 +101,7 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         // The NHibernate locking mechanism and the Azure Cache pessimistic concurrency
         // model are not a perfect fit. For example, Azure Cache has atomic "get-and-lock" 
-        // and "put-and-unlock" semantics but there is no corresponding atomic operations 
+        // and "put-and-unlock" semantics but there are no corresponding atomic operations 
         // defined on the ICache interface of NHibernate. Also, Azure Cache does not 
         // strictly enforce the pessimistic concurrency model - clients are responsible
         // for following the locking protocol and therefore the implementation assumes that 
