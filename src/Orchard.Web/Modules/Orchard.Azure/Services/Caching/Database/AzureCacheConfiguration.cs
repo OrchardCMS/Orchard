@@ -13,36 +13,18 @@ namespace Orchard.Azure.Services.Caching.Database {
     [OrchardSuppressDependency("Orchard.Data.DefaultDatabaseCacheConfiguration")]
     public class AzureCacheConfiguration : Component, IDatabaseCacheConfiguration {
 
-        public static string CacheHostIdentifier;
-        public static string CacheName;
-        public static bool IsSharedCaching;
+        public static CacheClientConfiguration CacheClientConfiguration;
 
-        public AzureCacheConfiguration(IShellSettingsManager shellSettingsManager, ShellSettings shellSettings)
+        public AzureCacheConfiguration(ShellSettings shellSettings)
             : base() {
 
-            // Create default configuration to local role-based cache when feature is enabled.
-            var doSave = false;
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheHostIdentifierSettingName)) {
-                shellSettings[Constants.DatabaseCacheHostIdentifierSettingName] = "Orchard.Azure.Web";
-                doSave = true;
+            try {
+                CacheClientConfiguration = CacheClientConfiguration.FromPlatformConfiguration(shellSettings, Constants.DatabaseCacheSettingNamePrefix);
+                CacheClientConfiguration.Validate();
             }
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheCacheNameSettingName)) {
-                shellSettings[Constants.DatabaseCacheCacheNameSettingName] = "DatabaseCache";
-                doSave = true;
+            catch (Exception ex) {
+                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
             }
-            if (!shellSettings.Keys.Contains(Constants.DatabaseCacheIsSharedCachingSettingName)) {
-                shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName] = "false";
-                doSave = true;
-            }
-
-            if (doSave) {
-                Logger.Information("Added missing shell settings; calling IShellSettingsManager.SaveSettings().");
-                shellSettingsManager.SaveSettings(shellSettings);
-            }
-
-            CacheHostIdentifier = shellSettings[Constants.DatabaseCacheHostIdentifierSettingName];
-            CacheName = shellSettings[Constants.DatabaseCacheCacheNameSettingName];
-            IsSharedCaching = Boolean.Parse(shellSettings[Constants.DatabaseCacheIsSharedCachingSettingName]);
 
             _shellSettings = shellSettings;
         }

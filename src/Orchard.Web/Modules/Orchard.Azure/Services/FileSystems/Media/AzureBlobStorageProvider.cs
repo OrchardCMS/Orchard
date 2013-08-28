@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
-using Orchard.FileSystems.Media;
 using Orchard.Environment.Extensions;
-using Microsoft.WindowsAzure;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure.Services.FileSystems.Media {
 
@@ -10,8 +10,13 @@ namespace Orchard.Azure.Services.FileSystems.Media {
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider) : base(CloudConfigurationManager.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName), Constants.MediaStorageContainerName, shellSettings.Name, false, mimeTypeProvider)
-        { }
+        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider)
+            : this(PlatformConfiguration.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings), Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider) {
+        }
+
+        public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider)
+            : base(storageConnectionString, containerName, rootFolderPath, false, mimeTypeProvider) {
+        }
 
         public bool TrySaveStream(string path, Stream inputStream) {
             try {

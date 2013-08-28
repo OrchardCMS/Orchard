@@ -143,17 +143,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Services\Caching\CacheClientConfiguration.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheClient.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheConfiguration.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheProvider.cs" />
     <Compile Include="Services\Caching\Database\AzureCacheRecord.cs" />
     <Compile Include="Services\Caching\Output\AzureOutputCacheStorageProvider.cs" />
     <Compile Include="Services\Environment\Configuration\AzureBlobShellSettingsManager.cs" />
+    <Compile Include="Services\Environment\Configuration\PlatformConfiguration.cs" />
     <Compile Include="Services\FileSystems\AzureFileSystem.cs" />
     <Compile Include="Services\FileSystems\CloudBlobContainerExtensions.cs" />
     <Compile Include="Services\FileSystems\Media\AzureBlobStorageProvider.cs" />
     <Compile Include="Services\Logging\AzureDiagnosticsAppender.cs" />
-    <Compile Include="Services\MissingSettingsBanner.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
