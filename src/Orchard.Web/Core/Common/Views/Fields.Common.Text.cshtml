@@ -1,8 +1,7 @@
-﻿@using Orchard.Utility.Extensions;
-@{
+﻿@{
     string name = Model.ContentField.DisplayName;
 }
 
 @if (HasText(name) && HasText(Model.Value)) {
-    <p class="text-field"><span class="name">@name:</span> <span class="value">@(new MvcHtmlString(Html.Encode((HtmlString) Model.Value).ReplaceNewLinesWith("<br />")))</span></p>
+    <p class="text-field"><span class="name">@name:</span> <span class="value">@Model.Value</span></p>
 }

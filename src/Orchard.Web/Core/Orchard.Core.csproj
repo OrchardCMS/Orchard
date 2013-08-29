@@ -80,6 +80,7 @@
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Routes.cs" />
     <Compile Include="Common\Services\IdentifierResolverSelector.cs" />
+    <Compile Include="Common\Services\TextFieldFilter.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
