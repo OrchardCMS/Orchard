@@ -28,7 +28,7 @@
     var selectedTerms = string.Join(",", Model.Terms.Where(x => x.IsChecked).Select(x => string.Format("{0}\t{1}", x.Name, x.Id)));
 }
 <fieldset class="taxonomy-wrapper" data-name-prefix="@Html.FieldNameFor(m => m)" data-id-prefix="@Html.FieldIdFor(m => m)">
-    <legend>@Model.Name.CamelFriendly()</legend>
+    <legend @if(Model.Settings.Required) { <text>class="required"</text> }>@Model.DisplayName.CamelFriendly()</legend>
     @if (Model.Settings.Autocomplete) {
     <div class="terms-editor" data-all-terms="@allTerms" data-selected-terms="@selectedTerms" data-allow-new-terms="@Model.Settings.AllowCustomTerms.ToString().ToLower()" data-singlechoice="@Model.Settings.SingleChoice.ToString().ToLower()">
         <ul></ul>
@@ -67,7 +67,7 @@
             
     @if (!Model.Terms.Any()) {
     <div class="no-terms">
-        @T("There are no terms defined for {0} yet.", Model.Name.CamelFriendly())
+        @T("There are no terms defined for {0} yet.", Model.DisplayName.CamelFriendly())
         <a href="@Url.Action("Index", "TermAdmin", new { taxonomyId = Model.TaxonomyId, area = "Orchard.Taxonomies" })">@T("Create some terms")</a>
     </div>        
     }

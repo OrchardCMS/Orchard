@@ -66,8 +66,8 @@ namespace Orchard.Taxonomies.Drivers {
 
                 terms.ForEach(t => t.IsChecked = appliedTerms.ContainsKey(t.Id));
 
-                var viewModel = new TaxonomyFieldViewModel
-                {
+                var viewModel = new TaxonomyFieldViewModel {
+                    DisplayName = field.DisplayName,
                     Name = field.Name,
                     Terms = terms,
                     Settings = settings,

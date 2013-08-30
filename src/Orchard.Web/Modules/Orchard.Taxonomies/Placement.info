@@ -1,6 +1,6 @@
 ﻿<Placement>
   <!-- Location of field edition -->
-  <Place Fields_TaxonomyField_Edit="Content:19"/>
+  <Place Fields_TaxonomyField_Edit="Content:9"/>
   
   <!-- Display terms in front-end summaries -->
   <Match DisplayType="Summary">

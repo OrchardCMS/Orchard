@@ -562,7 +562,8 @@ legend            { font-size: 1.231em; font-weight: normal; border:none;}
 fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
-label.required:after {margin-left: 1ex; content: "*"; color: red; }  
+label.required:after {margin-left: 1ex; content: "*"; color: red; }
+legend.required:after {margin-left: 1ex; content: "*"; color: red; }    
 
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
