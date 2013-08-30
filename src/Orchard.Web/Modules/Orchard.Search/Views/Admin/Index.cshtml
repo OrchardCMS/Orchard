@@ -3,7 +3,7 @@
     Layout.Title = pageTitle;
 }
 
-@using (Html.BeginFormAntiForgeryPost()) {
+@using (Html.BeginForm("index", "admin", new { area = "Orchard.Search" }, FormMethod.Get)) {
     <label for="search-text">@T("Search")</label>
     @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text textMedium", autofocus = "autofocus" })
 
