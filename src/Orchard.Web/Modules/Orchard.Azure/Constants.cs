@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Orchard.Azure {
+﻿namespace Orchard.Azure {
 
     public class Constants {
         public const string ShellSettingsStorageConnectionStringSettingName = "Orchard.Azure.Settings.StorageConnectionString";

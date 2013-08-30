@@ -1,5 +1,5 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Microsoft.WindowsAzure.ServiceRuntime;
 using NHibernate.Cache;
 using System;
 using Microsoft.ApplicationServer.Caching;
@@ -9,26 +9,20 @@ namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheProvider : ICacheProvider {
 
-        #region DataCache repository
-
-        private static IDictionary<string, DataCache> _cacheDictionary = new Dictionary<string, DataCache>();
+        private static readonly IDictionary<string, DataCache> _cacheDictionary = new  ConcurrentDictionary<string, DataCache>();
 
         private static DataCache GetCache(IInternalLogger logger, CacheClientConfiguration config) {
             string key = config.ToString();
             if (!_cacheDictionary.ContainsKey(key)) {
-                if (logger.IsDebugEnabled)
-                    logger.DebugFormat("Creating new DataCache with key '{0}'.", key);
+                logger.DebugFormat("Creating new DataCache with key '{0}'.", key);
                 _cacheDictionary[key] = AzureCacheConfiguration.CacheClientConfiguration.CreateCache();
             }
             else {
-                if (logger.IsDebugEnabled)
-                    logger.DebugFormat("Reusing existing DataCache with key '{0}'.", key);
+                logger.DebugFormat("Reusing existing DataCache with key '{0}'.", key);
             }
 
             return _cacheDictionary[key];
         }
-
-        #endregion
 
         public AzureCacheProvider() {
             _logger = LoggerProvider.LoggerFor(typeof(AzureCacheProvider));
@@ -39,10 +33,8 @@ namespace Orchard.Azure.Services.Caching.Database {
         #region ICacheProvider Members
 
         public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
-            bool enableCompression = false;
             string enableCompressionString;
-            if (properties.TryGetValue("compression_enabled", out enableCompressionString))
-                enableCompression = Boolean.Parse(enableCompressionString);
+            properties.TryGetValue("compression_enabled", out enableCompressionString);
 
             // Using static fields to communicate host identifier and cache name from AzureCacheConfiguration to
             // this class might cause problems in multi-tenancy scenarios when tenants have different settings
@@ -51,8 +43,9 @@ namespace Orchard.Azure.Services.Caching.Database {
 
             TimeSpan? expiration = null;
             string expirationString;
-            if (properties.TryGetValue("expiration", out expirationString) || properties.TryGetValue(global::NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString))
+            if (properties.TryGetValue("expiration", out expirationString) || properties.TryGetValue(NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString)) {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
+            }
 
             return new AzureCacheClient(cache, AzureCacheConfiguration.CacheClientConfiguration.IsSharedCaching, regionName, expiration);
         }

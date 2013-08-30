@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Orchard.FileSystems.Media;
@@ -82,8 +81,9 @@ namespace Orchard.Azure.Services.FileSystems {
         private static string ConvertToRelativeUriPath(string path) {
             var newPath = path.Replace(@"\", "/");
 
-            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://"))
+            if (newPath.StartsWith("/") || newPath.StartsWith("http://") || newPath.StartsWith("https://")) {
                 throw new ArgumentException("Path must be relative");
+            }
 
             return newPath;
         }
@@ -141,8 +141,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
             string prefix = Combine(Combine(Container.Name, _root), path);
 
-            if (!prefix.EndsWith("/"))
+            if (!prefix.EndsWith("/")) {
                 prefix += "/";
+            }
 
             return BlobClient.ListBlobs(prefix, true)
                         .OfType<CloudBlockBlob>()

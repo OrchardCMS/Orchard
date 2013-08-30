@@ -2,10 +2,6 @@
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Web;
 
 namespace Orchard.Azure.Services.Caching {
 
@@ -14,13 +10,13 @@ namespace Orchard.Azure.Services.Caching {
         public static CacheClientConfiguration FromPlatformConfiguration(ShellSettings shellSettings, string settingNamePrefix) {
             var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, shellSettings, settingNamePrefix);
             var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, shellSettings, settingNamePrefix);
-            return new CacheClientConfiguration() {
+            return new CacheClientConfiguration {
                 HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, shellSettings, settingNamePrefix),
                 CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, shellSettings, settingNamePrefix),
                 Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, shellSettings, settingNamePrefix),
                 Port = String.IsNullOrWhiteSpace(portString) ? 0 : Int32.Parse(portString),
                 AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, shellSettings, settingNamePrefix),
-                IsSharedCaching = String.IsNullOrWhiteSpace(isSharedCachingString) ? false : Boolean.Parse(isSharedCachingString)
+                IsSharedCaching = !String.IsNullOrWhiteSpace(isSharedCachingString) && Boolean.Parse(isSharedCachingString)
             };
         }
 
@@ -66,36 +62,37 @@ namespace Orchard.Azure.Services.Caching {
         }
 
         public void Validate() {
-            if (AutodiscoverIsEnabled) {
-                if (String.IsNullOrWhiteSpace(HostIdentifier))
-                    throw new Exception("AutoDiscover mode is detected but HostIdentifier is missing or empty.");
+            if (AutodiscoverIsEnabled && String.IsNullOrWhiteSpace(HostIdentifier)) {
+                throw new Exception("AutoDiscover mode is detected but HostIdentifier is missing or empty.");
             }
         }
 
         public DataCache CreateCache() {
-            var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration() {
+            var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration {
                 MaxConnectionsToServer = 32,
                 UseLegacyProtocol = false,
                 IsCompressionEnabled = CompressionIsEnabled
             };
 
-            if (AutodiscoverIsEnabled)
+            if (AutodiscoverIsEnabled) {
                 dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, HostIdentifier);
+            }
             else {
-                dataCacheFactoryConfiguration.Servers = new[] { new DataCacheServerEndpoint(Hostname, Port) };
+                dataCacheFactoryConfiguration.Servers = new[] {new DataCacheServerEndpoint(Hostname, Port)};
                 dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity(AuthorizationToken);
             }
 
             var dataCacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
 
-            if (IsSharedCaching || String.IsNullOrEmpty(CacheName))
+            if (IsSharedCaching || String.IsNullOrEmpty(CacheName)) {
                 return dataCacheFactory.GetDefaultCache();
+            }
 
             return dataCacheFactory.GetCache(CacheName);
         }
 
         public override string ToString() {
-            string key = String.Format("{0}_{1}_{2}_{3}_{4}_{5}_{6}", HostIdentifier, CacheName, Hostname, Port, AuthorizationToken, IsSharedCaching, CompressionIsEnabled);
+            var key = HostIdentifier + "_" + CacheName + "_" + Hostname + "_" + Port + "_" + AuthorizationToken + "_" + IsSharedCaching + "_" + CompressionIsEnabled;
             return key;
         }
     }

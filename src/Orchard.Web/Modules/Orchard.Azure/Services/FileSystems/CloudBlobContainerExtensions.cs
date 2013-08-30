@@ -34,8 +34,9 @@ namespace Orchard.Azure.Services.FileSystems {
         }
 
         public static bool DirectoryExists(this CloudBlobContainer container, string path) {
-            if (String.IsNullOrEmpty(path) || path.Trim() == String.Empty)
+            if (String.IsNullOrEmpty(path) || path.Trim() == String.Empty) {
                 throw new ArgumentException("Path can't be empty");
+            }
 
             return container.GetDirectoryReference(path).ListBlobs().Any();
         }

@@ -14,8 +14,7 @@ namespace Orchard.Azure.Services.Caching.Output {
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
     public class AzureOutputCacheStorageProvider : Component, IOutputCacheStorageProvider {
 
-        public AzureOutputCacheStorageProvider(ShellSettings shellSettings)
-            : base() {
+        public AzureOutputCacheStorageProvider(ShellSettings shellSettings) {
 
             try {
                 _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings, Constants.OutputCacheSettingNamePrefix);

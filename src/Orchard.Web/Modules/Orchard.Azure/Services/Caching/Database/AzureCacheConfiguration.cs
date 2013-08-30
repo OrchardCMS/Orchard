@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using NHibernate.Cfg.Loquacious;
-using Orchard;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -15,8 +13,7 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         public static CacheClientConfiguration CacheClientConfiguration;
 
-        public AzureCacheConfiguration(ShellSettings shellSettings)
-            : base() {
+        public AzureCacheConfiguration(ShellSettings shellSettings) {
 
             try {
                 CacheClientConfiguration = CacheClientConfiguration.FromPlatformConfiguration(shellSettings, Constants.DatabaseCacheSettingNamePrefix);
