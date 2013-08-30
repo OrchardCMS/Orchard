@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.ApplicationServer.Caching;
 using NHibernate.Cache;
 using System;
 
@@ -6,29 +7,26 @@ namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheProvider : ICacheProvider {
 
-        public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
-            CacheClientConfiguration configuration;
-            
-            try {
-                configuration = CacheClientConfiguration.FromPlatformConfiguration(Constants.DatabaseCacheSettingNamePrefix);
-                configuration.Validate();
-            }
-            catch (Exception ex) {
-                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
-            }
+        private DataCache _dataCache;
+        private bool _sharedCaching;
 
+        public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
+            
+            if (_dataCache == null) {
+                throw new ApplicationException("DataCache should be available");
+            }
+            
             string enableCompressionString;
             properties.TryGetValue("compression_enabled", out enableCompressionString);
 
-            var cache = configuration.CreateCache();
-
+            
             TimeSpan? expiration = null;
             string expirationString;
             if (properties.TryGetValue("expiration", out expirationString) || properties.TryGetValue(NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString)) {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
             }
 
-            return new AzureCacheClient(cache, configuration.IsSharedCaching, regionName, expiration);
+            return new AzureCacheClient(_dataCache, _sharedCaching, regionName, expiration);
         }
 
         public long NextTimestamp() {
@@ -36,6 +34,20 @@ namespace Orchard.Azure.Services.Caching.Database {
         }
 
         public void Start(IDictionary<string, string> properties) {
+            CacheClientConfiguration configuration;
+
+            try {
+                var tenant = properties["region_prefix"];
+
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenant, Constants.DatabaseCacheSettingNamePrefix);
+                configuration.Validate();
+            }
+            catch (Exception ex) {
+                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
+            }
+
+            _dataCache = configuration.CreateCache();
+            _sharedCaching = configuration.IsSharedCaching;
         }
 
         public void Stop() {

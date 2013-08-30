@@ -17,15 +17,5 @@ namespace Orchard.Azure.Services.Environment.Configuration {
             var fallbackName = namePrefix + name;
             return CloudConfigurationManager.GetSetting(tenantName) ?? CloudConfigurationManager.GetSetting(fallbackName);
         }
-
-        /// <summary>
-        /// Reads a setting from platform configuration
-        /// </summary>
-        /// <param name="name">The name of the setting to read.</param>
-        /// <param name="namePrefix">An optional prefix to prepend the setting name with.</param>
-        /// <returns>The value of the setting if found with or without tenant name prefix, otherwise null.</returns>
-        public static string GetSetting(string name, string namePrefix = null) {
-            return CloudConfigurationManager.GetSetting(namePrefix + name);
-        }
     }
 }
