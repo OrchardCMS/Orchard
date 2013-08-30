@@ -61,10 +61,10 @@ namespace Orchard.MediaProcessing.Providers.Filters {
 
             if (!String.IsNullOrWhiteSpace(padcolor)) {
                 if (padcolor.StartsWith("#")) {
-                    ColorTranslator.FromHtml(padcolor);
+                    settings.BackGroundColor = ColorTranslator.FromHtml(padcolor);
                 }
                 else {
-                    settings.PaddingColor = Color.FromName(padcolor);
+                    settings.BackGroundColor = Color.FromName(padcolor);
                 }
             }
 
