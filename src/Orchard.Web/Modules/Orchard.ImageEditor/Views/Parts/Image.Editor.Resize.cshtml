@@ -1,4 +1,4 @@
-﻿<button id="resize">Resize</button>
+﻿<button id="resize">@T("Resize")</button>
 
 @using (Script.Foot()) {
     
@@ -7,7 +7,7 @@
 
         jQuery(function ($) {
             $.imageEditor.registerPlugin(function () {
-                console.log('initiliazing resize');
+                console.log('initializing resize');
                 var host = $.imageEditor;
 
                 var oldWidth, oldHeight, ratio;
