@@ -1,45 +1,26 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NHibernate.Cache;
 using System;
-using Microsoft.ApplicationServer.Caching;
-using NHibernate;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheProvider : ICacheProvider {
 
-        private static readonly IDictionary<string, DataCache> _cacheDictionary = new  ConcurrentDictionary<string, DataCache>();
-
-        private static DataCache GetCache(IInternalLogger logger, CacheClientConfiguration config) {
-            string key = config.ToString();
-            if (!_cacheDictionary.ContainsKey(key)) {
-                logger.DebugFormat("Creating new DataCache with key '{0}'.", key);
-                _cacheDictionary[key] = AzureCacheConfiguration.CacheClientConfiguration.CreateCache();
-            }
-            else {
-                logger.DebugFormat("Reusing existing DataCache with key '{0}'.", key);
-            }
-
-            return _cacheDictionary[key];
-        }
-
-        public AzureCacheProvider() {
-            _logger = LoggerProvider.LoggerFor(typeof(AzureCacheProvider));
-        }
-
-        private readonly IInternalLogger _logger;
-
-        #region ICacheProvider Members
-
         public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
+            CacheClientConfiguration configuration;
+            
+            try {
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(regionName, Constants.DatabaseCacheSettingNamePrefix);
+                configuration.Validate();
+            }
+            catch (Exception ex) {
+                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
+            }
+
             string enableCompressionString;
             properties.TryGetValue("compression_enabled", out enableCompressionString);
 
-            // Using static fields to communicate host identifier and cache name from AzureCacheConfiguration to
-            // this class might cause problems in multi-tenancy scenarios when tenants have different settings
-            // for these in platform configuration. We should think of something more robust.
-            var cache = GetCache(_logger, AzureCacheConfiguration.CacheClientConfiguration);
+            var cache = configuration.CreateCache();
 
             TimeSpan? expiration = null;
             string expirationString;
@@ -47,7 +28,7 @@ namespace Orchard.Azure.Services.Caching.Database {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
             }
 
-            return new AzureCacheClient(cache, AzureCacheConfiguration.CacheClientConfiguration.IsSharedCaching, regionName, expiration);
+            return new AzureCacheClient(cache, configuration.IsSharedCaching, regionName, expiration);
         }
 
         public long NextTimestamp() {
@@ -59,7 +40,5 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         public void Stop() {
         }
-
-        #endregion
     }
 }

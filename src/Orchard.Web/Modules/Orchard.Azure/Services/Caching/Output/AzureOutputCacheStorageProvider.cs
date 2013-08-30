@@ -17,7 +17,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         public AzureOutputCacheStorageProvider(ShellSettings shellSettings) {
 
             try {
-                _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings, Constants.OutputCacheSettingNamePrefix);
+                _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix);
                 _cacheConfig.Validate();
             }
             catch (Exception ex) {

@@ -11,18 +11,7 @@ namespace Orchard.Azure.Services.Caching.Database {
     [OrchardSuppressDependency("Orchard.Data.DefaultDatabaseCacheConfiguration")]
     public class AzureCacheConfiguration : Component, IDatabaseCacheConfiguration {
 
-        public static CacheClientConfiguration CacheClientConfiguration;
-
         public AzureCacheConfiguration(ShellSettings shellSettings) {
-
-            try {
-                CacheClientConfiguration = CacheClientConfiguration.FromPlatformConfiguration(shellSettings, Constants.DatabaseCacheSettingNamePrefix);
-                CacheClientConfiguration.Validate();
-            }
-            catch (Exception ex) {
-                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
-            }
-
             _shellSettings = shellSettings;
         }
 

@@ -1,21 +1,20 @@
 ﻿using Microsoft.ApplicationServer.Caching;
 using Orchard.Azure.Services.Environment.Configuration;
-using Orchard.Environment.Configuration;
 using System;
 
 namespace Orchard.Azure.Services.Caching {
 
     public class CacheClientConfiguration {
 
-        public static CacheClientConfiguration FromPlatformConfiguration(ShellSettings shellSettings, string settingNamePrefix) {
-            var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, shellSettings, settingNamePrefix);
-            var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, shellSettings, settingNamePrefix);
+        public static CacheClientConfiguration FromPlatformConfiguration(string tenant, string settingNamePrefix) {
+            var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, tenant, settingNamePrefix);
+            var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, tenant, settingNamePrefix);
             return new CacheClientConfiguration {
-                HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, shellSettings, settingNamePrefix),
-                CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, shellSettings, settingNamePrefix),
-                Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, shellSettings, settingNamePrefix),
+                HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, tenant, settingNamePrefix),
+                CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, tenant, settingNamePrefix),
+                Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, tenant, settingNamePrefix),
                 Port = String.IsNullOrWhiteSpace(portString) ? 0 : Int32.Parse(portString),
-                AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, shellSettings, settingNamePrefix),
+                AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, tenant, settingNamePrefix),
                 IsSharedCaching = !String.IsNullOrWhiteSpace(isSharedCachingString) && Boolean.Parse(isSharedCachingString)
             };
         }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Orchard.OutputCache.Models;
-using Orchard;
 
 namespace Orchard.OutputCache.Services {
     public interface IOutputCacheStorageProvider : IDependency {
