@@ -6,15 +6,15 @@ namespace Orchard.Azure.Services.Caching {
 
     public class CacheClientConfiguration {
 
-        public static CacheClientConfiguration FromPlatformConfiguration(string tenant, string settingNamePrefix) {
-            var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, tenant, settingNamePrefix);
-            var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, tenant, settingNamePrefix);
+        public static CacheClientConfiguration FromPlatformConfiguration(string settingNamePrefix) {
+            var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, settingNamePrefix);
+            var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, settingNamePrefix);
             return new CacheClientConfiguration {
-                HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, tenant, settingNamePrefix),
-                CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, tenant, settingNamePrefix),
-                Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, tenant, settingNamePrefix),
+                HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, settingNamePrefix),
+                CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, settingNamePrefix),
+                Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, settingNamePrefix),
                 Port = String.IsNullOrWhiteSpace(portString) ? 0 : Int32.Parse(portString),
-                AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, tenant, settingNamePrefix),
+                AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, settingNamePrefix),
                 IsSharedCaching = !String.IsNullOrWhiteSpace(isSharedCachingString) && Boolean.Parse(isSharedCachingString)
             };
         }

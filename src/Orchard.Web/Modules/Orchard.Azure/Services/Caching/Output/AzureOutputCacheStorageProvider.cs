@@ -17,7 +17,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         public AzureOutputCacheStorageProvider(ShellSettings shellSettings) {
 
             try {
-                _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix);
+                _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(Constants.OutputCacheSettingNamePrefix);
                 _cacheConfig.Validate();
             }
             catch (Exception ex) {
@@ -41,34 +41,42 @@ namespace Orchard.Azure.Services.Caching.Output {
 
         public void Set(string key, CacheItem cacheItem) {
             Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching)
+            if (_cacheConfig.IsSharedCaching) {
                 _cache.Put(key, cacheItem);
-            else
+            }
+            else {
                 _cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _region);
+            }
         }
 
         public void Remove(string key) {
             Logger.Debug("Remove() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching)
+            if (_cacheConfig.IsSharedCaching) {
                 _cache.Remove(key);
-            else
+            }
+            else {
                 _cache.Remove(key, _region);
+            }
         }
 
         public void RemoveAll() {
             Logger.Debug("RemoveAll() invoked in region '{0}'.", _region);
-            if (_cacheConfig.IsSharedCaching)
+            if (_cacheConfig.IsSharedCaching) {
                 _cache.Clear();
-            else
+            }
+            else {
                 _cache.ClearRegion(_region);
+            }
         }
 
         public CacheItem GetCacheItem(string key) {
             Logger.Debug("GetCacheItem() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching)
+            if (_cacheConfig.IsSharedCaching) {
                 return _cache.Get(key) as CacheItem;
-            else
+            }
+            else {
                 return _cache.Get(key, _region) as CacheItem;
+            }
         }
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {

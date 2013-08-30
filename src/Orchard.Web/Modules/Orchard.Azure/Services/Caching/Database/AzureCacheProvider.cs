@@ -10,7 +10,7 @@ namespace Orchard.Azure.Services.Caching.Database {
             CacheClientConfiguration configuration;
             
             try {
-                configuration = CacheClientConfiguration.FromPlatformConfiguration(regionName, Constants.DatabaseCacheSettingNamePrefix);
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(Constants.DatabaseCacheSettingNamePrefix);
                 configuration.Validate();
             }
             catch (Exception ex) {
