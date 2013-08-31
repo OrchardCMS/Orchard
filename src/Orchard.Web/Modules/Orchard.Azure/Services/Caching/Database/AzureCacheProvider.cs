@@ -22,7 +22,7 @@ namespace Orchard.Azure.Services.Caching.Database {
             
             TimeSpan? expiration = null;
             string expirationString;
-            if (properties.TryGetValue("expiration", out expirationString) || properties.TryGetValue(NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString)) {
+            if (properties.TryGetValue(NHibernate.Cfg.Environment.CacheDefaultExpiration, out expirationString) || properties.TryGetValue("cache.default_expiration", out expirationString)) {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
             }
 
@@ -37,7 +37,7 @@ namespace Orchard.Azure.Services.Caching.Database {
             CacheClientConfiguration configuration;
 
             try {
-                var tenant = properties["region_prefix"];
+                var tenant = properties["cache.region_prefix"];
 
                 configuration = CacheClientConfiguration.FromPlatformConfiguration(tenant, Constants.DatabaseCacheSettingNamePrefix);
                 configuration.Validate();
