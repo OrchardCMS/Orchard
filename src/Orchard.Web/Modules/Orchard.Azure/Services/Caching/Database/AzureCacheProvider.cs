@@ -8,17 +8,13 @@ namespace Orchard.Azure.Services.Caching.Database {
     public class AzureCacheProvider : ICacheProvider {
 
         private DataCache _dataCache;
-        private bool _sharedCaching;
+        private bool _isSharedCaching;
 
         public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
             
             if (_dataCache == null) {
-                throw new ApplicationException("DataCache should be available");
+                throw new InvalidOperationException("Can't call this method when provider is in stopped state.");
             }
-            
-            string enableCompressionString;
-            properties.TryGetValue("compression_enabled", out enableCompressionString);
-
             
             TimeSpan? expiration = null;
             string expirationString;
@@ -26,7 +22,7 @@ namespace Orchard.Azure.Services.Caching.Database {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
             }
 
-            return new AzureCacheClient(_dataCache, _sharedCaching, regionName, expiration);
+            return new AzureCacheClient(_dataCache, _isSharedCaching, regionName, expiration);
         }
 
         public long NextTimestamp() {
@@ -37,9 +33,15 @@ namespace Orchard.Azure.Services.Caching.Database {
             CacheClientConfiguration configuration;
 
             try {
-                var tenant = properties["cache.region_prefix"];
+                var tenantName = properties["cache.region_prefix"];
 
-                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenant, Constants.DatabaseCacheSettingNamePrefix);
+                bool enableCompression = false;
+                string enableCompressionString;
+                if (properties.TryGetValue("compression_enabled", out enableCompressionString))
+                    enableCompression = Boolean.Parse(enableCompressionString);
+
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenantName, Constants.DatabaseCacheSettingNamePrefix);
+                configuration.CompressionIsEnabled = enableCompression;
                 configuration.Validate();
             }
             catch (Exception ex) {
@@ -47,10 +49,11 @@ namespace Orchard.Azure.Services.Caching.Database {
             }
 
             _dataCache = configuration.CreateCache();
-            _sharedCaching = configuration.IsSharedCaching;
+            _isSharedCaching = configuration.IsSharedCaching;
         }
 
         public void Stop() {
+            _dataCache = null;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Orchard.Azure.Services.Caching {
 
         public bool CompressionIsEnabled {
             get;
-            protected set;
+            set;
         }
 
         public bool AutodiscoverIsEnabled {
@@ -77,7 +77,8 @@ namespace Orchard.Azure.Services.Caching {
                 dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, HostIdentifier);
             }
             else {
-                dataCacheFactoryConfiguration.Servers = new[] {new DataCacheServerEndpoint(Hostname, Port)};
+                dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(false);
+                dataCacheFactoryConfiguration.Servers = new[] { new DataCacheServerEndpoint(Hostname, Port) };
                 dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity(AuthorizationToken);
             }
 
