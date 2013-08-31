@@ -58,13 +58,12 @@ namespace Orchard.Blogs.Controllers {
 
             _feedManager.Register(blogPart);
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Blog(blogPart)
                 .ArchiveData(archive);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
     }
 }

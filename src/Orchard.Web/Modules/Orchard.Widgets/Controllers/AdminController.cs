@@ -77,7 +77,7 @@ namespace Orchard.Widgets.Controllers {
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
             string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
                 .Layers(layers)
@@ -87,8 +87,7 @@ namespace Orchard.Widgets.Controllers {
                 .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
                 .ZonePreviewImage(zonePreviewImage);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Index")]
@@ -136,14 +135,13 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .CurrentLayer(currentLayer)
                 .Zone(zone)
                 .WidgetTypes(_widgetsService.GetWidgetTypes())
                 .ReturnUrl(returnUrl);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         public ActionResult AddWidget(int layerId, string widgetType, string zone, string returnUrl) {
@@ -158,9 +156,9 @@ namespace Orchard.Widgets.Controllers {
                 widgetPart.Position = widgetPosition.ToString(CultureInfo.InvariantCulture);
                 widgetPart.Zone = zone;
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
-                dynamic model = Services.ContentManager.BuildEditor(widgetPart);
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                var model = Services.ContentManager.BuildEditor(widgetPart);
+
+                return View(model);
             }
             catch (Exception exception) {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
@@ -190,8 +188,7 @@ namespace Orchard.Widgets.Controllers {
             }
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Your {0} has been added.", widgetPart.TypeDefinition.DisplayName));
@@ -207,7 +204,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(layerPart);
+            var model = Services.ContentManager.BuildEditor(layerPart);
 
             // only messing with the hints if they're given
             if (!string.IsNullOrWhiteSpace(name))
@@ -217,8 +214,7 @@ namespace Orchard.Widgets.Controllers {
             if (!string.IsNullOrWhiteSpace(layerRule))
                 model.LayerRule = layerRule;
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("AddLayer")]
@@ -234,8 +230,7 @@ namespace Orchard.Widgets.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
@@ -250,9 +245,8 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(layerPart);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            var model = Services.ContentManager.BuildEditor(layerPart);
+            return View(model);
         }
 
         [HttpPost, ActionName("EditLayer")]
@@ -269,8 +263,7 @@ namespace Orchard.Widgets.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
@@ -306,9 +299,8 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
             try {
-                dynamic model = Services.ContentManager.BuildEditor(widgetPart);
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                var model = Services.ContentManager.BuildEditor(widgetPart);
+                return View(model);
             }
             catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
@@ -337,8 +329,7 @@ namespace Orchard.Widgets.Controllers {
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
-                    // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                    return View((object)model);
+                    return View(model);
                 }
 
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));

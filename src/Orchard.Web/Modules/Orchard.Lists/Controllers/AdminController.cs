@@ -91,7 +91,7 @@ namespace Orchard.Lists.Controllers {
             else if (!string.IsNullOrEmpty(model.FilterByContentType))
                 containerItemContentDisplayName = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType).DisplayName;
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .ContainerId(model.ContainerId)
@@ -106,8 +106,7 @@ namespace Orchard.Lists.Controllers {
                     .Where(item => item != container)
                     .OrderBy(item => item.As<CommonPart>().VersionPublishedUtc));
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         private IContentQuery<ContentItem> GetListContentItemQuery(int containerId, string contentType, ContentsOrder orderBy) {
@@ -233,7 +232,7 @@ namespace Orchard.Lists.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .SourceContainerId(model.SourceContainerId)
@@ -245,8 +244,7 @@ namespace Orchard.Lists.Controllers {
                     .Select(part => part.ContentItem)
                     .OrderBy(item => item.As<CommonPart>().VersionPublishedUtc));
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Choose")]

@@ -154,7 +154,7 @@ namespace Orchard.Taxonomies.Controllers {
             term.Container = parentTerm == null ? taxonomy : (IContent)parentTerm;
 
             var model = Services.ContentManager.BuildEditor(term);
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -171,7 +171,7 @@ namespace Orchard.Taxonomies.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View((object)model);
+                return View(model);
             }
 
             _taxonomyService.ProcessPath(term);
@@ -191,7 +191,7 @@ namespace Orchard.Taxonomies.Controllers {
                 return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(term);
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -209,7 +209,7 @@ namespace Orchard.Taxonomies.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View((object)model);
+                return View(model);
             }
 
             Services.ContentManager.Publish(contentItem);

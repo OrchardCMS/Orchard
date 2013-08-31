@@ -67,14 +67,13 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = _contentManager.BuildEditor(contentItem);
+            var model = _contentManager.BuildEditor(contentItem);
 
             model
                 .ContentItem(form)
                 .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -122,7 +121,7 @@ namespace Orchard.CustomForms.Controllers {
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            dynamic model = _contentManager.UpdateEditor(contentItem, this);
+            var model = _contentManager.UpdateEditor(contentItem, this);
             
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();

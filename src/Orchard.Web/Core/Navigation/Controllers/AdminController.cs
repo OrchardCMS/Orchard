@@ -167,10 +167,9 @@ namespace Orchard.Core.Navigation.Controllers {
                 // filter the content items for this specific menu
                 menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                 
-                dynamic model = Services.ContentManager.BuildEditor(menuPart);
+                var model = Services.ContentManager.BuildEditor(menuPart);
                 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
             catch (Exception exception) {
                 Logger.Error(T("Creating menu item failed: {0}", exception.Message).Text);
@@ -204,8 +203,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Your {0} has been added.", menuPart.TypeDefinition.DisplayName));

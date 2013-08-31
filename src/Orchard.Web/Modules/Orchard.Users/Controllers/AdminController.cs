@@ -157,11 +157,10 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.New<IUser>("User");
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
             editor.Metadata.Position = "2";
-            dynamic model = Services.ContentManager.BuildEditor(user);
+            var model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -193,7 +192,7 @@ namespace Orchard.Users.Controllers {
                                                   null, null, true));
             }
 
-            dynamic model = Services.ContentManager.UpdateEditor(user, this);
+            var model = Services.ContentManager.UpdateEditor(user, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -202,8 +201,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("User created"));
@@ -217,11 +215,10 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
-            dynamic model = Services.ContentManager.BuildEditor(user);
+            var model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -232,7 +229,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id, VersionOptions.DraftRequired);
             string previousName = user.UserName;
 
-            dynamic model = Services.ContentManager.UpdateEditor(user, this);
+            var model = Services.ContentManager.UpdateEditor(user, this);
 
             var editModel = new UserEditViewModel {User = user};
             if (TryUpdateModel(editModel)) {
@@ -260,8 +257,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.ContentManager.Publish(user.ContentItem);
