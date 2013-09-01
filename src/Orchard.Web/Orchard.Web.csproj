@@ -202,16 +202,11 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Azure\Orchard.Azure.csproj">
-      <Project>{cbc7993c-57d8-4a6c-992c-19e849dfe71d}</Project>
-      <Name>Orchard.Azure</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Host.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\TestProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -264,6 +259,9 @@
       <DependentUpon>HostComponents.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
@@ -289,28 +287,18 @@
 		 Other similar extension points exist, see Microsoft.Common.targets.
 	<Target Name="BeforeBuild">
 	</Target> -->
+  <ItemGroup>
+	<RootBinFiles Include="bin\*">
+		<InProject>false</InProject>
+	</RootBinFiles>
+  </ItemGroup>
   <PropertyGroup>
-    <CopyAllFilesToSingleFolderForMsdeployDependsOn>CustomCollectFiles;$(CopyAllFilesToSingleFolderForMsdeployDependsOn);</CopyAllFilesToSingleFolderForMsdeployDependsOn>
-  </PropertyGroup>
-  <Target Name="CustomCollectFiles">
-    <ItemGroup>
-      <Orchard-Web-Bins Include="bin\*" />
-      <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
-      <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />
-      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*;Config\**\*" Exclude="**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt;**\.hgignore;**\.hgtags;**\.hg\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*" />
-      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
-        <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-      <_SqlCeBinariesx86Files Include="@(SqlCeBinariesx86);" />
-      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx86Files.Identity)">
-        <DestinationRelativePath>bin\x86\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-      <_SqlCeBinariesx64Files Include="@(SqlCeBinariesx64);" />
-      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx64Files.Identity)">
-        <DestinationRelativePath>bin\amd64\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-    </ItemGroup>
-  </Target>
+	<!-- This way for some reason doesn't work even though it resolves to the exact same string:
+	<ExcludeSubBinFiles>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)')</ExcludeSubBinFiles> -->
+	<!-- This way is a temporary hack that does the same thing but is obviously less maintainable: -->
+	<ExcludeSubBinFiles>Modules\**\bin\Autofac.Configuration.dll;Modules\**\bin\Autofac.Configuration.pdb;Modules\**\bin\Autofac.Configuration.xml;Modules\**\bin\Autofac.dll;Modules\**\bin\Autofac.pdb;Modules\**\bin\Autofac.xml;Modules\**\bin\Castle.Core.dll;Modules\**\bin\Castle.Core.xml;Modules\**\bin\Castle.DynamicProxy2.dll;Modules\**\bin\Castle.DynamicProxy2.xml;Modules\**\bin\FluentNHibernate.dll;Modules\**\bin\FluentNHibernate.xml;Modules\**\bin\Iesi.Collections.dll;Modules\**\bin\Iesi.Collections.xml;Modules\**\bin\log4net.dll;Modules\**\bin\log4net.xml;Modules\**\bin\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll;Modules\**\bin\Microsoft.ApplicationServer.Caching.AzureCommon.dll;Modules\**\bin\Microsoft.ApplicationServer.Caching.AzureCommon.xml;Modules\**\bin\Microsoft.ApplicationServer.Caching.Client.dll;Modules\**\bin\Microsoft.ApplicationServer.Caching.Client.xml;Modules\**\bin\Microsoft.ApplicationServer.Caching.Core.dll;Modules\**\bin\Microsoft.ApplicationServer.Caching.Core.xml;Modules\**\bin\Microsoft.Data.Edm.dll;Modules\**\bin\Microsoft.Data.OData.dll;Modules\**\bin\Microsoft.Web.DistributedCache.dll;Modules\**\bin\Microsoft.Web.Infrastructure.dll;Modules\**\bin\Microsoft.WindowsAzure.Configuration.dll;Modules\**\bin\Microsoft.WindowsAzure.Diagnostics.dll;Modules\**\bin\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll;Modules\**\bin\Microsoft.WindowsAzure.Diagnostics.xml;Modules\**\bin\Microsoft.WindowsAzure.Storage.dll;Modules\**\bin\Microsoft.WindowsAzure.Storage.xml;Modules\**\bin\Microsoft.WindowsFabric.Common.dll;Modules\**\bin\Microsoft.WindowsFabric.Data.Common.dll;Modules\**\bin\MySql.Data.dll;Modules\**\bin\Newtonsoft.Json.dll;Modules\**\bin\Newtonsoft.Json.xml;Modules\**\bin\NHibernate.dll;Modules\**\bin\NHibernate.Linq.dll;Modules\**\bin\NHibernate.SqlAzure.dll;Modules\**\bin\NHibernate.SqlAzure.pdb;Modules\**\bin\NHibernate.xml;Modules\**\bin\NuGet.Core.dll;Modules\**\bin\Orchard.Core.dll;Modules\**\bin\Orchard.Core.pdb;Modules\**\bin\Orchard.exe;Modules\**\bin\Orchard.Framework.dll;Modules\**\bin\Orchard.Framework.pdb;Modules\**\bin\Orchard.pdb;Modules\**\bin\Orchard.WarmupStarter.dll;Modules\**\bin\Orchard.WarmupStarter.pdb;Modules\**\bin\Orchard.Web.dll;Modules\**\bin\Orchard.Web.pdb;Modules\**\bin\System.Data.SqlServerCe.dll;Modules\**\bin\System.Net.Http.dll;Modules\**\bin\System.Net.Http.Formatting.dll;Modules\**\bin\System.Net.Http.Formatting.xml;Modules\**\bin\System.Net.Http.xml;Modules\**\bin\System.Spatial.dll;Modules\**\bin\System.Web.Helpers.dll;Modules\**\bin\System.Web.Helpers.xml;Modules\**\bin\System.Web.Http.dll;Modules\**\bin\System.Web.Http.WebHost.dll;Modules\**\bin\System.Web.Http.WebHost.xml;Modules\**\bin\System.Web.Http.xml;Modules\**\bin\System.Web.Mvc.dll;Modules\**\bin\System.Web.Mvc.xml;Modules\**\bin\System.Web.Razor.dll;Modules\**\bin\System.Web.Razor.xml;Modules\**\bin\System.Web.WebPages.Deployment.dll;Modules\**\bin\System.Web.WebPages.Deployment.xml;Modules\**\bin\System.Web.WebPages.dll;Modules\**\bin\System.Web.WebPages.Razor.dll;Modules\**\bin\System.Web.WebPages.Razor.xml;Modules\**\bin\System.Web.WebPages.xml</ExcludeSubBinFiles>
+    <ExcludeFilesFromDeployment>$(ExcludeSubBinFiles);**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;**\.hgignore;**\.hgtags;**\.hg\**;**\*.csproj.user;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
+  </PropertyGroup>	
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
       <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
