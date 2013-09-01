@@ -10,10 +10,12 @@ namespace Orchard.AntiSpam {
             
             ContentDefinitionManager.AlterPartDefinition("SubmissionLimitPart", cfg => cfg
                 .Attachable()
+                .WithDescription("Allows to filter content items based on submissions frequency.")
                 );
 
             ContentDefinitionManager.AlterPartDefinition("ReCaptchaPart", cfg => cfg
                 .Attachable()
+                .WithDescription("Ensures content items are submitted by humans only.")
                 );
 
             SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
@@ -25,6 +27,7 @@ namespace Orchard.AntiSpam {
 
             ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", cfg => cfg
                 .Attachable()
+                .WithDescription("Allows to filter submitted content items based on spam filters.")
                 );
 
             SchemaBuilder.CreateTable("SpamFilterPartRecord",
@@ -32,7 +35,12 @@ namespace Orchard.AntiSpam {
                     .Column<string>("Status", c => c.WithLength(64))
                 );
 
-            return 2;
+            ContentDefinitionManager.AlterPartDefinition("JavaScriptAntiSpamPart",
+                builder => builder
+                    .Attachable()
+                    .WithDescription("Prevents spambots to post the editor by requiring JavaScript support."));
+
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -58,6 +66,15 @@ namespace Orchard.AntiSpam {
                 .WithDescription("Ensures content items are submitted by humans only."));
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("JavaScriptAntiSpamPart",
+                builder => builder
+                    .Attachable()
+                    .WithDescription("Prevents spambots to post the editor by requiring JavaScript support."));
+
+            return 4;
         }
     }
 

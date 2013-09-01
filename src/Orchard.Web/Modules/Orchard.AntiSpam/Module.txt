@@ -10,7 +10,7 @@ Features:
 		Name: Anti-Spam
         Description: Provides anti-spam services to protect your content from malicious submissions.
 		Category: Security
-		Dependencies: Orchard.Tokens
+		Dependencies: Orchard.Tokens, Orchard.jQuery
 	Akismet.Filter:
 		Name: Akismet Anti-Spam Filter
         Description: Provides an anti-spam filter based on Akismet.

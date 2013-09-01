@@ -7,4 +7,5 @@
 
   <Place Parts_AntiSpam_AkismetSettings="Content:9"/>
   <Place Parts_AntiSpam_TypePadSettings="Content:10"/>
+  <Place Parts_JavaScriptAntiSpam_Edit="Content:5"/>
 </Placement>

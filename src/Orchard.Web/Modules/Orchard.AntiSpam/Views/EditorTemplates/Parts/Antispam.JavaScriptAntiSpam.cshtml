@@ -1,0 +1,19 @@
+﻿@model Orchard.AntiSpam.Models.JavaScriptAntiSpamPart
+
+@{
+    Script.Require("jQuery").AtFoot();
+}
+
+@Html.HiddenFor(m => m.IAmHuman)
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        (function ($) {
+            var $field = $("#@Html.FieldIdFor(m => m.IAmHuman)");
+
+            $field.closest("form").submit(function () {
+                $field.val("True");
+            });
+        })(jQuery);
+    </script>
+}
