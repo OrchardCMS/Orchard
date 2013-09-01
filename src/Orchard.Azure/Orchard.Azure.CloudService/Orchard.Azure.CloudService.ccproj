@@ -43,6 +43,7 @@
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>Orchard.Azure.Web</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
