@@ -64,9 +64,9 @@
 
 #media-library-main-navigation {
     vertical-align: top;
-    display: table-cell;
     min-width: 220px; /*Width of left column*/
-    height: 100%;
+    height: 85vh;
+    overflow-y: scroll;
     border-right: 1px solid #e0e0e0;
 }
     #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
@@ -129,14 +129,13 @@
 #media-library-main-list-wrapper {
     vertical-align: top;
     display: table-cell;
-    height: 100%;
+    height: 85vh;
     width: 100%;
-
 }
 
     #media-library-main-list {
         width: auto;
-        height: 100%;
+        height: 85vh;
         padding-left: 3px;
         padding-top: 3px;
         overflow-y: auto;
