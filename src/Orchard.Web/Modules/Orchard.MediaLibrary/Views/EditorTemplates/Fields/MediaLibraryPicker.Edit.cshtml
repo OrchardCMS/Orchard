@@ -12,16 +12,22 @@
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaLibraryPickerFieldSettings>();
     var contentManager = WorkContext.Resolve<IContentManager>();
+    var fieldIdForSelectedIds = Html.FieldIdFor(m => m.SelectedIds);
+    var fieldIdForIds = Html.FieldIdFor(m => m.Field.Ids);
 }
 
 <fieldset>
     <label @if(settings.Required) { <text>class="required"</text> }>@Model.Field.DisplayName</label>
-    <div id="save-message-@Html.FieldIdFor(m => m.Field.Ids)" class="message message-Warning media-library-picker-message">@T("You need to save your changes.")</div>
-    <div id="media-library-picker-@Html.FieldIdFor(m => m.Field.Ids)" class="items media-library-picker" summary="@Model.Field.DisplayName">
+    <div id="save-message-@fieldIdForIds" class="message message-Warning media-library-picker-message">@T("You need to save your changes.")</div>
+    <div id="media-library-picker-@fieldIdForIds" class="items media-library-picker" summary="@Model.Field.DisplayName">
         <ul>
             @foreach (var contentItem in Model.ContentItems) {
+                var editRouteValues = contentManager.GetItemMetadata(contentItem).EditorRouteValues;
+                var editUrl = Url.Action(
+                    Convert.ToString(editRouteValues["action"]),
+                    editRouteValues.Merge(new RouteValueDictionary { { "ReturnUrl", Request.RawUrl } }));
                 <li>
-                    <div data-id="@contentItem.Id" data-fieldid="@Html.FieldIdFor(m => m.Field.Ids)" class="media-library-picker-item">
+                    <div data-id="@contentItem.Id" data-fieldid="@fieldIdForIds" class="media-library-picker-item">
                         <div class="thumbnail">
                             @Display(contentManager.BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
@@ -30,14 +36,15 @@
 
                         </div>
                     </div>
-                    <span data-id="@contentItem.Id" class="media-library-picker-remove button grey">@T("Remove")</span>
+                    <a href="#" data-id="@contentItem.Id" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")
+                    <a href="@editUrl">@T("Edit")</a>
                 </li>
             }
         </ul>
     </div>
 
     <div>
-        <span id="btn-@Html.FieldIdFor(m => m.Field.Ids)" class="button">@T("Add")</span>
+        <span id="btn-@fieldIdForIds" class="button">@T("Add")</span>
     </div>
     
     @Html.HiddenFor(m => m.SelectedIds)
@@ -50,19 +57,19 @@
 
     (function($) {
 
-        var required = @(settings.Required ? "true" : "false");
         var multiple = @(settings.Multiple ? "true" : "false");
-        var addButton = $('#btn-@Html.FieldIdFor(m => m.Field.Ids)');
-        var @Html.FieldIdFor(m => m.Field.Ids)_Template = '<li><div data-id="{contentItemId}" data-fieldid="@Html.FieldIdFor(m => m.Field.Ids)" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div><div></div><span data-id="{contentItemId}" class="media-library-picker-remove button grey">@T("Remove")</span></li>';
+        var addButton = $('#btn-@fieldIdForIds');
+        var @(fieldIdForIds)_Template = 
+            '<li><div data-id="{contentItemId}" data-fieldid="@fieldIdForIds" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div><div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")<a href="{editLink}?ReturnUrl=@Request.RawUrl">@T("Edit")</a></li>';
         
         var refreshIds = function() {
-            var id = $('#@Html.FieldIdFor(m => m.SelectedIds)');
+            var id = $('#@fieldIdForSelectedIds');
             id.val('');
-            $("div[data-fieldid = @Html.FieldIdFor(m => m.Field.Ids)]").each(function() {
+            $("div[data-fieldid = @fieldIdForIds]").each(function() {
                 id.val(id.val() + "," + $(this).attr("data-id"));
             });
 
-            var itemsCount = $("div[data-fieldid = @Html.FieldIdFor(m => m.Field.Ids)]").length;
+            var itemsCount = $("div[data-fieldid = @fieldIdForIds]").length;
             
             if(!multiple && itemsCount > 0) {
                 addButton.hide();    
@@ -71,59 +78,76 @@
                 addButton.show();
             }
         };
+        
+        window.mediaLibraryDirty = false;
+        var showSaveMsg = function() {
+            $('#save-message-@fieldIdForIds').show();
+            window.mediaLibraryDirty = true;
+        };
+        if (!window.mediaLibraryNavigateAway) {
+            $(window).on("beforeunload", window.mediaLibraryNavigateAway = function() {
+                if (window.mediaLibraryDirty) {
+                    return "@HttpUtility.JavaScriptStringEncode(T("You have unsaved changes. Please only accept to leave if you don't mind losing those changes.").Text)";
+                }
+            });
+            $("#@(fieldIdForSelectedIds)").closest("form").on("submit", function() {
+                window.mediaLibraryDirty = false;
+            });
+        }
 
         refreshIds();
         
         addButton.click(function() {
             var url = '@HttpUtility.JavaScriptStringEncode(Url.Action("Index", "Admin", new {area = "Orchard.MediaLibrary", dialog = true}))';
-
             $.colorbox({
                 href: url,
                 iframe: true,
                 reposition: true,
                 width: "100%",
                 height: "100%",
-                onLoad: function () {
-                    // hide the scrollbars from the main window
+                onLoad: function() { // hide the scrollbars from the main window
                     $('html, body').css('overflow', 'hidden');
                     $('#cboxClose').remove();
                 },
-                onClosed: function () {
+                onClosed: function() {
                     $('html, body').css('overflow', '');
-
                     var selectedData = $.colorbox.selectedData;
-                    
                     if (selectedData == null) // Dialog cancelled, do nothing
                         return;
-
                     for (var i = 0; i < selectedData.length; i++) {
-                        
-                        var template = @Html.FieldIdFor(m => m.Field.Ids)_Template.replace(/\{contentItemId\}/g, selectedData[i].id).replace(/\{thumbnail\}/g, selectedData[i].thumbnail).replace(/\{title\}/g, selectedData[i].title);
+                        var template = @(fieldIdForIds)_Template
+                            .replace(/\{contentItemId\}/g, selectedData[i].id)
+                            .replace(/\{thumbnail\}/g, selectedData[i].thumbnail)
+                            .replace(/\{title\}/g, selectedData[i].title)
+                            .replace(/\{editLink\}/g, selectedData[i].editLink);
                         var content = $(template);
-                        $('#media-library-picker-@Html.FieldIdFor(m => m.Field.Ids) ul').append(content);
+                        $('#media-library-picker-@fieldIdForIds ul').append(content);
                     }
                     
                     refreshIds();
 
                     if (selectedData.length) {
-                        $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+                        showSaveMsg();
                     }
                 }
             });
             
         });
 
-        $(document).on("click",'#media-library-picker-@Html.FieldIdFor(m => m.Field.Ids) .media-library-picker-remove',function() {
+        $(document).on("click",'#media-library-picker-@fieldIdForIds .media-library-picker-remove', function(e) {
+            e.preventDefault();
+            if (!confirm("@HttpUtility.JavaScriptStringEncode(T("Do you really want to remove that media?").Text)")) return false;
             $(this).closest('li').remove();
             refreshIds();
-            $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+            showSaveMsg();
+            return false;
         });
             
-        $("#media-library-picker-@Html.FieldIdFor(m => m.Field.Ids) ul").sortable({
+        $("#media-library-picker-@fieldIdForIds ul").sortable({
             handle: '.thumbnail',
-            stop: function(event, ui) {
+            stop: function() {
                 refreshIds();
-                $('#save-message-@Html.FieldIdFor(m => m.Field.Ids)').show();
+                showSaveMsg();
             }
         }).disableSelection();
         
