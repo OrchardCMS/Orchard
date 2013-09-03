@@ -117,7 +117,7 @@
                     // load summary admin if not alreay done
                     if (newValue.summary() == '') {
                         var id = newValue.data.id;
-                        var url = settings.mediaItemsActionUrl + '/' + id;
+                        var url = settings.mediaItemActionUrl + '/' + id;
 
                         $.ajax({
                             type: "GET",
