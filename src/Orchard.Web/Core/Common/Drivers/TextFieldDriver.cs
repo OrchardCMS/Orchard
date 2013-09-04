@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
@@ -91,7 +90,8 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(string), T("Value"), T("The text associated with the field."));
+                .Member(null, typeof(string), T("Value"), T("The text associated with the field."))
+                .Enumerate<TextField>(() => field => new[] { field.Value });
         }
     }
 }

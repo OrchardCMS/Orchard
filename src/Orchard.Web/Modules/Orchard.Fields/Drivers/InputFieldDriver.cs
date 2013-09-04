@@ -61,7 +61,8 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(string), T("Value"), T("The value of the field."));
+                .Member(null, typeof(string), T("Value"), T("The value of the field."))
+                .Enumerate<InputField>(() => field => new[] { field.Value });
         }
     }
 }

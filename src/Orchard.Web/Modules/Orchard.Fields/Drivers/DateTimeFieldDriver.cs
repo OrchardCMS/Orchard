@@ -4,6 +4,7 @@ using System.Xml;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Fields.Fields;
 using Orchard.Fields.Settings;
 using Orchard.Fields.ViewModels;
 using Orchard.ContentManagement.Handlers;
@@ -11,7 +12,7 @@ using Orchard.Localization;
 
 namespace Orchard.Fields.Drivers {
     [UsedImplicitly]
-    public class DateTimeFieldDriver : ContentFieldDriver<Fields.DateTimeField> {
+    public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
         private readonly Lazy<CultureInfo> _cultureInfo;
@@ -33,7 +34,7 @@ namespace Orchard.Fields.Drivers {
             return field.Name;
         }
 
-        protected override DriverResult Display(ContentPart part, Fields.DateTimeField field, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(ContentPart part, DateTimeField field, string displayType, dynamic shapeHelper) {
             return ContentShape("Fields_DateTime", // this is just a key in the Shape Table
                 GetDifferentiator(field, part), 
                 () => {
@@ -57,7 +58,7 @@ namespace Orchard.Fields.Drivers {
             );
         }
 
-        protected override DriverResult Editor(ContentPart part, Fields.DateTimeField field, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
            
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
             var value = field.DateTime;
@@ -76,7 +77,7 @@ namespace Orchard.Fields.Drivers {
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: viewModel, Prefix: GetPrefix(field, part))); 
         }
 
-        protected override DriverResult Editor(ContentPart part, Fields.DateTimeField field, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, DateTimeField field, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new DateTimeFieldViewModel();
 
             if(updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
@@ -116,17 +117,20 @@ namespace Orchard.Fields.Drivers {
             return Editor(part, field, shapeHelper);
         }
 
-        protected override void Importing(ContentPart part, Fields.DateTimeField field, ImportContentContext context) {
+        protected override void Importing(ContentPart part, DateTimeField field, ImportContentContext context) {
             context.ImportAttribute(GetPrefix(field, part), "Value", v => field.Storage.Set(null, XmlConvert.ToDateTime(v, XmlDateTimeSerializationMode.Utc)));
         }
 
-        protected override void Exporting(ContentPart part, Fields.DateTimeField field, ExportContentContext context) {
+        protected override void Exporting(ContentPart part, DateTimeField field, ExportContentContext context) {
             context.Element(GetPrefix(field, part)).SetAttributeValue("Value", XmlConvert.ToString(field.Storage.Get<DateTime>(null), XmlDateTimeSerializationMode.Utc));
         }
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(DateTime), T("Value"), T("The date time value of the field."));
+                .Member(null, typeof(DateTime), T("Value"), T("The date time value of the field."))
+                .Enumerate<DateTimeField>(() => field => new[] { field.DateTime })
+                ;
+
         }
     }
 }

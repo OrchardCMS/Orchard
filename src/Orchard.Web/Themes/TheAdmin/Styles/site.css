@@ -631,7 +631,7 @@ select {
 select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus  {
     border-color:#666d51;
 }
-input.check-box {
+input.check-box, input[type=checkbox] {
     margin-left:0;
     vertical-align:-.1em;
 }

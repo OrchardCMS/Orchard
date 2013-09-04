@@ -65,7 +65,9 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(Boolean), T("Value"), T("The boolean value of the field."));
+                .Member(null, typeof(Boolean), T("Value"), T("The boolean value of the field."))
+                .Enumerate<BooleanField>(() => field => new [] { field.Value })
+                ;
         }
     }
 }

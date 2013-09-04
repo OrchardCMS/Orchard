@@ -108,7 +108,9 @@ namespace Orchard.Fields.Drivers {
         }
 
         protected override void Describe(DescribeMembersContext context) {
-            context.Member(null, typeof(decimal), T("Value"), T("The value of the field."));
+            context
+                .Member(null, typeof(decimal), T("Value"), T("The value of the field."))
+                .Enumerate<NumericField> (() => field => new[] { field.Value });
         }
     }
 }

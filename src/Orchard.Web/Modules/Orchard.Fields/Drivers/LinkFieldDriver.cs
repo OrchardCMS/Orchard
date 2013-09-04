@@ -70,7 +70,8 @@ namespace Orchard.Fields.Drivers {
         protected override void Describe(DescribeMembersContext context) {
             context
                 .Member("Text", typeof(string), T("Text"), T("The text of the link."))
-                .Member(null, typeof(string), T("Url"), T("The url of the link."));
+                .Member(null, typeof(string), T("Url"), T("The url of the link."))
+                .Enumerate<LinkField>(() => field => new[] { field.Value });
         }
     }
 }

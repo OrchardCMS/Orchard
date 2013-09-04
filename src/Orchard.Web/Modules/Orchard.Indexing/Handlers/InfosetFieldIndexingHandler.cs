@@ -29,7 +29,6 @@ namespace Orchard.Indexing.Handlers {
                         return;
                     }
 
-
                     // part fields
                     foreach ( var part in infosetPart.ContentItem.Parts ) {
                         foreach ( var field in part.PartDefinition.Fields ) {
@@ -43,29 +42,36 @@ namespace Orchard.Indexing.Handlers {
 
                             ContentPart localPart = part;
                             ContentPartFieldDefinition localField = field;
-                            var membersContext = new DescribeMembersContext(
-                                (storageName, storageType, displayName, description) =>
-                                {
-                                    var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
+                            var fieldStorage = _fieldStorageProvider.BindStorage(localPart, localField);
+                            var indexName = infosetPart.TypeDefinition.Name.ToLower() + "-" + field.Name.ToLower();
 
-                                    // fieldStorage.Get<T>(storageName)
-                                    var getter = typeof(IFieldStorage).GetMethod("Get").MakeGenericMethod(storageType);
-                                    var fieldValue = getter.Invoke(fieldStorage, new[] { storageName });
-                                    var indexName = String.Format("{0}-{1}", infosetPart.TypeDefinition.Name.ToLower(), field.Name.ToLower());
+                            var membersContext = new DescribeMembersContext(fieldStorage, values => {
 
-                                    TypeCode typeCode = Type.GetTypeCode(storageType);
+                                foreach (var value in values) {
+
+                                    if (value == null) {
+                                        continue;
+                                    }
+
+                                    var t = value.GetType();
+
+                                    // the T is nullable, convert using underlying type
+                                    if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                                        t = Nullable.GetUnderlyingType(t);
+                                    }
                                     
-                                    switch (typeCode)
-                                    {
+                                    var typeCode = Type.GetTypeCode(t);
+
+                                    switch (typeCode) {
                                         case TypeCode.Empty:
                                         case TypeCode.Object:
                                         case TypeCode.DBNull:
                                         case TypeCode.String:
                                         case TypeCode.Char:
-                                            context.DocumentIndex.Add(indexName, Convert.ToString(fieldValue)).RemoveTags().Analyze();
+                                            context.DocumentIndex.Add(indexName, Convert.ToString(value)).RemoveTags().Analyze();
                                             break;
                                         case TypeCode.Boolean:
-                                            context.DocumentIndex.Add(indexName, Convert.ToBoolean(fieldValue));
+                                            context.DocumentIndex.Add(indexName, Convert.ToBoolean(value));
                                             break;
                                         case TypeCode.SByte:
                                         case TypeCode.Int16:
@@ -74,19 +80,19 @@ namespace Orchard.Indexing.Handlers {
                                         case TypeCode.UInt32:
                                         case TypeCode.Int64:
                                         case TypeCode.UInt64:
-                                            context.DocumentIndex.Add(indexName, Convert.ToInt32(fieldValue));
+                                            context.DocumentIndex.Add(indexName, Convert.ToInt32(value));
                                             break;
                                         case TypeCode.Single:
                                         case TypeCode.Double:
                                         case TypeCode.Decimal:
-                                            context.DocumentIndex.Add(indexName, Convert.ToDouble(fieldValue));
+                                            context.DocumentIndex.Add(indexName, Convert.ToDouble(value));
                                             break;
                                         case TypeCode.DateTime:
-                                            context.DocumentIndex.Add(indexName, Convert.ToDateTime(fieldValue));
+                                            context.DocumentIndex.Add(indexName, Convert.ToDateTime(value));
                                             break;
                                     }
-
-                                });
+                                }
+                            });
 
                             foreach (var driver in drivers) {
                                 driver.Describe(membersContext);

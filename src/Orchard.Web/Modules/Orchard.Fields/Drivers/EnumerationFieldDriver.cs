@@ -1,15 +1,12 @@
-﻿using System;
-using Orchard;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Fields.Settings;
 using Orchard.Fields.Fields;
 using Orchard.Localization;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Fields.Drivers {
-    public class EnumerationFieldDriver : ContentFieldDriver<Fields.EnumerationField> {
+    public class EnumerationFieldDriver : ContentFieldDriver<EnumerationField> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Fields/Enumeration.Edit";
 
@@ -24,21 +21,21 @@ namespace Orchard.Fields.Drivers {
             return part.PartDefinition.Name + "." + field.Name;
         }
 
-        private static string GetDifferentiator(Fields.EnumerationField field, ContentPart part) {
+        private static string GetDifferentiator(EnumerationField field, ContentPart part) {
             return field.Name;
         }
 
-        protected override DriverResult Display(ContentPart part, Fields.EnumerationField field, string displayType, dynamic shapeHelper) {
+        protected override DriverResult Display(ContentPart part, EnumerationField field, string displayType, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration", GetDifferentiator(field, part),
                                 () => shapeHelper.Fields_Enumeration());
         }
 
-        protected override DriverResult Editor(ContentPart part, Fields.EnumerationField field, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, EnumerationField field, dynamic shapeHelper) {
             return ContentShape("Fields_Enumeration_Edit", GetDifferentiator(field, part),
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
         }
 
-        protected override DriverResult Editor(ContentPart part, Fields.EnumerationField field, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(ContentPart part, EnumerationField field, IUpdateModel updater, dynamic shapeHelper) {
             if (updater.TryUpdateModel(field, GetPrefix(field, part), null, null)) {
                 var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
                 if (settings.Required && field.SelectedValues.Length == 0) {
@@ -59,7 +56,8 @@ namespace Orchard.Fields.Drivers {
 
         protected override void Describe(DescribeMembersContext context) {
             context
-                .Member(null, typeof(string), T("Value"), T("The selected values of the field."));
+                .Member(null, typeof(string), T("Value"), T("The selected values of the field."))
+                .Enumerate<EnumerationField>(() => field => field.SelectedValues);
         }
     }
 }
