@@ -16,9 +16,6 @@
 
         public const string CacheHostIdentifierSettingName = "HostIdentifier";
         public const string CacheCacheNameSettingName = "CacheName";
-        public const string CacheHostnameSettingName = "Hostname";
-        public const string CachePortSettingName = "Port";
         public const string CacheAuthorizationTokenSettingName = "AuthorizationToken";
-        public const string CacheIsSharedCachingSettingName = "IsSharedCaching";
     }
 }

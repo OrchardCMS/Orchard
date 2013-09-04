@@ -7,15 +7,10 @@ namespace Orchard.Azure.Services.Caching {
     public class CacheClientConfiguration {
 
         public static CacheClientConfiguration FromPlatformConfiguration(string tenant, string settingNamePrefix) {
-            var portString = PlatformConfiguration.GetSetting(Constants.CachePortSettingName, tenant, settingNamePrefix);
-            var isSharedCachingString = PlatformConfiguration.GetSetting(Constants.CacheIsSharedCachingSettingName, tenant, settingNamePrefix);
             return new CacheClientConfiguration {
                 HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, tenant, settingNamePrefix),
                 CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, tenant, settingNamePrefix),
-                Hostname = PlatformConfiguration.GetSetting(Constants.CacheHostnameSettingName, tenant, settingNamePrefix),
-                Port = String.IsNullOrWhiteSpace(portString) ? 0 : Int32.Parse(portString),
                 AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, tenant, settingNamePrefix),
-                IsSharedCaching = !String.IsNullOrWhiteSpace(isSharedCachingString) && Boolean.Parse(isSharedCachingString)
             };
         }
 
@@ -29,22 +24,7 @@ namespace Orchard.Azure.Services.Caching {
             protected set;
         }
 
-        public string Hostname {
-            get;
-            protected set;
-        }
-
-        public int Port {
-            get;
-            protected set;
-        }
-
         public string AuthorizationToken {
-            get;
-            protected set;
-        }
-
-        public bool IsSharedCaching {
             get;
             protected set;
         }
@@ -54,15 +34,9 @@ namespace Orchard.Azure.Services.Caching {
             set;
         }
 
-        public bool AutodiscoverIsEnabled {
-            get {
-                return String.IsNullOrWhiteSpace(Hostname) || Port == 0 || String.IsNullOrWhiteSpace(AuthorizationToken);
-            }
-        }
-
         public void Validate() {
-            if (AutodiscoverIsEnabled && String.IsNullOrWhiteSpace(HostIdentifier)) {
-                throw new Exception("AutoDiscover mode is detected but HostIdentifier is missing or empty.");
+            if (String.IsNullOrWhiteSpace(HostIdentifier)) {
+                throw new Exception("The HostIdentifier value is missing or empty.");
             }
         }
 
@@ -73,27 +47,22 @@ namespace Orchard.Azure.Services.Caching {
                 IsCompressionEnabled = CompressionIsEnabled
             };
 
-            if (AutodiscoverIsEnabled) {
-                dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, HostIdentifier);
-            }
-            else {
-                dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(false);
-                dataCacheFactoryConfiguration.Servers = new[] { new DataCacheServerEndpoint(Hostname, Port) };
-                dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity(AuthorizationToken);
-            }
+            dataCacheFactoryConfiguration.AutoDiscoverProperty = new DataCacheAutoDiscoverProperty(true, HostIdentifier);
+            if (!String.IsNullOrEmpty(AuthorizationToken))
+                dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity(AuthorizationToken, sslEnabled: false);
 
             var dataCacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
 
-            if (IsSharedCaching || String.IsNullOrEmpty(CacheName)) {
-                return dataCacheFactory.GetDefaultCache();
+            if (!String.IsNullOrEmpty(CacheName)) {
+                return dataCacheFactory.GetCache(CacheName);
             }
 
-            return dataCacheFactory.GetCache(CacheName);
+            return dataCacheFactory.GetDefaultCache();
         }
 
-        public override string ToString() {
-            var key = HostIdentifier + "_" + CacheName + "_" + Hostname + "_" + Port + "_" + AuthorizationToken + "_" + IsSharedCaching + "_" + CompressionIsEnabled;
-            return key;
-        }
+        //public override string ToString() {
+        //    var key = HostIdentifier + "_" + CacheName + "_" + Hostname + "_" + Port + "_" + AuthorizationToken + "_" + IsSharedCaching + "_" + CompressionIsEnabled;
+        //    return key;
+        //}
     }
 }

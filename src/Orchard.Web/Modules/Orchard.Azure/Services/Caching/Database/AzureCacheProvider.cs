@@ -8,7 +8,6 @@ namespace Orchard.Azure.Services.Caching.Database {
     public class AzureCacheProvider : ICacheProvider {
 
         private DataCache _dataCache;
-        private bool _isSharedCaching;
 
         public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
             
@@ -22,7 +21,7 @@ namespace Orchard.Azure.Services.Caching.Database {
                 expiration = TimeSpan.FromSeconds(Int32.Parse(expirationString));
             }
 
-            return new AzureCacheClient(_dataCache, _isSharedCaching, regionName, expiration);
+            return new AzureCacheClient(_dataCache, regionName, expiration);
         }
 
         public long NextTimestamp() {
@@ -49,7 +48,6 @@ namespace Orchard.Azure.Services.Caching.Database {
             }
 
             _dataCache = configuration.CreateCache();
-            _isSharedCaching = configuration.IsSharedCaching;
         }
 
         public void Stop() {

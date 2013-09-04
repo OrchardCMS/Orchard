@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
+using System.Globalization;
 
 namespace Orchard.Azure.Services.Caching.Output {
 
@@ -25,68 +26,44 @@ namespace Orchard.Azure.Services.Caching.Output {
             }
 
             _cache = _cacheConfig.CreateCache();
+            _region = shellSettings.Name;
 
-            if (!_cacheConfig.IsSharedCaching) {
-                // If not using Windows Azure Shared Caching we can enable additional features by
-                // storing all cache items in a region. This enables enumerating and counting all
-                // items currently in the cache.
-                _region = shellSettings.Name;
-                _cache.CreateRegion(_region);
-            }
+            // Azure Cache supports only alphanumeric strings for regions, but Orchard supports some
+            // non-alphanumeric characters in tenant names. Remove all non-alphanumering characters
+            // from the region, and append the hash code of the original string to mitigate the risk
+            // of two distinct original region strings yielding the same transformed region string.
+            _regionAlphaNumeric = new String(Array.FindAll(_region.ToCharArray(), Char.IsLetterOrDigit)) + _region.GetHashCode().ToString(CultureInfo.InvariantCulture);
+            _cache.CreateRegion(_regionAlphaNumeric);
         }
 
         private readonly CacheClientConfiguration _cacheConfig;
         private readonly DataCache _cache;
         private readonly string _region;
+        private readonly string _regionAlphaNumeric;
 
         public void Set(string key, CacheItem cacheItem) {
-            Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching) {
-                _cache.Put(key, cacheItem);
-            }
-            else {
-                _cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _region);
-            }
+            Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            _cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _regionAlphaNumeric);
         }
 
         public void Remove(string key) {
-            Logger.Debug("Remove() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching) {
-                _cache.Remove(key);
-            }
-            else {
-                _cache.Remove(key, _region);
-            }
+            Logger.Debug("Remove() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            _cache.Remove(key, _regionAlphaNumeric);
         }
 
         public void RemoveAll() {
-            Logger.Debug("RemoveAll() invoked in region '{0}'.", _region);
-            if (_cacheConfig.IsSharedCaching) {
-                _cache.Clear();
-            }
-            else {
-                _cache.ClearRegion(_region);
-            }
+            Logger.Debug("RemoveAll() invoked in region '{0}'.", _regionAlphaNumeric);
+            _cache.ClearRegion(_regionAlphaNumeric);
         }
 
         public CacheItem GetCacheItem(string key) {
-            Logger.Debug("GetCacheItem() invoked with key='{0}' in region '{1}'.", key, _region);
-            if (_cacheConfig.IsSharedCaching) {
-                return _cache.Get(key) as CacheItem;
-            }
-            else {
-                return _cache.Get(key, _region) as CacheItem;
-            }
+            Logger.Debug("GetCacheItem() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            return _cache.Get(key, _regionAlphaNumeric) as CacheItem;
         }
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
-            Logger.Debug("GetCacheItems() invoked in region '{0}'.", _region);
-            if (_cacheConfig.IsSharedCaching) {
-                Logger.Debug("Enumeration not supported with Shared Caching; returning empty enumerable.");
-                return Enumerable.Empty<CacheItem>(); // Enumeration not supported with Shared Caching.
-            }
-            
-            return _cache.GetObjectsInRegion(_region).AsParallel()
+            Logger.Debug("GetCacheItems() invoked in region '{0}'.", _regionAlphaNumeric);
+            return _cache.GetObjectsInRegion(_regionAlphaNumeric).AsParallel()
                 .Select(x => x.Value)
                 .OfType<CacheItem>()
                 .Skip(skip)
@@ -95,13 +72,8 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public int GetCacheItemsCount() {
-            Logger.Debug("GetCacheItemsCount() invoked in region '{0}'.", _region);
-            if (_cacheConfig.IsSharedCaching) {
-                Logger.Debug("Enumeration not supported with Shared Caching; returning zero.");
-                return 0; // Enumeration not supported with Shared Caching.
-            }
-
-            return _cache.GetObjectsInRegion(_region).AsParallel()
+            Logger.Debug("GetCacheItemsCount() invoked in region '{0}'.", _regionAlphaNumeric);
+            return _cache.GetObjectsInRegion(_regionAlphaNumeric).AsParallel()
                 .Select(x => x.Value)
                 .OfType<CacheItem>()
                 .Count();
