@@ -39,7 +39,7 @@ namespace Orchard.ContentManagement.Handlers {
 
         public DescribeMembersContext Enumerate<TField>(Func<Func<TField, IEnumerable>> enumerate) where TField : ContentField, new() {
             
-            if (enumerate != null) {
+            if (enumerate != null && _storage != null && _apply != null) {
                 var f = enumerate();
                 var field = Activator.CreateInstance<TField>();
                 field.Storage = _storage;
