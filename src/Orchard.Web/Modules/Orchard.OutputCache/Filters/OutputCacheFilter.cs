@@ -88,7 +88,9 @@ namespace Orchard.OutputCache.Filters {
             _actionName = filterContext.ActionDescriptor.ActionName;
 
             // apply OutputCacheAttribute logic if defined
-            var outputCacheAttribute = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true).Cast<OutputCacheAttribute>().FirstOrDefault();
+            var actionAttributes = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
+            var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
+            var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
 
             if (outputCacheAttribute != null) {
                 if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore) {
