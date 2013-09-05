@@ -138,6 +138,8 @@
     <Compile Include="Models\TypeDescriptor.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\RuleRecord.cs" />
+    <Compile Include="Providers\ContentEvents.cs" />
+    <Compile Include="Providers\ContentForms.cs" />
     <Compile Include="Providers\ScheduleForms.cs" />
     <Compile Include="Providers\ScheduleActions.cs" />
     <Compile Include="Providers\NotificationForms.cs" />
