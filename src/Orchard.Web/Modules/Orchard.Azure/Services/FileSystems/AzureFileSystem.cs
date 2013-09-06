@@ -109,13 +109,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 return path2;
             }
 
-            var ch = path1[path1.Length - 1];
-
-            if (ch != '/') {
-                return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
-            }
-
-            return (path1 + path2);
+            return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
         }
 
         public IStorageFile GetFile(string path) {

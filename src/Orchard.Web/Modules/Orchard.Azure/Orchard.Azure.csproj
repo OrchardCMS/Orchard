@@ -53,10 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
@@ -65,46 +61,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Edm, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.OData.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.DistributedCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Web.DistributedCache.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics.StorageUtility, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsFabric.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsFabric.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -115,7 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
@@ -140,6 +106,7 @@
     <Compile Include="Services\Caching\Database\AzureCacheProvider.cs" />
     <Compile Include="Services\Caching\Database\Models\AzureCacheRecord.cs" />
     <Compile Include="Services\Caching\Output\AzureOutputCacheStorageProvider.cs" />
+    <Compile Include="Services\Caching\Output\IAzureOutputCacheHolder.cs" />
     <Compile Include="Services\Environment\Configuration\AzureBlobShellSettingsManager.cs" />
     <Compile Include="Services\Environment\Configuration\PlatformConfiguration.cs" />
     <Compile Include="Services\FileSystems\AzureFileSystem.cs" />

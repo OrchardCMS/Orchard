@@ -14,32 +14,37 @@ namespace Orchard.Azure.Services.Caching.Output {
     [OrchardFeature(Constants.OutputCacheFeatureName)]
     [OrchardSuppressDependency("Orchard.OutputCache.Services.DefaultCacheStorageProvider")]
     public class AzureOutputCacheStorageProvider : Component, IOutputCacheStorageProvider {
+        private readonly DataCache _cache;
+        private readonly string _regionAlphaNumeric;
 
-        public AzureOutputCacheStorageProvider(ShellSettings shellSettings) {
+        public AzureOutputCacheStorageProvider(ShellSettings shellSettings, IAzureOutputCacheHolder cacheHolder) {
 
-            try {
-                _cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix);
-                _cacheConfig.Validate();
-            }
-            catch (Exception ex) {
-                throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.OutputCacheFeatureName), ex);
-            }
-
-            _cache = _cacheConfig.CreateCache();
-            _region = shellSettings.Name;
+            var region = shellSettings.Name;
 
             // Azure Cache supports only alphanumeric strings for regions, but Orchard supports some
             // non-alphanumeric characters in tenant names. Remove all non-alphanumering characters
             // from the region, and append the hash code of the original string to mitigate the risk
             // of two distinct original region strings yielding the same transformed region string.
-            _regionAlphaNumeric = new String(Array.FindAll(_region.ToCharArray(), Char.IsLetterOrDigit)) + _region.GetHashCode().ToString(CultureInfo.InvariantCulture);
-            _cache.CreateRegion(_regionAlphaNumeric);
-        }
+            _regionAlphaNumeric = new String(Array.FindAll(region.ToCharArray(), Char.IsLetterOrDigit)) + region.GetHashCode().ToString(CultureInfo.InvariantCulture);
 
-        private readonly CacheClientConfiguration _cacheConfig;
-        private readonly DataCache _cache;
-        private readonly string _region;
-        private readonly string _regionAlphaNumeric;
+
+            _cache = cacheHolder.TryGetDataCache(() => {
+                CacheClientConfiguration cacheConfig;
+
+                try {
+                    cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix);
+                    cacheConfig.Validate();
+                }
+                catch (Exception ex) {
+                    throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.OutputCacheFeatureName), ex);
+                }
+
+                var cache = cacheConfig.CreateCache();
+                cache.CreateRegion(_regionAlphaNumeric);
+
+                return cache;
+            });
+        }
 
         public void Set(string key, CacheItem cacheItem) {
             Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);

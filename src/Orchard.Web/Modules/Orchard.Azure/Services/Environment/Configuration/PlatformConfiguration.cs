@@ -13,8 +13,8 @@ namespace Orchard.Azure.Services.Environment.Configuration {
         /// <param name="namePrefix">An optional prefix to prepend the setting name with.</param>
         /// <returns>The value of the setting if found with or without tenant name prefix, otherwise null.</returns>
         public static string GetSetting(string name, string tenant, string namePrefix = null) {
-            var tenantName = tenant + ":" + namePrefix + name;
-            var fallbackName = namePrefix + name;
+            var tenantName = tenant + ":" + (namePrefix ?? string.Empty) + name;
+            var fallbackName = (namePrefix ?? string.Empty) + name;
             return CloudConfigurationManager.GetSetting(tenantName) ?? CloudConfigurationManager.GetSetting(fallbackName);
         }
     }
