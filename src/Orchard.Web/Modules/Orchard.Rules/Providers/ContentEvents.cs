@@ -17,14 +17,14 @@ namespace Orchard.Rules.Providers {
             Func<dynamic, bool> contentHasPart = ContentHasPart;
 
             describe.For("Content", T("Content Items"), T("Content Items"))
-                .Element("Created", T("Content Created"), T("Content is actually created."), contentHasPart, (Func<dynamic, LocalizedString>)(context => T("When content with types ({0}) is created.", FormatPartsList(context))), "SelectContentTypes")
-                .Element("Versioned", T("Content Versioned"), T("Content is actually versioned."), contentHasPart, (Func<dynamic, LocalizedString>)(context => T("When content with types ({0}) is versioned.", FormatPartsList(context))), "SelectContentTypes")
-                .Element("Published", T("Content Published"), T("Content is actually published."), contentHasPart, (Func<dynamic, LocalizedString>)(context => T("When content with types ({0}) is published.", FormatPartsList(context))), "SelectContentTypes")
-                .Element("Removed", T("Content Removed"), T("Content is actually removed."), contentHasPart, (Func<dynamic, LocalizedString>)(context => T("When content with types ({0}) is removed.", FormatPartsList(context))), "SelectContentTypes");
+                .Element("Created", T("Content Created"), T("Content is actually created."), contentHasPart, context => T("When content with types ({0}) is created.", FormatPartsList(context)), "SelectContentTypes")
+                .Element("Versioned", T("Content Versioned"), T("Content is actually versioned."), contentHasPart, context => T("When content with types ({0}) is versioned.", FormatPartsList(context)), "SelectContentTypes")
+                .Element("Published", T("Content Published"), T("Content is actually published."), contentHasPart, context => T("When content with types ({0}) is published.", FormatPartsList(context)), "SelectContentTypes")
+                .Element("Removed", T("Content Removed"), T("Content is actually removed."), contentHasPart, context => T("When content with types ({0}) is removed.", FormatPartsList(context)), "SelectContentTypes");
         }
 
-        private string FormatPartsList(dynamic context) {
-            var contenttypes = context.Properties["ContentTypes"];
+        private string FormatPartsList(EventContext context) {
+            var contenttypes = context.Properties.ContainsKey("ContentTypes") ? context.Properties["ContentTypes"] : context.Properties["contenttypes"];
 
             if (String.IsNullOrEmpty(contenttypes)) {
                 return T("Any").Text;
