@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -90,8 +94,8 @@
     <Compile Include="FileSystems\Media\AzureBlobStorageProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orchard.Azure\Orchard.Azure.csproj">
-      <Project>{2505AA84-65A6-43D0-9C27-4F44FD576284}</Project>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Azure\Orchard.Azure.csproj">
+      <Project>{cbc7993c-57d8-4a6c-992c-19e849dfe71d}</Project>
       <Name>Orchard.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">

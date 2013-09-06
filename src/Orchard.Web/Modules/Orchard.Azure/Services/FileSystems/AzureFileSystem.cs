@@ -139,7 +139,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 prefix += "/";
             }
 
-            return BlobClient.ListBlobs(prefix, true)
+            return BlobClient.ListBlobs(prefix)
                         .OfType<CloudBlockBlob>()
                         .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
                         .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
@@ -264,6 +264,7 @@ namespace Orchard.Azure.Services.FileSystems {
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
             newBlob.StartCopyFromBlob(blob);
+            blob.Delete();
         }
 
         public IStorageFile CreateFile(string path) {

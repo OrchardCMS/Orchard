@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using Microsoft.WindowsAzure;
 using NUnit.Framework;
-using Orchard.Azure.Environment.Configuration;
+using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure.Tests.Environment.Configuration {
     [TestFixture]
@@ -12,20 +13,21 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         protected IShellSettingsManager ShellSettingsManager;
 
         protected override void OnInit() {
+
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
-            ShellSettingsManager = new AzureShellSettingsManager(DevAccount, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
+            ShellSettingsManager = new AzureBlobShellSettingsManager(new Moq.Mock<IMimeTypeProvider>().Object, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(AzureShellSettingsManager.ContainerName, DevAccount);
+            DeleteAllBlobs(Constants.ShellSettingsContainerName, DevAccount);
         }
 
         [TearDown]
         public void TearDown() {
             // ensure default container is empty after running tests
-            DeleteAllBlobs(AzureShellSettingsManager.ContainerName, DevAccount);
+            DeleteAllBlobs(Constants.ShellSettingsContainerName, DevAccount);
         }
 
         [Test]

@@ -2,10 +2,12 @@
 using System.IO;
 using System.Web;
 using NUnit.Framework;
-using Orchard.Azure.FileSystems.Media;
 using Microsoft.WindowsAzure;
 using System.Linq;
+using Orchard.Caching;
 using Orchard.Environment.Configuration;
+using Orchard.Azure.Services.FileSystems.Media;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
@@ -17,7 +19,7 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         protected override void OnInit() {
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out _devAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, _devAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, new ConfigurationMimeTypeProvider(new DefaultCacheManager(typeof(ConfigurationMimeTypeProvider), new DefaultCacheHolder(new DefaultCacheContextAccessor()))));
         }
 
         [SetUp]
@@ -213,8 +215,6 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             using ( var stream = foo.OpenWrite() )
             using ( var writer = new StreamWriter(stream) )
                 writer.Write(teststring);
-
-            Assert.AreEqual(22, foo.GetSize());
 
             string content;
             using ( var stream = foo.OpenRead() )
