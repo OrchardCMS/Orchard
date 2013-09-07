@@ -72,6 +72,7 @@
                 $.ajax({
                     type: "GET",
                     url: url,
+                    cache: false
                 }).done(function(data) {
                     var mediaItems = data.mediaItems;
                     self.mediaItemsCount = data.mediaItemsCount;
