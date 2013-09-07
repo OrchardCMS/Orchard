@@ -50,6 +50,8 @@ var updateActivities = function(localId) {
                 activity.State = JSON.parse(updatedActivityState);
             }
         }
+
+        displaySaveMessage();
     }
     
     sessionStorage.setItem(localId, JSON.stringify(workflow));
@@ -81,6 +83,7 @@ var loadActivities = function (localId) {
         });
     }
 
+    refreshStateMessage();
     return workflow;
 };
 

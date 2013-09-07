@@ -96,3 +96,8 @@
         @Html.ActionLink(T("Close").Text, "Index", "Admin", new { area = "Orchard.Workflows" }, new { @class = "primaryAction button" })
     </fieldset>
 }
+
+@using (Capture(Layout.Messages)) {
+    <div id="save-message" class="message message-Warning" style="display:none">@T("You need to hit \"Save\" in order to save your changes.")</div>
+    <div id="start-message" class="message message-Warning" style="display:none">@T("The workflow needs at least one activity to be set as a starting state.")</div>
+}

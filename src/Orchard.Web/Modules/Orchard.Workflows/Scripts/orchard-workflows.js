@@ -77,6 +77,8 @@
         if (activityName && activityName.length) {
             createActivity(activityName, event.pageY, event.pageX);
         }
+
+        displaySaveMessage();
     }
     });
 
@@ -209,6 +211,11 @@
             var checked = $(this).is(':checked');
             target.viewModel.start = checked;
             $(target).toggleClass('start', checked);
+            
+            // display a warning if there are no activities with a start state
+            refreshStateMessage();
+
+            displaySaveMessage();
         });
 
         // prevent the editor from getting clicked when the label is clicked
@@ -217,6 +224,17 @@
         });
     };
 
+    function refreshStateMessage() {
+        if ($("#activity-editor div").hasClass('start')) {
+            $("#start-message").hide();
+        } else {
+            $("#start-message").show();
+        }
+    }
+    
+    function displaySaveMessage() {
+        $("#save-message").show();
+    }
 
     var refreshToolbar = function(target) {
         target = $(target);
@@ -243,6 +261,8 @@
             
             jsPlumb.removeAllEndpoints(target.attr('id'));
             target.remove();
+
+            displaySaveMessage();
         });
 
     };
