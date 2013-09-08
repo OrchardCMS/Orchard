@@ -6,7 +6,7 @@
             if (e.keyCode == 13) {
                 var visibleRows = $("[data-record-text]:visible");
                 if (visibleRows.length > 0) {
-                    var editLink = $("a", visibleRows[0]);
+                    var editLink = $(".related a:last", visibleRows[0]);
                     location.href = editLink.attr("href");
                 } else {
                     var primaryButton = $("#layout-main .manage .primaryAction");
