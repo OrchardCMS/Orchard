@@ -3,10 +3,6 @@
 @using Orchard.Utility.Extensions;
 
 @{
-    Style.Include("admin-taxonomy.css");
-    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
-    Script.Include("admin-taxonomy-expando.js").AtFoot();
-
     if (Model.Settings.Autocomplete) {
         Style.Require("jQueryUI_Orchard");
         Script.Require("jQueryUI_Sortable");
@@ -15,6 +11,10 @@
         Style.Include("admin-taxonomy-tags.css");
         Script.Include("admin-taxonomy-tags.js").AtFoot();
     }
+
+    Style.Include("admin-taxonomy.css");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("admin-taxonomy-expando.js").AtFoot();
 
     var termIndex = 0;
 }
