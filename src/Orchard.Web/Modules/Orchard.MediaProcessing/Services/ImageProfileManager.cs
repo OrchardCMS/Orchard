@@ -197,11 +197,20 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
+        private static readonly char[] _disallowed = @"/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%".ToCharArray();
+
         private static string CreateDefaultFileName(string path) {
             var extention = Path.GetExtension(path);
             var newPath = Path.ChangeExtension(path, "");
-            newPath = newPath.Replace(@"/", "_");
-            return newPath.ToSafeName() + extention;
+            newPath = newPath.TrimEnd('.').RemoveDiacritics();
+            var normalized = newPath.ToCharArray();
+            for (var i = 0; i < normalized.Length; i++) {
+                if (Array.IndexOf(_disallowed, normalized[i]) >= 0) {
+                    normalized[i] = '_';
+                }
+            }
+
+            return new string(normalized) + extention;
         }
     }
 }

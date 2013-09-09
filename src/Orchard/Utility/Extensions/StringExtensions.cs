@@ -196,7 +196,7 @@ namespace Orchard.Utility.Extensions {
             return (c == '\r' || c == '\n' || c == '\t' || c == '\f' || c == ' ');
         }
 
-        public static string RemoveDiacritics(string name) {
+        public static string RemoveDiacritics(this string name) {
             string stFormD = name.Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder();
 
