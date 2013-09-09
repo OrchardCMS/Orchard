@@ -206,19 +206,19 @@
     float: left;
     margin: 0 3px 3px 0;
     padding: 0;
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
 }
 
 #media-library-main-selection .selection {
     margin: 0;
     padding: 0;
-    height: 60px;
+    height: 120px;
 }
 
 #media-library-main-selection .media-thumbnail > img {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
 }
 
 #media-library-main-selection-actions:before {
@@ -256,11 +256,13 @@
 #media-library-main-list .media-thumbnail {
     width: 200px;
     height: 200px;
+    overflow:hidden;
 }
 
 #media-library-main-selection .media-thumbnail {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
+    overflow:hidden;
 }
 
 .media-thumbnail-o-embed {

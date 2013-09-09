@@ -45,20 +45,39 @@
                 @Html.Raw(oembed.Element("html").Value)
                     break;
                 case "link":
-                <a href="@oembed.Element("url").Value">oembed.Element("title").Value</a>
+                if (oembed.Element("url") != null){
+                <a href="@oembed.Element("url").Value">@oembed.Element("title").Value</a>
+                }
+                else {
+                    @oembed.Element("title").Value
+                }
                     break;
                 case "rich":
                 @Html.Raw(oembed.Element("html").Value)
                     break;
             }
 
-            using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
+            string thumbnail = string.Empty;
+            if (oembed.Element("thumbnail") != null) {
+                thumbnail = oembed.Element("thumbnail").Value;
+            }
+            else if (oembed.Element("thumbnail_url") != null) {
+                thumbnail = oembed.Element("thumbnail_url").Value;
+            }
+            
+            if (oembed.Element("html") == null && !String.IsNullOrEmpty(thumbnail)) {
+                <div class="media-thumbnail">
+                    <img src="@thumbnail" />
+                </div>
+            }
+
+using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
                 @Html.Hidden("url", Model.Url)
                 @Html.Hidden("folderPath", Model.FolderPath)
                 @Html.Hidden("document", Model.Content.ToString())
 
                 <button type="submit">@("Import")</button>
-            }
+}
         }
 
     </div>

@@ -14,8 +14,7 @@
     
     @if (mediaParts.Any()) {
         foreach (var contentItem in mediaParts) {
-            <span>
-            @if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+            if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
                 <a href="@Url.ItemEditUrl(contentItem, new {returnUrl})">
                     @Display(BuildDisplay(contentItem, "Thumbnail"))
                 </a>
@@ -23,7 +22,6 @@
             else {
                 @Display(BuildDisplay(contentItem, "Thumbnail"))
             }
-            </span>
         }
     }
     else {

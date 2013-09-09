@@ -49,3 +49,17 @@
     padding-right:5px;
     font-size: 12px;
 }
+
+.media-thumbnail-document {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA5CAIAAAD/bz8YAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAASZJREFUaEPt2c8NgjAUx3F3cgFO3JmDEZiAGZiARdiCMxNwgRD8RaryR2j72lfBvO+NGl4/QiQk3saTJSBdpwcVRXF3qCxLNYjaAuSoeVdVlZpo3wfU932SJGqkc+RLxQVCNNN3UBRFbduqDwza+zIEEy8I2ZrYQcjK5B+Ec+u6juN4OpwyN7GAcG7TNDQTFwiLNBMjCBFMvCBka2IHIStTCBAyNwUCIUNTOBDamrbvBf5BVm03+jEIrW6cHxAiv9yladp1nZriEYRoptVePkHmHewloGf/BRqGIcuyad2l+a/JCTRfd2lv5vVBp7tlHAlI13+B5Dn06jIgeQ69EpCADhKQruuDQnYdEPL154tVeZ6r7Z8tQCiwaaVBa9DPE5AuAR03jg+0DsulZjOdQAAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 1px solid #e0e0e0;
+    width: 120px;
+height: 120px;
+}
+.media-thumbnail-o-embed {
+    width: 120px;
+    height: 120px;
+    overflow:hidden;
+}

@@ -3,6 +3,7 @@
 @{
     OEmbedPart oembedPart = Model.ContentPart;
     var mediaPart = ((ContentItem)Model.ContentItem).As<MediaPart>();
+    string thumbnail = oembedPart["thumbnail_url"] ?? oembedPart["thumbnail"];
 }
 
 @switch (oembedPart["type"]) {
@@ -18,4 +19,10 @@
     case "rich":
         @Html.Raw(oembedPart["html"])
         break;
+}
+
+@if (!String.IsNullOrEmpty(thumbnail)) {
+    <div class="media-thumbnail">
+        <img src="@thumbnail" />
+    </div>
 }
