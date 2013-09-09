@@ -244,7 +244,7 @@
       </RootBinFiles>
     </ItemGroup>
     <PropertyGroup>
-      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;**\.hgignore;**\.hgtags;**\.hg\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
+      <ExcludeFilesFromDeployment>@(RootBinFiles->'Modules\**\bin\%(Filename)%(Extension)');@(RootBinFiles->'Themes\**\%(Filename)%(Extension)');@(RootBinFiles->'Core\**\bin\%(Filename)%(Extension)');**\*.Debug.config;**\*.Release.config;**\obj\**;**\bin\*.xml;**\*.cs;**\*.csproj;Modules\**\Tests\**;Modules\**\Specs\**;Themes\bin\**;**\.hgignore;**\.hgtags;**\.hg\**;**\*.csproj.user;Properties\**\*;App_Data\Dependencies\*;App_Data\RecipeQueue\*;App_Data\Logs\*;App_Data\**\mappings.bin;App_Data\**\cache.dat;App_Data\**\hrestart.txt</ExcludeFilesFromDeployment>
     </PropertyGroup>
 	</Target>
 	
