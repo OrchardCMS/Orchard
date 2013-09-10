@@ -1,0 +1,16 @@
+# Orchard resource strings - fr-FR
+# Copyright (c) 2010 Outercurve Foundation
+# All rights reserved
+# This file is distributed under the BSD license
+
+#: Orchard.Core.Shapes.Localization.DateTimeLocalization
+#| msgid "h:mm tt"
+msgctxt "Orchard.Core.Shapes.Localization.DateTimeLocalization"
+msgid "h:mm tt"
+msgstr "HH:mm"
+
+#: Orchard.Core.Shapes.Localization.DateTimeLocalization
+#| msgid "M/d/yyyy"
+msgctxt "Orchard.Core.Shapes.Localization.DateTimeLocalization"
+msgid "M/d/yyyy"
+msgstr "dd/MM/yyyy"

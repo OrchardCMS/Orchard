@@ -123,6 +123,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Admin.feature</DependentUpon>
     </Compile>
+    <Compile Include="Autoroute.feature.cs">
+      <DependentUpon>Autoroute.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Bindings\BindingBase.cs" />
     <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\ContentRights.cs" />
@@ -134,6 +139,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Blogs.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Boolean.feature.cs">
+      <DependentUpon>Boolean.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Comments.feature.cs">
       <AutoGen>True</AutoGen>
@@ -149,6 +159,36 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ContentTypes.feature</DependentUpon>
+    </Compile>
+    <Compile Include="DateTime.feature.cs">
+      <DependentUpon>DateTime.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Enumeration.feature.cs">
+      <DependentUpon>Enumeration.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Input.feature.cs">
+      <DependentUpon>Input.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Link.feature.cs">
+      <DependentUpon>Link.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="MediaPicker.feature.cs">
+      <DependentUpon>MediaPicker.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Numeric.feature.cs">
+      <DependentUpon>Numeric.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Tags.feature.cs">
       <DependentUpon>Tags.feature</DependentUpon>
@@ -252,9 +292,17 @@
       <LastGenOutput>Admin.feature.cs</LastGenOutput>
     </None>
     <None Include="App.Config" />
+    <None Include="Autoroute.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Autoroute.feature.cs</LastGenOutput>
+    </None>
     <None Include="Blogs.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Blogs.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Boolean.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Boolean.feature.cs</LastGenOutput>
     </None>
     <None Include="Comments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -267,6 +315,31 @@
     <None Include="ContentTypes.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <Content Include="Content\orchard.core.po" />
+    <None Include="DateTime.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DateTime.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Enumeration.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Enumeration.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Input.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Input.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Link.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Link.feature.cs</LastGenOutput>
+    </None>
+    <None Include="MediaPicker.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>MediaPicker.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Numeric.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Numeric.feature.cs</LastGenOutput>
     </None>
     <None Include="Tags.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
