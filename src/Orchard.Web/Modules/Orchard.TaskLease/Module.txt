@@ -2,7 +2,7 @@ Name: Task Lease
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardtasklease.codeplex.com
-Version: 1.7
-OrchardVersion: 1.4.2
+Version: 1.7.1
+OrchardVersion: 1.7.1
 Description: Provides services to synchronize tasks in a farm environment
 Category: Hosting

@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.7
-OrchardVersion: 1.7
+Version: 1.7.1
+OrchardVersion: 1.7.1
 Description: The scripting module enables the possibility to execute scripts using a simple custom scripting language.
 FeatureDescription: Scripting support.
 Category: Scripting

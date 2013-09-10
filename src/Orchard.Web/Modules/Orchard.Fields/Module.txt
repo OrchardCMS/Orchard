@@ -2,8 +2,8 @@ Name: Fields
 AntiForgery: enabled
 Author: Antoine Griffard, Sébastien Ros
 Website: http://orchardfields.codeplex.com
-Version: 1.7
-OrchardVersion: 1.7
+Version: 1.7.1
+OrchardVersion: 1.7.1
 Description: Some content fields
 Features:
     Orchard.Fields:
