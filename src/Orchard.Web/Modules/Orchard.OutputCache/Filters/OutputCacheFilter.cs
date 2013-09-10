@@ -453,8 +453,10 @@ namespace Orchard.OutputCache.Filters {
 
             // an ETag is a string that uniquely identifies a specific version of a component.
             // we use the cache item to detect if it's a new one
-            if (response.Headers.Get("ETag") == null) {
-                response.Cache.SetETag(cacheItem.GetHashCode().ToString(CultureInfo.InvariantCulture));
+            if (HttpRuntime.UsingIntegratedPipeline) {
+                if (response.Headers.Get("ETag") == null) {
+                    response.Cache.SetETag(cacheItem.GetHashCode().ToString(CultureInfo.InvariantCulture));
+                }
             }
 
             response.Cache.SetOmitVaryStar(true);
