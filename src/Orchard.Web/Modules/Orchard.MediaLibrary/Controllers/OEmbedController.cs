@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -39,10 +40,11 @@ namespace Orchard.MediaLibrary.Controllers {
                 FolderPath = folderPath
             };
 
+            var webClient = new WebClient {Encoding = Encoding.UTF8};
             try {
                 // <link rel="alternate" href="http://vimeo.com/api/oembed.xml?url=http%3A%2F%2Fvimeo.com%2F23608259" type="text/xml+oembed">
 
-                var source = new WebClient().DownloadString(url);
+                var source = webClient.DownloadString(url);
 
                 // seek type="text/xml+oembed" or application/xml+oembed
                 var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
@@ -57,7 +59,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     if (matches.Count > 0) {
                         var href = matches[0].Groups[1].Value;
                         try {
-                            var content = new WebClient().DownloadString(Server.HtmlDecode(href));
+                            var content = webClient.DownloadString(Server.HtmlDecode(href));
                             viewModel.Content = XDocument.Parse(content);
                         }
                         catch {
