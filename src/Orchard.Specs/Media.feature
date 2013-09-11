@@ -5,6 +5,7 @@
 
 Scenario: Media admin is available
     Given I have installed Orchard
+		And I have installed "Orchard.Media"
 		And I have enabled "Orchard.Media"
 
 	# Accessing the media page
@@ -24,8 +25,6 @@ Scenario: Media admin is available
         And the status should be 200 "OK"
 
 	# Editing a media with limited rights
-    Given I have installed Orchard
-		And I have enabled "Orchard.Media"
     When I go to "admin/media/edit?name=..\..\bin&mediaPath=..\..\bin"
         And I am redirected
     Then I should see "Media"
