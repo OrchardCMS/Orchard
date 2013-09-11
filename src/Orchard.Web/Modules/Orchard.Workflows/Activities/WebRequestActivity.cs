@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.RegularExpressions;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -93,7 +92,31 @@ namespace Orchard.Workflows.Activities {
         }
 
         private static IEnumerable<KeyValuePair<string, string>> ParseKeyValueString(string text) {
-            return Regex.Split(text, "\n\r").Select(x => x.Split(new[] { '=' })).ToDictionary(x => x[0].Trim(), x => x[1].Trim());
+            using (var reader = new StringReader(text)) {
+                string line;
+                while (null != (line = reader.ReadLine())) {
+
+                    line = line.Trim();
+
+                    // ignore empty lines
+                    if (String.IsNullOrWhiteSpace(line)) {
+                        continue;
+                    }
+
+                    // step comments
+                    if (line.StartsWith("#")) {
+                        continue;
+                    }
+
+                    var index = line.IndexOf("=", StringComparison.InvariantCulture);
+                    if (index != -1 && index != line.Length - 1) {
+                        var name = line.Substring(0, index);
+                        var value = line.Substring(index + 1);
+
+                        yield return new KeyValuePair<string, string>(name, value);
+                    }
+                }
+            }
         }
     }
 }
