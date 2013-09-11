@@ -6,8 +6,8 @@ Feature: Setup
 Scenario: Root request shows setup form
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
             | Theme | SafeMode |
     When I go to "/"
     Then I should see "Welcome to Orchard"
@@ -17,8 +17,8 @@ Scenario: Root request shows setup form
 Scenario: Setup folder also shows setup form
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
             | Theme | SafeMode |
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
@@ -28,19 +28,20 @@ Scenario: Setup folder also shows setup form
 Scenario: Some of the initial form values are required
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
             | Theme | SafeMode |
     When I go to "/Setup"
         And I hit "Finish Setup"
-    Then I should see "<input autofocus="autofocus" class="input-validation-error" id="SiteName" name="SiteName" type="text" value="" />"
-        And I should see "<input class="input-validation-error" id="AdminPassword" name="AdminPassword" type="password" />"
+    Then I should see "Site name is required."
+        And I should see "Password is required."
+        And I should see "Password confirmation is required."
 
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.ContentPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields |
-            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp |
+            | Core | Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports |
             | Theme | SafeMode, TheAdmin, TheThemeMachine |
         And I am on "/Setup"
     When I fill in 

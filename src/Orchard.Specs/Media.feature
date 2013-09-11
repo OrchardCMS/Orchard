@@ -6,7 +6,6 @@
 Scenario: Media admin is available
     Given I have installed Orchard
 		And I have installed "Orchard.Media"
-		And I have enabled "Orchard.Media"
 
 	# Accessing the media page
     When I go to "admin/media"

@@ -1,4 +1,5 @@
 ﻿Name: Multi Tenancy
+Path: MultiTenancy
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net

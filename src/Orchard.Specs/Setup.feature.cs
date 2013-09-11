@@ -78,13 +78,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table1.AddRow(new string[] {
                         "Module",
-                        "Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles" +
-                            ", Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orc" +
-                            "hard.jQuery, TinyMce"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp"});
             table1.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
-                            "Rpc, Title"});
+                        "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
+                            " Shapes, XmlRpc, Title, Reports"});
             table1.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -115,13 +113,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table2.AddRow(new string[] {
                         "Module",
-                        "Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles" +
-                            ", Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orc" +
-                            "hard.jQuery, TinyMce"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp"});
             table2.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
-                            "Rpc, Title"});
+                        "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
+                            " Shapes, XmlRpc, Title, Reports"});
             table2.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -152,13 +148,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table3.AddRow(new string[] {
                         "Module",
-                        "Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Users, Orchard.Roles" +
-                            ", Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orc" +
-                            "hard.jQuery, TinyMce"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp"});
             table3.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
-                            "Rpc, Title"});
+                        "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
+                            " Shapes, XmlRpc, Title, Reports"});
             table3.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -169,11 +163,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 35
         testRunner.And("I hit \"Finish Setup\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 36
-    testRunner.Then("I should see \"<input autofocus=\"autofocus\" class=\"input-validation-error\" id=\"Sit" +
-                    "eName\" name=\"SiteName\" type=\"text\" value=\"\" />\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"Site name is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 37
-        testRunner.And("I should see \"<input class=\"input-validation-error\" id=\"AdminPassword\" name=\"Admi" +
-                    "nPassword\" type=\"password\" />\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I should see \"Password is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 38
+        testRunner.And("I should see \"Password confirmation is required.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -183,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void CallingSetupOnABrandNewInstall()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calling setup on a brand new install", ((string[])(null)));
-#line 39
+#line 40
 this.ScenarioSetup(scenarioInfo);
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -191,17 +185,17 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "Module",
-                        @"Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.ContentPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp"});
             table4.AddRow(new string[] {
                         "Core",
                         "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings," +
-                            " Shapes, XmlRpc, Title"});
+                            " Shapes, XmlRpc, Title, Reports"});
             table4.AddRow(new string[] {
                         "Theme",
                         "SafeMode, TheAdmin, TheThemeMachine"});
-#line 40
+#line 41
     testRunner.Given("I have a clean site with", ((string)(null)), table4, "Given ");
-#line 45
+#line 46
         testRunner.And("I am on \"/Setup\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
@@ -216,15 +210,15 @@ this.ScenarioSetup(scenarioInfo);
             table5.AddRow(new string[] {
                         "ConfirmPassword",
                         "6655321"});
-#line 46
+#line 47
     testRunner.When("I fill in", ((string)(null)), table5, "When ");
-#line 51
-        testRunner.And("I hit \"Finish Setup\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 52
-        testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Finish Setup\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 53
-    testRunner.Then("I should see \"My Site\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 54
+    testRunner.Then("I should see \"My Site\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 55
         testRunner.And("I should see \"Welcome, <strong><a href=\"/Users/Account/ChangePassword\">admin</a><" +
                     "/strong>!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden

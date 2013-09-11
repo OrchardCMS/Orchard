@@ -9,7 +9,6 @@ Scenario: Creating and using media fields
     Given I have installed Orchard
 		And I have installed "Orchard.Media"
 		And I have installed "Orchard.MediaPicker"
-		And I have enabled "Orchard.MediaPicker"
 
     When I go to "Admin/ContentTypes"
     Then I should see "<a[^>]*>.*?Create new type</a>"
