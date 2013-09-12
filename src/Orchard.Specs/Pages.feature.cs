@@ -74,27 +74,12 @@ namespace Orchard.Specs
 this.ScenarioSetup(scenarioInfo);
 #line 7
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 8
-  testRunner.And("I have installed \"Orchard.jQuery\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 9
-    testRunner.When("I go to \"admin\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
     testRunner.Then("I should see \"<a href=\"/Admin/Contents/Create/Page\"[^>]*>Page</a>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I can create and publish a new Page")]
-        public virtual void ICanCreateAndPublishANewPage()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create and publish a new Page", ((string[])(null)));
-#line 12
-this.ScenarioSetup(scenarioInfo);
 #line 13
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 14
-    testRunner.When("I go to \"admin/contents/create/page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -105,33 +90,18 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Body.Text",
                         "This is super."});
-#line 15
+#line 14
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
-#line 19
+#line 18
         testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 20
+#line 19
         testRunner.And("I go to \"super-duper\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
+#line 20
     testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 22
+#line 21
         testRunner.And("I should see \"This is super.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("If I create a page which gets a conflicting path generated its path is made to be" +
-            " unique")]
-        public virtual void IfICreateAPageWhichGetsAConflictingPathGeneratedItsPathIsMadeToBeUnique()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("If I create a page which gets a conflicting path generated its path is made to be" +
-                    " unique", ((string[])(null)));
 #line 24
-this.ScenarioSetup(scenarioInfo);
-#line 25
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 26
-    testRunner.When("I go to \"admin/contents/create/page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -141,118 +111,66 @@ this.ScenarioSetup(scenarioInfo);
                         "Super Duper"});
             table2.AddRow(new string[] {
                         "Body.Text",
-                        "This is super."});
-#line 27
+                        "This is super number two."});
+#line 25
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
-#line 31
+#line 29
         testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 32
-        testRunner.And("I go to \"super-duper\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 33
+#line 30
+        testRunner.And("I go to \"super-duper-2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 31
     testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
-        testRunner.And("I should see \"This is super.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
+        testRunner.And("I should see \"This is super number two.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 35
-    testRunner.When("I go to \"admin/contents/create/page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table3.AddRow(new string[] {
                         "Title.Title",
-                        "Super Duper"});
+                        "Another"});
             table3.AddRow(new string[] {
                         "Body.Text",
-                        "This is super number two."});
+                        "This is a draft of the new home page."});
+            table3.AddRow(new string[] {
+                        "Autoroute.PromoteToHomePage",
+                        "true"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
-#line 40
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 41
-        testRunner.And("I go to \"super-duper-2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 42
-    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 43
-        testRunner.And("I should see \"This is super number two.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("A new page marked to be the home page and publish does take over the home page an" +
-            "d is not accessible from its own standard path")]
-        public virtual void ANewPageMarkedToBeTheHomePageAndPublishDoesTakeOverTheHomePageAndIsNotAccessibleFromItsOwnStandardPath()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new page marked to be the home page and publish does take over the home page an" +
-                    "d is not accessible from its own standard path", ((string[])(null)));
+    testRunner.Then("I should see \"<h1>Another</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 44
+    testRunner.When("I go to \"another\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 45
-this.ScenarioSetup(scenarioInfo);
-#line 46
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 47
-    testRunner.When("I go to \"admin/contents/create/page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.Then("the status should be 404 \"Not Found\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 48
+    testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table4.AddRow(new string[] {
                         "Title.Title",
-                        "Super Duper"});
-            table4.AddRow(new string[] {
-                        "Body.Text",
-                        "This is a draft of the new home page."});
-            table4.AddRow(new string[] {
-                        "Autoroute.PromoteToHomePage",
-                        "true"});
-#line 48
-        testRunner.And("I fill in", ((string)(null)), table4, "And ");
-#line 53
-        testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 54
-        testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 55
-    testRunner.Then("I should see \"<h1>Super Duper</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 56
-    testRunner.When("I go to \"super-duper\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 57
-    testRunner.Then("the status should be 404 \"Not Found\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("A new page marked to be the home page but only saved as draft does not take over " +
-            "the home page")]
-        public virtual void ANewPageMarkedToBeTheHomePageButOnlySavedAsDraftDoesNotTakeOverTheHomePage()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new page marked to be the home page but only saved as draft does not take over " +
-                    "the home page", ((string[])(null)));
-#line 59
-this.ScenarioSetup(scenarioInfo);
-#line 60
-    testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 61
-    testRunner.When("I go to \"admin/contents/create/page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table5.AddRow(new string[] {
-                        "Title.Title",
                         "Drafty"});
-            table5.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "Body.Text",
                         "This is a draft of the new home page."});
-            table5.AddRow(new string[] {
+            table4.AddRow(new string[] {
                         "Autoroute.PromoteToHomePage",
                         "true"});
-#line 62
-        testRunner.And("I fill in", ((string)(null)), table5, "And ");
-#line 67
+#line 49
+        testRunner.And("I fill in", ((string)(null)), table4, "And ");
+#line 54
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 68
+#line 55
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 69
+#line 56
     testRunner.Then("I should see \"<h1>Welcome to Orchard!</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

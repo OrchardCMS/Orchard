@@ -75,17 +75,17 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
-    testRunner.When("I go to \"admin/widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
         testRunner.And("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10
-    testRunner.Then("I should see \"<input[^>]*name=\"Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"<input[^>]*name=\"LayerPart.Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table1.AddRow(new string[] {
-                        "Description",
+                        "LayerPart.Description",
                         "This is the default layer."});
 #line 11
     testRunner.When("I fill in", ((string)(null)), table1, "When ");
@@ -115,7 +115,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 21
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 22
-    testRunner.When("I go to \"admin/widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 23
         testRunner.And("I follow \"Add a new layer...\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
@@ -125,10 +125,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table2.AddRow(new string[] {
-                        "Name",
+                        "LayerPart.Name",
                         "For awesome stuff"});
             table2.AddRow(new string[] {
-                        "LayerRule",
+                        "LayerPart.LayerRule",
                         "url \"~/awesome*\""});
 #line 25
     testRunner.When("I fill in", ((string)(null)), table2, "When ");
@@ -155,13 +155,13 @@ this.ScenarioSetup(scenarioInfo);
 #line 35
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 36
-    testRunner.When("I go to \"admin/widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 37
     testRunner.Then("I should see \"<option[^>]*>Default</option>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 38
     testRunner.When("I follow \"Edit\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 39
-    testRunner.Then("I should see \"<input[^>]*name=\"Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"<input[^>]*name=\"LayerPart.Name\"[^>]*value=\"Default\"[^>]*>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 40
     testRunner.When("I hit \"Delete\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 41
@@ -184,7 +184,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 46
     testRunner.Given("I have installed Orchard", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 47
-    testRunner.When("I go to \"admin/widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.When("I go to \"Admin/Widgets\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",

@@ -5,12 +5,12 @@
 
 Scenario: I can edit a default layer
     Given I have installed Orchard
-    When I go to "admin/widgets"
+    When I go to "Admin/Widgets"
         And I follow "Edit"
-    Then I should see "<input[^>]*name="Name"[^>]*value="Default"[^>]*>"
+    Then I should see "<input[^>]*name="LayerPart.Name"[^>]*value="Default"[^>]*>"
     When I fill in
             | name | value |
-            | Description | This is the default layer. |
+            | LayerPart.Description | This is the default layer. |
         And I hit "Save"
         And I am redirected
     Then I should see "Your Layer has been saved"
@@ -19,13 +19,13 @@ Scenario: I can edit a default layer
 
 Scenario: I can add a new layer and that layer is active when I'm redirected to the widget management page
     Given I have installed Orchard
-    When I go to "admin/widgets"
+    When I go to "Admin/Widgets"
         And I follow "Add a new layer..."
     Then I should see "<h1[^>]*>Add Layer</h1>"
     When I fill in
             | name | value |
-            | Name | For awesome stuff |
-            | LayerRule | url "~/awesome*" |
+            | LayerPart.Name | For awesome stuff |
+            | LayerPart.LayerRule | url "~/awesome*" |
         And I hit "Save"
         And I am redirected
     Then I should see "Your Layer has been created."
@@ -33,10 +33,10 @@ Scenario: I can add a new layer and that layer is active when I'm redirected to 
 
 Scenario: I can delete a layer
     Given I have installed Orchard
-    When I go to "admin/widgets"
+    When I go to "Admin/Widgets"
     Then I should see "<option[^>]*>Default</option>"
     When I follow "Edit"
-    Then I should see "<input[^>]*name="Name"[^>]*value="Default"[^>]*>"
+    Then I should see "<input[^>]*name="LayerPart.Name"[^>]*value="Default"[^>]*>"
     When I hit "Delete"
         And I am redirected
     Then I should see "Layer was successfully deleted"
@@ -44,7 +44,7 @@ Scenario: I can delete a layer
 
 Scenario: I can add a widget to a specific zone in a specific layer
     Given I have installed Orchard
-    When I go to "admin/widgets"
+    When I go to "Admin/Widgets"
         And I fill in
             | name | value |
             | layerId | Disabled |
