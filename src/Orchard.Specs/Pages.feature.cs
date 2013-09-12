@@ -171,7 +171,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 55
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 56
-    testRunner.Then("I should see \"<h1>Welcome to Orchard!</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("I should see \"<h1>Another</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

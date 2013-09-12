@@ -53,4 +53,4 @@ Scenario: In the admin (menu) there is a link to create a Page
             | Autoroute.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "/"
-    Then I should see "<h1>Welcome to Orchard!</h1>"
+    Then I should see "<h1>Another</h1>"
