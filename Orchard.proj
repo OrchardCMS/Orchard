@@ -160,6 +160,8 @@
 
   <!-- Packaging (Stage) -->
 
+  <UsingTask AssemblyFile="$(LibFolder)\slowcheetah\SlowCheetah.Xdt.dll" TaskName="SlowCheetah.Xdt.TransformXml" />
+
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
@@ -174,8 +176,8 @@
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj"/>
-      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj;$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
+      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" Exclude="$(SrcFolder)\Orchard.Web\**\*.Release.config;$(SrcFolder)\Orchard.Web\**\*.Debug.config"/>
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
@@ -226,57 +228,24 @@
 
 
     <!-- extra processing of the staged config files -->
+    <TransformXml 
+      Source="$(StageFolder)\Web.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Web.Release.Config"
+      Destination="$(StageFolder)\Web.Config"
+    />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
-      XPath="/configuration/system.web/compilation/@debug"
-      Value="false" />
+    <TransformXml 
+      Source="$(StageFolder)\Config\HostComponents.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\HostComponents.Release.Config"
+      Destination="$(StageFolder)\Config\HostComponents.Config"
+    />
 
-    <XmlDelete XmlFileName="$(StageFolder)\web.config"
-      XPath="/configuration/system.web/trust" />
-
-    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
-      XPath="/configuration/system.web/machineKey/@validationKey"
-      Value="AutoGenerate" />
-
-    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
-      XPath="/configuration/system.web/machineKey/@decryptionKey"
-      Value="AutoGenerate" />
-
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/appender/immediateFlush/@value"
-      Value="false" />
-
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/logger/priority/@value"
-      Value="ERROR" />
-
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/root/priority/@value"
-      Value="ERROR" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='debug-file']" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='debugger']" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='error-file']/filter" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/logger[@name='Orchard.Localization']" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/logger[@name='Orchard']" />
-
-    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
-      XPath="/log4net/root/appender-ref[@ref='debug-file']" />
-
-		<!-- disable all file monitoring but ExtensionMonitoringCorrdinator to detect new modules/themes -->
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\HostComponents.config"
-      XPath="/HostComponents/Components/Component[@Type != 'Orchard.Environment.Extensions.Folders.ExtensionHarvester']/Properties/Property[@Name='DisableMonitoring']/@Value"
-      Value="true" />
-
+    <TransformXml 
+      Source="$(StageFolder)\Config\log4net.Config"
+      Transform="$(SrcFolder)\Orchard.Web\Config\log4net.Release.Config"
+      Destination="$(StageFolder)\Config\log4net.Config"
+    />
+    
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>

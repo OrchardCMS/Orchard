@@ -228,17 +228,29 @@ Copyright:    Copyright (c) 2002-2007 NUnit.org
               Portions Copyright (c) 2002-2008 Charlie Poole or Copyright (c) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov or Copyright (c) 2000-2002 Philip A. Craig
 License:      Derived from zlib: http://nunit.org/index.php?p=license&r=2.4
 
-SpecFlow
------
-Website:      http://www.specflow.org/
-Copyright:    Copyright (c) 2009 TechTalk
-License:      New BSD
-
 Microsoft SQL Server Compact 4.0
 -----
 Website:      http://www.microsoft.com
 Copyright:    Copyright (c) 2011 Microsoft Corporation
 License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/SQLCE_EULA_ENU.rtf
+
+Microsoft Xml Document Transformation 1.0.0.0
+-----
+Website:      http://www.microsoft.com
+Copyright:    Copyright Microsoft Corporation
+License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/microsoft_web_xmltransform.htm
+
+SlowCheetah
+-----
+Website:      https://github.com/sayedihashimi/package-web/
+Copyright:    Copyright 2013 Sayed Ibrahim Hashimi
+License:      Apache 2.0
+
+SpecFlow
+-----
+Website:      http://www.specflow.org/
+Copyright:    Copyright (c) 2009 TechTalk
+License:      New BSD
 
 TinyMCE
 -----
