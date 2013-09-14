@@ -21,7 +21,7 @@ namespace Orchard.Scripting.CSharp.Forms {
                   Id: "outcomes", Name: "Outcomes",
                   Title: T("Possible Outcomes."),
                   Description: T("A comma-separated list of possible outcomes."),
-                  Classes: new[] { "textMedium" }),
+                  Classes: new[] { "text medium" }),
                 _Script: Shape.TextArea(
                   Id: "Script", Name: "Script",
                   Title: T("Script"),

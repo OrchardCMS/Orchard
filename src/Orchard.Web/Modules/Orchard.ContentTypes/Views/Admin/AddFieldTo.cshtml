@@ -10,7 +10,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="DisplayName">@T("Display Name")</label>
-        @Html.TextBoxFor(m => m.DisplayName, new {@class = "textMedium", autofocus = "autofocus"})
+        @Html.TextBoxFor(m => m.DisplayName, new {@class = "text medium", autofocus = "autofocus"})
         <span class="hint">@T("Name of the field as it will be displayed in screens.")</span>
         <label for="Name">@T("Technical Name")</label>
         @Html.TextBoxFor(m => m.Name, new {@class = "text"})

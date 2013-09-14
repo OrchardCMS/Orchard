@@ -16,7 +16,7 @@
             </div>
             <div>
                 <label for="img-src">@T("URL for the image resource")</label>
-                <input class="text-box" type="text" id="img-src" />
+                <input class="text" type="text" id="img-src" />
             </div>
             <div>
                 @using(Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id = "img-uploadform", enctype = "multipart/form-data", onsubmit="jQuery.mediaPicker.uploadMedia(this)"})) { 
@@ -34,17 +34,17 @@
             <ol>
                 <li>
                 <label for="img-alt">@T("Alternative Text")</label>
-                <input class="text-box" type="text" id="img-alt" />
+                <input class="text" type="text" id="img-alt" />
                 </li>
 
                 <li>
                 <label for="img-class">@T("Class")</label>
-                <input class="text-box" type="text" id="img-class" />
+                <input class="text" type="text" id="img-class" />
                 </li>
 
                 <li>
                 <label for="img-style">@T("Style")</label>
-                <input class="text-box" type="text" id="img-style" />
+                <input class="text" type="text" id="img-style" />
                 </li>
 
                 <li>
@@ -66,11 +66,11 @@
                 <li class="group">
                 <div class="image-width">
                     <label for="img-width">@T("Width")</label>
-                    <input class="text-box" type="text" id="img-width" />&nbsp;x
+                    <input class="text" type="text" id="img-width" />&nbsp;x
                 </div>
                 <div class="image-height">
                     <label for="img-height">@T("Height")</label>
-                    <input class="text-box" type="text" id="img-height" />
+                    <input class="text" type="text" id="img-height" />
                 </div>
                 </li>
 

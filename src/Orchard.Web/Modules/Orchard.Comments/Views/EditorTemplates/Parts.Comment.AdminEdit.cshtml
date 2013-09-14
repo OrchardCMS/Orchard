@@ -6,12 +6,12 @@
     <ol>
         <li>
             @Html.LabelFor(m => m.Author, T("Name"))
-            @Html.TextBoxFor(m => m.Author, new { @class = "textMedium"})
+            @Html.TextBoxFor(m => m.Author, new { @class = "text medium"})
             <span class="hint">@T("The author's name.")</span>
         </li>
         <li>
             @Html.LabelFor(m => m.Email, T("Email"))
-            @Html.TextBoxFor(m => m.Email, new { @class = "textMedium"})
+            @Html.TextBoxFor(m => m.Email, new { @class = "text medium"})
             <span class="hint">@T("The email address the author has provided with the comment.")</span>
         </li>
         <li>

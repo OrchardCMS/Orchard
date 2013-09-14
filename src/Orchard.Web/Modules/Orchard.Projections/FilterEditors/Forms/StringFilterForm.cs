@@ -34,7 +34,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
                         _Value: Shape.TextBox(
                             Id: "value", Name: "Value",
                             Title: T("Value"),
-                            Classes: new[] { "textMedium", "tokenized" },
+                            Classes: new[] { "text medium", "tokenized" },
                             Description: T("Enter the value the string should be.")
                             )
                         );

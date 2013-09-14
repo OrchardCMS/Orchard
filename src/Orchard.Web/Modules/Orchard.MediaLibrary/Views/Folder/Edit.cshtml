@@ -17,7 +17,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Folder Name")</label>
-        @Html.TextBoxFor(m => m.Name, new { @class = "textMedium", autofocus = "autofocus"})
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium", autofocus = "autofocus"})
         @Html.HiddenFor(m => m.FolderPath)
     </fieldset>
     <fieldset>

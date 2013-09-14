@@ -27,7 +27,7 @@ namespace Orchard.Scripting.Rules {
                     Id: "description", Name: "description",
                     Title: T("Description"),
                     Description: T("Message that will be displayed in the Actions list."),
-                    Classes: new[] { "textMedium" }),
+                    Classes: new[] { "text medium" }),
                 _Condition: Shape.TextArea(
                     Id: "condition", Name: "condition",
                     Title: T("Condition"),

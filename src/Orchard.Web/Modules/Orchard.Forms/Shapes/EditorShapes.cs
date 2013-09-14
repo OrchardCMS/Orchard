@@ -220,7 +220,7 @@ namespace Orchard.Forms.Shapes {
 
         [Shape]
         public IHtmlString Textbox(dynamic Display, dynamic Shape) {
-            Shape.Classes.Add("text-box");
+            Shape.Classes.Add("text");
             return DisplayShapeAsInput(Display, Shape, "text");
         }
 
@@ -230,7 +230,7 @@ namespace Orchard.Forms.Shapes {
             dynamic Display,
             dynamic Shape, string Name, string Value, int Size = 0, int Rows = 0) {
             var select = (TagBuilder)_tagBuilderFactory.Create(Shape, "textarea");
-            select.AddCssClass("text-box");
+            select.AddCssClass("text");
 
             if (Name != null) {
                 select.MergeAttribute("name", Name, false);

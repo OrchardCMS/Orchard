@@ -15,7 +15,7 @@
         @Html.ValidationSummary()
         <fieldset>
             <label for="DisplayName">@T("Display Name")</label>
-            @Html.TextBoxFor(m => m.DisplayName, new { @class = "textMedium" })
+            @Html.TextBoxFor(m => m.DisplayName, new { @class = "text medium" })
             <span class="hint">@T("Content Type Id: {0}", Model.Name)</span>
             @* todo: if we continue to go down the midrodata route, some helpers would be nice *@
             <meta itemprop="DisplayName" content="@Model.DisplayName" />

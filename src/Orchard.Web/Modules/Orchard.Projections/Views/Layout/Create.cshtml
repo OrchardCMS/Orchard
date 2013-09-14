@@ -19,7 +19,7 @@
 
     <fieldset>
         @Html.LabelFor(m => m.Description, T("Description"))
-        @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+        @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
         <span class="hint">@T("You may optionally give a description to this layout, to be used in the dashboard screens.")</span>
     </fieldset>
 
@@ -36,7 +36,7 @@
             <div class="options">
                 <span data-controllerid="display-content-radio">
                     <label for="DatabaseConnectionString">@T("Display Type")</label>
-                    @Html.TextBoxFor(m => m.DisplayType, new { @class = "textMedium" })
+                    @Html.TextBoxFor(m => m.DisplayType, new { @class = "text medium" })
                     <span class="hint">@T("The display type determines how the content item should be formatted. e.g., Summary, SummaryAdmin, Detail, ...")</span>
                 </span>
             </div>

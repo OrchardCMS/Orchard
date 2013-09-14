@@ -15,13 +15,13 @@
     <fieldset>
         <div>
             @Html.LabelFor(m => m.FullName, T("Content Part Record"))
-            @Html.TextBoxFor(m => m.FullName, new { @class = "textMedium text", @readonly = "readonly" }) 
+            @Html.TextBoxFor(m => m.FullName, new { @class = "text medium", @readonly = "readonly" }) 
             <span class="hint">@T("The content part to add to the providers.")</span>
         </div>
 
         <div>
             @Html.LabelFor(m => m.Member, T("Member"))
-            @Html.TextBoxFor(m => m.Member, new { @class = "small-text text", @readonly = "readonly" }) 
+            @Html.TextBoxFor(m => m.Member, new { @class = "text small", @readonly = "readonly" }) 
             <span class="hint">@T("The name of the member.")</span>
         </div>
     </fieldset>
@@ -29,13 +29,13 @@
     <fieldset>
         <div>
             @Html.LabelFor(m => m.Display, T("Display"))
-            @Html.TextBoxFor(m => m.Display, new { @class = "textMedium text" }) 
+            @Html.TextBoxFor(m => m.Display, new { @class = "text medium" }) 
             <span class="hint">@T("Text to display in lists for this property.")</span>
         </div>
 
         <div>
             @Html.LabelFor(m => m.Description, T("Description"))
-            @Html.TextBoxFor(m => m.Description, new { @class = "large text" }) 
+            @Html.TextBoxFor(m => m.Description, new { @class = "text large" }) 
             <span class="hint">@T("Description to display in lists for this property.")</span>
         </div>
     </fieldset>

@@ -108,13 +108,16 @@ fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
 #orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
 #orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
 
-#orchardmediapicker .text-box {width:90%;}
+#orchardmediapicker .text-box,
+#orchardmediapicker .text {
+    width:90%;
+}
 
 #orchardmediapicker input[type=checkbox] { clear: both; }
 
 .image-width, .image-height {float:left; width:90px;}
 
-#orchardmediapicker .image-width .text-box, #orchardmediapicker .image-height .text-box, #orchardmediapicker #folderName {width:60%;}
+#orchardmediapicker .image-width .text, #orchardmediapicker .image-height .text, #orchardmediapicker #folderName {width:60%;}
 
 
 .clearboth {

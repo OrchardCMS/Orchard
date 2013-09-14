@@ -22,7 +22,7 @@ namespace Orchard.Workflows.Forms {
                         _Amount: Shape.Textbox(
                             Id: "Amount", Name: "Amount",
                             Title: T("Amount"),
-                            Classes: new[] { "text-small" }),
+                            Classes: new[] { "text small" }),
                         _Type: Shape.SelectList(
                             Id: "Unity", Name: "Unity",
                             Title: T("Amount type"))

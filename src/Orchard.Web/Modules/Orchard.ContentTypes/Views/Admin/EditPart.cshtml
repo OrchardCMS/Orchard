@@ -10,7 +10,7 @@
     <fieldset>
         <label for="Name">@T("Name")</label>
         @* has unintended consequences (renaming the part) - changing the name creates a new part of that name  *@
-        @Html.TextBoxFor(m => m.Name, new {@class = "textMedium", disabled = "disabled"})
+        @Html.TextBoxFor(m => m.Name, new {@class = "text medium", disabled = "disabled"})
         @Html.HiddenFor(m => m.Name)
     </fieldset>
     <div class="manage-part">

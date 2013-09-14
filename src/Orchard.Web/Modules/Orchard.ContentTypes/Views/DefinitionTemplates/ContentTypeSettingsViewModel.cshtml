@@ -16,7 +16,7 @@
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Stereotype)">@T("Stereotype")</label>
-    @Html.TextBoxFor(m => m.Stereotype, new { @class = "textMedium"})
+    @Html.TextBoxFor(m => m.Stereotype, new { @class = "text medium"})
     @Html.ValidationMessageFor(m => m.Stereotype)
     <span class="hint">@T("(Optional) The stereotype of the content type. e.g., Widget, MenuItem, ...")</span>
 </fieldset>

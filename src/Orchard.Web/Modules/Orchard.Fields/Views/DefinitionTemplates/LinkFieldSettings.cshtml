@@ -31,7 +31,7 @@
         <span class="hint">@T("Define how the title field should behave in the editor.")</span>
     </div>
     <div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.LinkTextMode) + "-static")">
-        @Html.TextBoxFor(m => m.StaticText, new { @class = "textMedium" })
+        @Html.TextBoxFor(m => m.StaticText, new { @class = "text medium" })
         <span class="hint">@T("The title to display for the link")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>
@@ -39,7 +39,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-        @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
         <span class="hint">@T("The help text is written under the field.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>

@@ -17,7 +17,7 @@
     @* Field settings *@
     <fieldset>
         @Html.LabelFor(m => m.Description, T("Description"))
-        @Html.TextBoxFor(m => m.Description, new { @class = "textMedium" })
+        @Html.TextBoxFor(m => m.Description, new { @class = "text medium" })
         <span class="hint">@T("You may optionally give a description to this property, to be used in the dashboard screens.")</span>
     </fieldset>
     
@@ -49,7 +49,7 @@
             <label class="forcheckbox" for="@Html.FieldIdFor(m => m.CreateLabel)">@T("Create a label")</label>
             <div data-controllerid="@Html.FieldIdFor(m => m.CreateLabel)">
                 <div>
-                    @Html.TextBoxFor(m => m.Label, new { @class = "textMedium tokenized" })
+                    @Html.TextBoxFor(m => m.Label, new { @class = "text medium tokenized" })
                     <span class="hint">@T("The text to display as a label for this property.")</span>
                 </div>
             </div>
@@ -66,12 +66,12 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.CustomizePropertyHtml)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomPropertyTag)">@T("HTML element")</label>
-                        @Html.TextBoxFor(m => m.CustomPropertyTag, new { @class = "text-small" })
+                        @Html.TextBoxFor(m => m.CustomPropertyTag, new { @class = "text small" })
                         <span class="hint">@T("The HTML element to wrap around this property (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
                     </div>
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomPropertyCss)">@T("Css class")</label>
-                        @Html.TextBoxFor(m => m.CustomPropertyCss, new { @class = "textMedium tokenized" })
+                        @Html.TextBoxFor(m => m.CustomPropertyCss, new { @class = "text medium tokenized" })
                         <span class="hint">@T("The Css class to apply to this element.")</span>
                     </div>
                 </div>
@@ -82,12 +82,12 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeLabelHtml)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomLabelTag)">@T("HTML element")</label>
-                        @Html.TextBoxFor(m => m.CustomLabelTag, new { @class = "text-small" })
+                        @Html.TextBoxFor(m => m.CustomLabelTag, new { @class = "text small" })
                         <span class="hint">@T("The HTML element to wrap around this label (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
                     </div>
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomLabelCss)">@T("Css class")</label>
-                        @Html.TextBoxFor(m => m.CustomLabelCss, new { @class = "textMedium tokenized" })
+                        @Html.TextBoxFor(m => m.CustomLabelCss, new { @class = "text medium tokenized" })
                         <span class="hint">@T("The Css class to apply to this element.")</span>
                     </div>
                 </div>
@@ -98,12 +98,12 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.CustomizeWrapperHtml)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomWrapperTag)">@T("HTML element")</label>
-                        @Html.TextBoxFor(m => m.CustomWrapperTag, new { @class = "text-small" })
+                        @Html.TextBoxFor(m => m.CustomWrapperTag, new { @class = "text small" })
                         <span class="hint">@T("The HTML element to wrap around this wrapper (e.g., h1, p, etc.). Use - to prevent a tag from being rendered.")</span>
                     </div>
                     <div>
                         <label for="@Html.FieldIdFor(m => m.CustomWrapperCss)">@T("Css class")</label>
-                        @Html.TextBoxFor(m => m.CustomWrapperCss, new { @class = "textMedium tokenized" })
+                        @Html.TextBoxFor(m => m.CustomWrapperCss, new { @class = "text medium tokenized" })
                         <span class="hint">@T("The Css class to apply to this element.")</span>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
             <div>
                 <div>
                     <label for="@Html.FieldIdFor(m => m.NoResultText)">@T("No results text")</label>
-                    @Html.TextBoxFor(m => m.NoResultText, new { @class = "textMedium tokenized" })
+                    @Html.TextBoxFor(m => m.NoResultText, new { @class = "text medium tokenized" })
                     <span class="hint">@T("Text to display when the property is empty.")</span>
                 </div>
 
@@ -149,7 +149,7 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.RewriteOutput)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.RewriteText)">@T("Rewrite text")</label>
-                        @Html.TextBoxFor(m => m.RewriteText, new { @class = "large text tokenized" })
+                        @Html.TextBoxFor(m => m.RewriteText, new { @class = "text large tokenized" })
                         <span class="hint">@T("The text to write for this field. It may include HTML. {Text} can be used to inject the current property text.")</span>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                 <div data-controllerid="@Html.FieldIdFor(m => m.TrimLength)">
                     <div>
                         <label for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
-                        @Html.TextBoxFor(m => m.MaxLength, new { @class = "text-small" })
+                        @Html.TextBoxFor(m => m.MaxLength, new { @class = "text small" })
                         <span class="hint">@T("The maximum number of characters this property can be.")</span>
                     </div>
                     

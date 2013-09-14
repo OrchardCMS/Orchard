@@ -39,9 +39,9 @@
         @for (int index = 0; index < Model.Patterns.Count; index++) {
             <tr>
                 <td>@Html.RadioButtonFor(m => m.DefaultPatternIndex, index, new { @class = "radio" })</td>
-                <td>@Html.TextBoxFor(m => m.Patterns[index].Name, new { @class = "text-box"})</td>
-                <td>@Html.TextBoxFor(m => m.Patterns[index].Pattern, new { @class = "tokenized text-box" })</td>
-                <td>@Html.TextBoxFor(m => m.Patterns[index].Description, new { @class = "text-box" })</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Name, new { @class = "text"})</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Pattern, new { @class = "tokenized text" })</td>
+                <td>@Html.TextBoxFor(m => m.Patterns[index].Description, new { @class = "text" })</td>
                 <td>&nbsp;</td>
             </tr>
         }

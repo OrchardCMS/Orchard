@@ -107,7 +107,7 @@
                 <div>
                     <h2>@menuPartEntry.Text</h2>
                     <span class="navigation-type">(@menuPartEntry.ContentItem.TypeDefinition.DisplayName)</span>
-                    <span class="navigation-position"><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
+                    <span class="navigation-position"><input type="text" class="text" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></span>
                     <span class="navigation-actions">
                         <input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />
                         @Html.ItemEditLink(T("Edit").Text, menuPartEntry.ContentItem, new { returnUrl = Request.RawUrl })@T(" | ")

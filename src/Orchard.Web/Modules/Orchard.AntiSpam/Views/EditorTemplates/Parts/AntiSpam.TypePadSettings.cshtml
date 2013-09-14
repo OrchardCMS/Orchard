@@ -10,7 +10,7 @@
    </div>
    <div>
        <label for="@Html.FieldIdFor(m => m.ApiKey)">@T("Api key")</label>
-       @Html.TextBoxFor(m => m.ApiKey, new { @class = "textMedium" })
+       @Html.TextBoxFor(m => m.ApiKey, new { @class = "text medium" })
        @Html.ValidationMessage("ApiKey", "*")
        <span class="hint">@T("API key for <a href=\"http://antispam.typepad.com/info/get-api-key.html\">TypePad AntiSpam</a> service.")</span>
    </div>

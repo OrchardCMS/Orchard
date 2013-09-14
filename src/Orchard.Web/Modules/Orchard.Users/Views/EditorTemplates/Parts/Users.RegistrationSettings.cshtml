@@ -32,12 +32,12 @@
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">
         <label for="@Html.FieldIdFor( m => m.ValidateEmailRegisteredWebsite)">@T("Website public name")</label>
-        @Html.TextBoxFor(m => m.ValidateEmailRegisteredWebsite, new { @class = "textMedium" } )
+        @Html.TextBoxFor(m => m.ValidateEmailRegisteredWebsite, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailRegisteredWebsite", "*")
         <span class="hint">@T("The name of your website as it will appear in the verification e-mail.")</span>
         
         <label for="@Html.FieldIdFor( m => m.ValidateEmailContactEMail)">@T("Contact Us E-Mail address")</label>
-        @Html.TextBoxFor(m => m.ValidateEmailContactEMail, new { @class = "textMedium" } )
+        @Html.TextBoxFor(m => m.ValidateEmailContactEMail, new { @class = "text medium" } )
         @Html.ValidationMessage("ValidateEmailContactEMail", "*")
         <span class="hint">@T("The e-mail address displayed in the verification e-mail for a Contact Us link. Leave empty for no link.")</span>
     </div>
@@ -57,7 +57,7 @@
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
         <label for="@Html.FieldIdFor( m => m.NotificationsRecipients)">@T("Moderators")</label>
-        @Html.TextBoxFor(m => m.NotificationsRecipients, new { @class = "textMedium" } )
+        @Html.TextBoxFor(m => m.NotificationsRecipients, new { @class = "text medium" } )
         @Html.ValidationMessage("NotificationsRecipients", "*")
         <span class="hint">@T("The usernames to send the notifications to (e.g., \"admin, user1, ...\").")</span>
     </div>    

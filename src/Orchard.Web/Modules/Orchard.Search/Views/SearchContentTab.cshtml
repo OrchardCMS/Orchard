@@ -6,7 +6,7 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
         <label for="search-text">@T("Search")</label>
-        @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text textMedium", autofocus = "autofocus" })
+        @Html.TextBox("searchText", (string)Model.SearchText, new { @class = "text medium", autofocus = "autofocus" })
 
         <button type="submit">@T("Search")</button>
     </fieldset>

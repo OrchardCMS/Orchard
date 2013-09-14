@@ -28,7 +28,7 @@ namespace Orchard.Workflows.Forms {
                     Id: "message", Name: "Message",
                     Title: T("Message"),
                     Description: T("The notification message to display."),
-                    Classes: new[] { "textMedium", "tokenized" })
+                    Classes: new[] { "text medium", "tokenized" })
                 )
             );
         }

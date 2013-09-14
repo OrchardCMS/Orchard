@@ -14,13 +14,13 @@
 
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.StartLevel)">@T("Start Level")</label>
-        @Html.TextBoxFor(m => m.StartLevel, new { @class = "text text-small" })
+        @Html.TextBoxFor(m => m.StartLevel, new { @class = "text small" })
         <span class="hint">@T("The level the menu should start at.")</span>
     </fieldset>
 
     <fieldset>
         <label for="@Html.FieldIdFor(m => m.StopLevel)">@T("Levels to display")</label>
-        @Html.TextBoxFor(m => m.StopLevel, new { @class = "text text-small" })
+        @Html.TextBoxFor(m => m.StopLevel, new { @class = "text small" })
         <span class="hint">@T("The number of levels to display, \"0\" meaning all levels.")</span>
     </fieldset>
 

@@ -8,7 +8,7 @@
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Url)" @if(settings.Required) { <text>class="required"</text> }>@Model.DisplayName</label>
-    @Html.TextBoxFor(m => m.Url, new { @class = "textMedium", @readonly = "readonly" }) <span id="btn-@Html.FieldIdFor(m => m.Url)" class="button">@T("Browse")</span>
+    @Html.TextBoxFor(m => m.Url, new { @class = "text medium", @readonly = "readonly" }) <span id="btn-@Html.FieldIdFor(m => m.Url)" class="button">@T("Browse")</span>
     
     @if(!settings.Required) {
         <span id="clear-@Html.FieldIdFor(m => m.Url)" class="button">@T("Clear")</span>    

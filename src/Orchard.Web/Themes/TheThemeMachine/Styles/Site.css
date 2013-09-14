@@ -243,10 +243,10 @@ input.text, input.textMedium, input.text-box {
     line-height:1.2em;
 }
 /*Are we using the two classes below?*/
-input.text-small {
+input.text-small, input.text.small {
     width:4em;
 }
-input.textMedium {
+input.textMedium, input.text.medium {
     width:26em;
 }
 select {

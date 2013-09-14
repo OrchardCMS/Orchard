@@ -28,7 +28,7 @@ namespace Orchard.Rules.Providers {
                     Id: "message", Name: "message",
                     Title: T("Message"),
                     Description: T("The notification message to display."),
-                    Classes: new[] { "textMedium", "tokenized" })
+                    Classes: new[] { "text medium", "tokenized" })
                 )
             );
         }

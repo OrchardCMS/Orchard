@@ -40,19 +40,19 @@ namespace Orchard.Projections.Providers.Layouts {
                                 Id: "list-id", Name: "ListId",
                                 Title: T("List id"),
                                 Description: T("The id to provide on the list element."),
-                                Classes: new[] { "textMedium", "tokenized" }
+                                Classes: new[] { "text medium", "tokenized" }
                                 ),
                             _ListClass: Shape.TextBox(
                                 Id: "list-class", Name: "ListClass",
                                 Title: T("List class"),
                                 Description: T("The class to provide on the list element."),
-                                Classes: new[] { "textMedium", "tokenized" }
+                                Classes: new[] { "text medium", "tokenized" }
                                 ),
                             _ItemClass: Shape.TextBox(
                                 Id: "item-class", Name: "ItemClass",
                                 Title: T("Item class"),
                                 Description: T("The class to provide on each list item."),
-                                Classes: new[] { "textMedium", "tokenized" }
+                                Classes: new[] { "text medium", "tokenized" }
                                 )
                             )
                         );

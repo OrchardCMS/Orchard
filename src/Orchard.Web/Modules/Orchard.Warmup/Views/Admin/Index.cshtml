@@ -15,7 +15,7 @@
 
 <fieldset>
     <div>
-        @Html.TextAreaFor(m => m.Settings.Urls, new { @class = "textMedium" })
+        @Html.TextAreaFor(m => m.Settings.Urls, new { @class = "text medium" })
         <span class="hint">@T("This must be a set of relative paths, e.g., /, /About. Please ensure that you enter only one path per line.")</span>
     </div>
 </fieldset>
@@ -26,7 +26,7 @@
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.Settings.Scheduled)">
         @T("Every") 
-        @Html.TextBoxFor(m => m.Settings.Delay, new { @class = "text-small" }) 
+        @Html.TextBoxFor(m => m.Settings.Delay, new { @class = "text small" }) 
         @T("minutes")
         @Html.ValidationMessage("Delay", "*")
     </div>

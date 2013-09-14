@@ -6,7 +6,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Name")</label>
-        @Html.TextBoxFor(m => m.Name, new {@class = "textMedium", autofocus = "autofocus"})
+        @Html.TextBoxFor(m => m.Name, new {@class = "text medium", autofocus = "autofocus"})
         <span class="hint">@T("Use no spaces or special characters. For example, \"MyCustomPart\"")</span>
     </fieldset>
     <fieldset>

@@ -76,7 +76,7 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                             Title: T("Quality"),
                             Value: 90,
                             Description: T("JPeg compression quality, from 0 to 100."),
-                            Classes: new[] { "text-small" })
+                            Classes: new[] { "text small" })
                         );
 
                     f._Format.Add(new SelectListItem { Value = "jpg", Text = T("Jpeg").Text });

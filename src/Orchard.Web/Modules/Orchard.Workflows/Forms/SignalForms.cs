@@ -31,7 +31,7 @@ namespace Orchard.Workflows.Forms {
                             Id: "signal", Name: "Signal",
                             Title: T("Name of the signal."),
                             Description: T("The name of the signal."),
-                            Classes: new[] {"textMedium"})
+                            Classes: new[] { "text medium" })
                         );
                 };
 

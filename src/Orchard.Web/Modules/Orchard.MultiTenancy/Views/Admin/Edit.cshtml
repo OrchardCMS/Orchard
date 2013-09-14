@@ -11,12 +11,12 @@
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
-            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "textMedium" })
+            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>
-            @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "textMedium" })
+            @Html.TextBoxFor(m => m.RequestUrlPrefix, new { @class = "text medium" })
             <span class="hint">@T("(Optional) Example: If prefix is \"site1\", the tenant URL prefix is \"http://orchardproject.net/site1\"")</span>
         </div>    
     </fieldset>
@@ -40,7 +40,7 @@
             <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
             <span data-controllerid="sqlDatabaseOption">
             <label for="DatabaseConnectionString">@T("Connection string")</label>
-            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "large text" })
+            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "text large" })
             <span class="hint">@T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
             </span>
             <span data-controllerid="sqlDatabaseOption">

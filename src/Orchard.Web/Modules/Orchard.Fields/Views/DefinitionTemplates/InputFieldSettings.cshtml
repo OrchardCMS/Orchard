@@ -14,7 +14,7 @@
     </div>
 	<div class="editor-field" data-controllerid="@(Html.FieldIdFor(m => m.Type) + "-text")">
         <label class="forpicker" for="@Html.FieldIdFor(m => m.Pattern)">@T("Pattern")</label>
-        @Html.TextBoxFor(m => m.Pattern, new { @class = "textMedium" })
+        @Html.TextBoxFor(m => m.Pattern, new { @class = "text medium" })
         @Html.ValidationMessageFor(m => m.Pattern)
         <span class="hint">@T("Declaring what pattern should be used for validating a field’s value, in the form of a regular expression. (optional)")</span>
 	</div>
@@ -64,7 +64,7 @@
 <fieldset>
 	<div class="editor-field">
         <label class="forpicker" for="@Html.FieldIdFor(m => m.MaxLength)">@T("Maximum length")</label>
-        @Html.TextBoxFor(m => m.MaxLength, new { @class = "small text" })
+        @Html.TextBoxFor(m => m.MaxLength, new { @class = "text small" })
         @Html.ValidationMessageFor(m => m.MaxLength)
         <span class="hint">@T("The maximum number of chars allowed. (optional)")</span>
 	</div>
@@ -72,7 +72,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-        @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" })
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" })
         <span class="hint">@T("The help text is written under the field when the user is entering a value.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>

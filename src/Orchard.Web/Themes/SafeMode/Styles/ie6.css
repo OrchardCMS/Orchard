@@ -16,8 +16,7 @@ legend {
     color:#333;
 }
 
-#AdminPassword, .text-box 
-{
+#AdminPassword, .text-box, .text {
     border:1px solid #DDDEDF;
     padding:4px;
     width:98%;

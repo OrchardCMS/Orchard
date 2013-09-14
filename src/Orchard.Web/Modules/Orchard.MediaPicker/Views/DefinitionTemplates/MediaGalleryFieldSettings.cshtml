@@ -13,7 +13,7 @@
     </div>
     <div data-controllerid="ext-@Html.FieldIdFor(m => m)">
         <div>
-            @Html.TextBoxFor(m => m.AllowedExtensions, new { @class = "textMedium" })
+            @Html.TextBoxFor(m => m.AllowedExtensions, new { @class = "text medium" })
             <span class="hint">@T("You can define a set of extensions the user will be able to pick, separated by spaces, e.g. jpg png gif")</span>
             <span class="hint">@T("Leave it empty if you don't want to apply any restriction.")</span>
         </div>
@@ -27,7 +27,7 @@
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-    @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+    @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
     <span class="hint">@T("The help text is written under the field when authors are selecting media items.")</span>
     @Html.ValidationMessageFor(m => m.Hint)
 </fieldset>

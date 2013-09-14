@@ -27,7 +27,7 @@ namespace Orchard.Projections.Providers.Layouts {
                                 Id: "shape-type", Name: "ShapeType",
                                 Title: T("Shape type"),
                                 Description: T("The type of the shape which is used for rendering content items."),
-                                Classes: new[] { "textMedium", "tokenized" }
+                                Classes: new[] { "text medium", "tokenized" }
                                 )
                             )
                         );

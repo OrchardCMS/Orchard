@@ -52,7 +52,7 @@
 <fieldset>
     <div>
         <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help text")</label>
-        @Html.TextAreaFor(m => m.Hint, new { @class = "textMedium", rows = "5" } )
+        @Html.TextAreaFor(m => m.Hint, new { @class = "text medium", rows = "5" } )
         <span class="hint">@T("The help text is written under the field when the user is selecting a value.")</span>
         @Html.ValidationMessageFor(m => m.Hint)
     </div>

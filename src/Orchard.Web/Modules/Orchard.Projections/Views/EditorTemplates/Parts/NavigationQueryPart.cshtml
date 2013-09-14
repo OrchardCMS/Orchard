@@ -25,13 +25,13 @@
 <fieldset>
     <div>
         @Html.LabelFor(m => m.Items, T("Items to display"))
-        @Html.TextBoxFor(m => m.Items, new { @class = "text-small" })
+        @Html.TextBoxFor(m => m.Items, new { @class = "text small" })
         <span class="hint">@T("The number of items to display. Enter 0 for no limit.")</span>
     </div>
 
     <div>
         @Html.LabelFor(m => m.Skip, T("Offset"))
-        @Html.TextBoxFor(m => m.Skip, new { @class = "text-small" })
+        @Html.TextBoxFor(m => m.Skip, new { @class = "text small" })
         <span class="hint">@T("The number of items to skip (e.g., if 2 is entered, the first 2 items won't be diplayed).")</span>
     </div>
 </fieldset>

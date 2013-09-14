@@ -23,7 +23,7 @@ namespace Orchard.Workflows.Forms {
                             Id: "branches", Name: "Branches",
                             Title: T("Available branches."),
                             Description: T("A comma separated list of names."),
-                            Classes: new[] {"textMedium"})
+                            Classes: new[] { "text medium" })
                         );
 
                     return f;

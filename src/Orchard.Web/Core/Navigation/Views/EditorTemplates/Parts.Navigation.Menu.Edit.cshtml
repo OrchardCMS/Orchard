@@ -17,7 +17,7 @@
             <span class="hint">@T("Select which menu you want the content item to be displayed on.")</span>
 
             <label for="MenuText">@T("Menu text")</label>
-            @Html.TextBoxFor(m => m.MenuText, new { @class = "text-box single-line" })
+            @Html.TextBoxFor(m => m.MenuText, new { @class = "text single-line" })
             <span class="hint">@T("The text that should appear in the menu.")</span>
         </div>
     </fieldset>
@@ -27,7 +27,7 @@ else {
     
     <fieldset>
         <label for="MenuText">@T("Menu text")</label>
-        @Html.TextBoxFor(m => m.MenuText, new { @class = "textMedium", autofocus = "autofocus" })
+        @Html.TextBoxFor(m => m.MenuText, new { @class = "text medium", autofocus = "autofocus" })
         <span class="hint">@T("The text that should appear in the menu.")</span>
         @Html.HiddenFor(m => m.OnMenu, true)
         @Html.HiddenFor(m => m.CurrentMenuId, Request["menuId"])

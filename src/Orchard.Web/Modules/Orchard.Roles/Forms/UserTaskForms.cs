@@ -37,7 +37,7 @@ namespace Orchard.Roles.Forms {
                             Id: "actions", Name: "Actions",
                             Title: T("Available actions."),
                             Description: T("A comma separated list of actions."),
-                            Classes: new[] {"textMedium"})
+                            Classes: new[] { "text medium" })
                         );
 
                     f._Parts.Add(new SelectListItem { Value = "", Text = T("Any").Text });
