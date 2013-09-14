@@ -608,7 +608,7 @@ label input {
     color:#7c7c7c;
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
-/* added .text-medium to be in line with naming style such as .text-small and .text-box, deprecating .textMedium */
+/* Official classes to use: 'text', 'text small', 'text medium', 'text large'. No more 'textMedium', 'text-medium', 'text-small', 'text-large' */
 select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
     font-family:inherit;
     padding:3px;
@@ -618,11 +618,10 @@ select, textarea, input.text, input.textMedium, input.text-medium, input.text-sm
 input.text, input.textMedium, input.text-medium, input.text-box {
     line-height:1.2em;
 }
-/*Are we using the two classes below?*/
-input.text-small {
+input.text-small, input.text.small {
     width:4em;
 }
-input.textMedium, input.text-medium {
+input.textMedium, input.text-medium, input.text.medium {
     width:26em;
 }
 select {
