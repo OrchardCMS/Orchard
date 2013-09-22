@@ -29371,6 +29371,13 @@
             If debug logging is enabled, log a string such as "msg: expression.ToString()".
             </summary>
         </member>
+        <member name="T:NHibernate.Linq.LinqLogging.ProxyReplacingExpressionTreeVisitor">
+            <summary>
+            Replace all occurances of ConstantExpression where the value is an NHibernate
+            proxy with a ParameterExpression. The name of the parameter will be a string
+            representing the proxied entity, without initializing it.
+            </summary>
+        </member>
         <member name="T:NHibernate.Linq.NhQueryable`1">
             <summary>
             Provides the main entry point to a LINQ query.
