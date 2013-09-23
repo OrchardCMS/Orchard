@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Lucene.Models;
@@ -23,7 +24,6 @@ namespace Lucene.Services {
     /// </summary>
     public class LuceneIndexProvider : IIndexProvider {
         private readonly IAppDataFolder _appDataFolder;
-        private readonly ShellSettings _shellSettings;
         public static readonly Version LuceneVersion = Version.LUCENE_29;
         private readonly Analyzer _analyzer ;
         private readonly string _basePath;
@@ -31,11 +31,10 @@ namespace Lucene.Services {
 
         public LuceneIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
             _appDataFolder = appDataFolder;
-            _shellSettings = shellSettings;
             _analyzer = CreateAnalyzer();
 
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
-            _basePath = _appDataFolder.Combine("Sites", _shellSettings.Name, "Indexes");
+            _basePath = _appDataFolder.Combine("Sites", shellSettings.Name, "Indexes");
 
             Logger = NullLogger.Instance;
 
@@ -152,13 +151,13 @@ namespace Lucene.Services {
             if (!documentIds.Any()) {
                 return;
             }
-
+            
             using(var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED)) {
                 var query = new BooleanQuery();
 
                 try {
                     foreach (var id in documentIds) {
-                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), Occur.SHOULD));
+                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString(CultureInfo.InvariantCulture))), Occur.SHOULD));
                     }
 
                     writer.DeleteDocuments(query);

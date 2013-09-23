@@ -48,12 +48,28 @@ namespace Orchard.MediaLibrary.Controllers {
                     mediaTypes.Add(contentTypeDefinition.Name);
             }
 
+            // let other modules enhance the ui by providing custom navigation and actions
+            var explorer = Services.ContentManager.New("MediaLibraryExplorer");
+            explorer.Weld(new MediaLibraryExplorerPart());
+
+            var explorerShape = Services.ContentManager.BuildDisplay(explorer);
+            
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 Folders = _mediaLibraryService.GetMediaFolders(null).Select(GetFolderHierarchy),
                 FolderPath = folderPath,
-                MediaTypes = mediaTypes.ToArray()
+                MediaTypes = mediaTypes.ToArray(),
+                CustomActionsShapes = explorerShape.Actions,
+                CustomNavigationShapes = explorerShape.Navigation,
             };
+
+            foreach (var shape in explorerShape.Actions.Items) {
+                shape.MediaManagerIndexViewModel = viewModel;
+            }
+
+            foreach (var shape in explorerShape.Navigation.Items) {
+                shape.MediaManagerIndexViewModel = viewModel;
+            }
 
             return View(viewModel);
         }

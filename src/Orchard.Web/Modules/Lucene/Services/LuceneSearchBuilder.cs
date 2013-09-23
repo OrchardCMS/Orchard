@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Lucene.Models;
+using Lucene.Net.Analysis;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -33,6 +34,7 @@ namespace Lucene.Services {
         private bool _exactMatch;
         private float _boost;
         private Query _query;
+        private readonly Analyzer _analyzer = LuceneIndexProvider.CreateAnalyzer();
 
         public ILogger Logger { get; set; }
 
@@ -68,10 +70,9 @@ namespace Lucene.Services {
                 query = QueryParser.Escape(query);
             }
 
-            var analyzer = LuceneIndexProvider.CreateAnalyzer();
             foreach (var defaultField in defaultFields) {
                 CreatePendingClause();
-                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query);
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzer).Parse(query);
             }
 
             return this;
@@ -159,8 +160,6 @@ namespace Lucene.Services {
             _query = null;
             _boost = 0;
             _asFilter = false;
-            _sort = String.Empty;
-            _comparer = 0;
         }
 
         private void CreatePendingClause() {
@@ -189,7 +188,7 @@ namespace Lucene.Services {
                 _clauses.Add(new BooleanClause(_query, _occur));
             }
 
-            _query = null;
+            InitPendingClause();
         }
 
         public ISearchBuilder SortBy(string name) {

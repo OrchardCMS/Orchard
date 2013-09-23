@@ -22,3 +22,8 @@ Features:
         Description: Provides a search tab in Content Picker.
         Dependencies: Orchard.ContentPicker, Orchard.Search
         Category: Search
+    Orchard.Search.MediaLibrary:
+        Name: Media Library Search
+        Description: Provides search menu item in the Media Library explorer.
+        Dependencies: Orchard.MediaLibrary, Orchard.Search
+        Category: Search

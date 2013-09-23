@@ -484,6 +484,22 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
+        public void ShouldSearchFolderStructure() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("media-path", "images").Store());
+            _provider.Store("default", _provider.New(2).Add("media-path", "images/pets/puppies").Store());
+            _provider.Store("default", _provider.New(3).Add("media-path", "images/pets/kitties").Store());
+
+            // Assert.That(SearchBuilder.WithField("media-path", "Pets").Mandatory().Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithField("media-path", "Images").Mandatory().Count(), Is.EqualTo(3));
+            Assert.That(SearchBuilder.WithField("media-path", "Images").ExactMatch().Mandatory().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets").Mandatory().Count(), Is.EqualTo(2));
+            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets").ExactMatch().Mandatory().Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets/Puppies").ExactMatch().Mandatory().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets/Puppies").Mandatory().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
         public void FieldsCanContainMultipleValue() {
             _provider.CreateIndex("default");
             var documentIndex = _provider.New(1)

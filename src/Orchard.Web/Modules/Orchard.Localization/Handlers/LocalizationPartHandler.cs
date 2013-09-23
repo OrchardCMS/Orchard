@@ -25,8 +25,7 @@ namespace Orchard.Localization.Handlers {
             OnVersioning<LocalizationPart>((context, part, versionedPart) => LazyLoadHandlers(versionedPart));
 
             OnIndexed<LocalizationPart>((context, localized) => context.DocumentIndex
-                .Add("culture", CultureInfo.GetCultureInfo(localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).LCID)
-                .Store()
+                .Add("culture", CultureInfo.GetCultureInfo(localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).LCID).Store()
                 );
         }
 
