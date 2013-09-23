@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
@@ -59,10 +60,19 @@ namespace Orchard.Taxonomies.Handlers {
                         ));
         }
 
+        // Retrieve the number of associated content items, for the whole hierarchy
         private static void RecalculateCount(ITaxonomyService taxonomyService, TermsPart part) {
             foreach (var term in part.Terms) {
                 var termPart = taxonomyService.GetTerm(term.TermRecord.Id);
-                term.TermRecord.Count = (int)taxonomyService.GetContentItemsCount(termPart);
+                while (termPart != null) {
+                    termPart.Count = (int)taxonomyService.GetContentItemsCount(termPart);
+
+                    // compute count for the hierarchy too
+                    if (termPart.Container != null) {
+                        var parentTerm = termPart.Container.As<TermPart>();
+                        termPart = parentTerm;
+                    }
+                }
             }
         }
 

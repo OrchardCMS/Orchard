@@ -149,7 +149,7 @@ namespace Orchard.Taxonomies.Controllers {
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(parentTermId);
             var term = _taxonomyService.NewTerm(taxonomy);
-            
+
             // assign a container to show the full route while editing
             term.Container = parentTerm == null ? taxonomy : (IContent)parentTerm;
 

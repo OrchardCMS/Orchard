@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
@@ -30,6 +31,14 @@ namespace Orchard.Taxonomies.Models {
         public bool DisplayRootTerm {
             get { return Convert.ToBoolean(this.As<InfosetPart>().Get("TaxonomyNavigationPart", "DisplayRootTerm", null), CultureInfo.InvariantCulture); }
             set { this.As<InfosetPart>().Set("TaxonomyNavigationPart", "DisplayRootTerm", null, Convert.ToString(value, CultureInfo.InvariantCulture)); }
+        }
+
+        /// <summary>
+        /// Number of levels to render. If <value>0</value> all levels are rendered.
+        /// </summary>
+        public int LevelsToDisplay {
+            get { return Convert.ToInt32(this.As<InfosetPart>().Get("TaxonomyNavigationPart", "LevelsToDisplay"), CultureInfo.InvariantCulture); }
+            set { this.As<InfosetPart>().Set("TaxonomyNavigationPart", "LevelsToDisplay", Convert.ToString(value, CultureInfo.InvariantCulture)); }
         }
 
         /// <summary>

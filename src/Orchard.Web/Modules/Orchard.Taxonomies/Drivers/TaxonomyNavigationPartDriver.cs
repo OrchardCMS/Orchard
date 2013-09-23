@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Localization;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.ViewModels;
@@ -14,6 +15,8 @@ namespace Orchard.Taxonomies.Drivers {
         public TaxonomyNavigationPartDriver(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
         }
+
+        public Localizer T { get; set; }
 
         protected override string Prefix { get { return "TaxonomyNavigationPart"; } }
 
@@ -30,17 +33,25 @@ namespace Orchard.Taxonomies.Drivers {
                         DisplayContentCount = part.DisplayContentCount,
                         DisplayTopMenuItem = part.DisplayRootTerm,
                         HideEmptyTerms = part.HideEmptyTerms,
+                        LevelsToDisplay = part.LevelsToDisplay,
                     };
 
                     if (updater != null) {
                         if (updater.TryUpdateModel(model, Prefix, null, null)) {
-                            // taxonomy to render
-                            part.TaxonomyId = model.SelectedTaxonomyId;
-                            // root term (can be null)
-                            part.TermId = model.SelectedTermId;
-                            part.DisplayContentCount = model.DisplayContentCount;
-                            part.DisplayRootTerm = model.DisplayTopMenuItem;
-                            part.HideEmptyTerms = model.HideEmptyTerms;
+
+                            if (model.LevelsToDisplay < 0) {
+                                updater.AddModelError("LevelsToDisplay", T("The levels to display must be a positive number"));
+                            }
+                            else {
+                                // taxonomy to render
+                                part.TaxonomyId = model.SelectedTaxonomyId;
+                                // root term (can be null)
+                                part.TermId = model.SelectedTermId;
+                                part.DisplayContentCount = model.DisplayContentCount;
+                                part.DisplayRootTerm = model.DisplayTopMenuItem;
+                                part.HideEmptyTerms = model.HideEmptyTerms;
+                                part.LevelsToDisplay = model.LevelsToDisplay;
+                            }
                         }
                     }
 

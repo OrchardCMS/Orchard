@@ -25,6 +25,13 @@
 </fieldset>
 
 <fieldset>
+    <label for="@Html.FieldIdFor( m => m.LevelsToDisplay)">@T("Levels to display")</label>
+    @Html.TextBoxFor(m => m.LevelsToDisplay, new { @class = "text small" } )
+    @Html.ValidationMessage("LevelsToDisplay", "*")
+    <span class="hint">@T("The number of levels to display in the hierarchy. 0 to display all levels.")</span>
+</fieldset>
+
+<fieldset>
    @Html.CheckBoxFor(m => m.HideEmptyTerms)
    <label for="@Html.FieldIdFor(m => m.HideEmptyTerms)" class="forcheckbox">@T("Hide empty entries")</label>
    <span class="hint">@T("When checked, any term which has no content item associated to it won't be rendered.")</span>

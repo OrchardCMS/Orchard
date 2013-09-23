@@ -12,5 +12,6 @@ namespace Orchard.Taxonomies.ViewModels {
         public bool DisplayTopMenuItem { get; set; }
         public bool DisplayContentCount { get; set; }
         public bool HideEmptyTerms { get; set; }
+        public int LevelsToDisplay { get; set; }
     }
 }

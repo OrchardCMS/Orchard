@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
@@ -267,12 +266,20 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetChildren(TermPart term) {
+            return GetChildren(term, false);
+        }
+
+        public IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent) {
             var rootPath = term.FullPath + "/";
 
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
-                .List()
-                .Where(x => x.Path.StartsWith(rootPath));
+                .Where(x => x.Path.StartsWith(rootPath))
+                .List();
+
+            if (includeParent) {
+                result = result.Concat(new [] {term});
+            }
 
             return TermPart.Sort(result);
         }

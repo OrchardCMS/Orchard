@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.UI.Navigation;
-using Orchard.Taxonomies.Helpers;
-
 
 namespace Orchard.Taxonomies.Navigation {
     /// <summary>
-    /// Dynamically injects query results as menu items on NavigationQueryMenuItem elements
+    /// Dynamically injects taxonomy items as menu items on TaxonomyNavigationMenuItem elements
     /// </summary>
     public class TaxonomyNavigationProvider : INavigationFilter {
         private readonly IContentManager _contentManager;
@@ -28,59 +28,65 @@ namespace Orchard.Taxonomies.Navigation {
 
             foreach (var item in items) {
                 if (item.Content != null && item.Content.ContentItem.ContentType == "TaxonomyNavigationMenuItem") {
-                    // expand query
 
                     var taxonomyNavigationPart = item.Content.As<TaxonomyNavigationPart>();
 
                     var rootTerm = _taxonomyService.GetTerm(taxonomyNavigationPart.TermId);
 
-                    List<int> positionList = new List<int>();
+                    TermPart[] allTerms;
 
-                    var allTerms = rootTerm != null
-                                       ? _taxonomyService.GetChildren(rootTerm).ToArray()
-                                       : _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId).ToArray();
+                    if (rootTerm != null) {
+                        // if DisplayRootTerm is specified add it to the menu items to render
+                        allTerms = _taxonomyService.GetChildren(rootTerm, taxonomyNavigationPart.DisplayRootTerm).ToArray();
+                    }
+                    else {
+                        allTerms = _taxonomyService.GetTerms(taxonomyNavigationPart.TaxonomyId).ToArray();
+                    }
 
-                    var rootlevel = rootTerm == null ? 0 : rootTerm.GetLevels();
+                    var rootLevel = rootTerm != null
+                        ? rootTerm.GetLevels()
+                        : 0;
                     
-                    positionList.Add(0);
-
                     var menuPosition = item.Position;
-                    int parentLevel = rootlevel;
+                    var rootPath = rootTerm == null || taxonomyNavigationPart.DisplayRootTerm ? "" : rootTerm.FullPath;
+
+                    var startLevel = rootLevel + 1;
+                    if (rootTerm == null || taxonomyNavigationPart.DisplayRootTerm) {
+                        startLevel = rootLevel;
+                    }
+
+                    var endLevel = Int32.MaxValue;
+                    if (taxonomyNavigationPart.LevelsToDisplay > 0) {
+                        endLevel = startLevel + taxonomyNavigationPart.LevelsToDisplay - 1;
+                    }
 
                     foreach (var contentItem in allTerms) {
                         if (contentItem != null) {
                             var part = contentItem;
+                            var level = part.GetLevels();
 
-                            if (taxonomyNavigationPart.HideEmptyTerms == true && part.Count == 0) {
+                            // filter levels ?
+                            if (level < startLevel || level > endLevel) {
                                 continue;
                             }
-                            string termPosition = "";
-                            if (part.GetLevels() - rootlevel > parentLevel) {
-                                positionList.Add(0);
-                                parentLevel = positionList.Count - 1;
-                            }
-                            else
-                                if ((part.GetLevels() - rootlevel) == parentLevel) {
-                                    positionList[parentLevel]++;
-                                }
-                                else {
-                                    positionList.RemoveRange(1, positionList.Count - 1);
-                                    parentLevel = positionList.Count - 1;
-                                    positionList[parentLevel]++;
-                                }
 
-                            termPosition = positionList.First().ToString();
-                            foreach (var position in positionList.Skip(1)) {
-                                termPosition = termPosition + "." + position.ToString();
+                            // ignore menu item if there are no content items associated to the term
+                            if (taxonomyNavigationPart.HideEmptyTerms && part.Count == 0) {
+                                continue;
                             }
-
 
                             var menuText = _contentManager.GetItemMetadata(part).DisplayText;
                             var routes = _contentManager.GetItemMetadata(part).DisplayRouteValues;
 
                             if (taxonomyNavigationPart.DisplayContentCount) {
-                                menuText = String.Format(menuText + " ({0})", part.Count.ToString());
+                                menuText += " (" + part.Count + ")";
                             }
+
+                            // create 
+                            var positions = contentItem.FullPath.Substring(rootPath.Length)
+                                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(p => Array.FindIndex(allTerms, t => t.Id == Int32.Parse(p)))
+                                .ToArray();
 
                             var inserted = new MenuItem {
                                 Text = new LocalizedString(menuText),
@@ -92,7 +98,7 @@ namespace Orchard.Taxonomies.Navigation {
                                 RouteValues = routes,
                                 LocalNav = item.LocalNav,
                                 Items = new MenuItem[0],
-                                Position = menuPosition + ":" + termPosition,
+                                Position = menuPosition + ":" + String.Join(".", positions.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray()),
                                 Permissions = item.Permissions,
                                 Content = part
                             };

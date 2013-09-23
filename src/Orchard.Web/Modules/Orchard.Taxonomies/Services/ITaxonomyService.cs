@@ -28,6 +28,7 @@ namespace Orchard.Taxonomies.Services {
         void UpdateTerms(ContentItem contentItem, IEnumerable<TermPart> terms, string field);
         IEnumerable<TermPart> GetParents(TermPart term);
         IEnumerable<TermPart> GetChildren(TermPart term);
+        IEnumerable<TermPart> GetChildren(TermPart term, bool includeParent);
         IEnumerable<IContent> GetContentItems(TermPart term, int skip = 0, int count = 0, string fieldName = null);
         long GetContentItemsCount(TermPart term, string fieldName = null);
         IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null);
