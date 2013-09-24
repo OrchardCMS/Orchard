@@ -209,6 +209,7 @@ namespace Orchard.Workflows.Services {
                 foreach (var blocking in blockedOn) {
                     workflow.AwaitingActivities.Add(new AwaitingActivityRecord {
                         ActivityRecord = blocking,
+                        WorkflowRecord = workflow
                     });
                 }
             }
