@@ -35,7 +35,7 @@ namespace Orchard.Search.Services {
             var searchBuilder = Search(index).Parse(searchFields, query);
 
             if (filterCulture) {
-                var culture = _cultureManager.GetSiteCulture();
+                var culture = _cultureManager.GetCurrentCulture(Services.WorkContext.HttpContext);
 
                 // use LCID as the text representation gets analyzed by the query parser
                 searchBuilder
