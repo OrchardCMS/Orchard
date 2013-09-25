@@ -142,8 +142,8 @@ namespace Orchard.Projections.FilterEditors.Forms {
             }
             else {
                 if (op == DateTimeOperator.Between || op == DateTimeOperator.NotBetween) {
-                    min = ApplyDelta(now, formState.MinUnit, Int32.Parse(formState.Min));
-                    max = ApplyDelta(now, formState.MinUnit, Int32.Parse(formState.Min));
+                    min = ApplyDelta(now, formState.MinUnit.Value, Int32.Parse(formState.Min.Value));
+                    max = ApplyDelta(now, formState.MaxUnit.Value, Int32.Parse(formState.Max.Value));
                 }
                 else {
                     min = max = ApplyDelta(now, Convert.ToString(formState.ValueUnit), Convert.ToInt32(formState.Value));
