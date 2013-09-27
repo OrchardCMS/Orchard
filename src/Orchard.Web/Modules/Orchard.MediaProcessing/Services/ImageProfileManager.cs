@@ -197,7 +197,7 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
-        private static readonly char[] _disallowed = @"/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%".ToCharArray();
+        private static readonly char[] _disallowed = @"/:?#[]@!$&'()*+,.;=s""<>\|%".ToCharArray();
 
         private static string CreateDefaultFileName(string path) {
             var extention = Path.GetExtension(path);
