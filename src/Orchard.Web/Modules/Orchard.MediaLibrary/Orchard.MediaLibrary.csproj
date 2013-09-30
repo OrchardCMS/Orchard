@@ -167,6 +167,7 @@
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
     <Compile Include="Tokens\FieldTokens.cs" />
+    <Compile Include="ViewModels\ImportMediaViewModel.cs" />
     <Compile Include="ViewModels\MediaLibraryPickerFieldViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerMediaItemsViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerFolderCreateViewModel.cs" />
@@ -335,6 +336,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\MediaLibrary.Navigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Image.Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

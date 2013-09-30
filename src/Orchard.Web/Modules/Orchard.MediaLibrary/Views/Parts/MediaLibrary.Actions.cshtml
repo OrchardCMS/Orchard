@@ -7,7 +7,7 @@
         <select id="filterMediaType" name="FilteredMediaType" data-bind="selectedOptions: mediaType">
             @Html.SelectOption("", true, T("Any (show all)").ToString())
             @foreach (var mediaType in viewModel.MediaTypes) {
-                @Html.SelectOption(mediaType, false, mediaType)
+                @Html.SelectOption(mediaType.Name, false, mediaType.DisplayName)
             }
         </select>
 

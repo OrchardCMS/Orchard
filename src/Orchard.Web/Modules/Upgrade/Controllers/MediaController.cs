@@ -157,7 +157,9 @@ namespace Upgrade.Controllers {
             
             try {
                 //_orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
-                return _mediaLibraryService.ImportMedia(folderName, fileName);
+                var media = _mediaLibraryService.ImportMedia(folderName, fileName);
+                _orchardServices.ContentManager.Create(media);
+                return media;
             }
             catch(Exception e) {
                 _orchardServices.Notifier.Error(T("Error while importing {0}. Please check the logs", folderName + "/" + fileName));

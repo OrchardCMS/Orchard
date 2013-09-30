@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.MediaLibrary {
@@ -85,6 +86,40 @@ namespace Orchard.MediaLibrary {
             );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("MediaPart", part => part
+                .Attachable()
+                .WithDescription("Turns a content type into a Media. Note: you need to set the stereotype to \"Media\" as well.")
+            );
+
+            ContentDefinitionManager.AlterPartDefinition("ImagePart", part => part
+                            .Attachable()
+                            .WithDescription("Provides common metadata for an Image Media.")
+                        );
+
+            ContentDefinitionManager.AlterPartDefinition("VideoPart", part => part
+                            .Attachable()
+                            .WithDescription("Provides common metadata for a Video Media.")
+                        );
+
+            ContentDefinitionManager.AlterPartDefinition("AudioPart", part => part
+                            .Attachable()
+                            .WithDescription("Provides common metadata for an Audio Media.")
+                        );
+
+            ContentDefinitionManager.AlterPartDefinition("DocumentPart", part => part
+                            .Attachable()
+                            .WithDescription("Provides common metadata for a Document Media.")
+                        );
+
+            ContentDefinitionManager.AlterPartDefinition("OEmbedPart", part => part
+                            .Attachable()
+                            .WithDescription("Provides common metadata for an OEmbed Media.")
+                        );
+
+            return 4;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.Drivers;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Drivers {
