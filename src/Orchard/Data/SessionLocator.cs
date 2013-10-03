@@ -53,9 +53,13 @@ namespace Orchard.Data {
             EnsureSession();
 
             if (_cancelled) {
-                _transaction.Rollback();
-                _transaction.Dispose();
-                _transaction = null;
+                if (_transaction != null) {
+                    _transaction.Rollback();
+                    _transaction.Dispose();
+                    _transaction = null;
+                }
+
+                _cancelled = false;
             }
             else {
                 if (_transaction != null) {
