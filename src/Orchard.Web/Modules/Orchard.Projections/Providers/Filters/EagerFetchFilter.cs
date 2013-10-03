@@ -13,30 +13,30 @@ namespace Orchard.Projections.Providers.Filters {
 
         public void Describe(DescribeFilterContext describe) {
             describe.For("Content", T("Content"),T("Content"))
-                .Element("EagerFetch", T("Eager fetch"), T("Eager fetch content parts"),
+                .Element("EagerFetch", T("Eager fetch"), T("Eager fetch content part records"),
                     ApplyFilter,
                     DisplayFilter,
-                    "ContentPartsForm"
+                    "ContentPartRecordsForm"
                 );
 
         }
 
         public void ApplyFilter(FilterContext context) {
-            var contentPartNames = (string)context.State.ContentParts;
-            if (!String.IsNullOrEmpty(contentPartNames)) {
-                var contentParts = contentPartNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var contentPartRecords = (string)context.State.ContentPartRecords;
+            if (!String.IsNullOrEmpty(contentPartRecords)) {
+                var contentParts = contentPartRecords.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 context.Query = context.Query.Include(contentParts);
             }
         }
 
         public LocalizedString DisplayFilter(FilterContext context) {
-            string contentparts = context.State.ContentParts;
+            string contentpartrecords = context.State.ContentPartRecords;
 
-            if (String.IsNullOrEmpty(contentparts)) {
-                return T("No content part");
+            if (String.IsNullOrEmpty(contentpartrecords)) {
+                return T("No content part record");
             }
 
-            return T("Eager fetch parts {0}", contentparts);
+            return T("Eager fetch part records {0}", contentpartrecords);
         }
     }
 }

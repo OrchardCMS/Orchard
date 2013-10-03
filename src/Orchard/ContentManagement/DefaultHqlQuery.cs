@@ -18,7 +18,7 @@ namespace Orchard.ContentManagement {
         private readonly IEnumerable<ISqlStatementProvider> _sqlStatementProviders;
         private readonly ShellSettings _shellSettings;
         private VersionOptions _versionOptions;
-        private string[] _includedPartNames = new string[0];
+        private string[] _includedPartRecords = new string[0];
         private bool _cacheable;
 
         protected IJoin _from;
@@ -161,8 +161,8 @@ namespace Orchard.ContentManagement {
             return this;
         }
 
-        public IHqlQuery Include(params string[] partNames) {
-            _includedPartNames = _includedPartNames.Union(partNames).ToArray();
+        public IHqlQuery Include(params string[] contentPartRecords) {
+            _includedPartRecords = _includedPartRecords.Union(contentPartRecords).ToArray();
             return this;
         }
 
@@ -202,9 +202,7 @@ namespace Orchard.ContentManagement {
                 .List<IDictionary>()
                 .Select(x => (int)x["Id"]);
 
-            var contentPartRecords = _includedPartNames.Select(part => part + "Record").ToList();
-
-            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(contentPartRecords));
+            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(_includedPartRecords));
         }
 
         public int Count() {

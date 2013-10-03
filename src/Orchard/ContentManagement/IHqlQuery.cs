@@ -22,7 +22,7 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Eagerly fetches specific content parts.
         /// </summary>
-        IHqlQuery Include(params string[] contentParts);
+        IHqlQuery Include(params string[] contentPartRecords);
         
         /// <summary>
         /// Adds versioning options to the query.
