@@ -18,13 +18,13 @@ namespace Orchard.ContentManagement {
         private readonly IEnumerable<ISqlStatementProvider> _sqlStatementProviders;
         private readonly ShellSettings _shellSettings;
         private VersionOptions _versionOptions;
+        private string[] _includedPartNames = new string[0];
+        private bool _cacheable;
 
         protected IJoin _from;
         protected readonly List<Tuple<IAlias, Join>> _joins = new List<Tuple<IAlias, Join>>();
         protected readonly List<Tuple<IAlias, Action<IHqlExpressionFactory>>> _wheres = new List<Tuple<IAlias, Action<IHqlExpressionFactory>>>();
         protected readonly List<Tuple<IAlias, Action<IHqlSortFactory>>> _sortings = new List<Tuple<IAlias, Action<IHqlSortFactory>>>();
-
-        private bool cacheable;
 
         public IContentManager ContentManager { get; private set; }
 
@@ -74,13 +74,18 @@ namespace Orchard.ContentManagement {
             return BindCriteriaByAlias(BindItemCriteria(), "ContentType", "ct");
         }
 
-        internal IAlias BindItemCriteria() {
+        internal IAlias BindItemCriteria(string type = "") {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
-            return BindCriteriaByAlias(BindItemVersionCriteria(), typeof(ContentItemRecord).Name, "ci");
+            return BindCriteriaByAlias(BindItemVersionCriteria(type), typeof(ContentItemRecord).Name, "ci");
         }
 
-        internal IAlias BindItemVersionCriteria() {
-            return _from ?? (_from = new Join(typeof(ContentItemVersionRecord).FullName, "civ", ""));
+        internal IAlias BindItemVersionCriteria(string type = "") {
+            _from = _from ?? new Join(typeof(ContentItemVersionRecord).FullName, "civ", type);
+            if (_from.Type.Length < type.Length) {
+                _from.Type = type;
+            }
+
+            return _from;
         }
 
         internal IAlias BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
@@ -152,6 +157,12 @@ namespace Orchard.ContentManagement {
             if (contentTypeNames != null && contentTypeNames.Length != 0) {
                 Where(BindTypeCriteria(), x => x.InG("Name", contentTypeNames));
             }
+            
+            return this;
+        }
+
+        public IHqlQuery Include(params string[] partNames) {
+            _includedPartNames = _includedPartNames.Union(partNames).ToArray();
             return this;
         }
 
@@ -170,13 +181,13 @@ namespace Orchard.ContentManagement {
 
         public IEnumerable<ContentItem> Slice(int skip, int count) {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            cacheable = true;
+            _cacheable = true;
             
             var hql = ToHql(false);
 
             var query = _session
                 .CreateQuery(hql)
-                .SetCacheable(cacheable)
+                .SetCacheable(_cacheable)
                 ;
 
             if (skip != 0) {
@@ -191,7 +202,9 @@ namespace Orchard.ContentManagement {
                 .List<IDictionary>()
                 .Select(x => (int)x["Id"]);
 
-            return ContentManager.GetManyByVersionId(ids, QueryHints.Empty);
+            var contentPartRecords = _includedPartNames.Select(part => part + "Record").ToList();
+
+            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(contentPartRecords));
         }
 
         public int Count() {
@@ -224,7 +237,7 @@ namespace Orchard.ContentManagement {
                     }
                     else {
                         // select distinct can't be used with newid()
-                        cacheable = false;
+                        _cacheable = false;
                         sb.Replace("select distinct", "select ");
                     }
                 }
