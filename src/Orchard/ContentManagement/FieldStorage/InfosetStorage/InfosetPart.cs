@@ -25,18 +25,18 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         public string Get(string partName, string fieldName, string valueName) {
-            var partElement = Infoset.Element.Element(partName);
+            var partElement = Infoset.Element.Element(XmlConvert.EncodeName(partName));
             if (partElement == null) {
                 return null;
             }
-            var fieldElement = partElement.Element(fieldName);
+            var fieldElement = partElement.Element(XmlConvert.EncodeName(fieldName));
             if (fieldElement == null) {
                 return null;
             }
             if (string.IsNullOrEmpty(valueName)) {
                 return fieldElement.Value;
             }
-            var valueAttribute = fieldElement.Attribute(XmlConvert.EncodeLocalName(valueName));
+            var valueAttribute = fieldElement.Attribute(XmlConvert.EncodeName(valueName));
             if (valueAttribute == null) {
                 return null;
             }
@@ -56,21 +56,21 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         public void Set(string partName, string fieldName, string valueName, string value) {
-            var partElement = Infoset.Element.Element(partName);
+            var partElement = Infoset.Element.Element(XmlConvert.EncodeName(partName));
             if (partElement == null) {
-                partElement = new XElement(partName);
+                partElement = new XElement(XmlConvert.EncodeName(partName));
                 Infoset.Element.Add(partElement);
             }
-            var fieldElement = partElement.Element(fieldName);
+            var fieldElement = partElement.Element(XmlConvert.EncodeName(fieldName));
             if (fieldElement == null) {
-                fieldElement = new XElement(fieldName);
+                fieldElement = new XElement(XmlConvert.EncodeName(fieldName));
                 partElement.Add(fieldElement);
             }
             if (string.IsNullOrEmpty(valueName)) {
                 fieldElement.Value = value ?? "";
             }
             else {
-                fieldElement.SetAttributeValue(XmlConvert.EncodeLocalName(valueName), value ?? "");
+                fieldElement.SetAttributeValue(XmlConvert.EncodeName(valueName), value);
             }
         }
     }

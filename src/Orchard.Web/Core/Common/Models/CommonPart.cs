@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.Core.Common.Utilities;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -22,20 +24,41 @@ namespace Orchard.Core.Common.Models {
             get { return _container.Value; }
             set { _container.Value = value; }
         }
-
+        
         public DateTime? CreatedUtc {
-            get { return Record.CreatedUtc; }
-            set { Record.CreatedUtc = value; }
+            get {
+                var dateTime = this.As<InfosetPart>().Get<CommonPart>("CreatedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+            }
+            set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<CommonPart>("CreatedUtc", dateTime);
+                Record.CreatedUtc = value;
+            }
         }
 
         public DateTime? PublishedUtc {
-            get { return Record.PublishedUtc; }
-            set { Record.PublishedUtc = value; }
+            get {
+                var dateTime = this.As<InfosetPart>().Get<CommonPart>("PublishedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+            }
+            set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<CommonPart>("PublishedUtc", dateTime);
+                Record.PublishedUtc = value;
+            }
         }
 
         public DateTime? ModifiedUtc {
-            get { return Record.ModifiedUtc; }
-            set { Record.ModifiedUtc = value; }
+            get {
+                var dateTime = this.As<InfosetPart>().Get<CommonPart>("ModifiedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+            }
+            set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<CommonPart>("ModifiedUtc", dateTime);
+                Record.ModifiedUtc = value;
+            }
         }
 
         CommonPartVersionRecord PartVersionRecord {
@@ -47,9 +70,12 @@ namespace Orchard.Core.Common.Models {
 
         public DateTime? VersionCreatedUtc {
             get {
-                return PartVersionRecord == null ? CreatedUtc : PartVersionRecord.CreatedUtc;
+                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("CreatedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("CreatedUtc", dateTime);
                 if (PartVersionRecord != null)
                     PartVersionRecord.CreatedUtc = value;
             }
@@ -57,9 +83,12 @@ namespace Orchard.Core.Common.Models {
 
         public DateTime? VersionPublishedUtc {
             get {
-                return PartVersionRecord == null ? PublishedUtc : PartVersionRecord.PublishedUtc;
+                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("PublishedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("PublishedUtc", dateTime);
                 if (PartVersionRecord != null)
                     PartVersionRecord.PublishedUtc = value;
             }
@@ -67,12 +96,16 @@ namespace Orchard.Core.Common.Models {
 
         public DateTime? VersionModifiedUtc {
             get {
-                return PartVersionRecord == null ? ModifiedUtc : PartVersionRecord.ModifiedUtc;
+                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("ModifiedUtc");
+                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
+                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
+                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("ModifiedUtc", dateTime);
                 if (PartVersionRecord != null)
                     PartVersionRecord.ModifiedUtc = value;
             }
         }
+
     }
 }

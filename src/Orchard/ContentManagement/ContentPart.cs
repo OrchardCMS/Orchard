@@ -76,7 +76,6 @@ namespace Orchard.ContentManagement {
 
             return true;
         }
-
     }
 
     public class ContentPart<TRecord> : ContentPart {
