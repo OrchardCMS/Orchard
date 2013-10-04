@@ -49,14 +49,12 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<WidgetPart> GetWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>()).
-                List();
+                .List();
         }
 
         public IEnumerable<WidgetPart> GetOrphanedWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
-                .Where<CommonPartRecord>(x => x.Container == null)
                 .List();
         }
 
@@ -64,7 +62,6 @@ namespace Orchard.Widgets.Services {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .Where<CommonPartRecord>(x => x.Container.Id == layerId)
-                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
                 .List();
         }
 
@@ -72,7 +69,6 @@ namespace Orchard.Widgets.Services {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
-                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
                 .List();
         }
 
