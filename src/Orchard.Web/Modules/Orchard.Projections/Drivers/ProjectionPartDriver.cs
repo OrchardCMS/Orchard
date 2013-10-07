@@ -310,8 +310,10 @@ namespace Orchard.Projections.Drivers {
                 var layoutIndex = context.Attribute(part.PartDefinition.Name, "LayoutIndex");
                 int layoutIndexValue;
                 if (layoutIndex != null 
-                    && Int32.TryParse(layoutIndex, out layoutIndexValue) 
-                    && part.Record.QueryPartRecord.Layouts.Count >= layoutIndexValue + 1) {
+                    && Int32.TryParse(layoutIndex, out layoutIndexValue)
+                    && layoutIndexValue != -1
+                    && part.Record.QueryPartRecord.Layouts.Count >= layoutIndexValue + 1)
+                {
                     part.Record.LayoutRecord = part.Record.QueryPartRecord.Layouts[Int32.Parse(layoutIndex)];
                 }
             }
