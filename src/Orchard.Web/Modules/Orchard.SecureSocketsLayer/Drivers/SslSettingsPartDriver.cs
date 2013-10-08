@@ -1,0 +1,51 @@
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Localization;
+using Orchard.SecureSocketsLayer.Models;
+
+namespace Orchard.SecureSocketsLayer.Drivers {
+    public class SslSettingsPartDriver : ContentPartDriver<SslSettingsPart> {
+        private const string TemplateName = "Parts/SecureSocketsLayer.Settings";
+
+        public SslSettingsPartDriver() {
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+
+        protected override string Prefix {
+            get { return "SslSettings"; }
+        }
+
+        protected override DriverResult Editor(SslSettingsPart part, dynamic shapeHelper) {
+            return ContentShape("Parts_SslSettings_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix))
+                .OnGroup("Ssl");
+        }
+
+        protected override DriverResult Editor(SslSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+            updater.TryUpdateModel(part, Prefix, null, null);
+
+            return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(SslSettingsPart part, ImportContentContext context) {
+            var elementName = part.PartDefinition.Name;
+            part.SecureEverything = bool.Parse(context.Attribute(elementName, "SecureEverything") ?? "true");
+            part.CustomEnabled = bool.Parse(context.Attribute(elementName, "CustomEnabled") ?? "false");
+            part.Urls = context.Attribute(elementName, "Urls") ?? "";
+            part.InsecureHostName = context.Attribute(elementName, "InsecureHostName") ?? "";
+            part.SecureHostName = context.Attribute(elementName, "SecureHostName") ?? "";
+        }
+
+        protected override void Exporting(SslSettingsPart part, ExportContentContext context) {
+            var el = context.Element(part.PartDefinition.Name);
+            el.SetAttributeValue("SecureEverything", part.SecureEverything);
+            el.SetAttributeValue("CustomEnabled", part.CustomEnabled);
+            el.SetAttributeValue("Urls", part.Urls);
+            el.SetAttributeValue("InsecureHostName", part.InsecureHostName);
+            el.SetAttributeValue("SecureHostName", part.SecureHostName);
+        }
+    }
+}
