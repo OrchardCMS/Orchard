@@ -34,7 +34,8 @@ namespace Orchard.OutputCache.Filters {
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
-        private static readonly string[] AuthorizedContentTypes = new [] { "text/html", "text/xml", "text/json" };
+        private readonly ICacheControlStrategy _cacheControlStrategy;
+        private Stream _previousFilter;
 
         private const string RefreshKey = "__r";
 
@@ -48,7 +49,8 @@ namespace Orchard.OutputCache.Filters {
             IClock clock,
             ICacheService cacheService,
             ISignals signals,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            ICacheControlStrategy cacheControlStrategy) {
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
             _tagCache = tagCache;
@@ -59,6 +61,7 @@ namespace Orchard.OutputCache.Filters {
             _cacheService = cacheService;
             _signals = signals;
             _shellSettings = shellSettings;
+            _cacheControlStrategy = cacheControlStrategy;
 
             Logger = NullLogger.Instance;
         }
@@ -257,7 +260,6 @@ namespace Orchard.OutputCache.Filters {
 
                 // adds some caching information to the output if requested
                 if (_debugMode) {
-                    output += "\r\n<!-- Cached on " + _cacheItem.CachedOnUtc + " (UTC) until " + _cacheItem.ValidUntilUtc + "  (UTC) -->";
                     response.AddHeader("X-Cached-On", _cacheItem.CachedOnUtc.ToString("r"));
                     response.AddHeader("X-Cached-Until", _cacheItem.ValidUntilUtc.ToString("r"));
                 }
@@ -281,18 +283,27 @@ namespace Orchard.OutputCache.Filters {
             ApplyCacheControl(_cacheItem, response);
 
             // no cache content available, intercept the execution results for caching
+            _previousFilter = response.Filter;
             response.Filter = _filter = new CapturingResponseFilter(response.Filter);
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
+            
+        }
 
-            // only cache view results, but don't return already as we still need to process redirections
-            if (!(filterContext.Result is ViewResultBase) && !( AuthorizedContentTypes.Contains(filterContext.HttpContext.Response.ContentType))) {
+        public void OnResultExecuted(ResultExecutedContext filterContext) {
+
+            var response = filterContext.HttpContext.Response;
+
+            if (!_cacheControlStrategy.IsCacheable(filterContext.Result, response)) {
                 _filter = null;
+                if (_previousFilter != null) {
+                    response.Filter = _previousFilter;
+                }
             }
-
+            
             // ignore error results from cache
-            if (filterContext.HttpContext.Response.StatusCode != (int)HttpStatusCode.OK) {
+            if (response.StatusCode != (int)HttpStatusCode.OK) {
 
                 // Never cache non-200 responses.
                 filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -300,6 +311,9 @@ namespace Orchard.OutputCache.Filters {
                 filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
 
                 _filter = null;
+                if (_previousFilter != null) {
+                    response.Filter = _previousFilter;
+                } 
                 return;
             }
 
@@ -310,6 +324,10 @@ namespace Orchard.OutputCache.Filters {
 
             // ignore in admin
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
+                _filter = null;
+                if (_previousFilter != null) {
+                    response.Filter = _previousFilter;
+                } 
                 return;
             }
 
@@ -317,16 +335,85 @@ namespace Orchard.OutputCache.Filters {
 
             // ignore authenticated requests
             if (_workContext.CurrentUser != null) {
+                _filter = null;
+                if (_previousFilter != null) {
+                    response.Filter = _previousFilter;
+                } 
                 return;
             }
 
+            // handle redirections
+            TransformRedirect(filterContext);
+
+            // save the result only if the content can be intercepted
+            if (_filter == null) return;
+
+            // flush here to force the Filter to get the rendered content
+            if (response.IsClientConnected)
+                response.Flush();
+
+            var output = _filter.GetContents(response.ContentEncoding);
+
+            if (String.IsNullOrWhiteSpace(output)) {
+                return;
+            }
+
+            response.Filter = null;
+            response.Write(output);
+
+
+            // check if there is a specific rule not to cache the whole route
+            var configurations = _cacheService.GetRouteConfigurations();
+            var route = filterContext.Controller.ControllerContext.RouteData.Route;
+            var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
+            var configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
+
+
+            // do not cache ?
+            if (configuration != null && configuration.Duration == 0) {
+                return;
+            }
+
+            // default duration of specific one ?
+            var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
+
+            // include each of the content item ids as tags for the cache entry
+            var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+
+            _cacheItem.ContentType = response.ContentType;
+            _cacheItem.StatusCode = response.StatusCode;
+            _cacheItem.CachedOnUtc = _now;
+            _cacheItem.ValidFor = cacheDuration;
+            _cacheItem.QueryString = filterContext.HttpContext.Request.Url.Query;
+            _cacheItem.Output = output;
+            _cacheItem.CacheKey = _cacheKey;
+            _cacheItem.InvariantCacheKey = _invariantCacheKey;
+            _cacheItem.Tenant = _shellSettings.Name;
+            _cacheItem.Url = filterContext.HttpContext.Request.Url.AbsolutePath;
+            _cacheItem.Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray();
+
+            Logger.Debug("Cache item added: " + _cacheItem.CacheKey);
+
+            // remove old cache data
+            _cacheService.RemoveByTag(_invariantCacheKey);
+
+            // add data to cache
+            _cacheStorageProvider.Set(_cacheKey, _cacheItem);
+
+            // add to the tags index
+            foreach (var tag in _cacheItem.Tags) {
+                _tagCache.Tag(tag, _cacheKey);
+            }
+
+        }
+
+        private void TransformRedirect(ResultExecutedContext filterContext) {
             // todo: look for RedirectToRoute to, or intercept 302s
 
             if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
                 && filterContext.Result is RedirectResult) {
-
                 Logger.Debug("Redirect on POST");
-                var redirectUrl = ((RedirectResult)filterContext.Result).Url;
+                var redirectUrl = ((RedirectResult) filterContext.Result).Url;
 
                 if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
                     var applicationRoot = filterContext.HttpContext.Request.ToRootUrlString();
@@ -366,72 +453,9 @@ namespace Orchard.OutputCache.Filters {
                     redirectUrl = redirectUrl + querystring;
                 }
 
-                filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult)filterContext.Result).Permanent);
+                filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult) filterContext.Result).Permanent);
                 filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             }
-        }
-
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-            var response = filterContext.HttpContext.Response;
-
-            // save the result only if the content can be intercepted
-            if (_filter == null) return;
-
-            // check if there is a specific rule not to cache the whole route
-            var configurations = _cacheService.GetRouteConfigurations();
-            var route = filterContext.Controller.ControllerContext.RouteData.Route;
-            var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
-            var configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
-
-            // flush here to force the Filter to get the rendered content
-            if (response.IsClientConnected)
-                response.Flush();
-
-            var output = _filter.GetContents(response.ContentEncoding);
-
-            if (String.IsNullOrWhiteSpace(output)) {
-                return;
-            }
-
-            response.Filter = null;
-            response.Write(output);
-
-            // do not cache ?
-            if (configuration != null && configuration.Duration == 0) {
-                return;
-            }
-
-            // default duration of specific one ?
-            var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
-
-            // include each of the content item ids as tags for the cache entry
-            var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
-
-            _cacheItem.ContentType = response.ContentType;
-            _cacheItem.StatusCode = response.StatusCode;
-            _cacheItem.CachedOnUtc = _now;
-            _cacheItem.ValidFor = cacheDuration;
-            _cacheItem.QueryString = filterContext.HttpContext.Request.Url.Query;
-            _cacheItem.Output = output;
-            _cacheItem.CacheKey = _cacheKey;
-            _cacheItem.InvariantCacheKey = _invariantCacheKey;
-            _cacheItem.Tenant = _shellSettings.Name;
-            _cacheItem.Url = filterContext.HttpContext.Request.Url.AbsolutePath;
-            _cacheItem.Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray();
-
-            Logger.Debug("Cache item added: " + _cacheItem.CacheKey);
-
-            // remove old cache data
-            _cacheService.RemoveByTag(_invariantCacheKey);
-
-            // add data to cache
-            _cacheStorageProvider.Set(_cacheKey, _cacheItem);
-
-            // add to the tags index
-            foreach (var tag in _cacheItem.Tags) {
-                _tagCache.Tag(tag, _cacheKey);
-            }
-
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
