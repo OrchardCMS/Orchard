@@ -12,6 +12,8 @@ namespace Orchard.SecureSocketsLayer.Models {
     }
 
     public class SslSettingsPart : ContentPart {
+        public const string CacheKey = "SslSettingsPart";
+
         public string Urls
         {
             get { return this.As<InfosetPart>().Get<SslSettingsPart>("Urls"); }

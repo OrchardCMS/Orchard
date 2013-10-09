@@ -13,10 +13,15 @@ namespace Orchard.SecureSocketsLayer.Services {
     public class SecureSocketsLayerService : ISecureSocketsLayerService {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
 
-        public SecureSocketsLayerService(IWorkContextAccessor workContextAccessor, ICacheManager cacheManager) {
+        public SecureSocketsLayerService(
+            IWorkContextAccessor workContextAccessor, 
+            ICacheManager cacheManager,
+            ISignals signals) {
             _workContextAccessor = workContextAccessor;
             _cacheManager = cacheManager;
+            _signals = signals;
         }
 
         public bool ShouldBeSecure(string actionName, string controllerName, RouteValueDictionary routeValues) {
@@ -186,6 +191,7 @@ namespace Orchard.SecureSocketsLayer.Services {
         private SslSettings GetSettings() {
             return _cacheManager.Get("SslSettings",
                 ctx => {
+                    ctx.Monitor(_signals.When(SslSettingsPart.CacheKey));
                     var settingsPart = _workContextAccessor.GetContext().CurrentSite.As<SslSettingsPart>();
                     return new SslSettings {
                         Urls = settingsPart.Urls,

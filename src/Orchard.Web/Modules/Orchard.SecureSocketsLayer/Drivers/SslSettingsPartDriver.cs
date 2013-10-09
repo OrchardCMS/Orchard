@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
@@ -6,9 +7,11 @@ using Orchard.SecureSocketsLayer.Models;
 
 namespace Orchard.SecureSocketsLayer.Drivers {
     public class SslSettingsPartDriver : ContentPartDriver<SslSettingsPart> {
+        private readonly ISignals _signals;
         private const string TemplateName = "Parts/SecureSocketsLayer.Settings";
 
-        public SslSettingsPartDriver() {
+        public SslSettingsPartDriver(ISignals signals) {
+            _signals = signals;
             T = NullLocalizer.Instance;
         }
 
@@ -25,7 +28,9 @@ namespace Orchard.SecureSocketsLayer.Drivers {
         }
 
         protected override DriverResult Editor(SslSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            if (updater.TryUpdateModel(part, Prefix, null, null)) {
+                _signals.Trigger(SslSettingsPart.CacheKey);
+            }
 
             return Editor(part, shapeHelper);
         }
@@ -37,6 +42,8 @@ namespace Orchard.SecureSocketsLayer.Drivers {
             part.Urls = context.Attribute(elementName, "Urls") ?? "";
             part.InsecureHostName = context.Attribute(elementName, "InsecureHostName") ?? "";
             part.SecureHostName = context.Attribute(elementName, "SecureHostName") ?? "";
+
+            _signals.Trigger(SslSettingsPart.CacheKey);
         }
 
         protected override void Exporting(SslSettingsPart part, ExportContentContext context) {
