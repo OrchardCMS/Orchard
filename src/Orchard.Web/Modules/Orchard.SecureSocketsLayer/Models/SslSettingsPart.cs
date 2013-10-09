@@ -1,31 +1,39 @@
+using System;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.SecureSocketsLayer.Models {
-    public class SslSettingsPart : ContentPart<SslSettingsPartRecord> {
+    public class SslSettingsPart : ContentPart {
         public string Urls
         {
-            get { return Record.Urls; }
-            set { Record.Urls = value; }
+            get { return this.As<InfosetPart>().Get<SslSettingsPart>("Urls"); }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("Urls", value); }
         }
 
         public bool SecureEverything {
-            get { return Record.SecureEverything; }
-            set { Record.SecureEverything = value; }
+            get {
+                var attributeValue = this.As<InfosetPart>().Get<SslSettingsPart>("SecureEverything");
+                return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
+            }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("SecureEverything", value.ToString()); }
         }
 
         public bool CustomEnabled {
-            get { return Record.CustomEnabled; }
-            set { Record.CustomEnabled = value; }
+            get {
+                var attributeValue = this.As<InfosetPart>().Get<SslSettingsPart>("CustomEnabled");
+                return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
+            }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("CustomEnabled", value.ToString()); }
         }
 
         public string SecureHostName {
-            get { return Record.SecureHostName; } 
-            set { Record.SecureHostName = value; }
+            get { return this.As<InfosetPart>().Get<SslSettingsPart>("SecureHostName"); }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("SecureHostName", value); }
         }
 
         public string InsecureHostName {
-            get { return Record.InsecureHostName; }
-            set { Record.InsecureHostName = value; }
+            get { return this.As<InfosetPart>().Get<SslSettingsPart>("InsecureHostName"); }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("InsecureHostName", value); }
         }
     }
 }

@@ -82,11 +82,9 @@
     <Compile Include="Drivers\SslSettingsPartDriver.cs" />
     <Compile Include="Filters\SecureSocketsLayersFilter.cs" />
     <Compile Include="Handlers\SslSettingsPartHandler.cs" />
-    <Compile Include="Migrations.cs" />
     <Compile Include="Models\SslSettingsPart.cs" />
-    <Compile Include="Models\SslSettingsPartRecord.cs" />
     <Compile Include="Services\ISecureSocketsLayerService.cs" />
-    <Compile Include="Services\SecuredSocketsLayerService.cs" />
+    <Compile Include="Services\SecureSocketsLayerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\SecureSocketsLayer.Settings.cshtml" />

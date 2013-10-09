@@ -6,10 +6,9 @@ using Orchard.SecureSocketsLayer.Models;
 
 namespace Orchard.SecureSocketsLayer.Handlers {
     public class SslSettingsPartHandler : ContentHandler {
-        public SslSettingsPartHandler(IRepository<SslSettingsPartRecord> repository) {
+        public SslSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<SslSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
         }
 
         public Localizer T { get; set; }
