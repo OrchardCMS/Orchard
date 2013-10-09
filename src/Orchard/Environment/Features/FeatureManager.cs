@@ -149,11 +149,11 @@ namespace Orchard.Environment.Features {
 					                      var states = featuresState.Where(featureState => featureState.Key.Id.Equals(fId, StringComparison.OrdinalIgnoreCase)).ToList();
 
 					                      if (states.Count == 0) {
-						                      throw new ApplicationException("Failed to get state for feature " + fId);
+											  throw new OrchardException(T("Failed to get state for feature {0}", fId));
 					                      }
 
 					                      if (states.Count > 1) {
-						                      throw new ApplicationException("Found " + states.Count + " states for feature " + fId);
+											  throw new OrchardException(T("Found {0} states for feature {1}", states.Count, fId));
 					                      }
 
 					                      return states[0];
