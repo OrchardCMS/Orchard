@@ -112,6 +112,7 @@ namespace Orchard.Modules.Controllers {
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
+                .Where(extensionDescriptor => extensionDescriptor.Id != "Orchard.Setup")
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
