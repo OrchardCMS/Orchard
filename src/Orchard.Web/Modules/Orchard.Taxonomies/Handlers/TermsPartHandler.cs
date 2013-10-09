@@ -30,8 +30,8 @@ namespace Orchard.Taxonomies.Handlers {
 
             // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
             OnInitialized<TermsPart>((context, part) => InitializerTermsLoader(part));
-            OnLoaded<TermsPart>((context, part) => InitializerTermsLoader(part));
-            OnUpdated<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnLoading<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnUpdating<TermsPart>((context, part) => InitializerTermsLoader(part));
 
             OnIndexing<TermsPart>(
                 (context, part) => {
