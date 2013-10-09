@@ -150,7 +150,7 @@ namespace Orchard.SecureSocketsLayer.Services {
             return requestContext;
         }
 
-        private static bool IsRequestProtected(string path, string appPath, SslSettingsPart settings) {
+        private static bool IsRequestProtected(string path, string appPath, SslSettings settings) {
             var match = false;
             var sr = new StringReader(settings.Urls ?? "");
             string pattern;
@@ -183,8 +183,18 @@ namespace Orchard.SecureSocketsLayer.Services {
                 : string.Equals(requestPath, pattern, StringComparison.OrdinalIgnoreCase);
         }
 
-        private SslSettingsPart GetSettings() {
-            return _cacheManager.Get("SslSettings", ctx => _workContextAccessor.GetContext().CurrentSite.As<SslSettingsPart>());
+        private SslSettings GetSettings() {
+            return _cacheManager.Get("SslSettings",
+                ctx => {
+                    var settingsPart = _workContextAccessor.GetContext().CurrentSite.As<SslSettingsPart>();
+                    return new SslSettings {
+                        Urls = settingsPart.Urls,
+                        CustomEnabled = settingsPart.CustomEnabled,
+                        SecureEverything = settingsPart.SecureEverything,
+                        SecureHostName = settingsPart.SecureHostName,
+                        InsecureHostName = settingsPart.InsecureHostName
+                    };
+                });
         }
 
         private string MakeInsecure(string path) {

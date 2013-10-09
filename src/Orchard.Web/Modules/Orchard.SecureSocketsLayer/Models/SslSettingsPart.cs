@@ -3,6 +3,14 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.SecureSocketsLayer.Models {
+    internal class SslSettings {
+        public string Urls { get; set; }
+        public bool SecureEverything { get; set; }
+        public bool CustomEnabled { get; set; }
+        public string SecureHostName { get; set; }
+        public string InsecureHostName { get; set; }
+    }
+
     public class SslSettingsPart : ContentPart {
         public string Urls
         {
