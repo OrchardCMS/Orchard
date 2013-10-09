@@ -21,6 +21,10 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnInitializing = handler });
         }
 
+        protected void OnInitialized<TPart>(Action<InitializingContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnInitialized = handler });
+        }
+
         protected void OnCreating<TPart>(Action<CreateContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreating = handler });
         }
@@ -103,6 +107,7 @@ namespace Orchard.ContentManagement.Handlers {
         class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IContent {
             public Action<ActivatedContentContext, TPart> OnActivated { get; set; }
             public Action<InitializingContentContext, TPart> OnInitializing { get; set; }
+            public Action<InitializingContentContext, TPart> OnInitialized { get; set; }
             public Action<CreateContentContext, TPart> OnCreating { get; set; }
             public Action<CreateContentContext, TPart> OnCreated { get; set; }
             public Action<LoadContentContext, TPart> OnLoading { get; set; }
@@ -124,6 +129,9 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Initializing(InitializingContentContext context, TPart instance) {
                 if (OnInitializing != null) OnInitializing(context, instance);
+            }
+            protected override void Initialized(InitializingContentContext context, TPart instance) {
+                if (OnInitialized != null) OnInitialized(context, instance);
             }
             protected override void Creating(CreateContentContext context, TPart instance) {
                 if (OnCreating != null) OnCreating(context, instance);
@@ -215,6 +223,12 @@ namespace Orchard.ContentManagement.Handlers {
             Initializing(context);
         }
 
+        void IContentHandler.Initialized(InitializingContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Initialized(context);
+            Initialized(context);
+        }
+        
         void IContentHandler.Creating(CreateContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Creating(context);
@@ -352,6 +366,7 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Activated(ActivatedContentContext context) { }
 
         protected virtual void Initializing(InitializingContentContext context) { }
+        protected virtual void Initialized(InitializingContentContext context) { }
 
         protected virtual void Creating(CreateContentContext context) { }
         protected virtual void Created(CreateContentContext context) { }

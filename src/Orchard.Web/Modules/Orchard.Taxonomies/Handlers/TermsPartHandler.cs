@@ -29,8 +29,9 @@ namespace Orchard.Taxonomies.Handlers {
             OnRemoved<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
 
             // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
+            OnInitialized<TermsPart>((context, part) => InitializerTermsLoader(part));
             OnLoaded<TermsPart>((context, part) => InitializerTermsLoader(part));
-            OnCreated<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnUpdated<TermsPart>((context, part) => InitializerTermsLoader(part));
 
             OnIndexing<TermsPart>(
                 (context, part) => {
