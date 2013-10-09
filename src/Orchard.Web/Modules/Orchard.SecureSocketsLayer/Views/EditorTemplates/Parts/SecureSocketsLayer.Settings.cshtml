@@ -26,11 +26,11 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.SecureHostName)">@T("Secure Host Name")</label>
         @Html.TextBoxFor(m => m.SecureHostName, new { @class = "textMedium" })
-        <span class="hint">@T("Provide the host name secure traffic should be redirected to (e.g. secure.mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. secure.127-0-0-1.org.uk:4333). Leave empty to remain on the same host name (not recommended as this can be a security issue).")</span>
+        <span class="hint">@T("Provide the host name secure traffic should be redirected to (e.g. secure.mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. secure.127-0-0-1.org.uk:4333).")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.InsecureHostName)">@T("Insecure Host Name")</label>
         @Html.TextBoxFor(m => m.InsecureHostName, new { @class = "textMedium" })
-        <span class="hint">@T("Provide the host name non-secured traffic should be redirected to (e.g. mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. dev.127-0-0-1.org.uk:4333). Leave empty to remain on the same host name (not recommended as this can be a security issue).")</span>
+        <span class="hint">@T("Provide the host name non-secured traffic should be redirected to (e.g. mydomain.com). Don't include the protocol or anything else than the host name. A port can be specified after a colon if necessary (e.g. dev.127-0-0-1.org.uk:4333).")</span>
     </div>
 </fieldset>
