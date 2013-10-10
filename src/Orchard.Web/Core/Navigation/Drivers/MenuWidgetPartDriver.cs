@@ -115,21 +115,24 @@ namespace Orchard.Core.Navigation.Drivers {
                 else {
                     var topLevelItems = menuItems.ToList();
 
-                    // should the menu be filtered on the currently displayed page ?
-                    if (!part.ShowFullMenu) {
-                        // apply start level by pushing children as top level items. When the start level is
-                        // greater than 1 (ie. below the top level), only menu items along the selected path
-                        // will be displayed.
-                        for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
-                            var temp = new List<MenuItem>();
-                            if (selectedPath != null) {
-                                topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
-                                foreach (var menuItem in topLevelItems) {
-                                    temp.AddRange(menuItem.Items);
-                                }
+                    // apply start level by pushing children as top level items. When the start level is
+                    // greater than 1 (ie. below the top level), only menu items along the selected path
+                    // will be displayed.
+                    for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
+                        var temp = new List<MenuItem>();
+                        // should the menu be filtered on the currently displayed page ?
+                        if (part.ShowFullMenu) {
+                            foreach (var menuItem in topLevelItems) {
+                                temp.AddRange(menuItem.Items);
                             }
-                            topLevelItems = temp;
                         }
+                        else if (selectedPath != null) {
+                            topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
+                            foreach (var menuItem in topLevelItems) {
+                                temp.AddRange(menuItem.Items);
+                            }
+                        }
+                        topLevelItems = temp;
                     }
 
                     // limit the number of levels to display (down from and including the start level)

@@ -44,10 +44,8 @@
         </fieldset>
     </div>
 
-    <div data-controllerid="@Html.FieldIdFor(m => m.Breadcrumb)">
-        <fieldset>
-            @Html.EditorFor(m => m.ShowFullMenu) 
-            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowFullMenu)">@T("No filter on selected page")</label>
-            <span class="hint">@T("Check for the menu to be display without filtering the selected current page.")</span>
-        </fieldset>
-    </div>
+    <fieldset>
+        @Html.EditorFor(m => m.ShowFullMenu) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowFullMenu)">@T("No filter on selected page")</label>
+        <span class="hint">@T("Check for the menu to be display without filtering the selected current page.")</span>
+    </fieldset>
