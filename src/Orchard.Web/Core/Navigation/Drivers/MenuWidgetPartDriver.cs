@@ -115,18 +115,21 @@ namespace Orchard.Core.Navigation.Drivers {
                 else {
                     var topLevelItems = menuItems.ToList();
 
-                    // apply start level by pushing children as top level items. When the start level is
-                    // greater than 1 (ie. below the top level), only menu items along the selected path
-                    // will be displayed.
-                    for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
-                        var temp = new List<MenuItem>();
-                        if (selectedPath != null) {
-                            topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
-                            foreach (var menuItem in topLevelItems) {
-                                temp.AddRange(menuItem.Items);
+                    // should the menu be filtered on the currently displayed page ?
+                    if (!part.ShowFullMenu) {
+                        // apply start level by pushing children as top level items. When the start level is
+                        // greater than 1 (ie. below the top level), only menu items along the selected path
+                        // will be displayed.
+                        for (var i = 0; topLevelItems.Any() && i < part.StartLevel - 1; i++) {
+                            var temp = new List<MenuItem>();
+                            if (selectedPath != null) {
+                                topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
+                                foreach (var menuItem in topLevelItems) {
+                                    temp.AddRange(menuItem.Items);
+                                }
                             }
+                            topLevelItems = temp;
                         }
-                        topLevelItems = temp;                        
                     }
 
                     // limit the number of levels to display (down from and including the start level)
@@ -165,6 +168,7 @@ namespace Orchard.Core.Navigation.Drivers {
                         Breadcrumb = part.Breadcrumb,
                         AddCurrentPage = part.AddCurrentPage,
                         AddHomePage = part.AddHomePage,
+                        ShowFullMenu = part.ShowFullMenu,
                         Menus = _menuService.GetMenus(),
                     };
 
@@ -181,6 +185,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.Breadcrumb = model.Breadcrumb;
                 part.AddHomePage = model.AddHomePage;
                 part.AddCurrentPage = model.AddCurrentPage;
+                part.ShowFullMenu = model.ShowFullMenu;
                 part.Menu = _contentManager.Get(model.CurrentMenuId).Record;
             }
 
@@ -193,6 +198,7 @@ namespace Orchard.Core.Navigation.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Breadcrumb", x => part.Breadcrumb = Convert.ToBoolean(x));
             context.ImportAttribute(part.PartDefinition.Name, "AddCurrentPage", x => part.AddCurrentPage = Convert.ToBoolean(x));
             context.ImportAttribute(part.PartDefinition.Name, "AddHomePage", x => part.AddHomePage = Convert.ToBoolean(x));
+            context.ImportAttribute(part.PartDefinition.Name, "ShowFullMenu", x => part.ShowFullMenu = Convert.ToBoolean(x));
 
             context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
         }
@@ -206,6 +212,7 @@ namespace Orchard.Core.Navigation.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Breadcrumb", part.Breadcrumb);
             context.Element(part.PartDefinition.Name).SetAttributeValue("AddCurrentPage", part.AddCurrentPage);
             context.Element(part.PartDefinition.Name).SetAttributeValue("AddHomePage", part.AddHomePage);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowFullMenu", part.ShowFullMenu);
         }
 
     }

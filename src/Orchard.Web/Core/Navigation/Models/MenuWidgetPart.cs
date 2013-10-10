@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Navigation.Models {
@@ -31,6 +32,11 @@ namespace Orchard.Core.Navigation.Models {
         public ContentItemRecord Menu {
             get { return Record.Menu; }
             set { Record.Menu = value; }
+        }
+
+        public bool ShowFullMenu {
+            get { return bool.Parse(this.As<InfosetPart>().Get<MenuWidgetPart>("ShowFullMenu") ?? "false"); }
+            set { this.As<InfosetPart>().Set<MenuWidgetPart>("ShowFullMenu", value.ToString()); }
         }
     }
 }
