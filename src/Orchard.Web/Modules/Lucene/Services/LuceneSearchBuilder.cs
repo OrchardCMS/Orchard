@@ -84,9 +84,9 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, int min, int max) {
+        public ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewIntRange(field, min, max, true, true);
+            _query = NumericRangeQuery.NewIntRange(field, min, max, includeMin, includeMax);
             return this;
         }
 
@@ -96,9 +96,9 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, double min, double max) {
+        public ISearchBuilder WithinRange(string field, double? min, double? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewDoubleRange(field, min, max, true, true);
+            _query = NumericRangeQuery.NewDoubleRange(field, min, max, includeMin, includeMax);
             return this;
         }
 
@@ -112,15 +112,15 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, DateTime min, DateTime max) {
+        public ISearchBuilder WithinRange(string field, DateTime? min, DateTime? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, DateTools.DateToString(min, DateTools.Resolution.MILLISECOND), DateTools.DateToString(max, DateTools.Resolution.MILLISECOND), true, true);
+            _query = new TermRangeQuery(field, min.HasValue ? DateTools.DateToString(min.Value, DateTools.Resolution.MILLISECOND) : null, max.HasValue ? DateTools.DateToString(max.Value, DateTools.Resolution.MILLISECOND) : null, includeMin, includeMax);
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, string min, string max) {
+        public ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(max.ToLower()), true, true);
+            _query = new TermRangeQuery(field, min != null ? QueryParser.Escape(min.ToLower()) : null, max != null ? QueryParser.Escape(max.ToLower()) : null, includeMin, includeMax);
             return this;
         }
 

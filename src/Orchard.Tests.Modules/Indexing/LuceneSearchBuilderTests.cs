@@ -674,5 +674,75 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(speak.Or(michael).Count(), Is.EqualTo(4));
             Assert.That(speak.Xor(michael).Count(), Is.EqualTo(3));
         }
+
+        [Test]
+        public void ShouldAcceptNoMin() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("string", "foo"));
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
+            _provider.Store("default", _provider.New(3).Add("number", 123.456));
+            _provider.Store("default", _provider.New(4).Add("integer", 123));
+
+            Assert.That(SearchBuilder.WithinRange("string", null, "foobar").Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("date", null, new DateTime(2010, 05, 29, 12, 30, 30)).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("number", null, 123.4567).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("integer", null, 124).Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldAcceptNoMax() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("string", "foo"));
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
+            _provider.Store("default", _provider.New(3).Add("number", 123.456));
+            _provider.Store("default", _provider.New(4).Add("integer", 123));
+
+            Assert.That(SearchBuilder.WithinRange("string", "fo", null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("date", new DateTime(2010, 05, 27, 12, 30, 30), null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("number", 123.45, null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("integer", 122, null).Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldIncludeBoudaries() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("string", "foo"));
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
+            _provider.Store("default", _provider.New(3).Add("number", 123.456));
+            _provider.Store("default", _provider.New(4).Add("integer", 123));
+
+            Assert.That(SearchBuilder.WithinRange("string", "foo", null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 30), null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("number", 123.456, null).Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithinRange("integer", 123, null).Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldNotIncludeLowerBoudary() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("string", "foo"));
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
+            _provider.Store("default", _provider.New(3).Add("number", 123.456));
+            _provider.Store("default", _provider.New(4).Add("integer", 123));
+
+            Assert.That(SearchBuilder.WithinRange("string", "foo", null, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 30), null, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("number", 123.456, null, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("integer", 123, null, false).Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldNotIncludeUpperBoudary() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("string", "foo"));
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
+            _provider.Store("default", _provider.New(3).Add("number", 123.456));
+            _provider.Store("default", _provider.New(4).Add("integer", 123));
+
+            Assert.That(SearchBuilder.WithinRange("string", null, "foo", true, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("date", null, new DateTime(2010, 05, 28, 12, 30, 30), true, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("number", null, 123.456, true, false).Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithinRange("integer", null, 123, true, false).Count(), Is.EqualTo(0));
+        }
     }
 }
