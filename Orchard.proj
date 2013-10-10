@@ -290,6 +290,7 @@
   </Target>
   <Target Name="Package-Zip">
     <ItemGroup>
+    
       <Zip-Exclude Include="
         $(MSBuildProjectDirectory)\src\**\bin\**\*;
         $(MSBuildProjectDirectory)\src\**\obj\**\*;
@@ -302,7 +303,7 @@
         $(MSBuildProjectDirectory)\**\*.hgignore;
         $(MSBuildProjectDirectory)\**\*.hg*\**\*;
         $(LibFolder)\nunit\addins\**\*;
-        " />
+        " Exclude="$(MSBuildProjectDirectory)\src\Orchard.Azure\Orchard.Azure.CloudService\*Content\**\*" />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
 
