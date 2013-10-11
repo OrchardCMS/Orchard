@@ -52,11 +52,10 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(blogs);
 
-            dynamic viewModel = Shape.ViewModel()
+            var viewModel = Shape.ViewModel()
                 .ContentItems(list);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         public ActionResult Item(int blogId, PagerParameters pagerParameters) {

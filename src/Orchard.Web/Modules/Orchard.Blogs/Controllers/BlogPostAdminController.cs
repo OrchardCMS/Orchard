@@ -47,10 +47,9 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            var model = Services.ContentManager.BuildEditor(blogPost);
             
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -85,8 +84,7 @@ namespace Orchard.Blogs.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             if (publish) {
@@ -114,9 +112,8 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, post, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = Services.ContentManager.BuildEditor(post);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            var model = Services.ContentManager.BuildEditor(post);
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -163,8 +160,7 @@ namespace Orchard.Blogs.Controllers {
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             conditionallyPublish(blogPost.ContentItem);

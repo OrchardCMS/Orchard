@@ -14,12 +14,6 @@ namespace Orchard.Recipes.Services {
         private const string WebConfig = 
 @"
 <configuration>
-  <system.web>
-    <httpHandlers>
-      <clear />
-      <add path=""*"" verb=""*"" type=""System.Web.HttpNotFoundHandler""/>
-    </httpHandlers>
-  </system.web>
   <system.webServer>
     <handlers accessPolicy=""Script"">
       <clear/>

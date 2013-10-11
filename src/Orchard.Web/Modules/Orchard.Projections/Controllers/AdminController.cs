@@ -248,7 +248,7 @@ namespace Orchard.Projections.Controllers {
             var list = Shape.List();
             list.AddRange(contentShapes);
 
-            return View((object)list);
+            return View(list);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

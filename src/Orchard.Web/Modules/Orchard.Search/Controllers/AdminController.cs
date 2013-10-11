@@ -66,13 +66,12 @@ namespace Orchard.Search.Controllers {
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
 
-            dynamic viewModel = Services.New.ViewModel()
+            var viewModel = Services.New.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .SearchText(searchText);
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
     }
 }

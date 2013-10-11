@@ -54,9 +54,8 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(blog);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            var model = Services.ContentManager.BuildEditor(blog);
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -67,12 +66,11 @@ namespace Orchard.Blogs.Controllers {
             var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            dynamic model = _contentManager.UpdateEditor(blog, this);
+            var model = _contentManager.UpdateEditor(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             _contentManager.Publish(blog.ContentItem);
@@ -88,9 +86,8 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(blog);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            var model = Services.ContentManager.BuildEditor(blog);
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -121,11 +118,10 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.UpdateEditor(blog, this);
+            var model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             _contentManager.Publish(blog);
@@ -160,10 +156,9 @@ namespace Orchard.Blogs.Controllers {
                             return blog;
                         }));
 
-            dynamic viewModel = Services.New.ViewModel()
+            var viewModel = Services.New.ViewModel()
                 .ContentItems(list);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return View(viewModel);
         }
 
         public ActionResult Item(int blogId, PagerParameters pagerParameters) {
@@ -176,7 +171,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
             var blogPostsShapes = blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")).ToArray();
 
-            dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
+            var blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
 
             var list = Shape.List();
             list.AddRange(blogPostsShapes);
@@ -185,8 +180,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)blog);
+            return View(blog);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

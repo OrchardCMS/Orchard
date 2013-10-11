@@ -52,8 +52,7 @@ namespace Orchard.Core.Settings.Controllers {
                 model = Services.ContentManager.BuildEditor(site);
             }
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Index")]
@@ -62,7 +61,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            dynamic model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
+            var model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
 
             GroupInfo groupInfo = null;
 
@@ -83,8 +82,7 @@ namespace Orchard.Core.Settings.Controllers {
                 Services.TransactionManager.Cancel();
                 model.GroupInfo = groupInfo;
 
-                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-                return View((object)model);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Settings updated"));

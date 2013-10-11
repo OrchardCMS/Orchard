@@ -32,8 +32,8 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            dynamic model = _contentManager.BuildDisplay(contentItem);
-            return View((object)model);
+            var model = _contentManager.BuildDisplay(contentItem);
+            return View(model);
         }
 
         // /Contents/Item/Preview/72
@@ -56,8 +56,8 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            dynamic model = _contentManager.BuildDisplay(contentItem);
-            return View((object)model);
+            var model = _contentManager.BuildDisplay(contentItem);
+            return View(model);
         }
     }
 }

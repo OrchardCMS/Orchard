@@ -10,10 +10,10 @@ namespace Orchard.Environment.Extensions.Compilers {
 
             _codeCompilerType = GetDefaultCompilerTypeForLanguage("C#");
 
-            // NOTE: This code could be used to define a compilation flag with the current Orchar version 
+            // NOTE: This code could be used to define a compilation flag with the current Orchard version 
             // but it's not compatible with Medium Trust
-            // var orchardVersion = new AssemblyName(typeof(IDependency).Assembly.FullName).Version;
-            // _codeCompilerType.CompilerParameters.CompilerOptions += string.Format("/define:ORCHARD_{0}_{1}", orchardVersion.Major, orchardVersion.Minor);
+            var orchardVersion = new AssemblyName(typeof(IDependency).Assembly.FullName).Version;
+            _codeCompilerType.CompilerParameters.CompilerOptions += string.Format("/define:ORCHARD_{0}_{1}", orchardVersion.Major, orchardVersion.Minor);
         }
 
         public IOrchardHostContainer HostContainer { get; set; }
