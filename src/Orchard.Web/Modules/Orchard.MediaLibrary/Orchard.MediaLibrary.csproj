@@ -337,9 +337,6 @@
   <ItemGroup>
     <Content Include="Views\Parts\MediaLibrary.Navigation.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts.Image.Edit.cshtml" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
