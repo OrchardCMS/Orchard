@@ -131,8 +131,8 @@ namespace Orchard.MediaProcessing.Providers.Filters {
                         _PadColor: Shape.Textbox(
                             Id: "padcolor", Name: "PadColor",
                             Title: T("Pad Color"),
-                            Value: "#ffffff",
-                            Description: T("The background color to use to pad the image. Named color or hex value."),
+                            Value: "",
+                            Description: T("The background color to use to pad the image e.g., #ffffff, red. Leave empty to keep transparency."),
                             Classes: new[] {"text small"})
                         );
 
