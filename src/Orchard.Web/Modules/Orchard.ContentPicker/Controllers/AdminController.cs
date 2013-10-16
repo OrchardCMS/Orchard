@@ -146,6 +146,7 @@ namespace Orchard.ContentPicker.Controllers {
             // retain the parameter in the pager links
             RouteData.Values["Options.SelectedFilter"] = model.Options.SelectedFilter;
             RouteData.Values["Options.OrderBy"] = model.Options.OrderBy.ToString();
+            RouteData.Values["Options.ContentsStatus"] = model.Options.ContentsStatus.ToString();
 
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }

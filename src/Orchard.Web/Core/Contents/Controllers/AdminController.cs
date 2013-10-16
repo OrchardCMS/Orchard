@@ -56,7 +56,24 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
-            var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            var versionOptions = VersionOptions.Latest;
+            switch (model.Options.ContentsStatus)
+            {
+                case ContentsStatus.Published:
+                    versionOptions = VersionOptions.Published;
+                    break;
+                case ContentsStatus.Draft:
+                    versionOptions = VersionOptions.Draft;
+                    break;
+                case ContentsStatus.AllVersions:
+                    versionOptions = VersionOptions.AllVersions;
+                    break;
+                default:
+                    versionOptions = VersionOptions.Latest;
+                    break;
+            }
+
+            var query = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -113,6 +130,7 @@ namespace Orchard.Core.Contents.Controllers {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
+                routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 }

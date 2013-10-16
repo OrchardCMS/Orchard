@@ -32,10 +32,12 @@ namespace Orchard.Core.Contents.ViewModels {
         public ContentOptions() {
             OrderBy = ContentsOrder.Modified;
             BulkAction = ContentsBulkAction.None;
+            ContentsStatus = ContentsStatus.Latest;
         }
         public string SelectedFilter { get; set; }
         public IEnumerable<KeyValuePair<string, string>> FilterOptions { get; set; }
         public ContentsOrder OrderBy { get; set; }
+        public ContentsStatus ContentsStatus { get; set; }
         public ContentsBulkAction BulkAction { get; set; }
     }
 
@@ -43,6 +45,14 @@ namespace Orchard.Core.Contents.ViewModels {
         Modified,
         Published,
         Created
+    }
+
+    public enum ContentsStatus
+    {
+        Draft,
+        Published,
+        AllVersions,
+        Latest
     }
 
     public enum ContentsBulkAction {

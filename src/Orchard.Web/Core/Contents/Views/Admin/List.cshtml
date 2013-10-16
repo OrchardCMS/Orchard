@@ -39,6 +39,13 @@
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
         </select>
+        <label for="contentResults" class="bulk-order">@T("Filter by")</label>
+        <select id="contentResults" name="Options.ContentsStatus">
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Latest, T("latest").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Published, T("published").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.Draft, T("unpublished").ToString())
+            @Html.SelectOption((ContentsStatus)Model.Options.ContentsStatus, ContentsStatus.AllVersions, T("all versions").ToString())
+        </select>
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
