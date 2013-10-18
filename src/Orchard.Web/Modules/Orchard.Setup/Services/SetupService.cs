@@ -141,6 +141,9 @@ namespace Orchard.Setup.Services {
                         throw new OrchardException(T("A previous Orchard installation was detected in this database with this table prefix."));
                     }
 
+                    // Make a workaround to avoid the Transaction issue for PostgreSQL
+                    environment.Resolve<ITransactionManager>().RequireNew();
+
                     var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
 
                     reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");

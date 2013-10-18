@@ -195,6 +195,8 @@
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
     <Compile Include="Data\Providers\ISqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlServerStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlStatementProvider.cs" />
+    <Compile Include="Data\Providers\PostgreSqlDataServicesProvider.cs" />
     <Compile Include="DisplayManagement\Arguments.cs" />
     <Compile Include="Data\Bags\SConvert.cs" />
     <Compile Include="Data\Bags\Serialization\IBagSerializer.cs" />
