@@ -41,7 +41,7 @@ namespace Orchard.DisplayManagement.Descriptors {
         }
 
         public bool IsLayoutZone() {
-            return GetZone().StartsWith("/");
+            return Location.StartsWith("/");
         }
 
         public string GetTab() {

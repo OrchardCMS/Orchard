@@ -7,6 +7,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
         [Test]
         public void ZoneShouldBeParsed() {
+            Assert.That(new PlacementInfo { Location = "/Content" }.GetZone(), Is.EqualTo("Content"));
             Assert.That(new PlacementInfo { Location = "Content" }.GetZone(), Is.EqualTo("Content"));
             Assert.That(new PlacementInfo { Location = "Content:5" }.GetZone(), Is.EqualTo("Content"));
             Assert.That(new PlacementInfo { Location = "Content:5#Tab1" }.GetZone(), Is.EqualTo("Content"));
@@ -23,7 +24,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             Assert.That(new PlacementInfo { Location = "Content:5@Group1" }.GetPosition(), Is.EqualTo("5"));
             Assert.That(new PlacementInfo { Location = "Content:5@Group1#Tab1" }.GetPosition(), Is.EqualTo("5"));
         }
-
 
         [Test]
         public void LayoutZoneShouldBeParsed() {
