@@ -8,7 +8,6 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.MediaProcessing.Descriptors.Filter;
 using Orchard.MediaProcessing.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.MediaProcessing.Providers.Filters {
     public class ResizeFilter : IImageFilterProvider {
@@ -72,7 +71,7 @@ namespace Orchard.MediaProcessing.Providers.Filters {
             if (context.Media.CanSeek) {
                 context.Media.Seek(0, SeekOrigin.Begin);
             }
-            ImageBuilder.Current.Build(context.Media, result, settings);
+            ImageBuilder.Current.Build(context.Media, result, settings, true);
             context.Media = result;
         }
 
