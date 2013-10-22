@@ -27,6 +27,14 @@ namespace Orchard.Blogs.Routing {
                     return false;
                 }
 
+                try {
+                    // is this a valid date ?
+                    archiveData.ToDateTime();
+                }
+                catch {
+                    return false;
+                }
+
                 return _blogPathConstraint.FindPath(path) != null;
             }
 
