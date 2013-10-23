@@ -42,7 +42,7 @@ namespace Orchard.CustomForms.Controllers {
             if (options == null)
                 options = new CustomFormIndexOptions();
 
-            var query = Services.ContentManager.Query().ForType("CustomForm", "CustomFormWidget");
+            var query = Services.ContentManager.Query().ForType("CustomForm", "CustomFormWidget").ForVersion(VersionOptions.Latest);
 
             switch (options.Filter) {
                 case CustomFormFilter.All:

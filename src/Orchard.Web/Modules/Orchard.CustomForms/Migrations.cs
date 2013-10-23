@@ -45,6 +45,14 @@ namespace Orchard.CustomForms {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("CustomForm", cfg =>
+                cfg.Draftable(false)
+                );
+
+            return 3;
+        }
+
         public void Uninstall() {
             ContentDefinitionManager.DeleteTypeDefinition("CustomForm");
         }
