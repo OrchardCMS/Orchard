@@ -17,7 +17,6 @@ $(function () {
         var itemsPerColumn = Math.ceil(listHeight / itemSize);
 
         var pageCount = itemsPerRow * itemsPerColumn;
-        alert(pageCount);
 
         function mediaPartViewModel(data) {
             var self = this;
