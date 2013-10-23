@@ -150,6 +150,7 @@ $(function () {
                         $.ajax({
                             type: "GET",
                             url: url,
+                            cache: false
                         }).done(function(data) {
                             newValue.summary(data);
                         });
