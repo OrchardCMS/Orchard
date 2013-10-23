@@ -75,6 +75,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         [AlwaysAccessible]
+        [ValidateInput(false)]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl, bool rememberMe = false) {
@@ -120,6 +121,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         [AlwaysAccessible]
+        [ValidateInput(false)]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
@@ -249,6 +251,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
             IUser user;
             if ( (user = _userService.ValidateLostPassword(nonce)) == null ) {
