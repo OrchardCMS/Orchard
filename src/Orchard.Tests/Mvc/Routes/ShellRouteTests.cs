@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -43,6 +45,11 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             rootBuilder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
+            rootBuilder.Register<Func<RouteBase, ShellRoute>>(c => {
+                var context = c.Resolve<IComponentContext>();
+                return new 
+            });
+
             _rootContainer = rootBuilder.Build();
 
             _containerA = _rootContainer.BeginLifetimeScope(
@@ -59,7 +66,7 @@ namespace Orchard.Tests.Mvc.Routes {
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerMatchingLifetimeScope("shell");
                 });
         }
-
+        
         [Test]
         public void FactoryMethodWillCreateShellRoutes() {
             var settings = new ShellSettings { Name = "Alpha" };

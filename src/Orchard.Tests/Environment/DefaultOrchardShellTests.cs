@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
@@ -65,6 +66,8 @@ namespace Orchard.Tests.Environment {
                 Routes = routes;
             }
             public IEnumerable<RouteDescriptor> Routes { get; set; }
+            public void Publish(IEnumerable<RouteDescriptor> routes, Func<IDictionary<string, object>, Task> pipeline) {
+            }
         }
 
         public class StubModelBinderProvider : IModelBinderProvider {

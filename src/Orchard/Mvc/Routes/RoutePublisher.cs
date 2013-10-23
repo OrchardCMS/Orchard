@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -31,7 +32,7 @@ namespace Orchard.Mvc.Routes {
             _extensionManager = extensionManager;
         }
 
-        public void Publish(IEnumerable<RouteDescriptor> routes) {
+        public void Publish(IEnumerable<RouteDescriptor> routes, Func<IDictionary<string, object>, Task> env) {
             var routesArray = routes
                 .OrderByDescending(r => r.Priority)
                 .ToArray();
@@ -51,7 +52,7 @@ namespace Orchard.Mvc.Routes {
 
                 preloading.Add(routeDescriptor.Name, routeDescriptor.Route);
             }
-                
+
 
             using (_routeCollection.GetWriteLock()) {
                 // existing routes are removed while the collection is briefly inaccessable
@@ -60,7 +61,7 @@ namespace Orchard.Mvc.Routes {
                     .Where(sr => sr.ShellSettingsName == _shellSettings.Name)
                     .ToArray();
 
-                foreach(var crop in cropArray) {
+                foreach (var crop in cropArray) {
                     _routeCollection.Remove(crop);
                 }
 
@@ -70,17 +71,17 @@ namespace Orchard.Mvc.Routes {
                     var defaultSessionState = SessionStateBehavior.Default;
 
                     ExtensionDescriptor extensionDescriptor = null;
-                    if(routeDescriptor.Route is Route) {
+                    if (routeDescriptor.Route is Route) {
                         object extensionId;
                         var route = routeDescriptor.Route as Route;
-                        if(route.DataTokens != null && route.DataTokens.TryGetValue("area", out extensionId) || 
+                        if (route.DataTokens != null && route.DataTokens.TryGetValue("area", out extensionId) ||
                            route.Defaults != null && route.Defaults.TryGetValue("area", out extensionId)) {
-                            extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString()); 
+                            extensionDescriptor = _extensionManager.GetExtension(extensionId.ToString());
                         }
                     }
-                    else if(routeDescriptor.Route is IRouteWithArea) {
+                    else if (routeDescriptor.Route is IRouteWithArea) {
                         var route = routeDescriptor.Route as IRouteWithArea;
-                        extensionDescriptor = _extensionManager.GetExtension(route.Area); 
+                        extensionDescriptor = _extensionManager.GetExtension(route.Area);
                     }
 
                     if (extensionDescriptor != null) {
@@ -91,9 +92,9 @@ namespace Orchard.Mvc.Routes {
                     }
 
                     // Route-level setting overrides module-level setting (from manifest).
-                    var sessionStateBehavior = routeDescriptor.SessionState == SessionStateBehavior.Default ? defaultSessionState : routeDescriptor.SessionState ;
+                    var sessionStateBehavior = routeDescriptor.SessionState == SessionStateBehavior.Default ? defaultSessionState : routeDescriptor.SessionState;
 
-                    var shellRoute = new ShellRoute(routeDescriptor.Route, _shellSettings, _workContextAccessor, _runningShellTable) {
+                    var shellRoute = new ShellRoute(routeDescriptor.Route, _shellSettings, _workContextAccessor, _runningShellTable, env) {
                         IsHttpRoute = routeDescriptor is HttpRouteDescriptor,
                         SessionState = sessionStateBehavior
                     };
@@ -101,7 +102,7 @@ namespace Orchard.Mvc.Routes {
                     try {
                         _routeCollection.Add(routeDescriptor.Name, shellRoute);
                     }
-                    catch(ArgumentException) {
+                    catch (ArgumentException) {
                         // Named routes can be added multiple times in the case of a module
                         // loaded in multiple tenants. There is no way to ensure a named route
                         // is already registered, thus catching the specific exception.

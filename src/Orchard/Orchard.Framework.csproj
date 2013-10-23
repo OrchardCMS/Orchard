@@ -86,6 +86,12 @@
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\lib\owin\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\lib\owin\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -100,6 +106,9 @@
     </Reference>
     <Reference Include="NHibernate.SqlAzure">
       <HintPath>..\..\lib\nhibernate.sqlazure\NHibernate.SqlAzure.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\lib\owin\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -282,6 +291,10 @@
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeViewLocationCache.cs" />
     <Compile Include="OrchardFatalException.cs" />
+    <Compile Include="Owin\IOwinMiddlewareProvider.cs" />
+    <Compile Include="Owin\OrchardMiddleware.cs" />
+    <Compile Include="Owin\OwinMiddleware.cs" />
+    <Compile Include="Owin\Startup.cs" />
     <Compile Include="Recipes\Events\IRecipeExecuteEventHandler.cs" />
     <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
     <Compile Include="Recipes\Models\Recipe.cs" />
