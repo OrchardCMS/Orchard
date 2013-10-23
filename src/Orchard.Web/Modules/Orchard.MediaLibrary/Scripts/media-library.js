@@ -8,6 +8,17 @@ var baseViewModel = function() {
 
 $(function () {
     (function (settings) {
+
+        var listWidth = $('#media-library-main-list').width();
+        var listHeight = $('#media-library-main-list').height();
+        var itemSize = $('.thumbnail').first().width();
+
+        var itemsPerRow = Math.floor(listWidth / itemSize);
+        var itemsPerColumn = Math.ceil(listHeight / itemSize);
+
+        var pageCount = itemsPerRow * itemsPerColumn;
+        alert(pageCount);
+
         function mediaPartViewModel(data) {
             var self = this;
 
@@ -156,7 +167,7 @@ $(function () {
                     return settings.mediaItemsActionUrl + '?folderPath=' + encodeURIComponent(f) + '&skip=' + skip + '&count=' + count + '&order=' + order + '&mediaType=' + mediaType;
                 };
                 
-                self.getMediaItems(20);
+                self.getMediaItems(pageCount);
             };
 
             self.selectFolder = function(folderPath) {
@@ -173,7 +184,7 @@ $(function () {
                 
                 self.results([]);
                 self.displayed(null);
-                self.getMediaItems(20);
+                self.getMediaItems(pageCount);
             };
 
             self.toggleSelect = function(searchResult, force) {
@@ -204,7 +215,7 @@ $(function () {
             self.scrolled = function(data, event) {
                 var elem = event.target;
                 if (elem.scrollTop > (elem.scrollHeight - elem.offsetHeight - 300)) {
-                    self.getMediaItems(20);
+                    self.getMediaItems(pageCount, true);
                 }
             };
 
