@@ -184,7 +184,15 @@ namespace Upgrade.Controllers {
                         if (contentField != null && contentField.Url != null) {
                             string url = Convert.ToString(contentField.Url);
                             var filename = Path.GetFileName(url);
-                            var media = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => filename == x.FileName).Slice(0, 1).FirstOrDefault();
+                            string folder = Path.GetDirectoryName(url);
+                            var mediaItems = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => filename == x.FileName).List().ToList();
+                            MediaPart media = null;
+
+                            // in case multiple media have the same filename find based on the folder
+                            if (mediaItems.Count() > 1) {
+                                media = mediaItems.FirstOrDefault(x => folder.EndsWith(x.FolderPath));
+                            }
+
                             if (media != null) {
                                 contentField.Url = "{" + media.Id + "}";
                             }
