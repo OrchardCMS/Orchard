@@ -62,10 +62,11 @@ namespace Orchard.Workflows.Services {
             // and any running workflow paused on this kind of activity for this content
             // it's important to return activities at this point as a workflow could be awaiting 
             // on several ones. When an activity is restarted, all the other ones of the same workflow are cancelled.
-            awaitingActivities.AddRange(_awaitingActivityRepository.Table.Where(
-                x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false && (target.ContentItem == null || (x.WorkflowRecord.ContentItemRecord == target.ContentItem.Record))
-                ).ToList()
-            );
+            var awaitingQuery = _awaitingActivityRepository.Table.Where(x => x.ActivityRecord.Name == name && x.ActivityRecord.Start == false);
+            awaitingQuery = target == null || target.ContentItem == null
+                    ? awaitingQuery.Where(x => x.WorkflowRecord.ContentItemRecord == null)
+                    : awaitingQuery.Where(x => x.WorkflowRecord.ContentItemRecord == target.ContentItem.Record);
+            awaitingActivities.AddRange(awaitingQuery.ToList());
 
             // if no activity record is matching the event, do nothing
             if (!startedWorkflows.Any() && !awaitingActivities.Any()) {
@@ -116,7 +117,9 @@ namespace Orchard.Workflows.Services {
                 var workflowRecord = new WorkflowRecord {
                     WorkflowDefinitionRecord = activityRecord.WorkflowDefinitionRecord,
                     State = "{}",
-                    ContentItemRecord = workflowContext.Content.ContentItem.Record
+                    ContentItemRecord = workflowContext.Content == null || workflowContext.Content.ContentItem == null
+                            ? null
+                            : workflowContext.Content.ContentItem.Record
                 };
 
                 workflowContext.Record = workflowRecord;
