@@ -86,6 +86,10 @@
     <Place Fields_MediaLibraryPicker="Content:after"/>
   </Match>
 
+  <Match DisplayType="Summary">
+    <Place Fields_MediaLibraryPicker_Summary="-"/>
+  </Match>
+  
   <Match DisplayType="SummaryAdmin">
     <Place Fields_MediaLibraryPicker_SummaryAdmin="Content:after"/>
   </Match>
