@@ -209,21 +209,28 @@ namespace Upgrade.Controllers {
                 }
             }
 
+            var processedParts = new List<string>();
             foreach (var match in matches) {
-                
+
+                // process each part only once as they could be used by multiple content types
+                if (processedParts.Contains(match.Part.PartDefinition.Name)) {
+                    continue;
+                }
+
+                processedParts.Add(match.Part.PartDefinition.Name);
+
                 string hint, required;
                 match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Hint", out hint);
                 match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Required", out required);
 
-                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name,
-                                                              cfg => cfg.RemoveField(match.Field.Name));
+                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name, cfg => cfg.RemoveField(match.Field.Name));
                 
                 _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name, cfg => cfg
                     .WithField(match.Field.Name, builder => builder
                         .OfType("MediaLibraryPickerField")
                         .WithDisplayName(match.Field.DisplayName)
-                        .WithSetting("MediaLibraryPickerFieldSettings.Hint", hint)
-                        .WithSetting("MediaLibraryPickerFieldSettings.Required", required)
+                        .WithSetting("MediaLibraryPickerFieldSettings.Hint", hint ?? "")
+                        .WithSetting("MediaLibraryPickerFieldSettings.Required", required ?? "")
                         .WithSetting("MediaLibraryPickerFieldSettings.Multiple", false.ToString(CultureInfo.InvariantCulture))
                         .WithSetting("MediaLibraryPickerFieldSettings.DisplayedContentTypes", String.Empty)
                 ));
