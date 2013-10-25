@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -380,7 +381,7 @@ namespace Orchard.Workflows.Controllers {
 
             var model = new UpdatedActivityModel {
                 ClientId = clientId,
-                Data = formValues
+                Data = new NameValueCollection(formValues)
             };
 
             TempData["UpdatedViewModel"] = model;
