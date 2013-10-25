@@ -1,0 +1,26 @@
+﻿@using Orchard.Core.Contents
+@using Orchard.MediaLibrary.Fields
+@using Orchard.Utility.Extensions;
+
+@{
+    var field = (MediaLibraryPickerField) Model.ContentField;
+    string name = field.DisplayName;
+    var mediaParts = field.MediaParts;
+
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+@if (mediaParts.Any()) {
+<span class="name">@name:</span>
+<p class="media-@name.HtmlClassify()">    
+        @foreach (var contentItem in mediaParts) {
+            if (Authorizer.Authorize(Permissions.EditContent, contentItem)) {
+                <a href="@Url.ItemEditUrl(contentItem, new {returnUrl})">
+                    @Display(BuildDisplay(contentItem, "Thumbnail"))
+                </a>
+            }
+            else {
+                @Display(BuildDisplay(contentItem, "Thumbnail"))
+            }
+        }
+</p>
+}
