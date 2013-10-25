@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -10,20 +8,17 @@ using Autofac;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
-using Orchard.Mvc.Filters;
 using Orchard.Mvc.Routes;
-using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
             moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
 
-            moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
-            moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();
-            moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().InstancePerDependency();
+            moduleBuilder.Register(HttpContextBaseFactory).As<HttpContextBase>().InstancePerDependency();
+            moduleBuilder.Register(RequestContextFactory).As<RequestContext>().InstancePerDependency();
+            moduleBuilder.Register(UrlHelperFactory).As<UrlHelper>().InstancePerDependency();
         }
 
         private static bool IsRequestValid() {

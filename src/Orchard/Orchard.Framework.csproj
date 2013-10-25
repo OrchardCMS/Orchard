@@ -871,7 +871,7 @@
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
-    <Compile Include="Mvc\Filters\FilterResolvingActionInvoker.cs" />
+    <Compile Include="Mvc\Filters\OrchardFilterProvider.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />

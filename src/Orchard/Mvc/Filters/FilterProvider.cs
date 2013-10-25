@@ -1,15 +1,19 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace Orchard.Mvc.Filters {
     public interface IFilterProvider : IDependency {
+        [Obsolete]
         void AddFilters(FilterInfo filterInfo);
     }
 
     public abstract class FilterProvider : IFilterProvider {
+        [Obsolete]
         void IFilterProvider.AddFilters(FilterInfo filterInfo) {
             AddFilters(filterInfo);
         }
 
+        [Obsolete]
         protected virtual void AddFilters(FilterInfo filterInfo) {
             if (this is IAuthorizationFilter)
                 filterInfo.AuthorizationFilters.Add(this as IAuthorizationFilter);

@@ -28,6 +28,7 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.DataAnnotations;
+using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
@@ -144,6 +145,7 @@ namespace Orchard.Environment {
             }
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+            FilterProviders.Providers.Add(new OrchardFilterProvider());
 
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new DefaultOrchardWebApiHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpHttpControllerActivator(GlobalConfiguration.Configuration));
