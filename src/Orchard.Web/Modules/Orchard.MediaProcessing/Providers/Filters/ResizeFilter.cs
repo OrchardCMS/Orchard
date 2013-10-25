@@ -41,7 +41,10 @@ namespace Orchard.MediaProcessing.Providers.Filters {
 
             switch (mode) {
                 case "max": settings.Mode = FitMode.Max; break;
-                case "pad": settings.Mode = FitMode.Pad; break;
+                case "pad": 
+                    settings.Mode = FitMode.Pad; 
+                    settings.Scale = ScaleMode.Both; 
+                    break;
                 case "crop": settings.Mode = FitMode.Crop; break;
                 case "stretch": settings.Mode = FitMode.Stretch; break;
             }
