@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json.Linq;
@@ -381,7 +383,7 @@ namespace Orchard.Workflows.Controllers {
 
             var model = new UpdatedActivityModel {
                 ClientId = clientId,
-                Data = new NameValueCollection(formValues)
+                Data = HttpUtility.JavaScriptStringEncode(FormParametersHelper.ToJsonString(formValues))
             };
 
             TempData["UpdatedViewModel"] = model;

@@ -15,7 +15,7 @@ namespace Orchard.Workflows.ViewModels {
 
     public class UpdatedActivityModel {
         public string ClientId { get; set; }
-        public NameValueCollection Data { get; set; }
+        public string Data { get; set; }
 
     }
 }
