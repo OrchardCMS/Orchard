@@ -125,6 +125,12 @@
     margin-left: -302px; /* width + borders */
 }
 
+#activity-toolbox .bulk-actions {
+    margin-top: 10px; 
+    margin-bottom: 5px; 
+    margin-left: 5px;
+}
+
     #activity-toolbox .activity-toolbox-item {
         display: block;
         margin: 5px 5px;
