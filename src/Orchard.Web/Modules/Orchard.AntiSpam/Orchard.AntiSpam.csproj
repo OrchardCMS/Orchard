@@ -106,7 +106,6 @@
     <Compile Include="Handlers\TypePadSettingsPartHandler.cs" />
     <Compile Include="Handlers\SpamFilterPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\AkismetSettingsPartRecord.cs" />
     <Compile Include="Models\AkismetSettingsPart.cs" />
     <Compile Include="Models\CommentCheckContext.cs" />
     <Compile Include="Models\ReCaptchaSettingsPart.cs" />

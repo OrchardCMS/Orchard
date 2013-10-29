@@ -76,6 +76,16 @@ namespace Upgrade.Controllers {
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"), null);
 
 
+            // AkismetSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Set("AkismetSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
+                    site.As<InfosetPart>().Set("AkismetSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"), null);
+
+
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
