@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using System.Web.Mvc;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Localization;
@@ -44,6 +45,7 @@ namespace Upgrade.Controllers {
 
             var site = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>();
 
+            // SiteSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettingsPartRecord"),
                 (reader, connection) => {
                     site.HomePage = (string)reader["HomePage"];
@@ -57,14 +59,23 @@ namespace Upgrade.Controllers {
                     site.SuperUser = (string)reader["SuperUser"];
                 });
 
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettingsPartRecord"), null);
+
+            // SiteSettings2PartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettings2PartRecord"),
                 (reader, connection) => {
                     site.BaseUrl = (string)reader["BaseUrl"];
                 });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettingsPartRecord"), null);
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettings2PartRecord"), null);
-            
+
+            // ThemeSiteSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"),
+                (reader, connection) => site.As<InfosetPart>().Set("ThemeSiteSettingsPart", "CurrentThemeName", (string)reader["CurrentThemeName"]));
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"), null);
+
+
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
