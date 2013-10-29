@@ -74,6 +74,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Controllers\ContentPickerController.cs" />
+    <Compile Include="Controllers\InfosetController.cs" />
     <Compile Include="Controllers\TaxonomyController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -134,7 +135,7 @@
     <Content Include="Views\ContentPicker\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <Content Include="Views\Infoset\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

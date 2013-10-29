@@ -15,7 +15,6 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Settings.Descriptor.Records;
-using Orchard.Core.Settings.Handlers;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Services;

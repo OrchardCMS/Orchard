@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions; 
 using System.Diagnostics.CodeAnalysis;
-using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -138,7 +137,7 @@ namespace Orchard.Users.Controllers {
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
-                        var siteUrl = _orchardServices.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+                        var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
                         if(String.IsNullOrWhiteSpace(siteUrl)) {
                             siteUrl = HttpContext.Request.ToRootUrlString();
                         }
@@ -190,7 +189,7 @@ namespace Orchard.Users.Controllers {
                 return View();
             }
 
-            var siteUrl = _orchardServices.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+            var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
             if (String.IsNullOrWhiteSpace(siteUrl)) {
                 siteUrl = HttpContext.Request.ToRootUrlString();
             }

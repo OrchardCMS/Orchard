@@ -7,6 +7,8 @@ using System.Linq;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Services;
@@ -45,6 +47,7 @@ namespace Orchard.Tests.Modules {
 
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<InfosetHandler>().As<IContentHandler>();
             builder.RegisterInstance(new StubLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(_clock).As<IClock>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));

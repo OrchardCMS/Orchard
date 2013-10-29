@@ -1,0 +1,67 @@
+﻿@{
+    Script.Require("jQuery");
+    Layout.Title = T("Migrate Infosets").ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
+    <fieldset>
+        <legend>@T("Migrating Site Settings:")</legend>
+        <span class="hint">@T("This migration step will migrate your Site Settings to Infosets and delete the deprecated records.")</span>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Migrate")</button>
+    </fieldset>
+}
+
+<fieldset>
+    <legend>@T("Migrating Body Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Body Parts to Infosets.")</span>
+</fieldset>
+<fieldset>
+    <button type="button" class="button" id="button-migrate" data-url="@Url.Action("MigrateBody", "Infoset")">@T("Migrate")</button>
+    <div class="message message-Warning" id="message-progress" style="display: none"></div>    
+</fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All content items have been processed").Text)';
+            
+            $('#button-migrate').click(function () {
+                var importUrl = $(this).data('url');
+
+                var processed = 0;
+                $('#message-progress').show();
+
+                var iId = setInterval(function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: importUrl,
+                        async: false,
+                        data: {
+                            __RequestVerificationToken: antiForgeryToken
+                        },
+                        success: function(data) {
+                            console.log('items remaining: ' + data);
+                            processed += Number(data);
+                            
+                            if (Number(data) == 0) {
+                                clearInterval(iId);
+                                $('#message-progress').text(endMessage);
+                            }
+                        },
+                        fail: function(result) {
+                            processed = 0;
+                            console.log("An error occured: " + result);
+                        }
+                    });
+
+                    $('#message-progress').text(processed + ' documents processed ...');
+
+                }, 100);
+                
+            });
+        });
+    </script>
+}

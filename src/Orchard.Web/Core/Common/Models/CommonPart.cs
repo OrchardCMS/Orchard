@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.Core.Common.Utilities;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -27,85 +26,71 @@ namespace Orchard.Core.Common.Models {
         
         public DateTime? CreatedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<CommonPart>("CreatedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = Get("CreatedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<CommonPart>("CreatedUtc", dateTime);
+                Set("CreatedUtc", dateTime);
                 Record.CreatedUtc = value;
             }
         }
 
         public DateTime? PublishedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<CommonPart>("PublishedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = Get("PublishedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<CommonPart>("PublishedUtc", dateTime);
+                Set("PublishedUtc", dateTime);
                 Record.PublishedUtc = value;
             }
         }
 
         public DateTime? ModifiedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<CommonPart>("ModifiedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = Get("ModifiedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<CommonPart>("ModifiedUtc", dateTime);
+                Set("ModifiedUtc", dateTime);
                 Record.ModifiedUtc = value;
-            }
-        }
-
-        CommonPartVersionRecord PartVersionRecord {
-            get {
-                var versionPart = this.As<ContentPart<CommonPartVersionRecord>>();
-                return versionPart == null ? null : versionPart.Record;
             }
         }
 
         public DateTime? VersionCreatedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("CreatedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("CreatedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("CreatedUtc", dateTime);
-                if (PartVersionRecord != null)
-                    PartVersionRecord.CreatedUtc = value;
+                this.As<ContentPart<CommonPartVersionRecord>>().Set("CreatedUtc", dateTime);
             }
         }
 
         public DateTime? VersionPublishedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("PublishedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("PublishedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("PublishedUtc", dateTime);
-                if (PartVersionRecord != null)
-                    PartVersionRecord.PublishedUtc = value;
+                this.As<ContentPart<CommonPartVersionRecord>>().Set("PublishedUtc", dateTime);
             }
         }
 
         public DateTime? VersionModifiedUtc {
             get {
-                var dateTime = this.As<InfosetPart>().Get<ContentPart<CommonPartVersionRecord>>("ModifiedUtc");
-                return dateTime == "" ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("ModifiedUtc");
+                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
             }
             set {
                 string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<InfosetPart>().Set<ContentPart<CommonPartVersionRecord>>("ModifiedUtc", dateTime);
-                if (PartVersionRecord != null)
-                    PartVersionRecord.ModifiedUtc = value;
+                this.As<ContentPart<CommonPartVersionRecord>>().Set("ModifiedUtc", dateTime);
             }
         }
-
     }
 }

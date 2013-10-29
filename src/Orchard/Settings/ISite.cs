@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 
 namespace Orchard.Settings {
     /// <summary>

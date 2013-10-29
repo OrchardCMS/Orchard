@@ -221,8 +221,6 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
-    <Compile Include="Settings\Models\SiteSettings2Part.cs" />
-    <Compile Include="Settings\Models\SiteSettings2PartRecord.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
     <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
@@ -235,7 +233,6 @@
     <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
-    <Compile Include="Settings\Models\SiteSettingsPartRecord.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
     <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
     <Compile Include="Settings\State\ShellStateManager.cs" />
@@ -375,6 +372,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Containers\Services\" />
+    <Folder Include="Settings\Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Web.config" />

@@ -62,7 +62,6 @@ namespace Orchard.Taxonomies.Services {
                 .Query<TaxonomyPart>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, CommonPartRecord>())
                 .List()
                 .FirstOrDefault();
         }
@@ -132,7 +131,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId)
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List();
 
             return TermPart.Sort(result);
@@ -141,7 +139,6 @@ namespace Orchard.Taxonomies.Services {
         public TermPart GetTermByPath(string path) {
             return _contentManager.Query<TermPart, TermPartRecord>()
                 .Join<AutoroutePartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<TitlePartRecord, CommonPartRecord>())
                 .Where(rr => rr.DisplayAlias == path)
                 .List()
                 .FirstOrDefault();
@@ -150,7 +147,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetAllTerms() {
             var result = _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List();
             return TermPart.Sort(result);
         }
@@ -158,7 +154,6 @@ namespace Orchard.Taxonomies.Services {
         public TermPart GetTerm(int id) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
 
@@ -171,7 +166,6 @@ namespace Orchard.Taxonomies.Services {
         public TermPart GetTermByName(int taxonomyId, string name) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(t => t.TaxonomyId == taxonomyId)
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
@@ -236,8 +230,7 @@ namespace Orchard.Taxonomies.Services {
             var rootPath = term.FullPath + "/";
 
             var query = _contentManager
-                .Query<TermsPart, TermsPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>());
+                .Query<TermsPart, TermsPartRecord>();
 
             if (String.IsNullOrWhiteSpace(fieldName)) {
                 query = query.Where(
@@ -273,7 +266,6 @@ namespace Orchard.Taxonomies.Services {
             var rootPath = term.FullPath + "/";
 
             var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(x => x.Path.StartsWith(rootPath))
                 .List();
 
@@ -291,7 +283,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<string> GetSlugs() {
             return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List()
                 .Select(t => t.Slug);
         }
@@ -299,7 +290,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<string> GetTermPaths() {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List()
                 .Select(t => t.Slug);
         }

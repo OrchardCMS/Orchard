@@ -1,30 +1,29 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.Autoroute.Models {
     public class AutoroutePart : ContentPart<AutoroutePartRecord>, IAliasAspect {
 
         public string CustomPattern {
-            get { return this.As<InfosetPart>().Get<AutoroutePart>("CustomPattern"); }
+            get { return Get("CustomPattern"); }
             set {
-                this.As<InfosetPart>().Set<AutoroutePart>("CustomPattern", value);
+                Set("CustomPattern", value);
                 Record.CustomPattern = value;
             }
         }
 
         public bool UseCustomPattern {
-            get { return bool.Parse(this.As<InfosetPart>().Get<AutoroutePart>("UseCustomPattern")); }
+            get { return bool.Parse(Get("UseCustomPattern")); }
             set {
-                this.As<InfosetPart>().Set<AutoroutePart>("UseCustomPattern", value.ToString());
+                Set("UseCustomPattern", value.ToString());
                 Record.UseCustomPattern = value;
             }
         }
 
         public string DisplayAlias {
-            get { return this.As<InfosetPart>().Get<AutoroutePart>("DisplayAlias"); }
+            get { return Get("DisplayAlias"); }
             set {
-                this.As<InfosetPart>().Set<AutoroutePart>("DisplayAlias", value);
+                Set("DisplayAlias", value);
                 Record.DisplayAlias = value;
             }
         }

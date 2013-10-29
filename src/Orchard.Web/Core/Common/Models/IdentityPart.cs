@@ -1,12 +1,11 @@
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.Core.Common.Models {
     public class IdentityPart : ContentPart<IdentityPartRecord> {
         public string Identifier {
-            get { return this.As<InfosetPart>().Get<IdentityPart>("Identifier"); }
+            get { return Get("Identifier"); }
             set {
-                this.As<InfosetPart>().Set<IdentityPart>("Identifier", value);
+                Set("Identifier", value);
                 Record.Identifier = value;
             }
         }

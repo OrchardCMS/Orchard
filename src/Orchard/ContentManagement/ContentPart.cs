@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web.Mvc;
+using Autofac;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Records;
 using Orchard.ContentManagement.Utilities;
 using Orchard.UI;
 
@@ -76,9 +79,35 @@ namespace Orchard.ContentManagement {
 
             return true;
         }
+        public virtual string Get(string fieldName) {
+            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, false);
+        }
+
+        public string GetVersioned(string fieldName) {
+            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, true);
+        }
+        public virtual void Set(string fieldName, string value) {
+            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, false);
+        }
+        public void SetVersionned(string fieldName, string value) {
+            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, true);
+        }
     }
 
     public class ContentPart<TRecord> : ContentPart {
+
+        static protected bool IsVersionableRecord { get; private set;}
+        static ContentPart() {
+            IsVersionableRecord = typeof (TRecord).IsAssignableTo<ContentItemVersionRecord>();
+        }
+
+        public override string Get(string fieldName) {
+            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, IsVersionableRecord);
+        }
+        public override void Set(string fieldName, string value) {
+            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, IsVersionableRecord);
+        }
+
         public readonly LazyField<TRecord> _record = new LazyField<TRecord>();
         public TRecord Record { get { return _record.Value; } set { _record.Value = value; } }
     }

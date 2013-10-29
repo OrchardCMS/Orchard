@@ -1,64 +1,62 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Orchard.ContentManagement;
-using Orchard.Data.Conventions;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
-    public sealed class SiteSettingsPart : ContentPart<SiteSettingsPartRecord>, ISite {
+    public sealed class SiteSettingsPart : ContentPart, ISite {
 
+        public const int DefaultPageSize = 10;
         public string PageTitleSeparator {
-            get { return Record.PageTitleSeparator; }
-            set { Record.PageTitleSeparator = value; }
+            get { return Get("PageTitleSeparator"); }
+            set { Set("PageTitleSeparator", value); }
         }
-
         public string SiteName {
-            get { return Record.SiteName; }
-            set { Record.SiteName = value; }
+            get { return Get("SiteName"); }
+            set { Set("SiteName", value); }
         }
 
         public string SiteSalt {
-            get { return Record.SiteSalt; }
+            get { return Get("SiteSalt"); }
+            set { Set("SiteSalt", value); }
         }
 
         public string SuperUser {
-            get { return Record.SuperUser; }
-            set { Record.SuperUser = value; }
+            get { return Get("SuperUser"); }
+            set { Set("SuperUser", value); }
         }
 
         public string HomePage {
-            get { return Record.HomePage; }
-            set { Record.HomePage = value; }
+            get { return Get("HomePage"); }
+            set { Set("HomePage", value); }
         }
 
         public string SiteCulture {
-            get { return Record.SiteCulture; }
-            set { Record.SiteCulture = value; }
+            get { return Get("SiteCulture"); }
+            set { Set("SiteCulture", value); }
         }
 
         public ResourceDebugMode ResourceDebugMode {
-            get { return Record.ResourceDebugMode; }
-            set { Record.ResourceDebugMode = value; }
+            get {
+                var value = Get("ResourceDebugMode");
+                return String.IsNullOrEmpty(value) ? ResourceDebugMode.Disabled : (ResourceDebugMode)Enum.Parse(typeof(ResourceDebugMode), value);
+            }
+            set { Set("ResourceDebugMode", value.ToString()); }
         }
 
         public int PageSize {
-            get { return Record.PageSize; }
-            set { Record.PageSize = value; }
+            get { return int.Parse(Get("PageSize") ?? "0", CultureInfo.InvariantCulture); }
+            set { Set("PageSize", value.ToString(CultureInfo.InvariantCulture)); }
         }
 
         public string SiteTimeZone {
-            get { return Record.SiteTimeZone; }
-            set { Record.SiteTimeZone = value; }
+            get { return Get("SiteTimeZone"); }
+            set { Set("SiteTimeZone", value); }
         }
 
-        [StringLengthMax]
         public string BaseUrl {
-            get {
-                return this.As<SiteSettings2Part>().BaseUrl;
-            }
-            set {
-                this.As<SiteSettings2Part>().BaseUrl = value;
-            }
+            get { return Get("BaseUrl"); }
+            set { Set("BaseUrl", value); }
         }
     }
 }
