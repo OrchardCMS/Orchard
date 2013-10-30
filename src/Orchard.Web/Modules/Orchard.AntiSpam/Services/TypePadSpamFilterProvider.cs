@@ -19,7 +19,7 @@ namespace Orchard.AntiSpam.Services {
 
         public IEnumerable<ISpamFilter> GetSpamFilters() {
 
-            var settings = _orchardServices.WorkContext.CurrentSite.As<TypePadSettingsPart>().Record;
+            var settings = _orchardServices.WorkContext.CurrentSite.As<TypePadSettingsPart>();
 
             if(string.IsNullOrWhiteSpace(settings.ApiKey)) {
                 yield break;

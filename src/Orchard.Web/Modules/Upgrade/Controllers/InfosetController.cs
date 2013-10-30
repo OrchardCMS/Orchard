@@ -95,6 +95,15 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"), null);
 
+            // TypePadSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Set("TypePadSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"), null);
+
 
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 

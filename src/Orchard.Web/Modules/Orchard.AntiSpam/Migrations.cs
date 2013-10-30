@@ -85,13 +85,6 @@ namespace Orchard.AntiSpam {
     public class TypePadMigrations : DataMigrationImpl {
 
         public int Create() {
-
-            SchemaBuilder.CreateTable("TypePadSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<bool>("TrustAuthenticatedUsers")
-                    .Column<string>("ApiKey")
-                );
-
             return 1;
         }
     }
