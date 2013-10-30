@@ -127,5 +127,37 @@ namespace Upgrade.Controllers {
 
             return new JsonResult { Data = contentItems.Last().Id };
         }
+
+
+        [HttpPost]
+        public JsonResult MigrateContentPermissionsPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = 0;
+            // TypePadSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord" + " WHERE Id > " + id),
+                (reader, connection) => {
+                    lastContentItemId = (int) reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "ViewContent", reader["ViewContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "ViewOwnContent", reader["ViewOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "PublishContent", reader["PublishContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "PublishOwnContent", reader["PublishOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "EditContent", reader["EditContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "EditOwnContent", reader["EditOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "DeleteContent", reader["DeleteContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "DeleteOwnContent", reader["DeleteOwnContent"].ToString());
+                });
+
+            if (lastContentItemId == 0) {
+                // delete the table only when there is no more content to process
+                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord"), null);
+            }
+
+            return new JsonResult { Data = lastContentItemId };
+        }
     }
 }

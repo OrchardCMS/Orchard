@@ -94,9 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drivers\ContentPermissionsPartDriver.cs" />
-    <Compile Include="Handlers\ContentPermissionsPartHandler.cs" />
     <Compile Include="Models\ContentPermissionsPart.cs" />
-    <Compile Include="Models\ContentPermissionsPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Migrations.cs" />
@@ -119,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.ContentPermissions.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
