@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentPicker.Models;
-using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 

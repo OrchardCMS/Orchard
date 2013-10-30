@@ -37,27 +37,24 @@ namespace Orchard.ContentManagement {
             TProperty value, bool versioned = false) where TPart : ContentPart {
 
             var partName = contentPart.GetType().Name;
-
             var infosetPart = contentPart.As<InfosetPart>();
-            var infoset = (versioned ? infosetPart.VersionInfoset : infosetPart.Infoset);
-            var partElement = infoset.Element.Element(partName);
-            if (partElement == null) {
-                partElement = new XElement(partName);
-                infoset.Element.Add(partElement);
-            }
-            
             var propertyInfo = ReflectionHelper<TPart>.GetPropertyInfo(targetExpression);
             var name = propertyInfo.Name;
 
-            partElement.Attr(name, value);
+            Store(infosetPart, partName, name, value, versioned);
         }
 
         public static void Store<TProperty>(this ContentPart contentPart, string name, 
             TProperty value, bool versioned = false) {
 
             var partName = contentPart.GetType().Name;
-
             var infosetPart = contentPart.As<InfosetPart>();
+           
+            Store(infosetPart, partName, name, value, versioned);
+        }
+
+        public static void Store<TProperty>(this InfosetPart infosetPart, string partName, string name, TProperty value, bool versioned = false) {
+            
             var infoset = (versioned ? infosetPart.VersionInfoset : infosetPart.Infoset);
             var partElement = infoset.Element.Element(partName);
             if (partElement == null) {

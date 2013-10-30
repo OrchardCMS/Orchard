@@ -3,6 +3,8 @@
     Layout.Title = T("Migrate Infosets").ToString();
 }
 
+<div class="message message-Warning" id="message-progress" style="display: none"></div>
+
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
     <fieldset>
         <legend>@T("Migrating Site Settings:")</legend>
@@ -16,22 +18,31 @@
 <fieldset>
     <legend>@T("Migrating Body Parts:")</legend>
     <span class="hint">@T("This migration step will copy all Body Parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateBody", "Infoset")">@T("Migrate")</button>
 </fieldset>
+
 <fieldset>
-    <button type="button" class="button" id="button-migrate" data-url="@Url.Action("MigrateBody", "Infoset")">@T("Migrate")</button>
-    <div class="message message-Warning" id="message-progress" style="display: none"></div>    
+    <legend>@T("Migrating Content Item Menu Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentPermissionsPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Content Item Menu Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Content Item Menu parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentMenuItemPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
 
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function() {
             var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
-            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All content items have been processed").Text)';
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All items have been processed").Text)';
             
-            $('#button-migrate').click(function () {
+            $('.button-migrate').click(function () {
                 var importUrl = $(this).data('url');
 
-                var processed = 0;
+                var startId = 0;
                 $('#message-progress').show();
 
                 var iId = setInterval(function() {
@@ -40,24 +51,23 @@
                         url: importUrl,
                         async: false,
                         data: {
-                            __RequestVerificationToken: antiForgeryToken
+                            __RequestVerificationToken: antiForgeryToken,
+                            id: startId // start at index 0
                         },
-                        success: function(data) {
-                            console.log('items remaining: ' + data);
-                            processed += Number(data);
-                            
-                            if (Number(data) == 0) {
+                        success: function (data) {
+                            if (Number(data) == startId) {
                                 clearInterval(iId);
                                 $('#message-progress').text(endMessage);
                             }
+                            else {
+                                startId = Number(data);
+                                $('#message-progress').text('Processing content item ' + startId);
+                            }
                         },
                         fail: function(result) {
-                            processed = 0;
                             console.log("An error occured: " + result);
                         }
                     });
-
-                    $('#message-progress').text(processed + ' documents processed ...');
 
                 }, 100);
                 

@@ -71,7 +71,7 @@ namespace Upgrade.Controllers {
 
             // ThemeSiteSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"),
-                (reader, connection) => site.As<InfosetPart>().Set("ThemeSiteSettingsPart", "CurrentThemeName", (string)reader["CurrentThemeName"]));
+                (reader, connection) => site.As<InfosetPart>().Store("ThemeSiteSettingsPart", "CurrentThemeName", (string)reader["CurrentThemeName"]));
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"), null);
 
@@ -79,8 +79,8 @@ namespace Upgrade.Controllers {
             // AkismetSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"),
                 (reader, connection) => {
-                    site.As<InfosetPart>().Set("AkismetSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
-                    site.As<InfosetPart>().Set("AkismetSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                    site.As<InfosetPart>().Store("AkismetSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
+                    site.As<InfosetPart>().Store("AkismetSettingsPart", "ApiKey", reader["ApiKey"].ToString());
                 });
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"), null);
@@ -88,9 +88,9 @@ namespace Upgrade.Controllers {
             // ReCaptchaSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"),
                 (reader, connection) => {
-                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "PublicKey", reader["PublicKey"].ToString());
-                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "PrivateKey", reader["PrivateKey"].ToString());
-                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
+                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PublicKey", reader["PublicKey"].ToString());
+                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PrivateKey", reader["PrivateKey"].ToString());
+                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
                 });
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"), null);
@@ -98,8 +98,8 @@ namespace Upgrade.Controllers {
             // TypePadSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"),
                 (reader, connection) => {
-                    site.As<InfosetPart>().Set("TypePadSettingsPart", "ApiKey", reader["ApiKey"].ToString());
-                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
+                    site.As<InfosetPart>().Store("TypePadSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
                 });
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"), null);
@@ -134,28 +134,46 @@ namespace Upgrade.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
-            var lastContentItemId = 0;
+            var lastContentItemId = id;
             // TypePadSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord" + " WHERE Id > " + id),
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord" + " WHERE Id > " + id),
                 (reader, connection) => {
                     lastContentItemId = (int) reader["Id"];
                     var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "ViewContent", reader["ViewContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "ViewOwnContent", reader["ViewOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "PublishContent", reader["PublishContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "PublishOwnContent", reader["PublishOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "EditContent", reader["EditContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "EditOwnContent", reader["EditOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "DeleteContent", reader["DeleteContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Set("ContentPermissionsPart", "DeleteOwnContent", reader["DeleteOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewContent", reader["ViewContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewOwnContent", reader["ViewOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishContent", reader["PublishContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishOwnContent", reader["PublishOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditContent", reader["EditContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditOwnContent", reader["EditOwnContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteContent", reader["DeleteContent"].ToString());
+                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteOwnContent", reader["DeleteOwnContent"].ToString());
                 });
 
-            if (lastContentItemId == 0) {
+            if (lastContentItemId == id) {
                 // delete the table only when there is no more content to process
                 _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord"), null);
             }
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+        [HttpPost]
+        public JsonResult MigrateContentMenuItemPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+            // TypePadSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord" + " WHERE Id > " + id),
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
+                });
 
             return new JsonResult { Data = lastContentItemId };
         }
