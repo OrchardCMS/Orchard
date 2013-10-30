@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
 using System.Xml.Linq;
+using NHibernate.Util;
 using Orchard.Utility;
 
 namespace Orchard.ContentManagement {
@@ -212,6 +213,10 @@ namespace Orchard.ContentManagement {
                 return decimalValue.ToString(CultureInfo.InvariantCulture);
             }
 
+            if (type.IsEnum) {
+                return value.ToString();
+            }
+
             throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
         }
 
@@ -262,6 +267,11 @@ namespace Orchard.ContentManagement {
             if (type == typeof(decimal) || type == typeof(decimal?)) {
                 return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
             }
+
+            if (type.IsEnum) {
+                return (T)Enum.Parse(type, value);
+            }
+
             throw new NotSupportedException(String.Format("Could not handle type {0}", type.Name));
         }
 
