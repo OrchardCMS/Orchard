@@ -126,7 +126,6 @@ namespace Orchard.Blogs.Services {
                 _contentManager.Query(versionOptions, "BlogPost")
                 .Join<CommonPartRecord>().Where(
                     cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc)
-                .WithQueryHintsFor("BlogPost")
                     ;
         }
     }

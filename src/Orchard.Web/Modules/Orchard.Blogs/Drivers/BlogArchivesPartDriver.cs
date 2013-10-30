@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel {
                 BlogId = part.BlogId,
-                Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
+                Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
                 };
 
             return ContentShape("Parts_Blogs_BlogArchives_Edit",

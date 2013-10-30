@@ -56,7 +56,7 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary")));
 
-            _feedManager.Register(blogPart);
+            _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)

@@ -47,7 +47,7 @@ namespace Orchard.Blogs.Drivers {
             var viewModel = new RecentBlogPostsViewModel {
                 Count = part.Count,
                 BlogId = part.BlogId,
-                Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
+                Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
             };
 
             return ContentShape("Parts_Blogs_RecentBlogPosts_Edit",

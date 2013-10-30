@@ -132,7 +132,7 @@ namespace Orchard.Blogs.Services {
                     array.Add(new XRpcStruct()
                                   .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
                                   .Set("blogid", blog.Id)
-                                  .Set("blogName", blog.Name));
+                                  .Set("blogName", _contentManager.GetItemMetadata(blog).DisplayText));
                 }
             }
 
