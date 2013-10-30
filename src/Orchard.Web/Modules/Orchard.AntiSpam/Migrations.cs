@@ -18,13 +18,6 @@ namespace Orchard.AntiSpam {
                 .WithDescription("Ensures content items are submitted by humans only.")
                 );
 
-            SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<string>("PublicKey")
-                    .Column<string>("PrivateKey")
-                    .Column<bool>("TrustAuthenticatedUsers")
-                );
-
             ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", cfg => cfg
                 .Attachable()
                 .WithDescription("Allows to filter submitted content items based on spam filters.")

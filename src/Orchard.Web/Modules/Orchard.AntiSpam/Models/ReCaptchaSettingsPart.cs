@@ -1,20 +1,20 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.AntiSpam.Models {
-    public class ReCaptchaSettingsPart : ContentPart<ReCaptchaSettingsPartRecord> {
+    public class ReCaptchaSettingsPart : ContentPart {
         public string PublicKey {
-            get { return Record.PublicKey; }
-            set { Record.PublicKey = value; }
+            get { return this.Retrieve(x => x.PublicKey); }
+            set { this.Store(x => x.PublicKey, value); }
         }
 
         public string PrivateKey {
-            get { return Record.PrivateKey; }
-            set { Record.PrivateKey = value; }
+            get { return this.Retrieve(x => x.PrivateKey); }
+            set { this.Store(x => x.PrivateKey, value); }
         }
 
         public bool TrustAuthenticatedUsers {
-            get { return Record.TrustAuthenticatedUsers; }
-            set { Record.TrustAuthenticatedUsers = value; }
+            get { return this.Retrieve(x => x.TrustAuthenticatedUsers); }
+            set { this.Store(x => x.TrustAuthenticatedUsers, value); }
         }
     }
 }

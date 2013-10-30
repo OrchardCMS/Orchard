@@ -85,6 +85,16 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"), null);
 
+            // ReCaptchaSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "PublicKey", reader["PublicKey"].ToString());
+                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "PrivateKey", reader["PrivateKey"].ToString());
+                    site.As<InfosetPart>().Set("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", reader["TrustAuthenticatedUsers"].ToString());
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"), null);
+
 
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 

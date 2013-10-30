@@ -109,7 +109,6 @@
     <Compile Include="Models\AkismetSettingsPart.cs" />
     <Compile Include="Models\CommentCheckContext.cs" />
     <Compile Include="Models\ReCaptchaSettingsPart.cs" />
-    <Compile Include="Models\ReCaptchaSettingsPartRecord.cs" />
     <Compile Include="Models\TypePadSettingsPart.cs" />
     <Compile Include="Models\TypePadSettingsPartRecord.cs" />
     <Compile Include="Models\SpamFilterPart.cs" />
