@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml;
 using Orchard.Core.Common.Utilities;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -23,73 +22,56 @@ namespace Orchard.Core.Common.Models {
             get { return _container.Value; }
             set { _container.Value = value; }
         }
-        
+
         public DateTime? CreatedUtc {
-            get {
-                var dateTime = Get("CreatedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
-            }
-            set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                Set("CreatedUtc", dateTime);
-                Record.CreatedUtc = value;
-            }
+            get { return Retrieve(x => x.CreatedUtc); }
+            set { Store(x => x.CreatedUtc, value); }
         }
 
         public DateTime? PublishedUtc {
-            get {
-                var dateTime = Get("PublishedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
-            }
-            set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                Set("PublishedUtc", dateTime);
-                Record.PublishedUtc = value;
-            }
+            get { return Retrieve(x => x.PublishedUtc); }
+            set { Store(x => x.PublishedUtc, value); }
         }
 
         public DateTime? ModifiedUtc {
+            get { return Retrieve(x => x.ModifiedUtc); }
+            set { Store(x => x.ModifiedUtc, value); }
+        }
+
+        CommonPartVersionRecord PartVersionRecord {
             get {
-                var dateTime = Get("ModifiedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
-            }
-            set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                Set("ModifiedUtc", dateTime);
-                Record.ModifiedUtc = value;
+                var versionPart = this.As<ContentPart<CommonPartVersionRecord>>();
+                return versionPart == null ? null : versionPart.Record;
             }
         }
 
         public DateTime? VersionCreatedUtc {
             get {
-                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("CreatedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                return PartVersionRecord == null ? CreatedUtc : PartVersionRecord.CreatedUtc;
             }
             set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<ContentPart<CommonPartVersionRecord>>().Set("CreatedUtc", dateTime);
+                if (PartVersionRecord != null)
+                    PartVersionRecord.CreatedUtc = value;
             }
         }
 
         public DateTime? VersionPublishedUtc {
             get {
-                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("PublishedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                return PartVersionRecord == null ? PublishedUtc : PartVersionRecord.PublishedUtc;
             }
             set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<ContentPart<CommonPartVersionRecord>>().Set("PublishedUtc", dateTime);
+                if (PartVersionRecord != null)
+                    PartVersionRecord.PublishedUtc = value;
             }
         }
 
         public DateTime? VersionModifiedUtc {
             get {
-                var dateTime = this.As<ContentPart<CommonPartVersionRecord>>().Get("ModifiedUtc");
-                return String.IsNullOrEmpty(dateTime) ? (DateTime?)null : XmlConvert.ToDateTime(dateTime, XmlDateTimeSerializationMode.Utc);
+                return PartVersionRecord == null ? ModifiedUtc : PartVersionRecord.ModifiedUtc;
             }
             set {
-                string dateTime = value.HasValue ? XmlConvert.ToString(value.Value, XmlDateTimeSerializationMode.Utc) : "";
-                this.As<ContentPart<CommonPartVersionRecord>>().Set("ModifiedUtc", dateTime);
+                if (PartVersionRecord != null)
+                    PartVersionRecord.ModifiedUtc = value;
             }
         }
     }

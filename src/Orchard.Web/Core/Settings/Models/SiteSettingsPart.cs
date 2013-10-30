@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
@@ -8,55 +6,52 @@ namespace Orchard.Core.Settings.Models {
 
         public const int DefaultPageSize = 10;
         public string PageTitleSeparator {
-            get { return Get("PageTitleSeparator"); }
-            set { Set("PageTitleSeparator", value); }
+            get { return this.Retrieve(x => x.PageTitleSeparator); }
+            set { this.Store(x => x.PageTitleSeparator, value); }
         }
         public string SiteName {
-            get { return Get("SiteName"); }
-            set { Set("SiteName", value); }
+            get { return this.Retrieve(x => x.SiteName); }
+            set { this.Store(x => x.SiteName, value); }
         }
 
         public string SiteSalt {
-            get { return Get("SiteSalt"); }
-            set { Set("SiteSalt", value); }
+            get { return this.Retrieve(x => x.SiteSalt); }
+            set { this.Store(x => x.SiteSalt, value); }
         }
 
         public string SuperUser {
-            get { return Get("SuperUser"); }
-            set { Set("SuperUser", value); }
+            get { return this.Retrieve(x => x.SuperUser); }
+            set { this.Store(x => x.SuperUser, value); }
         }
 
         public string HomePage {
-            get { return Get("HomePage"); }
-            set { Set("HomePage", value); }
+            get { return this.Retrieve(x => x.HomePage); }
+            set { this.Store(x => x.HomePage, value); }
         }
 
         public string SiteCulture {
-            get { return Get("SiteCulture"); }
-            set { Set("SiteCulture", value); }
+            get { return this.Retrieve(x => x.SiteCulture); }
+            set { this.Store(x => x.SiteCulture, value); }
         }
 
         public ResourceDebugMode ResourceDebugMode {
-            get {
-                var value = Get("ResourceDebugMode");
-                return String.IsNullOrEmpty(value) ? ResourceDebugMode.Disabled : (ResourceDebugMode)Enum.Parse(typeof(ResourceDebugMode), value);
-            }
-            set { Set("ResourceDebugMode", value.ToString()); }
+            get { return this.Retrieve(x => x.ResourceDebugMode); }
+            set { this.Store(x => x.ResourceDebugMode, value); }
         }
 
         public int PageSize {
-            get { return int.Parse(Get("PageSize") ?? "0", CultureInfo.InvariantCulture); }
-            set { Set("PageSize", value.ToString(CultureInfo.InvariantCulture)); }
+            get { return this.Retrieve(x => x.PageSize); }
+            set { this.Store(x => x.PageSize, value); }
         }
 
         public string SiteTimeZone {
-            get { return Get("SiteTimeZone"); }
-            set { Set("SiteTimeZone", value); }
+            get { return this.Retrieve(x => x.SiteTimeZone); }
+            set { this.Store(x => x.SiteTimeZone, value); }
         }
 
         public string BaseUrl {
-            get { return Get("BaseUrl"); }
-            set { Set("BaseUrl", value); }
+            get { return this.Retrieve(x => x.BaseUrl); }
+            set { this.Store(x => x.BaseUrl, value); }
         }
     }
 }

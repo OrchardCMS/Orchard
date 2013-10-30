@@ -161,6 +161,7 @@
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
+    <Compile Include="ContentManagement\ContentHelpers.cs" />
     <Compile Include="ContentManagement\ContentIdentityTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -180,6 +181,7 @@
     <Compile Include="ContentManagement\Handlers\GammaPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
     <Compile Include="ContentManagement\ImportContentSessionTests.cs" />
+    <Compile Include="ContentManagement\InfosetHelperTests.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReaderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriterTests.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\XmlHelperTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />

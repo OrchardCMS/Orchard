@@ -83,13 +83,6 @@ namespace Orchard.AntiSpam {
     public class AkismetMigrations : DataMigrationImpl {
 
         public int Create() {
-
-            SchemaBuilder.CreateTable("AkismetSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<bool>("TrustAuthenticatedUsers")
-                    .Column<string>("ApiKey")
-                );
-
             return 1;
         }
     }

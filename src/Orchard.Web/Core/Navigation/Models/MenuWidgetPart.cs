@@ -1,48 +1,32 @@
-﻿using System.Globalization;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Navigation.Models {
     public class MenuWidgetPart : ContentPart<MenuWidgetPartRecord> {
 
         public int StartLevel {
-            get { return int.Parse(Get("StartLevel") ?? "0", CultureInfo.InvariantCulture); }
-            set {
-                Set("StartLevel", value.ToString(CultureInfo.InvariantCulture));
-                Record.StartLevel = value;
-            }
+            get { return Retrieve(x => x.StartLevel); }
+            set { Store(x => x.StartLevel, value); }
         }
 
         public int Levels {
-            get { return int.Parse(Get("Levels") ?? "0", CultureInfo.InvariantCulture); }
-            set {
-                Set("Levels", value.ToString(CultureInfo.InvariantCulture));
-                Record.Levels = value;
-            }
+            get { return Retrieve(x => x.Levels); }
+            set { Store(x => x.Levels, value); }
         }
 
         public bool Breadcrumb {
-            get { return bool.Parse(Get("Breadcrumb") ?? "false"); }
-            set {
-                Set("Breadcrumb", value.ToString());
-                Record.Breadcrumb = value;
-            }
+            get { return Retrieve(x => x.Breadcrumb); }
+            set { Store(x => x.Breadcrumb, value); }
         }
 
         public bool AddHomePage {
-            get { return bool.Parse(Get("AddHomePage") ?? "false"); }
-            set {
-                Set("AddHomePage", value.ToString());
-                Record.AddHomePage = value;
-            }
+            get { return Retrieve(x => x.AddHomePage); }
+            set { Store(x => x.AddHomePage, value); }
         }
 
         public bool AddCurrentPage {
-            get { return bool.Parse(Get("AddCurrentPage") ?? "false"); }
-            set {
-                Set("AddCurrentPage", value.ToString());
-                Record.AddCurrentPage = value;
-            }
+            get { return Retrieve(x => x.AddCurrentPage); }
+            set { Store(x => x.AddCurrentPage, value); }
         }
         
         public ContentItemRecord Menu {

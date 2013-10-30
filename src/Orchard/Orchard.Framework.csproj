@@ -159,6 +159,8 @@
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\InfosetHelper.cs" />
+    <Compile Include="ContentManagement\XmlHelper.cs" />
     <Compile Include="ContentManagement\Handlers\TemplateFilterForPart.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
@@ -577,6 +579,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
+    <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
     <Compile Include="Wcf\OrchardInstanceContext.cs" />

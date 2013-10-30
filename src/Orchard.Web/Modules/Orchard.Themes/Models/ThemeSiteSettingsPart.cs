@@ -3,8 +3,8 @@
 namespace Orchard.Themes.Models {
     public class ThemeSiteSettingsPart : ContentPart {
         public string CurrentThemeName {
-            get { return Get("CurrentThemeName"); }
-            set { Set("CurrentThemeName", value); }
+            get { return this.Retrieve(x => x.CurrentThemeName); }
+            set { this.Store(x => x.CurrentThemeName, value); }
         }
     }
 }

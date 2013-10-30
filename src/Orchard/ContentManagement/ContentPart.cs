@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using Autofac;
-using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.ContentManagement.Utilities;
@@ -79,33 +79,49 @@ namespace Orchard.ContentManagement {
 
             return true;
         }
-        public virtual string Get(string fieldName) {
-            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, false);
+
+        public T Retrieve<T>(string fieldName) {
+            return InfosetHelper.Retrieve<T>(this, fieldName);
         }
 
-        public string GetVersioned(string fieldName) {
-            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, true);
+        public T RetrieveVersioned<T>(string fieldName) {
+            return this.Retrieve<T>(fieldName, true);
         }
-        public virtual void Set(string fieldName, string value) {
-            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, false);
+
+        public virtual void Store<T>(string fieldName, T value) {
+            InfosetHelper.Store(this, fieldName, value);
         }
-        public void SetVersionned(string fieldName, string value) {
-            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, true);
+
+        public virtual void StoreVersioned<T>(string fieldName, T value) {
+            this.Store(fieldName, value, true);
         }
+
     }
 
     public class ContentPart<TRecord> : ContentPart {
 
         static protected bool IsVersionableRecord { get; private set;}
+
         static ContentPart() {
             IsVersionableRecord = typeof (TRecord).IsAssignableTo<ContentItemVersionRecord>();
         }
 
-        public override string Get(string fieldName) {
-            return this.As<InfosetPart>().Get(GetType().Name, fieldName, null, IsVersionableRecord);
+        protected TProperty Retrieve<TProperty>(Expression<Func<TRecord, TProperty>> targetExpression) {
+            return InfosetHelper.Retrieve(this, targetExpression);
         }
-        public override void Set(string fieldName, string value) {
-            this.As<InfosetPart>().Set(GetType().Name, fieldName, null, value, IsVersionableRecord);
+
+        protected TProperty Retrieve<TProperty>(
+            Expression<Func<TRecord, TProperty>> targetExpression,
+            Func<TRecord, TProperty> defaultExpression) {
+
+            return InfosetHelper.Retrieve(this, targetExpression, defaultExpression);
+        }
+        protected ContentPart<TRecord> Store<TProperty>(
+            Expression<Func<TRecord, TProperty>> targetExpression,
+            TProperty value) {
+
+            InfosetHelper.Store(this, targetExpression, value);
+            return this;
         }
 
         public readonly LazyField<TRecord> _record = new LazyField<TRecord>();

@@ -3,13 +3,13 @@
 namespace Orchard.AntiSpam.Models {
     public class AkismetSettingsPart : ContentPart {
         public bool TrustAuthenticatedUsers {
-            get { return bool.Parse(Get("TrustAuthenticatedUsers") ?? "false"); }
-            set { Set("TrustAuthenticatedUsers", value.ToString()); }
+            get { return this.Retrieve(x => x.TrustAuthenticatedUsers); }
+            set { this.Store(x => x.TrustAuthenticatedUsers, value); }
         }
 
         public string ApiKey {
-            get { return Get("ApiKey"); }
-            set { Set("ApiKey", value); }
+            get { return this.Retrieve(x => x.ApiKey); }
+            set { this.Store(x => x.ApiKey, value); }
         }
     }
 }
