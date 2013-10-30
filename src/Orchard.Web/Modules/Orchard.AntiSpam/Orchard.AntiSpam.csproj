@@ -111,7 +111,7 @@
     <Compile Include="Models\ReCaptchaSettingsPart.cs" />
     <Compile Include="Models\TypePadSettingsPart.cs" />
     <Compile Include="Models\TypePadSettingsPartRecord.cs" />
-    <Compile Include="Models\SpamFilterPart.cs" />
+    <Compile Include="Models\_SpamFilterPart.cs" />
     <Compile Include="Models\ReCaptchaPart.cs" />
     <Compile Include="Models\SpamFilterPartRecord.cs" />
     <Compile Include="Models\SpamStatus.cs" />
