@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using System.Web.Mvc;
 using Orchard;
@@ -135,8 +137,8 @@ namespace Upgrade.Controllers {
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
-            // TypePadSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord" + " WHERE Id > " + id),
+            
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord") + " WHERE Id > " + id,
                 (reader, connection) => {
                     lastContentItemId = (int) reader["Id"];
                     var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
@@ -166,13 +168,39 @@ namespace Upgrade.Controllers {
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
-            // TypePadSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord" + " WHERE Id > " + id),
+            
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord") + " WHERE Id > " + id,
                 (reader, connection) => {
                     lastContentItemId = (int)reader["Id"];
                     var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
                     contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
+                });
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+        [HttpPost]
+        public JsonResult MigrateTagsPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+            
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagsPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    var tagNames = new List<string>();
+                    _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " TR.TagName as TagName FROM "
+                                                  + _upgradeService.GetPrefixedTableName("Orchard_Tags_ContentTagRecord") + " as CTR "
+                                                  + " INNER JOIN " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagRecord") + " as TR "
+                                                  + " ON CTR.TagRecord_Id = TR.Id"
+                                                  + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string) r["TagName"]));
+
+
+                    contentPermissionPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", String.Join(",", tagNames));
                 });
 
             return new JsonResult { Data = lastContentItemId };

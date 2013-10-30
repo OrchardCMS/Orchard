@@ -10,7 +10,6 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
-using Orchard.Events;
 
 namespace Orchard.Tags.Services {
     [UsedImplicitly]
@@ -149,6 +148,8 @@ namespace Orchard.Tags.Services {
         }
 
         private void TagContentItem(TagsPartRecord tagsPartRecord, string tagName) {
+            var tagPart = _orchardServices.ContentManager.Get<TagsPart>(tagsPartRecord.Id, VersionOptions.Latest);
+            tagPart.CurrentTags = tagPart.CurrentTags.Concat(new [] {tagName});
             var tagRecord = GetTagByName(tagName);
             var tagsContentItems = new ContentTagRecord { TagsPartRecord = tagsPartRecord, TagRecord = tagRecord };
             _contentTagRepository.Create(tagsContentItems);
@@ -165,7 +166,10 @@ namespace Orchard.Tags.Services {
             // delete orphan tags (for each tag, if there is no other contentItem than the one being deleted, it's an orphan)
             foreach (var tag in tagsPart.CurrentTags) {
                 if (_contentTagRepository.Count(x => x.TagsPartRecord.Id != contentItem.Id) == 0) {
-                    _tagRepository.Delete(tag);
+                    var tagRecord = GetTagByName(tag);
+                    if (tagRecord != null) {
+                        _tagRepository.Delete(tagRecord);
+                    }
                 }
             }
 
@@ -173,6 +177,8 @@ namespace Orchard.Tags.Services {
             foreach (var record in _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id)) {
                 _contentTagRepository.Delete(record);
             }
+
+            tagsPart.CurrentTags = Enumerable.Empty<string>();
         }
 
         public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {
@@ -191,6 +197,8 @@ namespace Orchard.Tags.Services {
             foreach (var newTagForContentItem in newTagsForContentItem) {
                 _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = newTagForContentItem });
             }
+
+            contentItem.As<TagsPart>().CurrentTags = tagNamesForContentItem;
         }
     }
 

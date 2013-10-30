@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
@@ -101,7 +100,7 @@ namespace Orchard.Tags.Services {
                 if (contentItem == null)
                     return;
 
-                var tags = contentItem.As<TagsPart>().CurrentTags.Select(tag => tag.TagName);
+                var tags = contentItem.As<TagsPart>().CurrentTags;
                 post.Set("mt_keywords", string.Join(", ", tags));
             });
 

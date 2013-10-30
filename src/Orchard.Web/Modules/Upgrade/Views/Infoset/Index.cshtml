@@ -22,7 +22,7 @@
 </fieldset>
 
 <fieldset>
-    <legend>@T("Migrating Content Item Menu Parts:")</legend>
+    <legend>@T("Migrating Content Item Permissions Parts:")</legend>
     <span class="hint">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentPermissionsPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
@@ -31,6 +31,12 @@
     <legend>@T("Migrating Content Item Menu Parts:")</legend>
     <span class="hint">@T("This migration step will copy all Content Item Menu parts to Infosets.")</span>
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Tags Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Tags parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateTagsPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
 
 @using (Script.Foot()) {

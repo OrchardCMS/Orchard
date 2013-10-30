@@ -95,9 +95,9 @@ namespace Orchard.Tests.Modules.Tags.Services {
             ClearSession();
 
             var thing2 = _contentManager.Get(thing.Id);
-            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag1"), Is.True);
-            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag2"), Is.True);
-            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag3"), Is.True);
+            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tag => tag == "tag1"), Is.True);
+            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tag => tag == "tag2"), Is.True);
+            Assert.That(thing2.As<TagsPart>().CurrentTags.Any(tag => tag == "tag3"), Is.True);
         }
 
         [Test]
@@ -263,13 +263,13 @@ namespace Orchard.Tests.Modules.Tags.Services {
             Assert.That(_tagService.GetTags().Any(tagRecord => tagRecord.TagName == "tag2"), Is.False);
             Assert.That(_tagService.GetTags().Any(tagRecord => tagRecord.TagName == "tag3"), Is.True);
 
-            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag1"), Is.True);
-            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag2"), Is.False);
-            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag3"), Is.True);
+            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag1"), Is.True);
+            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag2"), Is.False);
+            Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
 
-            Assert.That(_contentManager.Get(thing2.Id).As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag3"), Is.True);
+            Assert.That(_contentManager.Get(thing2.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
 
-            Assert.That(_contentManager.Get(thing3.Id).As<TagsPart>().CurrentTags.Any(tagRecord => tagRecord.TagName == "tag3"), Is.True);
+            Assert.That(_contentManager.Get(thing3.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
         }
 
         public class ThingHandler : ContentHandler {
