@@ -77,7 +77,6 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\SearchSettingsPartDriver.cs" />
     <Compile Include="Models\SearchSettingsPart.cs" />
-    <Compile Include="Models\SearchSettingsPartRecord.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Handlers\SearchSettingsPartHandler.cs" />
     <Compile Include="Services\ISearchService.cs" />

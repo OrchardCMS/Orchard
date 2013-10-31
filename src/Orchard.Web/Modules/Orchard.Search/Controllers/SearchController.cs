@@ -57,7 +57,7 @@ namespace Orchard.Search.Controllers {
             try {
 
                 searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().FilterCulture,
                                                   searchSettingPart.SearchIndex,
                                                   searchSettingPart.SearchedFields,
                                                   searchHit => searchHit);

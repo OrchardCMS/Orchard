@@ -8,10 +8,14 @@ using Orchard.ContentManagement.Handlers;
 namespace Orchard.Search.Handlers {
     [UsedImplicitly]
     public class SearchSettingsPartHandler : ContentHandler {
-        public SearchSettingsPartHandler(IRepository<SearchSettingsPartRecord> repository) {
+        public SearchSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<SearchSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
+            
+            OnInitializing<SearchSettingsPart>((context, part) => {
+                part.FilterCulture = false;
+                part.SearchedFields = new [] {"body, title"};
+            });
         }
 
         public Localizer T { get; set; }

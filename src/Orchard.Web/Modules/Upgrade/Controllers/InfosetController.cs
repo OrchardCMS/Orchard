@@ -135,7 +135,17 @@ namespace Upgrade.Controllers {
                 });
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord"), null);
-            
+
+            // SearchSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("SearchSettingsPart", "SearchedFields", (string)reader["SearchedFields"]);
+                    site.As<InfosetPart>().Store("SearchSettingsPart", "FilterCulture", (bool)reader["FilterCulture"]);
+                    site.As<InfosetPart>().Store("SearchSettingsPart", "SearchIndex", (string)reader["SearchIndex"]);
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord"), null);
+
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
