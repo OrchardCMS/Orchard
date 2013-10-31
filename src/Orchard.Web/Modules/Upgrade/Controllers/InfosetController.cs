@@ -120,6 +120,14 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord"), null);
 
+            // CommentSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Comment_CommentSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("CommentSettingsPart", "ModerateComments", (bool)reader["ModerateComments"]);
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Comment_CommentSettingsPartRecord"), null);
+
 
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 

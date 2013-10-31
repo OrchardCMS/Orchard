@@ -98,7 +98,6 @@
     <Compile Include="ViewModels\CommentCountViewModel.cs" />
     <Compile Include="Models\CommentSettingsPart.cs" />
     <Compile Include="Handlers\CommentSettingsPartHandler.cs" />
-    <Compile Include="Models\CommentSettingsPartRecord.cs" />
     <Compile Include="Handlers\CommentsPartHandler.cs" />
     <Compile Include="Models\CommentsPart.cs" />
     <Compile Include="Permissions.cs" />

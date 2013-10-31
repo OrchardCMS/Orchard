@@ -22,9 +22,9 @@ namespace Orchard.Comments.Drivers {
 
             return ContentShape("Parts_Comments_SiteSettings", () => {
                     if (updater != null) {
-                        updater.TryUpdateModel(part.Record, Prefix, null, null);
+                        updater.TryUpdateModel(part, Prefix, null, null);
                     }
-                    return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix); 
+                    return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part, Prefix: Prefix); 
                 })
                 .OnGroup("comments");
         }

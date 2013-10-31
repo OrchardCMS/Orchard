@@ -31,11 +31,6 @@ namespace Orchard.Comments {
                 .Column<int>("CommentsPartRecord_id")
                 );
 
-            SchemaBuilder.CreateTable("CommentSettingsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<bool>("ModerateComments")
-               );
-
             SchemaBuilder.CreateTable("CommentsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("CommentsShown")

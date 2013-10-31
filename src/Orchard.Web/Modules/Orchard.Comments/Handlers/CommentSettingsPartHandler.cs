@@ -1,17 +1,15 @@
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Orchard.Comments.Handlers {
     [UsedImplicitly]
     public class CommentSettingsPartHandler : ContentHandler {
-        public CommentSettingsPartHandler(IRepository<CommentSettingsPartRecord> repository) {
+        public CommentSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<CommentSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
         }
 
         public Localizer T { get; set; }

@@ -108,7 +108,7 @@ namespace Orchard.Comments.Drivers {
 
             if (currentUser != null) part.Author = currentUser.UserName;
 
-            var moderateComments = workContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments;
+            var moderateComments = workContext.CurrentSite.As<CommentSettingsPart>().ModerateComments;
             part.Status = moderateComments ? CommentStatus.Pending : CommentStatus.Approved;
 
             var commentedOn = _contentManager.Get<ICommonPart>(part.CommentedOn);

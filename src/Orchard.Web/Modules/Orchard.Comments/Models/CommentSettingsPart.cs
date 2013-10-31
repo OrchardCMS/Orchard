@@ -1,10 +1,10 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.Comments.Models {
-    public class CommentSettingsPart : ContentPart<CommentSettingsPartRecord> {
+    public class CommentSettingsPart : ContentPart {
         public bool ModerateComments {
-            get { return Record.ModerateComments; }
-            set { Record.ModerateComments = value; }
+            get { return this.Retrieve(x => x.ModerateComments); }
+            set { this.Store(x => x.ModerateComments, value); }
         }
     }
 }
