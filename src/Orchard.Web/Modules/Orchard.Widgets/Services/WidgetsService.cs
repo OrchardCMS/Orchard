@@ -67,7 +67,7 @@ namespace Orchard.Widgets.Services {
 
         public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
             return _contentManager
-                .Query<WidgetPart, WidgetPartRecord>()
+                .Query<WidgetPart>()
                 .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
                 .List();
         }
@@ -97,7 +97,7 @@ namespace Orchard.Widgets.Services {
                     .ToList();
 
             // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
-            while (zones.Count() == 0 && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+            while (!zones.Any() && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
                 if (theme != null && theme.Zones != null)
@@ -117,9 +117,9 @@ namespace Orchard.Widgets.Services {
         public LayerPart CreateLayer(string name, string description, string layerRule) {
             LayerPart layerPart = _contentManager.Create<LayerPart>("Layer",
                 layer => {
-                    layer.Record.Name = name;
-                    layer.Record.Description = description;
-                    layer.Record.LayerRule = layerRule;
+                    layer.Name = name;
+                    layer.Description = description;
+                    layer.LayerRule = layerRule;
                 });
 
             return layerPart;
@@ -148,9 +148,9 @@ namespace Orchard.Widgets.Services {
 
             WidgetPart widgetPart = _contentManager.Create<WidgetPart>(widgetType,
                 widget => {
-                    widget.Record.Title = title;
-                    widget.Record.Position = position;
-                    widget.Record.Zone = zone;
+                    widget.Title = title;
+                    widget.Position = position;
+                    widget.Zone = zone;
                     widget.LayerPart = layerPart;
                 });
 
@@ -228,7 +228,7 @@ namespace Orchard.Widgets.Services {
                 .OrderBy(widget => widget.Position, new UI.FlatPositionComparer()).ToList();
 
             // no need to continue if there are no widgets that will conflict with this widget's position
-            if (widgetsToMove.Count() == 0 || ParsePosition(widgetsToMove.First()) > targetPosition)
+            if (!widgetsToMove.Any() || ParsePosition(widgetsToMove.First()) > targetPosition)
                 return;
 
             int position = targetPosition;
@@ -238,7 +238,7 @@ namespace Orchard.Widgets.Services {
 
         private static int ParsePosition(WidgetPart widgetPart) {
             int value;
-            if (!int.TryParse(widgetPart.Record.Position, out value))
+            if (!int.TryParse(widgetPart.Position, out value))
                 return 0;
             return value;
         }

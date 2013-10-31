@@ -205,5 +205,47 @@ namespace Upgrade.Controllers {
 
             return new JsonResult { Data = lastContentItemId };
         }
+
+        [HttpPost]
+        public JsonResult MigrateWidgetPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Widgets_WidgetPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Title", (string)reader["Title"]);
+                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Position", (string)reader["Position"]);
+                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Zone", (string)reader["Zone"]);
+                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "RenderTitle", (bool)reader["RenderTitle"]);
+                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Name", (string)reader["Name"]);
+                });
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+        [HttpPost]
+        public JsonResult MigrateLayerPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Widgets_LayerPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Name", (string)reader["Name"]);
+                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Description", (string)reader["Description"]);
+                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "LayerRule", (string)reader["LayerRule"]);
+                });
+
+            return new JsonResult { Data = lastContentItemId };
+        }
     }
 }

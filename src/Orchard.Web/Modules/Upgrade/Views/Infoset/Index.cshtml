@@ -39,6 +39,18 @@
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateTagsPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
 
+<fieldset>
+    <legend>@T("Migrating Widget Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Widget parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateWidgetPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Layer Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Layer parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateLayerPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function() {

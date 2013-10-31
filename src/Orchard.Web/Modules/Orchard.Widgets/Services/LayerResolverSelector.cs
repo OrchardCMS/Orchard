@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Services {

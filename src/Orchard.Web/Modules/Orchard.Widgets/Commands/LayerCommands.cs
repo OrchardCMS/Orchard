@@ -34,9 +34,9 @@ namespace Orchard.Widgets.Commands {
             Context.Output.WriteLine(T("Creating Layer {0}", name));
 
             IContent layer = _contentManager.Create<LayerPart>("Layer", t => {
-                                                                            t.Record.Name = name; 
-                                                                            t.Record.LayerRule = LayerRule;
-                                                                            t.Record.Description = Description ?? String.Empty;
+                                                                            t.Name = name; 
+                                                                            t.LayerRule = LayerRule;
+                                                                            t.Description = Description ?? String.Empty;
                                                                         });
 
             _contentManager.Publish(layer.ContentItem);
