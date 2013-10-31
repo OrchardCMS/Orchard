@@ -159,8 +159,23 @@ namespace Upgrade.Controllers {
                     site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotificationsRecipients", (bool)reader["NotificationsRecipients"]);
                     site.As<InfosetPart>().Store("RegistrationSettingsPart", "EnableLostPassword", (bool)reader["EnableLostPassword"]);
                 });
+
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord"), null);
 
+            // SmtpSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Address", (string)reader["Address"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Host", (string)reader["Host"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Port", (int)reader["Port"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "EnableSsl", (bool)reader["EnableSsl"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "RequireCredentials", (bool)reader["RequireCredentials"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "UserName", (string)reader["UserName"]);
+                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Password", (string)reader["Password"]);
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord"), null);
+            
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
