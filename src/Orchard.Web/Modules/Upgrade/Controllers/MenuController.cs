@@ -76,7 +76,7 @@ namespace Upgrade.Controllers {
 
             var menuWidget = widget.As<MenuWidgetPart>();
 
-            menuWidget.Menu = mainMenu.ContentItem.Record;
+            menuWidget.MenuContentItemId = mainMenu.ContentItem.Id;
 
             menuWidget.StartLevel = 1;
             menuWidget.Levels = 1;

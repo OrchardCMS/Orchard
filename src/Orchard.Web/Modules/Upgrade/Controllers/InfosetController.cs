@@ -48,7 +48,7 @@ namespace Upgrade.Controllers {
             var site = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>();
 
             // SiteSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettingsPartRecord"),
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord"),
                 (reader, connection) => {
                     site.HomePage = (string)reader["HomePage"];
                     site.PageSize = (int)reader["PageSize"];
@@ -61,15 +61,15 @@ namespace Upgrade.Controllers {
                     site.SuperUser = (string)reader["SuperUser"];
                 });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettingsPartRecord"), null);
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord"), null);
 
             // SiteSettings2PartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettings2PartRecord"),
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord"),
                 (reader, connection) => {
                     site.BaseUrl = (string)reader["BaseUrl"];
                 });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Core_SiteSettings2PartRecord"), null);
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord"), null);
 
             // ThemeSiteSettingsPartRecord
             _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"),
@@ -244,6 +244,81 @@ namespace Upgrade.Controllers {
                     contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Description", (string)reader["Description"]);
                     contentPermissionPart.As<InfosetPart>().Store("LayerPart", "LayerRule", (string)reader["LayerRule"]);
                 });
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+        [HttpPost]
+        public JsonResult MigrateMenuWidgetPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "StartLevel", (int)reader["StartLevel"]);
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Levels", (int)reader["Levels"]);
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Breadcrumb", (bool)reader["Breadcrumb"]);
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddHomePage", (bool)reader["AddHomePage"]);
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddCurrentPage", (bool)reader["AddCurrentPage"]);
+                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "MenuContentItemId", (int)reader["Menu_id"]);
+                });
+
+            if (lastContentItemId == id) {
+                // delete the table only when there is no more content to process
+                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord"), null);
+            }
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+        [HttpPost]
+        public JsonResult MigrateShapeMenuItemPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("ShapeMenuItemPart", "ShapeType", (string)reader["ShapeType"]);
+                });
+
+            if (lastContentItemId == id) {
+                // delete the table only when there is no more content to process
+                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord"), null);
+            }
+
+            return new JsonResult { Data = lastContentItemId };
+        }
+
+
+        [HttpPost]
+        public JsonResult MigrateMenuItemPart(int id) {
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemId = id;
+
+            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord") + " WHERE Id > " + id,
+                (reader, connection) => {
+                    lastContentItemId = (int)reader["Id"];
+                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+
+                    contentPermissionPart.As<InfosetPart>().Store("MenuItemPart", "Url", (string)reader["Url"]);
+                });
+
+            if (lastContentItemId == id) {
+                // delete the table only when there is no more content to process
+                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord"), null);
+            }
 
             return new JsonResult { Data = lastContentItemId };
         }

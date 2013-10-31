@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Models;
@@ -44,12 +41,8 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
             return ContentShape( "Parts_MenuWidget", () => {
-                if(part.Menu == null) {
-                    return null;
-                }
-
-                var menu = _menuService.GetMenu(part.Menu.Id);
-
+                var menu = _menuService.GetMenu(part.MenuContentItemId);
+                
                 if(menu == null) {
                     return null;
                 }
@@ -164,8 +157,9 @@ namespace Orchard.Core.Navigation.Drivers {
         
         protected override DriverResult Editor(MenuWidgetPart part, dynamic shapeHelper) {
             return ContentShape("Parts_MenuWidget_Edit", () => {
+
                     var model = new MenuWidgetViewModel {
-                        CurrentMenuId = part.Menu == null ? -1 : part.Menu.Id,
+                        CurrentMenuId = part.MenuContentItemId,
                         StartLevel = part.StartLevel,
                         StopLevel = part.Levels,
                         Breadcrumb = part.Breadcrumb,
@@ -188,8 +182,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.Breadcrumb = model.Breadcrumb;
                 part.AddHomePage = model.AddHomePage;
                 part.AddCurrentPage = model.AddCurrentPage;
-                part.ShowFullMenu = model.ShowFullMenu;
-                part.Menu = _contentManager.Get(model.CurrentMenuId).Record;
+                part.MenuContentItemId = model.CurrentMenuId;
             }
 
             return Editor(part, shapeHelper);
@@ -203,11 +196,11 @@ namespace Orchard.Core.Navigation.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "AddHomePage", x => part.AddHomePage = Convert.ToBoolean(x));
             context.ImportAttribute(part.PartDefinition.Name, "ShowFullMenu", x => part.ShowFullMenu = Convert.ToBoolean(x));
 
-            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.Menu = context.GetItemFromSession(x).Record);
+            context.ImportAttribute(part.PartDefinition.Name, "Menu", x => part.MenuContentItemId = context.GetItemFromSession(x).Id);
         }
 
         protected override void Exporting(MenuWidgetPart part, ExportContentContext context) {
-            var menuIdentity = _contentManager.GetItemMetadata(_contentManager.Get(part.Menu.Id)).Identity;
+            var menuIdentity = _contentManager.GetItemMetadata(_contentManager.Get(part.MenuContentItemId)).Identity;
             context.Element(part.PartDefinition.Name).SetAttributeValue("Menu", menuIdentity);
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("StartLevel", part.StartLevel);

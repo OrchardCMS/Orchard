@@ -37,7 +37,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Importing(ShapeMenuItemPart part, ImportContentContext context) {
-            IfNotNull(context.Attribute(part.PartDefinition.Name, "ShapeType"), x => part.Record.ShapeType = x);
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "ShapeType"), x => part.ShapeType = x);
         }
 
         private static void IfNotNull<T>(T value, Action<T> then) where T : class {
@@ -47,7 +47,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override void Exporting(ShapeMenuItemPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShapeType", part.Record.ShapeType);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ShapeType", part.ShapeType);
         }
     }
 }

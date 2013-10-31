@@ -112,7 +112,7 @@ namespace Orchard.Widgets.Commands {
                 
                 if(menu != null) {
                     widget.RenderTitle = false;
-                    widget.As<MenuWidgetPart>().Menu = menu.ContentItem.Record;
+                    widget.As<MenuWidgetPart>().MenuContentItemId = menu.ContentItem.Id;
                 }
             }
 

@@ -51,6 +51,24 @@
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateLayerPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
 
+<fieldset>
+    <legend>@T("Migrating Menu Widget Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Menu Widget parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMenuWidgetPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Shape Menu Item Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Shape Menu Item parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateShapeMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Menu Item Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Menu Item parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function() {
