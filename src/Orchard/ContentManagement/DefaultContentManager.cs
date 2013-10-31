@@ -177,7 +177,7 @@ namespace Orchard.ContentManagement {
 
                         contentItemVersionCriteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
                         contentItemVersionCriteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
-                        contentItemVersionCriteria.SetMaxResults(1);
+                        //contentItemVersionCriteria.SetMaxResults(1);
                     });
 
 
