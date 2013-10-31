@@ -146,6 +146,21 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord"), null);
 
+            // RegistrationSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersMustValidateEmail", (bool)reader["UsersMustValidateEmail"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailRegisteredWebsite", (bool)reader["ValidateEmailRegisteredWebsite"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailContactEMail", (bool)reader["ValidateEmailContactEMail"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersAreModerated", (bool)reader["UsersAreModerated"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotifyModeration", (bool)reader["NotifyModeration"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotificationsRecipients", (bool)reader["NotificationsRecipients"]);
+                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "EnableLostPassword", (bool)reader["EnableLostPassword"]);
+                });
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord"), null);
+
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();

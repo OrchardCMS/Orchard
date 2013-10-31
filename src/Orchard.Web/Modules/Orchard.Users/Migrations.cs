@@ -21,19 +21,6 @@ namespace Orchard.Users {
                     .Column<string>("EmailChallengeToken")
                 );
 
-            SchemaBuilder.CreateTable("RegistrationSettingsPartRecord", 
-                table => table
-                    .ContentPartRecord()
-                    .Column<bool>("UsersCanRegister", c => c.WithDefault(false))
-                    .Column<bool>("UsersMustValidateEmail", c => c.WithDefault(false))
-                    .Column<string>("ValidateEmailRegisteredWebsite", c => c.WithLength(255))
-                    .Column<string>("ValidateEmailContactEMail", c => c.WithLength(255))
-                    .Column<bool>("UsersAreModerated", c => c.WithDefault(false))
-                    .Column<bool>("NotifyModeration", c => c.WithDefault(false))
-                    .Column<string>("NotificationsRecipients", c => c.Unlimited())
-                    .Column<bool>("EnableLostPassword", c => c.WithDefault(false))
-                );
-
             return 1;
         }
 

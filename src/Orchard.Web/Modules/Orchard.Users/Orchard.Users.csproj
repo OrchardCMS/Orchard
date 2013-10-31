@@ -78,7 +78,6 @@
     <Compile Include="Events\IUserEventHandler.cs" />
     <Compile Include="Models\MessageTypes.cs" />
     <Compile Include="Models\RegistrationSettingsPart.cs" />
-    <Compile Include="Models\RegistrationSettingsPartRecord.cs" />
     <Compile Include="Models\UserPart.cs" />
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
