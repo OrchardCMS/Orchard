@@ -100,7 +100,6 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ReportEntry.cs" />
     <Compile Include="Models\WarmupSettingsPart.cs" />
-    <Compile Include="Models\WarmupSettingsPartRecord.cs" />
     <Compile Include="Services\WarmupReportManager.cs" />
     <Compile Include="Services\IWarmupReportManager.cs" />
     <Compile Include="Services\IWarmupScheduler.cs" />

@@ -54,7 +54,7 @@ namespace Orchard.Tests.Modules.Warmup {
             _orchardServices = new StubOrchardServices();
             ((StubWorkContextAccessor.WorkContextImpl.StubSite) _orchardServices.WorkContext.CurrentSite).BaseUrl = "http://orchardproject.net";
 
-            _settings = new WarmupSettingsPart { Record = new WarmupSettingsPartRecord() };
+            _settings = new WarmupSettingsPart();
             _orchardServices.WorkContext.CurrentSite.ContentItem.Weld(_settings);
  
             var builder = new ContainerBuilder();

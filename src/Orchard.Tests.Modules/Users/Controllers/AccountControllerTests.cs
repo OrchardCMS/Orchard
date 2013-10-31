@@ -102,7 +102,6 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] { typeof(UserPartRecord),
-                    typeof(RegistrationSettingsPartRecord), 
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),
                     typeof(ContentItemVersionRecord), 

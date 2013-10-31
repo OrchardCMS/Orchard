@@ -1,26 +1,26 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.Warmup.Models {
-    public class WarmupSettingsPart : ContentPart<WarmupSettingsPartRecord> {
+    public class WarmupSettingsPart : ContentPart {
 
         public string Urls {
-            get { return Record.Urls; }
-            set { Record.Urls = value; }
+            get { return this.Retrieve(x => x.Urls); }
+            set { this.Store(x => x.Urls, value); }
         }
 
         public bool Scheduled {
-            get { return Record.Scheduled; }
-            set { Record.Scheduled = value; }
+            get { return this.Retrieve(x => x.Scheduled); }
+            set { this.Store(x => x.Scheduled, value); }
         }
 
         public int Delay {
-            get { return Record.Delay; }
-            set { Record.Delay = value; }
+            get { return this.Retrieve(x => x.Delay); }
+            set { this.Store(x => x.Delay, value); }
         }
 
         public bool OnPublish {
-            get { return Record.OnPublish; }
-            set { Record.OnPublish = value; }
+            get { return this.Retrieve(x => x.OnPublish); }
+            set { this.Store(x => x.OnPublish, value); }
         }
     }
 }

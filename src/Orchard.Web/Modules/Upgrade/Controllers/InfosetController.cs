@@ -175,6 +175,17 @@ namespace Upgrade.Controllers {
                 });
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord"), null);
+
+            // WarmupSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Urls", (string)reader["Urls"]);
+                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Scheduled", (bool)reader["Scheduled"]);
+                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Delay", (int)reader["Delay"]);
+                    site.As<InfosetPart>().Store("WarmupSettingsPart", "OnPublish", (bool)reader["OnPublish"]);
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord"), null);
             
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
