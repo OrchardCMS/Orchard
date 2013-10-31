@@ -24,31 +24,31 @@ namespace Orchard.Taxonomies.Models {
         }
 
         public int TaxonomyId {
-            get { return Record.TaxonomyId; }
-            set { Record.TaxonomyId = value; }
+            get { return Retrieve(x => x.TaxonomyId); }
+            set { Store(x => x.TaxonomyId, value); }
         }
 
         /// <summary>
         /// e.g., /; /1/; /1/2/
         /// </summary>
         public string Path {
-            get { return Record.Path; }
-            set { Record.Path = value; }
+            get { return Retrieve(x => x.Path); }
+            set { Store(x => x.Path, value); }
         }
 
         public int Count {
-            get { return Record.Count; }
-            set { Record.Count = value; }
+            get { return Retrieve(x => x.Count); }
+            set { Store(x => x.Count, value); }
         }
 
         public bool Selectable {
-            get { return Record.Selectable; }
-            set { Record.Selectable = value; }
+            get { return Retrieve(x => x.Selectable); }
+            set { Store(x => x.Selectable, value); }
         }
 
         public int Weight {
-            get { return Record.Weight; }
-            set { Record.Weight = value; }
+            get { return Retrieve(x => x.Weight); }
+            set { Store(x => x.Weight, value); }
         }
 
         public string FullPath { get { return String.Concat(Path, Id); } }

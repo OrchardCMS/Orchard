@@ -92,16 +92,16 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Exporting(TermPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Record.Count);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Selectable", part.Record.Selectable);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Record.Weight);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Selectable", part.Selectable);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight);
 
-            var taxonomy = _contentManager.Get(part.Record.TaxonomyId);
+            var taxonomy = _contentManager.Get(part.TaxonomyId);
             var identity = _contentManager.GetItemMetadata(taxonomy).Identity.ToString();
             context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", identity);
 
             var identityPaths = new List<string>();
-            foreach(var pathPart in part.Record.Path.Split('/')) {
+            foreach(var pathPart in part.Path.Split('/')) {
                 if(String.IsNullOrEmpty(pathPart)) {
                     continue;
                 }
@@ -114,9 +114,9 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TermPart part, ImportContentContext context) {
-            part.Record.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
-            part.Record.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
-            part.Record.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
+            part.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
+            part.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
+            part.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
 
             var identity = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
             var contentItem = context.GetItemFromSession(identity);
@@ -125,12 +125,12 @@ namespace Orchard.Taxonomies.Drivers {
                 throw new OrchardException(T("Unknown taxonomy: {0}", identity));
             } 
             
-            part.Record.TaxonomyId = contentItem.Id;
-            part.Record.Path = "/";
+            part.TaxonomyId = contentItem.Id;
+            part.Path = "/";
 
             foreach(var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)) {
                 var pathContentItem = context.GetItemFromSession(identityPath);
-                part.Record.Path += pathContentItem.Id + "/";
+                part.Path += pathContentItem.Id + "/";
             }
         }
     }

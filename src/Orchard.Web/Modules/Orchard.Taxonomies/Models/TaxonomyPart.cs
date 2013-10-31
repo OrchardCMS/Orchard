@@ -20,13 +20,13 @@ namespace Orchard.Taxonomies.Models {
         }
 
         public string TermTypeName {
-            get { return Record.TermTypeName; }
-            set { Record.TermTypeName = value; }
+            get { return Retrieve(x => x.TermTypeName); }
+            set { Store(x => x.TermTypeName, value); }
         }
 
         public bool IsInternal {
-            get { return Record.IsInternal; }
-            set { Record.IsInternal = value; }
+            get { return Retrieve(x => x.IsInternal); }
+            set { Store(x => x.IsInternal, value); }
         }
 
     }
