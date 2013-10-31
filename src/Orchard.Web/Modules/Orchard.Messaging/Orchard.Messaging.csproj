@@ -19,11 +19,11 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -68,7 +68,6 @@
     <Compile Include="Handlers\MessageSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MessageSettingsPart.cs" />
-    <Compile Include="Models\MessageSettingsPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MessageSettingsPartViewModel.cs" />
   </ItemGroup>

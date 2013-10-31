@@ -128,7 +128,14 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Comment_CommentSettingsPartRecord"), null);
 
+            // MessageSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("MessageSettingsPart", "DefaultChannelService", (bool)reader["DefaultChannelService"]);
+                });
 
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord"), null);
+            
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
