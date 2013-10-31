@@ -3,19 +3,7 @@
 namespace Orchard.OutputCache {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-
-            SchemaBuilder.CreateTable("CacheSettingsPartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<int>("DefaultCacheDuration")
-                    .Column<int>("DefaultMaxAge")
-                    .Column<string>("IgnoredUrls", c => c.Unlimited())
-                    .Column<string>("VaryQueryStringParameters", c => c.Unlimited())
-                    .Column<string>("VaryRequestHeaders", c => c.Unlimited())
-                    .Column<bool>("DebugMode", c => c.WithDefault(false))
-                    .Column<bool>("ApplyCulture", c => c.WithDefault(false))
-                );
-
+            
             SchemaBuilder.CreateTable("CacheParameterRecord",
                     table => table
                         .Column<int>("Id", c => c.PrimaryKey().Identity())

@@ -106,6 +106,20 @@ namespace Upgrade.Controllers {
 
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"), null);
 
+            // CacheSettingsPartRecord
+            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord"),
+                (reader, connection) => {
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultCacheDuration", (int)reader["DefaultCacheDuration"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultMaxAge", (int)reader["DefaultMaxAge"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "VaryQueryStringParameters", (string)reader["VaryQueryStringParameters"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "VaryRequestHeaders", (string)reader["VaryRequestHeaders"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "IgnoredUrls", (string)reader["IgnoredUrls"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "ApplyCulture", (bool)reader["ApplyCulture"]);
+                    site.As<InfosetPart>().Store("CacheSettingsPart", "DebugMode", (bool)reader["DebugMode"]);
+                });
+
+            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord"), null);
+
 
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 

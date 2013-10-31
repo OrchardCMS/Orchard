@@ -102,7 +102,6 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CacheItem.cs" />
     <Compile Include="Models\CacheSettingsPart.cs" />
-    <Compile Include="Models\CacheSettingsPartRecord.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Services\CacheService.cs" />
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />
