@@ -62,7 +62,7 @@ namespace Orchard.Workflows.Activities {
             }
 
             var amount = activityContext.GetState<int>("Amount");
-            var type = activityContext.GetState<string>("Type");
+            var type = activityContext.GetState<string>("Unity");
 
             return _clock.UtcNow > When(started, amount, type);
         }
