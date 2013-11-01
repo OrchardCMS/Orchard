@@ -94,17 +94,20 @@ namespace Orchard.Tags.Services {
                 var tagsContentItems = _contentTagRepository.Fetch(x => x.TagRecord.Id == tagId);
 
                 // get contentItems already tagged with the existing one
-                var taggedContentItems = GetTaggedContentItems(tagRecord.Id);
+                var taggedContentItems = GetTaggedContentItems(tagRecord.Id).ToArray();
+                var oldTag = GetTag(tagId);
 
                 foreach (var tagContentItem in tagsContentItems) {
                     ContentTagRecord item = tagContentItem;
-                    if (!taggedContentItems.Any(c => c.ContentItem.Id == item.TagsPartRecord.Id)) {
+                    // does the content item already have the new tag ?
+                    if (taggedContentItems.All(c => c.ContentItem.Id != item.TagsPartRecord.Id)) {
                         TagContentItem(tagContentItem.TagsPartRecord, tagName);
                     }
+                    UntagContentItem(tagContentItem.TagsPartRecord, oldTag.TagName);
                     _contentTagRepository.Delete(tagContentItem);
                 }
 
-                _tagRepository.Delete(GetTag(tagId));
+                _tagRepository.Delete(oldTag);
                 return;
             }
 
@@ -153,6 +156,11 @@ namespace Orchard.Tags.Services {
             var tagRecord = GetTagByName(tagName);
             var tagsContentItems = new ContentTagRecord { TagsPartRecord = tagsPartRecord, TagRecord = tagRecord };
             _contentTagRepository.Create(tagsContentItems);
+        }
+
+        private void UntagContentItem(TagsPartRecord tagsPartRecord, string tagName) {
+            var tagPart = _orchardServices.ContentManager.Get<TagsPart>(tagsPartRecord.Id, VersionOptions.Latest);
+            tagPart.CurrentTags = tagPart.CurrentTags.Where(x => x != tagName);
         }
 
         public void RemoveTagsForContentItem(ContentItem contentItem) {

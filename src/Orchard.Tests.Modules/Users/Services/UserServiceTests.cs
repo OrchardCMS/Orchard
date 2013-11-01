@@ -7,6 +7,7 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
@@ -100,8 +101,9 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+            builder.RegisterType<InfosetHandler>().As<IContentHandler>();
 
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());

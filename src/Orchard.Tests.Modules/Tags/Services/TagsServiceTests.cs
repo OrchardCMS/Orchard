@@ -11,7 +11,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment;
-using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Tags.Handlers;
 using Orchard.Tags.Models;
@@ -267,6 +266,7 @@ namespace Orchard.Tests.Modules.Tags.Services {
             Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag2"), Is.False);
             Assert.That(_contentManager.Get(thing1.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
 
+            Assert.That(_contentManager.Get(thing2.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag2"), Is.False);
             Assert.That(_contentManager.Get(thing2.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
 
             Assert.That(_contentManager.Get(thing3.Id).As<TagsPart>().CurrentTags.Any(t => t == "tag3"), Is.True);
