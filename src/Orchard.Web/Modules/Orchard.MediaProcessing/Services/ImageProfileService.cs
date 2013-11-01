@@ -11,14 +11,17 @@ namespace Orchard.MediaProcessing.Services {
         private readonly IContentManager _contentManager;
         private readonly ICacheManager _cacheManager;
         private readonly IRepository<FilterRecord> _filterRepository;
+        private readonly ISignals _signals;
 
         public ImageProfileService(
             IContentManager contentManager, 
             ICacheManager cacheManager,
-            IRepository<FilterRecord> filterRepository) {
+            IRepository<FilterRecord> filterRepository,
+            ISignals signals) {
             _contentManager = contentManager;
             _cacheManager = cacheManager;
             _filterRepository = filterRepository;
+            _signals = signals;
         }
 
         public Localizer T { get; set; }
@@ -79,6 +82,8 @@ namespace Orchard.MediaProcessing.Services {
                 .Where(x => x.Position < filter.Position && x.ImageProfilePartRecord.Id == filter.ImageProfilePartRecord.Id)
                 .OrderByDescending(x => x.Position)
                 .FirstOrDefault();
+
+            _signals.Trigger("MediaProcessing_Saved_" + filter.ImageProfilePartRecord.Name);
 
             // nothing to do if already at the top
             if (previous == null) {
