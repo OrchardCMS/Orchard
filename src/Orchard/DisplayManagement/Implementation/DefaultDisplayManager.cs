@@ -92,12 +92,29 @@ namespace Orchard.DisplayManagement.Implementation {
                 }
             }
 
-            foreach (var frameType in shape.Metadata.Wrappers) {
-                ShapeBinding frameBinding;
-                if (TryGetDescriptorBinding(frameType, Enumerable.Empty<string>(), shapeTable, out frameBinding)) {
-                    shape.Metadata.ChildContent = Process(frameBinding, shape, context);
-                }
+            var wrappers = shape.Metadata.Wrappers;
+            var alternates = shape.Metadata.Alternates;
+
+            foreach (var wrapperType in wrappers) {
+                // clearing wrappers and alternates to prevent infinite loop
+                shape.Metadata.Wrappers = new List<string>();
+                shape.Metadata.Alternates = new List<string>();
+
+                // mutating current shape to the wrapper type, leaving all content unchanged 
+                // (wrapper will have the same model as main template)
+                shape.Metadata.Type = wrapperType;
+                var newContext = new DisplayContext {
+                    Display = context.Display,
+                    Value = shape,
+                    ViewContext = context.ViewContext,
+                    ViewDataContainer = context.ViewDataContainer
+                };
+
+                shape.Metadata.ChildContent = Execute(newContext);
             }
+
+            shape.Metadata.Wrappers = wrappers;
+            shape.Metadata.Alternates = alternates;
 
             var displayedContext = new ShapeDisplayedContext {
                 Shape = shape,
