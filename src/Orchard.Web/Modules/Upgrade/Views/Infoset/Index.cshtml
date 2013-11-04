@@ -22,6 +22,12 @@
 </fieldset>
 
 <fieldset>
+    <legend>@T("Migrating Media Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Media Parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMedia", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
     <legend>@T("Migrating Content Item Permissions Parts:")</legend>
     <span class="hint">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentPermissionsPart", "Infoset")">@T("Migrate")</button>

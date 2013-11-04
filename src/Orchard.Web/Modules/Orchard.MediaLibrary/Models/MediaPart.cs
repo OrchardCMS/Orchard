@@ -21,32 +21,32 @@ namespace Orchard.MediaLibrary.Models {
         /// Gets or sets the mime type of the media.
         /// </summary>
         public string MimeType {
-            get { return Record.MimeType; }
-            set { Record.MimeType = value; }
+            get { return Retrieve(x => x.MimeType); }
+            set { Store(x => x.MimeType, value); }
         }
 
         /// <summary>
         /// Gets or sets the caption of the media.
         /// </summary>
         public string Caption {
-            get { return Record.Caption; }
-            set { Record.Caption = value; }
+            get { return Retrieve(x => x.Caption); }
+            set { Store(x => x.Caption, value); }
         }
 
         /// <summary>
         /// Gets or sets the alternate text of the media.
         /// </summary>
         public string AlternateText {
-            get { return Record.AlternateText; }
-            set { Record.AlternateText = value; }
+            get { return Retrieve(x => x.AlternateText); }
+            set { Store(x => x.AlternateText, value); }
         }
 
         /// <summary>
         /// Gets or sets the hierarchical location of the media.
         /// </summary>
         public string FolderPath {
-            get { return Record.FolderPath; }
-            set { Record.FolderPath = value; }
+            get { return Retrieve(x => x.FolderPath); }
+            set { Store(x => x.FolderPath, value); }
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Orchard.MediaLibrary.Models {
         /// with a local file.
         /// </summary>
         public string FileName {
-            get { return Record.FileName; }
-            set { Record.FileName = value; }
+            get { return Retrieve(x => x.FileName); }
+            set { Store(x => x.FileName, value); }
         }
 
         /// <summary>
