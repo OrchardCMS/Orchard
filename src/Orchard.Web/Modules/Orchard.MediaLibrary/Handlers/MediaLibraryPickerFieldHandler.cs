@@ -18,10 +18,11 @@ namespace Orchard.MediaLibrary.Handlers {
             
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
+
         }
 
         protected override void Loaded(LoadContentContext context) {
-            base.Loading(context);
+            base.Loaded(context);
             InitilizeLoader(context.ContentItem);
         }
 

@@ -19,7 +19,7 @@ namespace Orchard.MediaLibrary.Handlers {
 
             Filters.Add(StorageFilter.For(repository));
             OnRemoving<MediaPart>((context, part) => RemoveMedia(part));
-            OnLoading<MediaPart>((context, part) => {
+            OnLoaded<MediaPart>((context, part) => {
                 if (!String.IsNullOrEmpty(part.FileName)) {
                     part._publicUrl.Loader(x => _mediaLibraryService.GetMediaPublicUrl(part.FolderPath, part.FileName));
                 }
