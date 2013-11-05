@@ -61,10 +61,13 @@ namespace Orchard.DisplayManagement.Implementation {
             };
             _shapeDisplayEvents.Invoke(sde => sde.Displaying(displayingContext), Logger);
 
+            // if this shape is a wrapper - find alternates and binding sources for the wrapper, not the original type
+            var typeToLookup = shapeMetadata.WrapperType ?? shapeMetadata.Type;
+
             // find base shape association using only the fundamental shape type. 
             // alternates that may already be registered do not affect the "displaying" event calls
             ShapeBinding shapeBinding;
-            if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
+            if (TryGetDescriptorBinding(typeToLookup, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
 
                 // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
@@ -84,7 +87,7 @@ namespace Orchard.DisplayManagement.Implementation {
             else {
                 // now find the actual binding to render, taking alternates into account
                 ShapeBinding actualBinding;
-                if ( TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
+                if ( TryGetDescriptorBinding(typeToLookup, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
                     shape.Metadata.ChildContent = Process(actualBinding, shape, context);
                 }
                 else {
@@ -94,25 +97,21 @@ namespace Orchard.DisplayManagement.Implementation {
 
             var wrappers = shape.Metadata.Wrappers;
             var alternates = shape.Metadata.Alternates;
+            var bindingSources = shape.Metadata.BindingSources;
+            var currentWrapperType = shape.Metadata.WrapperType;
 
             foreach (var wrapperType in wrappers) {
                 // clearing wrappers and alternates to prevent infinite loop
                 shape.Metadata.Wrappers = new List<string>();
                 shape.Metadata.Alternates = new List<string>();
+                shape.Metadata.BindingSources = new List<string>();
+                shape.Metadata.WrapperType = wrapperType;
 
-                // mutating current shape to the wrapper type, leaving all content unchanged 
-                // (wrapper will have the same model as main template)
-                shape.Metadata.Type = wrapperType;
-                var newContext = new DisplayContext {
-                    Display = context.Display,
-                    Value = shape,
-                    ViewContext = context.ViewContext,
-                    ViewDataContainer = context.ViewDataContainer
-                };
-
-                shape.Metadata.ChildContent = Execute(newContext);
+                shape.Metadata.ChildContent = Execute(context);
             }
 
+            shape.Metadata.WrapperType = currentWrapperType;
+            shape.Metadata.BindingSources = bindingSources;
             shape.Metadata.Wrappers = wrappers;
             shape.Metadata.Alternates = alternates;
 
