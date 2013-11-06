@@ -21,6 +21,10 @@
     </UpgradeBackupLocation>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +71,8 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
+    <Compile Include="Implementation\Updater\AliasUpdateCursor.cs" />
+    <Compile Include="Implementation\Updater\IAliasUpdateCursor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
