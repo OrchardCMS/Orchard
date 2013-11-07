@@ -14,6 +14,7 @@
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "text medium" })
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
+            <span class="hint">@T("You may define multiple domains using the comma (,) as a separator. Use the '*.' prefix to map all subdomains.")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlPrefix)">@T("URL prefix")</label>

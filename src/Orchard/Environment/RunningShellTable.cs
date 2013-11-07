@@ -18,7 +18,7 @@ namespace Orchard.Environment {
     public class RunningShellTable : IRunningShellTable {
         private IEnumerable<ShellSettings> _shells = Enumerable.Empty<ShellSettings>();
         private IDictionary<string, IEnumerable<ShellSettings>> _shellsByHost;
-        private ConcurrentDictionary<string, ShellSettings> _shellsByHostAndPrefix = new ConcurrentDictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, ShellSettings> _shellsByHostAndPrefix = new ConcurrentDictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
 
         private ShellSettings _fallback;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
@@ -111,6 +111,10 @@ namespace Orchard.Environment {
         public ShellSettings Match(string host, string appRelativePath) {
             _lock.EnterReadLock();
             try {
+                if (_shellsByHost == null) {
+                    return null;
+                }
+
                 // optimized path when only one tenant (Default), configured with no custom host
                 if (!_shellsByHost.Any() && _fallback != null) {
                     return _fallback;
@@ -127,8 +131,24 @@ namespace Orchard.Environment {
                 return _shellsByHostAndPrefix.GetOrAdd(hostAndPrefix, key => {
                     
                     // filtering shells by host
-                    var shells = _shellsByHost.ContainsKey(host) ? _shellsByHost[host] : _shellsByHost[""];
+                    IEnumerable<ShellSettings> shells;
 
+                    if (!_shellsByHost.TryGetValue(host, out shells)) {
+                        if (!_shellsByHost.TryGetValue("", out shells)) {
+
+                            // no specific match, then look for star mapping
+                            var subHostKey = _shellsByHost.Keys.FirstOrDefault(x =>
+                                x.StartsWith("*.") && host.EndsWith(x.Substring(2))
+                                );
+
+                            if (subHostKey == null) {
+                                return _fallback; 
+                            }
+
+                            shells = _shellsByHost[subHostKey];
+                        }
+                    }
+                    
                     // looking for a request url prefix match
                     var mostQualifiedMatch = shells.FirstOrDefault(settings => {
                         if (settings.State == TenantState.Disabled) {
