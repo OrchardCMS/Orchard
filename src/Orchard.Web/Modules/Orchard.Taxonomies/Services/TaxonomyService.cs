@@ -212,9 +212,9 @@ namespace Orchard.Taxonomies.Services {
             var termsPart = contentItem.As<TermsPart>();
 
             // removing current terms for specific field
-            var fieldIndexes = termsPart.Terms
-                .Where(t => t.Field == field)
-                .Select((t, i) => i)
+            var fieldIndexes = termsPart.Terms.Select((t, i) => new {Term = t, Index = i})
+                .Where(x => x.Term.Field == field)
+                .Select(x => x.Index)
                 .OrderByDescending(i => i)
                 .ToList();
             
