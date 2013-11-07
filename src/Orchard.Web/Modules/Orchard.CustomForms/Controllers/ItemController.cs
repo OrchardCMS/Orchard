@@ -125,7 +125,7 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
+            //_contentManager.Create(contentItem, VersionOptions.Draft);
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             
@@ -166,9 +166,10 @@ namespace Orchard.CustomForms.Controllers {
 
             // save the submitted form
             if (!customForm.SaveContentItem) {
-                Services.ContentManager.Remove(contentItem);
+                // Services.ContentManager.Remove(contentItem);
             }
             else {
+                _contentManager.Create(contentItem);
                 conditionallyPublish(contentItem);
             }
 
