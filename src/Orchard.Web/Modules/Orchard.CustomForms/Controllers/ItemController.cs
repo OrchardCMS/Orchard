@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -125,8 +124,6 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            //_contentManager.Create(contentItem, VersionOptions.Draft);
-
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             
             if (!ModelState.IsValid) {
@@ -165,10 +162,8 @@ namespace Orchard.CustomForms.Controllers {
             }
 
             // save the submitted form
-            if (!customForm.SaveContentItem) {
-                // Services.ContentManager.Remove(contentItem);
-            }
-            else {
+            if (customForm.SaveContentItem) {
+                _contentManager.Create(contentItem);
                 _contentManager.Create(contentItem);
                 conditionallyPublish(contentItem);
             }
