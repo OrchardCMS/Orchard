@@ -164,7 +164,6 @@ namespace Orchard.CustomForms.Controllers {
             // save the submitted form
             if (customForm.SaveContentItem) {
                 _contentManager.Create(contentItem);
-                _contentManager.Create(contentItem);
                 conditionallyPublish(contentItem);
             }
 
