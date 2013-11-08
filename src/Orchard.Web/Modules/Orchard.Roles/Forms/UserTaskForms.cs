@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Roles.Services;
 
 namespace Orchard.Roles.Forms {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class UserTaskForms : IFormProvider {
         private readonly IRoleService _roleService;
         protected dynamic Shape { get; set; }
