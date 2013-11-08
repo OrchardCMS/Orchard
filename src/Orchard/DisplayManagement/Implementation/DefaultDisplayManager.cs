@@ -49,7 +49,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             var shapeMetadata = shape.Metadata;
             // can't really cope with a shape that has no type information
-            if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
+            if (shapeMetadata == null || (string.IsNullOrEmpty(shapeMetadata.Type) && string.IsNullOrEmpty(shapeMetadata.WrapperType)))
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext(context.ViewContext);
@@ -95,6 +95,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 }
             }
 
+            // storing current shape metadata so it won't get altered by wrappers' display process
             var wrappers = shape.Metadata.Wrappers;
             var alternates = shape.Metadata.Alternates;
             var bindingSources = shape.Metadata.BindingSources;
@@ -110,6 +111,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 shape.Metadata.ChildContent = Execute(context);
             }
 
+            // restoring original shape metadata
             shape.Metadata.WrapperType = currentWrapperType;
             shape.Metadata.BindingSources = bindingSources;
             shape.Metadata.Wrappers = wrappers;

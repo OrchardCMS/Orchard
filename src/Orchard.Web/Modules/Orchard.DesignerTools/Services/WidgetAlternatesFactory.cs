@@ -26,7 +26,7 @@ namespace Orchard.DesignerTools.Services {
                         var widgetPart = contentItem.As<WidgetPart>();
                         if (widgetPart != null) {
                             var zoneName = widgetPart.Zone;
-                            var shapeName = displayedContext.ShapeMetadata.Type;
+                            var shapeName = displayedContext.ShapeMetadata.WrapperType ?? displayedContext.ShapeMetadata.Type;
                             var contentTypeName = contentItem.ContentType;
 
                             // Add 2 alternates for flexible widget shape naming:
