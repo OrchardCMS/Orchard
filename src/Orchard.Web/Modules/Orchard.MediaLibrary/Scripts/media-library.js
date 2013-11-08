@@ -349,8 +349,12 @@ $(function () {
 
                         viewModel.clearSelection();
                     } else {
-                        console.log('failed to move media items');
+                        alert(errorMessage);
+                        console.log('failed to move media items: ' + result.toString());
                     }
+                }).fail(function (result) {
+                    alert(errorMessage);
+                    console.log('failed to move media items: ' + result.toString());
                 });
             }
         });

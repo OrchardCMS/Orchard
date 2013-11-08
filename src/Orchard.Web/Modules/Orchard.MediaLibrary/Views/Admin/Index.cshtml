@@ -100,6 +100,7 @@ var mediaLibrarySettings = {
     hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
+    errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()'
 };
 //]]>
