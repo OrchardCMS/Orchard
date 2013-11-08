@@ -49,7 +49,7 @@ namespace Orchard.ContentPicker.Controllers {
                 return HttpNotFound();
             }
 
-            if (contentPickerMenuItem.Items.All(x => x.Text.ToString() != T("Recent Content").Text)) {
+            if (contentPickerMenuItem.Items.All(x => x.Text.TextHint != "Recent Content")) {
                 // the default tab should not be displayed, redirect to the next one
                 var root = menuItems.FirstOrDefault();
                 if (root == null) {
