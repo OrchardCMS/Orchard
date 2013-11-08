@@ -21,9 +21,11 @@
   <Metadata>
     <Types>
       <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
+        <TitlePart/>
         <TagsPart />
         <LocalizationPart />
         <AutoroutePart />
+        <MenuPart />
       </Page>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <CommentsPart />

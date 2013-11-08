@@ -23,6 +23,7 @@
         <LocalizationPart />
         <TitlePart/>
         <AutoroutePart />
+        <MenuPart />
       </Page>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
         <CommentsPart />
