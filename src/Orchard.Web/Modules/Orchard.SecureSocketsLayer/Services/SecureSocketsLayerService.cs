@@ -188,7 +188,7 @@ namespace Orchard.SecureSocketsLayer.Services {
                 : string.Equals(requestPath, pattern, StringComparison.OrdinalIgnoreCase);
         }
 
-        private SslSettings GetSettings() {
+        public SslSettings GetSettings() {
             return _cacheManager.Get("SslSettings",
                 ctx => {
                     ctx.Monitor(_signals.When(SslSettingsPart.CacheKey));
@@ -198,7 +198,8 @@ namespace Orchard.SecureSocketsLayer.Services {
                         CustomEnabled = settingsPart.CustomEnabled,
                         SecureEverything = settingsPart.SecureEverything,
                         SecureHostName = settingsPart.SecureHostName,
-                        InsecureHostName = settingsPart.InsecureHostName
+                        InsecureHostName = settingsPart.InsecureHostName,
+                        Enabled = settingsPart.Enabled
                     };
                 });
         }

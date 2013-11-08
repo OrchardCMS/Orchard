@@ -3,7 +3,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.SecureSocketsLayer.Models {
-    internal class SslSettings {
+    public class SslSettings {
+        public bool Enabled { get; set; }
         public string Urls { get; set; }
         public bool SecureEverything { get; set; }
         public bool CustomEnabled { get; set; }
@@ -26,6 +27,14 @@ namespace Orchard.SecureSocketsLayer.Models {
                 return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
             }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("SecureEverything", value.ToString()); }
+        }
+
+        public bool Enabled {
+            get {
+                var attributeValue = this.As<InfosetPart>().Get<SslSettingsPart>("Enabled");
+                return !String.IsNullOrWhiteSpace(attributeValue) && Convert.ToBoolean(attributeValue);
+            }
+            set { this.As<InfosetPart>().Set<SslSettingsPart>("Enabled", value.ToString()); }
         }
 
         public bool CustomEnabled {

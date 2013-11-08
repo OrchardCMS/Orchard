@@ -1,19 +1,30 @@
 ﻿using System.Collections.Specialized;
 using System.Web.Mvc;
+using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.SecureSocketsLayer.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.SecureSocketsLayer.Filters {
     public class SecureSocketsLayersFilter : FilterProvider, IActionFilter {
         private readonly ISecureSocketsLayerService _sslService;
+        private readonly IOrchardServices _orchardServices;
 
-        public SecureSocketsLayersFilter(ISecureSocketsLayerService sslService) {
+        public SecureSocketsLayersFilter(ISecureSocketsLayerService sslService, IOrchardServices orchardServices) {
             _sslService = sslService;
+            _orchardServices = orchardServices;
         }
-
+        public Localizer T { get; set; }
         public void OnActionExecuted(ActionExecutedContext filterContext) {}
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
+            var settings = _sslService.GetSettings();
+
+            if (!settings.Enabled) {
+                _orchardServices.Notifier.Warning(T("You need to configure the SSL settings."));
+                return;
+            }
+
             var user = filterContext.HttpContext.User;
             var secure =
                 (user != null && user.Identity.IsAuthenticated) ||

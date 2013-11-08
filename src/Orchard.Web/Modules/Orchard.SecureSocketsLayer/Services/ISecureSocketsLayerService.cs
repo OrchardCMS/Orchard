@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.SecureSocketsLayer.Models;
 
 namespace Orchard.SecureSocketsLayer.Services {
     public interface ISecureSocketsLayerService : IDependency {
@@ -12,5 +13,7 @@ namespace Orchard.SecureSocketsLayer.Services {
         string SecureActionUrl(string actionName, string controllerName);
         string SecureActionUrl(string actionName, string controllerName, object routeValues);
         string SecureActionUrl(string actionName, string controllerName, RouteValueDictionary routeValues);
+        SslSettings GetSettings();
+
     }
 }
