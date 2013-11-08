@@ -49,7 +49,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             var shapeMetadata = shape.Metadata;
             // can't really cope with a shape that has no type information
-            if (shapeMetadata == null || (string.IsNullOrEmpty(shapeMetadata.Type) && string.IsNullOrEmpty(shapeMetadata.WrapperType)))
+            if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext(context.ViewContext);
@@ -61,13 +61,10 @@ namespace Orchard.DisplayManagement.Implementation {
             };
             _shapeDisplayEvents.Invoke(sde => sde.Displaying(displayingContext), Logger);
 
-            // if this shape is a wrapper - find alternates and binding sources for the wrapper, not the original type
-            var typeToLookup = shapeMetadata.WrapperType ?? shapeMetadata.Type;
-
             // find base shape association using only the fundamental shape type. 
             // alternates that may already be registered do not affect the "displaying" event calls
             ShapeBinding shapeBinding;
-            if (TryGetDescriptorBinding(typeToLookup, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
+            if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
 
                 // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
@@ -87,7 +84,7 @@ namespace Orchard.DisplayManagement.Implementation {
             else {
                 // now find the actual binding to render, taking alternates into account
                 ShapeBinding actualBinding;
-                if ( TryGetDescriptorBinding(typeToLookup, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
+                if ( TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
                     shape.Metadata.ChildContent = Process(actualBinding, shape, context);
                 }
                 else {
@@ -95,27 +92,12 @@ namespace Orchard.DisplayManagement.Implementation {
                 }
             }
 
-            // storing current shape metadata so it won't get altered by wrappers' display process
-            var wrappers = shape.Metadata.Wrappers;
-            var alternates = shape.Metadata.Alternates;
-            var bindingSources = shape.Metadata.BindingSources;
-            var currentWrapperType = shape.Metadata.WrapperType;
-
-            foreach (var wrapperType in wrappers) {
-                // clearing wrappers and alternates to prevent infinite loop
-                shape.Metadata.Wrappers = new List<string>();
-                shape.Metadata.Alternates = new List<string>();
-                shape.Metadata.BindingSources = new List<string>();
-                shape.Metadata.WrapperType = wrapperType;
-
-                shape.Metadata.ChildContent = Execute(context);
+            foreach (var frameType in shape.Metadata.Wrappers) {
+                ShapeBinding frameBinding;
+                if (TryGetDescriptorBinding(frameType, Enumerable.Empty<string>(), shapeTable, out frameBinding)) {
+                    shape.Metadata.ChildContent = Process(frameBinding, shape, context);
+                }
             }
-
-            // restoring original shape metadata
-            shape.Metadata.WrapperType = currentWrapperType;
-            shape.Metadata.BindingSources = bindingSources;
-            shape.Metadata.Wrappers = wrappers;
-            shape.Metadata.Alternates = alternates;
 
             var displayedContext = new ShapeDisplayedContext {
                 Shape = shape,

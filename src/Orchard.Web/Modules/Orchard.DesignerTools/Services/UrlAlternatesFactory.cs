@@ -56,15 +56,13 @@ namespace Orchard.DesignerTools.Services {
                     return;
                 }
 
-                var type = displayedContext.ShapeMetadata.WrapperType ?? displayedContext.ShapeMetadata.Type;
-
                 // appends Url alternates to current ones
                 displayedContext.ShapeMetadata.Alternates = displayedContext.ShapeMetadata.Alternates.SelectMany(
                     alternate => new [] { alternate }.Union(_urlAlternates.Value.Select(a => alternate + "__url__" + a))
                     ).ToList();
 
                 // appends [ShapeType]__url__[Url] alternates
-                displayedContext.ShapeMetadata.Alternates = _urlAlternates.Value.Select(url => type + "__url__" + url)
+                displayedContext.ShapeMetadata.Alternates = _urlAlternates.Value.Select(url => displayedContext.ShapeMetadata.Type + "__url__" + url)
                     .Union(displayedContext.ShapeMetadata.Alternates)
                     .ToList();
             });
