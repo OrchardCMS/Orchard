@@ -102,7 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Release notes.txt" />
     <Content Include="Styles\images\menu.comments.png" />
     <Content Include="Styles\menu.comments-admin.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
