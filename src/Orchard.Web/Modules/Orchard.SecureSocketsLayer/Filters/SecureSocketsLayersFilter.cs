@@ -15,13 +15,19 @@ namespace Orchard.SecureSocketsLayer.Filters {
             _orchardServices = orchardServices;
         }
         public Localizer T { get; set; }
-        public void OnActionExecuted(ActionExecutedContext filterContext) {}
+
+        public void OnActionExecuted(ActionExecutedContext filterContext) {
+            var settings = _sslService.GetSettings();
+
+            if (!settings.Enabled) {
+                _orchardServices.Notifier.Warning(T("You need to configure the SSL settings."));
+            }
+        }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             var settings = _sslService.GetSettings();
 
             if (!settings.Enabled) {
-                _orchardServices.Notifier.Warning(T("You need to configure the SSL settings."));
                 return;
             }
 
