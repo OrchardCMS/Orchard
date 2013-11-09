@@ -288,7 +288,8 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            
+            // handle redirections
+            TransformRedirect(filterContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
@@ -341,10 +342,7 @@ namespace Orchard.OutputCache.Filters {
                 } 
                 return;
             }
-
-            // handle redirections
-            TransformRedirect(filterContext);
-
+            
             // save the result only if the content can be intercepted
             if (_filter == null) return;
 
@@ -407,58 +405,67 @@ namespace Orchard.OutputCache.Filters {
 
         }
 
-        private void TransformRedirect(ResultExecutedContext filterContext) {
-            // todo: look for RedirectToRoute to, or intercept 302s
+        private bool TransformRedirect(ActionExecutedContext filterContext) {
 
-            if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
-                && filterContext.Result is RedirectResult) {
-                Logger.Debug("Redirect on POST");
-                var redirectUrl = ((RedirectResult) filterContext.Result).Url;
-
-                if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
-                    var applicationRoot = filterContext.HttpContext.Request.ToRootUrlString();
-                    if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
-                        redirectUrl = redirectUrl.Substring(applicationRoot.Length);
-                    }
-                }
-
-                // querystring invariant key
-                var invariantCacheKey = ComputeCacheKey(
-                    _shellSettings.Name,
-                    redirectUrl,
-                    () => _workContext.CurrentCulture,
-                    _themeManager.GetRequestTheme(filterContext.RequestContext).Id,
-                    null
-                    );
-
-                _cacheService.RemoveByTag(invariantCacheKey);
-
-                // adding a refresh key so that the next request will not be cached
-                var epIndex = redirectUrl.IndexOf('?');
-                var qs = new NameValueCollection();
-                if (epIndex > 0) {
-                    qs = HttpUtility.ParseQueryString(redirectUrl.Substring(epIndex));
-                }
-
-                var refresh = _now.Ticks;
-                qs.Remove(RefreshKey);
-
-                qs.Add(RefreshKey, refresh.ToString("x"));
-                var querystring = "?" + string.Join("&", Array.ConvertAll(qs.AllKeys, k => string.Format("{0}={1}", HttpUtility.UrlEncode(k), HttpUtility.UrlEncode(qs[k]))));
-
-                if (epIndex > 0) {
-                    redirectUrl = redirectUrl.Substring(0, epIndex) + querystring;
-                }
-                else {
-                    redirectUrl = redirectUrl + querystring;
-                }
-
-                filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult) filterContext.Result).Permanent);
-                filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            if (filterContext.Result == null) {
+                throw new ArgumentNullException();
             }
+
+            // status code can't be tested at this point, so test the result type instead
+            if (!filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
+                || !(filterContext.Result is RedirectResult)) {
+                return false;
+            }
+
+            Logger.Debug("Redirect on POST");
+            var redirectUrl = ((RedirectResult)(filterContext.Result)).Url ;
+
+            if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
+                var applicationRoot = filterContext.HttpContext.Request.ToRootUrlString();
+                if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
+                    redirectUrl = redirectUrl.Substring(applicationRoot.Length);
+                }
+            }
+
+            // querystring invariant key
+            var invariantCacheKey = ComputeCacheKey(
+                _shellSettings.Name,
+                redirectUrl,
+                () => _workContext.CurrentCulture,
+                _themeManager.GetRequestTheme(filterContext.RequestContext).Id,
+                null
+                );
+
+            _cacheService.RemoveByTag(invariantCacheKey);
+
+            // adding a refresh key so that the next request will not be cached
+            var epIndex = redirectUrl.IndexOf('?');
+            var qs = new NameValueCollection();
+            if (epIndex > 0) {
+                qs = HttpUtility.ParseQueryString(redirectUrl.Substring(epIndex));
+            }
+
+            var refresh = _now.Ticks;
+            qs.Remove(RefreshKey);
+
+            qs.Add(RefreshKey, refresh.ToString("x"));
+            var querystring = "?" + string.Join("&", Array.ConvertAll(qs.AllKeys, k => string.Format("{0}={1}", HttpUtility.UrlEncode(k), HttpUtility.UrlEncode(qs[k]))));
+
+            if (epIndex > 0) {
+                redirectUrl = redirectUrl.Substring(0, epIndex) + querystring;
+            }
+            else {
+                redirectUrl = redirectUrl + querystring;
+            }
+
+            filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult) filterContext.Result).Permanent);
+            filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+
+            return true;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+
         }
 
         /// <summary>
