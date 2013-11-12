@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.MediaLibrary.Models;
-using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -14,30 +13,28 @@ using Orchard.ContentManagement;
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class OEmbedController : Controller {
-        private readonly IMediaLibraryService _mediaLibraryService;
-
-        public OEmbedController(
-            IMediaLibraryService mediaManagerService, 
-            IOrchardServices services) {
-            _mediaLibraryService = mediaManagerService;
+        public OEmbedController(IOrchardServices services) {
             Services = services;
         }
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(string folderPath) {
+        public ActionResult Index(string folderPath, string type) {
             var viewModel = new OEmbedViewModel {
-                FolderPath = folderPath
+                FolderPath = folderPath,
+                Type = type
             };
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(string folderPath, string url) {
+        [ActionName("Index")]
+        public ActionResult IndexPOST(string folderPath, string url, string type) {
             var viewModel = new OEmbedViewModel {
                 Url = url,
-                FolderPath = folderPath
+                FolderPath = folderPath,
+                Type = type
             };
 
             var webClient = new WebClient {Encoding = Encoding.UTF8};
@@ -76,14 +73,20 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult MediaPost(string folderPath, string url, string document) {
+        public ActionResult MediaPost(string folderPath, string url, string document, string type) {
             var content = XDocument.Parse(document);
             var oembed = content.Root;
 
-            var part = Services.ContentManager.New<MediaPart>("OEmbed");
+            if (String.IsNullOrEmpty(type)) {
+                type = "OEmbed";
+            }
+
+            var part = Services.ContentManager.New<MediaPart>(type);
                         
             part.MimeType = "text/html";
             part.FolderPath = folderPath;
+            part.LogicalType = "OEmbed";
+
             if (oembed.Element("title") != null) {
                 part.Title = oembed.Element("title").Value;
             }
@@ -93,18 +96,23 @@ namespace Orchard.MediaLibrary.Controllers {
             if (oembed.Element("description") != null) {
                 part.Caption = oembed.Element("description").Value;
             }
+
             var oembedPart = part.As<OEmbedPart>();
 
-            oembedPart.Source = url;
+            if (oembedPart != null) {
 
-            foreach (var element in oembed.Elements()) {
-                oembedPart[element.Name.LocalName] = element.Value;
+                oembedPart.Source = url;
+
+                foreach (var element in oembed.Elements()) {
+                    oembedPart[element.Name.LocalName] = element.Value;
+                }
+
+                Services.ContentManager.Create(oembedPart);
             }
-            
-            Services.ContentManager.Create(oembedPart);
 
             var viewModel = new OEmbedViewModel {
-                FolderPath = folderPath
+                FolderPath = folderPath,
+                Type = type
             };
 
             return View("Index", viewModel);

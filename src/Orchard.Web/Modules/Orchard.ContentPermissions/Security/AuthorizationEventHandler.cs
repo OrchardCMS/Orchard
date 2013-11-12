@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.ContentPermissions.Models;
+using Orchard.Security.Permissions;
 
 namespace Orchard.ContentPermissions.Security {
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
@@ -51,19 +52,26 @@ namespace Orchard.ContentPermissions.Security {
 
             IEnumerable<string> authorizedRoles;
 
-            if (context.Permission == Core.Contents.Permissions.ViewContent) {
+            var grantingPermissions = PermissionNames(context.Permission, Enumerable.Empty<string>()).Distinct().ToArray();
+
+            if (grantingPermissions.Any(grantingPermission => String.Equals(Core.Contents.Permissions.ViewContent.Name, grantingPermission, StringComparison.OrdinalIgnoreCase)))
+            {
                 authorizedRoles = (hasOwnership ? part.ViewOwnContent : part.ViewContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             }
-            else if (context.Permission == Core.Contents.Permissions.PublishContent) {
-                authorizedRoles = (hasOwnership ? part.PublishOwnContent : part.PublishContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            else if (context.Permission == Core.Contents.Permissions.EditContent) {
+            else if (grantingPermissions.Any(grantingPermission => String.Equals(Core.Contents.Permissions.EditContent.Name, grantingPermission, StringComparison.OrdinalIgnoreCase)))
+            {
                 authorizedRoles = (hasOwnership ? part.EditOwnContent : part.EditContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             }
-            else if (context.Permission == Core.Contents.Permissions.DeleteContent) {
+            else if (grantingPermissions.Any(grantingPermission => String.Equals(Core.Contents.Permissions.PublishContent.Name, grantingPermission, StringComparison.OrdinalIgnoreCase)))
+            {
+                authorizedRoles = (hasOwnership ? part.PublishOwnContent : part.PublishContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            else if (grantingPermissions.Any(grantingPermission => String.Equals(Core.Contents.Permissions.DeleteContent.Name, grantingPermission, StringComparison.OrdinalIgnoreCase)))
+            {
                 authorizedRoles = (hasOwnership ? part.DeleteOwnContent : part.DeleteContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             }
-            else {
+            else
+            {
                 return;
             }
 
@@ -99,6 +107,31 @@ namespace Orchard.ContentPermissions.Security {
                 return false;
 
             return user.Id == common.Owner.Id;
+        }
+
+        private static IEnumerable<string> PermissionNames(Permission permission, IEnumerable<string> stack)
+        {
+            // the given name is tested
+            yield return permission.Name;
+
+            // iterate implied permissions to grant, it present
+            if (permission.ImpliedBy != null && permission.ImpliedBy.Any())
+            {
+                foreach (var impliedBy in permission.ImpliedBy)
+                {
+                    // avoid potential recursion
+                    if (stack.Contains(impliedBy.Name))
+                        continue;
+
+                    // otherwise accumulate the implied permission names recursively
+                    foreach (var impliedName in PermissionNames(impliedBy, stack.Concat(new[] { permission.Name })))
+                    {
+                        yield return impliedName;
+                    }
+                }
+            }
+
+            yield return StandardPermissions.SiteOwner.Name;
         }
     }
 }

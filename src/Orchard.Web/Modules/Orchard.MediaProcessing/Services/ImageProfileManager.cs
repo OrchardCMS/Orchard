@@ -110,6 +110,10 @@ namespace Orchard.MediaProcessing.Services {
 
                     var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", _storageProvider.Combine(profileName, CreateDefaultFileName(path))) };
 
+                    if (image == null) {
+                        return filterContext.FilePath;
+                    }
+
                     var tokens = new Dictionary<string, object>();
                     // if a content item is provided, use it while tokenizing
                     if (contentItem != null) {
@@ -160,14 +164,18 @@ namespace Orchard.MediaProcessing.Services {
 
         // TODO: Update this method once the storage provider has been updated
         private Stream GetImage(string path) {
+            if (path == null) {
+                throw new ArgumentNullException("path");
+            }
+
             var storagePath = _storageProvider.GetStoragePath(path);
             if (storagePath != null) {
                 try {
                     var file = _storageProvider.GetFile(storagePath);
                     return file.OpenRead();
                 }
-                catch {
-                    Logger.Error("path:" + path + " storagePath:" + storagePath);
+                catch(Exception e) {
+                    Logger.Error(e, "path:" + path + " storagePath:" + storagePath);
                 }
             }
 
@@ -197,7 +205,7 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
-        private static readonly char[] _disallowed = @"/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%".ToCharArray();
+        private static readonly char[] _disallowed = @"/:?#[]@!$&'()*+,.;=s""<>\|%".ToCharArray();
 
         private static string CreateDefaultFileName(string path) {
             var extention = Path.GetExtension(path);

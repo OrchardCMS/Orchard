@@ -138,17 +138,29 @@ namespace Orchard.Environment.Features {
         /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
         /// <returns>An enumeration of the enabled features.</returns>
         private IEnumerable<string> EnableFeature(string featureId, IDictionary<FeatureDescriptor, bool> availableFeatures, bool force) {
-            var getDisabledDependencies =
-                new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
-                    (currentFeatureId, featuresState) => {
-                        KeyValuePair<FeatureDescriptor, bool> feature = featuresState.Single(featureState => featureState.Key.Id.Equals(currentFeatureId, StringComparison.OrdinalIgnoreCase));
+	        var getDisabledDependencies =
+		        new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
+			        (currentFeatureId, featuresState) => {
+				        KeyValuePair<FeatureDescriptor, bool> feature = featuresState.Single(featureState => featureState.Key.Id.Equals(currentFeatureId, StringComparison.OrdinalIgnoreCase));
 
-                        // Retrieve disabled dependencies for the current feature
-                        return feature.Key.Dependencies
-                            .Select(fId => featuresState.Single(featureState => featureState.Key.Id.Equals(fId, StringComparison.OrdinalIgnoreCase)))
-                            .Where(featureState => !featureState.Value)
-                            .ToDictionary(f => f.Key, f => f.Value);
-                    });
+				        // Retrieve disabled dependencies for the current feature
+				        return feature.Key.Dependencies
+				                      .Select(fId => {
+					                      var states = featuresState.Where(featureState => featureState.Key.Id.Equals(fId, StringComparison.OrdinalIgnoreCase)).ToList();
+
+					                      if (states.Count == 0) {
+											  throw new OrchardException(T("Failed to get state for feature {0}", fId));
+					                      }
+
+					                      if (states.Count > 1) {
+											  throw new OrchardException(T("Found {0} states for feature {1}", states.Count, fId));
+					                      }
+
+					                      return states[0];
+				                      })
+				                      .Where(featureState => !featureState.Value)
+				                      .ToDictionary(f => f.Key, f => f.Value);
+			        });
 
             IEnumerable<string> featuresToEnable = GetAffectedFeatures(featureId, availableFeatures, getDisabledDependencies);
             if (featuresToEnable.Count() > 1 && !force) {

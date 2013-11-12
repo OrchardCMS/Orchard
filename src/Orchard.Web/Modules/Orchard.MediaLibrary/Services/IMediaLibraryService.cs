@@ -2,20 +2,23 @@
 using System.IO;
 using System.Web;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.MediaLibrary.Factories;
 using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.Services {
     public interface IMediaLibraryService : IDependency {
-        IEnumerable<string> GetMediaTypes();
+        IEnumerable<ContentTypeDefinition> GetMediaTypes();
         IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems();
         IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType);
         IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType);
         int GetMediaContentItemsCount(string folderPath, string mediaType);
         int GetMediaContentItemsCount(string mediaType);
         MediaPart ImportMedia(string relativePath, string filename);
+        MediaPart ImportMedia(string relativePath, string filename, string contentType);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);
-        IMediaFactory GetMediaFactory(Stream stream, string mimeType);
+        MediaPart ImportMedia(Stream stream, string relativePath, string filename, string contentType);
+        IMediaFactory GetMediaFactory(Stream stream, string mimeType, string contentType);
 
         /// <summary>
         /// Creates a unique filename to prevent filename collisions.

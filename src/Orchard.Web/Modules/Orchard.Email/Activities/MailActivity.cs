@@ -78,7 +78,7 @@ namespace Orchard.Email.Activities {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
-                if (user != null && String.IsNullOrWhiteSpace(user.Email)) {
+                if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
                     _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
@@ -34,10 +35,13 @@ namespace Orchard.MediaLibrary.Services {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<string> GetMediaTypes() {
-            return _orchardServices.ContentManager.GetContentTypeDefinitions()
+        public IEnumerable<ContentTypeDefinition> GetMediaTypes() {
+            return _orchardServices
+                .ContentManager
+                .GetContentTypeDefinitions()
                 .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Media")
-                .Select(contentTypeDefinition => contentTypeDefinition.Name);
+                .OrderBy(x => x.DisplayName)
+                .ToArray();
         }
 
         public IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems() {
@@ -105,10 +109,14 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public MediaPart ImportMedia(Stream stream, string relativePath, string filename) {
+            return ImportMedia(stream, relativePath, filename, null);
+        }
+
+        public MediaPart ImportMedia(Stream stream, string relativePath, string filename, string contentType) {
             var uniqueFilename = GetUniqueFilename(relativePath, filename);
 
             UploadMediaFile(relativePath, uniqueFilename, stream);
-            return ImportMedia(relativePath, uniqueFilename);
+            return ImportMedia(relativePath, uniqueFilename, contentType);
         }
 
         public string GetUniqueFilename(string folderPath, string filename) {
@@ -123,6 +131,10 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public MediaPart ImportMedia(string relativePath, string filename) {
+            return ImportMedia(relativePath, filename, null);
+        }
+
+        public MediaPart ImportMedia(string relativePath, string filename, string contentType) {
 
             var mimeType = _mimeTypeProvider.GetMimeType(filename);
 
@@ -134,21 +146,20 @@ namespace Orchard.MediaLibrary.Services {
             var mediaFile = BuildMediaFile(relativePath, storageFile);
 
             using (var stream = storageFile.OpenRead()) {
-                var mediaFactory = GetMediaFactory(stream, mimeType);
-                var mediaPart = mediaFactory.CreateMedia(stream, mediaFile.Name, mimeType);
+                var mediaFactory = GetMediaFactory(stream, mimeType, contentType);
+                var mediaPart = mediaFactory.CreateMedia(stream, mediaFile.Name, mimeType, contentType);
                 if (mediaPart != null) {
                     mediaPart.FolderPath = relativePath;
                     mediaPart.FileName = filename;
-                    _orchardServices.ContentManager.Create(mediaPart);
                 }
 
                 return mediaPart;
             }
         }
 
-        public IMediaFactory GetMediaFactory(Stream stream, string mimeType) {
+        public IMediaFactory GetMediaFactory(Stream stream, string mimeType, string contentType) {
             var requestMediaFactoryResults = _mediaFactorySelectors
-                .Select(x => x.GetMediaFactory(stream, mimeType))
+                .Select(x => x.GetMediaFactory(stream, mimeType, contentType))
                 .Where(x => x != null)
                 .OrderByDescending(x => x.Priority);
 

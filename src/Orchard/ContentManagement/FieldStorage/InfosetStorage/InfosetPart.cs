@@ -67,10 +67,10 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
                 partElement.Add(fieldElement);
             }
             if (string.IsNullOrEmpty(valueName)) {
-                fieldElement.Value = value;
+                fieldElement.Value = value ?? "";
             }
             else {
-                fieldElement.SetAttributeValue(XmlConvert.EncodeLocalName(valueName), value);
+                fieldElement.SetAttributeValue(XmlConvert.EncodeLocalName(valueName), value ?? "");
             }
         }
     }

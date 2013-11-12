@@ -52,7 +52,7 @@
         var model = TempData["UpdatedViewModel"] as UpdatedActivityModel;
         if (model != null) {
             @: updatedActivityClientId = '@(model.ClientId)';
-            @: updatedActivityState = '@Html.Raw(HttpUtility.JavaScriptStringEncode(FormParametersHelper.ToJsonString(model.Data)))';
+            @: updatedActivityState = '@Html.Raw(model.Data)';
         }
     }
     else if (!Model.IsLocal) {

@@ -30,6 +30,7 @@ namespace Orchard.MediaLibrary.Drivers {
         protected override DriverResult Display(ContentPart part, Fields.MediaLibraryPickerField field, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Fields_MediaLibraryPicker", GetDifferentiator(field, part), () => shapeHelper.Fields_MediaLibraryPicker()),
+                ContentShape("Fields_MediaLibraryPicker_Summary", GetDifferentiator(field, part), () => shapeHelper.Fields_MediaLibraryPicker_Summary()),
                 ContentShape("Fields_MediaLibraryPicker_SummaryAdmin", GetDifferentiator(field, part), () => shapeHelper.Fields_MediaLibraryPicker_SummaryAdmin())
             );
         }

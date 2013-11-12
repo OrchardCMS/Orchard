@@ -1,1 +1,3 @@
-﻿@Html.TextArea("Text", (string)Model.Text, 10, 80, new {})
+﻿@(Model.Required != null && Model.Required
+         ? Html.TextArea("Text", (string)Model.Text, 10, 80, new { required = "required" })
+         : Html.TextArea("Text", (string)Model.Text, 10, 80, new { }))

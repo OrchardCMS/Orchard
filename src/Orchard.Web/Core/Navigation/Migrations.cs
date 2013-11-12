@@ -190,5 +190,13 @@ namespace Orchard.Core.Navigation {
 
             return 5;
         }
+
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterTypeDefinition("Menu", cfg => cfg
+                .WithPart("IdentityPart")
+            );
+
+            return 6;
+        }
     }
 }

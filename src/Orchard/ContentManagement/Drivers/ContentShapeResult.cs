@@ -26,9 +26,6 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
-            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
-                return;
-
             var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
             if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
@@ -65,6 +62,15 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Clear();
             }
 
+            // parse group placement
+            var group = placement.GetGroup();
+            if (!String.IsNullOrEmpty(group)) {
+                _groupId = group;
+            }
+
+            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+                return;
+
             foreach (var alternate in placement.Alternates) {
                 newShapeMetadata.Alternates.Add(alternate);
             }
@@ -73,23 +79,19 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Wrappers.Add(wrapper);
             }
 
-            // copy the current location for further processing
-            var localPlacement = placement.Location;
-
             // the zone name is in reference of Layout, e.g. /AsideSecond
-            if (placement.Location.StartsWith("/")) {
-                localPlacement = placement.Location.Substring(1);
+            if (placement.IsLayoutZone()) {
                 parentShape = context.Layout;
             }
 
-            var delimiterIndex = localPlacement.IndexOf(':');
-            if (delimiterIndex < 0) {
-                parentShape.Zones[localPlacement].Add(newShape);
+            var position = placement.GetPosition();
+            var zone = placement.GetZone();
+
+            if (String.IsNullOrEmpty(position)) {
+                parentShape.Zones[zone].Add(newShape);
             }
             else {
-                var zoneName = localPlacement.Substring(0, delimiterIndex);
-                var position = localPlacement.Substring(delimiterIndex + 1);
-                parentShape.Zones[zoneName].Add(newShape, position);
+                parentShape.Zones[zone].Add(newShape, position);
             }
         }
 

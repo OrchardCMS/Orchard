@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.7.1
-OrchardVersion: 1.7.1
+Version: 1.7.2
+OrchardVersion: 1.7.2
 Description: The search module enables the management of the search index and provides the front-end searching user interface.
 
 Features:
@@ -21,4 +21,9 @@ Features:
         Name: Content Picker Search
         Description: Provides a search tab in Content Picker.
         Dependencies: Orchard.ContentPicker, Orchard.Search
+        Category: Search
+    Orchard.Search.MediaLibrary:
+        Name: Media Library Search
+        Description: Provides search menu item in the Media Library explorer.
+        Dependencies: Orchard.MediaLibrary, Orchard.Search
         Category: Search

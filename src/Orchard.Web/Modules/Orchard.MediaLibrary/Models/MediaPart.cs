@@ -1,4 +1,6 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Title.Models;
 
@@ -48,7 +50,7 @@ namespace Orchard.MediaLibrary.Models {
         }
 
         /// <summary>
-        /// Gets or set the name of the media when <see cref="IMediaService"/> is used 
+        /// Gets or sets the name of the media when <see cref="IMediaService"/> is used 
         /// to store the physical media. If <value>null</value> then the media is not associated
         /// with a local file.
         /// </summary>
@@ -62,6 +64,17 @@ namespace Orchard.MediaLibrary.Models {
         /// </summary>
         public string MediaUrl {
             get { return _publicUrl.Value;  }
+        }
+
+        /// <summary>
+        /// Get or sets the logical type of the media. For instance a custom type could be rendered as an Image
+        /// </summary>
+        /// <remarks>
+        /// The logical type is used to drive the thumbnails generation in the admin.
+        /// </remarks>
+        public string LogicalType {
+            get { return Convert.ToString(this.As<InfosetPart>().Get<MediaPart>("LogicalType")); }
+            set { this.As<InfosetPart>().Set<MediaPart>("LogicalType", value); }
         }
     }
 }

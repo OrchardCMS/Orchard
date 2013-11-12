@@ -1,4 +1,6 @@
-﻿@using System.Text
+﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
+
+@using System.Text
 @using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
 
@@ -83,7 +85,8 @@
 
     @Html.Hidden("antiforgerytoken", Html.AntiForgeryTokenValueOrchard())
     @Html.Hidden("action", Url.Action("ImagePost"))
-    @Html.Hidden("folderPath", (string)Model)
+    @Html.Hidden("folderPath", Model.FolderPath)
+    @Html.Hidden("type", Model.Type)
 
     @using(Script.Foot()) {
     <script type="text/javascript">
@@ -209,6 +212,7 @@
             $("#button-import").on("click", function (e) {
                 var antiForgeryToken = $('[name=antiforgerytoken]').val();
                 var folderPath = $('[name=folderPath]').val();
+                var type = $('[name=type]').val();
                 var action = $('[name=action]').val();
 
                 viewModel.selection().forEach(function (item) {
@@ -216,6 +220,7 @@
                     item.status('uploading');
                     $.post(action, {
                         folderPath: folderPath,
+                        type: type,
                         url: url,
                         __RequestVerificationToken: antiForgeryToken,
                     })

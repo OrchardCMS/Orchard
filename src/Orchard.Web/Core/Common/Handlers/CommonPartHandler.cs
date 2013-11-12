@@ -50,7 +50,7 @@ namespace Orchard.Core.Common.Handlers {
 
             OnIndexing<CommonPart>((context, commonPart) => {
                 context.DocumentIndex
-                    .Add("type", commonPart.ContentItem.ContentType).Analyze().Store()
+                    .Add("type", commonPart.ContentItem.ContentType).Store()
                     .Add("created", commonPart.CreatedUtc ?? _clock.UtcNow).Store()
                     .Add("published", commonPart.PublishedUtc ?? _clock.UtcNow).Store()
                     .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store();

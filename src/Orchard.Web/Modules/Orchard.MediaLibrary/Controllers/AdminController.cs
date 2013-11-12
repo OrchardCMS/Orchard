@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -40,32 +41,43 @@ namespace Orchard.MediaLibrary.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index(string folderPath = "", bool dialog = false) {
-            var mediaTypes = new List<string>();
+            
+            // let other modules enhance the ui by providing custom navigation and actions
+            var explorer = Services.ContentManager.New("MediaLibraryExplorer");
+            explorer.Weld(new MediaLibraryExplorerPart());
 
-            foreach(var contentTypeDefinition in _contentDefinitionManager.ListTypeDefinitions()) {
-                string stereotype;
-                if (contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "Media")
-                    mediaTypes.Add(contentTypeDefinition.Name);
-            }
-
+            var explorerShape = Services.ContentManager.BuildDisplay(explorer);
+            
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 Folders = _mediaLibraryService.GetMediaFolders(null).Select(GetFolderHierarchy),
                 FolderPath = folderPath,
-                MediaTypes = mediaTypes.ToArray()
+                MediaTypes = _mediaLibraryService.GetMediaTypes(),
+                CustomActionsShapes = explorerShape.Actions,
+                CustomNavigationShapes = explorerShape.Navigation,
             };
+
+            foreach (var shape in explorerShape.Actions.Items) {
+                shape.MediaManagerIndexViewModel = viewModel;
+            }
+
+            foreach (var shape in explorerShape.Navigation.Items) {
+                shape.MediaManagerIndexViewModel = viewModel;
+            }
 
             return View(viewModel);
         }
 
         public ActionResult Import(string folderPath) {
+
             var mediaProviderMenu = _navigationManager.BuildMenu("mediaproviders");
             var imageSets = _navigationManager.BuildImageSets("mediaproviders");
 
             var viewModel = new MediaManagerImportViewModel {
                 Menu = mediaProviderMenu,
                 ImageSets = imageSets,
-                FolderPath = folderPath
+                FolderPath = folderPath,
+                MediaTypes = _mediaLibraryService.GetMediaTypes()
             };
 
             return View(viewModel);
@@ -78,7 +90,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
                 MediaPart = x,
-                Shape = Services.ContentManager.BuildDisplay(x, "Thumbnail")
+                Shape = Services.ContentManager.BuildDisplay(x.ContentItem, "Thumbnail")
             }).ToList();
 
             var viewModel = new MediaManagerMediaItemsViewModel {

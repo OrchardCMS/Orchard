@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Orchard.Taxonomies.Models;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -107,11 +109,11 @@ namespace Orchard.Taxonomies.Drivers {
             var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString())
                 .ToArray();
 
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Terms", String.Join(",", termIdentities));
+            context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
         }
 
         protected override void Importing(ContentPart part, TaxonomyField field, ImportContentContext context) {
-            var termIdentities = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "Terms");
+            var termIdentities = context.Attribute(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name), "Terms");
             if (termIdentities == null) {
                 return;
             }

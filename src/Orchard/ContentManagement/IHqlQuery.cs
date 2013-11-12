@@ -18,6 +18,11 @@ namespace Orchard.ContentManagement {
         /// Add content type constraints to the query.
         /// </summary>
         IHqlQuery ForType(params string[] contentTypes);
+
+        /// <summary>
+        /// Eagerly fetches specific content parts.
+        /// </summary>
+        IHqlQuery Include(params string[] contentPartRecords);
         
         /// <summary>
         /// Adds versioning options to the query.

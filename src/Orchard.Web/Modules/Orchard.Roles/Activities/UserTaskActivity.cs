@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
-namespace Orchard.Workflows.Activities {
+namespace Orchard.Roles.Activities {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class UserTaskActivity : Event {
         private readonly IWorkContextAccessor _workContextAccessor;
 

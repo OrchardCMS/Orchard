@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,7 +17,9 @@ namespace Orchard.Environment {
 
     public class RunningShellTable : IRunningShellTable {
         private IEnumerable<ShellSettings> _shells = Enumerable.Empty<ShellSettings>();
-        private IEnumerable<IGrouping<string, ShellSettings>> _shellsByHost = Enumerable.Empty<ShellSettings>().GroupBy(x => default(string));
+        private IDictionary<string, IEnumerable<ShellSettings>> _shellsByHost;
+        private readonly ConcurrentDictionary<string, ShellSettings> _shellsByHostAndPrefix = new ConcurrentDictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
+
         private ShellSettings _fallback;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
@@ -81,7 +84,7 @@ namespace Orchard.Environment {
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
                 .GroupBy(s => s.RequestUrlHost ?? string.Empty)
                 .OrderByDescending(g => g.Key.Length)
-                .ToArray();
+                .ToDictionary(x => x.Key, x => x.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
 
             if (unqualified.Count() == 1) {
                 // only one shell had no request url criteria
@@ -108,20 +111,46 @@ namespace Orchard.Environment {
         public ShellSettings Match(string host, string appRelativePath) {
             _lock.EnterReadLock();
             try {
+                if (_shellsByHost == null) {
+                    return null;
+                }
+
                 // optimized path when only one tenant (Default), configured with no custom host
                 if (!_shellsByHost.Any() && _fallback != null) {
                     return _fallback;
                 }
 
+                // removing the port from the host
                 var hostLength = host.IndexOf(':');
-                if (hostLength != -1)
+                if (hostLength != -1) {
                     host = host.Substring(0, hostLength);
+                }
 
-                var mostQualifiedMatch = _shellsByHost
-                    .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
-                    .SelectMany(group => group
-                                             .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
-                    .FirstOrDefault(settings => {
+                string hostAndPrefix = host + "/" + appRelativePath.Split('/')[1];
+
+                return _shellsByHostAndPrefix.GetOrAdd(hostAndPrefix, key => {
+                    
+                    // filtering shells by host
+                    IEnumerable<ShellSettings> shells;
+
+                    if (!_shellsByHost.TryGetValue(host, out shells)) {
+                        if (!_shellsByHost.TryGetValue("", out shells)) {
+
+                            // no specific match, then look for star mapping
+                            var subHostKey = _shellsByHost.Keys.FirstOrDefault(x =>
+                                x.StartsWith("*.") && host.EndsWith(x.Substring(2))
+                                );
+
+                            if (subHostKey == null) {
+                                return _fallback; 
+                            }
+
+                            shells = _shellsByHost[subHostKey];
+                        }
+                    }
+                    
+                    // looking for a request url prefix match
+                    var mostQualifiedMatch = shells.FirstOrDefault(settings => {
                         if (settings.State == TenantState.Disabled) {
                             return false;
                         }
@@ -130,11 +159,12 @@ namespace Orchard.Environment {
                             return true;
                         }
 
-                        return appRelativePath.StartsWith("~/" + settings.RequestUrlPrefix + "/", StringComparison.OrdinalIgnoreCase)
-                               || appRelativePath.Equals("~/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
+                        return key.Equals(host + "/" + settings.RequestUrlPrefix, StringComparison.OrdinalIgnoreCase);
                     });
 
-                return mostQualifiedMatch ?? _fallback;
+                    return mostQualifiedMatch ?? _fallback;
+                });
+                
             }
             finally {
                 _lock.ExitReadLock();

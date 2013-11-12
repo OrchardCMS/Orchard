@@ -2,8 +2,9 @@
     public class ContentHandlerBase : IContentHandler {
         public virtual void Activating(ActivatingContentContext context) {}
         public virtual void Activated(ActivatedContentContext context) {}
-        public virtual void Initializing(InitializingContentContext context) {}
-        public virtual void Creating(CreateContentContext context) {}
+        public virtual void Initializing(InitializingContentContext context) { }
+        public virtual void Initialized(InitializingContentContext context) { }
+        public virtual void Creating(CreateContentContext context) { }
         public virtual void Created(CreateContentContext context) {}
         public virtual void Loading(LoadContentContext context) {}
         public virtual void Loaded(LoadContentContext context) {}

@@ -1,14 +1,16 @@
 using System;
 using System.Web;
 using System.Web.Routing;
+using Orchard.Autoroute.Services;
 using Orchard.Blogs.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Routing {
     public class ArchiveConstraint : IArchiveConstraint {
-        private readonly IBlogPathConstraint _blogPathConstraint;
+        private readonly IPathResolutionService _pathResolutionService;
 
-        public ArchiveConstraint(IBlogPathConstraint blogPathConstraint) {
-            _blogPathConstraint = blogPathConstraint;
+        public ArchiveConstraint(IPathResolutionService pathResolutionService) {
+            _pathResolutionService = pathResolutionService;
         }
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
@@ -27,7 +29,17 @@ namespace Orchard.Blogs.Routing {
                     return false;
                 }
 
-                return _blogPathConstraint.FindPath(path) != null;
+                try {
+                    // is this a valid date ?
+                    archiveData.ToDateTime();
+                }
+                catch {
+                    return false;
+                }
+
+                var autoroute = _pathResolutionService.GetPath(path);
+
+                return autoroute != null && autoroute.Is<BlogPart>();
             }
 
             return false;
