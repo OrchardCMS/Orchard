@@ -182,6 +182,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.Breadcrumb = model.Breadcrumb;
                 part.AddHomePage = model.AddHomePage;
                 part.AddCurrentPage = model.AddCurrentPage;
+                part.ShowFullMenu = model.ShowFullMenu;
                 part.MenuContentItemId = model.CurrentMenuId;
             }
 

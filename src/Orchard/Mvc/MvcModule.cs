@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
+using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {

@@ -34,8 +34,8 @@ namespace Orchard.Core.Navigation.Models {
         }
 
         public bool ShowFullMenu {
-            get { return bool.Parse(this.As<InfosetPart>().Get<MenuWidgetPart>("ShowFullMenu") ?? "false"); }
-            set { this.As<InfosetPart>().Set<MenuWidgetPart>("ShowFullMenu", value.ToString()); }
+            get { return this.Retrieve(x => x.ShowFullMenu); }
+            set { this.Store(x => x.ShowFullMenu, value); }
         }
     }
 }
