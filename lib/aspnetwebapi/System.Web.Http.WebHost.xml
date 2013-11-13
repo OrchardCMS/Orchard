@@ -8,8 +8,10 @@
       <summary> Provides a global <see cref="T:System.Web.Http.HttpConfiguration" /> for ASP.NET applications. </summary>
     </member>
     <member name="P:System.Web.Http.GlobalConfiguration.Configuration"></member>
-    <member name="P:System.Web.Http.GlobalConfiguration.DefaultHandler">
-      <summary> Gets the default message handler that will be called for all requests. </summary>
+    <member name="M:System.Web.Http.GlobalConfiguration.Configure(System.Action{System.Web.Http.HttpConfiguration})"></member>
+    <member name="P:System.Web.Http.GlobalConfiguration.DefaultHandler"></member>
+    <member name="P:System.Web.Http.GlobalConfiguration.DefaultServer">
+      <summary> Gets the global <see cref="T:System.Web.Http.HttpServer" />. </summary>
     </member>
     <member name="T:System.Web.Http.RouteCollectionExtensions">
       <summary> Extension methods for <see cref="T:System.Web.Routing.RouteCollection" /></summary>
@@ -49,47 +51,21 @@
       <param name="handler">The handler to which the request will be dispatched.</param>
     </member>
     <member name="T:System.Web.Http.WebHost.HttpControllerHandler">
-      <summary> A <see cref="T:System.Web.IHttpAsyncHandler" /> that passes ASP.NET requests into the <see cref="T:System.Web.Http.HttpServer" /> pipeline and write the result back. </summary>
+      <summary>A <see cref="T:System.Web.IHttpTaskAsyncHandler" /> that passes ASP.NET requests into the <see cref="T:System.Web.Http.HttpServer" /> pipeline and write the result back.</summary>
     </member>
     <member name="M:System.Web.Http.WebHost.HttpControllerHandler.#ctor(System.Web.Routing.RouteData)">
-      <summary> Initializes a new instance of the <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" /> class. </summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" /> class.</summary>
       <param name="routeData">The route data.</param>
     </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.BeginProcessRequest(System.Web.HttpContextBase,System.AsyncCallback,System.Object)">
-      <summary> Begins the process request. </summary>
-      <returns>An <see cref="T:System.IAsyncResult" /> that contains information about the status of the process. </returns>
-      <param name="httpContextBase">The HTTP context base.</param>
-      <param name="callback">The callback.</param>
-      <param name="state">The state.</param>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.#ctor(System.Web.Routing.RouteData,System.Net.Http.HttpMessageHandler)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" /> class.</summary>
+      <param name="routeData">The route data.</param>
+      <param name="handler">The message handler to dispatch requests to.</param>
     </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.EndProcessRequest(System.IAsyncResult)">
-      <summary> Provides an asynchronous process End method when the process ends. </summary>
-      <param name="result">An <see cref="T:System.IAsyncResult" /> that contains information about the status of the process.</param>
-    </member>
-    <member name="P:System.Web.Http.WebHost.HttpControllerHandler.IsReusable">
-      <summary> Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler" /> instance. </summary>
-    </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.ProcessRequest(System.Web.HttpContextBase)">
-      <summary> Processes the request. </summary>
-      <param name="httpContextBase">The HTTP context base.</param>
-    </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpAsyncHandler#BeginProcessRequest(System.Web.HttpContext,System.AsyncCallback,System.Object)">
-      <summary> Begins processing the request. </summary>
-      <returns>An <see cref="T:System.IAsyncResult" /> that contains information about the status of the process. </returns>
-      <param name="httpContext">The HTTP context.</param>
-      <param name="callback">The callback.</param>
-      <param name="state">The state.</param>
-    </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpAsyncHandler#EndProcessRequest(System.IAsyncResult)">
-      <summary> Provides an asynchronous process End method when the process ends. </summary>
-      <param name="result">An <see cref="T:System.IAsyncResult" /> that contains information about the status of the process.</param>
-    </member>
-    <member name="P:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpHandler#IsReusable">
-      <summary> Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler" /> instance. </summary>
-    </member>
-    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.System#Web#IHttpHandler#ProcessRequest(System.Web.HttpContext)">
-      <summary> Processes the request. </summary>
-      <param name="httpContext">The HTTP context base.</param>
+    <member name="M:System.Web.Http.WebHost.HttpControllerHandler.ProcessRequestAsync(System.Web.HttpContext)">
+      <summary>Provides code that handles an asynchronous task</summary>
+      <returns>The asynchronous task.</returns>
+      <param name="context">The HTTP context.</param>
     </member>
     <member name="T:System.Web.Http.WebHost.HttpControllerRouteHandler">
       <summary> A <see cref="T:System.Web.Routing.IRouteHandler" /> that returns instances of <see cref="T:System.Web.Http.WebHost.HttpControllerHandler" /> that can pass requests to a given <see cref="T:System.Web.Http.HttpServer" /> instance. </summary>
@@ -131,6 +107,22 @@
       <summary>Uses a buffered output stream for the web host.</summary>
       <returns>A buffered output stream.</returns>
       <param name="response">The response.</param>
+    </member>
+    <member name="T:System.Web.Http.WebHost.WebHostPrincipalService">
+      <summary>Represents the webhost principal service.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostPrincipalService.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.WebHost.WebHostPrincipalService" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostPrincipalService.GetCurrentPrincipal(System.Net.Http.HttpRequestMessage)">
+      <summary>Returns the current principal associated with the webhost.</summary>
+      <returns>The current principal associated with the webhost.</returns>
+      <param name="request">the request message.</param>
+    </member>
+    <member name="M:System.Web.Http.WebHost.WebHostPrincipalService.SetCurrentPrincipal(System.Security.Principal.IPrincipal,System.Net.Http.HttpRequestMessage)">
+      <summary>Sets the current principal associated with the webhost.</summary>
+      <param name="principal">The principal.</param>
+      <param name="request">The request message.</param>
     </member>
   </members>
 </doc>
