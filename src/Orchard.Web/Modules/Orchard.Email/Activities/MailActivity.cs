@@ -70,8 +70,6 @@ namespace Orchard.Email.Activities {
                     if (owner != null && owner.ContentItem != null && owner.ContentItem.Record != null) {
                         _messageManager.Send(owner.ContentItem.Record, MessageType, "email", properties);
                     }
-                    _messageManager.Send(
-                        SplitEmail(owner.As<IUser>().Email), MessageType, "email", properties);
                 }
             }
             else if (recipient == "author") {
