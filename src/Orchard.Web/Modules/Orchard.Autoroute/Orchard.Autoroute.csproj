@@ -131,7 +131,6 @@
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\AutorouteSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Autoroute.Edit.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

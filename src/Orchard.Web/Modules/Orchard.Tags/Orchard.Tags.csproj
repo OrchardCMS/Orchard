@@ -100,7 +100,6 @@
     <Content Include="Styles\images\menu.tags.png" />
     <Content Include="Styles\menu.tags-admin.css" />
     <Content Include="Styles\orchard-tags-admin.css" />
-    <Content Include="Views\Web.config" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Parts\Tags.ShowTags.cshtml" />

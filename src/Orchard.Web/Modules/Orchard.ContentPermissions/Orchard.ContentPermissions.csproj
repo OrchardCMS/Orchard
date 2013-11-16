@@ -74,7 +74,6 @@
     <Content Include="Styles\Images\lock.gif" />
     <Content Include="Styles\orchard-contentpermissions-admin.css" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>

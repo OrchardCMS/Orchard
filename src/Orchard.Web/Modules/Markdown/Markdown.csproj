@@ -117,7 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Markdown.Editor.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

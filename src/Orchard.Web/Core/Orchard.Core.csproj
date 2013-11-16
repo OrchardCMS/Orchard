@@ -341,12 +341,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Settings\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Common\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\Parts.Common.Owner.Edit.cshtml" />
@@ -359,19 +353,15 @@
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
-    <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
-    <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Containers\Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Contents\Views\Web.config" />
-    <Content Include="Reports\Views\Web.config" />
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />
@@ -380,7 +370,6 @@
     <Content Include="Shapes\Views\Layout.cshtml" />
     <Content Include="Shapes\Views\Menu.cshtml" />
     <Content Include="Shapes\Views\MenuItem.cshtml" />
-    <Content Include="Shapes\Views\Web.config" />
     <Content Include="Common\Placement.info" />
     <Content Include="Common\Views\Parts.Common.Metadata.Summary.cshtml" />
     <Content Include="Contents\Placement.info">
@@ -474,9 +463,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Title\Views\Parts.Title_SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Title\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ErrorPage.cshtml" />

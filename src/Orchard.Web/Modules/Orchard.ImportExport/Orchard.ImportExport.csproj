@@ -96,9 +96,6 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>

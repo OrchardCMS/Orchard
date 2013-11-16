@@ -105,9 +105,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\Web.config">
       <SubType>Designer</SubType>
     </Content>

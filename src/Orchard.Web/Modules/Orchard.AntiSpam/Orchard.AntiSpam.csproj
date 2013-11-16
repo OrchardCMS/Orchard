@@ -73,7 +73,6 @@
   <ItemGroup>
     <Content Include="Content\Admin\Images\spam.gif" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Drivers\JavaScriptAntiSpamPartDriver.cs" />

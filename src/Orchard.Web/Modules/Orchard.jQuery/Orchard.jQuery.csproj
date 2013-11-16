@@ -202,7 +202,6 @@
   <ItemGroup>
     <Content Include="Views\DatePickerLocalization.cshtml" />
     <Content Include="web.config" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TimePickerLocalization.cshtml" />

@@ -82,7 +82,6 @@
     <Content Include="Styles\jcrop\css\jquery.Jcrop.min.css" />
     <Content Include="Styles\orchard-imageeditor-admin.css" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />

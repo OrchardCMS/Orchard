@@ -105,7 +105,6 @@
     </Content>
     <Content Include="Styles\orchard-search-admin.css" />
     <Content Include="Styles\orchard-search-search.css" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />

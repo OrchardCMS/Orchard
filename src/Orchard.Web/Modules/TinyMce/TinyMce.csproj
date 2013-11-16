@@ -164,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Html.Editor.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

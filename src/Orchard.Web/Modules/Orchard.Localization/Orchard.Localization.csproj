@@ -109,9 +109,6 @@
     <Content Include="Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>

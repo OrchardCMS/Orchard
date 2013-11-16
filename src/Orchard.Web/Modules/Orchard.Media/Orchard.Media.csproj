@@ -98,7 +98,6 @@
     <Content Include="Styles\menu.media-admin.css" />
     <Content Include="Styles\orchard-media-admin.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

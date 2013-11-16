@@ -70,7 +70,6 @@
     <Content Include="Styles\images\menu.upgrade.png" />
     <Content Include="Styles\menu.upgrade-admin.css" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Controllers\ContentPickerController.cs" />

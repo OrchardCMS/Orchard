@@ -113,7 +113,6 @@
     <Content Include="Styles\orchard-comments-admin.css" />
     <Content Include="Styles\workflows-activity-close-comments.css" />
     <Content Include="Views\Admin\Details.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

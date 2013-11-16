@@ -75,7 +75,6 @@
     <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Styles\orchard-warmup-admin.css" />
     <Content Include="web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />

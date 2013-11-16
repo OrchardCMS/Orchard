@@ -79,7 +79,6 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\workflows-activity-sendemail.css" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\SmtpSettings.cshtml" />

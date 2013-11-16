@@ -117,9 +117,6 @@
     <Content Include="Views\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
