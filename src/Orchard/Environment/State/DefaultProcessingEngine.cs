@@ -12,15 +12,17 @@ namespace Orchard.Environment.State {
     public class DefaultProcessingEngine : Component, IProcessingEngine {
         private readonly IShellContextFactory _shellContextFactory;
         private readonly Func<IOrchardHost> _orchardHost;
-        private readonly IList<Entry> _entries = new List<Entry>();
 
-
+        [ThreadStatic] private static IList<Entry> _entries; 
+        
         public DefaultProcessingEngine(IShellContextFactory shellContextFactory, Func<IOrchardHost> orchardHost) {
             _shellContextFactory = shellContextFactory;
             _orchardHost = orchardHost;
         }
 
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string eventName, Dictionary<string, object> parameters) {
+            EnsureEntries();
+
             var entry = new Entry {
                 ShellSettings = shellSettings,
                 ShellDescriptor = shellDescriptor,
@@ -29,14 +31,12 @@ namespace Orchard.Environment.State {
                 TaskId = Guid.NewGuid().ToString("n"),
                 ProcessId = Guid.NewGuid().ToString("n"),
             };
-            Logger.Information("Adding event {0} to process {1} for shell {2}", 
-                eventName, 
+            Logger.Information("Adding event {0} to process {1} for shell {2}",
+                eventName,
                 entry.ProcessId,
                 shellSettings.Name);
-            lock (_entries) {
-                _entries.Add(entry);
-                return entry.ProcessId;
-            }
+            _entries.Add(entry);
+            return entry.ProcessId;
         }
 
 
@@ -52,19 +52,26 @@ namespace Orchard.Environment.State {
 
 
         public bool AreTasksPending() {
-            lock (_entries)
-                return _entries.Any();
+            return EnsureEntries().Any();
         }
 
         public void ExecuteNextTask() {
+            EnsureEntries();
+
             Entry entry;
-            lock (_entries) {
-                if (!_entries.Any())
-                    return;
-                entry = _entries.First();
-                _entries.Remove(entry);
-            }
+            if (!_entries.Any())
+                return;
+            entry = _entries.First();
+            _entries.Remove(entry);
             Execute(entry);
+        }
+
+        private IList<Entry> EnsureEntries() {
+            if (_entries == null) {
+                _entries = new List<Entry>();
+            }
+
+            return _entries;
         }
 
         private void Execute(Entry entry) {
