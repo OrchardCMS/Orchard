@@ -267,7 +267,9 @@
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
+    <Compile Include="Localization\Services\DefaultDateServices.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\IDateServices.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
