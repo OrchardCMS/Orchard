@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -13,6 +14,7 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
+    // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -25,10 +27,8 @@ namespace Orchard.Environment {
         private readonly static object _syncLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
-        
-        [ThreadStatic]
-        private static IList<ShellSettings> _tenantsToRestart;
 
+        private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
@@ -46,6 +46,8 @@ namespace Orchard.Environment {
             _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
             _hostLocalRestart = hostLocalRestart;
+
+            _tenantsToRestart = new ContextState<IList<ShellSettings>>("DefaultOrchardHost.TenantsToRestart", () => new List<ShellSettings>());
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -109,9 +111,9 @@ namespace Orchard.Environment {
         }
 
         void StartUpdatedShells() {
-            while (_tenantsToRestart != null && _tenantsToRestart.Any()) {
-                var settings = _tenantsToRestart.First();
-                _tenantsToRestart.Remove(settings);
+            while (_tenantsToRestart.GetState().Any()) {
+                var settings = _tenantsToRestart.GetState().First();
+                _tenantsToRestart.GetState().Remove(settings);
                 Logger.Debug("Updating shell: " + settings.Name);
                 lock (_syncLock) {
                     ActivateShell(settings);
@@ -244,11 +246,9 @@ namespace Orchard.Environment {
 
             // if a tenant has been created
             if (settings.State != TenantState.Invalid) {
-                _tenantsToRestart = _tenantsToRestart ?? new List<ShellSettings>();
-                
-                if (!_tenantsToRestart.Any(t => t.Name.Equals(settings.Name))) {
+                if (!_tenantsToRestart.GetState().Any(t => t.Name.Equals(settings.Name))) {
                     Logger.Debug("Adding tenant to restart: " + settings.Name + " " + settings.State);
-                    _tenantsToRestart.Add(settings);
+                    _tenantsToRestart.GetState().Add(settings);
                 }
             }
         }
@@ -291,7 +291,7 @@ namespace Orchard.Environment {
             if (_shellContexts == null) {
                 return;
             }
-            
+
             Logger.Debug("Shell changed: " + tenant);
 
             var context = _shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
@@ -300,13 +300,18 @@ namespace Orchard.Environment {
                 return;
             }
 
+            // don't restart when tenant is in setup
+            if (context.Settings.State != TenantState.Running) {
+                return;
+            }
+
             // don't flag the tenant if already listed
-            if (_tenantsToRestart.Any(x => x.Name == tenant)) {
+            if (_tenantsToRestart.GetState().Any(x => x.Name == tenant)) {
                 return;
             }
 
             Logger.Debug("Adding tenant to restart: " + tenant);
-            _tenantsToRestart.Add(context.Settings);
+            _tenantsToRestart.GetState().Add(context.Settings);
         }
     }
 }
