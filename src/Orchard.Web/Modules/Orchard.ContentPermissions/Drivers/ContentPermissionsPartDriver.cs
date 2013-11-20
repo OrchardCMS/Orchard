@@ -177,7 +177,7 @@ namespace Orchard.ContentPermissions.Drivers {
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishOwnContent, part.ContentItem)) {
-                part.PublishOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.ViewContent, UserSimulation.Create(x), null)})) : settings.PublishOwn;
+                part.PublishOwnContent = settings == null ? ContentPermissionsPartViewModel.SerializePermissions(allRoles.Select(x => new RoleEntry {Role = x, Checked = _authorizationService.TryCheckAccess(Core.Contents.Permissions.PublishOwnContent, UserSimulation.Create(x), null)})) : settings.PublishOwn;
             }
 
             if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, part.ContentItem)) {
