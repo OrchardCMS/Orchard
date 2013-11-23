@@ -337,6 +337,10 @@
         text-wrap: none;
     }
 
+    .media-library-main-list-overlay .publication-status {
+        font-style: italic;
+    }
+
     .ui-draggable-dragging .media-library-main-list-overlay{
         display: none;
     }

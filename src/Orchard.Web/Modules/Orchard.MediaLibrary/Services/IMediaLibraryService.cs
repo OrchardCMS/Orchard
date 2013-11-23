@@ -9,11 +9,11 @@ using Orchard.MediaLibrary.Models;
 namespace Orchard.MediaLibrary.Services {
     public interface IMediaLibraryService : IDependency {
         IEnumerable<ContentTypeDefinition> GetMediaTypes();
-        IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems();
-        IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType);
-        IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType);
-        int GetMediaContentItemsCount(string folderPath, string mediaType);
-        int GetMediaContentItemsCount(string mediaType);
+        IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems(VersionOptions versionOptions = null);
+        IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
+        IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType, VersionOptions versionOptions = null);
+        int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null);
+        int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null);
         MediaPart ImportMedia(string relativePath, string filename);
         MediaPart ImportMedia(string relativePath, string filename, string contentType);
         MediaPart ImportMedia(Stream stream, string relativePath, string filename);

@@ -12,6 +12,7 @@ $(function () {
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
         var itemSize = $('.thumbnail').first().width();
+        var draftText = $("#media-library").data("draft-text");
 
         var itemsPerRow = Math.floor(listWidth / itemSize);
         var itemsPerColumn = Math.ceil(listHeight / itemSize);
@@ -51,6 +52,10 @@ $(function () {
                 }
 
                 return css;
+            });
+
+            self.publicationStatus = ko.computed(function() {
+                return self.data.published ? "" : draftText;
             });
 
             // operations

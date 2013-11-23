@@ -15,7 +15,7 @@
     Layout.Title = T("Media Library");
 }
 
-<div id="media-library">
+<div id="media-library" data-draft-text="@T("(draft)")">
     <div id="media-library-toolbar">
         <a href="#" data-bind="visible: displayed(), click: importMedia" class="button" id="button-import">@T("Import")</a>
         <a href="#" data-bind="visible: displayed(), attr: { href: '@HttpUtility.JavaScriptStringEncode(Url.Action("Edit", "Folder", new { area = "Orchard.MediaLibrary"}))?folderPath=' + encodeURIComponent(displayed()) }" class="button"  id="button-edit-folder">@T("Edit Folder")</a>
@@ -48,6 +48,7 @@
                         </div>
                         <div class="media-library-main-list-overlay">
                             <p class="title" data-bind="text: data.title"></p>
+                            <p class="publication-status" data-bind="text: publicationStatus"></p>
                         </div>
                     </li>
                 </ul>

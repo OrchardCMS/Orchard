@@ -24,11 +24,13 @@
         <span>@mediaPart.Caption</span>
     </div>
 }
-
 @if (HasText(mediaPart.AlternateText)) {
     <div class="alternate-text">
         <em>@T("Alternate Text:")</em>
         <span>@mediaPart.AlternateText</span>
     </div>
 }
-
+<div class="publication-status">
+    <em>@T("Status:")</em>
+    <span>@T("{0}", mediaPart.ContentItem.VersionRecord.Published ? "Published" : "Draft")</span>
+</div>

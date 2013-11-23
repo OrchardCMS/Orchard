@@ -44,12 +44,12 @@ namespace Orchard.MediaLibrary.Services {
                 .ToArray();
         }
 
-        public IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems() {
-            return _orchardServices.ContentManager.Query<MediaPart, MediaPartRecord>();
+        public IContentQuery<MediaPart, MediaPartRecord> GetMediaContentItems(VersionOptions versionOptions = null) {
+            return _orchardServices.ContentManager.Query<MediaPart, MediaPartRecord>(versionOptions);
         }
 
-        public IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType) {
-            var query = _orchardServices.ContentManager.Query<MediaPart>();
+        public IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
+            var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
 
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
@@ -86,12 +86,12 @@ namespace Orchard.MediaLibrary.Services {
             }
         }
 
-        public IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType) {
+        public IEnumerable<MediaPart> GetMediaContentItems(int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
             return GetMediaContentItems(null, skip, count, order, mediaType);
         }
 
-        public int GetMediaContentItemsCount(string folderPath, string mediaType) {
-            var query = _orchardServices.ContentManager.Query<MediaPart>();
+        public int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null) {
+            var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
 
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
@@ -104,8 +104,8 @@ namespace Orchard.MediaLibrary.Services {
             return query.Count();
         }
 
-        public int GetMediaContentItemsCount(string mediaType) {
-            return GetMediaContentItemsCount(null, mediaType);
+        public int GetMediaContentItemsCount(string mediaType, VersionOptions versionOptions = null) {
+            return GetMediaContentItemsCount(null, mediaType, versionOptions);
         }
 
         public MediaPart ImportMedia(Stream stream, string relativePath, string filename) {
