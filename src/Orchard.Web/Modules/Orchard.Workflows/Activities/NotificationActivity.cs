@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Localization;
-using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -9,11 +8,9 @@ using Orchard.Workflows.Services;
 namespace Orchard.Workflows.Activities {
     public class NotificationActivity : Task {
         private readonly INotifier _notifier;
-        private readonly ITokenizer _tokenizer;
 
-        public NotificationActivity(INotifier notifier, ITokenizer tokenizer) {
+        public NotificationActivity(INotifier notifier) {
             _notifier = notifier;
-            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
         }
 
