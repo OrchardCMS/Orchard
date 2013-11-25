@@ -19,11 +19,11 @@ namespace Orchard.CodeGeneration.Commands {
         private const string SolutionDirectoryModules = "E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5";
         private const string SolutionDirectoryThemes = "74492CBC-7201-417E-BC29-28B4C25A58B0";
 
-        private static readonly string[] _themeDirectories = new [] {
-            "", "Content", "Styles", "Scripts", "Views", "Zones"
+        private static readonly string[] _themeDirectories = {
+	        "", "Content", "Styles", "Scripts", "Views"
         };
-        private static readonly string[] _moduleDirectories = new [] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
+        private static readonly string[] _moduleDirectories = {
+	        "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
 
         private const string ModuleName = "CodeGeneration";
