@@ -226,8 +226,6 @@ namespace Orchard.CodeGeneration.Commands {
 
             File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             content.Add(modulePath + "Web.config");
-            File.WriteAllText(modulePath + "Views\\Web.config", File.ReadAllText(_codeGenTemplatePath + "ViewsWebConfig.txt"));
-            content.Add(modulePath + "Views\\Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
             content.Add(modulePath + "Scripts\\Web.config");
             File.WriteAllText(modulePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -298,9 +296,6 @@ namespace Orchard.CodeGeneration.Commands {
 
             File.WriteAllText(themePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
             createdFiles.Add(themePath + "Web.config");
-            var webConfig = themePath + "Views\\Web.config";
-            File.WriteAllText(webConfig, File.ReadAllText(_codeGenTemplatePath + "\\ViewsWebConfig.txt"));
-            createdFiles.Add(webConfig);
             File.WriteAllText(themePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
             createdFiles.Add(themePath + "Scripts\\Web.config");
             File.WriteAllText(themePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));

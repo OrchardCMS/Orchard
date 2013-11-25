@@ -78,7 +78,6 @@
     <Content Include="CodeGenerationTemplates\ModuleAssemblyInfo.txt" />
     <Content Include="CodeGenerationTemplates\ModuleCsProj.txt" />
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
-    <Content Include="CodeGenerationTemplates\ViewsWebConfig.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config">
