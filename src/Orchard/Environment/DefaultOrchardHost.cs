@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -129,15 +130,15 @@ namespace Orchard.Environment {
 
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
-                foreach (var settings in allSettings) {
+                Parallel.ForEach(allSettings, settings => {
                     try {
                         var context = CreateShellContext(settings);
                         ActivateShell(context);
                     }
-                    catch(Exception e) {
+                    catch (Exception e) {
                         Logger.Error(e, "A tenant could not be started: " + settings.Name);
                     }
-                }
+                });
             }
             // no settings, run the Setup
             else {
