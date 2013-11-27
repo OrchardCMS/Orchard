@@ -25,7 +25,7 @@ namespace Orchard.Tests.Environment.State {
             builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>();
             builder.RegisterModule(new WorkContextModule());
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
-            builder.RegisterAutoMocking();
+            builder.RegisterAutoMocking(MockBehavior.Loose);
             _container = builder.Build();
 
             _shellContext = new ShellContext {
@@ -41,6 +41,19 @@ namespace Orchard.Tests.Environment.State {
                 .Setup(x=>x.Current())
                 .Returns(default(HttpContextBase));
 
+        }
+
+        [TearDown]
+        public void CleanTasks() {
+            // clear the previous values
+            try {
+                var engine = _container.Resolve<IProcessingEngine>();
+                if (engine != null)
+                    while (engine.AreTasksPending()) engine.ExecuteNextTask();
+            }
+            catch {
+                
+            }
         }
 
         [Test]

@@ -34,7 +34,7 @@ namespace Orchard.Tests.DataMigration {
         private ISession _session;
         private ITransactionManager _transactionManager;
 
-        [TestFixtureSetUp]
+        [SetUp]
         public void CreateDb() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
@@ -45,6 +45,7 @@ namespace Orchard.Tests.DataMigration {
                 typeof(ContentTypeRecord));
         }
 
+        [TearDown]
         public void InitDb() {
             foreach ( var record in _repository.Fetch(m => m != null) ) {
                 _repository.Delete(record);
