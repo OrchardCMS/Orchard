@@ -14,12 +14,14 @@ namespace Orchard.Mvc.Routes {
 
         private readonly ConcurrentDictionary<string, IList<RouteBase>> _routesByShell = new ConcurrentDictionary<string, IList<RouteBase>>();
 
-        public HubRoute(string area, int priority, IRunningShellTable runningShellTable) {
+        public HubRoute(string name, string area, int priority, IRunningShellTable runningShellTable) {
             Priority = priority;
             Area = area;
+            Name = name;
             _runningShellTable = runningShellTable;
         }
 
+        public string Name { get; private set; }
         public string Area { get; private set; }
         public int Priority { get; private set; }
 
@@ -84,6 +86,10 @@ namespace Orchard.Mvc.Routes {
             }
 
             if (other == this) {
+                return 0;
+            }
+
+            if (String.IsNullOrEmpty(Name) && String.IsNullOrEmpty(other.Name) || Name == other.Name) {
                 return 0;
             }
 

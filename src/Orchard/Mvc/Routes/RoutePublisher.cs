@@ -59,7 +59,7 @@ namespace Orchard.Mvc.Routes {
                 _routeCollection
                     .OfType<HubRoute>()
                     .ForEach(x => x.ReleaseShell(_shellSettings));
-
+                
                 // new routes are added
                 foreach (var routeDescriptor in routesArray) {
                     // Loading session state information. 
@@ -102,11 +102,11 @@ namespace Orchard.Mvc.Routes {
                             return false;
                         }
 
-                        return routeDescriptor.Priority == hubRoute.Priority && hubRoute.Area.Equals(area, StringComparison.OrdinalIgnoreCase);
+                        return routeDescriptor.Priority == hubRoute.Priority && hubRoute.Area.Equals(area, StringComparison.OrdinalIgnoreCase) && hubRoute.Name == routeDescriptor.Name;
                     }) as HubRoute;
 
                     if (matchedHubRoute == null) {
-                        matchedHubRoute = new HubRoute(area, routeDescriptor.Priority, _runningShellTable);
+                        matchedHubRoute = new HubRoute(routeDescriptor.Name, area, routeDescriptor.Priority, _runningShellTable);
 
                         int index;
                         for (index = 0; index < _routeCollection.Count; index++) {
