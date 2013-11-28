@@ -40,7 +40,8 @@ namespace Orchard.Workflows.Models {
                 return default(T);
             }
 
-            return (T)State[key];
+            var value = State[key];
+            return value != null ? value.ToObject<T>() : default(T);
         }
 
         public object GetState(string key) {
