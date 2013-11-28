@@ -33,8 +33,13 @@ namespace Orchard.Data {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public Configuration GetConfiguration(Func<Configuration> builder) {
+            if (Disabled) {
+                return builder();
+            }
+
             var hash = ComputeHash().Value;
 
             // if the current configuration is unchanged, return it

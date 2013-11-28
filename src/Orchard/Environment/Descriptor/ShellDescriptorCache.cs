@@ -42,11 +42,13 @@ namespace Orchard.Environment.Descriptor {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        public bool Disabled { get; set; }
 
-        #region Implementation of IShellDescriptorCache
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StringReader closed by XmlReader.")]
         public ShellDescriptor Fetch(string name) {
+            if (Disabled) {
+                return null;
+            }
+
             lock (_synLock) {
                 VerifyCacheFile();
                 var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
@@ -67,8 +69,11 @@ namespace Orchard.Environment.Descriptor {
 
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "writer closed by xmlWriter.")]
         public void Store(string name, ShellDescriptor descriptor) {
+            if (Disabled) {
+                return;
+            }
+
             lock (_synLock) {
                 VerifyCacheFile();
                 var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
@@ -97,8 +102,6 @@ namespace Orchard.Environment.Descriptor {
             }
         }
 
-        #endregion
-
         private static string GetCacheTextForShellDescriptor(ShellDescriptor descriptor) {
             var sb = new StringBuilder();
             sb.Append(descriptor.SerialNumber + "|");
@@ -125,19 +128,19 @@ namespace Orchard.Environment.Descriptor {
             return shellDescriptor;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        /// <summary>
+        /// Creates an empty cache file if it doesn't exist already
+        /// </summary>
         private void VerifyCacheFile() {
             if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
                 var writer = new StringWriter();
-                using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
-                    if (xmlWriter != null) {
-                        xmlWriter.WriteStartDocument();
-                        xmlWriter.WriteStartElement("Tenants");
-                        xmlWriter.WriteEndElement();
-                        xmlWriter.WriteEndDocument();
-                    }
+                using (var xmlWriter = XmlWriter.Create(writer)) {
+                    xmlWriter.WriteStartDocument();
+                    xmlWriter.WriteStartElement("Tenants");
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndDocument();
                 }
-                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());
+                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());                
             }
         }
     }

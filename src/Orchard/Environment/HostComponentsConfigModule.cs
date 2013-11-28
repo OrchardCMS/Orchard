@@ -94,10 +94,10 @@ namespace Orchard.Environment {
                     PropertyInfo = p,
                     IndexParameters = p.GetIndexParameters(),
                     Accessors = p.GetAccessors(false),
-                    PropertyEntry = properties.Where(t => t.Name == p.Name).FirstOrDefault()
+                    PropertyEntry = properties.FirstOrDefault(t => t.Name == p.Name)
                 })
                 .Where(x => x.PropertyEntry != null) // Must be present in "properties"
-                .Where(x => x.IndexParameters.Count() == 0) // must not be an indexer
+                .Where(x => !x.IndexParameters.Any()) // must not be an indexer
                 .Where(x => x.Accessors.Length != 1 || x.Accessors[0].ReturnType == typeof(void)); //must have get/set, or only set
 
             // Return an array of actions that assign the property value
