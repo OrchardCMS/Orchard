@@ -23,6 +23,7 @@ namespace Orchard.Tokens.Tests {
             builder.RegisterType<DateTokens>().As<ITokenProvider>();
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<DefaultDateTimeLocalization>().As<IDateTimeLocalization>();
+            builder.RegisterType<DefaultDateServices>().As<IDateServices>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             _container = builder.Build();
             _tokenizer = _container.Resolve<ITokenizer>();
