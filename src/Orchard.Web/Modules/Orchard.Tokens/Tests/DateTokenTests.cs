@@ -2,7 +2,7 @@
 using System.Globalization;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Core.Shapes.Localization;
+using Orchard.Localization.Services;
 using Orchard.Services;
 using Orchard.Tokens.Implementation;
 using Orchard.Tokens.Providers;
@@ -22,7 +22,7 @@ namespace Orchard.Tokens.Tests {
             builder.RegisterType<Tokenizer>().As<ITokenizer>();
             builder.RegisterType<DateTokens>().As<ITokenProvider>();
             builder.RegisterType<StubClock>().As<IClock>();
-            builder.RegisterType<DateTimeLocalization>().As<IDateTimeLocalization>();
+            builder.RegisterType<DefaultDateTimeLocalization>().As<IDateTimeLocalization>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             _container = builder.Build();
             _tokenizer = _container.Resolve<ITokenizer>();

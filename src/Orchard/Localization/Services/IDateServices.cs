@@ -24,6 +24,14 @@ namespace Orchard.Localization.Services {
         DateTime? ConvertToLocal(DateTime? date);
 
         /// <summary>
+        /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it using the default long date and time format string.
+        /// </summary>
+        /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
+        /// <param name="nullText">A text to be returned if the supplied UTC date is equal to DateTime.MinValue.</param>
+        /// <returns></returns>
+        string ConvertToLocalString(DateTime date, string nullText = null);
+
+        /// <summary>
         /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it using the specified format string using the Orchard configured culture.
         /// </summary>
         /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>

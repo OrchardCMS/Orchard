@@ -4,18 +4,18 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
-        private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly IDateServices _dateServices;
 
         public DateEditorDriver(
-            IOrchardServices services) {
-            T = NullLocalizer.Instance;
-            Services = services;
-
-            // initializing the culture info lazy initializer
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
+            IOrchardServices services,
+            IDateServices dateServices) {
+                _dateServices = dateServices;
+                T = NullLocalizer.Instance;
+                Services = services;
         }
 
         public Localizer T { get; set; }
@@ -53,40 +53,30 @@ namespace Orchard.Core.Common.DateEditor {
                             thisIsTheInitialVersionRecord && 
                             theDatesHaveNotBeenModified;
 
-                        if (theEditorShouldBeBlank == false) {
-                            // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
-                            var createdLocal = TimeZoneInfo.ConvertTimeFromUtc(part.CreatedUtc.Value, Services.WorkContext.CurrentTimeZone);
-
-                            model.CreatedDate = createdLocal.ToString("d", _cultureInfo.Value);
-                            model.CreatedTime = createdLocal.ToString("t", _cultureInfo.Value);
+                        if (!theEditorShouldBeBlank) {
+                            model.CreatedDate = _dateServices.ConvertToLocalDateString(part.CreatedUtc, "");
+                            model.CreatedTime = _dateServices.ConvertToLocalTimeString(part.CreatedUtc, "");
                         }
                     }
 
                     if (updater != null) {
                         updater.TryUpdateModel(model, Prefix, null, null);
 
-                        if (!string.IsNullOrWhiteSpace(model.CreatedDate) && !string.IsNullOrWhiteSpace(model.CreatedTime)) {
-                            DateTime createdUtc;
-                            
-                            string parseDateTime = String.Concat(model.CreatedDate, " ", model.CreatedTime);
-
-                            // use current culture
-                            if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out createdUtc)) {
-
-                                // the date time is entered locally for the configured timezone
-                                part.CreatedUtc = TimeZoneInfo.ConvertTimeToUtc(createdUtc, Services.WorkContext.CurrentTimeZone);
-                                part.VersionCreatedUtc = part.CreatedUtc;
+                        if (!String.IsNullOrWhiteSpace(model.CreatedDate) && !String.IsNullOrWhiteSpace(model.CreatedTime)) {
+                            try {
+                                var utcDateTime = _dateServices.ConvertFromLocalString(model.CreatedDate, model.CreatedTime);
+                                part.CreatedUtc = utcDateTime;
+                                part.VersionCreatedUtc = utcDateTime;
                             }
-                            else {
-                                updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                            catch (FormatException) {
+                                updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.CreatedDate, model.CreatedTime));                                                                             
                             }
                         }
-                        else if (!string.IsNullOrWhiteSpace(model.CreatedDate) || !string.IsNullOrWhiteSpace(model.CreatedTime)) {
-                            // only one part is specified
+                        else if (!String.IsNullOrWhiteSpace(model.CreatedDate) || !String.IsNullOrWhiteSpace(model.CreatedTime)) {
                             updater.AddModelError(Prefix, T("Both the date and time need to be specified."));
                         }
 
-                        // none date/time part is specified => do nothing
+                        // Neither date/time part is specified => do nothing.
                     }
 
                     return model;

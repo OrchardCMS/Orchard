@@ -1,9 +1,9 @@
 ﻿using System;
-using Orchard.Core.Shapes.Localization;
+using System.Globalization;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc.Html;
 using Orchard.Services;
-using System.Globalization;
 
 namespace Orchard.Tokens.Providers {
     public class DateTokens : ITokenProvider {
@@ -11,18 +11,18 @@ namespace Orchard.Tokens.Providers {
         private readonly IDateTimeLocalization _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly Lazy<TimeZoneInfo> _timeZone;
+        private readonly IDateServices _dateServices;
 
         public DateTokens(
             IClock clock, 
             IDateTimeLocalization dateTimeLocalization, 
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor,
+            IDateServices dateServices) {
             _clock = clock;
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
-
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
-            _timeZone = new Lazy<TimeZoneInfo>(() => _workContextAccessor.GetContext().CurrentTimeZone);
+            _dateServices = dateServices;
 
             T = NullLocalizer.Instance;
         }
@@ -32,7 +32,7 @@ namespace Orchard.Tokens.Providers {
         public void Describe(DescribeContext context) {
             context.For("Date", T("Date/time"), T("Current date/time tokens"))
                 .Token("Since", T("Since"), T("Relative to the current date/time."), "Date")
-                .Token("Local", T("Local"), T("Based on the configured time zone."), "Date")
+                .Token("Local", T("Local"), T("Based on the configured time zone and calendar."), "Date")
                 .Token("ShortDate", T("Short Date"), T("Short date format."))
                 .Token("ShortTime", T("Short Time"), T("Short time format."))
                 .Token("Long", T("Long Date and Time"), T("Long date and time format."))
@@ -45,8 +45,8 @@ namespace Orchard.Tokens.Providers {
                 .Token("Since", DateTimeRelative)
                 .Chain("Since", "Date", DateTimeRelative)
                 // {Date.Local}
-                .Token("Local", d => TimeZoneInfo.ConvertTimeFromUtc(d, _timeZone.Value))
-                .Chain("Local", "Date", d => TimeZoneInfo.ConvertTimeFromUtc(d, _timeZone.Value))
+                .Token("Local", d => _dateServices.ConvertToLocal(d))
+                .Chain("Local", "Date", d => _dateServices.ConvertToLocal(d))
                 // {Date.ShortDate}
                 .Token("ShortDate", d => d.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value))
                 // {Date.ShortTime}
