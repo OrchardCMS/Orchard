@@ -5,13 +5,13 @@ namespace Orchard.Core.Common.ViewModels {
         public BodyPart BodyPart { get; set; }
 
         public string Text {
-            get { return BodyPart.Record.Text; }
-            set { BodyPart.Record.Text = value; }
+            get { return BodyPart.Text; }
+            set { BodyPart.Text = value; }
         }
 
         public string Format {
-            get { return BodyPart.Record.Format; }
-            set { BodyPart.Record.Format = value; }
+            get { return BodyPart.Format; }
+            set { BodyPart.Format = value; }
         }
 
         public string EditorFlavor { get; set; }
