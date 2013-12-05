@@ -1,8 +1,4 @@
 ﻿<Placement>
-  <Match ContentType="List" DisplayType="Detail">
-    <Place Parts_Title="-"
-           Parts_Common_Metadata="-" />
-  </Match>
   <Place Dialog_CloseButton="Sidebar:30"
          Breadcrumbs_ContentItem="Content:before"
          ListNavigation="Sidebar:29"/>
