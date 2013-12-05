@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement
+@{
+    var previous = (IContent) Model.Previous;
+    var next = (IContent)Model.Next;
+}
+<div class="list-navigation">
+    <div class="pull-right">
+        @if (previous != null) { <a href="@Url.ItemAdminUrl(previous)" class="button">@T("Previous")</a> }
+        @if (next != null) { <a href="@Url.ItemAdminUrl(next)" class="button">@T("Next")</a> }
+    </div>
+</div>

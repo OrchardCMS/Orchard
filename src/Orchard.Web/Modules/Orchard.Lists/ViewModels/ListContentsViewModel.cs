@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.Core.Containers.ViewModels;
 
 namespace Orchard.Lists.ViewModels {
     public class ListContentsViewModel  {
@@ -8,40 +9,29 @@ namespace Orchard.Lists.ViewModels {
         }
 
         public string FilterByContentType { get; set; }
-        public int? ContainerId { get; set; }
+        public int ContainerId { get; set; }
         public string ContainerDisplayName { get; set; }
 
         public int? Page { get; set; }
         public IList<Entry> Entries { get; set; }
         public ContentOptions Options { get; set; }
 
-        #region Nested type: Entry
-
         public class Entry {
             public ContentItem ContentItem { get; set; }
             public ContentItemMetadata ContentItemMetadata { get; set; }
         }
-
-        #endregion
     }
 
     public class ContentOptions {
         public ContentOptions() {
-            OrderBy = ContentsOrder.Modified;
+            OrderBy = SortBy.Modified;
             BulkAction = ContentsBulkAction.None;
         }
         public string SelectedFilter { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> FilterOptions { get; set; }
-        public ContentsOrder OrderBy { get; set; }
+        public SortBy OrderBy { get; set; }
         public ContentsBulkAction BulkAction { get; set; }
     }
-
-    public enum ContentsOrder {
-        Modified,
-        Published,
-        Created
-    }
-
+    
     public enum ContentsBulkAction {
         None,
         PublishNow,
@@ -49,5 +39,12 @@ namespace Orchard.Lists.ViewModels {
         Remove,
         RemoveFromList,
         MoveToList
+    }
+
+    public enum ListOperation {
+        None,
+        Shuffle,
+        Reverse,
+        Sort
     }
 }

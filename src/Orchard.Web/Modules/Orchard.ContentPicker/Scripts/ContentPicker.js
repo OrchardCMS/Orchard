@@ -1,6 +1,6 @@
 ﻿jQuery(function ($) {
 
-    $("form").bind("orchard-admin-contentpicker-open", function (ev, data) {
+    $("#layout-content").on("orchard-admin-contentpicker-open", "form", function (ev, data) {
         data = data || {};
         // the popup will be doing full page reloads, so will not be able to retain
         // a pointer to the callback. We will generate a temporary callback
@@ -21,10 +21,13 @@
         if (baseUrl.slice(-1) == '/')
             baseUrl = baseUrl.substr(0, baseUrl.length - 1);
 
-        var url = baseUrl
-            + "/Admin/Orchard.ContentPicker?"
-            + "callback=" + callbackName
-            + "&" + (new Date() - 0);
+        var url = baseUrl + "/Admin/Orchard.ContentPicker?";
+        
+        if (data.types) {
+            url += "types=" + encodeURIComponent(data.types) + "&";
+        }
+
+        url += "callback=" + callbackName + "&" + (new Date() - 0);
 
         if (data.part) {
             url += "&part=" + encodeURIComponent(data.part);

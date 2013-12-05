@@ -530,6 +530,11 @@ span.message {
     border:1px solid #e4e8ee;  /* blue */
     padding-left:26px;
 }
+.error { 
+    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    border:1px solid #e5cece;  /* red */
+    padding-left:26px;
+}
 .message-Information, .notifications {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
@@ -1011,7 +1016,7 @@ table.items tr:nth-child(even) {
 
 #main .contentItems > ul > li:hover,
 ul.contentItems > li:hover,
-table.items tr:hover {
+table.items tbody tr:hover {
     background-color: #EDF9F5;
 }
 

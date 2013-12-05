@@ -1,0 +1,63 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Core.Containers.Models
+@using Orchard.Core.Containers.ViewModels
+@using Orchard.Lists.ViewModels
+@using SortDirection = Orchard.Core.Containers.ViewModels.SortDirection;
+@{
+    var container = (ContainerPart) Model.Container;
+    var options = (ContentOptions)Model.Options;
+    var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
+        contentItem => new SelectListItem {
+            Text = contentItem.ContentType + ": " + contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
+            Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        }).ToList();
+    lists.Insert(0, new SelectListItem { Text = T("Move to...").ToString(), Value = "" });
+}
+<fieldset class="bulk-actions">
+    <label for="publishActions">@T("Actions:")</label>
+    <select id="publishActions" name="Options.BulkAction">
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
+        @Html.SelectOption(options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
+    </select>
+    @Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
+    <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+</fieldset>
+@if (container.EnablePositioning) {
+    <fieldset class="bulk-actions">
+        <label for="listOperations" class="list-operation">@T("List Operations:")</label>
+        <select id="listOperations" name="Operation">
+            @Html.SelectOption(ListOperation.None, false, T("Choose operation...").ToString())
+            @Html.SelectOption(ListOperation.Shuffle, false, T("Shuffle").ToString())
+            @Html.SelectOption(ListOperation.Reverse, false, T("Reverse").ToString())
+            @Html.SelectOption(ListOperation.Sort, false, T("Sort").ToString())
+        </select>
+        <select id="SortBy" name="SortBy">
+            @Html.SelectOption("", false, T("Sort by...").ToString())
+            @Html.SelectOption(SortBy.Created, false, T("Recently Created").ToString())
+            @Html.SelectOption(SortBy.Modified, false, T("Recently Modified").ToString())
+            @Html.SelectOption(SortBy.Published, false, T("Recently Published").ToString())
+            @Html.SelectOption(SortBy.DisplayText, false, T("Title").ToString())
+        </select>
+        <select id="SortByDirection" name="SortByDirection">
+            @Html.SelectOption(SortDirection.Ascending, false, T("Ascending").ToString())
+            @Html.SelectOption(SortDirection.Descending, false, T("Descending").ToString())
+        </select>
+        <button type="submit" name="submit.ListOp" value="yes please">@T("Apply")</button>
+    </fieldset>
+}
+else {
+  <fieldset class="bulk-actions">
+        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
+        <select id="orderResults" name="Options.OrderBy">
+            @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Created, T("Recently Created").ToString())
+            @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Modified, T("Recently Modified").ToString())
+            @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.Published, T("Recently Published").ToString())
+            @Html.SelectOption((SortBy)Model.Options.OrderBy, SortBy.DisplayText, T("Title").ToString())
+        </select>
+        <button type="submit" name="submit.Order" value="yes please">@T("Apply")</button>
+    </fieldset>
+}

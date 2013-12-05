@@ -103,12 +103,17 @@ namespace Orchard.Mvc.Html {
 
         public static string ItemEditUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata.DisplayRouteValues == null)
+            if (metadata.EditorRouteValues == null)
                 return null;
 
             return urlHelper.Action(
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues ?? new {}));
+        }
+
+        public static string ItemAdminUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            return metadata.AdminRouteValues == null ? null : urlHelper.RouteUrl(metadata.AdminRouteValues.Merge(additionalRouteValues ?? new { }));
         }
 
         private static string NonNullOrEmpty(params string[] values) {

@@ -1,10 +1,12 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Containers.Models;
 using Orchard.Data;
 
 namespace Orchard.Core.Containers.Drivers {
+    [Obsolete("Use Fields instead.")]
     public class CustomPropertiesPartDriver : ContentPartDriver<CustomPropertiesPart> {
         protected override DriverResult Editor(CustomPropertiesPart part, dynamic shapeHelper) {
             return Editor(part, (IUpdateModel)null, shapeHelper);
@@ -45,6 +47,7 @@ namespace Orchard.Core.Containers.Drivers {
         }
     }
 
+    [Obsolete("Use Fields instead.")]
     public class CustomPropertiesPartHandler : ContentHandler {
         public CustomPropertiesPartHandler(IRepository<CustomPropertiesPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));

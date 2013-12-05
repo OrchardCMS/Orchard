@@ -128,14 +128,6 @@ namespace Upgrade.Controllers {
                                     autoroutePart.DisplayAlias = path ?? String.Empty;
                                     titlePart.Title = title;
 
-                                    // updating order if it's a container
-                                    var containerPart = autoroutePart.As<ContainerPart>();
-                                    if(containerPart != null) {
-                                        if(!String.IsNullOrEmpty(containerPart.OrderByProperty) && containerPart.OrderByProperty.StartsWith("RoutePart")) {
-                                            containerPart.OrderByProperty = "TitlePart.Title";
-                                        }
-                                    }
-
                                     _autorouteService.PublishAlias(autoroutePart);
                                 }
                                 catch(Exception e) {

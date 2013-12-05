@@ -75,31 +75,39 @@
 }
 @using (Script.Foot()) {
 <script type="text/javascript">
-//<![CDATA[
+    //<![CDATA[
     $(function () {
-        $('ul.selector').each(function () {
-            var self = $(this),
-                options = $.map(self.find("li"), function (li) {
-                    var self = $(li);
-                    return $("<option/>", {
-                        value: self.children("a").attr("href"),
-                        text: self.text(),
-                        selected: self.hasClass("selected")
-                    })[0];
-                }),
-                select = $("<select/>", {
-                    id: self.attr("id") + "Selector",
-                    "class": self.attr("class"),
-                    name: self.attr("name") + "Selector"
-                }).change(onSelectChange).append(options);
-            self.replaceWith(select);
-        });
-
-        function onSelectChange() {
-            // redirect to page with new page size
-            // disable button so that no other value can be chosen while the form is submited
+        var onSelectChange = function() {
+            // Rredirect to page with new page size.
+            // Disable button so that no other value can be chosen while the form is submitted.
             window.location = $(this).attr("disabled", true).val();
-        }
+        };
+
+        var transformPager = function () {
+            $('ul.selector').each(function () {
+                var self = $(this),
+                    options = $.map(self.find("li"), function (li) {
+                        var self = $(li);
+                        return $("<option/>", {
+                            value: self.children("a").attr("href"),
+                            text: self.text(),
+                            selected: self.hasClass("selected")
+                        })[0];
+                    }),
+                    select = $("<select/>", {
+                        id: self.attr("id") + "Selector",
+                        "class": self.attr("class"),
+                        name: self.attr("name") + "Selector"
+                    }).change(onSelectChange).append(options);
+                self.replaceWith(select);
+            });
+        };
+
+        transformPager();
+
+        $(window).on("reinitialize", function() {
+            transformPager();
+        });
     })
 //]]>
 </script>

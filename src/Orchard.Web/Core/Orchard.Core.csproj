@@ -102,6 +102,8 @@
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
+    <Compile Include="Containers\Extensions\ContentDefinitionManagerExtensions.cs" />
+    <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
     <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
     <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
@@ -113,11 +115,16 @@
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
     <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
-    <Compile Include="Containers\Models\OrderByDirection.cs" />
+    <Compile Include="Containers\Services\ContainerService.cs" />
+    <Compile Include="Containers\Services\ListViewProvider.cs" />
+    <Compile Include="Containers\Services\ListViewService.cs" />
+    <Compile Include="Containers\Services\Randomizer.cs" />
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
+    <Compile Include="Containers\Settings\ContainableSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerTypePartSettingsViewModel.cs" />
     <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
@@ -359,7 +366,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Containers\Services\" />
+    <Folder Include="Views\Gamma\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Content.cshtml" />
@@ -393,7 +400,7 @@
     <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
-    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettingsViewModel.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
@@ -540,6 +547,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Item\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\EditorTemplates\ListViewPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\DefinitionTemplates\ContainableTypePartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
