@@ -69,6 +69,7 @@
     <Compile Include="Activities\IsInRoleActivity.cs" />
     <Compile Include="Activities\UserTaskActivity.cs" />
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\RoleCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserTaskDriver.cs" />
     <Compile Include="Forms\SelectRolesForms.cs" />
