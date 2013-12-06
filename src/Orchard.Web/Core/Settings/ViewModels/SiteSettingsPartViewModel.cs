@@ -8,6 +8,7 @@ namespace Orchard.Core.Settings.ViewModels {
     public class SiteSettingsPartViewModel  {
         public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
+		public IEnumerable<string> SiteCalendars { get; set; }
         public IEnumerable<TimeZoneInfo> TimeZones { get; set; }
 
         [HiddenInput(DisplayValue = false)]
@@ -28,6 +29,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public string SiteCulture {
             get { return Site.SiteCulture; }
             set { Site.SiteCulture = value; }
+        }
+
+        public string SiteCalendar {
+            get { return Site.SiteCalendar; }
+            set { Site.SiteCalendar = value; }
         }
 
         public string SuperUser {

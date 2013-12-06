@@ -35,6 +35,11 @@ namespace Orchard.Core.Settings.Models {
             set { this.Store(x => x.SiteCulture, value); }
         }
 
+		public string SiteCalendar {
+            get { return this.Retrieve(x => x.SiteCalendar); }
+            set { this.Store(x => x.SiteCalendar, value); }
+        }
+
         public ResourceDebugMode ResourceDebugMode {
             get { return this.Retrieve(x => x.ResourceDebugMode); }
             set { this.Store(x => x.ResourceDebugMode, value); }

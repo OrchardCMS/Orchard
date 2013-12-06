@@ -15,22 +15,30 @@
         @Html.ValidationMessage("SiteName", "*")
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
+        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
         @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium" })
-        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
+        <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
-    <div>
-        <label for="SiteCulture">@T("Default Site Culture")</label>
-        @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
-        @Html.ValidationMessage("SiteCulture", "*")
-        <p>@Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture")</p>
-    </div>
+	<div>
+		<label for="SiteCulture">@T("Default Site Culture")</label>
+		@Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
+		@Html.ValidationMessage("SiteCulture", "*")
+		<span class="hint">@T("Determines the default culture used to localize strings and to format and parse numbers, date and times.")</span>
+		<p>@Html.ActionLink(T("Add or remove supported cultures for the site").ToString(), "Culture")</p>
+	</div>
+	<div>
+		<label for="SiteCalendar">@T("Default Site Calendar")</label>
+		@Html.DropDownList("SiteCalendar", new[] { new SelectListItem { Text = T("Culture calendar").Text, Value = "" } }.Union(new SelectList(Model.SiteCalendars, Model.SiteCalendar)))
+		@Html.ValidationMessage("SiteCalendar", "*")
+		<span class="hint">@T("Determines the default calendar used when displaying and editing dates and times.")</span>
+		<span class="hint">@T("The 'Culture calendar' option means the default calendar for the culture of the current request will be used (not necessarily the configured default site culture).")</span>
+	</div>
     <div>
         <label for="TimeZone">@T("Default Time Zone")</label>
         @Html.DropDownList("TimeZone", new[] { new SelectListItem { Text = T("Local to server").Text, Value = "" } }.Union(new SelectList(Model.TimeZones, "Id", "", Model.TimeZone)))
         @Html.ValidationMessage("TimeZone", "*")
-        <span class="hint">@T("Determines the default time zone which will should be used to display date and times.")</span>
+        <span class="hint">@T("Determines the default time zone used when displaying and editing dates and times.")</span>
     </div>
     <div>
         <label for="PageTitleSeparator">@T("Page title separator")</label>

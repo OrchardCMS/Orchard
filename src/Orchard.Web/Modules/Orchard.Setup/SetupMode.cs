@@ -176,6 +176,11 @@ namespace Orchard.Setup {
                 set { throw new NotImplementedException(); }
             }
 
+            public string SiteCalendar {
+                get { return ""; }
+                set { throw new NotImplementedException(); }
+            }
+
             public ResourceDebugMode ResourceDebugMode {
                 get { return ResourceDebugMode.FromAppSetting; }
                 set { throw new NotImplementedException(); }

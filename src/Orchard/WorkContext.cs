@@ -24,10 +24,8 @@ namespace Orchard {
         /// <returns>True if the dependency could be resolved, false otherwise</returns>
         public abstract bool TryResolve<T>(out T service);
 
-
-        public abstract T GetState<T>(string name);
+		public abstract T GetState<T>(string name);
         public abstract void SetState<T>(string name, T value);
-
 
         /// <summary>
         /// The http context corresponding to the work context
@@ -75,6 +73,14 @@ namespace Orchard {
         public string CurrentCulture {
             get { return GetState<string>("CurrentCulture"); }
             set { SetState("CurrentCulture", value); }
+        }
+
+        /// <summary>
+        /// Active calendar of the work context
+        /// </summary>
+        public string CurrentCalendar {
+            get { return GetState<string>("CurrentCalendar"); }
+            set { SetState("CurrentCalendar", value); }
         }
 
         /// <summary>

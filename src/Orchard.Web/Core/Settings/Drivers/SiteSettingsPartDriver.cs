@@ -18,16 +18,19 @@ namespace Orchard.Core.Settings.Drivers {
     public class SiteSettingsPartDriver : ContentPartDriver<SiteSettingsPart> {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
+		private readonly ICalendarManager _calendarProvider;
         private readonly IMembershipService _membershipService;
         private readonly INotifier _notifier;
 
         public SiteSettingsPartDriver(
             ISiteService siteService, 
-            ICultureManager cultureManager, 
+            ICultureManager cultureManager,
+			ICalendarManager calendarProvider,
             IMembershipService membershipService, 
             INotifier notifier) {
             _siteService = siteService;
             _cultureManager = cultureManager;
+			_calendarProvider = calendarProvider;
             _membershipService = membershipService;
             _notifier = notifier;
 
@@ -46,6 +49,7 @@ namespace Orchard.Core.Settings.Drivers {
             var model = new SiteSettingsPartViewModel {
                 Site = site,
                 SiteCultures = _cultureManager.ListCultures(),
+				SiteCalendars = _calendarProvider.ListCalendars(),
                 TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
@@ -58,7 +62,8 @@ namespace Orchard.Core.Settings.Drivers {
             var model = new SiteSettingsPartViewModel { 
                 Site = site,
                 SiteCultures = _cultureManager.ListCultures(),
-                TimeZones = TimeZoneInfo.GetSystemTimeZones()
+				SiteCalendars = _calendarProvider.ListCalendars(),
+				TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
             var previousBaseUrl = model.Site.BaseUrl;
