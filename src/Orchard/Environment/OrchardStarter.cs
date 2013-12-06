@@ -34,6 +34,7 @@ using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 using Orchard.WebApi;
+using Orchard.WebApi.Filters;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -153,6 +154,9 @@ namespace Orchard.Environment {
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new DefaultOrchardWebApiHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpHttpControllerActivator(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiActionFilterDispatcher());
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiExceptionFilterDispatcher());
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
