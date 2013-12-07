@@ -5,6 +5,7 @@ namespace Orchard.Core.Settings.Models {
     public sealed class SiteSettingsPart : ContentPart, ISite {
 
         public const int DefaultPageSize = 10;
+
         public string PageTitleSeparator {
             get { return this.Retrieve(x => x.PageTitleSeparator); }
             set { this.Store(x => x.PageTitleSeparator, value); }
@@ -40,7 +41,7 @@ namespace Orchard.Core.Settings.Models {
         }
 
         public int PageSize {
-            get { return this.Retrieve(x => x.PageSize); }
+            get { return this.Retrieve(x => x.PageSize, DefaultPageSize); }
             set { this.Store(x => x.PageSize, value); }
         }
 
