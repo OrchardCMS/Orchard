@@ -118,13 +118,15 @@ namespace Orchard.CustomForms.Controllers {
             }
 
             var customForm = form.As<CustomFormPart>();
-
             var contentItem = _contentManager.New(customForm.ContentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = _contentManager.UpdateEditor(contentItem, this);
+            if(customForm.SaveContentItem)
+                _contentManager.Create(contentItem, VersionOptions.Draft);
+
+            var model = _contentManager.UpdateEditor(contentItem, this);
             
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -163,7 +165,6 @@ namespace Orchard.CustomForms.Controllers {
 
             // save the submitted form
             if (customForm.SaveContentItem) {
-                _contentManager.Create(contentItem);
                 conditionallyPublish(contentItem);
             }
 
