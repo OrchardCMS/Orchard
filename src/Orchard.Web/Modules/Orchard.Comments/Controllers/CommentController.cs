@@ -118,10 +118,14 @@ namespace Orchard.Comments.Controllers {
                     // if the user who submitted the comment has the right to moderate, don't make this comment moderated
                     if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
                         commentPart.Status = CommentStatus.Approved;
+                        Services.Notifier.Information(T("Your comment has been posted."));
                     }
                     else {
                         Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
                     }
+                }
+                else {
+                    Services.Notifier.Information(T("Your comment has been posted."));
                 }
             }
             else {
