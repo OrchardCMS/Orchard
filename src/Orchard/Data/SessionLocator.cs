@@ -24,9 +24,11 @@ namespace Orchard.Data {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
             Logger = NullLogger.Instance;
+            IsolationLevel = IsolationLevel.ReadCommitted;
         }
 
         public ILogger Logger { get; set; }
+        public IsolationLevel IsolationLevel { get; set; }
 
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);
@@ -41,12 +43,12 @@ namespace Orchard.Data {
 
             if (_transaction == null) {
                 Logger.Debug("Creating transaction on Demand");
-                _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+                _transaction = _session.BeginTransaction(IsolationLevel);
             }
         }
 
         public void RequireNew() {
-            RequireNew(IsolationLevel.ReadCommitted);
+            RequireNew(IsolationLevel);
         }
 
         public void RequireNew(IsolationLevel level) {

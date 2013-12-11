@@ -157,6 +157,7 @@
     <Content Include="Config\Host.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\Sites.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
