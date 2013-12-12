@@ -38,6 +38,7 @@ namespace Orchard.OutputCache.Services {
                 foreach (var item in items) {
                     Remove(item.CacheKey);
                 }
+                items = GetCacheItems(0, 100).ToList();
             }
         }
 
