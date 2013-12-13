@@ -1,0 +1,18 @@
+﻿@model Orchard.Messaging.ViewModels.MessageQueueViewModel
+<fieldset>
+    @Html.HiddenFor(m => m.Id)
+    <div>
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+    </div>
+    <div>
+        @Html.LabelFor(m => m.TimeSlice)
+        @Html.TextBoxFor(m => m.TimeSlice, new { @class = "text medium" })
+        <span class="hint">@T("The time this queue gets to process per cycle.")</span>
+    </div>
+    <div>
+        @Html.LabelFor(m => m.UpdateFrequency)
+        @Html.TextBoxFor(m => m.UpdateFrequency, new { @class = "text medium" })
+        <span class="hint">@T("The interval this queue is to be processed.")</span>
+    </div>
+</fieldset>

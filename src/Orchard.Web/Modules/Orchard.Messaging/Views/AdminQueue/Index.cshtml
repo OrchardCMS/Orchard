@@ -1,0 +1,62 @@
+﻿@using Orchard.Messaging.Models
+@using Orchard.Utility.Extensions
+@{
+    var queues = (IEnumerable<dynamic>) Model.Queues;
+    Script.Require("jQuery").AtFoot();
+    Script.Include("submit.js", "submit.min.js").AtFoot();
+    Style.Include("admin-messaging.css", "admin-messaging.min.css");
+    Layout.Title = T("Manage Queues");
+}
+<div class="manage">
+    @Html.ActionLink(T("Create Queue").ToString(), "Create", new { Area = "Orchard.Messaging" }, new { @class = "button primaryAction" })
+</div>
+@if (!queues.Any()) {
+    <div class="message info">@T("There are no queues. <a href=\"{0}\">Create a new Queue</a>.", Url.Action("Create", "AdminQueue"))</div>
+}
+else {
+    <table class="items queues">
+        <thead>
+            <tr>
+                <th>@T("Name")</th>
+                <th>@T("Status")</th>
+                <th>@T("Time Slice")</th>
+                <th>@T("Update Interval")</th>
+                <th>@T("Pending")</th>
+                <th>@T("Sent")</th>
+                <th>@T("Faulted")</th>
+                <th>@T("Last Run")</th>
+                <th>@T("Next Run")</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var queue in queues) {
+                <tr>
+                    <td><a href="@Url.Action("List", "AdminQueue", new { queue.Id })">@queue.Name</a></td>
+                    <td><span class="queue-status @String.Format("{0}", ((MessageQueueStatus)queue.Status).ToString().HtmlClassify())">@queue.Status</span></td>
+                    <td>@queue.TimeSlice</td>
+                    <td>@queue.UpdateFrequency</td>
+                    <td>@queue.Pending</td>
+                    <td>@queue.Sent</td>
+                    <td>@queue.Faulted</td>
+                    <td>@queue.EndedUtc</td>
+                    <td>@queue.NextRun</td>
+                    <td>
+                        <ul class="horizontal">
+                            <li>
+                                @if (queue.Status == MessageQueueStatus.Paused) {
+                                    using (Html.BeginFormAntiForgeryPost(Url.Action("Resume", new { id = queue.Id }))) { <a href="#" class="queue-control play submit-form">@T("Resume")</a> }
+                                }
+                                @if (queue.Status == MessageQueueStatus.Idle || queue.Status == MessageQueueStatus.Processing) {
+                                    using (Html.BeginFormAntiForgeryPost(Url.Action("Pause", new { id = queue.Id }))) { <a href="#" class="queue-control pause submit-form">@T("Pause")</a> }
+                                }
+                            </li>
+                            <li>&nbsp;|&nbsp;<a href="@Url.Action("Edit", "AdminQueue", new { queue.Id })">@T("Properties")</a></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -149,6 +149,14 @@
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
     <Compile Include="Caching\IParallelCacheContext.cs" />
+    <Compile Include="Compilation\CompilersModule.cs" />
+    <Compile Include="Compilation\ICompiler.cs" />
+    <Compile Include="Compilation\Razor\RazorModule.cs" />
+    <Compile Include="Compilation\Razor\IRazorCompiler.cs" />
+    <Compile Include="Compilation\Razor\IRazorTemplateCache.cs" />
+    <Compile Include="Compilation\Razor\RazorCompiler.cs" />
+    <Compile Include="Compilation\Razor\RazorTemplateBase.cs" />
+    <Compile Include="Compilation\Razor\RazorTemplateCache.cs" />
     <Compile Include="ContentManagement\Aspects\IAliasAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ITitleAspect.cs" />
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />

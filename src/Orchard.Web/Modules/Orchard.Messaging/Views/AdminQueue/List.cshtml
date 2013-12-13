@@ -1,0 +1,74 @@
+﻿@using Orchard.Messaging.Models
+@using Orchard.Messaging.ViewModels
+@using Orchard.Utility.Extensions
+@{
+    var queue = (MessageQueue) Model.Queue;
+    var messages = (IEnumerable<QueuedMessage>) Model.Messages;
+    var filter = (MessagesFilter) Model.Filter;
+    Layout.Title = T("Message Queue");
+    Style.Include("admin-messaging.css", "admin-messaging.min.css");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+<div class="manage">
+    <span class="queue-status @String.Format("{0}", (queue.Status).ToString().HtmlClassify())">@T("Status: {0}", queue.Status)</span>
+    @if (queue.Status == MessageQueueStatus.Paused) {
+        <button type="submit" name="submit.Resume" value="resume" class="button">@T("Resume")</button>
+    }
+    else {
+        <button type="submit" name="submit.Pause" value="pause" class="button grey">@T("Pause")</button>
+        <button type="submit" name="submit.Process" value="process">@T("Process Now")</button>
+    }
+</div>
+<fieldset class="bulk-actions">
+    <label for="filterResults" class="bulk-filter">@T("Filter")</label>
+    <select id="filterResults" name="status">
+        @Html.SelectOption(filter.Status, default(QueuedMessageStatus?), T("All").ToString())
+        @Html.SelectOption(filter.Status, QueuedMessageStatus.Pending, T("Pending").ToString())
+        @Html.SelectOption(filter.Status, QueuedMessageStatus.Sending, T("Sending").ToString())
+        @Html.SelectOption(filter.Status, QueuedMessageStatus.Sent, T("Sent").ToString())
+        @Html.SelectOption(filter.Status, QueuedMessageStatus.Faulted, T("Faulted").ToString())
+    </select>
+    <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
+</fieldset>
+if (!messages.Any()) {
+    if (filter.Status == null) {
+        <div class="message info">@T("There no messages in this queue yet.")</div>
+    }
+    else {
+        <div class="message info">@T("There no messages in the '{0}' status.", filter.Status)</div>
+    }
+}
+else {
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Status")</th>
+                <th>@T("Priority")</th>
+                <th>@T("Recipients")</th>
+                <th>@T("Payload")</th>
+                <th>@T("Created")</th>
+                <th>@T("Started")</th>
+                <th>@T("Completed")</th>
+                <th>@T("Actions")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in messages) {
+                <tr>
+                    <td><span class="message-status @message.Status.ToString().HtmlClassify()">@message.Status</span></td>
+                    <td>@message.Priority.Name</td>
+                    <td>@String.Join(", ", message.Recipients).Ellipsize(50)</td>
+                    <td>@message.Record.Payload.Ellipsize(100, "...")</td>
+                    <td>@message.CreatedUtc</td>
+                    <td>@message.StartedUtc</td>
+                    <td>@message.CompletedUtc</td>
+                    <td>
+                        <a href="@Url.Action("Details", "AdminMessage", new { message.Id, returnUrl = Request.Url.PathAndQuery })">@T("Details")</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    @Display(Model.Pager)
+}

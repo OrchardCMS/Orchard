@@ -1,0 +1,17 @@
+﻿@model Orchard.Messaging.ViewModels.MessagePriorityViewModel
+<fieldset>
+    <div>
+        @Html.HiddenFor(m => m.Id)
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
+    </div>
+    <div>
+        @Html.LabelFor(m => m.DisplayText)
+        @Html.TextBoxFor(m => m.DisplayText, new { @class = "text medium" })
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Value)
+        @Html.TextBoxFor(m => m.Value, new { @class = "text small" })
+        <span class="hint">@T("The higher the value, the higher the priority.")</span>
+    </div>
+</fieldset>

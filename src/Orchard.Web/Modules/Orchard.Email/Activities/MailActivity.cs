@@ -12,12 +12,12 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Email.Activities {
-
+    [Obsolete("Use the new EmailActivity instead.")]
     public class MailActivity : Task {
         private readonly IMessageManager _messageManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
-        public const string MessageType = "ActionEmail";
+        public const string MessageType = "ActionEmail_Deprecated";
 
         public MailActivity(
             IMessageManager messageManager,
@@ -46,12 +46,12 @@ namespace Orchard.Email.Activities {
         }
 
         public override string Name {
-            get { return "SendEmail"; }
+            get { return "SendEmailDeprecated"; }
         }
 
 
         public override LocalizedString Description {
-            get { return T("Sends an e-mail to a specific user."); }
+            get { return T("Sends an e-mail to a specific user (deprecated)."); }
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -103,6 +103,7 @@ namespace Orchard.Email.Activities {
         }
     }
 
+    [Obsolete]
     public class MailActionsHandler : IMessageEventHandler {
         public MailActionsHandler() {
             T = NullLocalizer.Instance;

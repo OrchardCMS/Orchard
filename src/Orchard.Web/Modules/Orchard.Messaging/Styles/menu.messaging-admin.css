@@ -1,0 +1,7 @@
+﻿.navicon-messaging {
+    background-image: url(./images/menu.messaging.png) !important;
+}
+
+.navicon-messaging:hover {
+    background-position: 0 -30px !important;
+}

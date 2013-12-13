@@ -1,0 +1,40 @@
+﻿@{
+    var priorities = (IEnumerable<dynamic>)Model.Priorities;
+    Script.Require("jQuery").AtFoot();
+    Script.Include("submit.js", "submit.min.js").AtFoot();
+    Style.Include("admin-messaging.css", "admin-messaging.min.css");
+    Layout.Title = T("Manage Priorities");
+}
+<div class="manage">
+    @Html.ActionLink(T("Create Priority").ToString(), "Create", new { Area = "Orchard.Messaging" }, new { @class = "button primaryAction" })
+</div>
+@if (!priorities.Any()) {
+    <div class="message info">@T("There are no priorities. <a href=\"{0}\">Create a new Priority</a>.", Url.Action("Create", "AdminPriority"))</div>
+}
+else {
+    using (Html.BeginFormAntiForgeryPost()) {
+        <table class="items priorities">
+            <thead>
+                <tr>
+                    <th>@T("Name")</th>
+                    <th>@T("Display Text")</th>
+                    <th>@T("Value")</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var priority in priorities) {
+                    <tr>
+                        <td>@priority.Name</td>
+                        <td>@priority.DisplayText</td>
+                        <td>@priority.Value</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "AdminPriority", new { priority.Id })">@T("Edit")</a>@T(" | ")
+                            <a href="@Url.Action("Delete", "AdminPriority", new { priority.Id })" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

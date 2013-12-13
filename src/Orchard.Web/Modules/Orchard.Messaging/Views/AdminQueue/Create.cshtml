@@ -1,0 +1,9 @@
+﻿@model Orchard.Messaging.ViewModels.MessageQueueViewModel
+@{
+    Layout.Title = T("Create Queue");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.EditorForModel()
+    <button type="submit">@T("Create")</button>
+    <a href="@Url.Action("Index")">@T("Cancel")</a>
+}

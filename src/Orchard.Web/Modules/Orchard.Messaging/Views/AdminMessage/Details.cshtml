@@ -1,0 +1,47 @@
+﻿@using Orchard.Messaging.Models
+@using Orchard.Utility.Extensions
+@{
+    Style.Include("admin-messaging.css", "admin-messaging.min.css");
+    Layout.Title = T("Message Details");
+    var message = (QueuedMessage)Model.Message;
+    var returnUrl = (string)Model.ReturnUrl;
+}
+<fieldset class="summary">
+    <ul>
+        <li>
+            <label>@T("Status")</label>
+            <span class="message-status @message.Status.ToString().HtmlClassify()">@message.Status</span>
+        </li>
+        @if (message.Status == QueuedMessageStatus.Faulted) {
+            <li>
+                <label>@T("Error")</label>
+                <span>@message.Result</span>
+            </li>
+        }
+        <li>
+            <label>@T("Priority")</label>
+            <span>@message.Priority</span>
+        </li>
+        <li>
+            <label>@T("Recipients")</label>
+            <span>@String.Join(", ", message.Recipients)</span>
+        </li>
+        <li>
+            <label>@T("Created")</label>
+            <span>@message.CreatedUtc</span>
+        </li>
+        <li>
+            <label>@T("Started")</label>
+            <span>@message.StartedUtc</span>
+        </li>
+        <li>
+            <label>@T("Completed")</label>
+            <span>@message.CompletedUtc</span>
+        </li>
+        <li>
+            <label>@T("Payload")</label>
+            <span>@message.Record.Payload</span>
+        </li>
+    </ul>
+</fieldset>
+<a href="@returnUrl" class="button">@T("Back")</a>
