@@ -16,7 +16,6 @@ using Orchard.Themes.Models;
 namespace Orchard.Templates.Services {
     public class RazorTemplateProcessor : TemplateProcessorImpl {
         private readonly IRazorCompiler _compiler;
-        private readonly IRazorTemplateCache _cache;
         private readonly ISiteService _siteService;
         private readonly IHttpContextAccessor _hca;
 
@@ -24,9 +23,8 @@ namespace Orchard.Templates.Services {
             get { return "Razor"; }
         }
 
-        public RazorTemplateProcessor(IRazorCompiler compiler, IRazorTemplateCache cache, ISiteService siteService, IHttpContextAccessor hca) {
+        public RazorTemplateProcessor(IRazorCompiler compiler, ISiteService siteService, IHttpContextAccessor hca) {
             _compiler = compiler;
-            _cache = cache;
             _siteService = siteService;
             _hca = hca;
             Logger = NullLogger.Instance;

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 
 namespace Orchard.Compilation.Razor {
-    public class RazorTemplateCache : IRazorTemplateCache {
+    public class RazorTemplateHolder : IRazorTemplateHolder {
         private readonly ConcurrentDictionary<string, string> _cache; 
 
-        public RazorTemplateCache() {
+        public RazorTemplateHolder() {
             _cache = new ConcurrentDictionary<string, string>();
         }
         public string Get(string name) {

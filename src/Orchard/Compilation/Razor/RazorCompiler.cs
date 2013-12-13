@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Razor;
-using System.Web.Razor.Generator;
 using Microsoft.CSharp;
 using Orchard.Caching;
 using Orchard.Logging;
@@ -17,25 +16,51 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Compilation.Razor {
     public class RazorCompiler : IRazorCompiler {
         private readonly ICacheManager _cache;
-        private readonly IWorkContextAccessor _wca;
-        const string DynamicallyGeneratedClassName = "RazorTemplate";
-        const string NamespaceForDynamicClasses = "Orchard.Compilation.Razor";
+        private readonly ISignals _signals;
+        private const string DynamicallyGeneratedClassName = "RazorTemplate";
+        private const string NamespaceForDynamicClasses = "Orchard.Compilation.Razor";
         private const string ForceRecompile = "Razor.ForceRecompile";
+        private static readonly string[] DefaultNamespaces = {
+                    "System",
+                    "System.IO",
+                    "System.Linq",
+                    "System.Collections",
+                    "System.Collections.Generic",
+                    "System.Dynamic",
+                    "System.Text",
+                    "System.Web",
+                    "System.Web.Mvc",
+                    "System.Web.Mvc.Html",
+                    "System.Web.Mvc.Ajax",
+                    "System.Web.UI",
+                    "System.Web.Routing",
+                    "Orchard.Compilation.Razor",
+                    "Orchard.ContentManagement",
+                    "Orchard.DisplayManagement",
+                    "Orchard.DisplayManagement.Shapes",
+                    "Orchard.Security.Permissions",
+                    "Orchard.UI.Resources",
+                    "Orchard.Security",
+                    "Orchard.Mvc.Spooling",
+                    "Orchard.Mvc.Html"
+                };
 
-        public RazorCompiler(ICacheManager cache, IWorkContextAccessor wca) {
+        public RazorCompiler(
+            ICacheManager cache, 
+            ISignals signals) {
             _cache = cache;
-            _wca = wca;
+            _signals = signals;
             Logger = NullLogger.Instance;
         }
 
-        ILogger Logger { get; set; }
+        private ILogger Logger { get; set; }
 
         public IRazorTemplateBase<TModel> CompileRazor<TModel>(string code, string name, IDictionary<string, object> parameters) {
-            return (RazorTemplateBase<TModel>)Compile(code, name, typeof(TModel), parameters);
+            return (RazorTemplateBase<TModel>) Compile(code, name, typeof (TModel), parameters);
         }
 
         public IRazorTemplateBase CompileRazor(string code, string name, IDictionary<string, object> parameters) {
-            return (IRazorTemplateBase)Compile(code, name, null, parameters);
+            return (IRazorTemplateBase) Compile(code, name, null, parameters);
         }
 
         public object Compile(string code, IDictionary<string, object> parameters) {
@@ -47,15 +72,12 @@ namespace Orchard.Compilation.Razor {
         }
 
         private object Compile(string code, string name, Type modelType, IDictionary<string, object> parameters) {
-            ISignals signals = _wca.GetContext().TryResolve(out signals) ? signals : null;
-
-            var cacheKey = name ?? GetHash(code);
+           
+            var cacheKey = (name ?? DynamicallyGeneratedClassName) + GetHash(code);
             var generatedClassName = name != null ? name.Strip(c => !c.IsLetter() && !Char.IsDigit(c)) : DynamicallyGeneratedClassName;
 
             var assembly = _cache.Get(cacheKey, ctx => {
-                if (signals != null) {
-                    ctx.Monitor(signals.When(ForceRecompile));
-                }
+                _signals.When(ForceRecompile);
 
                 var modelTypeName = "dynamic";
                 var reader = new StringReader(code);
@@ -81,32 +103,7 @@ namespace Orchard.Compilation.Razor {
                     DefaultNamespace = NamespaceForDynamicClasses
                 };
 
-                var namespaces = new List<string> {
-                    "System",
-                    "System.IO",
-                    "System.Linq",
-                    "System.Collections",
-                    "System.Collections.Generic",
-                    "System.Dynamic",
-                    "System.Text",
-                    "System.Web",
-                    "System.Web.Mvc",
-                    "System.Web.Mvc.Html",
-                    "System.Web.Mvc.Ajax",
-                    "System.Web.UI",
-                    "System.Web.Routing",
-                    "Orchard.Compilation.Razor",
-                    "Orchard.ContentManagement",
-                    "Orchard.DisplayManagement",
-                    "Orchard.DisplayManagement.Shapes",
-                    "Orchard.Security.Permissions",
-                    "Orchard.UI.Resources",
-                    "Orchard.Security",
-                    "Orchard.Mvc.Spooling",
-                    "Orchard.Mvc.Html"
-                };
-
-                foreach (var n in namespaces) {
+                foreach (var n in DefaultNamespaces) {
                     host.NamespaceImports.Add(n);
                 }
 
@@ -119,16 +116,17 @@ namespace Orchard.Compilation.Razor {
             return assembly.CreateInstance(NamespaceForDynamicClasses + "." + generatedClassName);
         }
 
-        public static string GetHash(string value)
-        {
+        public static string GetHash(string value) {
             var data = Encoding.ASCII.GetBytes(value);
-            var hashData = new SHA1Managed().ComputeHash(data);
+            var hashData = new MD5CryptoServiceProvider().ComputeHash(data);
 
-            return hashData.Aggregate(string.Empty, (current, b) => current + b.ToString("X2"));
+            var strBuilder = new StringBuilder();
+            hashData.Aggregate(strBuilder, (current, b) => strBuilder.Append(b));
+
+            return strBuilder.ToString();
         }
 
-        private static Assembly CreateCompiledAssemblyFor(CodeCompileUnit unitToCompile, string templateName)
-        {
+        private static Assembly CreateCompiledAssemblyFor(CodeCompileUnit unitToCompile, string templateName) {
             var compilerParameters = new CompilerParameters();
             compilerParameters.ReferencedAssemblies.AddRange(AppDomain.CurrentDomain
                 .GetAssemblies()

@@ -15,14 +15,15 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Templates.Drivers {
     public class ShapePartDriver : ContentPartDriver<ShapePart> {
         private readonly IEnumerable<ITemplateProcessor> _processors;
-        private readonly IRazorTemplateCache _cache;
-        private readonly ITemplateService _service;
+        private readonly IRazorTemplateHolder _templateHolder;
         private readonly ITransactionManager _transactions;
 
-        public ShapePartDriver(IEnumerable<ITemplateProcessor> processors, IRazorTemplateCache cache, ITemplateService service,ITransactionManager transactions) {
+        public ShapePartDriver(
+            IEnumerable<ITemplateProcessor> processors,
+            IRazorTemplateHolder templateHolder, 
+            ITransactionManager transactions) {
             _processors = processors;
-            _cache = cache;
-            _service = service;
+            _templateHolder = templateHolder;
             _transactions = transactions;
             T = NullLocalizer.Instance;
         }
@@ -51,7 +52,7 @@ namespace Orchard.Templates.Drivers {
                     try {
                         var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.Language, StringComparison.OrdinalIgnoreCase));
                         processor.Verify(part.Template);
-                        _cache.Set(part.Name, part.Template);
+                        _templateHolder.Set(part.Name, part.Template);
                     }
                     catch (Exception ex) {
                         updater.AddModelError("", T("Template processing error: {0}", ex.Message));

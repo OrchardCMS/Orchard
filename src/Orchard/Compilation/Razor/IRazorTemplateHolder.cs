@@ -1,5 +1,5 @@
 ﻿namespace Orchard.Compilation.Razor {
-    public interface IRazorTemplateCache {
+    public interface IRazorTemplateHolder : ISingletonDependency {
         string Get(string name);
         void Set(string name, string template);
     }
