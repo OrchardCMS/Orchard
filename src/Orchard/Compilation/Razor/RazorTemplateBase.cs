@@ -1,11 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Web.Mvc;
-using System.Web.UI;
 using System.Web.WebPages;
-using System.Web.WebPages.Instrumentation;
 
 namespace Orchard.Compilation.Razor {
     public interface IRazorTemplateBase
@@ -22,13 +17,13 @@ namespace Orchard.Compilation.Razor {
 
     public interface IRazorTemplateBase<TModel> : IRazorTemplateBase
     {
-        TModel Model { get; }
-        ViewDataDictionary<TModel> ViewData { get; set; }
+        new TModel Model { get; }
+        new ViewDataDictionary<TModel> ViewData { get; set; }
     }
 
     public abstract class RazorTemplateBase<T> : Mvc.ViewEngines.Razor.WebViewPage<T>, IRazorTemplateBase<T> {
         public WebPageContext WebPageContext { get; set; }
-        public void Render(TextWriter writer) {
+        public virtual void Render(TextWriter writer) {
             PushContext(WebPageContext, writer);
             OutputStack.Push(writer);
             Execute();

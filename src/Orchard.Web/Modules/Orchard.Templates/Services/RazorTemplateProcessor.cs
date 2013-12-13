@@ -2,31 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
 using Orchard.Compilation.Razor;
-using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Logging;
-using Orchard.Mvc;
-using Orchard.Settings;
-using Orchard.Themes.Models;
-
-namespace Orchard.Templates.Services {
+using Orchard.Logging;namespace Orchard.Templates.Services {
     public class RazorTemplateProcessor : TemplateProcessorImpl {
         private readonly IRazorCompiler _compiler;
-        private readonly ISiteService _siteService;
-        private readonly IHttpContextAccessor _hca;
+        private readonly HttpContextBase _httpContextBase;
 
         public override string Type {
             get { return "Razor"; }
         }
 
-        public RazorTemplateProcessor(IRazorCompiler compiler, ISiteService siteService, IHttpContextAccessor hca) {
+        public RazorTemplateProcessor(
+            IRazorCompiler compiler, 
+            HttpContextBase httpContextBase) {
             _compiler = compiler;
-            _siteService = siteService;
-            _hca = hca;
+            _httpContextBase = httpContextBase;
             Logger = NullLogger.Instance;
         }
 
@@ -48,24 +43,32 @@ namespace Orchard.Templates.Services {
         private string ActivateAndRenderTemplate(IRazorTemplateBase obj, DisplayContext displayContext, string templateVirtualPath, object model) {
             var buffer = new StringBuilder(1024);
             using (var writer = new StringWriter(buffer)) {
-                var htmlWriter = new HtmlTextWriter(writer);
-                var httpContext = _hca.Current();
+                using (var htmlWriter = new HtmlTextWriter(writer)) {
 
-                // this should be done better - if no display context is provided we should fallback to current controller context somehow, if possible
-                if (displayContext != null) {
-                    var shapeViewContext = new ViewContext(displayContext.ViewContext.Controller.ControllerContext, displayContext.ViewContext.View, displayContext.ViewContext.ViewData, displayContext.ViewContext.TempData, htmlWriter);
-                    obj.WebPageContext = new WebPageContext(displayContext.ViewContext.HttpContext, obj as WebPageRenderingBase, model);
-                    obj.ViewContext = shapeViewContext;
-                    obj.ViewData = new ViewDataDictionary(displayContext.ViewDataContainer.ViewData) { Model = model };
-                }
-                else {
-                    obj.ViewData = new ViewDataDictionary(model);
-                    obj.WebPageContext = new WebPageContext(httpContext, obj as WebPageRenderingBase, model);
-                }
+                    if (displayContext != null && displayContext.ViewContext.Controller != null) {
+                        var shapeViewContext = new ViewContext(
+                            displayContext.ViewContext.Controller.ControllerContext,
+                            displayContext.ViewContext.View,
+                            displayContext.ViewContext.ViewData,
+                            displayContext.ViewContext.TempData,
+                            htmlWriter
+                            );
 
-                obj.VirtualPath = templateVirtualPath ?? "~/Themes/" + _siteService.GetSiteSettings().As<ThemeSiteSettingsPart>().CurrentThemeName;
-                obj.InitHelpers();
-                obj.Render(htmlWriter);
+                        obj.WebPageContext = new WebPageContext(displayContext.ViewContext.HttpContext, obj as WebPageRenderingBase, model);
+                        obj.ViewContext = shapeViewContext;
+
+                        obj.ViewData = new ViewDataDictionary(displayContext.ViewDataContainer.ViewData) {Model = model};
+                        obj.InitHelpers();
+                    }
+                    else {
+
+                        obj.ViewData = new ViewDataDictionary(model);
+                        obj.WebPageContext = new WebPageContext(_httpContextBase, obj as WebPageRenderingBase, model);
+                    }
+
+                    obj.VirtualPath = templateVirtualPath ?? "~/Themes/Orchard.Templates";
+                    obj.Render(htmlWriter);
+                }
             }
 
             return buffer.ToString();
