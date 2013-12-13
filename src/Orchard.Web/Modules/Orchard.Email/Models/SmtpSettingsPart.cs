@@ -21,7 +21,7 @@ namespace Orchard.Email.Models {
         }
 
         public int Port {
-            get { return this.Retrieve(x => x.Port); }
+            get { return this.Retrieve(x => x.Port, 25); }
             set { this.Store(x => x.Port, value); }
         }
 
