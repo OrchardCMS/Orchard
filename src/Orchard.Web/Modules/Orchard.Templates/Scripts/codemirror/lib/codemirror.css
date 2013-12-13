@@ -2,7 +2,8 @@
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
+  line-height: 1.40em;
+  font-family: Monaco, Menlo, "Andale Mono","lucida console","Courier New",monospace !important;
   height: 300px;
 }
 .CodeMirror-scroll {
