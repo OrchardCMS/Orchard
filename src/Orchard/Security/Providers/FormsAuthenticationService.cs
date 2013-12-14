@@ -57,13 +57,7 @@ namespace Orchard.Security.Providers {
             var httpContext = _httpContextAccessor.Current();
 
             if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
-                var cookiePath = httpContext.Request.ApplicationPath;
-                if (cookiePath != null && cookiePath.Length > 1) {
-                    cookiePath += '/';
-                }
-
-                cookiePath += _settings.RequestUrlPrefix;
-                cookie.Path = cookiePath;
+                cookie.Path = GetCookiePath(httpContext);
             }
 
             if (FormsAuthentication.CookieDomain != null) {
@@ -84,6 +78,18 @@ namespace Orchard.Security.Providers {
             _signedInUser = null;
             _isAuthenticated = false;
             FormsAuthentication.SignOut();
+
+            // overwritting the authentication cookie for the given tenant
+            var httpContext = _httpContextAccessor.Current();
+            var rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") {
+                Expires = DateTime.Now.AddYears(-1),
+            };
+
+            if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
+                rFormsCookie.Path = GetCookiePath(httpContext);
+            }
+
+            httpContext.Response.Cookies.Add(rFormsCookie);
         }
 
         public void SetAuthenticatedUserForRequest(IUser user) {
@@ -125,6 +131,17 @@ namespace Orchard.Security.Providers {
 
             _isAuthenticated = true;
             return _signedInUser = _contentManager.Get(userId).As<IUser>();
+        }
+
+        private string GetCookiePath(HttpContextBase httpContext) {
+            var cookiePath = httpContext.Request.ApplicationPath;
+            if (cookiePath != null && cookiePath.Length > 1) {
+                cookiePath += '/';
+            }
+
+            cookiePath += _settings.RequestUrlPrefix;
+
+            return cookiePath;
         }
     }
 }
