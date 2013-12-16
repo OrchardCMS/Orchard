@@ -20,7 +20,8 @@ namespace Orchard.ContentManagement {
                 ? null
                 : (versioned ? infosetPart.VersionInfoset.Element : infosetPart.Infoset.Element)
                 .Element(contentPart.GetType().Name);
-            return el == null ? defaultValue : el.Attr<TProperty>(name);
+            var attr = el != null ? el.Attribute(name) : default(XAttribute);
+            return attr == null ? defaultValue : XmlHelper.Parse<TProperty>(attr.Value);
         }
 
         public static TProperty Retrieve<TProperty>(this ContentPart contentPart, string name, 
