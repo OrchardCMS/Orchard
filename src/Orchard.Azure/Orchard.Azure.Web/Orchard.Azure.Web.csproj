@@ -428,6 +428,10 @@
       <Name>Orchard.Search</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.SecureSocketsLayer\Orchard.SecureSocketsLayer.csproj">
+      <Project>{36b82383-d69e-4897-a24a-648babdf80ec}</Project>
+      <Name>Orchard.SecureSocketsLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
