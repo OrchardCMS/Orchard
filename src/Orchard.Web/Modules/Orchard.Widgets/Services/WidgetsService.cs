@@ -55,6 +55,7 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<WidgetPart> GetOrphanedWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
+                .Where<CommonPartRecord>(x => x.Container == null)
                 .List();
         }
 
