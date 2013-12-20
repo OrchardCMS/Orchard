@@ -30,6 +30,11 @@ namespace Orchard.Users.Commands {
         [CommandHelp("user create /UserName:<username> /Password:<password> /Email:<email>\r\n\t" + "Creates a new User")]
         [OrchardSwitches("UserName,Password,Email")]
         public void Create() {
+	        if (string.IsNullOrWhiteSpace(UserName)) {
+		        Context.Output.WriteLine(T("Username cannot be empty."));
+		        return;
+	        }
+
             if (!_userService.VerifyUserUnicity(UserName, Email)) {
                 Context.Output.WriteLine(T("User with that username and/or email already exists."));
                 return;
