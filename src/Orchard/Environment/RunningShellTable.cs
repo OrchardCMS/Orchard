@@ -107,7 +107,15 @@ namespace Orchard.Environment {
 
         public ShellSettings Match(HttpContextBase httpContext) {
             // use Host header to prevent proxy alteration of the orignal request
-            return Match(httpContext.Request.Headers["Host"] ?? string.Empty, httpContext.Request.AppRelativeCurrentExecutionFilePath);
+            var httpRequest = httpContext.Request;
+            if(httpRequest == null) {
+                return null;
+            }
+            
+            var host = httpRequest.Headers["Host"];
+            var appRelativeCurrentExecutionFilePath = httpRequest.AppRelativeCurrentExecutionFilePath;
+
+            return Match(host ?? string.Empty, appRelativeCurrentExecutionFilePath);
         }
 
         public ShellSettings Match(string host, string appRelativePath) {
