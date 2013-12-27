@@ -68,7 +68,7 @@ namespace Orchard.Logging {
             }
 
             var ctx = HttpContext.Current;
-            if (ctx != null)             {
+            if (ctx != null && ctx.Request != null) {
                 ThreadContext.Properties["Url"] = ctx.Request.Url.ToString();
             }
         }
