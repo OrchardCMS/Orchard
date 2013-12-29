@@ -158,9 +158,11 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null) {
-            return String.IsNullOrEmpty(field) 
-                ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => GetTerm(t.TermRecord.Id))
-                : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => GetTerm(t.TermRecord.Id));
+            var termIds = String.IsNullOrEmpty(field)
+                ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => t.TermRecord.Id).ToArray()
+                : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => t.TermRecord.Id).ToArray();
+
+            return _contentManager.GetMany<TermPart>(termIds, VersionOptions.Latest, QueryHints.Empty);
         }
 
         public TermPart GetTermByName(int taxonomyId, string name) {
