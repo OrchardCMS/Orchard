@@ -24,7 +24,7 @@ namespace Orchard.Taxonomies.Services {
 
         string GenerateTermTypeName(string taxonomyName);
         TermPart NewTerm(TaxonomyPart taxonomy);
-        IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null);
+        IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null, VersionOptions versionOptions = null);
         void UpdateTerms(ContentItem contentItem, IEnumerable<TermPart> terms, string field);
         IEnumerable<TermPart> GetParents(TermPart term);
         IEnumerable<TermPart> GetChildren(TermPart term);

@@ -60,7 +60,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, dynamic shapeHelper) {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
-                var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name).Distinct(new TermPartComparer()).ToDictionary(t => t.Id, t => t);
+                var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToDictionary(t => t.Id, t => t);
                 var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
                 var terms = taxonomy != null
                     ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()

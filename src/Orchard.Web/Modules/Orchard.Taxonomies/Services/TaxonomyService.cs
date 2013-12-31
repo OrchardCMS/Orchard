@@ -157,12 +157,12 @@ namespace Orchard.Taxonomies.Services {
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
 
-        public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null) {
+        public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null, VersionOptions versionOptions = null) {
             var termIds = String.IsNullOrEmpty(field)
                 ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => t.TermRecord.Id).ToArray()
                 : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => t.TermRecord.Id).ToArray();
 
-            return _contentManager.GetMany<TermPart>(termIds, VersionOptions.Latest, QueryHints.Empty);
+            return _contentManager.GetMany<TermPart>(termIds, versionOptions ?? VersionOptions.Published, QueryHints.Empty);
         }
 
         public TermPart GetTermByName(int taxonomyId, string name) {
