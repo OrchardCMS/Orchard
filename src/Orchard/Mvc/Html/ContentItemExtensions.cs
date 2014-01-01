@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Utility.Extensions;
 
@@ -13,11 +14,11 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
-            return ItemDisplayLink(html, null, content);
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content, object htmlAttributes = null) {
+            return ItemDisplayLink(html, null, content, htmlAttributes);
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content) {
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content, object htmlAttributes = null) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayRouteValues == null)
                 return null;
@@ -25,7 +26,8 @@ namespace Orchard.Mvc.Html {
             return html.ActionLink(
                 NonNullOrEmpty(linkText, metadata.DisplayText, "view"),
                 Convert.ToString(metadata.DisplayRouteValues["action"]),
-                metadata.DisplayRouteValues);
+                metadata.DisplayRouteValues,
+                new RouteValueDictionary(htmlAttributes));
         }
 
         public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
