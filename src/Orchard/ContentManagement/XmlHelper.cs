@@ -175,7 +175,9 @@ namespace Orchard.ContentManagement {
             }
 
             if (type == typeof(int) ||
-                type == typeof(int?)) {
+                type == typeof(int?) ||
+                type == typeof(long) ||
+                type == typeof(long?)) {
 
                 return Convert.ToInt64(value).ToString(CultureInfo.InvariantCulture);
             }
@@ -251,6 +253,9 @@ namespace Orchard.ContentManagement {
             }
             if (type == typeof(int) || type == typeof(int?)) {
                 return (T)(object)int.Parse(value, CultureInfo.InvariantCulture);
+            }
+            if (type == typeof(long) || type == typeof(long?)) {
+                return (T)(object)long.Parse(value, CultureInfo.InvariantCulture);
             }
             if (type == typeof(bool) || type == typeof(bool?)) {
                 return (T)(object)value.Equals("true", StringComparison.Ordinal);
