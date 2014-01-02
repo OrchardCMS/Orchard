@@ -14,8 +14,16 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content, object htmlAttributes = null) {
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
+            return ItemDisplayLink(html, null, content, null);
+        }
+
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content, object htmlAttributes) {
             return ItemDisplayLink(html, null, content, htmlAttributes);
+        }
+
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content) {
+            return ItemDisplayLink(html, linkText, content, null);
         }
 
         public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content, object htmlAttributes = null) {
