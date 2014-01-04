@@ -35,12 +35,24 @@ namespace Orchard.Templates.Services {
                 })
                 .ToList();
 
+            // Use a fake theme descriptor which will ensure the shape is used over
+            // any other extension. It's also necessary to define them in the Admin 
+            // theme in order to process tokens
+
+            var fakeThemeDescriptor = new FeatureDescriptor {
+                Id = "", // so that the binding is not filtered out
+                Priority = 10, // so that it's higher than the themes' priority
+                Extension = new ExtensionDescriptor {
+                    ExtensionType = DefaultExtensionTypes.Theme, // so that the binding is overriding modules
+                }
+            };
+
             foreach (var record in shapes) {
                 _templateProvider.Set(record.Name, record.Template);
                 var shapeType = AdjustName(record.Name);
 
                 builder.Describe(shapeType)
-                       .From(new Feature { Descriptor = Feature.Descriptor })
+                       .From(new Feature { Descriptor = fakeThemeDescriptor })
                        .BoundAs("Template::" + shapeType,
                                 descriptor => context => {
                                     var template = _templateProvider.Get(record.Name);
