@@ -63,7 +63,6 @@ namespace Orchard.ContentManagement {
             return BindCriteriaByPath(BindItemCriteria(), typeof(TRecord).Name);
         }
 
-
         private void ForType(params string[] contentTypeNames) {
             if (contentTypeNames != null && contentTypeNames.Length != 0)
                 // don't use the IN operator if not needed for performance reasons
@@ -174,6 +173,57 @@ namespace Orchard.ContentManagement {
             return criteria.SetProjection(Projections.RowCount()).UniqueResult<Int32>();
         }
 
+        void WithQueryHints(QueryHints hints) {
+            if (hints == QueryHints.Empty) {
+                return;
+            }
+
+            var contentItemVersionCriteria = BindItemVersionCriteria();
+            var contentItemCriteria = BindItemCriteria();
+
+            var contentItemMetadata = _session.SessionFactory.GetClassMetadata(typeof(ContentItemRecord));
+            var contentItemVersionMetadata = _session.SessionFactory.GetClassMetadata(typeof(ContentItemVersionRecord));
+
+            // break apart and group hints by their first segment
+            var hintDictionary = hints.Records
+                .Select(hint => new { Hint = hint, Segments = hint.Split('.') })
+                .GroupBy(item => item.Segments.FirstOrDefault())
+                .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
+
+            // locate hints that match properties in the ContentItemVersionRecord
+            foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+            }
+
+            // locate hints that match properties in the ContentItemRecord
+            foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
+                contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+            }
+
+            if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
+                contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
+        }
+
+        void WithQueryHintsFor(string contentType) {
+            var contentItem = ContentManager.New(contentType);
+            var contentPartRecords = new List<string>();
+            foreach (var part in contentItem.Parts) {
+                var partType = part.GetType().BaseType;
+                if (partType.IsGenericType && partType.GetGenericTypeDefinition() == typeof(ContentPart<>)) {
+                    var recordType = partType.GetGenericArguments().Single();
+                    contentPartRecords.Add(recordType.Name);
+                }
+            }
+
+            WithQueryHints(new QueryHints().ExpandRecords(contentPartRecords));
+        }
+
+        private static ICriteria ExtendCriteria(ICriteria criteria, string segment) {
+            return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
+        }
+
         IContentQuery<TPart> IContentQuery.ForPart<TPart>() {
             return new ContentQuery<TPart>(this);
         }
@@ -239,6 +289,16 @@ namespace Orchard.ContentManagement {
                 _query.OrderByDescending(keySelector);
                 return new ContentQuery<T, TRecord>(_query);
             }
+
+            IContentQuery<T> IContentQuery<T>.WithQueryHints(QueryHints hints) {
+                _query.WithQueryHints(hints);
+                return this;
+            }
+
+            IContentQuery<T> IContentQuery<T>.WithQueryHintsFor(string contentType) {
+                _query.WithQueryHintsFor(contentType);
+                return this;
+            }
         }
 
 
@@ -269,58 +329,14 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
-
-            public IContentQuery<T, TR> WithQueryHints(QueryHints hints) {
-                if (hints == QueryHints.Empty) {
-                    return this;
-                }
-
-                var contentItemVersionCriteria = _query.BindItemVersionCriteria();
-                var contentItemCriteria = _query.BindItemCriteria();
-
-                var contentItemMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemRecord));
-                var contentItemVersionMetadata = _query._session.SessionFactory.GetClassMetadata(typeof(ContentItemVersionRecord));
-
-                // break apart and group hints by their first segment
-                var hintDictionary = hints.Records
-                    .Select(hint => new { Hint = hint, Segments = hint.Split('.') })
-                    .GroupBy(item => item.Segments.FirstOrDefault())
-                    .ToDictionary(grouping => grouping.Key, StringComparer.InvariantCultureIgnoreCase);
-
-                // locate hints that match properties in the ContentItemVersionRecord
-                foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
-                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
-                }
-
-                // locate hints that match properties in the ContentItemRecord
-                foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key => hintDictionary[key])) {
-                    contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
-                    hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
-                }
-
-                if (hintDictionary.SelectMany(x => x.Value).Any(x => x.Segments.Count() > 1))
-                    contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
-
+            IContentQuery<T, TR> IContentQuery<T, TR>.WithQueryHints(QueryHints hints) {
+                _query.WithQueryHints(hints);
                 return this;
             }
 
-            private static ICriteria ExtendCriteria(ICriteria criteria, string segment) {
-                return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
-            }
-
-            public IContentQuery<T, TR> WithQueryHintsFor(string contentType) {
-                var contentItem = _query.ContentManager.New(contentType);
-                var contentPartRecords = new List<string>();
-                foreach (var part in contentItem.Parts) {
-                    var partType = part.GetType().BaseType;
-                    if (partType.IsGenericType && partType.GetGenericTypeDefinition() == typeof(ContentPart<>)) {
-                        var recordType = partType.GetGenericArguments().Single();
-                        contentPartRecords.Add(recordType.Name);
-                    }
-                }
-
-                return WithQueryHints(new QueryHints().ExpandRecords(contentPartRecords));
+            IContentQuery<T, TR> IContentQuery<T, TR>.WithQueryHintsFor(string contentType) {
+                _query.WithQueryHintsFor(contentType);
+                return this;
             }
         }
     }

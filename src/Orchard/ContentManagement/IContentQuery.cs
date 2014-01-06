@@ -24,6 +24,9 @@ namespace Orchard.ContentManagement {
         IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord;
         IContentQuery<TPart, TRecord> OrderBy<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord;
         IContentQuery<TPart, TRecord> OrderByDescending<TRecord>(Expression<Func<TRecord, object>> keySelector) where TRecord : ContentPartRecord;
+
+        IContentQuery<TPart> WithQueryHints(QueryHints hints);
+        IContentQuery<TPart> WithQueryHintsFor(string contentType);
     }
 
     public interface IContentQuery<TPart, TRecord> : IContentQuery<TPart> where TPart : IContent where TRecord : ContentPartRecord {
