@@ -53,7 +53,8 @@ namespace Orchard.SecureSocketsLayer.Filters {
 
             // non auth page on a secure canal
             // nb: needed as the ReturnUrl for LogOn doesn't force the scheme to http, and reuses the current one
-            if (!secure && request.IsSecureConnection) {
+            // Also don't force http on ajax requests.
+            if (!secure && request.IsSecureConnection && !request.IsAjaxRequest()) {
                 var insecureActionUrl = AppendQueryString(
                     request.QueryString,
                     _sslService.InsecureActionUrl(
