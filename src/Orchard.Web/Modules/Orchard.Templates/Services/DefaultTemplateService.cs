@@ -11,6 +11,8 @@ using Orchard.Templates.Models;
 namespace Orchard.Templates.Services {
     public class DefaultTemplateService : ITemplateService {
 
+        public const string TemplatesSignal = "Orchard.Templates";
+
         private readonly IShapeFactory _shapeFactory;
         private readonly IDisplayHelperFactory _displayHelperFactory;
         private readonly IWorkContextAccessor _workContextAccessor;

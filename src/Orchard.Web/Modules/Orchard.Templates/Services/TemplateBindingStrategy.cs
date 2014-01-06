@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
+using Orchard.Caching;
 using Orchard.Compilation.Razor;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
@@ -8,15 +9,18 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc.Spooling;
 
 namespace Orchard.Templates.Services {
-    public class TemplateBindingStrategy : IShapeTableProvider {
+    public class TemplateBindingStrategy : IShapeTableProvider, IShapeTableMonitor {
         private readonly ITemplateService _templateService;
         private readonly IRazorTemplateHolder _templateProvider;
+        private readonly ISignals _signals;
 
         public TemplateBindingStrategy(
             ITemplateService templateService,
-            IRazorTemplateHolder templateProvider) {
+            IRazorTemplateHolder templateProvider,
+            ISignals signals) {
             _templateService = templateService;
             _templateProvider = templateProvider;
+            _signals = signals;
         }
 
         public virtual Feature Feature { get; set; }
@@ -105,5 +109,8 @@ namespace Orchard.Templates.Services {
             return invoke as IHtmlString ?? (invoke != null ? new HtmlString(invoke.ToString()) : null);
         }
 
+        public void Monitor(Action<IVolatileToken> monitor) {
+            monitor(_signals.When(DefaultTemplateService.TemplatesSignal));
+        }
     }
 }

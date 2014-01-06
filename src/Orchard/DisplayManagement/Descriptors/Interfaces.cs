@@ -1,4 +1,6 @@
-﻿using Orchard.Events;
+﻿using System;
+using Orchard.Caching;
+using Orchard.Events;
 
 namespace Orchard.DisplayManagement.Descriptors {
 
@@ -12,6 +14,10 @@ namespace Orchard.DisplayManagement.Descriptors {
 
     public interface IShapeTableEventHandler : IEventHandler {
         void ShapeTableCreated(ShapeTable shapeTable);
+    }
+
+    public interface IShapeTableMonitor : IDependency {
+        void Monitor(Action<IVolatileToken> monitor);
     }
 
 }
