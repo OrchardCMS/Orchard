@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Messaging.Services {
-    [Obsolete("Use the new IMessageChannel interface instead.")]
+    [Obsolete]
     public interface IMessagingChannel : IDependency {
         /// <summary>
         /// Actually sends the message though this channel

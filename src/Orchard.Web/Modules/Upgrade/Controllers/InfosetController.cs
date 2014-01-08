@@ -211,6 +211,8 @@ namespace Upgrade.Controllers {
             _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord"), null);
             #endregion
 
+            // todo: user records
+
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();

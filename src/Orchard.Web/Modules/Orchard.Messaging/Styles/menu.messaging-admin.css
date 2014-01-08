@@ -1,7 +1,7 @@
-﻿.navicon-messaging {
+﻿.navicon-message-queue {
     background-image: url(./images/menu.messaging.png) !important;
 }
 
-.navicon-messaging:hover {
+.navicon-message-queue:hover {
     background-position: 0 -30px !important;
 }

@@ -70,32 +70,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\AdminQueueController.cs" />
-    <Compile Include="Controllers\AdminMessageController.cs" />
-    <Compile Include="Controllers\AdminPriorityController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="ViewModels\MessagePriorityViewModel.cs" />
-    <Compile Include="ViewModels\MessageQueueViewModel.cs" />
+    <Compile Include="Services\DefaultMessageService.cs" />
+    <Compile Include="Services\IMessageChannelSelector.cs" />
+    <Compile Include="Services\IMessageQueueProcessor.cs" />
+    <Compile Include="Services\IMessageQueueService.cs" />
+    <Compile Include="Services\IMessageService.cs" />
+    <Compile Include="Services\NullMessageChannelSelector.cs" />
     <Compile Include="ViewModels\MessagesFilter.cs" />
     <Compile Include="Drivers\MessageSettingsPartDriver.cs" />
     <Compile Include="Handlers\MessageSettingsPartHandler.cs" />
-    <Compile Include="Migrations\MessagingQueuingMigrations.cs" />
-    <Compile Include="Migrations\MessagingMigrations.cs" />
-    <Compile Include="Models\MessageQueue.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Services\MessageQueueProcessor.cs" />
-    <Compile Include="Services\MessageChannelBase.cs" />
     <Compile Include="Services\MessageQueueBackgroundTask.cs" />
     <Compile Include="Services\IMessageChannel.cs" />
-    <Compile Include="Models\QueuedMessage.cs" />
-    <Compile Include="Models\MessagePriority.cs" />
-    <Compile Include="Models\MessageQueueRecord.cs" />
     <Compile Include="Models\MessageQueueStatus.cs" />
     <Compile Include="Models\QueuedMessageRecord.cs" />
     <Compile Include="Models\MessageSettingsPart.cs" />
     <Compile Include="Models\QueuedMessageStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\MessageQueueManager.cs" />
-    <Compile Include="Models\MessageRecipient.cs" />
+    <Compile Include="Services\MessageQueueService.cs" />
     <Compile Include="ViewModels\MessageSettingsPartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -103,10 +98,6 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\submit.js" />
-    <Content Include="Scripts\submit.min.js">
-      <DependentUpon>submit.js</DependentUpon>
-    </Content>
     <Content Include="Styles\admin-messaging.min.css">
       <DependentUpon>admin-messaging.css</DependentUpon>
     </Content>
@@ -131,6 +122,10 @@
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
       <Name>Orchard.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3F72A4E9-7B72-4260-B010-C16EC54F9BAF}</Project>
+      <Name>Orchard.TaskLease</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
       <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
       <Name>Orchard.Workflows</Name>
@@ -140,49 +135,21 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AdminQueue\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AdminQueue\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\MessageQueueViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AdminQueue\Edit.cshtml" />
+    <Content Include="Views\Admin\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AdminQueue\List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AdminMessage\Details.cshtml" />
+    <Content Include="Views\Admin\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Activity-SendMessage.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\submit.min.js.map">
-      <DependentUpon>submit.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AdminPriority\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AdminPriority\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AdminPriority\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\MessagePriorityViewModel.cshtml" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

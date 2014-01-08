@@ -1,17 +1,19 @@
-﻿@using Orchard.Messaging.Models
+﻿@using Orchard.Localization
+@using Orchard.Messaging.Models
 @using Orchard.Messaging.ViewModels
 @using Orchard.Utility.Extensions
 @{
-    var queue = (MessageQueue) Model.Queue;
-    var messages = (IEnumerable<QueuedMessage>) Model.Messages;
-    var filter = (MessagesFilter) Model.Filter;
+    IEnumerable<QueuedMessageRecord> messages = Model.Messages;
+    MessagesFilter filter = Model.Filter;
+    MessageQueueStatus status = Model.MessageQueueStatus;
+
     Layout.Title = T("Message Queue");
     Style.Include("admin-messaging.css", "admin-messaging.min.css");
 }
 @using (Html.BeginFormAntiForgeryPost()) {
 <div class="manage">
-    <span class="queue-status @String.Format("{0}", (queue.Status).ToString().HtmlClassify())">@T("Status: {0}", queue.Status)</span>
-    @if (queue.Status == MessageQueueStatus.Paused) {
+    <span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span>
+    @if (status == MessageQueueStatus.Paused) {
         <button type="submit" name="submit.Resume" value="resume" class="button">@T("Resume")</button>
     }
     else {
@@ -44,26 +46,37 @@ else {
             <tr>
                 <th>@T("Status")</th>
                 <th>@T("Priority")</th>
-                <th>@T("Recipients")</th>
-                <th>@T("Payload")</th>
+                <th>@T("Type")</th>
                 <th>@T("Created")</th>
-                <th>@T("Started")</th>
                 <th>@T("Completed")</th>
                 <th>@T("Actions")</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var message in messages) {
+                LocalizedString priorityName;
+                switch (message.Priority) {
+                    case -50:
+                        priorityName = T("Low");
+                        break;
+                    case 0:
+                        priorityName = T("Normal");
+                        break;
+                    case 50:
+                        priorityName = T("High");
+                        break;
+                    default:
+                        priorityName = T("None");
+                        break;
+                }
                 <tr>
                     <td><span class="message-status @message.Status.ToString().HtmlClassify()">@message.Status</span></td>
-                    <td>@message.Priority.Name</td>
-                    <td>@String.Join(", ", message.Recipients).Ellipsize(50)</td>
-                    <td>@message.Record.Payload.Ellipsize(100, "...")</td>
-                    <td>@message.CreatedUtc</td>
-                    <td>@message.StartedUtc</td>
-                    <td>@message.CompletedUtc</td>
+                    <td>@priorityName</td>
+                    <td>@message.Type</td>
+                    <td>@Display.DateTimeRelative(dateTimeUtc: message.CreatedUtc)</td>
+                    <td>@Display.DateTimeRelative(dateTimeUtc: message.CompletedUtc)</td>
                     <td>
-                        <a href="@Url.Action("Details", "AdminMessage", new { message.Id, returnUrl = Request.Url.PathAndQuery })">@T("Details")</a>
+                        <a href="@Url.Action("Details", "Admin", new { message.Id, returnUrl = Request.Url.PathAndQuery })">@T("Details")</a>
                     </td>
                 </tr>
             }

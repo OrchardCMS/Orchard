@@ -3,7 +3,7 @@
 @{
     Style.Include("admin-messaging.css", "admin-messaging.min.css");
     Layout.Title = T("Message Details");
-    var message = (QueuedMessage)Model.Message;
+    var message = (QueuedMessageRecord)Model.Message;
     var returnUrl = (string)Model.ReturnUrl;
 }
 <fieldset class="summary">
@@ -23,16 +23,8 @@
             <span>@message.Priority</span>
         </li>
         <li>
-            <label>@T("Recipients")</label>
-            <span>@String.Join(", ", message.Recipients)</span>
-        </li>
-        <li>
             <label>@T("Created")</label>
             <span>@message.CreatedUtc</span>
-        </li>
-        <li>
-            <label>@T("Started")</label>
-            <span>@message.StartedUtc</span>
         </li>
         <li>
             <label>@T("Completed")</label>
@@ -40,7 +32,7 @@
         </li>
         <li>
             <label>@T("Payload")</label>
-            <span>@message.Record.Payload</span>
+            <span>@message.Payload</span>
         </li>
     </ul>
 </fieldset>

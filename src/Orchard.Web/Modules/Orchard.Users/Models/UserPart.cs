@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Web.Security;
+using Orchard.ContentManagement;
 using Orchard.Security;
 
 namespace Orchard.Users.Models {
@@ -10,6 +11,31 @@ namespace Orchard.Users.Models {
         public string UserName {
             get { return Retrieve(x => x.UserName); }
             set { Store(x => x.UserName, value); }
+        }
+
+        public string EmailChallengeToken {
+            get { return Retrieve(x => x.EmailChallengeToken); }
+            set { Store(x => x.EmailChallengeToken, value); }
+        }
+
+        public string HashAlgorithm {
+            get { return Retrieve(x => x.HashAlgorithm); }
+            set { Store(x => x.HashAlgorithm, value); }
+        }
+
+        public string Password {
+            get { return Retrieve(x => x.Password); }
+            set { Store(x => x.Password, value); }
+        }
+
+        public MembershipPasswordFormat PasswordFormat {
+            get { return Retrieve(x => x.PasswordFormat); }
+            set { Store(x => x.PasswordFormat, value); }
+        }
+
+        public string PasswordSalt {
+            get { return Retrieve(x => x.PasswordSalt); }
+            set { Store(x => x.PasswordSalt, value); }
         }
 
         public string Email {

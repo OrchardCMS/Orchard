@@ -1,5 +1,4 @@
 using System;
-using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
 using Orchard.Tests.Stubs;
 
@@ -17,9 +16,7 @@ namespace Orchard.Messaging.Tests {
         public void Dispose() {
         }
 
-        public string Name { get { return ChannelName; } }
-
-        public void Send(QueuedMessage message) {
+        public void Process(string payload) {
             _clock.Advance(_simulatedProcessingTime);
         }
     }

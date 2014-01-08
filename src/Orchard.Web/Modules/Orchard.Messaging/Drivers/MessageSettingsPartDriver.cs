@@ -3,18 +3,15 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.Messaging.Models;
-using Orchard.Messaging.Services;
 using Orchard.Messaging.ViewModels;
 
 namespace Orchard.Messaging.Drivers {
     [UsedImplicitly]
     public class MessageSettingsPartDriver : ContentPartDriver<MessageSettingsPart> {
         private const string TemplateName = "Parts/MessageSettings";
-        private readonly IMessageManager _messageQueueManager;
         public IOrchardServices Services { get; set; }
 
-        public MessageSettingsPartDriver(IOrchardServices services, IMessageManager messageQueueManager) {
-            _messageQueueManager = messageQueueManager;
+        public MessageSettingsPartDriver(IOrchardServices services) {
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -26,7 +23,6 @@ namespace Orchard.Messaging.Drivers {
         protected override DriverResult Editor(MessageSettingsPart part, dynamic shapeHelper) {
 
             var model = new MessageSettingsPartViewModel {
-                ChannelServices = _messageQueueManager.GetAvailableChannelServices(),
                 MessageSettings = part
             };
 
@@ -35,7 +31,6 @@ namespace Orchard.Messaging.Drivers {
 
         protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MessageSettingsPartViewModel {
-                ChannelServices = _messageQueueManager.GetAvailableChannelServices(),
                 MessageSettings = part
             };
 

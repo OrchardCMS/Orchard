@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
-using Orchard.Messaging.Models;
-using Orchard.Messaging.Services;
 
 namespace Orchard.Email.Forms {
     public class EmailForm : Component, IFormProvider {
-        private readonly IMessageQueueManager _messageQueueManager;
         protected dynamic New { get; set; }
 
-        public EmailForm(IShapeFactory shapeFactory, IMessageQueueManager messageQueueManager) {
+        public EmailForm(IShapeFactory shapeFactory) {
             New = shapeFactory;
-            _messageQueueManager = messageQueueManager;
         }
 
         public void Describe(DescribeContext context) {
@@ -46,19 +39,12 @@ namespace Orchard.Email.Forms {
                                 Id: "priority",
                                 Name: "Priority",
                                 Title: T("Priority"),
-                                Description: ("The priority of this message."),
-                                Items: GetPriorities())));
+                                Description: ("The priority of this message.")
+                                )));
 
-                    var queues = GetQueues();
-
-                    if (queues.Count() > 1) {
-                        form._Queue = New.SelectList(
-                            Id: "queue",
-                            Name: "Queue",
-                            Title: T("Queue"),
-                            Description: ("The queue to add this message to."),
-                            Items: queues);
-                    }
+                    form._Type._Priority.Add(new SelectListItem { Value = "-50", Text = T("Low").Text });
+                    form._Type._Priority.Add(new SelectListItem { Value = "0", Text = T("Normal").Text });
+                    form._Type._Priority.Add(new SelectListItem { Value = "50", Text = T("Hight").Text });
 
                     return form;
                 };
@@ -66,19 +52,6 @@ namespace Orchard.Email.Forms {
             context.Form("EmailActivity", formFactory);
         }
 
-        private IEnumerable<SelectListItem> GetPriorities() {
-            var priorities = _messageQueueManager.GetPriorities().ToList();
-            if (!priorities.Any())
-                priorities = _messageQueueManager.CreateDefaultPriorities().ToList();
-            return priorities.Select(x => new SelectListItem { Text = x.DisplayText, Value = x.Id.ToString(CultureInfo.InvariantCulture) }).ToList();
-        }
-
-        private IEnumerable<SelectListItem> GetQueues() {
-            var queues = _messageQueueManager.GetQueues().ToList();
-            if (!queues.Any())
-                queues = new List<MessageQueue> {_messageQueueManager.CreateDefaultQueue()};
-            return queues.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString(CultureInfo.InvariantCulture)}).ToList();
-        }
     }
 
     public class EmailFormValidator : IFormEventHandler {

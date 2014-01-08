@@ -1,9 +1,0 @@
-﻿@model Orchard.Messaging.ViewModels.MessagePriorityViewModel
-@{
-    Layout.Title = T("Edit Priority");
-}
-@using (Html.BeginFormAntiForgeryPost()) {
-    @Html.EditorForModel()
-    <button type="submit">@T("Save")</button>
-    <a class="button" href="@Url.Action("Index")">@T("Back")</a>
-}

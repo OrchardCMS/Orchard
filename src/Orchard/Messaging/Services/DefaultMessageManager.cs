@@ -7,6 +7,7 @@ using Orchard.Messaging.Models;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Messaging.Services {
+    [Obsolete]
     public class DefaultMessageManager : IMessageManager {
         private readonly IMessageEventHandler _messageEventHandler;
         private readonly IEnumerable<IMessagingChannel> _channels;

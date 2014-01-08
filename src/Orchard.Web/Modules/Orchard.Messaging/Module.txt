@@ -4,14 +4,9 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.7.2
 OrchardVersion: 1.7.2
-Description: This module provides the messaging infrastructure that modules such as Workflows can use. It is only useful as a dependency for other modules that implement specific channels, such as e-mail or Twitter.
+Description: This module provides the messaging infrastructure that modules can use to send messages.
 Category: Messaging
 Features:
 	Orchard.Messaging:
-		Description: Provides the messaging infrastructure that modules such as Workflows can use. It is only useful as a dependency for other modules that implement specific channels, such as e-mail or Twitter.
-		Dependencies: Settings
-	Orchard.Messaging.Queuing
-		Name: Message Queuing
-		Description: Provides message queuing facilities and APIs, enabling the queing of messages to be processed at regular intervals. Includes support for prioritized messages and templates messages using shapes.
-		Category: Messaging
-		Dependencies: Orchard.Messaging, Orchard.Forms, Orchard.Workflows, Orchard.jQuery
+		Description: Provides the messaging infrastructure that modules can use to send messages.
+		Dependencies: Settings, Orchard.TaskLease

@@ -1,65 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Orchard.Environment;
 using Orchard.Logging;
 using Orchard.Messaging.Models;
 using Orchard.Services;
+using Orchard.TaskLease.Services;
 
 namespace Orchard.Messaging.Services {
-    public interface IMessageQueueProcessor : IDependency {
-        void ProcessQueues();
-    }
+    public class MessageQueueProcessor : IMessageQueueProcessor {
+        private readonly Work<IMessageQueueService> _messageQueueService;
+        private readonly Work<IMessageService> _messageService;
+        private readonly Work<IClock> _clock;
+        private readonly Work<ITaskLeaseService> _taskLeaseService;
+        private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
 
-    public class MessageQueueProcessor : Component, IMessageQueueProcessor {
-        private readonly IMessageQueueManager _manager;
-        private readonly IClock _clock;
-
-        public MessageQueueProcessor(IMessageQueueManager manager, IClock clock) {
-            _manager = manager;
+        public MessageQueueProcessor(
+            Work<IMessageQueueService> messageQueueService, 
+            Work<IMessageService> messageService,
+            Work<IClock> clock,
+            Work<ITaskLeaseService> taskLeaseService) {
+            _messageQueueService = messageQueueService;
+            _messageService = messageService;
             _clock = clock;
+            _taskLeaseService = taskLeaseService;
+            Logger = NullLogger.Instance;
         }
 
-        public void ProcessQueues() {
-            var queuesToProcess = GetQueuesToProcess();
+        public ILogger Logger { get; set; }
+        public void ProcessQueue() {
+            // prevent two threads on the same machine to process the message queue
+            if (_rwl.TryEnterWriteLock(0)) {
+                try {
+                    _taskLeaseService.Value.Acquire("MessageQueueProcessor", _clock.Value.UtcNow.AddMinutes(5));
+                    IEnumerable<QueuedMessageRecord> messages;
 
-            foreach (var queue in queuesToProcess.AsParallel()) {
-                ProcessQueue(queue);
-            }
-        }
-
-        private IEnumerable<MessageQueue> GetQueuesToProcess() {
-            return _manager.GetIdleQueues().ToList();
-        }
-
-        private void ProcessQueue(MessageQueue queue) {
-            _manager.EnterProcessingStatus(queue);
-            var messages = _manager.GetPendingMessages(queue.Id);
-
-            while (messages.Any()) {
-                foreach (var message in messages.AsParallel()) {
-                    ProcessMessage(message);
+                    while ((messages = _messageQueueService.Value.GetMessages(QueuedMessageStatus.Pending, 0, 10).ToArray()).Any()) {
+                        foreach (var message in messages.AsParallel()) {
+                            ProcessMessage(message);
+                        }
+                    }
                 }
-                messages = _manager.GetPendingMessages(queue.Id);
+                finally {
+                    _rwl.ExitWriteLock();
+                }
             }
-            
-            _manager.ExitProcessingStatus(queue);
         }
 
-        private void ProcessMessage(QueuedMessage message) {
-            var channel = message.Channel;
+        private void ProcessMessage(QueuedMessageRecord message) {
 
-            message.StartedUtc = _clock.UtcNow;
+            message.StartedUtc = _clock.Value.UtcNow;
             message.Status = QueuedMessageStatus.Sending;
 
             Logger.Debug("Sending message ID {0}.", message.Id);
-            if (!message.Recipients.Any()) {
-                message.Status = QueuedMessageStatus.Faulted;
-                message.Result = String.Format("Cannot send message {0} because at least on recipient is required.", message.Id);
-                Logger.Error(message.Result);
-                return;
-            }
+            
             try {
-                channel.Send(message);
+                _messageService.Value.Send(message.Type, message.Payload);
                 message.Status = QueuedMessageStatus.Sent;
                 Logger.Debug("Sent message ID {0}.", message.Id);
             }
@@ -69,7 +66,7 @@ namespace Orchard.Messaging.Services {
                 Logger.Error(e, "An unexpected error while sending message {0}. Error message: {1}.", message.Id, e);
             }
             finally {
-                message.CompletedUtc = _clock.UtcNow;
+                message.CompletedUtc = _clock.Value.UtcNow;
             }
         }
     }

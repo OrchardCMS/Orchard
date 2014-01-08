@@ -1,8 +1,6 @@
-﻿using Orchard.Environment.Extensions;
-using Orchard.Tasks;
+﻿using Orchard.Tasks;
 
 namespace Orchard.Messaging.Services {
-    [OrchardFeature("Orchard.Messaging.Queuing")]
     public class MessageQueueBackgroundTask : Component, IBackgroundTask {
         private readonly IMessageQueueProcessor _messageQueueProcessor;
         public MessageQueueBackgroundTask(IMessageQueueProcessor messageQueueProcessor) {
@@ -10,7 +8,7 @@ namespace Orchard.Messaging.Services {
         }
 
         public void Sweep() {
-            _messageQueueProcessor.ProcessQueues();
+            _messageQueueProcessor.ProcessQueue();
         }
     }
 }

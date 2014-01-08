@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Orchard.Email.Models;
 using Orchard.Email.Services;
 using Orchard.Localization;
-using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Email.Activities {
     public class EmailActivity : Task {
-        private readonly IMessageQueueManager _messageQueueManager;
+        private readonly IMessageQueueService _messageQueueManager;
 
-        public EmailActivity(IMessageQueueManager messageQueueManager) {
+        public EmailActivity(IMessageQueueService messageQueueManager) {
             _messageQueueManager = messageQueueManager;
             T = NullLocalizer.Instance;
         }
@@ -43,21 +41,24 @@ namespace Orchard.Email.Activities {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var recipientAddresses = Split(activityContext.GetState<string>("RecipientAddress")).ToList();
+            var priority = activityContext.GetState<int>("Priority");
+
             var body = activityContext.GetState<string>("Body");
             var subject = activityContext.GetState<string>("Subject");
-            var queueId = activityContext.GetState<int?>("Queue") ?? _messageQueueManager.GetDefaultQueue().Id;
-            var priorityId = activityContext.GetState<int>("Priority");
-            var recipients = recipientAddresses.Select(x => new MessageRecipient(x));
-            var priority = _messageQueueManager.GetPriority(priorityId);
-            var payload = new EmailMessage(subject, body);
-            _messageQueueManager.Send(recipients, EmailMessageChannel.ChannelName, payload, priority, queueId);
+            var recipients = Split(activityContext.GetState<string>("RecipientAddress"));
+            var payload = new EmailMessage {
+                Subject = subject, 
+                Body = body,
+                Recipients = recipients
+            };
+
+            _messageQueueManager.Enqueue(SmtpMessageChannel.MessageType, payload, priority);
 
             yield return T("Queued");
         }
 
-        private static IEnumerable<string> Split(string value) {
-            return !String.IsNullOrWhiteSpace(value) ? value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : Enumerable.Empty<string>();
+        private static string[] Split(string value) {
+            return !String.IsNullOrWhiteSpace(value) ? value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries) : new string[0];
         }
     }
 }

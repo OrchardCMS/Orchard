@@ -10,7 +10,7 @@ using Orchard.Messaging.Services;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Email.Services {
-    [Obsolete("Use EmailMessageChannel instead.")]
+    [Obsolete]
     public class EmailMessagingChannel : IMessagingChannel {
         private readonly IOrchardServices _orchardServices;
 
