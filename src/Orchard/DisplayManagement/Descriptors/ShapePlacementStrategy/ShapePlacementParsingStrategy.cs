@@ -120,6 +120,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         public static Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
             var expression = term.Value;
             switch (term.Key) {
+                case "ContentPart":
+                        return ctx => ctx.Content != null 
+                            && ctx.Content.ContentItem.Parts.Any(part => part.PartDefinition.Name == expression) 
+                            && predicate(ctx);
                 case "ContentType":
                     if (expression.EndsWith("*")) {
                         var prefix = expression.Substring(0, expression.Length - 1);
