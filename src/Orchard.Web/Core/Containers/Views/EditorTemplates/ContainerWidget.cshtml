@@ -16,6 +16,7 @@
 <fieldset>
     @Html.LabelFor(m => m.Part.Record.OrderByProperty, T("Order by"))
     <select id="@Html.FieldIdFor(m => m.Part.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByProperty)">
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "ContainablePart.Weight", T("Weight").Text)
         @Html.SelectOption(Model.Part.Record.OrderByProperty, "CommonPart.CreatedUtc", T("Date Created").Text)
         @Html.SelectOption(Model.Part.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
         @Html.SelectOption(Model.Part.Record.OrderByProperty, "TitlePart.Title", T("Title (Title Part)").Text)
