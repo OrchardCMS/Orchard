@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI;
+using System.Xml.Linq;
 using Orchard.Compilation.Razor;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Templates.Helpers;
@@ -60,6 +63,21 @@ namespace Orchard.Templates.Drivers {
                     }
             }
             return ContentShape("Parts_Shape_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts.Shape", Model: viewModel, Prefix: Prefix));
+        }
+
+        protected override void Exporting(ShapePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Language", part.Language);
+            context.Element(part.PartDefinition.Name).Add(new XCData(part.Template));
+        }
+
+        protected override void Importing(ShapePart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "Name", x => part.Name = x);
+            context.ImportAttribute(part.PartDefinition.Name, "Language", x => part.Language = x);
+            var shapeElement = context.Data.Element(part.PartDefinition.Name);
+
+            if(shapeElement != null)
+                part.Template = shapeElement.Value;
         }
 
         private bool ValidateShapeName(string name, IUpdateModel updater) {
