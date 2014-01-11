@@ -1,0 +1,4 @@
+﻿@T("Thank you for registering with {0}.<br /><br /><br /><b>Final Step</b><br />To verify that you own this e-mail address, please click the following link:<br /><a href=\"{1}\">{1}</a><br /><br /><b>Troubleshooting:</b><br />If clicking on the link above does not work, try the following:<br /><br />Select and copy the entire link.<br />Open a browser window and paste the link in the address bar.<br />Click <b>Go</b> or, on your keyboard, press <b>Enter</b> or <b>Return</b>.", Model.RegisteredWebsite, Model.ChallengeUrl)
+@if (!String.IsNullOrWhiteSpace(Model.ContactEmail)) {
+    @T("<br /><br />If you continue to have access problems or want to report other issues, please <a href=\"mailto:{0}\">Contact Us</a>.",Model.ContactEmail)
+}
