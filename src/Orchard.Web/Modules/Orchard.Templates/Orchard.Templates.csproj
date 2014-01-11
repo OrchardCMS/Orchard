@@ -167,12 +167,16 @@
     <Compile Include="Drivers\ShapePartDriver.cs" />
     <Compile Include="Models\ShapePart.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\ShapePartRecord.cs" />
     <Compile Include="Services\ITemplateProcessor.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\TemplateProcessorImpl.cs" />
     <Compile Include="Services\RazorTemplateProcessor.cs" />
     <Compile Include="Services\TemplateBindingStrategy.cs" />
     <Compile Include="Services\DefaultTemplateService.cs" />
+    <Compile Include="Settings\ShapePartSettings.cs" />
+    <Compile Include="Settings\ShapePartSettingsEvents.cs" />
+    <Compile Include="ViewModels\ShapePartSettingsViewModel.cs" />
     <Compile Include="ViewModels\ShapePartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -188,10 +192,16 @@
     <Content Include="Views\Admin\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\TemplateLanguagePicker.cshtml" />
+    <Content Include="Views\EditorTemplates\TemplateProcessorPicker.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tokens\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\Parts.Shape.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ShapePartSettingsViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

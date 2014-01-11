@@ -8,7 +8,6 @@ namespace Orchard.Templates {
             SchemaBuilder.CreateTable("ShapePartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Name", c => c.WithLength(100))
-                .Column<string>("Language", c => c.WithLength(50))
                 .Column<string>("Template", c => c.Unlimited()));
 
             ContentDefinitionManager.AlterPartDefinition("ShapePart", part => part
@@ -18,7 +17,8 @@ namespace Orchard.Templates {
             ContentDefinitionManager.AlterTypeDefinition("Template", type => type
                 .WithPart("CommonPart")
                 .WithPart("IdentityPart")
-                .WithPart("ShapePart")
+                .WithPart("ShapePart", p => p
+                    .WithSetting("ShapePartSettings.Processor", "Razor"))
                 .Draftable());
             return 1;
         }

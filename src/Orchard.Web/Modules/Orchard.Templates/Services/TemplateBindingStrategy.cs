@@ -34,7 +34,7 @@ namespace Orchard.Templates.Services {
             var shapes = _templateService.GetTemplates().Select(r =>
                 new {
                     r.Name,
-                    r.Language,
+                    r.ProcessorName,
                     r.Template
                 })
                 .ToList();
@@ -60,7 +60,7 @@ namespace Orchard.Templates.Services {
                        .BoundAs("Template::" + shapeType,
                                 descriptor => context => {
                                     var template = _templateProvider.Get(record.Name);
-                                    return template != null ? PerformInvoke(context, record.Name, record.Language, template) : new HtmlString("");
+                                    return template != null ? PerformInvoke(context, record.Name, record.ProcessorName, template) : new HtmlString("");
                                 });
             }
         }

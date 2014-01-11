@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI;
 using System.Xml.Linq;
 using Orchard.Compilation.Razor;
 using Orchard.ContentManagement;
@@ -40,20 +39,17 @@ namespace Orchard.Templates.Drivers {
         protected override DriverResult Editor(ShapePart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new ShapePartViewModel {
                 Name = part.Name,
-                Template = part.Template,
-                Language = part.Language,
-                AvailableLanguages = _processors.Select(x => x.Type).Distinct().ToArray()
+                Template = part.Template
             };
 
             if (updater != null 
                 && updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableLanguages" })
                 && ValidateShapeName(viewModel.Name, updater)) {
                     part.Name = viewModel.Name.TrimSafe();
-                    part.Language = viewModel.Language;
                     part.Template = viewModel.Template;
 
                     try {
-                        var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.Language, StringComparison.OrdinalIgnoreCase));
+                        var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.ProcessorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
                         processor.Verify(part.Template);
                         _templateHolder.Set(part.Name, part.Template);
                     }
@@ -67,13 +63,11 @@ namespace Orchard.Templates.Drivers {
 
         protected override void Exporting(ShapePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Language", part.Language);
             context.Element(part.PartDefinition.Name).Add(new XCData(part.Template));
         }
 
         protected override void Importing(ShapePart part, ImportContentContext context) {
             context.ImportAttribute(part.PartDefinition.Name, "Name", x => part.Name = x);
-            context.ImportAttribute(part.PartDefinition.Name, "Language", x => part.Language = x);
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
             if(shapeElement != null)

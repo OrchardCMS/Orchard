@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
-using Orchard.Data.Conventions;
+using Orchard.Templates.Settings;
 
 namespace Orchard.Templates.Models {
     public class ShapePart : ContentPart<ShapePartRecord> {
@@ -9,22 +8,13 @@ namespace Orchard.Templates.Models {
             set { Store(x => x.Name, value); }
         }
 
-        public string Language {
-            get { return Retrieve(x => x.Language); }
-            set { Store(x => x.Language, value); }
+        public string ProcessorName {
+            get { return TypePartDefinition.Settings.GetModel<ShapePartSettings>().Processor; }
         }
 
         public string Template {
             get { return Retrieve(x => x.Template); }
             set { Store(x => x.Template, value); }
         }
-    }
-
-    public class ShapePartRecord : ContentPartRecord {
-        public virtual string Name { get; set; }
-        public virtual string Language { get; set; }
-
-        [StringLengthMax]
-        public virtual string Template { get; set; }
     }
 }
