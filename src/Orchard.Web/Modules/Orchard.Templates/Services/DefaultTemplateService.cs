@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Templates.Models;
 
@@ -13,40 +10,14 @@ namespace Orchard.Templates.Services {
 
         public const string TemplatesSignal = "Orchard.Templates";
 
-        private readonly IShapeFactory _shapeFactory;
-        private readonly IDisplayHelperFactory _displayHelperFactory;
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<ITemplateProcessor> _processors;
-        private readonly HttpContextBase _httpContextBase;
 
         public DefaultTemplateService(
-            IShapeFactory shapeFactory, 
-            IDisplayHelperFactory displayHelperFactory, 
-            IWorkContextAccessor workContextAccessor, 
             IContentManager contentManager, 
-            IEnumerable<ITemplateProcessor> processors,
-            HttpContextBase httpContextBase) {
-            _shapeFactory = shapeFactory;
-            _displayHelperFactory = displayHelperFactory;
-            _workContextAccessor = workContextAccessor;
+            IEnumerable<ITemplateProcessor> processors) {
             _contentManager = contentManager;
             _processors = processors;
-            _httpContextBase = httpContextBase;
-        }
-
-        public string ExecuteShape(string shapeType) {
-            return ExecuteShape(shapeType, null);
-        }
-
-        public string ExecuteShape(string shapeType, INamedEnumerable<object> parameters) {
-            var shape = _shapeFactory.Create(shapeType, parameters);
-
-            var viewContext = new ViewContext { HttpContext = _httpContextBase };
-            viewContext.RouteData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
-            var display = _displayHelperFactory.CreateHelper(viewContext, new ViewDataContainer());
-            
-            return ((DisplayHelper)display).ShapeExecute(shape).ToString();
         }
 
         public string Execute<TModel>(string template, string name, string language, TModel model = default(TModel)) {
@@ -62,12 +33,5 @@ namespace Orchard.Templates.Services {
             return _contentManager.Query<ShapePart>(versionOptions ?? VersionOptions.Published).List();
         }
 
-        private class ViewDataContainer : IViewDataContainer {
-            public ViewDataDictionary ViewData { get; set; }
-
-            public ViewDataContainer() {
-                ViewData = new ViewDataDictionary();
-            }
-        }
     }
 }

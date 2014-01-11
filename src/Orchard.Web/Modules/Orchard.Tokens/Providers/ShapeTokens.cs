@@ -1,14 +1,14 @@
 ﻿using System;
 using Orchard.DisplayManagement;
-using Orchard.Templates.Services;
-using Orchard.Tokens;
 
-namespace Orchard.Templates.Tokens {
-    public class ShapeTokenProvider : Component, ITokenProvider {
-        private readonly ITemplateService _templateService;
+namespace Orchard.Tokens.Providers {
+    public class ShapeTokens : Component, ITokenProvider {
+        private readonly IShapeDisplay _shapeDisplay;
+        private readonly IShapeFactory _shapeFactory;
 
-        public ShapeTokenProvider(ITemplateService templateService) {
-            _templateService = templateService;
+        public ShapeTokens(IShapeDisplay shapeDisplay, IShapeFactory shapeFactory) {
+            _shapeDisplay = shapeDisplay;
+            _shapeFactory = shapeFactory;
         }
 
         public void Describe(DescribeContext context) {
@@ -23,7 +23,8 @@ namespace Orchard.Templates.Tokens {
 
         private object TokenValue(EvaluateContext context, string shapeName, string data) {
             var parameters = Arguments.From(context.Data.Values, context.Data.Keys);
-            return _templateService.ExecuteShape(shapeName, parameters);
+            var shape = _shapeFactory.Create(shapeName, parameters);
+            return _shapeDisplay.Display(shape);
         }
     }
 }

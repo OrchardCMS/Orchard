@@ -220,6 +220,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\IShapeDisplay.cs" />
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />

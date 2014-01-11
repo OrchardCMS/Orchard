@@ -173,7 +173,6 @@
     <Compile Include="Services\RazorTemplateProcessor.cs" />
     <Compile Include="Services\TemplateBindingStrategy.cs" />
     <Compile Include="Services\DefaultTemplateService.cs" />
-    <Compile Include="Tokens\ShapeTokenProvider.cs" />
     <Compile Include="ViewModels\ShapePartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +190,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\TemplateLanguagePicker.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Tokens\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

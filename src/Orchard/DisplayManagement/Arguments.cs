@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Orchard.DisplayManagement {
     public static class Arguments {
@@ -11,6 +12,16 @@ namespace Orchard.DisplayManagement {
 
         public static INamedEnumerable<object> From(IEnumerable<object> arguments, IEnumerable<string> names) {
             return new NamedEnumerable<object>(arguments, names);
+        }
+
+        public static INamedEnumerable<object> From(IDictionary<string, object> dictionary) {
+            return From(dictionary.Values, dictionary.Keys);
+        }
+
+        public static INamedEnumerable<object> From(object propertyObject) {
+            var properties = propertyObject.GetType().GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
+            var values = properties.Select(x => x.GetGetMethod().Invoke(propertyObject, null));
+            return new NamedEnumerable<object>(values, properties.Select(x => x.Name));
         }
 
         class NamedEnumerable<T> : INamedEnumerable<T> {
