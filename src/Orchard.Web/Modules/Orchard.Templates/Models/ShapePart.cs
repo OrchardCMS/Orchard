@@ -5,18 +5,18 @@ using Orchard.Data.Conventions;
 namespace Orchard.Templates.Models {
     public class ShapePart : ContentPart<ShapePartRecord> {
         public string Name {
-            get { return Record.Name; }
-            set { Record.Name = value; }
+            get { return Retrieve(x => x.Name); }
+            set { Store(x => x.Name, value); }
         }
 
         public string Language {
-            get { return Record.Language; }
-            set { Record.Language = value; }
+            get { return Retrieve(x => x.Language); }
+            set { Store(x => x.Language, value); }
         }
 
         public string Template {
-            get { return Record.Template; }
-            set { Record.Template = value; }
+            get { return Retrieve(x => x.Template); }
+            set { Store(x => x.Template, value); }
         }
     }
 
