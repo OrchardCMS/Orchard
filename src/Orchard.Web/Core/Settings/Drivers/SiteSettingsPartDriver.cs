@@ -3,6 +3,7 @@ using System.Net;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization.Services;
@@ -100,6 +101,14 @@ namespace Orchard.Core.Settings.Drivers {
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(SiteSettingsPart part, ExportContentContext context) {
+            DefaultSettingsPartImportExport.ExportSettingsPart(part, context);
+        }
+
+        protected override void Importing(SiteSettingsPart part, ImportContentContext context) {
+            DefaultSettingsPartImportExport.ImportSettingPart(part, context.Data.Element(part.PartDefinition.Name));
         }
     }
 }

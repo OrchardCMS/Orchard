@@ -1,10 +1,12 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
 using Orchard.Messaging.ViewModels;
+using Orchard.Settings;
 
 namespace Orchard.Messaging.Drivers {
     [UsedImplicitly]
@@ -42,6 +44,14 @@ namespace Orchard.Messaging.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
 
             return ContentShape("Parts_MessageSettings_Edit", () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(MessageSettingsPart part, ExportContentContext context) {
+            DefaultSettingsPartImportExport.ExportSettingsPart(part, context);
+        }
+
+        protected override void Importing(MessageSettingsPart part, ImportContentContext context) {
+            DefaultSettingsPartImportExport.ImportSettingPart(part, context.Data.Element(part.PartDefinition.Name));
         }
     }
 }

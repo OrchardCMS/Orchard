@@ -2,7 +2,9 @@
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
+using Orchard.Settings;
 
 namespace Orchard.Comments.Drivers {
     public class CommentSettingsPartDriver : ContentPartDriver<CommentSettingsPart> {
@@ -27,6 +29,14 @@ namespace Orchard.Comments.Drivers {
                     return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix); 
                 })
                 .OnGroup("comments");
+        }
+
+        protected override void Exporting(CommentSettingsPart part, ExportContentContext context) {
+            DefaultSettingsPartImportExport.ExportSettingsPart(part, context);
+        }
+
+        protected override void Importing(CommentSettingsPart part, ImportContentContext context) {
+            DefaultSettingsPartImportExport.ImportSettingPart(part, context.Data.Element(part.PartDefinition.Name));
         }
     }
 }

@@ -139,31 +139,8 @@ namespace Orchard.ImportExport.Services {
         }
 
         private XElement ExportSiteSettings() {
-            var settings = new XElement("Settings");
-            var hasSetting = false;
-
-            foreach (var sitePart in _orchardServices.WorkContext.CurrentSite.ContentItem.Parts) {
-                var setting = new XElement(sitePart.PartDefinition.Name);
-
-                foreach (var property in sitePart.GetType().GetProperties()) {
-                    var propertyType = property.PropertyType;
-                    // Supported types (we also know they are not indexed properties).
-                    if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
-                        // Exclude read-only properties.
-                        if (property.GetSetMethod() != null) {
-                            setting.SetAttributeValue(property.Name, property.GetValue(sitePart, null));
-                            hasSetting = true;
-                        }
-                    }
-                }
-
-                if (hasSetting) {
-                    settings.Add(setting);
-                    hasSetting = false;
-                }
-            }
-
-            return settings;
+            var exportContentItem = ExportContentItem(_orchardServices.WorkContext.CurrentSite.ContentItem);
+            return new XElement("Settings", exportContentItem.Elements());
         }
 
         private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {

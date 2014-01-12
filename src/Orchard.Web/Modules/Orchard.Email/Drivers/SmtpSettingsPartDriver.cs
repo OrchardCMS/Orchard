@@ -1,8 +1,10 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Email.Models;
 using Orchard.Localization;
+using Orchard.Settings;
 
 namespace Orchard.Email.Drivers {
 
@@ -38,6 +40,14 @@ namespace Orchard.Email.Drivers {
                     return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix);
                 })
                 .OnGroup("email");
+        }
+
+        protected override void Exporting(SmtpSettingsPart part, ExportContentContext context) {
+            DefaultSettingsPartImportExport.ExportSettingsPart(part, context);
+        }
+
+        protected override void Importing(SmtpSettingsPart part, ImportContentContext context) {
+            DefaultSettingsPartImportExport.ImportSettingPart(part, context.Data.Element(part.PartDefinition.Name));
         }
     }
 }
