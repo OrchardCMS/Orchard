@@ -176,6 +176,7 @@
     <Compile Include="Services\IWorkflowManager.cs" />
     <Compile Include="Services\WorkflowManager.cs" />
     <Compile Include="Tokens\SignalTokens.cs" />
+    <Compile Include="Tokens\StateTokens.cs" />
     <Compile Include="ViewModels\AdminEditViewModel.cs" />
     <Compile Include="ViewModels\AdminIndexViewModel.cs" />
     <Compile Include="ViewModels\WorkflowDefinitionViewModel.cs" />
