@@ -44,7 +44,7 @@ namespace Orchard.Email.Forms {
 
                     form._Type._Priority.Add(new SelectListItem { Value = "-50", Text = T("Low").Text });
                     form._Type._Priority.Add(new SelectListItem { Value = "0", Text = T("Normal").Text });
-                    form._Type._Priority.Add(new SelectListItem { Value = "50", Text = T("Hight").Text });
+                    form._Type._Priority.Add(new SelectListItem { Value = "50", Text = T("High").Text });
 
                     return form;
                 };
