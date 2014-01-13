@@ -109,6 +109,8 @@ namespace Orchard.Users.Services {
                     var recipient = GetUser(userName);
                     if (recipient != null) {
                         var template = _shapeFactory.Create("Template_User_Moderated", Arguments.From(createUserParams));
+                        template.Metadata.Wrappers.Add("Template_User_Wrapper");    
+                        
                         var payload = new {
                             Subject = T("New account").Text,
                             Body = _shapeDisplay.Display(template),

@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Web.Mvc;
 using Newtonsoft.Json;
+using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Email.Models;
-using Orchard.Messaging.Services;
 
 namespace Orchard.Email.Services {
-    public class SmtpMessageChannel : Component, IMessageChannel, IDisposable {
+    public class SmtpMessageChannel : Component, ISmtpChannel, IDisposable {
         private readonly SmtpSettingsPart _smtpSettings;
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
         private readonly Lazy<SmtpClient> _smtpClientField;
         public static readonly string MessageType = "Email";
 
-        public SmtpMessageChannel(SmtpSettingsPart smtpSettings) {
-            _smtpSettings = smtpSettings;
+        public SmtpMessageChannel(
+            IOrchardServices orchardServices,
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay) {
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
+
+            _smtpSettings = orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
             _smtpClientField = new Lazy<SmtpClient>(CreateSmtpClient);
         }
 
@@ -26,6 +36,8 @@ namespace Orchard.Email.Services {
         }
 
         public void Process(string payload) {
+
+
             if (!_smtpSettings.IsValid()) {
                 return;
             }
@@ -40,11 +52,16 @@ namespace Orchard.Email.Services {
                 return;
             }
 
+            // Applying default Body alteration for SmtpChannel
+            var template = _shapeFactory.Create("Template_Smtp_Wrapper", Arguments.From(new {
+                Content = new MvcHtmlString(emailMessage.Body)
+            }));
+
             var mailMessage = new MailMessage {
                 From = new MailAddress(_smtpSettings.Address),
                 Subject = emailMessage.Subject,
-                Body = emailMessage.Body,
-                IsBodyHtml = emailMessage.Body != null && emailMessage.Body.Contains("<") && emailMessage.Body.Contains(">")
+                Body = _shapeDisplay.Display(template),
+                IsBodyHtml = true
             };
 
             try {

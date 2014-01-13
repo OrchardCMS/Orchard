@@ -79,6 +79,7 @@
     <Compile Include="Rules\MailActions.cs" />
     <Compile Include="Rules\MailForms.cs" />
     <Compile Include="Services\DefaultEmailMessageChannelSelector.cs" />
+    <Compile Include="Services\ISmtpChannel.cs" />
     <Compile Include="Services\SmtpMessageChannel.cs" />
     <Compile Include="Services\EmailMessageEventHandler.cs" />
     <Compile Include="Services\EmailMessagingChannel.cs" />
@@ -128,6 +129,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-SendEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template.Smtp.Wrapper.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -140,6 +140,7 @@ namespace Orchard.Users.Services {
                     ContactEmail = site.As<RegistrationSettingsPart>().ValidateEmailContactEMail,
                     ChallengeUrl = url
                 }));
+                template.Metadata.Wrappers.Add("Template_User_Wrapper"); 
 
                 var payload = new {
                     Subject = T("Verification E-Mail").Text,
@@ -163,6 +164,7 @@ namespace Orchard.Users.Services {
                     User = user,
                     LostPasswordUrl = url
                 }));
+                template.Metadata.Wrappers.Add("Template_User_Wrapper"); 
 
                 var payload = new {
                     Subject = T("Lost password").Text,
