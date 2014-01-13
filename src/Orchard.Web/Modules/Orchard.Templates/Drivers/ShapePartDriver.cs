@@ -8,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
-using Orchard.Templates.Helpers;
 using Orchard.Templates.Models;
 using Orchard.Templates.Services;
 using Orchard.Templates.ViewModels;
@@ -38,14 +37,12 @@ namespace Orchard.Templates.Drivers {
 
         protected override DriverResult Editor(ShapePart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new ShapePartViewModel {
-                Name = part.Name,
                 Template = part.Template
             };
 
             if (updater != null 
                 && updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableLanguages" })
-                && ValidateShapeName(viewModel.Name, updater)) {
-                    part.Name = viewModel.Name.TrimSafe();
+                && ValidateShapeName(part, updater)) {
                     part.Template = viewModel.Template;
 
                     try {
@@ -62,27 +59,34 @@ namespace Orchard.Templates.Drivers {
         }
 
         protected override void Exporting(ShapePart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
             context.Element(part.PartDefinition.Name).Add(new XCData(part.Template));
         }
 
         protected override void Importing(ShapePart part, ImportContentContext context) {
-            context.ImportAttribute(part.PartDefinition.Name, "Name", x => part.Name = x);
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
             if(shapeElement != null)
                 part.Template = shapeElement.Value;
         }
 
-        private bool ValidateShapeName(string name, IUpdateModel updater) {
+        private bool ValidateShapeName(ShapePart part, IUpdateModel updater) {
+            var titleViewModel = new TitleViewModel();
+            if (!updater.TryUpdateModel(titleViewModel, "Title", null, null))
+                return false;
+
+            var name = titleViewModel.Title;
             if (!string.IsNullOrWhiteSpace(name) && 
                 name[0].IsLetter() && 
                 name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '.' || c == '-' )) {
                 return true;
             }
 
-            updater.AddModelError("Name", T("Shape names can only contain alphanumerical, dot (.) or dash (-) characters and have to start with a letter."));
+            updater.AddModelError("Title", T("{0} names can only contain alphanumerical, dot (.) or dash (-) characters and have to start with a letter.", part.ContentItem.TypeDefinition.DisplayName));
             return false;
+        }
+
+        private class TitleViewModel {
+            public string Title { get; set; }
         }
     }
 }

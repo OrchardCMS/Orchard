@@ -167,7 +167,6 @@
     <Compile Include="Drivers\ShapePartDriver.cs" />
     <Compile Include="Models\ShapePart.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\ShapePartRecord.cs" />
     <Compile Include="Services\ITemplateProcessor.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\TemplateProcessorImpl.cs" />

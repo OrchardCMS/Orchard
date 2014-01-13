@@ -5,10 +5,6 @@ using Orchard.Data.Migration;
 namespace Orchard.Templates {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("ShapePartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Name", c => c.WithLength(100))
-                .Column<string>("Template", c => c.Unlimited()));
 
             ContentDefinitionManager.AlterPartDefinition("ShapePart", part => part
                 .Attachable()
@@ -17,6 +13,7 @@ namespace Orchard.Templates {
             ContentDefinitionManager.AlterTypeDefinition("Template", type => type
                 .WithPart("CommonPart")
                 .WithPart("IdentityPart")
+                .WithPart("TitlePart")
                 .WithPart("ShapePart", p => p
                     .WithSetting("ShapePartSettings.Processor", "Razor"))
                 .Draftable());

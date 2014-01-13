@@ -1,11 +1,11 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Templates.Settings;
 
 namespace Orchard.Templates.Models {
-    public class ShapePart : ContentPart<ShapePartRecord> {
+    public class ShapePart : ContentPart {
         public string Name {
-            get { return Retrieve(x => x.Name); }
-            set { Store(x => x.Name, value); }
+            get { return this.As<ITitleAspect>().Title; }
         }
 
         public string ProcessorName {
@@ -13,8 +13,8 @@ namespace Orchard.Templates.Models {
         }
 
         public string Template {
-            get { return Retrieve(x => x.Template); }
-            set { Store(x => x.Template, value); }
+            get { return this.Retrieve(x => x.Template); }
+            set { this.Store(x => x.Template, value); }
         }
     }
 }
