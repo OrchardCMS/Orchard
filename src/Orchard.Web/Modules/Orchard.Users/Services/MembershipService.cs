@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -109,14 +108,15 @@ namespace Orchard.Users.Services {
                     var recipient = GetUser(userName);
                     if (recipient != null) {
                         var template = _shapeFactory.Create("Template_User_Moderated", Arguments.From(createUserParams));
-                        template.Metadata.Wrappers.Add("Template_User_Wrapper");    
-                        
-                        var payload = new {
-                            Subject = T("New account").Text,
-                            Body = _shapeDisplay.Display(template),
-                            Recipients = new [] { recipient.Email }
+                        template.Metadata.Wrappers.Add("Template_User_Wrapper");
+
+                        var parameters = new Dictionary<string, object> {
+                            {"Subject", T("New account").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", new [] { recipient.Email }}
                         };
-                        _messageService.Send("Email", JsonConvert.SerializeObject(payload));
+
+                        _messageService.Send("Email", parameters);
                     }
                 }
             }

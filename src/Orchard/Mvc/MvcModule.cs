@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
+using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -46,8 +49,9 @@ namespace Orchard.Mvc {
             // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
             // thus preventing a StackOverflowException.
             var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
-
-            return new HttpContextPlaceholder(baseUrl);
+            var httpContextBase = new HttpContextPlaceholder(baseUrl);
+            context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
+            return httpContextBase;
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
@@ -82,6 +86,7 @@ namespace Orchard.Mvc {
         /// </summary>
         class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
+            private readonly IDictionary _items = new Dictionary<object, object>();
 
             public HttpContextPlaceholder(Func<string> baseUrl) {
                 _baseUrl = new Lazy<string>(baseUrl);
@@ -95,6 +100,14 @@ namespace Orchard.Mvc {
 
             public override HttpResponseBase Response {
                 get { return new HttpResponsePlaceholder(); }
+            }
+
+            public override IDictionary Items {
+                get { return _items; }
+            }
+
+            public override PageInstrumentationService PageInstrumentation {
+                get { return new PageInstrumentationService(); }
             }
         }
 
@@ -160,6 +173,10 @@ namespace Orchard.Mvc {
                         
                     };
                 }
+            }
+
+            public override bool IsLocal {
+                get { return true; }
             }
 
         }

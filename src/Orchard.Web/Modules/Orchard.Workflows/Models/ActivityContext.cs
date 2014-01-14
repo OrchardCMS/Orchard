@@ -13,7 +13,13 @@ namespace Orchard.Workflows.Models {
                 return default(T);
             }
 
-            return State.Value[key];
+            dynamic value = State.Value[key];
+
+            if (value == null) {
+                return default(T);
+            }
+
+            return value;
         }
     }
 }

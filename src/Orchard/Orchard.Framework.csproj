@@ -221,6 +221,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\INamedEnumerable.cs" />
     <Compile Include="DisplayManagement\IShapeDisplay.cs" />
+    <Compile Include="DisplayManagement\ShapeDisplay.cs" />
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
@@ -275,6 +276,12 @@
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageService.cs" />
+    <Compile Include="Messaging\Services\IMessageChannel.cs" />
+    <Compile Include="Messaging\Services\IMessageChannelProvider.cs" />
+    <Compile Include="Messaging\Services\IMessageChannelSelector.cs" />
+    <Compile Include="Messaging\Services\IMessageService.cs" />
+    <Compile Include="Messaging\Services\NullMessageChannelSelector.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRegularExpressionAttribute.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedStringMaxLengthAttribute.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRangeAttribute.cs" />

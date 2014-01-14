@@ -9,4 +9,4 @@ Features:
 	Orchard.Users:
 		Description: Standard users.
 		Category: Core
-		Dependencies: Settings, Orchard.Messaging
+		Dependencies: Settings

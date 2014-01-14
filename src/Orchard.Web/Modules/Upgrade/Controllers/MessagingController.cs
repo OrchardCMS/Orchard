@@ -68,24 +68,22 @@ namespace Upgrade.Controllers {
                     };
 
                     if (!newState.Body.StartsWith("<p ")) {
-                        newState.Body = 
-                            "<p style=\"font-family:Arial, Helvetica; font-size:10pt;\">" 
-                            + newState.Body 
-                            + System.Environment.NewLine
-                            + "</p>";
+                        newState.Body =
+                            newState.Body
+                            + System.Environment.NewLine;
                     }
 
                     if (state.Recipient == "owner") {
-                        newState.Recipients = new [] {"{User.Current.Email}"};
+                        newState.Recipients = "{User.Current.Email}";
                     }
                     else if (state.Recipient == "author") {
-                        newState.Recipients = new[] { "{Content.Author.Email}" };
+                        newState.Recipients = "{Content.Author.Email}";
                     }
                     else if (state.Recipient == "admin") {
-                        newState.Recipients = new[] { "{Site.SuperUser.Email}" };
+                        newState.Recipients = "{Site.SuperUser.Email}";
                     }
                     else if (state.Recipient == "other") {
-                        newState.Recipients = state.RecipientOther.Split(',');
+                        newState.Recipients = state.RecipientOther;
                     }
 
                     record.State = JsonConvert.SerializeObject(newState);

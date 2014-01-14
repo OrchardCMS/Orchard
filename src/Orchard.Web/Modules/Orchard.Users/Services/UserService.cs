@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -20,7 +20,7 @@ namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class UserService : IUserService {
         private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
-        private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to validate email
+        private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
 
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
@@ -140,15 +140,15 @@ namespace Orchard.Users.Services {
                     ContactEmail = site.As<RegistrationSettingsPart>().ValidateEmailContactEMail,
                     ChallengeUrl = url
                 }));
-                template.Metadata.Wrappers.Add("Template_User_Wrapper"); 
+                template.Metadata.Wrappers.Add("Template_User_Wrapper");
+                
+                var parameters = new Dictionary<string, object> {
+                            {"Subject", T("Verification E-Mail").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", user.Email}
+                        };
 
-                var payload = new {
-                    Subject = T("Verification E-Mail").Text,
-                    Body = _shapeDisplay.Display(template),
-                    Recipients = new[] { user.Email }
-                };
-
-                _messageService.Send("Email", JsonConvert.SerializeObject(payload));
+                _messageService.Send("Email", parameters);
             }
         }
 
@@ -164,15 +164,15 @@ namespace Orchard.Users.Services {
                     User = user,
                     LostPasswordUrl = url
                 }));
-                template.Metadata.Wrappers.Add("Template_User_Wrapper"); 
+                template.Metadata.Wrappers.Add("Template_User_Wrapper");
 
-                var payload = new {
-                    Subject = T("Lost password").Text,
-                    Body = _shapeDisplay.Display(template),
-                    Recipients = new[] { user.Email }
-                };
+                var parameters = new Dictionary<string, object> {
+                            {"Subject", T("Lost password").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", user.Email }
+                        };
 
-                _messageService.Send("Email", JsonConvert.SerializeObject(payload));
+                _messageService.Send("Email", parameters);
                 return true;
             }
 

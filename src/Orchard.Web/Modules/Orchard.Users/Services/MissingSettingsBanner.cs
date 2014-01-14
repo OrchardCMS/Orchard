@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Messaging.Services;
@@ -10,9 +9,9 @@ using Orchard.Users.Models;
 namespace Orchard.Users.Services {
     public class MissingSettingsBanner : INotificationProvider {
         private readonly IOrchardServices _orchardServices;
-        private readonly IMessageManager _messageManager;
+        private readonly IMessageChannelManager _messageManager;
 
-        public MissingSettingsBanner(IOrchardServices orchardServices, IMessageManager messageManager) {
+        public MissingSettingsBanner(IOrchardServices orchardServices, IMessageChannelManager messageManager) {
             _orchardServices = orchardServices;
             _messageManager = messageManager;
             T = NullLocalizer.Instance;
@@ -28,7 +27,11 @@ namespace Orchard.Users.Services {
                     ( registrationSettings.UsersMustValidateEmail ||
                     registrationSettings.NotifyModeration ||
                     registrationSettings.EnableLostPassword ) &&
-                !_messageManager.GetAvailableChannelServices().Contains("email") ) {
+                null == _messageManager.GetMessageChannel("Email", new Dictionary<string, object> {
+                    {"Body", ""}, 
+                    {"Subject", "Subject"},
+                    {"Recipients", "john.doe@outlook.com"}
+                }) ) {
                 yield return new NotifyEntry { Message = T("Some Orchard.User settings require an Email channel to be enabled."), Type = NotifyType.Warning };
             }
         }

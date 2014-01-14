@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.Caching;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
@@ -153,19 +154,21 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                 // If the View is null, it means that the shape is being executed from a non-view origin / where no ViewContext was established by the view engine, but manually.
                 // Manually creating a ViewContext works when working with Shape methods, but not when the shape is implemented as a Razor view template.
                 // Horrible, but it will have to do for now.
-                result = RenderRazorViewToString(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
+                result = RenderRazorViewToString(harvestShapeInfo.TemplateVirtualPath, displayContext);
             }
 
             Logger.Information("Done rendering template file '{0}'", harvestShapeInfo.TemplateVirtualPath);
             return result;
         }
 
-        private IHtmlString RenderRazorViewToString(string path, object model) {
+        private IHtmlString RenderRazorViewToString(string path, DisplayContext context) {
             using (var sw = new StringWriter()) {
                 var controllerContext = CreateControllerContext();
                 var viewResult = _viewEngine.Value.FindPartialView(controllerContext, path, false);
-                var viewContext = new ViewContext(controllerContext, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
-                viewResult.View.Render(viewContext, sw);
+
+                context.ViewContext.ViewData = new ViewDataDictionary(context.Value);
+                context.ViewContext.TempData = new TempDataDictionary();
+                viewResult.View.Render(context.ViewContext, sw);
                 viewResult.ViewEngine.ReleaseView(controllerContext, viewResult.View);
                 return new HtmlString(sw.GetStringBuilder().ToString());
             }
@@ -173,13 +176,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
         private ControllerContext CreateControllerContext() {
             var controller = new StubController();
-            var httpContext = _workContextAccessor.GetContext().HttpContext;
-            var routeData = httpContext.Request.RequestContext.RouteData;
+            var httpContext = _workContextAccessor.GetContext().Resolve<HttpContextBase>();
+            var requestContext = _workContextAccessor.GetContext().Resolve<RequestContext>();
+            var routeData = requestContext.RouteData;
 
             if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
                 routeData.Values.Add("controller", controller.GetType().Name.ToLower().Replace("controller", ""));
 
             controller.ControllerContext = new ControllerContext(httpContext, routeData, controller);
+            controller.ControllerContext.RequestContext = requestContext;
             return controller.ControllerContext;
         }
 

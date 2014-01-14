@@ -1,0 +1,46 @@
+﻿fieldset.summary ul li:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+fieldset.summary ul li label,
+fieldset.summary ul li span {
+    float: left;
+    display: block;
+}
+
+fieldset.summary ul li label {
+    width: 200px;
+    font-weight: bold;
+}
+
+fieldset.summary ul li label:after {
+    content: ":";
+}
+
+span.queue-status {
+    margin-right: 1.5em;
+}
+
+table.queues {
+    clear: both;
+}
+
+table.queues td {
+    vertical-align: middle;
+}
+
+ul.horizontal li {
+    float: left;
+}
+
+.clear {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

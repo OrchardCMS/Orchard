@@ -10,4 +10,4 @@ Features:
         Name: Email Messaging
         FeatureDescription: Email Messaging services.
         Category: Messaging
-        Dependencies: Orchard.Messaging, Orchard.Workflows
+        Dependencies: Orchard.Workflows

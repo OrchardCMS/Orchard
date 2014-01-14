@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
@@ -35,17 +37,18 @@ namespace Orchard.Email.Services {
             _smtpClientField.Value.Dispose();
         }
 
-        public void Process(string payload) {
+        public void Process(IDictionary<string, object> parameters) {
 
 
             if (!_smtpSettings.IsValid()) {
                 return;
             }
 
-            var emailMessage = JsonConvert.DeserializeObject<EmailMessage>(payload);
-            if (emailMessage == null) {
-                return;
-            }
+            var emailMessage = new EmailMessage {
+                Body = parameters["Body"] as string,
+                Subject = parameters["Subject"] as string,
+                Recipients = parameters["Recipients"] as string
+            };
 
             if (emailMessage.Recipients.Length == 0) {
                 Logger.Error("Email message doesn't have any recipient");
@@ -65,7 +68,7 @@ namespace Orchard.Email.Services {
             };
 
             try {
-                foreach (var recipient in emailMessage.Recipients) {
+                foreach (var recipient in emailMessage.Recipients.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
                     mailMessage.To.Add(new MailAddress(recipient));
                 }
 

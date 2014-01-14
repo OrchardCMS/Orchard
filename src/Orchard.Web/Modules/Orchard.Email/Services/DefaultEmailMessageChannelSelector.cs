@@ -12,10 +12,9 @@ namespace Orchard.Email.Services {
         public MessageChannelSelectorResult GetChannel(string messageType, object payload) {
             if (messageType == "Email") {
                 var workContext = _workContextAccessor.GetContext();
-                var channel = workContext.Resolve<ISmtpChannel>();
                 return new MessageChannelSelectorResult {
                     Priority = 50,
-                    MessageChannel = channel
+                    MessageChannel = () => workContext.Resolve<ISmtpChannel>()
                 };
             }
 
