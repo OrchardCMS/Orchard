@@ -67,15 +67,7 @@ namespace Orchard.Azure.Services.FileSystems {
             // The container is named with DNS naming restrictions (i.e. all lower case)
             _container = _blobClient.GetContainerReference(ContainerName);
 
-            _container.CreateIfNotExists();
-
-            _container.SetPermissions(_isPrivate
-                                            ? new BlobContainerPermissions {
-                                                PublicAccess = BlobContainerPublicAccessType.Off
-                                            }
-                                            : new BlobContainerPermissions {
-                                                PublicAccess = BlobContainerPublicAccessType.Container
-                                            });
+            _container.CreateIfNotExists(_isPrivate ? BlobContainerPublicAccessType.Off : BlobContainerPublicAccessType.Container);
         }
 
         private static string ConvertToRelativeUriPath(string path) {
