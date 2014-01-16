@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.State;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
@@ -15,14 +19,24 @@ namespace Orchard.Comments.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IClock _clock;
         private readonly IEncryptionService _encryptionService;
+        private readonly IProcessingEngine _processingEngine;
+        private readonly ShellSettings _shellSettings;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly HashSet<int> _processedCommentsParts = new HashSet<int>();
 
         public CommentService(
             IOrchardServices orchardServices, 
             IClock clock, 
-            IEncryptionService encryptionService) {
+            IEncryptionService encryptionService,
+            IProcessingEngine processingEngine,
+            ShellSettings shellSettings,
+            IShellDescriptorManager shellDescriptorManager) {
             _orchardServices = orchardServices;
             _clock = clock;
             _encryptionService = encryptionService;
+            _processingEngine = processingEngine;
+            _shellSettings = shellSettings;
+            _shellDescriptorManager = shellDescriptorManager;
             Logger = NullLogger.Instance;
         }
 
@@ -44,7 +58,7 @@ namespace Orchard.Comments.Services {
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id) {
             return GetComments()
-                       .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id);
+                       .Where(c => c.CommentedOn == id);
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status) {
@@ -66,14 +80,23 @@ namespace Orchard.Comments.Services {
             return result;
         }
 
+        public void ProcessCommentsCount(int commentsPartId) {
+            if (!_processedCommentsParts.Contains(commentsPartId)) {
+                _processedCommentsParts.Add(commentsPartId);
+                _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ICommentsCountProcessor.Process", new Dictionary<string, object> { { "commentsPartId", commentsPartId } });
+            }
+        }
+
         public void ApproveComment(int commentId) {
             var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Approved;
+            ProcessCommentsCount(commentPart.CommentedOn);
         }
 
         public void UnapproveComment(int commentId) {
             var commentPart = GetCommentWithQueryHints(commentId);
             commentPart.Record.Status = CommentStatus.Pending;
+            ProcessCommentsCount(commentPart.CommentedOn);
         }
 
         public void DeleteComment(int commentId) {

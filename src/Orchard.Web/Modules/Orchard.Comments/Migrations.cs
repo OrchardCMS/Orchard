@@ -9,9 +9,13 @@ using Orchard.Data.Migration;
 namespace Orchard.Comments {
     public class Migrations : DataMigrationImpl {
         private readonly ICommentService _commentService;
+        private readonly IContentManager _contentManager;
 
-        public Migrations(ICommentService commentService) {
+        public Migrations(
+            ICommentService commentService,
+            IContentManager contentManager) {
             _commentService = commentService;
+            _contentManager = contentManager;
         }
 
         public int Create() {
@@ -36,6 +40,7 @@ namespace Orchard.Comments {
                 .Column<bool>("CommentsShown")
                 .Column<bool>("CommentsActive")
                 .Column<bool>("ThreadedComments")
+                .Column<int>("CommentsCount")
                 );
 
             ContentDefinitionManager.AlterPartDefinition("CommentPart", part => part
@@ -63,7 +68,7 @@ namespace Orchard.Comments {
                 .Attachable()
                 .WithDescription("Allows content items to be commented on."));
 
-            return 5;
+            return 6;
         }
 
         public int UpdateFrom1() {
@@ -148,6 +153,29 @@ namespace Orchard.Comments {
                 .WithDescription("Allows content items to be commented on."));
 
             return 5;
+        }
+
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("CommentsPartRecord", table => table
+                .AddColumn<int>("CommentsCount")
+                );
+
+            SchemaBuilder.AlterTable("CommentPartRecord",
+               table => table
+                   .CreateIndex("IDX_CommentedOn", "CommentedOn")
+               );
+
+            SchemaBuilder.AlterTable("CommentPartRecord",
+               table => table
+                   .CreateIndex("IDX_CommentedOnContainer", "CommentedOnContainer")
+               );
+
+            // populate the CommentsPartRecord.CommentsCount property
+            foreach (var commentsPart in _contentManager.Query<CommentsPart>().List()) {
+                _commentService.ProcessCommentsCount(commentsPart.Id);
+            }
+
+            return 6;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Orchard.Comments.Feeds {
 
             var comments = _contentManager
                 .Query<CommentPart, CommentPartRecord>()
-                .Where(x => x.CommentedOn == commentedOn && x.Status == CommentStatus.Approved)
+                .Where(x => x.CommentsPartRecord.Id == commentedOn && x.Status == CommentStatus.Approved)
                 .OrderByDescending(x => x.CommentDateUtc)
                 .Slice(0, limit);
 

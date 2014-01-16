@@ -80,6 +80,8 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />
+    <Compile Include="Services\CommentsCountProcessor.cs" />
+    <Compile Include="Services\ICommentsCountProcessor.cs" />
     <Compile Include="Settings\CommentsPartSettings.cs" />
     <Compile Include="Settings\CommentsPartSettingsEvents.cs" />
     <Compile Include="Shapes.cs" />

@@ -39,8 +39,6 @@ namespace Orchard.Comments.Drivers {
                             .List()
                             .ToList();
 
-                        var approvedCount = comments.Count(); 
-                        
                         foreach (var item in comments) {
                             var shape = shapeHelper.Parts_Comment(ContentPart: item, ContentItem: item.ContentItem);
                             allShapes.Add(item.Id, shape);
@@ -60,7 +58,7 @@ namespace Orchard.Comments.Drivers {
 
                         return shapeHelper.Parts_ListOfComments(
                             List: list,
-                            CommentCount: approvedCount);
+                            CommentCount: part.CommentsCount);
                     }),
                 ContentShape("Parts_CommentForm",
                     () => {
@@ -78,33 +76,20 @@ namespace Orchard.Comments.Drivers {
                         if (part.CommentsShown == false)
                             return null;
 
-                        var comments = _commentService
-                            .GetCommentsForCommentedContent(part.ContentItem.Id);
-                        var approvedCount = comments
-                            .Where(x => x.Status == CommentStatus.Approved)
-                            .Count();
-                        var pendingCount = comments
-                            .Where(x => x.Status == CommentStatus.Pending)
-                            .Count();
-
                         return shapeHelper.Parts_Comments_Count(
-                            CommentCount: approvedCount,
-                            PendingCount: pendingCount);
+                            CommentCount: part.CommentsCount);
                     }),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
                     () => {
 
                         var comments = _commentService
                             .GetCommentsForCommentedContent(part.ContentItem.Id);
-                        var approvedCount = comments
-                            .Where(x => x.Status == CommentStatus.Approved)
-                            .Count();
                         var pendingCount = comments
                             .Where(x => x.Status == CommentStatus.Pending)
                             .Count();
 
                         return shapeHelper.Parts_Comments_Count_SummaryAdmin(
-                            CommentCount: approvedCount,
+                            CommentCount: part.CommentsCount,
                             PendingCount: pendingCount);
                     })
             );

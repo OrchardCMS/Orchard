@@ -21,18 +21,23 @@ namespace Orchard.Comments.Models {
         }
 
         public bool CommentsShown {
-            get { return Record.CommentsShown; }
-            set { Record.CommentsShown = value; }
+            get { return Retrieve(x => Record.CommentsShown); }
+            set { Store(x => Record.CommentsShown, value); }
         }
 
         public bool CommentsActive {
-            get { return Record.CommentsActive; }
-            set { Record.CommentsActive = value; }
+            get { return Retrieve(x => Record.CommentsActive); }
+            set { Store(x => Record.CommentsActive, value); }
         }
 
         public bool ThreadedComments {
-            get { return Record.ThreadedComments; }
-            set { Record.ThreadedComments = value; }
+            get { return Retrieve(x => Record.ThreadedComments); }
+            set { Store(x => Record.ThreadedComments, value); }
+        }
+
+        public int CommentsCount {
+            get { return Retrieve(x => Record.CommentsCount); }
+            set { Store(x => Record.CommentsCount, value); }
         }
     }
 }
