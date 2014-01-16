@@ -4,7 +4,7 @@
         if (tagsHtml.Any()) {
             tagsHtml.Add(new HtmlString(", "));
         }
-        tagsHtml.Add(Html.ActionLink((string)t, "Search", "Home", new { area = "Orchard.Tags", tagName = (string)t }, new { }));
+        tagsHtml.Add(Html.ActionLink((string)t.TagName, "Search", "Home", new { area = "Orchard.Tags", tagName = (string)t.TagName }, new { }));
     }
 }
 

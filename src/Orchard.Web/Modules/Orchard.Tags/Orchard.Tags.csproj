@@ -91,6 +91,7 @@
     <Compile Include="ViewModels\TagsAdminCreateViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminEditViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminIndexViewModel.cs" />
+    <Compile Include="ViewModels\ShowTagsViewModel.cs" />
     <Compile Include="ViewModels\TagsSearchViewModel.cs" />
     <Compile Include="ViewModels\TagsIndexViewModel.cs" />
   </ItemGroup>

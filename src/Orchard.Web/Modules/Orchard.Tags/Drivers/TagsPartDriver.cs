@@ -33,7 +33,7 @@ namespace Orchard.Tags.Drivers {
 
         protected override DriverResult Display(TagsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Tags_ShowTags",
-                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags));
+                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags.Select(x => new ShowTagViewModel { TagName = x })));
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
