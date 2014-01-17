@@ -68,6 +68,16 @@ namespace Orchard.Comments {
                 .Attachable()
                 .WithDescription("Allows content items to be commented on."));
 
+            SchemaBuilder.AlterTable("CommentPartRecord",
+               table => table
+                   .CreateIndex("IDX_CommentedOn", "CommentedOn")
+               );
+
+            SchemaBuilder.AlterTable("CommentPartRecord",
+                table => table
+                    .CreateIndex("IDX_CommentedOnContainer", "CommentedOnContainer")
+                );
+
             return 6;
         }
 
