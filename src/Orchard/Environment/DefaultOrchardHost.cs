@@ -260,6 +260,10 @@ namespace Orchard.Environment {
             // look for the associated shell context
             var shellContext = _shellContexts.FirstOrDefault(c => c.Settings.Name == settings.Name);
 
+            if (shellContext == null && settings.State == TenantState.Disabled) {
+                return;
+            }
+
             // is this is a new tenant ? or is it a tenant waiting for setup ?
             if (shellContext == null || settings.State == TenantState.Uninitialized) {
                 // create the Shell
@@ -267,6 +271,14 @@ namespace Orchard.Environment {
 
                 // activate the Shell
                 ActivateShell(context);
+            }
+            // terminate the shell if the tenant was disabled
+            else if (settings.State == TenantState.Disabled) {
+                shellContext.Shell.Terminate();
+                shellContext.LifetimeScope.Dispose();
+                _runningShellTable.Remove(settings);
+
+                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name);
             }
             // reload the shell as its settings have changed
             else {

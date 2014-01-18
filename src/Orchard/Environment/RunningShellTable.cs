@@ -101,6 +101,8 @@ namespace Orchard.Environment {
                 // will not be mapped to routes coming from orchard
                 _fallback = null;
             }
+
+            _shellsByHostAndPrefix.Clear();
         }
 
         public ShellSettings Match(HttpContextBase httpContext) {
