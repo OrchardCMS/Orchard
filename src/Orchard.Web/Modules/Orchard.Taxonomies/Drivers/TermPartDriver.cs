@@ -59,6 +59,10 @@ namespace Orchard.Taxonomies.Drivers {
                     var totalItemCount = _taxonomyService.GetContentItemsCount(part);
 
                     var partSettings = part.Settings.GetModel<TermPartSettings>();
+                    if (partSettings != null && partSettings.OverrideDefaultPagination) {
+                        pager.PageSize = partSettings.PageSize;
+                    }
+
                     var childDisplayType = partSettings != null &&
                                            !String.IsNullOrWhiteSpace(partSettings.ChildDisplayType)
                         ? partSettings.ChildDisplayType
@@ -72,7 +76,9 @@ namespace Orchard.Taxonomies.Drivers {
 
                     list.AddRange(termContentItems);
 
-                    var pagerShape = shapeHelper.Pager(pager)
+                    var pagerShape = pager.PageSize == 0
+                        ? null
+                        : shapeHelper.Pager(pager)
                             .TotalItemCount(totalItemCount)
                             .Taxonomy(taxonomy)
                             .Term(part);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -23,7 +24,9 @@ namespace Orchard.Taxonomies.Settings {
 
             if (updateModel.TryUpdateModel(model, "TermPartSettings", null, null)) {
                 builder
-                    .WithSetting("TermPartSettings.ChildDisplayType", model.ChildDisplayType);
+                    .WithSetting("TermPartSettings.ChildDisplayType", model.ChildDisplayType)
+                    .WithSetting("TermPartSettings.OverrideDefaultPagination", model.OverrideDefaultPagination.ToString())
+                    .WithSetting("TermPartSettings.PageSize", model.PageSize.ToString(CultureInfo.InvariantCulture));
             }
 
             yield return DefinitionTemplate(model);
