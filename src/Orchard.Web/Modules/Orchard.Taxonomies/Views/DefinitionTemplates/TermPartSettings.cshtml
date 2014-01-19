@@ -1,0 +1,7 @@
+﻿@model Orchard.Taxonomies.Settings.TermPartSettings
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ChildDisplayType)">@T("Child display type")</label>
+    @Html.TextBoxFor(m => m.ChildDisplayType, new { @class = "text medium" })
+    <span class="hint">@T("The display type to apply to child items when displaying the details of this taxonomy term.")</span>
+    @Html.ValidationMessageFor(m => m.ChildDisplayType)
+</fieldset>

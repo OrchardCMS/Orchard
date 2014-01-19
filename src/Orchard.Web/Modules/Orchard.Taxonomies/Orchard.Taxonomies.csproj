@@ -97,7 +97,9 @@
     <Compile Include="Fields\TaxonomyField.cs" />
     <Compile Include="Services\ITaxonomyService.cs" />
     <Compile Include="Services\TaxonomyService.cs" />
+    <Compile Include="Settings\TermPartEditorEvents.cs" />
     <Compile Include="Settings\TaxonomyFieldEditorEvents.cs" />
+    <Compile Include="Settings\TermPartSettings.cs" />
     <Compile Include="Settings\TaxonomyFieldSettings.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="StandardQueries\TermFeedQuery.cs" />
@@ -204,7 +206,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Navigation.Taxonomy.Edit.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\TermPartSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
