@@ -23,15 +23,6 @@
       <param name="methodInfo">The method information.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="controllerContext " />parameter is null.</exception>
     </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteName">
-      <summary>Gets or sets the name of the route to generate for this action.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteOrder">
-      <summary>Gets or sets the order of the route relative to other routes. The default order is 0.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.AcceptVerbsAttribute.RouteTemplate">
-      <summary>Gets or sets the route template describing the URI pattern to match against.</summary>
-    </member>
     <member name="P:System.Web.Mvc.AcceptVerbsAttribute.Verbs">
       <summary>Gets or sets the list of HTTP verbs that the action method will respond to.</summary>
       <returns>The list of HTTP verbs that the action method will respond to.</returns>
@@ -865,6 +856,10 @@
       <summary>Gets the edit format string of the model.If the value is cached, the cashed value is returned; otherwise the value is retrieved from the model metadata and stored in the cache.</summary>
       <returns>The edit format string of the model.</returns>
     </member>
+    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.ComputeHasNonDefaultEditFormat">
+      <summary>Gets a value that indicates whether the model uses a non-default edit format.</summary>
+      <returns>A value that indicates whether non-default edit format is used.</returns>
+    </member>
     <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.ComputeHideSurroundingHtml">
       <summary>Gets a value that indicates whether the model object should be rendered using associated HTML elements.Gets a value that indicates whether the model object should be rendered using associated HTML elements.If the value is cached, the cashed value is returned; otherwise the value is retrieved from the model metadata and stored in the cache.</summary>
       <returns>A value that indicates whether the model object should be rendered using associated HTML elements.</returns>
@@ -969,6 +964,10 @@
     <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeEditFormatString">
       <summary>This method is protected and therefore cannot be called directly. This method was designed to be overridden in a deriving class such as <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />.Gets or sets the edit format string of the model.</summary>
       <returns>The edit format string of the model.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeHasNonDefaultEditFormat">
+      <summary>This method is protected and therefore cannot be called directly. This method was designed to be overridden in a deriving class such as <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />.</summary>
+      <returns>A value that indicates whether a non-default edit format is used.</returns>
     </member>
     <member name="M:System.Web.Mvc.CachedModelMetadata`1.ComputeHideSurroundingHtml">
       <summary>This method is protected and therefore cannot be called directly. This method was designed to be overridden in a deriving class such as <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" />.Gets or sets a cached value that indicates whether the model object should be rendered using associated HTML elements.</summary>
@@ -3441,9 +3440,11 @@
     <member name="M:System.Web.Mvc.HttpDeleteAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpDeleteAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpDeleteAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpDeleteAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpDeleteAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method delete request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpFileCollectionValueProvider">
       <summary>Represents a value provider to use with values that come from a collection of HTTP files.</summary>
@@ -3470,9 +3471,11 @@
     <member name="M:System.Web.Mvc.HttpGetAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpGetAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpGetAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpGetAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpGetAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method get request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpHeadAttribute">
       <summary>Specifies that the HTTP request must be the HTTP HEAD method.</summary>
@@ -3480,9 +3483,11 @@
     <member name="M:System.Web.Mvc.HttpHeadAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpHeadAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpHeadAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpHeadAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpHeadAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpNotFoundResult">
       <summary>Defines an object that is used to indicate that the requested resource was not found.</summary>
@@ -3500,9 +3505,11 @@
     <member name="M:System.Web.Mvc.HttpOptionsAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpOptionsAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpOptionsAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpOptionsAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpOptionsAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPatchAttribute">
       <summary>Represents an attribute that is used to restrict an action method so that the method handles only HTTP PATCH requests.</summary>
@@ -3510,9 +3517,11 @@
     <member name="M:System.Web.Mvc.HttpPatchAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPatchAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPatchAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPatchAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpPatchAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPostAttribute">
       <summary>Represents an attribute that is used to restrict an action method so that the method handles only HTTP POST requests.</summary>
@@ -3520,9 +3529,11 @@
     <member name="M:System.Web.Mvc.HttpPostAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPostAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPostAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPostAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpPostAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method post request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPostedFileBaseModelBinder">
       <summary>Binds a model to a posted file.</summary>
@@ -3543,9 +3554,11 @@
     <member name="M:System.Web.Mvc.HttpPutAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPutAttribute" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.HttpPutAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPutAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
+    <member name="M:System.Web.Mvc.HttpPutAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether the action method put request is valid for the specified controller context.</summary>
+      <returns>true if the action method request is valid for the specified controller context; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpRequestExtensions">
       <summary>Extends the <see cref="T:System.Web.HttpRequestBase" /> class that contains the HTTP values that were sent by a client during a Web request.</summary>
@@ -3557,21 +3570,6 @@
       <exception cref="T:System.ArgumentNullException">The <paramref name="request" /> parameter is null.</exception>
       <exception cref="T:System.NotImplementedException">The HTTP data-transfer method override was not implemented.</exception>
     </member>
-    <member name="T:System.Web.Mvc.HttpRouteAttribute">
-      <summary>Represents a route for an action method.</summary>
-    </member>
-    <member name="M:System.Web.Mvc.HttpRouteAttribute.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpRouteAttribute" /> class.</summary>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteName">
-      <summary>Gets or sets the name of the route to generate for this action.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteOrder">
-      <summary>Gets or sets the order of the route relative to other routes. The default order is 0.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.RouteTemplate"></member>
-    <member name="P:System.Web.Mvc.HttpRouteAttribute.Verbs"></member>
     <member name="T:System.Web.Mvc.HttpStatusCodeResult">
       <summary>Provides a way to return an action result with a specific HTTP response status code and description.</summary>
     </member>
@@ -3615,27 +3613,6 @@
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpUnauthorizedResult" /> class using the status description.</summary>
       <param name="statusDescription">The status description.</param>
     </member>
-    <member name="T:System.Web.Mvc.HttpVerbAttribute">
-      <summary>Defines a base class for specifying that an action supports particular HTTP methods.</summary>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.#ctor(System.Web.Mvc.HttpVerbs)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpVerbAttribute" /> class.</summary>
-      <param name="httpMethods">The HTTP methods the action supports.</param>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.#ctor(System.Web.Mvc.HttpVerbs,System.String)">
-      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpVerbAttribute" /> class.</summary>
-      <param name="httpMethods">The HTTP methods the action supports.</param>
-      <param name="routeTemplate">The route template describing the URI pattern to match against.</param>
-    </member>
-    <member name="M:System.Web.Mvc.HttpVerbAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)"></member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteName">
-      <summary>Gets or sets the name of the route to generate for this action.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteOrder">
-      <summary>Gets or sets the order of the route relative to other routes. The default order is 0.</summary>
-    </member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.RouteTemplate"></member>
-    <member name="P:System.Web.Mvc.HttpVerbAttribute.Verbs"></member>
     <member name="T:System.Web.Mvc.HttpVerbs">
       <summary>Enumerates the HTTP verbs.</summary>
     </member>
@@ -4017,6 +3994,32 @@
       <returns>The bound data object. If the model cannot be bound, this method returns null.Implements<see cref="M:System.Web.Mvc.IModelBinder.BindModel(System.Web.Mvc.ControllerContext,System.Web.Mvc.ModelBindingContext)" />.</returns>
       <param name="controllerContext">The context within which the controller operates. The context information includes the controller, HTTP content, request context, and route data.</param>
       <param name="bindingContext">The context within which the model is bound. The context includes information such as the model object, model name, model type, property filter, and value provider.</param>
+    </member>
+    <member name="T:System.Web.Mvc.MaxLengthAttributeAdapter">
+      <summary>Provides an adapter for the MaxLengthAttribute attribute.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.MaxLengthAttributeAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,System.ComponentModel.DataAnnotations.MaxLengthAttribute)">
+      <summary>Initializes a new instance of the MaxLengthAttribute class.</summary>
+      <param name="metadata">The model metadata.</param>
+      <param name="context">The controller context.</param>
+      <param name="attribute">The MaxLength attribute.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MaxLengthAttributeAdapter.GetClientValidationRules">
+      <summary>Gets a list of client validation rules for a max length check.</summary>
+      <returns>A list of client validation rules for the check.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.MinLengthAttributeAdapter">
+      <summary>Provides an adapter for the MinLengthAttribute attribute.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.MinLengthAttributeAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,System.ComponentModel.DataAnnotations.MinLengthAttribute)">
+      <summary>Initializes a new instance of the MinLenghtAttribute class.</summary>
+      <param name="metadata">The model metadata.</param>
+      <param name="context">The controller context.</param>
+      <param name="attribute">The minimum length attribute.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MinLengthAttributeAdapter.GetClientValidationRules">
+      <summary>Gets a list of client validation rules for the minimum length check.</summary>
+      <returns>A list of client validation rules for a check.</returns>
     </member>
     <member name="T:System.Web.Mvc.ModelBinderAttribute">
       <summary>Represents an attribute that is used to associate a model type to a model-builder type.</summary>
@@ -5736,23 +5739,39 @@
       <summary>Gets the URL prefix to apply to the routes of this area. Defaults to the area's name.</summary>
       <returns>The URL prefix to apply to the routes of this area.</returns>
     </member>
+    <member name="T:System.Web.Mvc.RouteAttribute">
+      <summary>Place on a controller or action to expose it directly via a route.             When placed on a controller, it applies to actions that do not have any System.Web.Mvc.RouteAttribute’s on them.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RouteAttribute" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RouteAttribute" /> class with the specified template.</summary>
+      <param name="template">The pattern of the route to match.</param>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Name">
+      <summary>Gets or sets the name of the route.</summary>
+      <returns>The name of the route</returns>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Order">
+      <summary>Gets the order the route is applied.</summary>
+      <returns>The order the route is applied.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.RouteAttribute.System#Web#Mvc#Routing#IDirectRouteFactory#CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>Creates a direct route entry.</summary>
+      <returns>The direct route entry.</returns>
+      <param name="context">The context to use to create the route.</param>
+    </member>
+    <member name="P:System.Web.Mvc.RouteAttribute.Template">
+      <summary>Gets the pattern for the route to match.</summary>
+      <returns>The pattern to match.</returns>
+    </member>
     <member name="T:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions">
       <summary>Provides routing extensions for route collection attribute.</summary>
     </member>
     <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection)">
       <summary>Maps the attribute-defined routes for the application.</summary>
       <param name="routes">A collection of routes.</param>
-    </member>
-    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{System.Type})">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-      <param name="controllerTypes">The controller types to scan.</param>
-    </member>
-    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Collections.Generic.IEnumerable{System.Type},System.Web.Mvc.Routing.IInlineConstraintResolver)">
-      <summary>Maps the attribute-defined routes for the application.</summary>
-      <param name="routes">A collection of routes.</param>
-      <param name="controllerTypes">The controller types to scan.</param>
-      <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints in route templates.</param>
     </member>
     <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Web.Mvc.Routing.IInlineConstraintResolver)">
       <summary>Maps the attribute-defined routes for the application.</summary>
@@ -5869,12 +5888,16 @@
     <member name="T:System.Web.Mvc.RoutePrefixAttribute">
       <summary>Annotates a controller with a route prefix that applies to all actions within the controller.</summary>
     </member>
-    <member name="M:System.Web.Mvc.RoutePrefixAttribute.#ctor(System.String)">
+    <member name="M:System.Web.Mvc.RoutePrefixAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RoutePrefixAttribute" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.RoutePrefixAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RoutePrefixAttribute" /> class with the specified prefix.</summary>
       <param name="prefix">The route prefix for the controller.</param>
     </member>
     <member name="P:System.Web.Mvc.RoutePrefixAttribute.Prefix">
       <summary>Gets the route prefix.</summary>
+      <returns>The route prefix.</returns>
     </member>
     <member name="T:System.Web.Mvc.SelectList">
       <summary>Represents a list that lets users select one item.</summary>
@@ -6116,6 +6139,9 @@
     </member>
     <member name="T:System.Web.Mvc.UrlHelper">
       <summary>Contains methods to build URLs for ASP.NET MVC within an application.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.UrlHelper.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.UrlHelper" /> class.</summary>
     </member>
     <member name="M:System.Web.Mvc.UrlHelper.#ctor(System.Web.Routing.RequestContext)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.UrlHelper" /> class using the specified request context.</summary>
@@ -8900,6 +8926,41 @@
       <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
       <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
     </member>
+    <member name="T:System.Web.Mvc.Html.EnumHelper">
+      <summary>Provides methods for working with enumeration values and select lists.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)">
+      <summary>Gets a list of <see cref="T:System.Web.Mvc.SelectListItem" /> objects corresponding to enum constants defined in the given type.</summary>
+      <returns>A list for the given <paramref name="type" />.</returns>
+      <param name="type">The type to evaluate.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type,System.Enum)">
+      <summary>Gets a list of <see cref="T:System.Web.Mvc.SelectListItem" /> objects corresponding to enum constants defined in the given type.  Also ensures the <paramref name="value" /> will round-trip even if it does not match a defined constant and sets the Selected property to true for one element in the returned list -- matching the <paramref name="value" />.</summary>
+      <returns>A list for the given <paramref name="type" />, possibly extended to include an unrecognized <paramref name="value" />.</returns>
+      <param name="type">The type to evaluate.</param>
+      <param name="value">The value from type to select.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)">
+      <summary>Gets a list of <see cref="T:System.Web.Mvc.SelectListItem" /> objects corresponding to enum constants defined in the given metadata.</summary>
+      <returns>A list for the given metadata.</returns>
+      <param name="metadata">The model metadata to evaluate.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata,System.Enum)">
+      <summary>Gets a list of <see cref="T:System.Web.Mvc.SelectListItem" /> objects corresponding to enum constants defined in the given metadata.  Also ensures the value will round-trip even if it does not match a defined constant and sets the Selected property to true for one element in the returned list -- matching the value.</summary>
+      <returns>A list for the given <paramref name="metadata" />, possibly extended to include an unrecognized <paramref name="value" />.</returns>
+      <param name="metadata">The metadata to evaluate.</param>
+      <param name="value">Value from the type of metadata to select.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.IsValidForEnumHelper(System.Type)">
+      <summary>Gets a value indicating whether the given type or an expression of this type is suitable for use in <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)" /> and <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> calls.</summary>
+      <returns>true if <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Type)" /> will not throw when passed the given type and <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> will not throw when passed an expression of this type; otherwise, false.</returns>
+      <param name="type">The type to check.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EnumHelper.IsValidForEnumHelper(System.Web.Mvc.ModelMetadata)">
+      <summary>Gets a value indicating whether the given metadata or associated expression is suitable for use in <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)" /> and <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> calls.</summary>
+      <returns>true if <see cref="M:System.Web.Mvc.Html.EnumHelper.GetSelectList(System.Web.Mvc.ModelMetadata)" /> will return not throw when passed given <see cref="T:System.Web.Mvc.ModelMetadata" /> and <see cref="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})" /> will not throw when passed associated expression; otherwise, false.</returns>
+      <param name="metadata">The metadata to check.</param>
+    </member>
     <member name="T:System.Web.Mvc.Html.FormExtensions">
       <summary>Represents support for HTML in an application.</summary>
     </member>
@@ -10105,6 +10166,61 @@
       <typeparam name="TProperty">The type of the value.</typeparam>
       <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.EnumDropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns an HTML select element for each value in the enumeration that is represented by the specified expression.</summary>
+      <returns>An HTML select element for each value in the enumeration that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the values to display.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TEnum">The type of the value.</typeparam>
+    </member>
     <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBox(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns a multi-select select element using the specified HTML helper and the name of the form field.</summary>
       <returns>An HTML select element.</returns>
@@ -10539,20 +10655,98 @@
       <summary>Gets the mutable dictionary that maps constraint keys to a particular constraint type.</summary>
     </member>
     <member name="M:System.Web.Mvc.Routing.DefaultInlineConstraintResolver.ResolveConstraint(System.String)"></member>
-    <member name="T:System.Web.Mvc.Routing.IDirectRouteInfoProvider">
-      <summary>Provides information for building a <see cref="T:System.Web.Routing.Route" />.</summary>
+    <member name="T:System.Web.Mvc.Routing.DirectRouteFactoryContext">
+      <summary>Represents a context that supports creating a direct route.</summary>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteName">
-      <summary>Gets the name of the route to generate.</summary>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.#ctor(System.String,System.String,System.Collections.Generic.IReadOnlyCollection{System.Web.Mvc.ActionDescriptor},System.Web.Mvc.Routing.IInlineConstraintResolver,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.DirectRouteFactoryContext" /> class.</summary>
+      <param name="areaPrefix">The route prefix, if any, defined by the area.</param>
+      <param name="controllerPrefix">The route prefix, if any, defined by the controller.</param>
+      <param name="actions">The action descriptors to which to create a route.</param>
+      <param name="inlineConstraintResolver">The inline constraint resolver.</param>
+      <param name="targetIsAction">A value indicating whether the route is configured at the action or controller level.</param>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteOrder">
-      <summary>Gets the order of the route relative to other routes.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.Actions">
+      <summary>Gets the action descriptors to which to create a route.</summary>
+      <returns>The action descriptors to which to create a route.</returns>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.RouteTemplate">
-      <summary>Gets the route template describing the URI pattern to match against.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.AreaPrefix">
+      <summary>Gets the route prefix, if any, defined by the area.</summary>
+      <returns>The route prefix, if any, defined by the area.</returns>
     </member>
-    <member name="P:System.Web.Mvc.Routing.IDirectRouteInfoProvider.Verbs">
-      <summary>Gets the set of allowed HTTP methods for that route. If the route allow any method to be used, the value is null.</summary>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.ControllerPrefix">
+      <summary>Gets the route prefix, if any, defined by the controller.</summary>
+      <returns>The route prefix, if any, defined by the controller.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.CreateBuilder(System.String)">
+      <summary>Creates a route builder that can build a route matching this context.</summary>
+      <returns>A route builder that can build a route matching this context.</returns>
+      <param name="template">The route template.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DirectRouteFactoryContext.CreateBuilder(System.String,System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>Creates a route builder that can build a route matching this context.</summary>
+      <returns>A route builder that can build a route matching this context.</returns>
+      <param name="template">The route template.</param>
+      <param name="constraintResolver">The inline constraint resolver to use, if any; otherwise, null.</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.InlineConstraintResolver">
+      <summary>Gets the inline constraint resolver.</summary>
+      <returns>The inline constraint resolver.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.DirectRouteFactoryContext.TargetIsAction">
+      <summary>Gets a value indicating whether the route is configured at the action or controller level.</summary>
+      <returns>true when the route is configured at the action level; otherwise false if the route is configured at the controller level.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IDirectRouteBuilder">
+      <summary>Defines a builder that creates direct routes to actions (attribute routes).</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Actions">
+      <summary>Gets the action descriptors to which to create a route.</summary>
+      <returns>The action descriptors to which to create a route.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.IDirectRouteBuilder.Build">
+      <summary>Creates a route entry based on the current property values.</summary>
+      <returns>The route entry created.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Constraints">
+      <summary>Gets or sets the route constraints.</summary>
+      <returns>The route constraints.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.DataTokens">
+      <summary>Gets or sets the route data tokens.</summary>
+      <returns>The route data tokens.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Defaults">
+      <summary>Gets or sets the route defaults.</summary>
+      <returns>The route defaults.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Name">
+      <summary>Gets or sets the route name.</summary>
+      <returns>The route name, or null if no name supplied.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Order">
+      <summary>Gets or sets the route order.</summary>
+      <returns>The route order.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Precedence">
+      <summary>Gets or sets the route precedence.</summary>
+      <returns>The route precedence.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.TargetIsAction">
+      <summary>Gets a value indicating whether the route is configured at the action or controller level.</summary>
+      <returns>true when the route is configured at the action level; otherwise, false if the route is configured at the controller level.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IDirectRouteBuilder.Template">
+      <summary>Gets or sets the route template.</summary>
+      <returns>The route template.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IDirectRouteFactory">
+      <summary>Defines a factory that creates a route directly to a set of action descriptors (an attribute route).</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.IDirectRouteFactory.CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>Creates a direct route entry.</summary>
+      <returns>The direct route entry.</returns>
+      <param name="context">The context to use to create the route.</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.IInlineConstraintResolver">
       <summary>Defines an abstraction for resolving inline constraints as instances of <see cref="T:System.Web.Routing.IRouteConstraint" />.</summary>
@@ -10561,6 +10755,24 @@
       <summary>Resolves the inline constraint.</summary>
       <returns>The <see cref="T:System.Web.Routing.IRouteConstraint" /> the inline constraint was resolved to.</returns>
       <param name="inlineConstraint">The inline constraint to resolve.</param>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IRouteInfoProvider">
+      <summary>Provides information for building a System.Web.Routing.Route.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRouteInfoProvider.Name">
+      <summary>Gets the route template describing the URI pattern to match against.</summary>
+      <returns>The route template describing the URI pattern to match against.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRouteInfoProvider.Template">
+      <summary>Gets the name of the route to generate.</summary>
+      <returns>The name of the route to generate.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IRoutePrefix">
+      <summary>Defines a route prefix.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.IRoutePrefix.Prefix">
+      <summary>Gets the route prefix.</summary>
+      <returns>The route prefix.</returns>
     </member>
     <member name="T:System.Web.Mvc.Routing.RouteBuilder">
       <summary>Builds <see cref="T:System.Web.Routing.Route" /> instances based on route information.</summary>
@@ -10581,6 +10793,12 @@
       <param name="actionName">The name of the associated action.</param>
       <param name="targetMethod">The method that the route attribute has been applied on.</param>
     </member>
+    <member name="M:System.Web.Mvc.Routing.RouteBuilder.BuildDirectRoute(System.String,System.Web.Mvc.ControllerDescriptor)">
+      <summary>Builds an <see cref="T:System.Web.Routing.Route" /> for a particular action.</summary>
+      <returns>The generated route.</returns>
+      <param name="routeTemplate">The tokenized route template for the route.</param>
+      <param name="controllerDescriptor">The controller the route attribute has been applied on.</param>
+    </member>
     <member name="M:System.Web.Mvc.Routing.RouteBuilder.BuildDirectRoute(System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteValueDictionary,System.Web.Routing.RouteValueDictionary,System.String,System.Reflection.MethodInfo)">
       <summary>Builds an <see cref="T:System.Web.Routing.Route" />.</summary>
       <returns>The generated <see cref="T:System.Web.Routing.Route" />.</returns>
@@ -10589,7 +10807,62 @@
       <param name="routeTemplate">The detokenized route template.</param>
       <param name="targetMethod">The method that the route attribute has been applied on.</param>
     </member>
-    <member name="P:System.Web.Mvc.Routing.RouteBuilder.ConstraintResolver"></member>
+    <member name="P:System.Web.Mvc.Routing.RouteBuilder.ConstraintResolver">
+      <summary>Gets the resolver for resolving inline constraints.</summary>
+      <returns>The resolver for resolving inline constraints.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.RouteEntry">
+      <summary>Represents a named route.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteEntry.#ctor(System.String,System.Web.Routing.Route)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.RouteEntry" /> class.</summary>
+      <param name="name">The route name.</param>
+      <param name="route">The route.</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteEntry.Name">
+      <summary>Gets the route name.</summary>
+      <returns>The route name, if any; otherwise, null.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteEntry.Route">
+      <summary>Gets the route.</summary>
+      <returns>The route.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.RouteFactoryAttribute">
+      <summary>Represents an attribute route that may contain custom constraints.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteFactoryAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Routing.RouteFactoryAttribute" /> class.</summary>
+      <param name="template">The route template.</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Constraints">
+      <summary>Gets the route constraints.</summary>
+      <returns>The route constraints, if any; otherwise null.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.RouteFactoryAttribute.CreateRoute(System.Web.Mvc.Routing.DirectRouteFactoryContext)">
+      <summary>Creates a direct route entry.</summary>
+      <returns>The direct route entry.</returns>
+      <param name="context">The context to use to create the route.</param>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.DataTokens">
+      <summary>Gets the route data tokens.</summary>
+      <returns>The route data tokens, if any; otherwise null.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Defaults">
+      <summary>Gets the route defaults.</summary>
+      <returns>The route defaults, if any; otherwise null.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Name">
+      <summary>Gets or sets the route name.</summary>
+      <returns>The route name, if any; otherwise null.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Order">
+      <summary>Gets or sets the route order.</summary>
+      <returns>The route order.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Routing.RouteFactoryAttribute.Template">
+      <summary>Gets the route template.</summary>
+      <returns>The route template.</returns>
+    </member>
     <member name="T:System.Web.Mvc.Routing.Constraints.AlphaRouteConstraint">
       <summary>Constrains a route parameter to contain only lowercase or uppercase letters A through Z in the English alphabet.</summary>
     </member>

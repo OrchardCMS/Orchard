@@ -324,6 +324,30 @@
       <param name="formatterLogger">The IFormatterLogger to log events to.</param>
       <typeparam name="T">The type of the object to read.</typeparam>
     </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync``1(System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter},System.Net.Http.Formatting.IFormatterLogger,System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="formatters">The collection of MediaTypeFormatter instances to use.</param>
+      <param name="formatterLogger">The IFormatterLogger to log events to.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+      <typeparam name="T">The type of the object to read.</typeparam>
+    </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync``1(System.Net.Http.HttpContent,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter},System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="formatters">The collection of MediaTypeFormatter instances to use.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+      <typeparam name="T">The type of the object to read.</typeparam>
+    </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync``1(System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+      <typeparam name="T">The type of the object to read.</typeparam>
+    </member>
     <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync(System.Net.Http.HttpContent,System.Type)">
       <summary> Returns a Task that will yield an object of the specified type from the content instance. </summary>
       <returns>A Task that will yield an object instance of the specified type.</returns>
@@ -345,6 +369,30 @@
       <param name="formatters">The collection of MediaTypeFormatter instances to use.</param>
       <param name="formatterLogger">The IFormatterLogger to log events to.</param>
     </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync(System.Net.Http.HttpContent,System.Type,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter},System.Net.Http.Formatting.IFormatterLogger,System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance using one of the provided formatters to deserialize the content.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="type">The type of the object to read.</param>
+      <param name="formatters">The collection of MediaTypeFormatter instances to use.</param>
+      <param name="formatterLogger">The IFormatterLogger to log events to.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync(System.Net.Http.HttpContent,System.Type,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter},System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance using one of the provided formatters to deserialize the content.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="type">The type of the object to read.</param>
+      <param name="formatters">The collection of MediaTypeFormatter instances to use.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
+    <member name="M:System.Net.Http.HttpContentExtensions.ReadAsAsync(System.Net.Http.HttpContent,System.Type,System.Threading.CancellationToken)">
+      <summary>Returns a Task that will yield an object of the specified type from the content instance using one of the provided formatters to deserialize the content.</summary>
+      <returns>An object instance of the specified type.</returns>
+      <param name="content">The HttpContent instance from which to read.</param>
+      <param name="type">The type of the object to read.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="T:System.Net.Http.HttpContentFormDataExtensions">
       <summary>Extension methods to read HTML form URL-encoded datafrom <see cref="T:System.Net.Http.HttpContent" /> instances.</summary>
     </member>
@@ -357,6 +405,12 @@
       <summary>Asynchronously reads HTML form URL-encoded from an <see cref="T:System.Net.Http.HttpContent" /> instance and stores the results in a <see cref="T:System.Collections.Specialized.NameValueCollection" /> object.</summary>
       <returns>A task object representing the asynchronous operation.</returns>
       <param name="content">The content.</param>
+    </member>
+    <member name="M:System.Net.Http.HttpContentFormDataExtensions.ReadAsFormDataAsync(System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+      <summary>Asynchronously reads HTML form URL-encoded from an <see cref="T:System.Net.Http.HttpContent" /> instance and stores the results in a <see cref="T:System.Collections.Specialized.NameValueCollection" /> object.</summary>
+      <returns>A task object representing the asynchronous operation.</returns>
+      <param name="content">The content.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Net.Http.HttpContentMessageExtensions">
       <summary>Provides extension methods to read <see cref="T:System.Net.Http.HttpRequestMessage" /> and <see cref="T:System.Net.Http.HttpResponseMessage" /> entities from <see cref="T:System.Net.Http.HttpContent" /> instances. </summary>
@@ -397,6 +451,10 @@
       <param name="bufferSize">The size of the buffer.</param>
       <param name="maxHeaderSize">The maximum length of the HTTP header.</param>
     </member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpRequestMessageAsync(System.Net.Http.HttpContent,System.String,System.Int32,System.Int32,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpRequestMessageAsync(System.Net.Http.HttpContent,System.String,System.Int32,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpRequestMessageAsync(System.Net.Http.HttpContent,System.String,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpRequestMessageAsync(System.Net.Http.HttpContent,System.Threading.CancellationToken)"></member>
     <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpResponseMessageAsync(System.Net.Http.HttpContent)">
       <summary> Reads the <see cref="T:System.Net.Http.HttpContent" /> as an <see cref="T:System.Net.Http.HttpResponseMessage" />. </summary>
       <returns>The parsed <see cref="T:System.Net.Http.HttpResponseMessage" /> instance.</returns>
@@ -415,6 +473,9 @@
       <param name="bufferSize">The size of the buffer.</param>
       <param name="maxHeaderSize">The maximum length of the HTTP header.</param>
     </member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpResponseMessageAsync(System.Net.Http.HttpContent,System.Int32,System.Int32,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpResponseMessageAsync(System.Net.Http.HttpContent,System.Int32,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Net.Http.HttpContentMessageExtensions.ReadAsHttpResponseMessageAsync(System.Net.Http.HttpContent,System.Threading.CancellationToken)"></member>
     <member name="T:System.Net.Http.HttpContentMultipartExtensions">
       <summary>Extension methods to read MIME multipart entities from <see cref="T:System.Net.Http.HttpContent" /> instances.</summary>
     </member>
@@ -431,8 +492,14 @@
     </member>
     <member name="M:System.Net.Http.HttpContentMultipartExtensions.ReadAsMultipartAsync(System.Net.Http.HttpContent)">
       <summary>Reads all body parts within a MIME multipart message and produces a set of <see cref="T:System.Net.Http.HttpContent" /> instances as a result.</summary>
-      <returns>A &lt;see cref="T:System.Threading.Tasks.Task`1" /&gt; representing the tasks of getting the collection of <see cref="T:System.Net.Http.HttpContent" /> instances where each instance represents a body part.</returns>
+      <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> representing the tasks of getting the collection of <see cref="T:System.Net.Http.HttpContent" /> instances where each instance represents a body part.</returns>
       <param name="content">An existing <see cref="T:System.Net.Http.HttpContent" /> instance to use for the object's content.</param>
+    </member>
+    <member name="M:System.Net.Http.HttpContentMultipartExtensions.ReadAsMultipartAsync(System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+      <summary>Reads all body parts within a MIME multipart message and produces a set of <see cref="T:System.Net.Http.HttpContent" /> instances as a result.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> representing the tasks of getting the collection of <see cref="T:System.Net.Http.HttpContent" /> instances where each instance represents a body part.</returns>
+      <param name="content">An existing <see cref="T:System.Net.Http.HttpContent" /> instance to use for the object's content.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="M:System.Net.Http.HttpContentMultipartExtensions.ReadAsMultipartAsync``1(System.Net.Http.HttpContent,``0)">
       <summary>Reads all body parts within a MIME multipart message and produces a set of <see cref="T:System.Net.Http.HttpContent" /> instances as a result using the streamProvider instance to determine where the contents of each body part is written.</summary>
@@ -447,6 +514,23 @@
       <param name="content">An existing <see cref="T:System.Net.Http.HttpContent" /> instance to use for the object's content.</param>
       <param name="streamProvider">A stream provider providing output streams for where to write body parts as they are parsed.</param>
       <param name="bufferSize">Size of the buffer used to read the contents.</param>
+      <typeparam name="T">The type of the MIME multipart.</typeparam>
+    </member>
+    <member name="M:System.Net.Http.HttpContentMultipartExtensions.ReadAsMultipartAsync``1(System.Net.Http.HttpContent,``0,System.Int32,System.Threading.CancellationToken)">
+      <summary>Reads all body parts within a MIME multipart message and produces a set of <see cref="T:System.Net.Http.HttpContent" /> instances as a result using the streamProvider instance to determine where the contents of each body part is written and bufferSize as read buffer size.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> representing the tasks of getting the collection of <see cref="T:System.Net.Http.HttpContent" /> instances where each instance represents a body part.</returns>
+      <param name="content">An existing <see cref="T:System.Net.Http.HttpContent" /> instance to use for the object's content.</param>
+      <param name="streamProvider">A stream provider providing output streams for where to write body parts as they are parsed.</param>
+      <param name="bufferSize">Size of the buffer used to read the contents.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+      <typeparam name="T">The type of the MIME multipart.</typeparam>
+    </member>
+    <member name="M:System.Net.Http.HttpContentMultipartExtensions.ReadAsMultipartAsync``1(System.Net.Http.HttpContent,``0,System.Threading.CancellationToken)">
+      <summary>Reads all body parts within a MIME multipart message and produces a set of <see cref="T:System.Net.Http.HttpContent" /> instances as a result using the streamProvider instance to determine where the contents of each body part is written.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task`1" /> representing the tasks of getting the collection of <see cref="T:System.Net.Http.HttpContent" /> instances where each instance represents a body part.</returns>
+      <param name="content">An existing <see cref="T:System.Net.Http.HttpContent" /> instance to use for the object's content.</param>
+      <param name="streamProvider">A stream provider providing output streams for where to write body parts as they are parsed.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
       <typeparam name="T">The type of the MIME multipart.</typeparam>
     </member>
     <member name="T:System.Net.Http.HttpMessageContent">
@@ -590,6 +674,7 @@
       <summary>Reads the non-file contents as form data.</summary>
       <returns>A task that represents the asynchronous operation.</returns>
     </member>
+    <member name="M:System.Net.Http.MultipartFormDataStreamProvider.ExecutePostProcessingAsync(System.Threading.CancellationToken)"></member>
     <member name="P:System.Net.Http.MultipartFormDataStreamProvider.FormData">
       <summary>Gets a <see cref="T:System.Collections.Specialized.NameValueCollection" /> of form data passed as part of the multipart form data.</summary>
       <returns>The <see cref="T:System.Collections.Specialized.NameValueCollection" /> of form data.</returns>
@@ -641,6 +726,11 @@
     <member name="M:System.Net.Http.MultipartStreamProvider.ExecutePostProcessingAsync">
       <summary>Executes the post processing operation for this <see cref="T:System.Net.Http.MultipartStreamProvider" />.</summary>
       <returns>The asynchronous task for this operation.</returns>
+    </member>
+    <member name="M:System.Net.Http.MultipartStreamProvider.ExecutePostProcessingAsync(System.Threading.CancellationToken)">
+      <summary>Executes the post processing operation for this <see cref="T:System.Net.Http.MultipartStreamProvider" />.</summary>
+      <returns>The asynchronous task for this operation.</returns>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="M:System.Net.Http.MultipartStreamProvider.GetStream(System.Net.Http.HttpContent,System.Net.Http.Headers.HttpContentHeaders)">
       <summary>Gets the stream where to write the body part to. This method is called when a MIME multipart body part has been parsed.</summary>
@@ -732,6 +822,20 @@
       <param name="onStreamAvailable">An action that is called when an output stream is available, allowing the action to write to it directly.</param>
       <param name="mediaType">The media type.</param>
     </member>
+    <member name="M:System.Net.Http.PushStreamContent.#ctor(System.Func{System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.Tasks.Task})">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.PushStreamContent" /> class.</summary>
+      <param name="onStreamAvailable">An action that is called when an output stream is available, allowing the action to write to it directly.</param>
+    </member>
+    <member name="M:System.Net.Http.PushStreamContent.#ctor(System.Func{System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.Tasks.Task},System.Net.Http.Headers.MediaTypeHeaderValue)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.PushStreamContent" /> class.</summary>
+      <param name="onStreamAvailable">An action that is called when an output stream is available, allowing the action to write to it directly.</param>
+      <param name="mediaType">The media type.</param>
+    </member>
+    <member name="M:System.Net.Http.PushStreamContent.#ctor(System.Func{System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.Tasks.Task},System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.PushStreamContent" /> class.</summary>
+      <param name="onStreamAvailable">An action that is called when an output stream is available, allowing the action to write to it directly.</param>
+      <param name="mediaType">The media type.</param>
+    </member>
     <member name="M:System.Net.Http.PushStreamContent.SerializeToStreamAsync(System.IO.Stream,System.Net.TransportContext)">
       <summary>Asynchronously serializes the push content into stream.</summary>
       <returns>The serialized push content.</returns>
@@ -783,6 +887,144 @@
       <param name="address">The <see cref="T:System.Uri" /> instance from which to read.</param>
       <param name="value">An object to be initialized with this instance or null if the conversion cannot be performed.</param>
     </member>
+    <member name="T:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter">
+      <summary>Abstract media type formatter class to support Bson and Json.</summary>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter" /> class.</summary>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.#ctor(System.Net.Http.Formatting.BaseJsonMediaTypeFormatter)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter" /> class.</summary>
+      <param name="formatter">The <see cref="T:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter" /> instance to copy settings from.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CanReadType(System.Type)">
+      <summary>Determines whether this formatter can read objects of the specified type.</summary>
+      <returns>true if objects of this type can be read, otherwise false.</returns>
+      <param name="type">The type of object that will be read.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CanWriteType(System.Type)">
+      <summary>Determines whether this formatter can write objects of the specified type.</summary>
+      <returns>true if objects of this type can be written, otherwise false.</returns>
+      <param name="type">The type of object to write.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CreateDefaultSerializerSettings">
+      <summary>Creates a <see cref="T:Newtonsoft.Json.JsonSerializerSettings" /> instance with the default settings used by the <see cref="T:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter" />.</summary>
+      <returns>Returns <see cref="T:Newtonsoft.Json.JsonSerializerSettings" />.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CreateJsonReader(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during deserialization to get the <see cref="T:Newtonsoft.Json.JsonReader" />.</summary>
+      <returns>The reader to use during deserialization.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CreateJsonSerializer">
+      <summary>Called during serialization and deserialization to get the <see cref="T:Newtonsoft.Json.JsonSerializer" />.</summary>
+      <returns>The JsonSerializer used during serialization and deserialization.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.CreateJsonWriter(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to get the <see cref="T:Newtonsoft.Json.JsonWriter" />.</summary>
+      <returns>The writer to use during serialization.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
+    </member>
+    <member name="P:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.MaxDepth">
+      <summary>Gets or sets the maximum depth allowed by this formatter.</summary>
+      <returns>The maximum depth allowed by this formatter.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.ReadFromStream(System.Type,System.IO.Stream,System.Text.Encoding,System.Net.Http.Formatting.IFormatterLogger)">
+      <summary>Called during deserialization to read an object of the specified type from the specified stream.</summary>
+      <returns>The object that has been read.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+      <param name="formatterLogger">The logger to log events to.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+      <summary>Called during deserialization to read an object of the specified type from the specified stream.</summary>
+      <returns>A task whose result will be the object instance that has been read.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being read.</param>
+      <param name="formatterLogger">The logger to log events to.</param>
+    </member>
+    <member name="P:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.SerializerSettings">
+      <summary>Gets or sets the JsonSerializerSettings used to configure the JsonSerializer.</summary>
+      <returns>The JsonSerializerSettings used to configure the JsonSerializer.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStream(System.Type,System.Object,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to write an object of the specified type to the specified stream.</summary>
+      <param name="type">The type of the object to write.</param>
+      <param name="value">The object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BaseJsonMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
+      <summary>Called during serialization to write an object of the specified type to the specified stream.</summary>
+      <returns>Returns <see cref="T:System.Threading.Tasks.Task" />.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="value">The object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being written.</param>
+      <param name="transportContext">The transport context.</param>
+      <param name="cancellationToken">The token to monitor for cancellation.</param>
+    </member>
+    <member name="T:System.Net.Http.Formatting.BsonMediaTypeFormatter">
+      <summary>Represents a media type formatter to handle Bson.</summary>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.#ctor">
+      <summary>Initializes a new instance of the<see cref="T:System.Net.Http.Formatting.BsonMediaTypeFormatter" /> class.</summary>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.#ctor(System.Net.Http.Formatting.BsonMediaTypeFormatter)">
+      <summary>Initializes a new instance of the<see cref="T:System.Net.Http.Formatting.BsonMediaTypeFormatter" /> class.</summary>
+      <param name="formatter">The formatter to copy settings from.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.CreateJsonReader(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during deserialization to get the <see cref="T:Newtonsoft.Json.JsonReader" />.</summary>
+      <returns>The reader to use during deserialization.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.CreateJsonWriter(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to get the <see cref="T:Newtonsoft.Json.JsonWriter" />.</summary>
+      <returns>The writer to use during serialization.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
+    </member>
+    <member name="P:System.Net.Http.Formatting.BsonMediaTypeFormatter.DefaultMediaType">
+      <summary>Gets the default media type for Json, namely "application/bson".</summary>
+      <returns>The default media type for Json, namely "application/bson".</returns>
+    </member>
+    <member name="P:System.Net.Http.Formatting.BsonMediaTypeFormatter.MaxDepth">
+      <summary>Gets or sets the maximum depth allowed by this formatter.</summary>
+      <returns>The maximum depth allowed by this formatter.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.ReadFromStream(System.Type,System.IO.Stream,System.Text.Encoding,System.Net.Http.Formatting.IFormatterLogger)">
+      <summary>Called during deserialization to read an object of the specified type from the specified stream.</summary>
+      <returns>The object that has been read.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+      <param name="formatterLogger">The logger to log events to.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
+      <summary>Called during deserialization to read an object of the specified type from the specified stream.</summary>
+      <returns>A task whose result will be the object instance that has been read.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being read.</param>
+      <param name="formatterLogger">The logger to log events to.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BsonMediaTypeFormatter.WriteToStream(System.Type,System.Object,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to write an object of the specified type to the specified stream.</summary>
+      <param name="type">The type of the object to write.</param>
+      <param name="value">The object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
+    </member>
     <member name="T:System.Net.Http.Formatting.BufferedMediaTypeFormatter">
       <summary>Represents a helper class to allow a synchronous formatter on top of the asynchronous formatter infrastructure.</summary>
     </member>
@@ -801,9 +1043,18 @@
       <summary>Reads synchronously from the buffered stream.</summary>
       <returns>An object of the given <paramref name="type" />.</returns>
       <param name="type">The type of the object to deserialize.</param>
-      <param name="readStream">The stream from which to read</param>
+      <param name="readStream">The stream from which to read.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
       <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.ReadFromStream(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger,System.Threading.CancellationToken)">
+      <summary>Reads synchronously from the buffered stream.</summary>
+      <returns>An object of the given <paramref name="type" />.</returns>
+      <param name="type">The type of the object to deserialize.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
+      <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
       <summary>Reads asynchronously from the buffered stream.</summary>
@@ -813,12 +1064,29 @@
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
       <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
     </member>
+    <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger,System.Threading.CancellationToken)">
+      <summary>Reads asynchronously from the buffered stream.</summary>
+      <returns>A task object representing the asynchronous operation.</returns>
+      <param name="type">The type of the object to deserialize.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
+      <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.WriteToStream(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent)">
       <summary>Writes synchronously to the buffered stream.</summary>
       <param name="type">The type of the object to serialize.</param>
       <param name="value">The object value to write. Can be null.</param>
       <param name="writeStream">The stream to which to write.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.WriteToStream(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+      <summary>Writes synchronously to the buffered stream.</summary>
+      <param name="type">The type of the object to serialize.</param>
+      <param name="value">The object value to write. Can be null.</param>
+      <param name="writeStream">The stream to which to write.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
       <summary>Writes asynchronously to the buffered stream.</summary>
@@ -828,6 +1096,16 @@
       <param name="writeStream">The stream to which to write.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
       <param name="transportContext">The transport context.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.BufferedMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
+      <summary>Writes asynchronously to the buffered stream.</summary>
+      <returns>A task object representing the asynchronous operation.</returns>
+      <param name="type">The type of the object to serialize.</param>
+      <param name="value">The object value to write.  It may be null.</param>
+      <param name="writeStream">The stream to which to write.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. Can be null.</param>
+      <param name="transportContext">The transport context.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Net.Http.Formatting.ContentNegotiationResult">
       <summary> Represents the result of content negotiation performed using &lt;see cref="M:System.Net.Http.Formatting.IContentNegotiator.Negotiate(System.Type,System.Net.Http.HttpRequestMessage,System.Collections.Generic.IEnumerable{System.Net.Http.Formatting.MediaTypeFormatter})" /&gt;</summary>
@@ -979,6 +1257,7 @@
       <returns>The values of the collection of form data.</returns>
       <param name="key">The key.</param>
     </member>
+    <member name="P:System.Net.Http.Formatting.FormDataCollection.Item(System.String)"></member>
     <member name="M:System.Net.Http.Formatting.FormDataCollection.ReadAsNameValueCollection">
       <summary>Reads the collection of form data as a collection of name value.</summary>
       <returns>The collection of form data as a collection of name value.</returns>
@@ -1092,9 +1371,24 @@
       <returns>true if objects of this <paramref name="type" /> can be written, otherwise false.</returns>
       <param name="type">The type of object that will be written.</param>
     </member>
-    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.CreateDefaultSerializerSettings">
-      <summary> Creates a JsonSerializerSettings instance with the default settings used by the <see cref="T:System.Net.Http.Formatting.JsonMediaTypeFormatter" />. </summary>
-      <returns>A newly created JsonSerializerSettings instance with the default settings used by the <see cref="T:System.Net.Http.Formatting.JsonMediaTypeFormatter" />.</returns>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.CreateDataContractSerializer(System.Type)">
+      <summary>Called during deserialization to get the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" />.</summary>
+      <returns>The object used for serialization.</returns>
+      <param name="type">The type of object that will be serialized or deserialized.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.CreateJsonReader(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during deserialization to get the <see cref="T:Newtonsoft.Json.JsonReader" />.</summary>
+      <returns>The reader to use during deserialization.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.CreateJsonWriter(System.Type,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to get the <see cref="T:Newtonsoft.Json.JsonWriter" />.</summary>
+      <returns>The writer to use during serialization.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
     </member>
     <member name="P:System.Net.Http.Formatting.JsonMediaTypeFormatter.DefaultMediaType">
       <summary>Gets the default media type for JSON, namely "application/json".</summary>
@@ -1108,30 +1402,34 @@
       <summary>Gets or sets the maximum depth allowed by this formatter.</summary>
       <returns>The maximum depth allowed by this formatter.</returns>
     </member>
-    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
-      <summary>Reads an object of the specified <paramref name="type" /> from the specified <paramref name="stream" />. This method is called during deserialization.</summary>
-      <returns>Returns <see cref="T:System.Threading.Tasks.Task`1" />.</returns>
-      <param name="type">The type of object to read.</param>
-      <param name="readStream">Thestream from which to read</param>
-      <param name="content">The content being written.</param>
-      <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
-    </member>
-    <member name="P:System.Net.Http.Formatting.JsonMediaTypeFormatter.SerializerSettings">
-      <summary> Gets or sets the JsonSerializerSettings used to configure the JsonSerializer. </summary>
-      <returns> The JsonSerializerSettings used to configure the JsonSerializer. </returns>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.ReadFromStream(System.Type,System.IO.Stream,System.Text.Encoding,System.Net.Http.Formatting.IFormatterLogger)">
+      <summary>Called during deserialization to read an object of the specified type from the specified stream.</summary>
+      <returns>The object that has been read.</returns>
+      <param name="type">The type of the object to read.</param>
+      <param name="readStream">The stream from which to read.</param>
+      <param name="effectiveEncoding">The encoding to use when reading.</param>
+      <param name="formatterLogger">The logger to log events to.</param>
     </member>
     <member name="P:System.Net.Http.Formatting.JsonMediaTypeFormatter.UseDataContractJsonSerializer">
       <summary> Gets or sets a value indicating whether to use <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> by default. </summary>
       <returns>true if to <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> by default; otherwise, false.</returns>
     </member>
-    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
-      <summary>Writes an object of the specified <paramref name="type" /> to the specified <paramref name="stream" />. This method is called during serialization.</summary>
-      <returns>A <see cref="T:System.Threading.Tasks.Task" /> that will write the value to the stream.</returns>
-      <param name="type">The type of object to write.</param>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.WriteToStream(System.Type,System.Object,System.IO.Stream,System.Text.Encoding)">
+      <summary>Called during serialization to write an object of the specified type to the specified stream.</summary>
+      <param name="type">The type of the object to write.</param>
       <param name="value">The object to write.</param>
-      <param name="writeStream">The <see cref="T:System.IO.Stream" /> to which to write.</param>
-      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> where the content is being written.</param>
-      <param name="transportContext">The <see cref="T:System.Net.TransportContext" />.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="effectiveEncoding">The encoding to use when writing.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.JsonMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
+      <summary>Called during serialization to write an object of the specified type to the specified stream.</summary>
+      <returns>Returns <see cref="T:System.Threading.Tasks.Task" />.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="value">The object to write.</param>
+      <param name="writeStream">The stream to write to.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being written.</param>
+      <param name="transportContext">The transport context.</param>
+      <param name="cancellationToken">The token to monitor for cancellation.</param>
     </member>
     <member name="T:System.Net.Http.Formatting.MediaTypeFormatter">
       <summary> Base class to handle serializing and deserializing strongly-typed objects using <see cref="T:System.Net.Http.ObjectContent" />. </summary>
@@ -1182,6 +1480,15 @@
       <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
       <exception cref="T:System.NotSupportedException">Derived types need to support reading.</exception>
     </member>
+    <member name="M:System.Net.Http.Formatting.MediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger,System.Threading.CancellationToken)">
+      <summary>Asynchronously deserializes an object of the specified type.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task" /> whose result will be an object of the given type.</returns>
+      <param name="type">The type of the object to deserialize.</param>
+      <param name="readStream">The <see cref="T:System.IO.Stream" /> to read.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />, if available. It may be null.</param>
+      <param name="formatterLogger">The <see cref="T:System.Net.Http.Formatting.IFormatterLogger" /> to log events to.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="P:System.Net.Http.Formatting.MediaTypeFormatter.RequiredMemberSelector">
       <summary>Gets or sets the <see cref="T:System.Net.Http.Formatting.IRequiredMemberSelector" /> instance used to determine required members.</summary>
       <returns>The <see cref="T:System.Net.Http.Formatting.IRequiredMemberSelector" /> instance.</returns>
@@ -1213,6 +1520,17 @@
       <param name="writeStream">The <see cref="T:System.IO.Stream" /> to which to write.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> if available. It may be null.</param>
       <param name="transportContext">The <see cref="T:System.Net.TransportContext" /> if available. It may be null.</param>
+      <exception cref="T:System.NotSupportedException">Derived types need to support writing.</exception>
+    </member>
+    <member name="M:System.Net.Http.Formatting.MediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes an object of the specified type.</summary>
+      <returns>A <see cref="T:System.Threading.Tasks.Task" /> that will perform the write.</returns>
+      <param name="type">The type of the object to write.</param>
+      <param name="value">The object value to write.  It may be null.</param>
+      <param name="writeStream">The <see cref="T:System.IO.Stream" /> to which to write.</param>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> if available. It may be null.</param>
+      <param name="transportContext">The <see cref="T:System.Net.TransportContext" /> if available. It may be null.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
       <exception cref="T:System.NotSupportedException">Derived types need to support writing.</exception>
     </member>
     <member name="T:System.Net.Http.Formatting.MediaTypeFormatterCollection">
@@ -1270,9 +1588,6 @@
     <member name="P:System.Net.Http.Formatting.MediaTypeFormatterCollection.XmlFormatter">
       <summary>Gets the <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter" /> to use for XML.</summary>
       <returns>The <see cref="T:System.Net.Http.Formatting.XmlMediaTypeFormatter" />to use for XML.</returns>
-    </member>
-    <member name="T:System.Net.Http.Formatting.MediaTypeFormatterExtensions">
-      <summary>Represents extensions for adding <see cref="T:System.Net.Http.Formatting.MediaTypeMapping" /> items to a <see cref="T:System.Net.Http.Formatting.MediaTypeFormatter" />. </summary>
     </member>
     <member name="M:System.Net.Http.Formatting.MediaTypeFormatterExtensions.AddQueryStringMapping(System.Net.Http.Formatting.MediaTypeFormatter,System.String,System.String,System.Net.Http.Headers.MediaTypeHeaderValue)"></member>
     <member name="M:System.Net.Http.Formatting.MediaTypeFormatterExtensions.AddQueryStringMapping(System.Net.Http.Formatting.MediaTypeFormatter,System.String,System.String,System.String)"></member>
@@ -1438,11 +1753,21 @@
       <returns>true if the <see cref="T:System.Net.Http.Formatting.XmlMediaTypeFormatter" /> can serialize the type; otherwise, false.</returns>
       <param name="type">The type to serialize.</param>
     </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.CreateDataContractSerializer(System.Type)">
+      <summary>Called during deserialization to get the DataContractSerializer serializer.</summary>
+      <returns>The object used for serialization.</returns>
+      <param name="type">The type of object that will be serialized or deserialized.</param>
+    </member>
     <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.CreateXmlReader(System.IO.Stream,System.Net.Http.HttpContent)">
       <summary>Called during deserialization to get the XML reader to use for reading objects from the stream.</summary>
       <returns>The <see cref="T:System.Xml.XmlReader" /> to use for reading objects.</returns>
       <param name="readStream">The <see cref="T:System.IO.Stream" /> to read from.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being read.</param>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.CreateXmlSerializer(System.Type)">
+      <summary>Called during deserialization to get the XML serializer.</summary>
+      <returns>The object used for serialization.</returns>
+      <param name="type">The type of object that will be serialized or deserialized.</param>
     </member>
     <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.CreateXmlWriter(System.IO.Stream,System.Net.Http.HttpContent)">
       <summary>Called during serialization to get the XML writer to use for writing objects to the stream.</summary>
@@ -1470,6 +1795,22 @@
     <member name="P:System.Net.Http.Formatting.XmlMediaTypeFormatter.Indent">
       <summary>Gets or sets a value indicating whether to indent elements when writing data.</summary>
       <returns>true to indent elements; otherwise, false.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.InvokeCreateXmlReader(System.IO.Stream,System.Net.Http.HttpContent)">
+      <summary>This method is to support infrastructure and is not intended to be used directly from your code.</summary>
+      <returns>Returns <see cref="T:System.Xml.XmlReader" />.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.InvokeCreateXmlWriter(System.IO.Stream,System.Net.Http.HttpContent)">
+      <summary>This method is to support infrastructure and is not intended to be used directly from your code.</summary>
+      <returns>Returns <see cref="T:System.Xml.XmlWriter" />.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.InvokeGetDeserializer(System.Type,System.Net.Http.HttpContent)">
+      <summary>This method is to support infrastructure and is not intended to be used directly from your code.</summary>
+      <returns>Returns <see cref="T:System.Object" />.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.InvokeGetSerializer(System.Type,System.Object,System.Net.Http.HttpContent)">
+      <summary>This method is to support infrastructure and is not intended to be used directly from your code.</summary>
+      <returns>Returns <see cref="T:System.Object" />.</returns>
     </member>
     <member name="P:System.Net.Http.Formatting.XmlMediaTypeFormatter.MaxDepth">
       <summary>Gets and sets the maximum nested node depth.</summary>
@@ -1512,14 +1853,19 @@
       <summary>Gets or sets a value indicating whether the XML formatter uses the <see cref="T:System.Xml.Serialization.XmlSerializer" /> as the default serializer, instead of  using the <see cref="T:System.Runtime.Serialization.DataContractSerializer" />.</summary>
       <returns>If true, the formatter uses the <see cref="T:System.Xml.Serialization.XmlSerializer" /> by default; otherwise, it uses the <see cref="T:System.Runtime.Serialization.DataContractSerializer" /> by default.</returns>
     </member>
-    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
-      <summary> Called during serialization to write an object of the specified type to the specified writeStream. </summary>
+    <member name="P:System.Net.Http.Formatting.XmlMediaTypeFormatter.WriterSettings">
+      <summary>Gets the settings to be used while writing.</summary>
+      <returns>The settings to be used while writing.</returns>
+    </member>
+    <member name="M:System.Net.Http.Formatting.XmlMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
+      <summary>Called during serialization to write an object of the specified type to the specified writeStream.</summary>
       <returns>A <see cref="T:System.Threading.Tasks.Task" /> that will write the value to the stream.</returns>
       <param name="type">The type of object to write.</param>
       <param name="value">The object to write.</param>
       <param name="writeStream">The <see cref="T:System.IO.Stream" /> to which to write.</param>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" /> for the content being written.</param>
       <param name="transportContext">The <see cref="T:System.Net.TransportContext" />.</param>
+      <param name="cancellationToken">The token to monitor cancellation.</param>
     </member>
     <member name="T:System.Net.Http.Handlers.HttpProgressEventArgs">
       <summary>Represents the event arguments for the HTTP progress.</summary>
