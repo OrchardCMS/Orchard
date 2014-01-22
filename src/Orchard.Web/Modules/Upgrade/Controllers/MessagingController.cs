@@ -74,10 +74,10 @@ namespace Upgrade.Controllers {
                     }
 
                     if (state.Recipient == "owner") {
-                        newState.Recipients = "{User.Current.Email}";
+                        newState.Recipients = "{Content.Author.Email}";
                     }
                     else if (state.Recipient == "author") {
-                        newState.Recipients = "{Content.Author.Email}";
+                        newState.Recipients = "{User.Current.Email}";
                     }
                     else if (state.Recipient == "admin") {
                         newState.Recipients = "{Site.SuperUser.Email}";
