@@ -69,6 +69,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
@@ -84,6 +88,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\TaskLease\AzureMachineNameProvider.cs" />
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -96,6 +101,10 @@
     <ProjectReference Include="..\Orchard.OutputCache\Orchard.OutputCache.csproj">
       <Project>{6e444ff1-a47c-4cf6-bb3f-507c8ebd776d}</Project>
       <Name>Orchard.OutputCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3f72a4e9-7b72-4260-b010-c16ec54f9baf}</Project>
+      <Name>Orchard.TaskLease</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
