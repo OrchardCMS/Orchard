@@ -36,9 +36,8 @@ namespace Orchard.Alias.Implementation.Updater {
                 // update the last processed id
                 if (aliases.Any()) {
                     _cursor.Cursor = aliases.Last().Item5;
+                    _aliasHolder.SetAliases(aliases.Select(alias => new AliasInfo { Path = alias.Item1, Area = alias.Item2, RouteValues = alias.Item3 }));
                 }
-                
-                _aliasHolder.SetAliases(aliases.Select(alias => new AliasInfo { Path = alias.Item1, Area = alias.Item2, RouteValues = alias.Item3 }));
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Exception during Alias refresh");
