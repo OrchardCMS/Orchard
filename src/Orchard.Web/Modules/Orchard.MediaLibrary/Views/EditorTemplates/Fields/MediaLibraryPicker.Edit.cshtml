@@ -60,7 +60,7 @@
         var multiple = @(settings.Multiple ? "true" : "false");
         var addButton = $('#btn-@fieldIdForIds');
         var @(fieldIdForIds)_Template = 
-            '<li><div data-id="{contentItemId}" data-fieldid="@fieldIdForIds" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div><div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")<a href="{editLink}?ReturnUrl=@Request.RawUrl">@T("Edit")</a></li>';
+            '<li><div data-id="{contentItemId}" data-fieldid="@fieldIdForIds" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")<a href="{editLink}?ReturnUrl=@Request.RawUrl">@T("Edit")</a></li>';
         
         var refreshIds = function() {
             var id = $('#@fieldIdForSelectedIds');
