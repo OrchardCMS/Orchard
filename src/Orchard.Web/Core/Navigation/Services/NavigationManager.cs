@@ -85,8 +85,9 @@ namespace Orchard.Core.Navigation.Services {
                                 ? menuItemUrl
                                 : _urlHelper.RouteUrl(routeValueDictionary);
 
+            var schemes = new[] { "http", "https", "tel", "mailto" };
             if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
-                !(url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("/"))) {
+                !(url.StartsWith("/") || schemes.Any(scheme => url.StartsWith(scheme + ":")))) {
                 if (url.StartsWith("~/")) {
                     url = url.Substring(2);
                 }
