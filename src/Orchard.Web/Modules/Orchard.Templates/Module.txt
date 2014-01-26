@@ -4,7 +4,7 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.8
-Description: Provides a Template type that can be used to stre Razor code and used as a shape.
+Description: Provides a Template type that can be used to store Razor code and used as a shape.
 Features:
     Orchard.Templates:
         Name: Templates
