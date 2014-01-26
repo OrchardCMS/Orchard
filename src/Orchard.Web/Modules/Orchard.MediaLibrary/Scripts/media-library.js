@@ -571,5 +571,39 @@ $(function () {
             });
             return false;
         });
+
+        $('#clone-selection-button').click(function () {
+            if (!confirm(settings.cloneConfirmationMessage)) {
+                return false;
+            }
+
+            var ids = [];
+            viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+
+            if (ids.length != 1) {
+                return false;
+            }
+
+            var url = settings.cloneActionUrl;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                traditional: true,
+                data: {
+                    mediaItemId: ids[0],
+                    __RequestVerificationToken: settings.antiForgeryToken
+                }
+            }).done(function (result) {
+                if (result) {
+                    viewModel.getMediaItems(viewModel.pageCount);
+                } else {
+                    console.log('failed to clone media items');
+                }
+                return false;
+            });
+            return false;
+        });
     })(window.mediaLibrarySettings);
 })
