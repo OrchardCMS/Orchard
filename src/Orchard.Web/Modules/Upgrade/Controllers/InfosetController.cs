@@ -403,13 +403,15 @@ namespace Upgrade.Controllers {
                 _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + widgetsTable + " WHERE Id > " + id,
                     (reader, connection) => {
                         lastContentItemId = (int)reader["Id"];
-                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+                        var widgetPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Title", (string)reader["Title"]);
-                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Position", (string)reader["Position"]);
-                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Zone", (string)reader["Zone"]);
-                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "RenderTitle", (bool)reader["RenderTitle"]);
-                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Name", reader["Name"] as string);
+                        if (widgetPart != null) {
+                            widgetPart.As<InfosetPart>().Store("WidgetPart", "Title", (string)reader["Title"]);
+                            widgetPart.As<InfosetPart>().Store("WidgetPart", "Position", (string)reader["Position"]);
+                            widgetPart.As<InfosetPart>().Store("WidgetPart", "Zone", (string)reader["Zone"]);
+                            widgetPart.As<InfosetPart>().Store("WidgetPart", "RenderTitle", (bool)reader["RenderTitle"]);
+                            widgetPart.As<InfosetPart>().Store("WidgetPart", "Name", reader["Name"] as string);
+                        }
                     });
             }
 
