@@ -353,7 +353,9 @@ namespace Upgrade.Controllers {
                         lastContentItemId = (int)reader["Id"];
                         var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                        contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
+                        if (contentPermissionPart != null) {
+                            contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]); 
+                        }
                     });
             }
 
