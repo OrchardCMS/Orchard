@@ -36,7 +36,7 @@ namespace Upgrade.Controllers {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        
+
         public ActionResult Index() {
             return View();
         }
@@ -49,166 +49,207 @@ namespace Upgrade.Controllers {
             var site = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>();
 
             #region SiteSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord"),
-                (reader, connection) => {
-                    site.HomePage = (string)reader["HomePage"];
-                    site.PageSize = (int)reader["PageSize"];
-                    site.PageTitleSeparator = (string)reader["PageTitleSeparator"];
-                    site.ResourceDebugMode = (ResourceDebugMode)reader["ResourceDebugMode"];
-                    site.SiteCulture = (string)reader["SiteCulture"];
-                    site.SiteName = (string)reader["SiteName"];
-                    site.SiteSalt = (string)reader["SiteSalt"];
-                    site.SiteTimeZone = (string)reader["SiteTimeZone"];
-                    site.SuperUser = (string)reader["SuperUser"];
-                });
+            var siteTable = _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord");
+            if (_upgradeService.TableExists(siteTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + siteTable,
+                    (reader, connection) => {
+                        site.HomePage = reader["HomePage"] as string;
+                        site.PageSize = (int)reader["PageSize"];
+                        site.PageTitleSeparator = (string)reader["PageTitleSeparator"];
+                        site.ResourceDebugMode = (ResourceDebugMode)Enum.Parse(typeof(ResourceDebugMode), (string)reader["ResourceDebugMode"]);
+                        site.SiteCulture = (string)reader["SiteCulture"];
+                        site.SiteName = (string)reader["SiteName"];
+                        site.SiteSalt = (string)reader["SiteSalt"];
+                        site.SiteTimeZone = (string)reader["SiteTimeZone"];
+                        site.SuperUser = (string)reader["SuperUser"];
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Settings_SiteSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + siteTable, null);
+            }
 
             #endregion
 
             #region SiteSettings2PartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord"),
-                (reader, connection) => {
-                    site.BaseUrl = (string)reader["BaseUrl"];
-                });
+            var site2Table = _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord");
+            if (_upgradeService.TableExists(site2Table)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + site2Table,
+                    (reader, connection) => {
+                        site.BaseUrl = (string)reader["BaseUrl"];
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Settings_SiteSettings2PartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + site2Table, null);
+            }
 
             #endregion
 
             #region ThemeSiteSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"),
-                (reader, connection) => site.As<InfosetPart>().Store("ThemeSiteSettingsPart", "CurrentThemeName", (string)reader["CurrentThemeName"]));
+            var themesTable = _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord");
+            if (_upgradeService.TableExists(themesTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + themesTable,
+                    (reader, connection) => site.As<InfosetPart>().Store("ThemeSiteSettingsPart", "CurrentThemeName", (string)reader["CurrentThemeName"]));
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Themes_ThemeSiteSettingsPartRecord"), null);
-
+                _upgradeService.ExecuteReader("DROP TABLE " + themesTable, null);
+            }
 
             #endregion
 
             #region AkismetSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("AkismetSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
-                    site.As<InfosetPart>().Store("AkismetSettingsPart", "ApiKey", reader["ApiKey"].ToString());
-                });
+            var akismetTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord");
+            if (_upgradeService.TableExists(akismetTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + akismetTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("AkismetSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
+                        site.As<InfosetPart>().Store("AkismetSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_AkismetSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + akismetTable, null);
+            }
 
             #endregion
 
             #region ReCaptchaSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PublicKey", reader["PublicKey"].ToString());
-                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PrivateKey", reader["PrivateKey"].ToString());
-                    site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
-                });
+            var reCaptchaTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord");
+            if (_upgradeService.TableExists(reCaptchaTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + reCaptchaTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PublicKey", reader["PublicKey"].ToString());
+                        site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "PrivateKey", reader["PrivateKey"].ToString());
+                        site.As<InfosetPart>().Store("ReCaptchaSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_ReCaptchaSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + reCaptchaTable, null);
+            }
 
             #endregion
 
             #region TypePadSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("TypePadSettingsPart", "ApiKey", reader["ApiKey"].ToString());
-                    site.As<InfosetPart>().Store("TypePadSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
-                });
+            var typePadTable = _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord");
+            if (_upgradeService.TableExists(typePadTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + typePadTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("TypePadSettingsPart", "ApiKey", reader["ApiKey"].ToString());
+                        site.As<InfosetPart>().Store("TypePadSettingsPart", "TrustAuthenticatedUsers", (bool)reader["TrustAuthenticatedUsers"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_AntiSpam_TypePadSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + typePadTable, null);
+            }
 
             #endregion
 
             #region CacheSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultCacheDuration", (int)reader["DefaultCacheDuration"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultMaxAge", (int)reader["DefaultMaxAge"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "VaryQueryStringParameters", (string)reader["VaryQueryStringParameters"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "VaryRequestHeaders", (string)reader["VaryRequestHeaders"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "IgnoredUrls", (string)reader["IgnoredUrls"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "ApplyCulture", (bool)reader["ApplyCulture"]);
-                    site.As<InfosetPart>().Store("CacheSettingsPart", "DebugMode", (bool)reader["DebugMode"]);
-                });
+            var cacheTable = _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord");
+            if (_upgradeService.TableExists(cacheTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + cacheTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultCacheDuration", (int)reader["DefaultCacheDuration"]);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "DefaultMaxAge", (int)reader["DefaultMaxAge"]);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "VaryQueryStringParameters", reader["VaryQueryStringParameters"] as string);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "VaryRequestHeaders", reader["VaryRequestHeaders"] as string);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "IgnoredUrls", reader["IgnoredUrls"] as string);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "ApplyCulture", (bool)reader["ApplyCulture"]);
+                        site.As<InfosetPart>().Store("CacheSettingsPart", "DebugMode", (bool)reader["DebugMode"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_OutputCache_CacheSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + cacheTable, null);
+            }
+
             #endregion
 
             #region CommentSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Comments_CommentSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("CommentSettingsPart", "ModerateComments", (bool)reader["ModerateComments"]);
-                });
+            var commentsTable = _upgradeService.GetPrefixedTableName("Orchard_Comments_CommentSettingsPartRecord");
+            if (_upgradeService.TableExists(commentsTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + commentsTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("CommentSettingsPart", "ModerateComments", (bool)reader["ModerateComments"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Comments_CommentSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + commentsTable, null);
+            }
+
             #endregion
 
             #region  MessageSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("MessageSettingsPart", "DefaultChannelService", (bool)reader["DefaultChannelService"]);
-                });
+            var messagesTable = _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord");
+            if (_upgradeService.TableExists(messagesTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + messagesTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("MessageSettingsPart", "DefaultChannelService", reader["DefaultChannelService"] as string);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Messaging_MessageSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + messagesTable, null);
+            }
 
             #endregion
 
             #region SearchSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("SearchSettingsPart", "SearchedFields", (string)reader["SearchedFields"]);
-                    site.As<InfosetPart>().Store("SearchSettingsPart", "FilterCulture", (bool)reader["FilterCulture"]);
-                    site.As<InfosetPart>().Store("SearchSettingsPart", "SearchIndex", (string)reader["SearchIndex"]);
-                });
+            var searchTable = _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord");
+            if (_upgradeService.TableExists(searchTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + searchTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("SearchSettingsPart", "SearchedFields", reader["SearchedFields"] as string);
+                        site.As<InfosetPart>().Store("SearchSettingsPart", "FilterCulture", (bool)reader["FilterCulture"]);
+                        site.As<InfosetPart>().Store("SearchSettingsPart", "SearchIndex", reader["SearchIndex"] as string);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Search_SearchSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + searchTable, null);
+            }
 
             #endregion
 
             #region RegistrationSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersMustValidateEmail", (bool)reader["UsersMustValidateEmail"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailRegisteredWebsite", (bool)reader["ValidateEmailRegisteredWebsite"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailContactEMail", (bool)reader["ValidateEmailContactEMail"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersAreModerated", (bool)reader["UsersAreModerated"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotifyModeration", (bool)reader["NotifyModeration"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotificationsRecipients", (bool)reader["NotificationsRecipients"]);
-                    site.As<InfosetPart>().Store("RegistrationSettingsPart", "EnableLostPassword", (bool)reader["EnableLostPassword"]);
-                });
+            var registrationTable = _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord");
+            if (_upgradeService.TableExists(registrationTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + registrationTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersMustValidateEmail", (bool)reader["UsersMustValidateEmail"]);
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersCanRegister", (bool)reader["UsersCanRegister"]);
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailRegisteredWebsite", SafelyConvertFieldToBool(reader["ValidateEmailRegisteredWebsite"]));
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "ValidateEmailContactEMail", SafelyConvertFieldToBool(reader["ValidateEmailContactEMail"]));
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "UsersAreModerated", (bool)reader["UsersAreModerated"]);
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotifyModeration", (bool)reader["NotifyModeration"]);
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "NotificationsRecipients", SafelyConvertFieldToBool(reader["NotificationsRecipients"]));
+                        site.As<InfosetPart>().Store("RegistrationSettingsPart", "EnableLostPassword", (bool)reader["EnableLostPassword"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Users_RegistrationSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + registrationTable, null);
+            }
 
             #endregion
 
             #region SmtpSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Address", (string)reader["Address"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Host", (string)reader["Host"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Port", (int)reader["Port"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "EnableSsl", (bool)reader["EnableSsl"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "RequireCredentials", (bool)reader["RequireCredentials"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "UserName", (string)reader["UserName"]);
-                    site.As<InfosetPart>().Store("SmtpSettingsPart", "Password", (string)reader["Password"]);
-                });
+            var emailTable = _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord");
+            if (_upgradeService.TableExists(emailTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + emailTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "Address", reader["Address"] as string);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "Host", reader["Host"] as string);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "Port", (int)reader["Port"]);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "EnableSsl", (bool)reader["EnableSsl"]);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "RequireCredentials", (bool)reader["RequireCredentials"]);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "UserName", reader["UserName"] as string);
+                        site.As<InfosetPart>().Store("SmtpSettingsPart", "Password", reader["Password"] as string);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Email_SmtpSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + emailTable, null);
+            }
 
             #endregion
 
             #region WarmupSettingsPartRecord
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord"),
-                (reader, connection) => {
-                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Urls", (string)reader["Urls"]);
-                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Scheduled", (bool)reader["Scheduled"]);
-                    site.As<InfosetPart>().Store("WarmupSettingsPart", "Delay", (int)reader["Delay"]);
-                    site.As<InfosetPart>().Store("WarmupSettingsPart", "OnPublish", (bool)reader["OnPublish"]);
-                });
+            var warmupTable = _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord");
+            if (_upgradeService.TableExists(warmupTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + warmupTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("WarmupSettingsPart", "Urls", reader["Urls"] as string);
+                        site.As<InfosetPart>().Store("WarmupSettingsPart", "Scheduled", (bool)reader["Scheduled"]);
+                        site.As<InfosetPart>().Store("WarmupSettingsPart", "Delay", (int)reader["Delay"]);
+                        site.As<InfosetPart>().Store("WarmupSettingsPart", "OnPublish", (bool)reader["OnPublish"]);
+                    });
 
-            _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_Warmup_WarmupSettingsPartRecord"), null);
+                _upgradeService.ExecuteReader("DROP TABLE " + warmupTable, null);
+            }
+
             #endregion
 
             // todo: user records
@@ -263,17 +304,17 @@ namespace Upgrade.Controllers {
 
             return new JsonResult { Data = lastContentItemId };
         }
-        
+
         [HttpPost]
         public JsonResult MigrateContentPermissionsPart(int id) {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
-            
+
             _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord") + " WHERE Id > " + id,
                 (reader, connection) => {
-                    lastContentItemId = (int) reader["Id"];
+                    lastContentItemId = (int)reader["Id"];
                     var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
                     contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
@@ -301,7 +342,7 @@ namespace Upgrade.Controllers {
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
-            
+
             _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord") + " WHERE Id > " + id,
                 (reader, connection) => {
                     lastContentItemId = (int)reader["Id"];
@@ -319,7 +360,7 @@ namespace Upgrade.Controllers {
                 throw new AuthenticationException("");
 
             var lastContentItemId = id;
-            
+
             _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagsPartRecord") + " WHERE Id > " + id,
                 (reader, connection) => {
                     lastContentItemId = (int)reader["Id"];
@@ -330,7 +371,7 @@ namespace Upgrade.Controllers {
                                                   + _upgradeService.GetPrefixedTableName("Orchard_Tags_ContentTagRecord") + " as CTR "
                                                   + " INNER JOIN " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagRecord") + " as TR "
                                                   + " ON CTR.TagRecord_Id = TR.Id"
-                                                  + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string) r["TagName"]));
+                                                  + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string)r["TagName"]));
 
 
                     contentPermissionPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", String.Join(",", tagNames));
@@ -454,6 +495,25 @@ namespace Upgrade.Controllers {
             }
 
             return new JsonResult { Data = lastContentItemId };
+        }
+
+
+        private static bool SafelyConvertFieldToBool(object field) {
+            if (field == null) {
+                return false;
+            }
+
+            var stringRepresentation = field.ToString();
+
+            if (String.IsNullOrEmpty(stringRepresentation)) {
+                return false;
+            }
+
+            bool result;
+            if (bool.TryParse(stringRepresentation, out result)) {
+                return result;
+            }
+            return false;
         }
     }
 }

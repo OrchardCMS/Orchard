@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using NHibernate.Dialect;
+using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
@@ -32,7 +35,7 @@ namespace Upgrade.Services {
                 for (int i = 0; i < reader.FieldCount; i++) {
                     parameters.Add(reader.GetName(i), reader.GetValue(i));
                 }
-                
+
                 values.Add(parameters);
             });
 
@@ -79,7 +82,7 @@ namespace Upgrade.Services {
 
                 command.CommandText = statement;
 
-                command.ExecuteNonQuery();                
+                command.ExecuteNonQuery();
             }
         }
 
@@ -89,7 +92,7 @@ namespace Upgrade.Services {
 
             var command = session.Connection.CreateCommand();
             command.CommandText = string.Format(sqlStatement);
-                
+
             var reader = command.ExecuteReader();
 
             while (reader != null && reader.Read()) {
@@ -114,6 +117,21 @@ namespace Upgrade.Services {
             }
 
             return _shellSettings.DataTablePrefix + "_" + tableName;
+        }
+
+        public bool TableExists(string tableName) {
+            // While not particularly nice (or fast with many tables) this seems to be a database-agnostic way of checking the existence
+            // of a table.
+            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
+            var session = sessionFactory.OpenSession();
+
+            var connection = session.Connection as DbConnection;
+
+            if (connection == null) {
+                throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+            }
+
+            return connection.GetSchema("Tables").Rows.Cast<DataRow>().Any(row => row["TABLE_NAME"].ToString() == tableName);
         }
     }
 }
