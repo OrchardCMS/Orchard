@@ -312,25 +312,28 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var permissionsTable = _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord");
+            if (_upgradeService.TableExists(permissionsTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + permissionsTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewContent", reader["ViewContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewOwnContent", reader["ViewOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishContent", reader["PublishContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishOwnContent", reader["PublishOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditContent", reader["EditContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditOwnContent", reader["EditOwnContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteContent", reader["DeleteContent"].ToString());
-                    contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteOwnContent", reader["DeleteOwnContent"].ToString());
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "Enabled", reader["Enabled"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewContent", reader["ViewContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "ViewOwnContent", reader["ViewOwnContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishContent", reader["PublishContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "PublishOwnContent", reader["PublishOwnContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditContent", reader["EditContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "EditOwnContent", reader["EditOwnContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteContent", reader["DeleteContent"].ToString());
+                        contentPermissionPart.As<InfosetPart>().Store("ContentPermissionsPart", "DeleteOwnContent", reader["DeleteOwnContent"].ToString());
+                    });
 
-            if (lastContentItemId == id) {
-                // delete the table only when there is no more content to process
-                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Orchard_ContentPermissions_ContentPermissionsPartRecord"), null);
+                if (lastContentItemId == id) {
+                    // delete the table only when there is no more content to process
+                    _upgradeService.ExecuteReader("DROP TABLE " + permissionsTable, null);
+                }
             }
 
             return new JsonResult { Data = lastContentItemId };
@@ -343,13 +346,16 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var contentMenuItemTable = _upgradeService.GetPrefixedTableName("Orchard_ContentPicker_ContentMenuItemPartRecord");
+            if (_upgradeService.TableExists(contentMenuItemTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + contentMenuItemTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("ContentMenuItemPart", "ContentItemId", (int)reader["ContentMenuItemRecord_id"]);
+                    });
+            }
 
             return new JsonResult { Data = lastContentItemId };
         }
@@ -361,21 +367,24 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagsPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var tagsTable = _upgradeService.GetPrefixedTableName("Orchard_Tags_TagsPartRecord");
+            if (_upgradeService.TableExists(tagsTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + tagsTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    var tagNames = new List<string>();
-                    _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " TR.TagName as TagName FROM "
-                                                  + _upgradeService.GetPrefixedTableName("Orchard_Tags_ContentTagRecord") + " as CTR "
-                                                  + " INNER JOIN " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagRecord") + " as TR "
-                                                  + " ON CTR.TagRecord_Id = TR.Id"
-                                                  + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string)r["TagName"]));
+                        var tagNames = new List<string>();
+                        _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " TR.TagName as TagName FROM "
+                                                        + _upgradeService.GetPrefixedTableName("Orchard_Tags_ContentTagRecord") + " as CTR "
+                                                        + " INNER JOIN " + _upgradeService.GetPrefixedTableName("Orchard_Tags_TagRecord") + " as TR "
+                                                        + " ON CTR.TagRecord_Id = TR.Id"
+                                                        + " WHERE TagsPartRecord_id = " + lastContentItemId, (r, c) => tagNames.Add((string)r["TagName"]));
 
 
-                    contentPermissionPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", String.Join(",", tagNames));
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("TagsPart", "CurrentTags", String.Join(",", tagNames));
+                    });
+            }
 
             return new JsonResult { Data = lastContentItemId };
         }
@@ -387,17 +396,20 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Widgets_WidgetPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var widgetsTable = _upgradeService.GetPrefixedTableName("Orchard_Widgets_WidgetPartRecord");
+            if (_upgradeService.TableExists(widgetsTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + widgetsTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Title", (string)reader["Title"]);
-                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Position", (string)reader["Position"]);
-                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Zone", (string)reader["Zone"]);
-                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "RenderTitle", (bool)reader["RenderTitle"]);
-                    contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Name", (string)reader["Name"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Title", (string)reader["Title"]);
+                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Position", (string)reader["Position"]);
+                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Zone", (string)reader["Zone"]);
+                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "RenderTitle", (bool)reader["RenderTitle"]);
+                        contentPermissionPart.As<InfosetPart>().Store("WidgetPart", "Name", reader["Name"] as string);
+                    });
+            }
 
             return new JsonResult { Data = lastContentItemId };
         }
@@ -409,15 +421,18 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Widgets_LayerPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var layersTable = _upgradeService.GetPrefixedTableName("Orchard_Widgets_LayerPartRecord");
+            if (_upgradeService.TableExists(layersTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + layersTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Name", (string)reader["Name"]);
-                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Description", (string)reader["Description"]);
-                    contentPermissionPart.As<InfosetPart>().Store("LayerPart", "LayerRule", (string)reader["LayerRule"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Name", (string)reader["Name"]);
+                        contentPermissionPart.As<InfosetPart>().Store("LayerPart", "Description", (string)reader["Description"]);
+                        contentPermissionPart.As<InfosetPart>().Store("LayerPart", "LayerRule", (string)reader["LayerRule"]);
+                    });
+            }
 
             return new JsonResult { Data = lastContentItemId };
         }
@@ -429,22 +444,25 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var menuWidgetTable = _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord");
+            if (_upgradeService.TableExists(menuWidgetTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + menuWidgetTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "StartLevel", (int)reader["StartLevel"]);
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Levels", (int)reader["Levels"]);
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Breadcrumb", (bool)reader["Breadcrumb"]);
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddHomePage", (bool)reader["AddHomePage"]);
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddCurrentPage", (bool)reader["AddCurrentPage"]);
-                    contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "MenuContentItemId", (int)reader["Menu_id"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "StartLevel", (int)reader["StartLevel"]);
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Levels", (int)reader["Levels"]);
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "Breadcrumb", (bool)reader["Breadcrumb"]);
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddHomePage", (bool)reader["AddHomePage"]);
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "AddCurrentPage", (bool)reader["AddCurrentPage"]);
+                        contentPermissionPart.As<InfosetPart>().Store("MenuWidgetPart", "MenuContentItemId", (int)reader["Menu_id"]);
+                    });
 
-            if (lastContentItemId == id) {
-                // delete the table only when there is no more content to process
-                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_MenuWidgetPartRecord"), null);
+                if (lastContentItemId == id) {
+                    // delete the table only when there is no more content to process
+                    _upgradeService.ExecuteReader("DROP TABLE " + menuWidgetTable, null);
+                }
             }
 
             return new JsonResult { Data = lastContentItemId };
@@ -457,17 +475,20 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var shapeMenuItemTable = _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord");
+            if (_upgradeService.TableExists(shapeMenuItemTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + shapeMenuItemTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("ShapeMenuItemPart", "ShapeType", (string)reader["ShapeType"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("ShapeMenuItemPart", "ShapeType", (string)reader["ShapeType"]);
+                    });
 
-            if (lastContentItemId == id) {
-                // delete the table only when there is no more content to process
-                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_ShapeMenuItemPartRecord"), null);
+                if (lastContentItemId == id) {
+                    // delete the table only when there is no more content to process
+                    _upgradeService.ExecuteReader("DROP TABLE " + shapeMenuItemTable, null);
+                }
             }
 
             return new JsonResult { Data = lastContentItemId };
@@ -481,17 +502,20 @@ namespace Upgrade.Controllers {
 
             var lastContentItemId = id;
 
-            _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord") + " WHERE Id > " + id,
-                (reader, connection) => {
-                    lastContentItemId = (int)reader["Id"];
-                    var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
+            var menuItemTable = _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord");
+            if (_upgradeService.TableExists(menuItemTable)) {
+                _upgradeService.ExecuteReader("SELECT TOP " + BATCH + " * FROM " + menuItemTable + " WHERE Id > " + id,
+                    (reader, connection) => {
+                        lastContentItemId = (int)reader["Id"];
+                        var contentPermissionPart = _orchardServices.ContentManager.Get(lastContentItemId);
 
-                    contentPermissionPart.As<InfosetPart>().Store("MenuItemPart", "Url", (string)reader["Url"]);
-                });
+                        contentPermissionPart.As<InfosetPart>().Store("MenuItemPart", "Url", reader["Url"] as string);
+                    });
 
-            if (lastContentItemId == id) {
-                // delete the table only when there is no more content to process
-                _upgradeService.ExecuteReader("DROP TABLE " + _upgradeService.GetPrefixedTableName("Navigation_MenuItemPartRecord"), null);
+                if (lastContentItemId == id) {
+                    // delete the table only when there is no more content to process
+                    _upgradeService.ExecuteReader("DROP TABLE " + menuItemTable, null);
+                }
             }
 
             return new JsonResult { Data = lastContentItemId };
