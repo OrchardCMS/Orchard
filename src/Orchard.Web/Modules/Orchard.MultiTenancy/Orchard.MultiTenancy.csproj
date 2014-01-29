@@ -75,6 +75,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\ITenantService.cs" />
     <Compile Include="Services\TenantService.cs" />
+    <Compile Include="ViewModels\ModuleEntry.cs" />
     <Compile Include="ViewModels\TenantEditViewModel.cs" />
     <Compile Include="ViewModels\TenantAddViewModel.cs" />
     <Compile Include="ViewModels\TenantsIndexViewModel.cs" />
@@ -85,6 +86,7 @@
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Scripts\multi-tenancy.admin.js" />
     <Content Include="Styles\orchard-multitenancy-admin.css" />
     <Content Include="Views\Admin\Add.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
@@ -108,11 +110,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>
+      </SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

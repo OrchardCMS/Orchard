@@ -7,6 +7,7 @@ namespace Orchard.MultiTenancy.ViewModels {
     public class TenantEditViewModel  {
         public TenantEditViewModel() {
             Themes = new List<ThemeEntry>();
+            Modules = new List<ModuleEntry>();
         }
 
         [Required]
@@ -20,6 +21,8 @@ namespace Orchard.MultiTenancy.ViewModels {
         public TenantState State { get; set; }
 
         public List<ThemeEntry> Themes { get; set; }
+        public List<ModuleEntry> Modules { get; set; }
+
     }
 }
 
