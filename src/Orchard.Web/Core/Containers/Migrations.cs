@@ -81,13 +81,13 @@ namespace Orchard.Core.Containers {
                 table.DropColumn("OrderByDirection");
                 table.DropColumn("ItemContentType");
                 table.AddColumn<string>("ItemContentTypes");
-                table.AddColumn<bool>("ShowOnAdminMenu", c => c.NotNull());
+                table.AddColumn<bool>("ShowOnAdminMenu");
                 table.AddColumn<string>("AdminMenuText", c => c.WithLength(50));
                 table.AddColumn<string>("AdminMenuPosition", c => c.WithLength(50));
                 table.AddColumn<string>("AdminMenuImageSet", c => c.WithLength(50));
                 table.AddColumn<bool>("EnablePositioning");
                 table.AddColumn<string>("AdminListViewName", c => c.WithLength(50));
-                table.AddColumn<int>("ItemCount", c => c.NotNull());
+                table.AddColumn<int>("ItemCount");
             });
 
             SchemaBuilder.AlterTable("ContainablePartRecord", table => {
