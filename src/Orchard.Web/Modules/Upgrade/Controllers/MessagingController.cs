@@ -30,13 +30,19 @@ namespace Upgrade.Controllers {
 
         public ActionResult Index() {
             var found = false;
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord")  + " WHERE Name = 'SendEmail'",
-                (reader, connection) => {
-                    found = true;
-                });
+            var activityTable = _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord");
+            if (_upgradeService.TableExists(activityTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + activityTable + " WHERE Name = 'SendEmail'",
+                    (reader, connection) => {
+                        found = true;
+                    });
 
-            if (!found) {
-                _orchardServices.Notifier.Warning(T("This step is unnecessary as no Send Email activities were found."));
+                if (!found) {
+                    _orchardServices.Notifier.Warning(T("This step is unnecessary as no Send Email activities were found."));
+                }
+            }
+            else {
+                _orchardServices.Notifier.Warning(T("This step appears unnecessary since it appears Orchard Workflows is not enabled."));
             }
 
             return View();
@@ -47,49 +53,55 @@ namespace Upgrade.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to upgrade.")))
                 return new HttpUnauthorizedResult();
 
-            _upgradeService.ExecuteReader("SELECT * FROM " + _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord") + " WHERE Name = 'SendEmail'",
-                (reader, connection) => {
-                    var record = _repository.Get((int) reader["Id"]);
+            var activityTable = _upgradeService.GetPrefixedTableName("Orchard_Workflows_ActivityRecord");
+            if (_upgradeService.TableExists(activityTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + activityTable + " WHERE Name = 'SendEmail'",
+                    (reader, connection) => {
+                        var record = _repository.Get((int)reader["Id"]);
 
-                    if (record == null) {
-                        return;
-                    }
+                        if (record == null) {
+                            return;
+                        }
 
-                    var state = JsonConvert.DeserializeAnonymousType(record.State, new {
-                        Body = "",
-                        Subject = "",
-                        Recipient = "",
-                        RecipientOther = "",
+                        var state = JsonConvert.DeserializeAnonymousType(record.State, new {
+                            Body = "",
+                            Subject = "",
+                            Recipient = "",
+                            RecipientOther = "",
+                        });
+
+                        var newState = new EmailMessage {
+                            Body = state.Body,
+                            Subject = state.Subject
+                        };
+
+                        if (!newState.Body.StartsWith("<p ")) {
+                            newState.Body =
+                                newState.Body
+                                + System.Environment.NewLine;
+                        }
+
+                        if (state.Recipient == "owner") {
+                            newState.Recipients = "{Content.Author.Email}";
+                        }
+                        else if (state.Recipient == "author") {
+                            newState.Recipients = "{User.Current.Email}";
+                        }
+                        else if (state.Recipient == "admin") {
+                            newState.Recipients = "{Site.SuperUser.Email}";
+                        }
+                        else if (state.Recipient == "other") {
+                            newState.Recipients = state.RecipientOther;
+                        }
+
+                        record.State = JsonConvert.SerializeObject(newState);
                     });
 
-                    var newState = new EmailMessage {
-                        Body = state.Body,
-                        Subject = state.Subject
-                    };
-
-                    if (!newState.Body.StartsWith("<p ")) {
-                        newState.Body =
-                            newState.Body
-                            + System.Environment.NewLine;
-                    }
-
-                    if (state.Recipient == "owner") {
-                        newState.Recipients = "{Content.Author.Email}";
-                    }
-                    else if (state.Recipient == "author") {
-                        newState.Recipients = "{User.Current.Email}";
-                    }
-                    else if (state.Recipient == "admin") {
-                        newState.Recipients = "{Site.SuperUser.Email}";
-                    }
-                    else if (state.Recipient == "other") {
-                        newState.Recipients = state.RecipientOther;
-                    }
-
-                    record.State = JsonConvert.SerializeObject(newState);
-                });
-
-            _orchardServices.Notifier.Information(T("Email activities updated successfully"));
+                _orchardServices.Notifier.Information(T("Email activities updated successfully"));
+            }
+            else {
+                _orchardServices.Notifier.Warning(T("No email activities were updated."));
+            }
 
             return RedirectToAction("Index");
         }
