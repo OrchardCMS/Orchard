@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -87,6 +88,7 @@ namespace Orchard.Mvc {
         class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
+            private readonly Cache _cache = new Cache();
 
             public HttpContextPlaceholder(Func<string> baseUrl) {
                 _baseUrl = new Lazy<string>(baseUrl);
@@ -108,6 +110,10 @@ namespace Orchard.Mvc {
 
             public override PageInstrumentationService PageInstrumentation {
                 get { return new PageInstrumentationService(); }
+            }
+
+            public override Cache Cache {
+                get { return _cache; }
             }
         }
 
