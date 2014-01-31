@@ -105,7 +105,10 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes(bool andContainable) {
-            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
+                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
+                ctd.Settings.GetModel<ContentTypeSettings>().Creatable &&
+                (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
         [HttpPost, ActionName("List")]
