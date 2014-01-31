@@ -101,6 +101,12 @@ namespace Orchard.Data {
                     _cancelled = false;
                 }
             }
+
+            if (_session != null) {
+                _session.Dispose();
+                _session = null;
+            }
+
         }
 
         private void EnsureSession() {
@@ -116,7 +122,6 @@ namespace Orchard.Data {
         class OrchardSessionInterceptor : IInterceptor {
             private readonly ISessionInterceptor[] _interceptors;
             private readonly ILogger _logger;
-            private ISession _session;
 
             public OrchardSessionInterceptor(ISessionInterceptor[] interceptors, ILogger logger) {
                 _interceptors = interceptors;
@@ -238,8 +243,6 @@ namespace Orchard.Data {
             }
 
             void IInterceptor.SetSession(ISession session) {
-                _session = session;
-
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.SetSession(session), _logger);
             }
