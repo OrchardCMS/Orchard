@@ -88,7 +88,6 @@ namespace Orchard.Mvc {
         class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
-            private readonly Cache _cache = new Cache();
 
             public HttpContextPlaceholder(Func<string> baseUrl) {
                 _baseUrl = new Lazy<string>(baseUrl);
@@ -113,7 +112,7 @@ namespace Orchard.Mvc {
             }
 
             public override Cache Cache {
-                get { return _cache; }
+                get { return HttpRuntime.Cache; }
             }
         }
 
