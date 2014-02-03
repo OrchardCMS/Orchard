@@ -22,6 +22,7 @@ namespace Orchard.UI.Admin {
             if (IsAdmin(filterContext)) {
                 if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel, T("Can't access the admin"))) {
                     filterContext.Result = new HttpUnauthorizedResult();
+                    filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
                 }
 
                 Apply(filterContext.RequestContext);
