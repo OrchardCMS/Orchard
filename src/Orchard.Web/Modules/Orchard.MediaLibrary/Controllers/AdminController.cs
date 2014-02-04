@@ -41,7 +41,9 @@ namespace Orchard.MediaLibrary.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index(string folderPath = "", bool dialog = false) {
-            
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
+                return new HttpUnauthorizedResult();
+
             // let other modules enhance the ui by providing custom navigation and actions
             var explorer = Services.ContentManager.New("MediaLibraryExplorer");
             explorer.Weld(new MediaLibraryExplorerPart());
@@ -69,6 +71,8 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         public ActionResult Import(string folderPath) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot import media")))
+                return new HttpUnauthorizedResult();
 
             var mediaProviderMenu = _navigationManager.BuildMenu("mediaproviders");
             var imageSets = _navigationManager.BuildImageSets("mediaproviders");
@@ -85,6 +89,9 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [Themed(false)]
         public ActionResult MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
+                return new HttpUnauthorizedResult();
+
             var mediaParts = _mediaLibraryService.GetMediaContentItems(folderPath, skip, count, order, mediaType);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(folderPath, mediaType);
 
@@ -103,6 +110,9 @@ namespace Orchard.MediaLibrary.Controllers {
 
         [Themed(false)]
         public ActionResult RecentMediaItems(int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
+                return new HttpUnauthorizedResult();
+
             var mediaParts = _mediaLibraryService.GetMediaContentItems(skip, count, order, mediaType);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(mediaType);
 
@@ -126,7 +136,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, contentItem, T("Cannot edit media")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, contentItem, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = Services.ContentManager.BuildDisplay(contentItem, displayType);
