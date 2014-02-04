@@ -11,6 +11,7 @@ using Orchard.Core.Feeds;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Settings;
+using Orchard.Taxonomies.Settings;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Taxonomies.Drivers {
@@ -57,16 +58,27 @@ namespace Orchard.Taxonomies.Drivers {
                     var taxonomy = _taxonomyService.GetTaxonomy(part.TaxonomyId);
                     var totalItemCount = _taxonomyService.GetContentItemsCount(part);
 
+                    var partSettings = part.Settings.GetModel<TermPartSettings>();
+                    if (partSettings != null && partSettings.OverrideDefaultPagination) {
+                        pager.PageSize = partSettings.PageSize;
+                    }
+
+                    var childDisplayType = partSettings != null &&
+                                           !String.IsNullOrWhiteSpace(partSettings.ChildDisplayType)
+                        ? partSettings.ChildDisplayType
+                        : "Summary";
                     // asign Taxonomy and Term to the content item shape (Content) in order to provide 
                     // alternates when those content items are displayed when they are listed on a term
                     var termContentItems = _taxonomyService.GetContentItems(part, pager.GetStartIndex(), pager.PageSize)
-                        .Select(c => _contentManager.BuildDisplay(c, "Summary").Taxonomy(taxonomy).Term(part));
+                        .Select(c => _contentManager.BuildDisplay(c, childDisplayType).Taxonomy(taxonomy).Term(part));
 
                     var list = shapeHelper.List();
 
                     list.AddRange(termContentItems);
 
-                    var pagerShape = shapeHelper.Pager(pager)
+                    var pagerShape = pager.PageSize == 0
+                        ? null
+                        : shapeHelper.Pager(pager)
                             .TotalItemCount(totalItemCount)
                             .Taxonomy(taxonomy)
                             .Term(part);

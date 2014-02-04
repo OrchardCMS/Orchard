@@ -15,25 +15,19 @@ namespace Orchard.CustomForms {
         public static readonly Permission ManageForms = new Permission { Description = "Manage custom forms", Name = "ManageForms" };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
-        private readonly IContentManager _contentManager;
         
         public virtual Feature Feature { get; set; }
 
-        public Permissions(IContentDefinitionManager contentDefinitionManager, IContentManager contentManager) {
+        public Permissions(IContentDefinitionManager contentDefinitionManager) {
             _contentDefinitionManager = contentDefinitionManager;
-            _contentManager = contentManager;
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            // manage rights only for Creatable types
-            var formTypes = _contentManager.Query<CustomFormPart>().List().Select(x => x.ContentType).Distinct();
-            
-            foreach (var contentType in formTypes) {
-                var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-                if(typeDefinition == null) {
-                    continue;
-                }
+            var formTypeDefinitions = _contentDefinitionManager
+                .ListTypeDefinitions()
+                .Where(x => x.Parts.Any(xx => xx.PartDefinition.Name == typeof(CustomFormPart).Name));
 
+            foreach (var typeDefinition in formTypeDefinitions) {
                 yield return CreateSubmitPermission(typeDefinition);
             }
 

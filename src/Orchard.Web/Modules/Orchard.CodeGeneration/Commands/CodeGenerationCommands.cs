@@ -21,10 +21,10 @@ namespace Orchard.CodeGeneration.Commands {
         private const string SolutionDirectoryThemes = "74492CBC-7201-417E-BC29-28B4C25A58B0";
 
         private static readonly string[] _themeDirectories = new[] {
-            "", "Content", "Styles", "Scripts", "Views", "Zones"
+	        "", "Content", "Styles", "Scripts", "Views"
         };
         private static readonly string[] _moduleDirectories = new[] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
+	        "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
         private static readonly string[] _moduleTestsDirectories = new[] {
             "", "Properties"
