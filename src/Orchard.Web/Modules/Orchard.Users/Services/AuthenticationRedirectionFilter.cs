@@ -16,6 +16,8 @@ namespace Orchard.Users.Services {
 
         public void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext) {
             if (filterContext.Result is HttpUnauthorizedResult) {
+                filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
+
                 filterContext.Result = new RedirectToRouteResult(
                     new RouteValueDictionary
                 {
