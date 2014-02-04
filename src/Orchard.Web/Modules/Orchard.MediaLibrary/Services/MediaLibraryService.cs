@@ -198,6 +198,10 @@ namespace Orchard.MediaLibrary.Services {
             return GetPublicUrl(Path.Combine(mediaPath, fileName));
         }
 
+        public MediaFolder GetRootMediaFolder() {
+            return null;
+        }
+
         /// <summary>
         /// Retrieves the media folders within a given relative path.
         /// </summary>

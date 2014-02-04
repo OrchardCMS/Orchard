@@ -36,6 +36,8 @@ namespace Orchard.MediaLibrary.Services {
         /// <returns>The public URL for the media.</returns>
         string GetMediaPublicUrl(string mediaPath, string fileName);
 
+        MediaFolder GetRootMediaFolder();
+
         /// <summary>
         /// Retrieves the media folders within a given relative path.
         /// </summary>
