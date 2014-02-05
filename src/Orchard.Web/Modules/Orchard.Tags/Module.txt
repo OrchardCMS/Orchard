@@ -10,3 +10,8 @@ Features:
         Description: The tags module is providing basic tagging for arbitrary content types. 
         Dependencies: Settings, Orchard.jQuery
         Category: Navigation
+    Orchard.Tags.Feeds:
+        Name: Tags Feeds
+        Description: Adds tags to the RSS feeds. 
+        Dependencies: Orchard.Tags, Feeds
+        Category: Syndication

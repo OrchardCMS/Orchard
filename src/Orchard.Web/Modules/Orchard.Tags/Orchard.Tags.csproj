@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Feeds\TagsFeedItemBuilder.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ContentTagRecord.cs" />
     <Compile Include="Models\TagsPartRecord.cs" />
