@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -20,7 +19,6 @@ namespace Orchard.Core.Navigation.Services {
         private readonly IEnumerable<INavigationFilter> _navigationFilters;
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
-        private readonly ShellSettings _shellSettings;
 
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders, 
@@ -28,15 +26,13 @@ namespace Orchard.Core.Navigation.Services {
             IAuthorizationService authorizationService,
             IEnumerable<INavigationFilter> navigationFilters,
             UrlHelper urlHelper, 
-            IOrchardServices orchardServices,
-            ShellSettings shellSettings) {
+            IOrchardServices orchardServices) {
             _navigationProviders = navigationProviders;
             _menuProviders = menuProviders;
             _authorizationService = authorizationService;
             _navigationFilters = navigationFilters;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
-            _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
         }
 
@@ -94,9 +90,6 @@ namespace Orchard.Core.Navigation.Services {
                 !(url.StartsWith("/") || schemes.Any(scheme => url.StartsWith(scheme + ":")))) {
                 if (url.StartsWith("~/")) {
                     url = url.Substring(2);
-                    if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
-                        url = _shellSettings.RequestUrlPrefix + "/" + url;
-                    }
                 }
                 if (!url.StartsWith("#")) {
                     var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;

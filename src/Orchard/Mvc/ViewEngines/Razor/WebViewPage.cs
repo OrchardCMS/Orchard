@@ -190,14 +190,23 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return writer;
         }
 
-        private string _tenantPrefix = null;
+        private string _tenantPrefix;
         public override string Href(string path, params object[] pathParts) {
             if (_tenantPrefix == null) {
                 _tenantPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix ?? "";
             }
 
             if (!String.IsNullOrEmpty(_tenantPrefix)) {
-                return base.Href(path, new [] {_tenantPrefix }.Concat(pathParts).ToArray());
+
+                if (path.StartsWith("~/")
+                    && !path.StartsWith("~/Modules", StringComparison.OrdinalIgnoreCase)
+                    && !path.StartsWith("~/Themes", StringComparison.OrdinalIgnoreCase)
+                    && !path.StartsWith("~/Media", StringComparison.OrdinalIgnoreCase)
+                    && !path.StartsWith("~/Core", StringComparison.OrdinalIgnoreCase)) {
+                    
+                    return base.Href("~/" + _tenantPrefix + path.Substring(2), pathParts);
+                }
+
             }
 
             return base.Href(path, pathParts);
