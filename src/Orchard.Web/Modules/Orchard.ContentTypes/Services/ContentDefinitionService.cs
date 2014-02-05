@@ -50,6 +50,7 @@ namespace Orchard.ContentTypes.Services {
             };
 
             foreach (var part in viewModel.Parts) {
+                part._Definition.ContentTypeDefinition = contentTypeDefinition;
                 part.Templates = _contentDefinitionEditorEvents.TypePartEditor(part._Definition);
                 foreach (var field in part.PartDefinition.Fields)
                     field.Templates = _contentDefinitionEditorEvents.PartFieldEditor(field._Definition);
