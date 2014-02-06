@@ -12,21 +12,22 @@ namespace Orchard.Tags {
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
-                             new RouteDescriptor {   Priority = 5,
-                                                     Route = new Route(
-                                                         "Tags/{tagName}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Tags"},
-                                                                                      {"controller", "Home"},
-                                                                                      {"action", "Search"}
-                                                         },
-                                                         new RouteValueDictionary(),
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Tags"}
-                                                         },
-                                                         new MvcRouteHandler())
-                             }
-                         };
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "Tags/{tagName}",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Tags"},
+                            {"controller", "Home"},
+                            {"action", "Search"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Tags"}
+                        },
+                        new MvcRouteHandler())
+                }
+            };
         }
     }
 }

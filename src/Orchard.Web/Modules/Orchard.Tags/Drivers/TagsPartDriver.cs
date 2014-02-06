@@ -14,7 +14,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Tags.Drivers {
     [UsedImplicitly]
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
-        private static readonly char[] _disalowedChars =  { '<', '>', '*', '%', ':', '&', '\\', '"', '|' };
+        public static readonly char[] DisalowedChars =  { '<', '>', '*', '%', ':', '&', '\\', '"', '|', '/' };
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;
         private readonly INotifier _notifier;
@@ -50,10 +50,10 @@ namespace Orchard.Tags.Drivers {
             // as the tag names are used in the route directly, prevent them from having ASP.NET disallowed chars
             // c.f., http://www.hanselman.com/blog/ExperimentsInWackinessAllowingPercentsAnglebracketsAndOtherNaughtyThingsInTheASPNETIISRequestURL.aspx
 
-            var disallowedTags = tagNames.Where(x => _disalowedChars.Intersect(x).Any()).ToList();
+            var disallowedTags = tagNames.Where(x => DisalowedChars.Intersect(x).Any()).ToList();
 
             if (disallowedTags.Any()) {
-                _notifier.Warning(T("The tags \"{0}\" could not be added because they contain forbidden chars: {1}", String.Join(", ", disallowedTags), String.Join(", ", _disalowedChars)));
+                _notifier.Warning(T("The tags \"{0}\" could not be added because they contain forbidden chars: {1}", String.Join(", ", disallowedTags), String.Join(", ", DisalowedChars)));
                 tagNames = tagNames.Where(x => !disallowedTags.Contains(x)).ToList();
             }
 

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
+using Orchard.Tags.Drivers;
 using Orchard.Tags.Models;
 using Orchard.Tags.ViewModels;
 using Orchard.Tags.Services;
@@ -74,11 +74,17 @@ namespace Orchard.Tags.Controllers {
 
             var viewModel = new TagsAdminCreateViewModel();
 
-            if (!TryUpdateModel(viewModel)) {
+            TryUpdateModel(viewModel);
+
+            if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
+                ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be added because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+            }
+
+            if(!ModelState.IsValid) {
                 ViewData["CreateTag"] = viewModel;
                 return Index();
             }
-            
+
             _tagService.CreateTag(viewModel.TagName);
             
             return RedirectToAction("Index");
@@ -111,6 +117,11 @@ namespace Orchard.Tags.Controllers {
             
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't edit tag")))
                 return new HttpUnauthorizedResult();
+
+            if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
+                ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be modified because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+                return View(viewModel);
+            }
 
             _tagService.UpdateTag(viewModel.Id, viewModel.TagName);
             return RedirectToAction("Index");
