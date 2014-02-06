@@ -95,9 +95,10 @@ namespace Orchard.UI.Navigation {
                 // if the menu item doesn't have route values, compare urls
                 if (currentRequest != null && menuItem.RouteValues == null) {
 
-                    string requestUrl = currentRequest.Path.Replace(currentRequest.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-                    string modelUrl = menuItem.Href.Replace(currentRequest.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
-                    if (requestUrl == modelUrl || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/"))) {
+                    string requestUrl = currentRequest.Path.Replace(currentRequest.ApplicationPath ?? "/", string.Empty);
+                    string modelUrl = menuItem.Href.Replace("~/", currentRequest.ApplicationPath);
+                    modelUrl = modelUrl.Replace(currentRequest.ApplicationPath ?? "/", string.Empty);
+                    if (requestUrl.Equals(modelUrl, StringComparison.OrdinalIgnoreCase) || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/", StringComparison.OrdinalIgnoreCase))) {
                         match = true;
                     }
                 }

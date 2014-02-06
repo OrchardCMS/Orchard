@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -19,6 +20,7 @@ namespace Orchard.Core.Navigation.Services {
         private readonly IEnumerable<INavigationFilter> _navigationFilters;
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
+        private readonly ShellSettings _shellSettings;
 
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders, 
@@ -26,13 +28,15 @@ namespace Orchard.Core.Navigation.Services {
             IAuthorizationService authorizationService,
             IEnumerable<INavigationFilter> navigationFilters,
             UrlHelper urlHelper, 
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            ShellSettings shellSettings) {
             _navigationProviders = navigationProviders;
             _menuProviders = menuProviders;
             _authorizationService = authorizationService;
             _navigationFilters = navigationFilters;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
+            _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
         }
 
@@ -60,7 +64,7 @@ namespace Orchard.Core.Navigation.Services {
             return GetImageSets(menuName).SelectMany(imageSets => imageSets.Distinct()).Distinct();
         }
 
-        private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
+        private IEnumerable<MenuItem> FinishMenu(ICollection<MenuItem> menuItems) {
             foreach (var menuItem in menuItems) {
                 menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
                 menuItem.Items = FinishMenu(menuItem.Items.ToArray());
@@ -89,7 +93,10 @@ namespace Orchard.Core.Navigation.Services {
             if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
                 !(url.StartsWith("/") || schemes.Any(scheme => url.StartsWith(scheme + ":")))) {
                 if (url.StartsWith("~/")) {
-                    url = url.Substring(2);
+
+                    if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
+                        url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
+                    }
                 }
                 if (!url.StartsWith("#")) {
                     var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
