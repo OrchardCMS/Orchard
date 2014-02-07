@@ -133,13 +133,18 @@ namespace Orchard.ContentManagement {
     public interface IAliasFactory {
         /// <summary>
         /// Creates a join on a content part record or returns it if it already exists.
+        /// <param name="type">The type of join, e.g. "left outer join"</param>
+        /// <param name="withPredicate">An expression for an additional constraint on the join</param>
         /// </summary>
-        IAliasFactory ContentPartRecord<TRecord>() where TRecord : ContentPartRecord;
+        IAliasFactory ContentPartRecord<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord;
         
         /// <summary>
         /// Creates a join on a content part record or returns it if it already exists.
+        /// <param name="contentPartRecord">The type of the part to join</param>
+        /// <param name="type">The type of join, e.g. "left outer join"</param>
+        /// <param name="withPredicate">An expression for an additional constraint on the join</param>
         /// </summary>
-        IAliasFactory ContentPartRecord(Type contentPartRecord);
+        IAliasFactory ContentPartRecord(Type contentPartRecord, string type = null, Action<IHqlExpressionFactory> withPredicate = null);
 
         /// <summary>
         /// Creates a join based on a property, or returns it if it already exists.

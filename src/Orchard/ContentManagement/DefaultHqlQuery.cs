@@ -52,17 +52,17 @@ namespace Orchard.ContentManagement {
             return tuple == null ? null : tuple.Item2;
         }
 
-        internal IAlias BindCriteriaByPath(IAlias alias, string path) {
-            return BindCriteriaByAlias(alias, path, PathToAlias(path));
+        internal IAlias BindCriteriaByPath(IAlias alias, string path, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
+            return BindCriteriaByAlias(alias, path, PathToAlias(path), type, withPredicate);
         }
 
-        internal IAlias BindCriteriaByAlias(IAlias alias, string path, string aliasName) {
+        internal IAlias BindCriteriaByAlias(IAlias alias, string path, string aliasName, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             // is this Join already existing (based on aliasName)
 
             Join join = BindNamedAlias(aliasName);
 
             if (join == null) {
-                join = new Join(path, aliasName);
+                join = new Join(path, aliasName, type, withPredicate);
                 _joins.Add(new Tuple<IAlias, Join>(alias, join));
             }
 
@@ -88,19 +88,19 @@ namespace Orchard.ContentManagement {
             return _from;
         }
 
-        internal IAlias BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
-            return BindPartCriteria(typeof(TRecord));
+        internal IAlias BindPartCriteria<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord {
+            return BindPartCriteria(typeof(TRecord), type, withPredicate);
         }
 
-        internal IAlias BindPartCriteria(Type contentPartRecordType) {
+        internal IAlias BindPartCriteria(Type contentPartRecordType, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             if (!contentPartRecordType.IsSubclassOf(typeof(ContentPartRecord))) {
                 throw new ArgumentException("The type must inherit from ContentPartRecord", "contentPartRecordType");
             }
 
             if (contentPartRecordType.IsSubclassOf(typeof(ContentPartVersionRecord))) {
-                return BindCriteriaByPath(BindItemVersionCriteria(), contentPartRecordType.Name);
+                return BindCriteriaByPath(BindItemVersionCriteria(), contentPartRecordType.Name, type, withPredicate);
             }
-            return BindCriteriaByPath(BindItemCriteria(), contentPartRecordType.Name);
+            return BindCriteriaByPath(BindItemCriteria(), contentPartRecordType.Name, type, withPredicate);
         }
 
         internal void Where(IAlias alias, Action<IHqlExpressionFactory> predicate) {
@@ -246,7 +246,16 @@ namespace Orchard.ContentManagement {
             sb.Append("from ").Append(_from.TableName).Append(" as ").Append(_from.Name).AppendLine();
 
             foreach (var join in _joins) {
-                sb.Append(join.Item2.Type).Append(" ").Append(join.Item1.Name + "." + join.Item2.TableName).Append(" as ").Append(join.Item2.Name).AppendLine();
+                sb.Append(join.Item2.Type + " " +
+                    join.Item1.Name + "." + join.Item2.TableName +
+                    " as " + join.Item2.Name);
+                if (join.Item2.WithPredicate != null) {
+                    var predicate = join.Item2.WithPredicate;
+                    var expressionFactory = new DefaultHqlExpressionFactory();
+                    predicate(expressionFactory);
+                    sb.Append(" with " + expressionFactory.Criterion.ToHql(join.Item2));
+                }
+                sb.AppendLine();
             }
 
             // generating where clause
@@ -378,6 +387,7 @@ namespace Orchard.ContentManagement {
     public interface IJoin : IAlias {
         string TableName { get; set; }
         string Type { get; set; }
+        Action<IHqlExpressionFactory> WithPredicate { get; set; }
     }
 
     public class Sort {
@@ -396,20 +406,26 @@ namespace Orchard.ContentManagement {
     public class Join : Alias, IJoin {
 
         public Join(string tableName, string alias)
-            : this(tableName, alias, "join") {}
+            : this(tableName, alias, "join", null) {}
 
         public Join(string tableName, string alias, string type)
+            : this(tableName, alias, type, null) {
+        }
+
+        public Join(string tableName, string alias, string type, Action<IHqlExpressionFactory> withPredicate)
             : base(alias) {
             if (String.IsNullOrEmpty(tableName)) {
                 throw new ArgumentException("Table Name can't be empty");
             }
 
             TableName = tableName;
-            Type = type;
+            Type = type ?? "join";
+            WithPredicate = withPredicate;
         }
 
         public string TableName { get; set; }
         public string Type { get; set; }
+        public Action<IHqlExpressionFactory> WithPredicate { get; set; }
     }
 
     public class DefaultHqlSortFactory : IHqlSortFactory
@@ -442,17 +458,17 @@ namespace Orchard.ContentManagement {
             Current = _query.BindItemCriteria();
         }
 
-        public IAliasFactory ContentPartRecord<TRecord>() where TRecord : ContentPartRecord {
-            Current = _query.BindPartCriteria<TRecord>();
+        public IAliasFactory ContentPartRecord<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord {
+            Current = _query.BindPartCriteria<TRecord>(type, withPredicate);
             return this;
         }
 
-        public IAliasFactory ContentPartRecord(Type contentPartRecord) {
+        public IAliasFactory ContentPartRecord(Type contentPartRecord, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             if(!contentPartRecord.IsSubclassOf(typeof(ContentPartRecord))) {
                 throw new ArgumentException("Type must inherit from ContentPartRecord", "contentPartRecord");
             }
 
-            Current = _query.BindPartCriteria(contentPartRecord);
+            Current = _query.BindPartCriteria(contentPartRecord, type, withPredicate);
             return this;
         }
 
