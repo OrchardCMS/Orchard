@@ -10,14 +10,19 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.UI.Admin;
+using Orchard.UI.Notify;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
+        private readonly INotifier _notifier;
         private readonly IWorkContextAccessor _workContextAccessor;
         private const string ReCaptchaUrl = "http://www.google.com/recaptcha/api";
         private const string ReCaptchaSecureUrl = "https://www.google.com/recaptcha/api";
         
-        public ReCaptchaPartDriver(IWorkContextAccessor workContextAccessor) {
+        public ReCaptchaPartDriver(
+            INotifier notifier,
+            IWorkContextAccessor workContextAccessor) {
+            _notifier = notifier;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
@@ -73,7 +78,7 @@ namespace Orchard.AntiSpam.Drivers {
                     );
 
                 if(!HandleValidateResponse(context, result)) {
-                    updater.AddModelError("Parts_ReCaptcha_Fields", T("The text you entered in the Captcha field does not match the image"));
+                    _notifier.Error(T("The text you entered in the Captcha field does not match the image"));
                 }
             }
 
