@@ -618,7 +618,7 @@ namespace Orchard.Core.Shapes {
 
             IEnumerable<string> classes = Shape.Classes;
             IDictionary<string, string> attributes = Shape.Attributes;
-            attributes.Add("href", action);
+            attributes["href"] = action;
             string id = Shape.Id;
             var tag = GetTagBuilder("a", id, classes, attributes);
             tag.InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString();
