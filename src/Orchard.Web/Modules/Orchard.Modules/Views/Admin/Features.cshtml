@@ -75,6 +75,7 @@
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
                 var showDisable = categoryName.ToString() != "Core";
                 var showEnable = !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
+                
                 <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
@@ -107,7 +108,8 @@
                     </div>
                     <div class="actions">
                         @if (showDisable && feature.IsEnabled) {
-                            <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true">@T("Disable")</a> 
+                            var dependantsJoined = string.Join(", ", feature.DependentFeatures.Select(f => f.Name));
+                            <a href="#" data-feature-id="@feature.Descriptor.Id" data-feature-action="@FeaturesBulkAction.Disable" data-feature-force="true" data-feature-dependants="@dependantsJoined">@T("Disable")</a> 
                         }
 
                         @if (showEnable && !feature.IsEnabled) {
@@ -123,4 +125,12 @@
         }</ul>
     </li>}
 }</ul>}
+
+    using (Script.Foot()) {
+        <script type="text/javascript">
+        //<![CDATA[
+            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
+        //]]>
+        </script>
+    }
 }

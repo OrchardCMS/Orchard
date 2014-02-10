@@ -179,8 +179,10 @@ namespace Orchard.Modules.Controllers {
                                 Descriptor = f,
                                 IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
                                 IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(f.Extension),
-                                NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id)
-                            });
+                                NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id),
+                                DependentFeatures = _moduleService.GetDependentFeatures(f.Id).Where(x => x.Id != f.Id).ToList()
+                            })
+                .ToList();
 
             return View(new FeaturesViewModel { Features = features });
         }

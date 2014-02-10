@@ -41,13 +41,18 @@
             var featureId = actionLink.data("feature-id");
             var action = actionLink.data("feature-action");
             var force = actionLink.data("feature-force");
+            var dependants = actionLink.data("feature-dependants");
 
-            $("[name='submit.BulkExecute']").val("yes");
-            $("[name='featureIds']").val(featureId);
-            $("[name='bulkAction']").val(action);
-            $("[name='force']").val(force);
+            if (!dependants || /^\s*$/.test(dependants) || confirm(confirmDisableMessage + "\n\n" + dependants)) {
 
-            actionLink.parents("form:first").submit();
+                $("[name='submit.BulkExecute']").val("yes");
+                $("[name='featureIds']").val(featureId);
+                $("[name='bulkAction']").val(action);
+                $("[name='force']").val(force);
+
+                actionLink.parents("form:first").submit();
+            }
+
             e.preventDefault();
         });
     };

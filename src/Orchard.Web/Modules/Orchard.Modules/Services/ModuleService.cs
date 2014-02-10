@@ -115,6 +115,15 @@ namespace Orchard.Modules.Services {
             return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
         }
 
+        public IEnumerable<FeatureDescriptor> GetDependentFeatures(string featureId) {
+            var dependants = _featureManager.GetDependentFeatures(featureId);
+            var availableFeatures = _featureManager.GetAvailableFeatures().ToLookup(f => f.Id, StringComparer.OrdinalIgnoreCase);
+
+            return dependants
+                .SelectMany(id => availableFeatures[id])
+                .ToList();
+        }
+
         /// <summary>
         /// Retrieves the full path of the manifest file for a module's extension descriptor.
         /// </summary>
