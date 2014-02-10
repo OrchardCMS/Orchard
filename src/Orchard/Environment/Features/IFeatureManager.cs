@@ -48,5 +48,12 @@ namespace Orchard.Environment.Features {
         /// <param name="force">Boolean parameter indicating if the feature should disable the features which depend on it if required or fail otherwise.</param>
         /// <returns>An enumeration with the disabled feature IDs.</returns>
         IEnumerable<string> DisableFeatures(IEnumerable<string> featureIds, bool force);
+
+        /// <summary>
+        /// Lists all enabled features that depend on a given feature.
+        /// </summary>
+        /// <param name="featureId">ID of the feature to check.</param>
+        /// <returns>An enumeration with dependent feature IDs.</returns>
+        IEnumerable<string> GetDependentFeatures(string featureId);
     }
 }
