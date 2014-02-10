@@ -79,6 +79,7 @@ namespace Orchard.AntiSpam.Drivers {
 
                 if(!HandleValidateResponse(context, result)) {
                     _notifier.Error(T("The text you entered in the Captcha field does not match the image"));
+                    updater.AddModelError("", T("The text you entered in the Captcha field does not match the image"));
                 }
             }
 
