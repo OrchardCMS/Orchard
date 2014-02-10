@@ -13,7 +13,7 @@ Features:
 	Orchard.Azure.OutputCache:
 		Name: Windows Azure Output Cache
 		Description: Activates an Orchard output cache provider that targets Windows Azure Cache.
-		Dependencies: Orchard.OutputCache
+		Dependencies: Orchard.Azure, Orchard.OutputCache
 		Category: Performance
 	Orchard.Azure.DatabaseCache:
 		Name: Windows Azure Database Cache
