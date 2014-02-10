@@ -58,7 +58,10 @@ namespace Orchard.Blogs.Services {
         }
 
         public int PostCount(BlogPart blogPart, VersionOptions versionOptions) {
-            return GetBlogQuery(blogPart, versionOptions).Count();
+            return _contentManager.Query(versionOptions, "BlogPost")
+                .Join<CommonPartRecord>().Where(
+                    cr => cr.Container == blogPart.Record.ContentItemRecord)
+                .Count();
         }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {

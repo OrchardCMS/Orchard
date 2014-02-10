@@ -108,9 +108,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
+    <Compile Include="Services\BlogPostsCountProcessor.cs" />
     <Compile Include="Services\IArchiveService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
+    <Compile Include="Services\IBlogPostsCountProcessor.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
     <Compile Include="ViewModels\RecentBlogPostsViewModel.cs" />

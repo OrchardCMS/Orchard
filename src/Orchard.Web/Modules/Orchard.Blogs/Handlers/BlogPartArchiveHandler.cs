@@ -78,7 +78,7 @@ namespace Orchard.Blogs.Handlers {
             _blogArchiveRepository.Flush();
 
             // don't reduce archive count if the content item is not published
-            if (!blogPostPart.HasPublished) {
+            if (!_previousCreatedUtc.ContainsKey(blogPostPart.Id)) {
                 return;
             }
 
