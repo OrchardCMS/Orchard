@@ -3,14 +3,14 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.ViewModels;
+using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
-using Orchard.Localization;
-using System.Globalization;
 using Orchard.Services;
-using Orchard.Localization.Services;
 
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
@@ -62,10 +62,13 @@ namespace Orchard.PublishLater.Drivers {
 
         protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
             var model = new PublishLaterViewModel(part) {
-                ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = !part.IsPublished() ? _dateServices.ConvertToLocalDateString(part.ScheduledPublishUtc.Value, "") : "",
-                ScheduledPublishTime = !part.IsPublished() ? _dateServices.ConvertToLocalTimeString(part.ScheduledPublishUtc.Value, "") : ""
-            };
+                 Editor = new DateTimeEditor() {
+                    ShowDate = true,
+                    ShowTime = true,
+                    Date = !part.IsPublished() ? _dateServices.ConvertToLocalDateString(part.ScheduledPublishUtc.Value, "") : "",
+                    Time = !part.IsPublished() ? _dateServices.ConvertToLocalTimeString(part.ScheduledPublishUtc.Value, "") : "",
+                }
+           };
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
@@ -77,23 +80,23 @@ namespace Orchard.PublishLater.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
             var httpContext = _httpContextAccessor.Current();
             if (httpContext.Request.Form["submit.Save"] == "submit.PublishLater") {
-                if (!String.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !String.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                     try {
-                        var utcDateTime = _dateServices.ConvertFromLocalString(model.ScheduledPublishDate, model.ScheduledPublishTime);
-                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = utcDateTime;
-
-                        if (model.ScheduledPublishUtc < _clock.UtcNow) {
-                            updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past."));
-                        }
-                        else {
-                            _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        if (utcDateTime.HasValue) {
+                            if (utcDateTime.Value < _clock.UtcNow) {
+                                updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past."));
+                            }
+                            else {
+                                _publishLaterService.Publish(model.ContentItem, utcDateTime.Value);
+                            }
                         }
                     }
                     catch (FormatException) {
-                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.ScheduledPublishDate, model.ScheduledPublishTime));                                             
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                                             
                     }
                 }
-                else if (!String.IsNullOrWhiteSpace(model.ScheduledPublishDate) || !String.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                     updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
             }

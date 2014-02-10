@@ -8,14 +8,14 @@ using Orchard.Services;
 namespace Orchard.Tokens.Providers {
     public class DateTokens : ITokenProvider {
         private readonly IClock _clock;
-        private readonly IDateTimeLocalization _dateTimeLocalization;
+        private readonly IDateTimeFormatProvider _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
         private readonly IDateServices _dateServices;
 
         public DateTokens(
             IClock clock, 
-            IDateTimeLocalization dateTimeLocalization, 
+            IDateTimeFormatProvider dateTimeLocalization, 
             IWorkContextAccessor workContextAccessor,
             IDateServices dateServices) {
             _clock = clock;
@@ -48,15 +48,15 @@ namespace Orchard.Tokens.Providers {
                 .Token("Local", d => _dateServices.ConvertToLocal(d))
                 .Chain("Local", "Date", d => _dateServices.ConvertToLocal(d))
                 // {Date.ShortDate}
-                .Token("ShortDate", d => d.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value))
+                .Token("ShortDate", d => d.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value))
                 // {Date.ShortTime}
-                .Token("ShortTime", d => d.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value))
+                .Token("ShortTime", d => d.ToString(_dateTimeLocalization.ShortTimeFormat, _cultureInfo.Value))
                 // {Date.Long}
-                .Token("Long", d => d.ToString(_dateTimeLocalization.LongDateTimeFormat.Text, _cultureInfo.Value))
+                .Token("Long", d => d.ToString(_dateTimeLocalization.LongDateTimeFormat, _cultureInfo.Value))
                 // {Date}
                 .Token(
                     token => token == String.Empty ? String.Empty : null,
-                    (token, d) => d.ToString(_dateTimeLocalization.ShortDateFormat.Text + " " + _dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value))
+                    (token, d) => d.ToString(_dateTimeLocalization.ShortDateFormat + " " + _dateTimeLocalization.ShortTimeFormat, _cultureInfo.Value))
                 // {Date.Format:<formatstring>}
                 .Token(
                     token => token.StartsWith("Format:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Format:".Length) : null,

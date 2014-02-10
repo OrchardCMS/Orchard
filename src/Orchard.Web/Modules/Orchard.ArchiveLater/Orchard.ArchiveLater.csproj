@@ -70,7 +70,6 @@
     <Compile Include="Handlers\UnpublishingTaskHandler.cs" />
     <Compile Include="Models\ArchiveLaterPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ArchiveLaterService.cs" />
     <Compile Include="Services\IArchiveLaterService.cs" />
     <Compile Include="ViewModels\ArchiveLaterViewModel.cs" />
@@ -78,7 +77,6 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\orchard-archivelater-datetime.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
@@ -96,11 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

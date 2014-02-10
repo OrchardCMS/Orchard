@@ -73,7 +73,6 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\IPublishLaterService.cs" />
     <Compile Include="Services\PublishingTaskManager.cs" />
     <Compile Include="Services\PublishLaterService.cs" />
@@ -102,7 +101,6 @@
     <Content Include="Content\Admin\images\published.gif" />
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\orchard-publishlater-datetime.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\PublishLater.cshtml" />
@@ -118,11 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

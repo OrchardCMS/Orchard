@@ -6,8 +6,8 @@ using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
-using System.Globalization;
 using Orchard.Localization.Services;
 
 namespace Orchard.ArchiveLater.Drivers {
@@ -51,13 +51,14 @@ namespace Orchard.ArchiveLater.Drivers {
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
-            var localDate = new Lazy<DateTime>(() => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledArchiveUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
-
             var model = new ArchiveLaterViewModel(part) {
-                ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value,
                 ArchiveLater = part.ScheduledArchiveUtc.Value.HasValue,
-                ScheduledArchiveDate = _dateServices.ConvertToLocalDateString(part.ScheduledArchiveUtc.Value, ""),
-                ScheduledArchiveTime = _dateServices.ConvertToLocalTimeString(part.ScheduledArchiveUtc.Value, "")
+                Editor = new DateTimeEditor() {
+                    ShowDate = true,
+                    ShowTime = true,
+                    Date = _dateServices.ConvertToLocalDateString(part.ScheduledArchiveUtc.Value, ""),
+                    Time = _dateServices.ConvertToLocalTimeString(part.ScheduledArchiveUtc.Value, ""),
+                }
             };
 
             return ContentShape("Parts_ArchiveLater_Edit",
@@ -70,12 +71,11 @@ namespace Orchard.ArchiveLater.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (model.ArchiveLater) {
                     try {
-                        var utcDateTime = _dateServices.ConvertFromLocalString(model.ScheduledArchiveDate, model.ScheduledArchiveTime);
-                        model.ScheduledArchiveUtc = utcDateTime;
-                        _archiveLaterService.ArchiveLater(model.ContentItem, model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value : DateTime.MaxValue);
+                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        _archiveLaterService.ArchiveLater(model.ContentItem, utcDateTime.HasValue ? utcDateTime.Value : DateTime.MaxValue);
                     }
                     catch (FormatException) {
-                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.ScheduledArchiveDate, model.ScheduledArchiveTime));                        
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                        
                     }
                 }
                 else {

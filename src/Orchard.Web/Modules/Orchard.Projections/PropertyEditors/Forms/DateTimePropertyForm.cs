@@ -66,7 +66,7 @@ namespace Orchard.Projections.PropertyEditors.Forms {
 
             switch(format) {
                 case "ago":
-                    return display.DateTimeRelative(dateTimeUtc: dateTime);
+                    return display.DateTimeRelative(DateTimeUtc: dateTime);
                 case "day" :
                     return dateTime.Day.ToString(cultureInfo);
                 case "month" :

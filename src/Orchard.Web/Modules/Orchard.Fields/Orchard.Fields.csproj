@@ -71,12 +71,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\hint.js" />
     <Content Include="Styles\media-gallery-admin.css" />
-    <Content Include="Styles\datetime.css" />
     <Content Include="Styles\Images\move.gif" />
     <Content Include="Web.config" />
-    <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />

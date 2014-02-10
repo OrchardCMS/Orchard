@@ -10,6 +10,7 @@ using Orchard.Fields.ViewModels;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Core.Common.ViewModels;
 
 namespace Orchard.Fields.Drivers {
     [UsedImplicitly]
@@ -43,12 +44,14 @@ namespace Orchard.Fields.Drivers {
 
                     var viewModel = new DateTimeFieldViewModel {
                         Name = field.DisplayName,
-                        Date = DateServices.ConvertToLocalDateString(value, String.Empty),
-                        Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
-                        ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
-                        ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
                         Hint = settings.Hint,
-                        Required = settings.Required
+                        IsRequired = settings.Required,
+                        Editor = new DateTimeEditor() {
+                            Date = DateServices.ConvertToLocalDateString(value, String.Empty),
+                            Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
+                            ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
+                            ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
+                        }
                     };
 
                     return shapeHelper.Fields_DateTime( // this is the actual Shape which will be resolved (Fields/DateTime.cshtml)
@@ -63,12 +66,14 @@ namespace Orchard.Fields.Drivers {
 
             var viewModel = new DateTimeFieldViewModel {
                 Name = field.DisplayName,
-                Date = DateServices.ConvertToLocalDateString(value, String.Empty),
-                Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
-                ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
-                ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
                 Hint = settings.Hint,
-                Required = settings.Required
+                IsRequired = settings.Required,
+                Editor = new DateTimeEditor() {
+                    Date = DateServices.ConvertToLocalDateString(value, String.Empty),
+                    Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
+                    ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
+                    ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
+                }
             };
 
             return ContentShape("Fields_DateTime_Edit", GetDifferentiator(field, part),
@@ -81,11 +86,11 @@ namespace Orchard.Fields.Drivers {
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Required && (((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly) && String.IsNullOrWhiteSpace(viewModel.Date)) || ((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly) && String.IsNullOrWhiteSpace(viewModel.Time)))) {
+                if (settings.Required && (((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly) && String.IsNullOrWhiteSpace(viewModel.Editor.Date)) || ((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly) && String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 } else {
                     try {
-                        var utcDateTime = DateServices.ConvertFromLocalString(viewModel.Date, viewModel.Time);
+                        var utcDateTime = DateServices.ConvertFromLocalString(viewModel.Editor.Date, viewModel.Editor.Time);
                         if (utcDateTime.HasValue) {
                             field.DateTime = utcDateTime.Value;
                         } else {

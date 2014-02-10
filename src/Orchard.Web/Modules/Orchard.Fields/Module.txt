@@ -9,4 +9,4 @@ Features:
     Orchard.Fields:
         Description: Contains the following fields: Input, Boolean, DateTime, Numeric, Link, Enumeration
         Category: Fields
-        Dependencies: Orchard.jQuery
+        Dependencies: Common, Orchard.jQuery

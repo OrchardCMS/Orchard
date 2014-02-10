@@ -13,12 +13,12 @@ namespace Orchard.Fields.Tokens {
 
     public class FieldTokens : ITokenProvider {
 
-        private readonly IDateTimeLocalization _dateTimeLocalization;
+        private readonly IDateTimeFormatProvider _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
 
         public FieldTokens(
-            IDateTimeLocalization dateTimeLocalization, 
+            IDateTimeFormatProvider dateTimeLocalization, 
             IWorkContextAccessor workContextAccessor) {
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
@@ -55,9 +55,9 @@ namespace Orchard.Fields.Tokens {
                 ;
 
             context.For<DateTimeField>("DateTimeField")
-                .Token("Date", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateFormat.Text, _cultureInfo.Value)))
-                .Token("Time", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortTimeFormat.Text, _cultureInfo.Value)))
-                .Token("DateTime", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateTimeFormat.Text, _cultureInfo.Value)))
+                .Token("Date", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value)))
+                .Token("Time", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortTimeFormat, _cultureInfo.Value)))
+                .Token("DateTime", (Func<DateTimeField, object>)(d => d.DateTime.ToString(_dateTimeLocalization.ShortDateTimeFormat, _cultureInfo.Value)))
                 .Chain("DateTime", "Date", (Func<DateTimeField, object>)(field => field.DateTime))
                 ;
         }

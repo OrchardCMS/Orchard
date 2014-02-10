@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
@@ -312,6 +313,11 @@ namespace Orchard.Utility.Extensions {
             }
 
             return new string(result);
+        }
+
+        public static string ReplaceAll(this string original, IDictionary<string, string> replacements) {
+            var pattern = String.Format("({0})", String.Join("|", replacements.Keys.ToArray()));
+            return Regex.Replace(original, pattern, (match) => replacements[match.Value]);
         }
     }
 }

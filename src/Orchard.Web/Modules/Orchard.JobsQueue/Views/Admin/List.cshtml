@@ -52,7 +52,7 @@ else {
                 <tr>
                     <td>@priorityName</td>
                     <td>@job.Message</td>
-                    <td>@Display.DateTimeRelative(dateTimeUtc: job.CreatedUtc)</td>
+                    <td>@Display.DateTimeRelative(DateTimeUtc: job.CreatedUtc)</td>
                     <td>
                         <a href="@Url.Action("Details", "Admin", new { job.Id, returnUrl = Request.Url.PathAndQuery })">@T("Details")</a>
                     </td>

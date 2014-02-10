@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 
@@ -22,7 +22,7 @@ namespace Orchard.Core.Common.DateEditor {
         public IOrchardServices Services { get; set; }
 
         protected override string Prefix {
-            get { return "DateEditor"; }
+            get { return ""; }
         }
 
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
@@ -39,6 +39,11 @@ namespace Orchard.Core.Common.DateEditor {
                 "Parts_Common_Date_Edit",
                 () => {
                     DateEditorViewModel model = shapeHelper.Parts_Common_Date_Edit(typeof(DateEditorViewModel));
+                    
+                    model.Editor = new DateTimeEditor() {
+                        ShowDate = true,
+                        ShowTime = true
+                    };
 
                     if (part.CreatedUtc != null) {
                         // show CreatedUtc only if is has been "touched", 
@@ -48,31 +53,31 @@ namespace Orchard.Core.Common.DateEditor {
                         var thisIsTheInitialVersionRecord = part.ContentItem.Version < 2;
                         var theDatesHaveNotBeenModified = part.CreatedUtc == part.VersionCreatedUtc;
 
-                        var theEditorShouldBeBlank = 
-                            itemHasNeverBeenPublished && 
-                            thisIsTheInitialVersionRecord && 
+                        var theEditorShouldBeBlank =
+                            itemHasNeverBeenPublished &&
+                            thisIsTheInitialVersionRecord &&
                             theDatesHaveNotBeenModified;
 
                         if (!theEditorShouldBeBlank) {
-                            model.CreatedDate = _dateServices.ConvertToLocalDateString(part.CreatedUtc, "");
-                            model.CreatedTime = _dateServices.ConvertToLocalTimeString(part.CreatedUtc, "");
+                            model.Editor.Date = _dateServices.ConvertToLocalDateString(part.CreatedUtc, "");
+                            model.Editor.Time = _dateServices.ConvertToLocalTimeString(part.CreatedUtc, "");
                         }
                     }
 
                     if (updater != null) {
                         updater.TryUpdateModel(model, Prefix, null, null);
 
-                        if (!String.IsNullOrWhiteSpace(model.CreatedDate) && !String.IsNullOrWhiteSpace(model.CreatedTime)) {
+                        if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                             try {
-                                var utcDateTime = _dateServices.ConvertFromLocalString(model.CreatedDate, model.CreatedTime);
+                                var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
                                 part.CreatedUtc = utcDateTime;
                                 part.VersionCreatedUtc = utcDateTime;
                             }
                             catch (FormatException) {
-                                updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.CreatedDate, model.CreatedTime));                                                                             
+                                updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));
                             }
                         }
-                        else if (!String.IsNullOrWhiteSpace(model.CreatedDate) || !String.IsNullOrWhiteSpace(model.CreatedTime)) {
+                        else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                             updater.AddModelError(Prefix, T("Both the date and time need to be specified."));
                         }
 

@@ -12,12 +12,12 @@ namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
         private readonly IDateServices _dateServices;
-        private readonly IDateTimeLocalization _dateTimeLocalization;
+        private readonly IDateTimeFormatProvider _dateTimeLocalization;
 
         public DateTimeShapes(
             IClock clock,
             IDateServices dateServices,
-            IDateTimeLocalization dateTimeLocalization
+            IDateTimeFormatProvider dateTimeLocalization
             ) {
             _clock = clock;
             _dateServices = dateServices;
@@ -32,7 +32,7 @@ namespace Orchard.Core.Shapes {
             var time = _clock.UtcNow - DateTimeUtc;
 
             if (time.TotalDays > 7 || time.TotalDays < -7)
-                return Display.DateTime(DateTimeUtc: DateTimeUtc, CustomFormat: _dateTimeLocalization.LongDateTimeFormat);
+                return Display.DateTime(DateTimeUtc: DateTimeUtc, CustomFormat: null);
 
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
@@ -60,14 +60,14 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat) {
+        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat = null) {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
-                return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat.Text));
+                return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat, null));
             }
 
-            return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, CustomFormat.Text));
+            return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, CustomFormat.Text, null));
         }
     }
 }

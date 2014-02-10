@@ -8,4 +8,4 @@ OrchardVersion: 1.7.2
 Description: The PublishLater module introduces draft creation and scheduled publishing functionality.
 FeatureDescription: Draft creation and scheduled publishing.
 Category: Content
-Dependencies: Common, Scheduling, Orchard.jQuery
+Dependencies: Common, Scheduling
