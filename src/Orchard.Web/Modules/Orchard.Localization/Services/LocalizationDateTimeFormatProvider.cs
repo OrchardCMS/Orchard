@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Localization.Services {
 
     /// <summary>
     /// Provides an implementation of IDateTimeFormatProvider which uses Localizer to obtain
     /// property values. The strings used to resolve values through Localizer can be changed
-    /// for other cultures using the normal string localization process.
+    /// for other cultures using the normal string localization process. This is useful for
+    /// adding additional or different translations than those provided by CultureInfo.
     /// </summary>
+    [OrchardFeature("Orchard.Localization.DateTimeFormat")]
+    [OrchardSuppressDependency("Orchard.Localization.Services.CultureDateTimeFormatProvider")]
     public class LocalizationDateTimeFormatProvider : IDateTimeFormatProvider {
 
         public LocalizationDateTimeFormatProvider(IOrchardServices orchardServices) {

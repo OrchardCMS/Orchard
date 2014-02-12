@@ -28,7 +28,8 @@ namespace Orchard.Core.Shapes {
         public Localizer T { get; set; }
 
         [Shape]
-        public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc) {
+        public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc, DateTime dateTimeUtc) {
+            DateTimeUtc = DateTimeUtc != System.DateTime.MinValue ? DateTimeUtc : dateTimeUtc; // Both capitalizations retained for compatibility.
             var time = _clock.UtcNow - DateTimeUtc;
 
             if (time.TotalDays > 7 || time.TotalDays < -7)
@@ -60,7 +61,7 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat = null) {
+        public IHtmlString DateTime(DateTime DateTimeUtc, LocalizedString CustomFormat) {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
