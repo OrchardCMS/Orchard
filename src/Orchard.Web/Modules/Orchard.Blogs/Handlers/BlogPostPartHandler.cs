@@ -5,27 +5,39 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPostPartHandler : ContentHandler {
+        private readonly IBlogService _blogService;
 
         public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
+            _blogService = blogService;
 
             OnGetDisplayShape<BlogPostPart>(SetModelProperties);
             OnGetEditorShape<BlogPostPart>(SetModelProperties);
             OnUpdateEditorShape<BlogPostPart>(SetModelProperties);
 
-            OnCreated<BlogPostPart>((context, part) => blogService.ProcessBlogPostsCount(part.BlogPart.Id));
-            OnPublished<BlogPostPart>((context, part) => blogService.ProcessBlogPostsCount(part.BlogPart.Id));
-            OnUnpublished<BlogPostPart>((context, part) => blogService.ProcessBlogPostsCount(part.BlogPart.Id));
-            OnVersioned<BlogPostPart>((context, part, newVersionPart) => blogService.ProcessBlogPostsCount(newVersionPart.BlogPart.Id));
-            OnRemoved<BlogPostPart>((context, part) => blogService.ProcessBlogPostsCount(part.BlogPart.Id));
+            OnCreated<BlogPostPart>((context, part) => ProcessBlogPostsCount(part));
+            OnPublished<BlogPostPart>((context, part) => ProcessBlogPostsCount(part));
+            OnUnpublished<BlogPostPart>((context, part) => ProcessBlogPostsCount(part));
+            OnVersioned<BlogPostPart>((context, part, newVersionPart) => ProcessBlogPostsCount(newVersionPart));
+            OnRemoved<BlogPostPart>((context, part) => ProcessBlogPostsCount(part));
 
             OnRemoved<BlogPart>(
                 (context, b) =>
                 blogPostService.Get(context.ContentItem.As<BlogPart>()).ToList().ForEach(
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
+        }
+
+        private void ProcessBlogPostsCount(BlogPostPart blogPostPart) {
+            CommonPart commonPart = blogPostPart.As<CommonPart>();
+            if (commonPart != null &&
+                commonPart.Record.Container != null) {
+
+                _blogService.ProcessBlogPostsCount(commonPart.Container.Id);
+            }
         }
 
         private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
