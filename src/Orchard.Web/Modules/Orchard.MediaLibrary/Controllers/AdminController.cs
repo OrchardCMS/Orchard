@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -12,7 +11,6 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.ContentManagement.MetaData;
-using System.Collections.Generic;
 using Orchard.Validation;
 
 namespace Orchard.MediaLibrary.Controllers {

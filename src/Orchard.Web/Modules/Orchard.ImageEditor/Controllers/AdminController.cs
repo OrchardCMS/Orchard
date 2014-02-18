@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ImageEditor.Models;
+using Orchard.MediaLibrary;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.Mvc;
@@ -90,6 +92,21 @@ namespace Orchard.ImageEditor.Controllers {
             media.MimeType = "image/png";
 
             return Json(true);
+        }
+
+        public ActionResult Proxy(string url) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent))
+                return HttpNotFound();
+
+            using (var wc = new WebClient()) {
+                try {
+                    var data = wc.DownloadData(url);
+                    return new FileContentResult(data, "image");
+                }
+                catch {
+                    return HttpNotFound();
+                }
+            }
         }
     }
 }
