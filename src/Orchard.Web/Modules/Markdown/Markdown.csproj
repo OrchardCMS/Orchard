@@ -119,6 +119,9 @@
     <Content Include="Views\Body-Markdown.Editor.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\MarkdownSiteSettingsPartHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\MarkdownSiteSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\MarkdownFilter.cs" />
@@ -167,6 +170,9 @@
     <Content Include="Scripts\orchard-markdown.min.js.map">
       <DependentUpon>orchard-markdown.js</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Markdown.MarkdownSiteSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
