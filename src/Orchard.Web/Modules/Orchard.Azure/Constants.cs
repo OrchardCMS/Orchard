@@ -5,7 +5,7 @@
         public const string ShellSettingsContainerName = "sites"; // Container names must be lower case.
         public const string ShellSettingsFileName = "Settings.txt";
 
-        public const string MediaStorageFeatureName = "Orchard.Azure";
+        public const string MediaStorageFeatureName = "Orchard.Azure.Media";
         public const string MediaStorageStorageConnectionStringSettingName = "Orchard.Azure.Media.StorageConnectionString";
         public const string MediaStorageContainerName = "media"; // Container names must be lower case.
 

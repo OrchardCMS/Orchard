@@ -1,4 +1,4 @@
-﻿Name: Azure
+﻿Name: Orchard.Azure
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
@@ -6,7 +6,7 @@ Version: 1.0
 OrchardVersion: 1.7.2
 Description: Provides a set of Orchard service implementations targeting Windows Azure services.
 Features:
-	Orchard.Azure:
+	Orchard.Azure.Media:
 		Name: Windows Azure Media Storage
 		Description: Activates an Orchard media storage provider that targets Windows Azure Blob Storage.
 		Category: Hosting
