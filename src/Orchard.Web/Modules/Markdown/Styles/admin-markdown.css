@@ -76,44 +76,6 @@
     overflow-y: scroll;
 }
 
-    .wmd-preview ol {
-        list-style: decimal;
-        margin-left: 15px;
-    }
-
-    .wmd-preview ul {
-        list-style: disc;
-        margin-left: 15px;
-    }
-
-    .wmd-preview blockquote {
-        margin: 1em 3em;
-        color: #333;
-        border-left: 2px solid #999;
-        padding-left: 1em;
-    }
-
-    .wmd-preview pre, .wmd-preview code {
-        margin: 1em 3em;
-        color: #333;
-        border-left: 2px solid #999;
-        padding-left: 1em;
-        font-family: Courier New;
-    }
-
-        .wmd-preview pre code {
-            border: none;
-            margin-left: 0;
-            padding-left: 0;
-        }
-
-
-    .wmd-preview p code {
-        border: none;
-        margin: 0;
-        padding: 0;
-    }
-
 .wmd-prompt-dialog {
     border: solid 1px #ccc;
     background-color: white;
@@ -156,23 +118,29 @@ div.grippie {
         line-height: 1.3em !important;
         margin-bottom: 14px !important;
     }
+    
+    .wmd-preview b, .wmd-preview strong {
+        font-weight: bold !important;
+    }
 
     .wmd-preview em {
         font-style: italic !important;
     }
-
-    .wmd-preview ul {
-        margin-bottom: 14px !important;
+    
+    .wmd-preview ol {
+        list-style: decimal !important;
+        margin-left: 20px !important;
     }
 
-
+    .wmd-preview ul, .wmd-preview ol  {
+        margin-bottom: 14px !important;
+    }
         .wmd-preview ul li {
             margin-left: 10px !important;
         }
 
 .wmd-preview code, .wmd-preview pre {
-    padding: 0 3px 2px !important;
-    font-family: Consolas,Monaco,"Courier New",monospace !important;
+    font-family: Consolas, "Courier New",monospace !important;
     font-size: 12px !important;
     color: #333333 !important;
     line-height: 18px !important;
