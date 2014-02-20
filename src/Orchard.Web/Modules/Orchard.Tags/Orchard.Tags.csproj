@@ -67,16 +67,22 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\TagCloudDriver.cs" />
     <Compile Include="Feeds\TagsFeedItemBuilder.cs" />
+    <Compile Include="Handlers\TagCloudHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ContentTagRecord.cs" />
+    <Compile Include="Models\TagCloudPart.cs" />
+    <Compile Include="Models\TagCount.cs" />
     <Compile Include="Models\TagsPartRecord.cs" />
     <Compile Include="Projections\TagsFilter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Projections\TagsFilterForms.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Services\ITagCloudService.cs" />
     <Compile Include="Services\ITagService.cs" />
+    <Compile Include="Services\TagCloudService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\EditTagsViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -118,6 +124,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -136,7 +146,12 @@
   <ItemGroup>
     <Content Include="Scripts\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Parts\TagCloud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\TagCloud.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
