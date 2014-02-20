@@ -30,7 +30,12 @@ namespace Orchard.Mvc.Extensions {
             }
             
             if(String.IsNullOrEmpty(baseUrl)) {
-                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();
+                var workContextAccessor = urlHelper.RequestContext.GetWorkContext();
+                baseUrl = workContextAccessor.CurrentSite.BaseUrl;
+
+                if (String.IsNullOrWhiteSpace(baseUrl)) {
+                    baseUrl = urlHelper.RequestContext.HttpContext.Request.ToApplicationRootUrlString();
+                }
             }
 
             if(String.IsNullOrEmpty(url)) {

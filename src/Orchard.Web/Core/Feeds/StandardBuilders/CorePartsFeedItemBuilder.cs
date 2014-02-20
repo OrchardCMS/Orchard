@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
+using Orchard.Mvc.Extensions;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
@@ -45,7 +46,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
                     context.Response.Contextualize(requestContext => {
                                                         var urlHelper = new UrlHelper(requestContext, _routes);
-                                                        var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                                                        var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                                                         link.Add(uriBuilder.Uri.OriginalString);
                                                         guid.Add(uriBuilder.Uri.OriginalString);
                                                    });

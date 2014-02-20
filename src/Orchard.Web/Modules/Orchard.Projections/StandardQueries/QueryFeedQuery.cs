@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.StandardBuilders;
+using Orchard.Mvc.Extensions;
 using Orchard.Projections.Models;
 using Orchard.Projections.Services;
 using Orchard.Services;
@@ -63,7 +64,7 @@ namespace Orchard.Projections.StandardQueries {
 
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                    var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                     link.Add(uriBuilder.Uri.OriginalString);
                 });
             }
