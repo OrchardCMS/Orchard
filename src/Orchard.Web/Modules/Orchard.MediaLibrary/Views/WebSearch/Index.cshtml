@@ -8,8 +8,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     @{
-        Script.Require("jQuery");
-        Script.Include("knockout-2.3.0.js");
+        Script.Require("jQuery").AtFoot();
+        Script.Include("knockout-2.3.0.js").AtFoot();
         
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-websearch-admin.css");
