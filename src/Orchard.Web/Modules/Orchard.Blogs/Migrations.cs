@@ -15,13 +15,6 @@ namespace Orchard.Blogs {
                     .Column<int>("BlogPart_id")
                 );
 
-            SchemaBuilder.CreateTable("BlogPartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<string>("Description", c => c.Unlimited())
-                    .Column<int>("PostCount")
-                );
-
             SchemaBuilder.CreateTable("RecentBlogPostsPartRecord",
                 table => table
                     .ContentPartRecord()

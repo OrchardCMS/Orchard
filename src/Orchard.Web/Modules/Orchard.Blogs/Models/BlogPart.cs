@@ -2,20 +2,20 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Blogs.Models {
-    public class BlogPart : ContentPart<BlogPartRecord> {
+    public class BlogPart : ContentPart {
 
         public string Name {
             get { return this.As<ITitleAspect>().Title; }
         }
 
         public string Description {
-            get { return Retrieve(x => x.Description); }
-            set { Store(x => x.Description, value); }
+            get { return this.Retrieve(x => x.Description); }
+            set { this.Store(x => x.Description, value); }
         }
 
         public int PostCount {
-            get { return Retrieve(x => x.PostCount); }
-            set { Store(x => x.PostCount, value); }
+            get { return this.Retrieve(x => x.PostCount); }
+            set { this.Store(x => x.PostCount, value); }
         }
     }
 }

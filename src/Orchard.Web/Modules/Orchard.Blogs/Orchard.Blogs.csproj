@@ -104,7 +104,6 @@
     <Compile Include="Handlers\BlogPartHandler.cs" />
     <Compile Include="Models\BlogPostPart.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
-    <Compile Include="Models\BlogPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />

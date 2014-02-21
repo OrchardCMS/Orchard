@@ -252,6 +252,18 @@ namespace Upgrade.Controllers {
 
             #endregion
 
+            #region BlogPartRecord
+            var blogTable = _upgradeService.GetPrefixedTableName("Orchard_Blogs_BlogPartRecord");
+            if (_upgradeService.TableExists(blogTable)) {
+                _upgradeService.ExecuteReader("SELECT * FROM " + blogTable,
+                    (reader, connection) => {
+                        site.As<InfosetPart>().Store("BlogPart", "Description", ConvertToString(reader["Description"]));
+                    });
+
+                _upgradeService.ExecuteReader("DROP TABLE " + blogTable, null);
+            }
+            #endregion
+            
             // todo: user records
 
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));

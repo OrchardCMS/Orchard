@@ -23,13 +23,13 @@ namespace Orchard.Blogs.Services {
 
         public void RebuildArchive(BlogPart blogPart) {
 
-            var first = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Record.Id).OrderBy<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
+            var first = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id).OrderBy<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
 
             if (first == null) {
                 return;
             }
 
-            var last = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Record.Id).OrderByDescending<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
+            var last = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id).OrderByDescending<CommonPartRecord>(x => x.CreatedUtc).Slice(0, 1).FirstOrDefault();
 
             DateTime? start = DateTime.MaxValue;
             if (first.As<CommonPart>() != null) {
@@ -42,7 +42,7 @@ namespace Orchard.Blogs.Services {
             }
 
             // delete previous archive records
-            foreach (var record in _blogArchiveRepository.Table.Where(x => x.BlogPart == blogPart.Record)) {
+            foreach (var record in _blogArchiveRepository.Table.Where(x => x.BlogPart.Id == blogPart.Id)) {
                 _blogArchiveRepository.Delete(record);
             }
 
@@ -55,7 +55,7 @@ namespace Orchard.Blogs.Services {
 
             // build a collection of all the post dates
             var blogPostDates = new List<DateTime>();
-            var blogPosts = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Record.Id);
+            var blogPosts = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(bp => bp.Container.Id == blogPart.Id);
             foreach (var blogPost in blogPosts.List()) {
                 if (blogPost.As<CommonPart>() != null)
                     if (blogPost.As<CommonPart>().CreatedUtc.HasValue) {
@@ -82,7 +82,7 @@ namespace Orchard.Blogs.Services {
                     //var count = _contentManager.Query<BlogPostPart>().Where<CommonPartRecord>(x => x.CreatedUtc.Value >= from && x.CreatedUtc.Value < to).Count();
                     var count = blogPostDates.Count(bp => bp >= @from && bp < to);
 
-                    var newArchiveRecord = new BlogPartArchiveRecord { BlogPart = blogPart.Record, Year = year, Month = month, PostCount = count };
+                    var newArchiveRecord = new BlogPartArchiveRecord { BlogPart = blogPart.ContentItem.Record, Year = year, Month = month, PostCount = count };
                     _blogArchiveRepository.Create(newArchiveRecord);
                 }
             }

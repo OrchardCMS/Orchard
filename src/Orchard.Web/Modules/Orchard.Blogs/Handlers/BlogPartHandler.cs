@@ -9,9 +9,7 @@ namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartHandler : ContentHandler {
 
-        public BlogPartHandler(IRepository<BlogPartRecord> repository) {
-            Filters.Add(StorageFilter.For(repository));
-
+        public BlogPartHandler() {
             OnGetDisplayShape<BlogPart>((context, blog) => {
                 context.Shape.Description = blog.Description;
                 context.Shape.PostCount = blog.PostCount;

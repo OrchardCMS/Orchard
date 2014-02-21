@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Drivers {
                 }
 
                 var blogPosts = _contentManager.Query(VersionOptions.Published, "BlogPost")
-                    .Join<CommonPartRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
+                    .Join<CommonPartRecord>().Where(cr => cr.Container.Id == blog.Id)
                     .OrderByDescending(cr => cr.CreatedUtc)
                     .Slice(0, part.Count)
                     .Select(ci => ci.As<BlogPostPart>());
