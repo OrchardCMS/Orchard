@@ -46,10 +46,31 @@ namespace Orchard.Blogs.Routing {
         }
 
         public string FindPath(string path) {
+            // my-blog/archive
+            if (path.EndsWith("/archive")) {
+                return path.Substring(0, path.Length - "/archive".Length);
+            }
+
+            // my-blog/archive/
+            if (path.EndsWith("/archive/")) {
+                return null;
+            }
+
+            // my-blog/archive/2014
             var archiveIndex = path.IndexOf("/archive/", StringComparison.OrdinalIgnoreCase);
 
             if (archiveIndex == -1) {
-                
+
+                // archive/
+                if (path.EndsWith("archive/")) {
+                    return null;
+                }
+
+                // archive
+                if (path.EndsWith("archive")) {
+                    return String.Empty;
+                }
+
                 // archive for blog as homepage ?
                 if(path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
                     return String.Empty;
@@ -62,10 +83,30 @@ namespace Orchard.Blogs.Routing {
         }
 
         public ArchiveData FindArchiveData(string path) {
+            // my-blog/archive
+            if (path.EndsWith("/archive")) {
+                return new ArchiveData("");
+            }
+
+            // my-blog/archive/
+            if (path.EndsWith("/archive/")) {
+                return null;
+            }
+
             var archiveIndex = path.IndexOf("/archive/", StringComparison.OrdinalIgnoreCase);
 
             if (archiveIndex == -1) {
-                
+
+                // archive/
+                if (path.EndsWith("archive/")) {
+                    return null;
+                }
+
+                // archive
+                if (path.EndsWith("archive")) {
+                    return new ArchiveData("");
+                }
+
                 // archive for blog as homepage ?
                 if (path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
                     return new ArchiveData(path.Substring("archive/".Length));
