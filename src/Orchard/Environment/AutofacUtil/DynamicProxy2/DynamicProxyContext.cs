@@ -4,7 +4,6 @@ using System.Linq;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Castle.Core.Interceptor;
 using Castle.DynamicProxy;
 
 namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
@@ -82,7 +81,7 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
                 if (_cache.TryGetValue(type, out proxyType))
                     return;
 
-                _cache[type] = _proxyBuilder.CreateClassProxy(type, ProxyGenerationOptions.Default);
+                _cache[type] = _proxyBuilder.CreateClassProxyType(type, new Type[0], ProxyGenerationOptions.Default);
             }
         }
 

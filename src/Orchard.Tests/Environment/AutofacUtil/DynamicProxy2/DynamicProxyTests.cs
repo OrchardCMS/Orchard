@@ -2,7 +2,7 @@
 using Autofac;
 using Autofac.Core;
 using Autofac.Features.Metadata;
-using Castle.Core.Interceptor;
+using Castle.DynamicProxy;
 using NUnit.Framework;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 

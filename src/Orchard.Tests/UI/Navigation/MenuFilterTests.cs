@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using Castle.Core;
+using Castle.Core.Internal;
 using Moq;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
