@@ -54,11 +54,17 @@ namespace Orchard.Blogs.Drivers {
             if (postCount != null) {
                 part.PostCount = Convert.ToInt32(postCount);
             }
+
+            var feedProxyUrl = context.Attribute(part.PartDefinition.Name, "FeedProxyUrl");
+            if (feedProxyUrl != null) {
+                part.FeedProxyUrl = feedProxyUrl;
+            }
         }
 
         protected override void Exporting(BlogPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
             context.Element(part.PartDefinition.Name).SetAttributeValue("PostCount", part.PostCount);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FeedProxyUrl", part.FeedProxyUrl);
         }
     }
 }

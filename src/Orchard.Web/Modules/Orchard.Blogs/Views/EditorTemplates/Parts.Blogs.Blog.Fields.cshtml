@@ -1,5 +1,20 @@
-﻿@model Orchard.Blogs.Models.BlogPart
+﻿@using Orchard.Mvc.Extensions
+@model Orchard.Blogs.Models.BlogPart
+
 <fieldset>
     @Html.LabelFor(m => m.Description, T("Description"))
     @Html.TextAreaFor(m => m.Description, 5, 60, null)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.FeedProxyUrl, T("Feed proxy Url"))
+    @Html.TextBoxFor(m => m.FeedProxyUrl, new { @class = "text medium" })
+    <span class="hint">@T("Provide a custom public url which will be used to proxy the local rss feed.")</span>
+    <span class="hint">@T("The current feed is available at <a href=\"{0}\">{0}</a>.", Url.AbsoluteAction("Index", "Feed", new { area = "Feeds", containerid = Model.Id }))</span>
+</fieldset>
+
+<fieldset>
+    @Html.CheckBoxFor(m => m.EnableCommentsFeed)
+    @Html.LabelFor(m => m.EnableCommentsFeed, T("Render a comments rss feed").Text, new { @class = "forcheckbox" })
+    <span class="hint">@T("Enable to render the comments rss feed.")</span>
 </fieldset>

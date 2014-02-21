@@ -17,5 +17,15 @@ namespace Orchard.Blogs.Models {
             get { return this.Retrieve(x => x.PostCount); }
             set { this.Store(x => x.PostCount, value); }
         }
+
+        public string FeedProxyUrl {
+            get { return this.Retrieve(x => x.FeedProxyUrl); }
+            set { this.Store(x => x.FeedProxyUrl, value); }
+        }
+
+        public bool EnableCommentsFeed {
+            get { return this.Retrieve(x => x.EnableCommentsFeed, false); }
+            set { this.Store(x => x.EnableCommentsFeed, value); }
+        }
     }
 }
