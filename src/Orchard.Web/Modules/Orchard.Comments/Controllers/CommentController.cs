@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
-using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
@@ -12,14 +11,12 @@ namespace Orchard.Comments.Controllers {
     public class CommentController : Controller, IUpdateModel {
         public IOrchardServices Services { get; set; }
         private readonly ICommentService _commentService;
-        private readonly INotifier _notifier;
 
         public Localizer T { get; set; }
 
-        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier) {
+        public CommentController(IOrchardServices services, ICommentService commentService) {
             Services = services;
             _commentService = commentService;
-            _notifier = notifier;
 
             T = NullLocalizer.Instance;
         }
@@ -57,20 +54,13 @@ namespace Orchard.Comments.Controllers {
                 var commentPart = comment.As<CommentPart>();
 
                 // ensure the comments are not closed on the container, as the html could have been tampered manually
-                var container = Services.ContentManager.Get(commentPart.CommentedOn);
-                CommentsPart commentsPart = null;
-                if(container != null) {
-                    commentsPart = container.As<CommentsPart>();
-                    if (commentsPart != null) {
-                        var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
-                        if (!commentsPart.CommentsActive
-                            || (settings.MustBeAuthenticated && Services.WorkContext.CurrentUser == null)) {
-                            Services.TransactionManager.Cancel();
-                            return this.RedirectLocal(returnUrl, "~/");
-                        }
-                    }
+                if (!_commentService.CanCreateComment(commentPart)) {
+                    Services.TransactionManager.Cancel();
+                    return this.RedirectLocal(returnUrl, "~/");
                 }
 
+                var commentsPart = Services.ContentManager.Get(commentPart.CommentedOn).As<CommentsPart>();
+           
                 // is it a response to another comment ?
                 if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
                     var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);

@@ -69,7 +69,7 @@ namespace Orchard.Comments.Drivers {
                         if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
                         var editorShape = _contentManager.BuildEditor(newComment);
 
-                        return shapeHelper.Parts_CommentForm(EditorShape: editorShape);
+                        return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),
                 ContentShape("Parts_Comments_Count",
                     () => {

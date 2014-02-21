@@ -5,10 +5,11 @@
 
 @{
     CommentsPart commentsPart = Model.ContentPart;
+    bool canStillCommentOn = Model.CanStillComment;
     var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
 }
 
-@if (!Model.ContentPart.CommentsActive) {
+@if (!Model.ContentPart.CommentsActive || !canStillCommentOn) {
     if (Model.ContentPart.Comments.Count > 0) {
     <div id="comments">
         <p class="comment-disabled">@T("Comments have been disabled for this content.")</p>

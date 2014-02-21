@@ -20,5 +20,8 @@ namespace Orchard.Comments.Services {
         void EnableCommentsForCommentedContent(int id);
         bool DecryptNonce(string nonce, out int id);
         string CreateNonce(CommentPart comment, TimeSpan delay);
+        bool CanStillCommentOn(CommentsPart commentsPart);
+        bool CanCreateComment(CommentPart commentPart);
+
     }
 }

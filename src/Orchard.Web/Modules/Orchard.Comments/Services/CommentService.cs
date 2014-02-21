@@ -5,6 +5,8 @@ using System.Text;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Comments.Settings;
+using Orchard.Core.Common.Models;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
@@ -137,6 +139,63 @@ namespace Orchard.Comments.Services {
             }
 
         }
+
+        public bool CanCreateComment(CommentPart commentPart) {
+            if (commentPart == null) {
+                return false;
+            }
+
+            var container = _orchardServices.ContentManager.Get(commentPart.CommentedOn);
+            
+            if (container == null) {
+                return false;
+            }
+
+            var commentsPart = container.As<CommentsPart>();
+            if (commentsPart == null) {
+                return false;
+            }
+            
+            var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
+            if (!commentsPart.CommentsActive) {
+                return false;
+            }
+
+            if (settings.MustBeAuthenticated && _orchardServices.WorkContext.CurrentUser == null) {
+                return false;
+            }
+            
+            if (!CanStillCommentOn(commentsPart)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool CanStillCommentOn(CommentsPart commentsPart) {
+            var commentSettings = _orchardServices.WorkContext.CurrentSite.As<CommentSettingsPart>();
+            if (commentSettings == null) {
+                return false;
+            }
+
+            if (commentSettings.ClosedCommentsDelay > 0) {
+                var commonPart = commentsPart.As<CommonPart>();
+                if (commentsPart == null) {
+                    return false;
+                }
+
+                if (!commonPart.CreatedUtc.HasValue) {
+                    return false;
+                }
+
+                if (commonPart.CreatedUtc.Value.AddDays(commentSettings.ClosedCommentsDelay) < _clock.UtcNow) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private CommentPart GetCommentWithQueryHints(int id) {
             return _orchardServices.ContentManager.Get<CommentPart>(id, VersionOptions.Latest, new QueryHints().ExpandParts<CommentPart>());
         }
