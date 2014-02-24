@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Web;
 using Orchard.Azure.Services.Environment.Configuration;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -51,7 +52,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
             if (url.StartsWith(_absoluteRoot)) {
-                return url.Substring(Combine(_absoluteRoot, "/").Length);
+                return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
             }
 
             return null;
