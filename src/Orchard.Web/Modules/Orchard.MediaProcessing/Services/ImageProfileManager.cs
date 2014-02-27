@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
@@ -205,20 +206,14 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
-        private static readonly char[] _disallowed = @"/:?#[]@!$&'()*+,.;=s""<>\|%".ToCharArray();
-
         private static string CreateDefaultFileName(string path) {
             var extention = Path.GetExtension(path);
-            var newPath = Path.ChangeExtension(path, "");
-            newPath = newPath.TrimEnd('.').RemoveDiacritics();
-            var normalized = newPath.ToCharArray();
-            for (var i = 0; i < normalized.Length; i++) {
-                if (Array.IndexOf(_disallowed, normalized[i]) >= 0) {
-                    normalized[i] = '_';
-                }
+            var utf8Bytes = System.Text.Encoding.UTF8.GetBytes(path);
+            using (var provider = new MD5CryptoServiceProvider()) {
+                var hash = provider.ComputeHash(utf8Bytes);
+                var encodedHash = Convert.ToBase64String(hash);
+                return encodedHash + extention;
             }
-
-            return new string(normalized) + extention;
         }
     }
 }
