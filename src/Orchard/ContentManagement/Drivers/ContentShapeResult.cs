@@ -30,6 +30,15 @@ namespace Orchard.ContentManagement.Drivers {
             if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
+            // parse group placement
+            var group = placement.GetGroup();
+            if (!String.IsNullOrEmpty(group)) {
+                _groupId = group;
+            }
+
+            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+                return;
+
             dynamic parentShape = context.Shape;
             context.ContentPart = ContentPart;
 
@@ -61,15 +70,6 @@ namespace Orchard.ContentManagement.Drivers {
                 newShapeMetadata.Alternates.Clear();
                 newShapeMetadata.Wrappers.Clear();
             }
-
-            // parse group placement
-            var group = placement.GetGroup();
-            if (!String.IsNullOrEmpty(group)) {
-                _groupId = group;
-            }
-
-            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
-                return;
 
             foreach (var alternate in placement.Alternates) {
                 newShapeMetadata.Alternates.Add(alternate);
