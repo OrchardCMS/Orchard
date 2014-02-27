@@ -8,7 +8,7 @@
 @{
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
-    Script.Require("Switchable");
+    Script.Require("Switchable").AtFoot();
     Script.Include("features.admin.js", "features.admin.min.js").AtFoot();
 
     Layout.Title = T("Modules").ToString();
