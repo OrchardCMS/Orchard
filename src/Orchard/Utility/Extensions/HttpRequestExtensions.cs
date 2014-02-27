@@ -88,7 +88,22 @@ namespace Orchard.Utility.Extensions {
             // at this point, check for an fully qualified url
             try {
                 var uri = new Uri(url);
-                return uri.Authority.Equals(request.Headers["Host"], StringComparison.OrdinalIgnoreCase);
+                if (uri.Authority.Equals(request.Headers["Host"], StringComparison.OrdinalIgnoreCase)) {
+                    return true;
+                }
+
+                // finally, check the base url from the settings
+                var workContext = request.RequestContext.GetWorkContext();
+                if (workContext != null) {
+                    var baseUrl = workContext.CurrentSite.BaseUrl;
+                    if (!string.IsNullOrWhiteSpace(baseUrl)) {
+                        if (uri.Authority.Equals(new Uri(baseUrl).Authority, StringComparison.OrdinalIgnoreCase)) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
             }
             catch {
                 // mall-formed url e.g, "abcdef"
