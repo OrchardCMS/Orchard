@@ -41,8 +41,8 @@ namespace Orchard.Email.Models {
         }
 
         public string Password {
-            get { return this.Retrieve(x => x.Password); }
-            set { this.Store(x => x.Password, value); }
+            get { return _password.Value; }
+            set { _password.Value = value; }
         }
 
         public bool IsValid() {

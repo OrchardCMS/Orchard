@@ -34,7 +34,8 @@ namespace Orchard.Email.Handlers {
         void LazyLoadHandlers(LoadContentContext context, SmtpSettingsPart part) {
             part.PasswordField.Getter(() => {
                 try {
-                    return String.IsNullOrWhiteSpace(part.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Password)));
+                    var encryptedPassword = part.Retrieve(x => x.Password);
+                    return String.IsNullOrWhiteSpace(encryptedPassword) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(encryptedPassword)));
                 }
                 catch {
                     Logger.Error("The email password could not be decrypted. It might be corrupted, try to reset it.");
@@ -42,7 +43,10 @@ namespace Orchard.Email.Handlers {
                 }
             });
 
-            part.PasswordField.Setter(value => part.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value))));
+            part.PasswordField.Setter(value => {
+                var encryptedPassword = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value)));
+                part.Store(x => x.Password, encryptedPassword);
+            });
         }
 
         public Localizer T { get; set; }
