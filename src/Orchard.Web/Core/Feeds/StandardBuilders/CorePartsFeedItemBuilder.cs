@@ -9,7 +9,6 @@ using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
     [UsedImplicitly]
@@ -35,9 +34,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
                     _contentManager.GetItemMetadata(feedItem.Item), 
                     _htmlFilters);
 
-
-                // TODO: author
-
+                // author is intentionally left empty as it could result in unwanted spam
 
                 // add to known formats
                 if (context.Format == "rss") {

@@ -1,0 +1,46 @@
+﻿@model Orchard.Tokens.Settings.RssPartSettings
+
+<fieldset>
+    <span class="hint">@T(" Use '-' to remove the tag, leave empty to keep untouched, or use the 'Text' text token for the current value.")</span>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Title)">@T("Title")</label>
+        @Html.TextBoxFor(m => m.Title, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The title field of the RSS item.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Link)">@T("Link")</label>
+        @Html.TextBoxFor(m => m.Link, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The link field of the RSS item")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Description)">@T("Description")</label>
+        @Html.TextBoxFor(m => m.Description, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The description field of the RSS item")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Author)">@T("Author")</label>
+        @Html.TextBoxFor(m => m.Author, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The author field of the RSS item")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Category)">@T("Category")</label>
+        @Html.TextBoxFor(m => m.Category, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The category field of the RSS item")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Enclosure)">@T("Enclosure")</label>
+        @Html.TextBoxFor(m => m.Enclosure, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The enclosure field of the RSS item. This is usually a html tag like <img>")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.PubDate)">@T("PubDate")</label>
+        @Html.TextBoxFor(m => m.PubDate, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The pubDate field of the RSS item")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Source)">@T("Source")</label>
+        @Html.TextBoxFor(m => m.Source, new { @class = "tokenized text medium" })
+        <span class="hint">@T("The source field of the RSS item")</span>
+    </div>
+
+</fieldset>

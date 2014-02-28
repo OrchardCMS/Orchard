@@ -77,6 +77,8 @@
     <Content Include="Styles\orchard-tokens-admin.css" />
     <Content Include="Styles\Images\tokensPopup.gif" />
     <Content Include="Web.config" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\RssPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\TokenHint.cshtml" />
@@ -94,12 +96,15 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Providers\ContentTokens.cs" />
+    <Compile Include="Providers\RssPartFeedItemBuilder.cs" />
     <Compile Include="Providers\RequestTokens.cs" />
     <Compile Include="Providers\DateTokens.cs" />
     <Compile Include="Providers\ShapeTokens.cs" />
     <Compile Include="Providers\TextTokens.cs" />
     <Compile Include="Providers\UserTokens.cs" />
     <Compile Include="ReplaceOptions.cs" />
+    <Compile Include="RssPartDriver.cs" />
+    <Compile Include="Settings\RssPartSettings.cs" />
     <Compile Include="TokenDescriptor.cs" />
     <Compile Include="DescribeContext.cs" />
     <Compile Include="DescribeFor.cs" />
@@ -121,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Admin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\RssPartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
