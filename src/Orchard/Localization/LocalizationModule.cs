@@ -25,6 +25,10 @@ namespace Orchard.Localization {
                 var scope = registration.Activator.LimitType.FullName;
 
                 registration.Activated += (sender, e) => {
+                    if (e.Instance.GetType().FullName != scope) {
+                        return;
+                    }
+
                     var localizer = _localizerCache.GetOrAdd(scope, key => LocalizationUtilities.Resolve(e.Context, scope));
                     userProperty.SetValue(e.Instance, localizer, null);
                 };
