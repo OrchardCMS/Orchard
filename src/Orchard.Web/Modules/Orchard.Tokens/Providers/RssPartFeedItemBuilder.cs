@@ -4,10 +4,12 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Tokens.Models;
 using Orchard.Tokens.Settings;
 
 namespace Orchard.Tokens.Providers {
+    [OrchardFeature("Orchard.Tokens.Feeds")]
     public class RssPartFeedItemBuilder : IFeedItemBuilder {
         private readonly ITokenizer _tokenizer;
 

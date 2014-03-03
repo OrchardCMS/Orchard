@@ -1,9 +1,11 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Tokens {
-    public class Migrations : DataMigrationImpl {
+    [OrchardFeature("Orchard.Tokens.Feeds")]
+    public class FeedsMigrations : DataMigrationImpl {
 
         public int Create() {
 

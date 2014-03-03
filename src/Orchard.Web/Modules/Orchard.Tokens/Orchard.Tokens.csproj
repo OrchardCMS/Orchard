@@ -103,7 +103,7 @@
     <Compile Include="Providers\TextTokens.cs" />
     <Compile Include="Providers\UserTokens.cs" />
     <Compile Include="ReplaceOptions.cs" />
-    <Compile Include="RssPartDriver.cs" />
+    <Compile Include="Drivers\RssPartDriver.cs" />
     <Compile Include="Settings\RssPartSettings.cs" />
     <Compile Include="TokenDescriptor.cs" />
     <Compile Include="DescribeContext.cs" />

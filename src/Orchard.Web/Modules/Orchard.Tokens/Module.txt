@@ -6,7 +6,12 @@ Version: 1.7.2
 OrchardVersion: 1.7.2
 Description: Provides a system for performing string replacements with common site values.
 Features:
-    Orchard.Tokens:
-        Name: Tokens
-        Description: Provides a system for performing string replacements with common site values.
-        Category: Content
+	Orchard.Tokens:
+		Name: Tokens
+		Description: Provides a system for performing string replacements with common site values.
+		Category: Content
+	Orchard.Tokens.Feeds:
+		Name: Tokens
+		Description: Provides a content part to customize RSS fields based on tokens.
+		Category: Content
+		Dependencies: Orchard.Tokens, Feeds
