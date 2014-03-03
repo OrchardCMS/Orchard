@@ -287,8 +287,6 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-
-            Container.EnsureBlobExists(String.Concat(_root, path));
             return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
         }
 
@@ -314,6 +312,7 @@ namespace Orchard.Azure.Services.FileSystems {
             }
 
             public DateTime GetLastUpdated() {
+                _blob.FetchAttributes();
                 return _blob.Properties.LastModified.GetValueOrDefault().DateTime;
             }
 
@@ -335,7 +334,6 @@ namespace Orchard.Azure.Services.FileSystems {
                 _blob.DeleteIfExists();
                 _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
                 _blob.UploadFromStream(new MemoryStream(new byte[0]));
-
                 return OpenWrite();
             }
         }
