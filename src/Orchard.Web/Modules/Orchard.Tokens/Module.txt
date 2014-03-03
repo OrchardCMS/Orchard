@@ -9,5 +9,4 @@ Features:
     Orchard.Tokens:
         Name: Tokens
         Description: Provides a system for performing string replacements with common site values.
-		Category: Content
-		Dependencies: Core
+        Category: Content
