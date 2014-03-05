@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Orchard.Localization;
+using System.Web;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
@@ -88,7 +89,7 @@ namespace Orchard.Utility.Extensions {
                 : new LocalizedString(text);
         }
 
-        public static string RemoveTags(this string html) {
+        public static string RemoveTags(this string html, bool htmlDecode = false) {
             if (String.IsNullOrEmpty(html)) {
                 return String.Empty;
             }
@@ -114,7 +115,13 @@ namespace Orchard.Utility.Extensions {
                 }
             }
 
-            return new string(result, 0, cursor);
+            var stringResult = new string(result, 0, cursor);
+
+            if (htmlDecode) {
+                stringResult = HttpUtility.HtmlDecode(stringResult);
+            }
+
+            return stringResult;
         }
 
         // not accounting for only \r (e.g. Apple OS 9 carriage return only new lines)
