@@ -11,7 +11,7 @@ Features:
 		Description: Provides a system for performing string replacements with common site values.
 		Category: Content
 	Orchard.Tokens.Feeds:
-		Name: Tokens
+		Name: Feeds Tokens 
 		Description: Provides a content part to customize RSS fields based on tokens.
 		Category: Content
 		Dependencies: Orchard.Tokens, Feeds
