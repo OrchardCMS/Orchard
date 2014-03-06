@@ -10,3 +10,8 @@ Features:
 		Description: Standard users.
 		Category: Core
 		Dependencies: Settings
+	Orchard.Users.Workflows:
+		Name: Users Workflows Activities
+        Description: Provides User based Workflow Activites.
+		Category: Workflows
+		Dependencies: Orchard.Workflows

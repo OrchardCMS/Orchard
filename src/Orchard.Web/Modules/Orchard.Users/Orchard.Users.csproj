@@ -71,10 +71,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\UserActivity.cs" />
+    <Compile Include="Activities\UserIsApprovedActivity.cs" />
     <Compile Include="Commands\UserCommands.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Events\UserContext.cs" />
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
@@ -125,6 +128,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
+      <Project>{7059493C-8251-4764-9C1E-2368B8B485BC}</Project>
+      <Name>Orchard.Workflows</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Items\Content-User.Edit.cshtml" />
@@ -168,6 +175,7 @@
   <ItemGroup>
     <Content Include="Views\Template.User.Wrapper.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
