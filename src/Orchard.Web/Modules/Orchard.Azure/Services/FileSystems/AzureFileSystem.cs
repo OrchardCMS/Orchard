@@ -289,8 +289,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-            var uri = Container.GetBlockBlobReference(String.Concat(_root, path)).Uri;
-            return string.IsNullOrEmpty(_publicHostName) ? uri.ToString() : uri.ToString().Replace(uri.Host, _publicHostName);
+            var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
+            if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
+            return uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
