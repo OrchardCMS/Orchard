@@ -12,6 +12,7 @@ Features:
 		Name: Windows Azure Media Storage
 		Description: Activates an Orchard media storage provider that targets Windows Azure Blob Storage.
 		Category: Hosting
+		Dependencies: Orchard.Azure
 	Orchard.Azure.OutputCache:
 		Name: Windows Azure Output Cache
 		Description: Activates an Orchard output cache provider that targets Windows Azure Cache.
