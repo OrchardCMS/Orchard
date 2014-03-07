@@ -17,6 +17,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
         protected string _root;
         protected string _absoluteRoot;
+        protected string _publicHostName;
 
         private CloudStorageAccount _storageAccount;
         private CloudBlobClient _blobClient;
@@ -46,12 +47,13 @@ namespace Orchard.Azure.Services.FileSystems {
             }
         }
 
-        public AzureFileSystem(string storageConnectionString, string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
+        public AzureFileSystem(string storageConnectionString, string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider, string publicHostName = null) {
             _isPrivate = isPrivate;
             _mimeTypeProvider = mimeTypeProvider;
             StorageConnectionString = storageConnectionString;
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
+            _publicHostName = publicHostName;
         }
 
         private void EnsureInitialized() {
@@ -287,7 +289,8 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-            return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
+            var uri = Container.GetBlockBlobReference(String.Concat(_root, path)).Uri;
+            return string.IsNullOrEmpty(_publicHostName) ? uri.ToString() : uri.ToString().Replace(uri.Host, _publicHostName);
         }
 
         private class AzureBlobFileStorage : IStorageFile {

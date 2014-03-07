@@ -12,11 +12,13 @@ namespace Orchard.Azure.Services.FileSystems.Media {
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
         public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider, IPlatformConfigurationAccessor pca)
-            : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null), Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider) {
+            : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null),
+                   Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider,
+                   pca.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null)) {
         }
 
-        public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider)
-            : base(storageConnectionString, containerName, rootFolderPath, false, mimeTypeProvider) {
+        public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider, string publicHostName)
+            : base(storageConnectionString, containerName, rootFolderPath, false, mimeTypeProvider, publicHostName) {
         }
 
         public bool TrySaveStream(string path, Stream inputStream) {
