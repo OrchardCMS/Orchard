@@ -30,12 +30,7 @@
                 @Display(Model.CustomNavigationShapes)
 
                 <li id="media-library-main-navigation-tree">
-                    <ul>
-                        @foreach (var folder in viewModel.Folders) {
-                            <li>
-                                @Display.Partial(TemplateName: "MediaManagerFolder", Model: folder)
-                            </li>
-                        }
+                    <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders }">
                     </ul>
                 </li>
             </ul>
@@ -95,6 +90,7 @@ var mediaLibrarySettings = {
     mediaItemActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItem", "Admin"))',
     mediaItemsActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Admin"))',
     recentMediaItemsActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("RecentMediaItems", "Admin"))',
+    childFolderListingActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("ChildFolders", "Admin"))',
     importActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))',
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
@@ -105,5 +101,16 @@ var mediaLibrarySettings = {
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()'
 };
 //]]>
+</script>
+<script type="text/html" id="media-folder-template">
+    <li data-bind="visible: isVisible()">
+        <div class="media-library-folder">
+            <div class="media-library-folder-title" data-bind="click: folderClicked, css: { selected: isSelected() }">
+                <a data-bind="disable: $root.pendingRequest" href="#" class="media-library-navigation-folder-link"><i data-bind="css: {'icon-folder-open-alt': isExpanded(), 'icon-folder-close-alt': !isExpanded()}"></i><span data-bind="text: name"></span></a>
+            </div>
+            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders }, visible: childFolders().length > 0">
+            </ul>
+        </div>
+    </li>
 </script>
 }

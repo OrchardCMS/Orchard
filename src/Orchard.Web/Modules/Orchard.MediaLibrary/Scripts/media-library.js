@@ -81,6 +81,28 @@ $(function () {
             self.orderMedia = ko.observableArray(['created']);
             self.mediaType = ko.observableArray([]);
 
+            self.mediaFolders = ko.observableArray([]);
+
+            (function () {
+                var getChildFolderListUrl = function (f) {
+                    return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
+                };
+                var url = getChildFolderListUrl(settings.folderPath);
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    cache: false
+                }).done(function (data) {
+                    var childFolders = data.childFolders;
+                    for (var x = 0; x < childFolders.length; x++) {
+                        self.mediaFolders.push(new mediaFolderViewModel(childFolders[x]));
+                    }
+                }).fail(function (data) {
+                    console.error(data);
+                });
+            })();
+
             self.getMediaItems = function (count, append) {
                 var folderPath = self.displayed() || '';
                 
@@ -164,7 +186,6 @@ $(function () {
             });
 
             self.displayFolder = function(folderPath) {
-
                 self.results([]);
                 self.displayed(folderPath);
 
@@ -175,7 +196,7 @@ $(function () {
                 self.getMediaItems(pageCount);
             };
 
-            self.selectFolder = function(folderPath) {
+            self.selectFolder = function (folderPath) {
                 History.pushState({ action: 'displayFolder', folderPath: folderPath }, '', '?folderPath=' + folderPath);
                 self.displayFolder(folderPath);
             };
@@ -241,6 +262,73 @@ $(function () {
         }
 
         var viewModel = new mediaIndexViewModel();
+
+        function mediaFolderViewModel(data) {
+            var self = this;
+
+            self.mediaIndexViewModel = viewModel;
+
+            self.folderPath = ko.observable(data.folderPath);
+
+            self.name = ko.observable(data.name);
+
+            self.childFolders = ko.observableArray([]);
+
+            self.childFoldersFetchStatus = 0;  //0 = unfetched, 1 = fetching, 2 = fetched
+
+            self.isExpanded = ko.observable(false);
+            self.isVisible = ko.observable(true);
+
+            self.isSelected = ko.computed(function() {
+                return (self.mediaIndexViewModel.displayed() == self.folderPath());
+            });
+
+            self.folderClicked = function () {
+                self.mediaIndexViewModel.selectFolder(self.folderPath());
+                
+                var childFolders = self.childFolders();
+
+                if (self.isExpanded()) {    
+                    for (var x = 0; x < childFolders.length; x++) {
+                        childFolders[x].isVisible(false);
+                    }
+                    self.isExpanded(false);
+                } else {
+                    if (self.childFoldersFetchStatus !== 0) {
+                        for (var x = 0; x < childFolders.length; x++) {
+                            childFolders[x].isVisible(true);
+                        }
+                    } else {
+                        self.childFoldersFetchStatus = 1;
+                        var getChildFolderListUrl = function (f) {
+                            return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
+                        };
+                        var url = getChildFolderListUrl(self.folderPath());
+
+                        $.ajax({
+                            type: "GET",
+                            url: url,
+                            cache: false
+                        }).done(function (data) {
+                            var newChildFolders = data.childFolders;
+                            for (var y = 0; y < newChildFolders.length; y++) {
+                                var newChildFolder = new mediaFolderViewModel(newChildFolders[y]);
+                                newChildFolder.isVisible(true);
+                                self.childFolders.push(newChildFolder);
+                            }
+                            self.childFoldersFetchStatus = 2;
+                        }).fail(function (data) {
+                            console.error(data);
+                            self.childFoldersFetchStatus = 0;
+                        });
+                    }
+                    
+                    self.isExpanded(true);
+                }
+
+
+            };
+        }
 
         enhanceViewModel(viewModel);
         
