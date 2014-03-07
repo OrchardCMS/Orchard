@@ -11,8 +11,8 @@ namespace Orchard.Azure.Services.FileSystems.Media {
     [OrchardSuppressDependency("Orchard.FileSystems.Media.FileSystemStorageProvider")]
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
-        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider)
-            : this(PlatformConfiguration.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name), Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider) {
+        public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider, IPlatformConfigurationAccessor pca)
+            : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null), Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider) {
         }
 
         public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider)

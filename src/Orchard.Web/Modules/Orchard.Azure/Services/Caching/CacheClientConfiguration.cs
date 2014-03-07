@@ -6,11 +6,11 @@ namespace Orchard.Azure.Services.Caching {
 
     public class CacheClientConfiguration {
 
-        public static CacheClientConfiguration FromPlatformConfiguration(string tenant, string settingNamePrefix) {
+        public static CacheClientConfiguration FromPlatformConfiguration(string tenant, string settingNamePrefix, IPlatformConfigurationAccessor pca) {
             return new CacheClientConfiguration {
-                HostIdentifier = PlatformConfiguration.GetSetting(Constants.CacheHostIdentifierSettingName, tenant, settingNamePrefix),
-                CacheName = PlatformConfiguration.GetSetting(Constants.CacheCacheNameSettingName, tenant, settingNamePrefix),
-                AuthorizationToken = PlatformConfiguration.GetSetting(Constants.CacheAuthorizationTokenSettingName, tenant, settingNamePrefix),
+                HostIdentifier = pca.GetSetting(Constants.CacheHostIdentifierSettingName, tenant, settingNamePrefix),
+                CacheName = pca.GetSetting(Constants.CacheCacheNameSettingName, tenant, settingNamePrefix),
+                AuthorizationToken = pca.GetSetting(Constants.CacheAuthorizationTokenSettingName, tenant, settingNamePrefix),
             };
         }
 

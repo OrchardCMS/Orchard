@@ -100,6 +100,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\Environment\Configuration\DefaultPlatformConfigurationAccessor.cs" />
+    <Compile Include="Services\Environment\Configuration\IPlatformConfigurationAccessor.cs" />
     <Compile Include="Services\TaskLease\AzureMachineNameProvider.cs" />
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,7 +131,6 @@
     <Compile Include="Services\Caching\Output\AzureOutputCacheStorageProvider.cs" />
     <Compile Include="Services\Caching\Output\IAzureOutputCacheHolder.cs" />
     <Compile Include="Services\Environment\Configuration\AzureBlobShellSettingsManager.cs" />
-    <Compile Include="Services\Environment\Configuration\PlatformConfiguration.cs" />
     <Compile Include="Services\FileSystems\AzureFileSystem.cs" />
     <Compile Include="Services\FileSystems\CloudBlobContainerExtensions.cs" />
     <Compile Include="Services\FileSystems\Media\AzureBlobStorageProvider.cs" />
