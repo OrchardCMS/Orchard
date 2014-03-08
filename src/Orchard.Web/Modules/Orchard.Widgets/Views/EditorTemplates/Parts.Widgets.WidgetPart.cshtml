@@ -1,4 +1,5 @@
 ﻿@model Orchard.Widgets.Models.WidgetPart
+<h2>@Model.TypeDefinition.DisplayName</h2>
 <fieldset>
     @Html.LabelFor(widget => widget.Zone, T("Zone"))
     @Html.DropDownListFor(widget => widget.Zone, new SelectList(Model.AvailableZones))
