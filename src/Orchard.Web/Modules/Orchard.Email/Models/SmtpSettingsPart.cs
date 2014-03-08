@@ -1,4 +1,8 @@
-﻿using Orchard.ContentManagement;
+﻿using System.ComponentModel;
+using System.Configuration;
+using System.Net.Configuration;
+using System.Net.Mail;
+using Orchard.ContentManagement;
 using System;
 using Orchard.ContentManagement.Utilities;
 
@@ -46,9 +50,23 @@ namespace Orchard.Email.Models {
         }
 
         public bool IsValid() {
-            return !String.IsNullOrWhiteSpace(Host)
-                && Port > 0
-                && !String.IsNullOrWhiteSpace(Address);
+            var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+            if (section != null && !String.IsNullOrWhiteSpace(section.Network.Host)) {
+                return true;
+            }
+
+            // establish if the settings are defined in the web.config file
+            var smtpClient = new SmtpClient();
+
+            if (!String.IsNullOrWhiteSpace(Address)) {
+                return false;
+            }
+
+            if (!String.IsNullOrWhiteSpace(Host) && Port == 0) {
+                return false;
+            }
+                
+            return String.IsNullOrWhiteSpace(smtpClient.Host);
         }
     }
 }

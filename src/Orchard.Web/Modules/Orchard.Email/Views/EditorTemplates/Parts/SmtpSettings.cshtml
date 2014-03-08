@@ -1,27 +1,37 @@
-﻿@model Orchard.Email.Models.SmtpSettingsPart
-@using System.Net.Mail;
+﻿@using System.Configuration
+@using System.Net.Mail
+@model Orchard.Email.Models.SmtpSettingsPart
+@{
+    var smtpClient = new SmtpClient();
+
+    dynamic section = ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+}
 
 <fieldset>
     <legend>@T("Email")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
-        @Html.EditorFor(m => m.Address)
+        @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = (string) section.From })
         @Html.ValidationMessage("Address", "*")
+        <span class="hint">@T("The default email address to use as a sender.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
-        @Html.EditorFor(m => m.Host)
-        @Html.ValidationMessage("Host", "*") 
+        @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "text medium" })
+        @Html.ValidationMessage("Host", "*")
+        <span class="hint">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
-        @Html.EditorFor(m => m.Port)
+        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
         @Html.ValidationMessage("Port", "*")
+        <span class="hint">@T("The SMTP server port, usually 25.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.EnableSsl)
         <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
         @Html.ValidationMessage("EnableSsl", "*")
+        <span class="hint">@T("Check if the SMTP server requires SSL communications.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.RequireCredentials)
@@ -31,13 +41,15 @@
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
         <div>
             <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-            @Html.EditorFor(m => m.UserName)
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
             @Html.ValidationMessage("UserName", "*")
+            <span class="hint">@T("The username for authentication.")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-            @Html.PasswordFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
             @Html.ValidationMessage("Password", "*")
+            <span class="hint">@T("The password for authentication.")</span>
         </div>
     </div>
 </fieldset>

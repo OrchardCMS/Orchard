@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
+using System.Net.Configuration;
 using System.Net.Mail;
 using System.Web.Mvc;
-using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
@@ -61,11 +61,15 @@ namespace Orchard.Email.Services {
             }));
 
             var mailMessage = new MailMessage {
-                From = new MailAddress(_smtpSettings.Address),
                 Subject = emailMessage.Subject,
                 Body = _shapeDisplay.Display(template),
                 IsBodyHtml = true
             };
+
+            var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+            mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address) 
+                ? new MailAddress(_smtpSettings.Address) 
+                : new MailAddress(section.From);
 
             try {
                 foreach (var recipient in emailMessage.Recipients.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
@@ -80,8 +84,13 @@ namespace Orchard.Email.Services {
         }
 
         private SmtpClient CreateSmtpClient() {
+            // if no properties are set in the dashboard, use the web.config value
+            if (String.IsNullOrWhiteSpace(_smtpSettings.Host)) {
+                return new SmtpClient(); 
+            }
+
             var smtpClient = new SmtpClient {
-                UseDefaultCredentials = !_smtpSettings.RequireCredentials
+                UseDefaultCredentials = !_smtpSettings.RequireCredentials,
             };
 
             if (!smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(_smtpSettings.UserName)) {
