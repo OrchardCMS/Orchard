@@ -98,7 +98,8 @@ var mediaLibrarySettings = {
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
-    antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()'
+    antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
+    childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
 };
 //]]>
 </script>

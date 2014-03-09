@@ -4,6 +4,7 @@ using Orchard.MediaLibrary.Models;
 
 namespace Orchard.MediaLibrary.ViewModels {
     public class MediaManagerIndexViewModel {
+        public MediaManagerChildFoldersViewModel ChildFoldersViewModel { get; set; }
         public string FolderPath { get; set; }
         public bool DialogMode { get; set; }
         public IEnumerable<ContentTypeDefinition> MediaTypes { get; set; }

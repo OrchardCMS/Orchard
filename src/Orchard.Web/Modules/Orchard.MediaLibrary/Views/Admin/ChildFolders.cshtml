@@ -1,7 +1,5 @@
-﻿@using Orchard.Utility.Extensions
-@model Orchard.MediaLibrary.ViewModels.MediaManagerChildFoldersViewModel
+﻿@model Orchard.MediaLibrary.ViewModels.MediaManagerChildFoldersViewModel
 @{
-    Response.ContentType = "text/json";
     @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
     new {
         childFolders = Model.Children.Select(x => new {

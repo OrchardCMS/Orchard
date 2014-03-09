@@ -49,6 +49,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 FolderPath = folderPath,
+                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel{Children = _mediaLibraryService.GetMediaFolders(folderPath)},
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
                 CustomActionsShapes = explorerShape.Actions,
                 CustomNavigationShapes = explorerShape.Navigation,
@@ -103,12 +104,12 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot get child folder listing")))
                 return new HttpUnauthorizedResult();
 
-            var childFolders = _mediaLibraryService.GetMediaFolders(folderPath);
-
             var viewModel = new MediaManagerChildFoldersViewModel {
-                Children = childFolders
+                Children = _mediaLibraryService.GetMediaFolders(folderPath)
             };
 
+            Response.ContentType = "text/json";
+            
             return View(viewModel);
         }
 

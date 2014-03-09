@@ -83,26 +83,6 @@ $(function () {
 
             self.mediaFolders = ko.observableArray([]);
 
-            (function () {
-                var getChildFolderListUrl = function (f) {
-                    return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
-                };
-                var url = getChildFolderListUrl(settings.folderPath);
-
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    cache: false
-                }).done(function (data) {
-                    var childFolders = data.childFolders;
-                    for (var x = 0; x < childFolders.length; x++) {
-                        self.mediaFolders.push(new mediaFolderViewModel(childFolders[x]));
-                    }
-                }).fail(function (data) {
-                    console.error(data);
-                });
-            })();
-
             self.getMediaItems = function (count, append) {
                 var folderPath = self.displayed() || '';
                 
@@ -325,10 +305,12 @@ $(function () {
                     
                     self.isExpanded(true);
                 }
-
-
             };
         }
+
+        $.map(settings.childFolders, function (childFolder, index) {
+            viewModel.mediaFolders.push(new mediaFolderViewModel(childFolder));
+        });
 
         enhanceViewModel(viewModel);
         
