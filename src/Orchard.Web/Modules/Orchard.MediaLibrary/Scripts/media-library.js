@@ -76,12 +76,34 @@ $(function () {
             self.focus = ko.observable();
             self.results = ko.observableArray();
             self.displayed = ko.observable();
-            self.pendingRequest = ko.observable(false);
             self.mediaItemsCount = 0;
             self.orderMedia = ko.observableArray(['created']);
             self.mediaType = ko.observableArray([]);
 
             self.mediaFolders = ko.observableArray([]);
+            self.mediaFoldersRequestCount = ko.observable(0);
+            self.mediaFoldersPendingRequest = ko.computed({
+                read: function () {
+                    return (self.mediaFoldersRequestCount() > 0);
+                },
+                write: function (value) {
+                    if (value === true) {
+                        self.mediaFoldersRequestCount(self.mediaFoldersRequestCount() + 1);
+                    } else if (value === false) {
+                        self.mediaFoldersRequestCount(self.mediaFoldersRequestCount() - 1);
+                    }
+                }
+            });
+
+            self.mediaPendingRequest = ko.observable(false);
+            self.pendingRequest = ko.computed({
+                read: function () {
+                    return (self.mediaFoldersPendingRequest() || self.mediaPendingRequest());
+                },
+                write: function (value) {
+                    self.mediaPendingRequest(value);
+                }
+            });
 
             self.getMediaItems = function (count, append) {
                 var folderPath = self.displayed() || '';
@@ -264,6 +286,10 @@ $(function () {
             });
 
             self.folderClicked = function () {
+                if (self.mediaIndexViewModel.mediaFoldersPendingRequest()) {
+                    return;
+                }
+
                 self.mediaIndexViewModel.selectFolder(self.folderPath());
                 
                 var childFolders = self.childFolders();
@@ -284,6 +310,8 @@ $(function () {
                             return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
                         };
                         var url = getChildFolderListUrl(self.folderPath());
+                        
+                        self.mediaIndexViewModel.mediaFoldersPendingRequest(true);
 
                         $.ajax({
                             type: "GET",
@@ -296,10 +324,13 @@ $(function () {
                                 newChildFolder.isVisible(true);
                                 self.childFolders.push(newChildFolder);
                             }
+
                             self.childFoldersFetchStatus = 2;
                         }).fail(function (data) {
                             console.error(data);
                             self.childFoldersFetchStatus = 0;
+                        }).always(function () {
+                            self.mediaIndexViewModel.mediaFoldersPendingRequest(false);
                         });
                     }
                     

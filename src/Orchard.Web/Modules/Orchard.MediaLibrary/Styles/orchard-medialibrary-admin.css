@@ -105,6 +105,10 @@
         background-color: #e0e0e0;
     }
 
+    .in-progress .media-library-folder-title:hover, .in-progress .media-library-folder-title.selected, .in-progress a  {
+        cursor: progress;
+    }
+
     .media-library-navigation-folder-link {
         padding: 0;
     }
