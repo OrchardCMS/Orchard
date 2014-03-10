@@ -108,7 +108,7 @@ $(function () {
             self.getMediaItems = function (count, append) {
                 var folderPath = self.displayed() || '';
                 
-                if (self.pendingRequest()) {
+                if (self.mediaPendingRequest()) {
                     return;
                 }
 
@@ -261,6 +261,17 @@ $(function () {
             };
             self.orderMedia.subscribe(selectFolderOrRecent);
             self.mediaType.subscribe(selectFolderOrRecent);
+
+            self.fetchDisplayedFolderStructure = function(displayedFolder) {
+                var folders = self.mediaFolders();
+                for (var x = 0; x < folders.length; x++) {
+                    var folder = folders[x];
+                    if (displayedFolder.indexOf(folder.folderPath()) === 0) {
+                        folder.fetchChildren(displayedFolder);
+                        folder.isExpanded(true);
+                    }
+                }
+            };
         }
 
         var viewModel = new mediaIndexViewModel();
@@ -285,6 +296,54 @@ $(function () {
                 return (self.mediaIndexViewModel.displayed() == self.folderPath());
             });
 
+            self.fetchChildren = function (deepestChildPath) {
+                self.childFoldersFetchStatus = 1;
+                
+                var getChildFolderListUrl = function (f) {
+                    return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
+                };
+                var url = getChildFolderListUrl(self.folderPath());
+
+                self.mediaIndexViewModel.mediaFoldersPendingRequest(true);
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    cache: false
+                }).done(function (data) {
+                    var newChildFolders = data.childFolders;
+
+                    var nextFetch = self.folderPath();
+
+                    if (deepestChildPath !== undefined && deepestChildPath !== null && (deepestChildPath.indexOf(self.folderPath()) === 0)) {
+                        var deepestChildPathBreadCrumbs = deepestChildPath.split('\\');
+                        var currentBreadCrumbs = self.folderPath().split('\\');
+
+                        var diff = deepestChildPathBreadCrumbs.length - currentBreadCrumbs.length;
+                        if (diff > 0) {
+                            nextFetch = self.folderPath() + '\\' + deepestChildPathBreadCrumbs[deepestChildPathBreadCrumbs.length - diff];
+                        }
+                    }
+
+                    for (var y = 0; y < newChildFolders.length; y++) {
+                        var newChildFolder = new mediaFolderViewModel(newChildFolders[y]);
+                        if (newChildFolder.folderPath() === nextFetch) {
+                            newChildFolder.fetchChildren(deepestChildPath);
+                            newChildFolder.isExpanded(true);
+                        }
+                        newChildFolder.isVisible(true);
+                        self.childFolders.push(newChildFolder);
+                    }
+
+                    self.childFoldersFetchStatus = 2;
+                }).fail(function (data) {
+                    console.error(data);
+                    self.childFoldersFetchStatus = 0;
+                }).always(function () {
+                    self.mediaIndexViewModel.mediaFoldersPendingRequest(false);
+                });
+            };
+
             self.folderClicked = function () {
                 if (self.mediaIndexViewModel.mediaFoldersPendingRequest()) {
                     return;
@@ -305,33 +364,7 @@ $(function () {
                             childFolders[x].isVisible(true);
                         }
                     } else {
-                        self.childFoldersFetchStatus = 1;
-                        var getChildFolderListUrl = function (f) {
-                            return settings.childFolderListingActionUrl + '?folderPath=' + encodeURIComponent(f);
-                        };
-                        var url = getChildFolderListUrl(self.folderPath());
-                        
-                        self.mediaIndexViewModel.mediaFoldersPendingRequest(true);
-
-                        $.ajax({
-                            type: "GET",
-                            url: url,
-                            cache: false
-                        }).done(function (data) {
-                            var newChildFolders = data.childFolders;
-                            for (var y = 0; y < newChildFolders.length; y++) {
-                                var newChildFolder = new mediaFolderViewModel(newChildFolders[y]);
-                                newChildFolder.isVisible(true);
-                                self.childFolders.push(newChildFolder);
-                            }
-
-                            self.childFoldersFetchStatus = 2;
-                        }).fail(function (data) {
-                            console.error(data);
-                            self.childFoldersFetchStatus = 0;
-                        }).always(function () {
-                            self.mediaIndexViewModel.mediaFoldersPendingRequest(false);
-                        });
+                        self.fetchChildren();
                     }
                     
                     self.isExpanded(true);
@@ -342,6 +375,8 @@ $(function () {
         $.map(settings.childFolders, function (childFolder, index) {
             viewModel.mediaFolders.push(new mediaFolderViewModel(childFolder));
         });
+
+        viewModel.fetchDisplayedFolderStructure(settings.folderPath);
 
         enhanceViewModel(viewModel);
         
