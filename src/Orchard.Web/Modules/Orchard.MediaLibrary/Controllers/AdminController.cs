@@ -49,7 +49,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var viewModel = new MediaManagerIndexViewModel {
                 DialogMode = dialog,
                 FolderPath = folderPath,
-                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel{Children = _mediaLibraryService.GetMediaFolders(folderPath)},
+                ChildFoldersViewModel = new MediaManagerChildFoldersViewModel{Children = _mediaLibraryService.GetMediaFolders(null)},
                 MediaTypes = _mediaLibraryService.GetMediaTypes(),
                 CustomActionsShapes = explorerShape.Actions,
                 CustomNavigationShapes = explorerShape.Navigation,
