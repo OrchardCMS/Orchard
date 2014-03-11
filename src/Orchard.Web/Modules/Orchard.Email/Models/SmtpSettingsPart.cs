@@ -55,9 +55,6 @@ namespace Orchard.Email.Models {
                 return true;
             }
 
-            // establish if the settings are defined in the web.config file
-            var smtpClient = new SmtpClient();
-
             if (String.IsNullOrWhiteSpace(Address)) {
                 return false;
             }
