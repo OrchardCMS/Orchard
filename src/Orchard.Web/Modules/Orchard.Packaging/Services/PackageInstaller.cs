@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
+using Orchard.Services;
 using Orchard.UI;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
@@ -23,17 +24,20 @@ namespace Orchard.Packaging.Services {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManager _extensionManager;
         private readonly IFolderUpdater _folderUpdater;
+        private readonly IClock _clock;
 
         public PackageInstaller(
             INotifier notifier,
             IVirtualPathProvider virtualPathProvider,
             IExtensionManager extensionManager,
-            IFolderUpdater folderUpdater) {
+            IFolderUpdater folderUpdater,
+            IClock clock) {
 
             _notifier = notifier;
             _virtualPathProvider = virtualPathProvider;
             _extensionManager = extensionManager;
             _folderUpdater = folderUpdater;
+            _clock = clock;
 
             T = NullLocalizer.Instance;
             Logger = Logging.NullLogger.Instance;
@@ -147,6 +151,7 @@ namespace Orchard.Packaging.Services {
                 : packageRepository;
 
             var project = new FileBasedProjectSystem(targetPath) { Logger = logger };
+            project.OverwriteLastWriteTimeUtcForAddedFiles(_clock.UtcNow);
             var projectManager = new ProjectManager(
                 sourceRepository, // source repository for the package to install
                 new DefaultPackagePathResolver(targetPath),
