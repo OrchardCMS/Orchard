@@ -10,6 +10,7 @@ namespace Orchard.Packaging.Services {
         private const string NetFrameworkIdentifier = ".NETFramework";
         private const string BinDir = "bin";
         private readonly string _root;
+        private DateTime? _writeTimeUtcForAddedFiles;
 
         public FileBasedProjectSystem(string root) {
             if (String.IsNullOrEmpty(root)) {
@@ -60,6 +61,10 @@ namespace Orchard.Packaging.Services {
 
             using (Stream outputStream = File.Create(fullPath)) {
                 stream.CopyTo(outputStream);
+            }
+
+            if (_writeTimeUtcForAddedFiles.HasValue) {
+                File.SetLastWriteTimeUtc(fullPath, _writeTimeUtcForAddedFiles.Value);
             }
         }
 
@@ -170,6 +175,10 @@ namespace Orchard.Packaging.Services {
 
         public virtual bool IsSupportedFile(string path) {
             return true;
+        }
+
+        public void OverwriteLastWriteTimeUtcForAddedFiles(DateTime dateTime) {
+            _writeTimeUtcForAddedFiles = dateTime;
         }
 
         protected string MakeRelativePath(string fullPath) {
