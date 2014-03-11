@@ -58,15 +58,15 @@ namespace Orchard.Email.Models {
             // establish if the settings are defined in the web.config file
             var smtpClient = new SmtpClient();
 
-            if (!String.IsNullOrWhiteSpace(Address)) {
+            if (String.IsNullOrWhiteSpace(Address)) {
                 return false;
             }
 
             if (!String.IsNullOrWhiteSpace(Host) && Port == 0) {
                 return false;
             }
-                
-            return String.IsNullOrWhiteSpace(smtpClient.Host);
+
+            return true;
         }
     }
 }
