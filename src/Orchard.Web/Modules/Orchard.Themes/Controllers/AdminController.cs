@@ -71,7 +71,10 @@ namespace Orchard.Themes.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            bool installThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
+            bool installThemes = 
+                _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null 
+                && Services.Authorizer.Authorize(StandardPermissions.SiteOwner) // only site owners
+                && _shellSettings.Name == ShellSettings.DefaultName; // of the default tenant
 
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
