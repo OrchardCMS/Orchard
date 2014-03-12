@@ -37,11 +37,8 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void RemoveByTag(string tag) {
-            Collection<string> itemKeys;
-            if (_tagCache.TryGetValue(tag, out itemKeys)) {
-                foreach (var key in itemKeys) {
-                    _cacheStorageProvider.Remove(key);
-                }
+            foreach(var key in _tagCache.GetTaggedItems(tag)) {
+                _cacheStorageProvider.Remove(key);
             }
         }
 
