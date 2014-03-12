@@ -131,6 +131,12 @@ $(function () {
                     cache: false
                 }).done(function(data) {
                     var mediaItems = data.mediaItems;
+                    var mediaItemsFolderPath = data.folderPath;
+
+                    if (mediaItemsFolderPath !== self.displayed()) {
+                        return;
+                    }
+
                     self.mediaItemsCount = data.mediaItemsCount;
                     for (var i = 0; i < mediaItems.length; i++) {
                         var item = new mediaPartViewModel(mediaItems[i]);
