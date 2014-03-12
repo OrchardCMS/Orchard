@@ -332,17 +332,6 @@ $(function () {
             };
             self.orderMedia.subscribe(selectFolderOrRecent);
             self.mediaType.subscribe(selectFolderOrRecent);
-
-            self.fetchDisplayedFolderStructure = function(displayedFolder) {
-                var folders = self.mediaFolders();
-                for (var x = 0; x < folders.length; x++) {
-                    var folder = folders[x];
-                    if (displayedFolder.indexOf(folder.folderPath()) === 0) {
-                        folder.fetchChildren(displayedFolder);
-                        folder.isExpanded(true);
-                    }
-                }
-            };
         }
 
         var viewModel = new mediaIndexViewModel();
@@ -361,7 +350,6 @@ $(function () {
             self.childFoldersFetchStatus = 0;  //0 = unfetched, 1 = fetching, 2 = fetched
 
             self.isExpanded = ko.observable(false);
-            self.isVisible = ko.observable(true);
 
             self.isSelected = ko.computed(function() {
                 return (self.mediaIndexViewModel.displayed() == self.folderPath());
@@ -402,7 +390,6 @@ $(function () {
                             newChildFolder.fetchChildren(deepestChildPath);
                             newChildFolder.isExpanded(true);
                         }
-                        newChildFolder.isVisible(true);
                         self.childFolders.push(newChildFolder);
                     }
 
@@ -421,25 +408,12 @@ $(function () {
                 }
 
                 self.mediaIndexViewModel.selectFolder(self.folderPath());
-                
-                var childFolders = self.childFolders();
 
-                if (self.isExpanded()) {    
-                    for (var x = 0; x < childFolders.length; x++) {
-                        childFolders[x].isVisible(false);
-                    }
-                    self.isExpanded(false);
-                } else {
-                    if (self.childFoldersFetchStatus !== 0) {
-                        for (var x = 0; x < childFolders.length; x++) {
-                            childFolders[x].isVisible(true);
-                        }
-                    } else {
-                        self.fetchChildren();
-                    }
-                    
-                    self.isExpanded(true);
+                if (self.childFoldersFetchStatus === 0) {
+                    self.fetchChildren();
                 }
+
+                self.isExpanded(!self.isExpanded());
             };
 
             self.afterRenderMediaFolderTemplate = function (elements, model) {
@@ -452,14 +426,26 @@ $(function () {
             viewModel.mediaFolders.push(new mediaFolderViewModel(childFolder));
         });
 
-        viewModel.fetchDisplayedFolderStructure(settings.folderPath);
-
         enhanceViewModel(viewModel);
         
         ko.applyBindings(viewModel);
 
         if (settings.hasFolderPath) {
             viewModel.displayFolder(settings.folderPath);
+
+            //fetch displayed folder structure
+            (function (displayedFolder) {
+                var folders = viewModel.mediaFolders();
+                for (var x = 0; x < folders.length; x++) {
+                    var folder = folders[x];
+                    if (displayedFolder.indexOf(folder.folderPath()) === 0) {
+                        folder.fetchChildren(displayedFolder);
+                        folder.isExpanded(true);
+                        break;
+                    }
+                }
+            })(settings.folderPath);
+
             History.pushState({
                 action: 'displayFolder',
                 folderPath: settings.folderPath
