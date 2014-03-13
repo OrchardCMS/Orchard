@@ -50,7 +50,7 @@ namespace Orchard.Users.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(UserIndexOptions options, PagerParameters pagerParameters) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -115,7 +115,7 @@ namespace Orchard.Users.Controllers {
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult Index(FormCollection input) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new UsersIndexViewModel {Users = new List<UserEntry>(), Options = new UserIndexOptions()};
@@ -151,7 +151,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
@@ -165,7 +165,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(UserCreateViewModel createModel) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             if (!string.IsNullOrEmpty(createModel.UserName)) {
@@ -209,7 +209,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
@@ -223,7 +223,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id, VersionOptions.DraftRequired);
@@ -268,7 +268,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
@@ -290,7 +290,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult SendChallengeEmail(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
@@ -310,7 +310,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Approve(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);
@@ -327,7 +327,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Moderate(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<IUser>(id);

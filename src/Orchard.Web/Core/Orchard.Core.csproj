@@ -225,6 +225,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
+    <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
     <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
