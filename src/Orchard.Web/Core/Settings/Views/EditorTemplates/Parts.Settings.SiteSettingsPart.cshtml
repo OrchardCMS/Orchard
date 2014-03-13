@@ -45,14 +45,14 @@
         @Html.EditorFor(x => x.PageTitleSeparator)
         @Html.ValidationMessage("PageTitleSeparator", "*")
     </div>
-    @if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
-        <div>
-            <label for="SuperUser">@T("Super user")</label>
-            @Html.EditorFor(x => x.SuperUser)
-            @Html.ValidationMessage("SuperUser", "*")
-            <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
-        </div>
-    }
+@if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
+    <div>
+        <label for="SuperUser">@T("Super user")</label>
+        @Html.EditorFor(x => x.SuperUser)
+        @Html.ValidationMessage("SuperUser", "*")
+        <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
+    </div>
+}
     <div>
         <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
         @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
@@ -63,4 +63,11 @@
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text small" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
     </div>
+@if (AuthorizedFor(Orchard.Security.StandardPermissions.SiteOwner)) {
+    <div>
+        <label for="MaxPageSize">@T("Maximum number of items per page")</label>
+        @Html.TextBoxFor(m => m.MaxPageSize, new {@class = "text small"})
+        <span class="hint">@T("Determines the maximum number of items that are shown per page. Leave 0 for unlimited.")</span>
+    </div>
+}
 </fieldset>

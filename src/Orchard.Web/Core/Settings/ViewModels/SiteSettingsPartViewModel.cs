@@ -51,6 +51,11 @@ namespace Orchard.Core.Settings.ViewModels {
             set { Site.PageSize = value; }
         }
 
+        public int MaxPageSize {
+            get { return Site.MaxPageSize; }
+            set { Site.MaxPageSize = value; }
+        }
+
         public string BaseUrl {
             get { return Site.BaseUrl; }
             set { Site.BaseUrl = value; }

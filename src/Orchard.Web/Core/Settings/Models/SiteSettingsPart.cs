@@ -50,6 +50,11 @@ namespace Orchard.Core.Settings.Models {
             set { this.Store(x => x.PageSize, value); }
         }
 
+        public int MaxPageSize {
+            get { return this.Retrieve(x => x.MaxPageSize); }
+            set { this.Store(x => x.MaxPageSize, value); }
+        }
+
         public string SiteTimeZone {
             get { return this.Retrieve(x => x.SiteTimeZone); }
             set { this.Store(x => x.SiteTimeZone, value); }
