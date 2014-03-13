@@ -2,7 +2,11 @@
 @using Orchard.Blogs.Models;
 @using Orchard.ContentManagement
 
-@{ Layout.Title = T("Manage {0}", Html.ItemDisplayText((IContent)Model.ContentItem)); }
+@{
+    ContentItem blog = Model.ContentItem;
+    var displayText = blog.ContentManager.GetItemMetadata(blog).DisplayText;
+    Layout.Title = T("Manage {0}", displayText);
+}
 
 @Display(Model.Header)
 @Display(Model.Actions)
