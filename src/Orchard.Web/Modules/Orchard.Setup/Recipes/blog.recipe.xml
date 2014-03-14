@@ -59,7 +59,8 @@
     site setting set baseurl
     theme activate "The Theme Machine"
     menu create /MenuName:"Main Menu"
-    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog." /MenuText:"Home" /MenuName:"Main Menu"
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+    menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
     widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
   </Command>
 </Orchard>
