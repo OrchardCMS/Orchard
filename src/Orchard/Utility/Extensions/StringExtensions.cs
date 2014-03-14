@@ -173,9 +173,7 @@ namespace Orchard.Utility.Extensions {
 
             name = RemoveDiacritics(name);
             name = name.Strip(c => 
-                c != '_' 
-                && c != '-' 
-                && !c.IsLetter()
+                !c.IsLetter()
                 && !Char.IsDigit(c)
                 );
 
