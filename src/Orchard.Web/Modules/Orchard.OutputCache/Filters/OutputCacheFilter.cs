@@ -424,7 +424,7 @@ namespace Orchard.OutputCache.Filters {
             if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
                 var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
                 if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
-                    redirectUrl = redirectUrl.Substring(applicationRoot.Length);
+                    redirectUrl = "~/" + redirectUrl.Substring(applicationRoot.Length);
                 }
             }
 
