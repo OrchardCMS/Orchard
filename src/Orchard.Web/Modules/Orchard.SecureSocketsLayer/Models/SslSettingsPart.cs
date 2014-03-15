@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
@@ -45,11 +46,13 @@ namespace Orchard.SecureSocketsLayer.Models {
             set { this.As<InfosetPart>().Set<SslSettingsPart>("CustomEnabled", value.ToString()); }
         }
 
+        [Required]
         public string SecureHostName {
             get { return this.As<InfosetPart>().Get<SslSettingsPart>("SecureHostName"); }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("SecureHostName", value); }
         }
 
+        [Required]
         public string InsecureHostName {
             get { return this.As<InfosetPart>().Get<SslSettingsPart>("InsecureHostName"); }
             set { this.As<InfosetPart>().Set<SslSettingsPart>("InsecureHostName", value); }
