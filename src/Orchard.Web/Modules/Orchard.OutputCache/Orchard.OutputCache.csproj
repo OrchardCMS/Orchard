@@ -90,7 +90,6 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
-    <Compile Include="Drivers\CacheSettingsPartDriver.cs" />
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />

@@ -65,7 +65,6 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Exporting(SearchSettingsPart part, ExportContentContext context) {
-            DefaultSettingsPartImportExport.ExportSettingsPart(part, context);
             context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchedFields", string.Join(",", part.SearchedFields)));
         }
 
@@ -73,10 +72,10 @@ namespace Orchard.Search.Drivers {
             var xElement = context.Data.Element(part.PartDefinition.Name);
             if (xElement == null) return;
             
-            DefaultSettingsPartImportExport.ImportSettingPart(part, xElement);
-
             var searchedFields = xElement.Attribute("SearchedFields");
-            part.SearchedFields = searchedFields.Value.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+            searchedFields.Remove();
+
+            part.SearchedFields = searchedFields.Value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

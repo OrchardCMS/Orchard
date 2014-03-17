@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -40,13 +41,22 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
-            var site = _siteService.GetSiteSettings();
+            var siteContentItem = _siteService.GetSiteSettings().ContentItem;
 
             var importContentSession = new ImportContentSession(_contentManager);
 
-            var context = new ImportContentContext(site.ContentItem, recipeContext.RecipeStep.Step, importContentSession);
+            var context = new ImportContentContext(siteContentItem, recipeContext.RecipeStep.Step, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
+            }
+
+            foreach (var contentPart in siteContentItem.Parts) {
+                var partElement = context.Data.Element(contentPart.PartDefinition.Name);
+                if (partElement == null) {
+                    continue;
+                }
+
+                ImportSettingPart(contentPart, partElement);
             }
 
             foreach (var contentHandler in Handlers) {
@@ -54,6 +64,30 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             recipeContext.Executed = true;
+        }
+
+        private void ImportSettingPart(ContentPart sitePart, XElement element) {
+
+            foreach (var attribute in element.Attributes()) {
+                var attributeName = attribute.Name.LocalName;
+                var attributeValue = attribute.Value;
+
+                var property = sitePart.GetType().GetProperty(attributeName);
+                if (property == null) {
+                    throw new InvalidOperationException(string.Format("Could set setting {0} for part {1} because it was not found.", attributeName, sitePart.PartDefinition.Name));
+                }
+
+                var propertyType = property.PropertyType;
+                if (propertyType == typeof(string)) {
+                    property.SetValue(sitePart, attributeValue, null);
+                }
+                else if (propertyType == typeof(bool)) {
+                    property.SetValue(sitePart, Boolean.Parse(attributeValue), null);
+                }
+                else if (propertyType == typeof(int)) {
+                    property.SetValue(sitePart, Int32.Parse(attributeValue), null);
+                }
+            }
         }
     }
 }

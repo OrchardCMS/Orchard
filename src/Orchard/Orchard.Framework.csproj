@@ -302,7 +302,6 @@
     <Compile Include="Services\DefaultJsonConverter.cs" />
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
-    <Compile Include="ContentManagement\Drivers\DefaultSettingsPartImportExport.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
