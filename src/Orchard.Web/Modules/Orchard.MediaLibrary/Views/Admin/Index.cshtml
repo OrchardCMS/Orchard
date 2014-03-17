@@ -3,13 +3,13 @@
 @{
     var viewModel = Model;
 
-    Script.Require("ShapesBase");
+    Script.Require("ShapesBase").AtFoot();
     Style.Require("MediaManagerAdmin");
-    Script.Require("jQuery");
-    Script.Require("jQueryUI_Droppable");
-    Script.Include("knockout-2.3.0.js");
-    Script.Include("history.js");
-    Script.Include("media-library.js");
+    Script.Require("jQuery").AtFoot();
+    Script.Require("jQueryUI_Droppable").AtFoot();
+    Script.Include("knockout-2.3.0.js").AtFoot();
+    Script.Include("history.js").AtFoot();
+    Script.Include("media-library.js").AtFoot();
     Style.Require("FontAwesome");
 
     Layout.Title = T("Media Library");

@@ -99,6 +99,10 @@ namespace Orchard.SecureSocketsLayer.Services {
             var urlHelper = new UrlHelper(requestContext);
             var url = urlHelper.Action(actionName, controllerName, requestContext.RouteData);
 
+            if (String.IsNullOrWhiteSpace(url)) {
+                return false;
+            }
+
             return IsRequestProtected(
                 url, requestContext.HttpContext.Request.ApplicationPath, settings);
         }

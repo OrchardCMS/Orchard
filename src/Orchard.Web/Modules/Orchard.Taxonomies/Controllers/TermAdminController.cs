@@ -167,6 +167,9 @@ namespace Orchard.Taxonomies.Controllers {
             var term = _taxonomyService.NewTerm(taxonomy);
             term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
 
+            // Create content item before updating so attached fields save correctly
+            Services.ContentManager.Create(term, VersionOptions.Draft);
+
             var model = Services.ContentManager.UpdateEditor(term, this);
 
             if (!ModelState.IsValid) {
@@ -175,7 +178,7 @@ namespace Orchard.Taxonomies.Controllers {
             }
 
             _taxonomyService.ProcessPath(term);
-            Services.ContentManager.Create(term, VersionOptions.Published);
+            Services.ContentManager.Publish(term.ContentItem);
             Services.Notifier.Information(T("The {0} term has been created.", term.Name));
 
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId });

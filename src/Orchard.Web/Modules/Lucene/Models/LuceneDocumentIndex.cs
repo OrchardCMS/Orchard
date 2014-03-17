@@ -100,7 +100,7 @@ namespace Lucene.Models {
             switch(_typeCode) {
                 case TypeCode.String:
                     if(_removeTags) {
-                        _stringValue = _stringValue.RemoveTags();
+                        _stringValue = _stringValue.RemoveTags(true);
                     }
                     Fields.Add(new Field(_name, _stringValue ?? String.Empty, 
                         _store ? Field.Store.YES : Field.Store.NO, 

@@ -121,7 +121,7 @@ namespace Orchard.Users.Controllers {
         [HttpPost]
         [AlwaysAccessible]
         [ValidateInput(false)]
-        public ActionResult Register(string userName, string email, string password, string confirmPassword) {
+        public ActionResult Register(string userName, string email, string password, string confirmPassword, string returnUrl = null) {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if ( !registrationSettings.UsersCanRegister ) {
@@ -153,7 +153,7 @@ namespace Orchard.Users.Controllers {
                     }
 
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
-                    return Redirect("~/");
+                    return this.RedirectLocal(returnUrl);
                 }
                 
                 ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
@@ -197,7 +197,7 @@ namespace Orchard.Users.Controllers {
             _userService.SendLostPasswordEmail(username, nonce => Url.MakeAbsolute(Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
 
             _orchardServices.Notifier.Information(T("Check your e-mail for the confirmation link."));
-
+            
             return RedirectToAction("LogOn");
         }
 

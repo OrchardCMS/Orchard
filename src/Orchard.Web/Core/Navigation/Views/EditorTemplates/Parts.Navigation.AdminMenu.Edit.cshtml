@@ -5,12 +5,14 @@
 }
 <fieldset>
     @Html.EditorFor(m => m.OnAdminMenu)
-    <label for="OnAdminMenu" class="forcheckbox">@T("Show on admin menu")</label>
-    <div data-controllerid="OnAdminMenu" class="">
-        <label for="AdminMenuText">@T("Menu text")</label>
+    <label for="@Html.FieldIdFor(m => m.OnAdminMenu)" class="forcheckbox">@T("Show on admin menu")</label>
+    <div data-controllerid="@Html.FieldIdFor(m => m.OnAdminMenu)" class="">
+        <label for="@Html.FieldIdFor(m => m.AdminMenuText)">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "text single-line" })
+        <span class="hint">@T("The text that should appear in the menu.")</span>
 
-		<label for="AdminMenuPosition">@T("Position")</label>
-		@Html.TextBoxFor(m => m.AdminMenuPosition, new { @class = "text single-line" })
+        <label for="@Html.FieldIdFor(m => m.AdminMenuPosition)">@T("Position")</label>
+        @Html.TextBoxFor(m => m.AdminMenuPosition, new { @class = "text small" })
+        <span class="hint">@T("The position in the menu.")</span>
     </div>
 </fieldset>

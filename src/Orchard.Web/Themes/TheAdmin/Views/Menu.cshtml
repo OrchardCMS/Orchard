@@ -1,7 +1,7 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     Script.Require("jQuery");
-    Script.Include("admin.js");
+    Script.Include("admin.js").AtFoot();
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
     if (Model.ImageSets != null) {

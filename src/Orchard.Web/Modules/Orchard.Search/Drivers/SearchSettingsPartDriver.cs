@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Search.Models;
@@ -60,6 +62,20 @@ namespace Orchard.Search.Drivers {
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model, Prefix: Prefix);
             }).OnGroup("search");
+        }
+
+        protected override void Exporting(SearchSettingsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchedFields", string.Join(",", part.SearchedFields)));
+        }
+
+        protected override void Importing(SearchSettingsPart part, ImportContentContext context) {
+            var xElement = context.Data.Element(part.PartDefinition.Name);
+            if (xElement == null) return;
+            
+            var searchedFields = xElement.Attribute("SearchedFields");
+            searchedFields.Remove();
+
+            part.SearchedFields = searchedFields.Value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

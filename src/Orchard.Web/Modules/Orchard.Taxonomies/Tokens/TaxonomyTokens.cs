@@ -32,7 +32,10 @@ namespace Orchard.Taxonomies.Tokens {
             context.For<TaxonomyField>("TaxonomyField")
                    .Token("Terms", field => String.Join(", ", field.Terms.Select(t => t.Name).ToArray()))
                    .Token(
-                       token => token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) ? token.Substring("Terms:".Length) : null,
+                       token => {
+                           var index = 0;
+                           return (token.StartsWith("Terms:", StringComparison.OrdinalIgnoreCase) && int.TryParse(token.Substring("Terms:".Length), out index)) ? index.ToString() : null;
+                       },
                        (token, t) => {
                            var index = Convert.ToInt32(token);
                            return index + 1 > t.Terms.Count() ? null : t.Terms.ElementAt(index).Name;
