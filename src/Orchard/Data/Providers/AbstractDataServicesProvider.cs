@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using FluentNHibernate;
 using FluentNHibernate.Automapping;
@@ -48,7 +47,6 @@ namespace Orchard.Data.Providers {
                                     .SetProperty(NHibernate.Cfg.Environment.FormatSql, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.GenerateStatistics, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.Hbm2ddlKeyWords, Hbm2DDLKeyWords.None.ToString())
-                                    .SetProperty(NHibernate.Cfg.Environment.PrepareSql, Boolean.TrueString)
                                     .SetProperty(NHibernate.Cfg.Environment.PropertyBytecodeProvider, "lcg")
                                     .SetProperty(NHibernate.Cfg.Environment.PropertyUseReflectionOptimizer, Boolean.TrueString)
                                     .SetProperty(NHibernate.Cfg.Environment.QueryStartupChecking, Boolean.FalseString)
@@ -62,6 +60,10 @@ namespace Orchard.Data.Providers {
                                cfg.EventListeners.PostLoadEventListeners = new IPostLoadEventListener[0];
                                cfg.EventListeners.PreLoadEventListeners = new IPreLoadEventListener[0];
                                
+                               // don't enable PrepareSql by default as it breaks on SqlCe
+                               // this can be done per driver by overriding AlterConfiguration
+                               AlterConfiguration(cfg);
+
                                parameters.Configurers.Invoke(c => c.Building(cfg), Logger);
                                
                            })
@@ -70,6 +72,10 @@ namespace Orchard.Data.Providers {
             parameters.Configurers.Invoke(c => c.Prepared(config), Logger);
 
             return config.BuildConfiguration();
+        }
+
+        protected virtual void AlterConfiguration(Configuration config) {
+            
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {

@@ -1,5 +1,6 @@
 using System;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Cfg;
 using NHibernate.SqlAzure;
 
 namespace Orchard.Data.Providers {
@@ -31,6 +32,10 @@ namespace Orchard.Data.Providers {
             }
 
             return persistence;
+        }
+
+        protected override void AlterConfiguration(Configuration config) {
+            config.SetProperty(NHibernate.Cfg.Environment.PrepareSql, Boolean.TrueString);
         }
     }
 }
