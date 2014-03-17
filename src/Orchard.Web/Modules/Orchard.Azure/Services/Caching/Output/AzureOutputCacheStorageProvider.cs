@@ -47,6 +47,10 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public void Set(string key, CacheItem cacheItem) {
+            if (cacheItem.ValidFor <= 0) {
+                return;
+            }
+
             Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
             _cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _regionAlphaNumeric);
         }

@@ -381,6 +381,10 @@ namespace Orchard.OutputCache.Filters {
             // default duration of specific one ?
             var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : _cacheDuration;
 
+            if (cacheDuration <= 0) {
+                return;
+            }
+
             // include each of the content item ids as tags for the cache entry
             var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
