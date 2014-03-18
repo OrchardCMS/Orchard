@@ -5,7 +5,7 @@ namespace Orchard.OutputCache.Models {
         public const string CacheKey = "CacheSettingsPart";
 
         public int DefaultCacheDuration {
-            get { return this.Retrieve(x => x.DefaultCacheDuration); }
+            get { return this.Retrieve(x => x.DefaultCacheDuration, 300); }
             set { this.Store(x => x.DefaultCacheDuration, value); }
         }
 
