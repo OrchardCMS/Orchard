@@ -27,7 +27,7 @@ namespace Orchard.Data.Providers {
             persistence = persistence.ConnectionString(_connectionString);
 
             // when using Sql Server Azure, use a specific driver, c.f. https://orchard.codeplex.com/workitem/19315
-            if (_connectionString.ToLowerInvariant().Contains("database.windows.net")) {
+            if (IsAzureSql()) {
                 persistence = persistence.Driver<SqlAzureClientDriver>();
             }
 
@@ -36,6 +36,14 @@ namespace Orchard.Data.Providers {
 
         protected override void AlterConfiguration(Configuration config) {
             config.SetProperty(NHibernate.Cfg.Environment.PrepareSql, Boolean.TrueString);
+
+            if (IsAzureSql()) {
+                config.SetProperty(NHibernate.Cfg.Environment.TransactionStrategy, typeof(ReliableAdoNetWithDistributedTransactionFactory).AssemblyQualifiedName);
+            }
+        }
+
+        private bool IsAzureSql() {
+            return _connectionString.ToLowerInvariant().Contains("database.windows.net");
         }
     }
 }
