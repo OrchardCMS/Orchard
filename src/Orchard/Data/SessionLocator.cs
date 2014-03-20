@@ -87,14 +87,14 @@ namespace Orchard.Data {
                         Logger.Debug("Reverting operations from transaction");
                         _transaction.Rollback();
                     }
-
-                    _transaction.Dispose();
-                    Logger.Debug("Transaction disposed");
                 }
                 catch (Exception e) {
                     Logger.Error(e, "Error while disposing the transaction.");
                 }
                 finally {
+                    _transaction.Dispose();
+                    Logger.Debug("Transaction disposed");
+
                     _transaction = null;
                     _cancelled = false;
                 }
