@@ -121,9 +121,20 @@ namespace Orchard.Core.Navigation.Services {
                 item.Permissions.Any(x => _authorizationService.TryCheckAccess(
                     x, 
                     _orchardServices.WorkContext.CurrentUser, 
-                    item.Content == null || isAdminMenu ? null : item.Content))))
-            {
-                item.Items = Reduce(item.Items, isAdminMenu, hasDebugShowAllMenuItems);
+                    item.Content == null || isAdminMenu ? null : item.Content)))) {
+                var oldItems = item.Items;
+
+                item.Items = Reduce(item.Items, isAdminMenu, hasDebugShowAllMenuItems).ToList();
+
+                // if all sub items have been filtered out, ensure the main one is not one of them
+                // e.g., Manage Roles and Manage Users are not granted, the Users item should not show up 
+                if (oldItems.Any() && !item.Items.Any()) {
+                    if (oldItems.Any(x => NavigationHelper.RouteMatches(x.RouteValues, item.RouteValues))) {
+                        continue;
+                    }
+                }
+
+                // if there are sub items returns the current item, otherwise ensure this item has valid permissions
                 yield return item;
             }
         }

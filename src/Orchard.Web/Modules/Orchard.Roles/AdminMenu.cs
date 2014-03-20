@@ -10,7 +10,7 @@ namespace Orchard.Roles {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Users"),
                 menu => menu.Add(T("Roles"), "2.0", item => item.Action("Index", "Admin", new { area = "Orchard.Roles" })
-                    .LocalNav().Permission(StandardPermissions.SiteOwner)));
+                    .LocalNav().Permission(Permissions.ManageRoles)));
         }
     }
 }
