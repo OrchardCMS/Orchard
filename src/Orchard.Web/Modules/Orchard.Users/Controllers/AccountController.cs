@@ -358,9 +358,19 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("username", T("You must specify a username."));
                 validate = false;
             }
+            else {
+                if (userName.Length >= 255) {
+                    ModelState.AddModelError("username", T("The username you provided is too long."));
+                    validate = false;
+                }
+            }
 
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", T("You must specify an email address."));
+                validate = false;
+            }
+            else if (email.Length >= 255) {
+                ModelState.AddModelError("email", T("The email address you provided is too long."));
                 validate = false;
             }
             else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
