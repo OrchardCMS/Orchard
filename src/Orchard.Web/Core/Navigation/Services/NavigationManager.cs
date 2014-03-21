@@ -97,6 +97,9 @@ namespace Orchard.Core.Navigation.Services {
                     if (!String.IsNullOrEmpty(_shellSettings.RequestUrlPrefix)) {
                         url = _shellSettings.RequestUrlPrefix + "/" + url.Substring(2);
                     }
+                    else {
+                        url = url.Substring(2);
+                    }
                 }
                 if (!url.StartsWith("#")) {
                     var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
