@@ -27,8 +27,10 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
+            Services.ContentManager.Create(comment, VersionOptions.Draft);
             
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
+
 
             if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
@@ -47,6 +49,7 @@ namespace Orchard.Comments.Controllers {
             }
 
             if (ModelState.IsValid) {
+                Services.ContentManager.Create(comment);
 
                 var commentPart = comment.As<CommentPart>();
 
@@ -55,8 +58,6 @@ namespace Orchard.Comments.Controllers {
                     Services.TransactionManager.Cancel();
                     return this.RedirectLocal(returnUrl, "~/");
                 }
-                
-                Services.ContentManager.Create(comment.ContentItem, VersionOptions.Published);
 
                 var commentsPart = Services.ContentManager.Get(commentPart.CommentedOn).As<CommentsPart>();
            
