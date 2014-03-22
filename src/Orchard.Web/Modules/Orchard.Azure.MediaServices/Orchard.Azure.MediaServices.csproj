@@ -68,9 +68,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.TransientFaultHandling.Core, Version=5.1.1209.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Microsoft.Practices.TransientFaultHandling.Core.dll</HintPath>
+    <Reference Include="Microsoft.Practices.TransientFaultHandling.Core">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.Practices.TransientFaultHandling.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,9 +79,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.MediaServices.Client">
+      <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.MediaServices.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -156,8 +154,6 @@
     <Content Include="Images\Loader1.GIF" />
     <Content Include="Images\Thumbnail-Placeholder2.png" />
     <Content Include="Images\Thumbnail-Placeholder1.png" />
-    <Content Include="Lib\Microsoft.Practices.TransientFaultHandling.Core.dll" />
-    <Content Include="Lib\Microsoft.WindowsAzure.MediaServices.Client.dll" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
@@ -546,9 +542,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Assets\Thumbnail.Preview.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Lib\Azure SDK for Media Services Notice.docx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Strobe Media Playback Notice.docx" />
