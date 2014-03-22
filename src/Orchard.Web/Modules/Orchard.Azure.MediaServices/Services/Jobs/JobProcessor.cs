@@ -156,9 +156,12 @@ namespace Orchard.Azure.MediaServices.Services.Jobs {
                         }
                     }
                 }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error during sweep.");
+                }
                 finally {
-                    Logger.Debug("Ending sweep.");
                     Monitor.Exit(_sweepLock);
+                    Logger.Debug("Ending sweep.");
                 }
             }
         }
