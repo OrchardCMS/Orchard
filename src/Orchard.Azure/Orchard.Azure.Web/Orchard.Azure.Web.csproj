@@ -249,6 +249,10 @@
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Azure.MediaServices\Orchard.Azure.MediaServices.csproj">
+      <Project>{14a96b1a-9dc9-44c8-a675-206329e15263}</Project>
+      <Name>Orchard.Azure.MediaServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Azure\Orchard.Azure.csproj">
       <Project>{cbc7993c-57d8-4a6c-992c-19e849dfe71d}</Project>
       <Name>Orchard.Azure</Name>

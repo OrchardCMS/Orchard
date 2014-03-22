@@ -1,0 +1,28 @@
+﻿#tabs { // Should be .tabs-container but that does not gain enough specificity to nested rules to override JQueryUI styling.
+    display: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+
+    ul {
+        background: none;
+        border-top: 0;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 0;
+        padding: 0;
+
+        li {
+            margin-right: 6px;
+            border-radius: 0;
+        }
+    }
+
+    .ui-tabs-panel {
+        border: 1px solid #aaaaaa;
+        border-top: 0;
+        border-radius: 0;
+    }
+}

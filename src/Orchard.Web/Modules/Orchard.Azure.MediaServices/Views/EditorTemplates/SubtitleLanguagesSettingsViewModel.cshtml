@@ -1,0 +1,34 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.SubtitleLanguagesSettingsViewModel
+@using (Script.Head()) {
+    <script type="text/javascript">
+        var initSubtitleLanguages = [ @(Model.Languages != null && Model.Languages.Any() ? Html.Raw(String.Join(", ", from s in Model.Languages select String.Format("'{0}'", s))) : Html.Raw(""))];
+    </script>
+}
+
+<p class="hint">
+    Subtitle languages are configured with their respective .NET culture code, e.g. "en-US" or "sv-SE".
+</p>
+
+<fieldset>
+    <legend>@T("Subtitle languages")</legend>
+    <table id="languages-table" class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Culture code")</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: subtitleLanguages">
+            <tr>
+                <td><input type="text" class="text" data-bind="value: value, attr: { id: 'SubtitleLanguages_Languages_' + $index(), name: 'SubtitleLanguages.Languages[' + $index() + ']'}" /></td>
+                <td><a href="#" data-bind="click: Orchard.Azure.MediaServices.Admin.Settings.deleteSubtitleLanguage">@T("Delete")</a></td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td><a href="#" data-bind="click: Orchard.Azure.MediaServices.Admin.Settings.addNewSubtitleLanguage"><i class="icon-plus-sign icon-large"></i> Add new</a></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>

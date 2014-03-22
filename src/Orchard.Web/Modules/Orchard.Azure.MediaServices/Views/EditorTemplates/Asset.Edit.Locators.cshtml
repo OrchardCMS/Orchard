@@ -1,0 +1,24 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Media.AssetViewModel
+@{
+    var locators = Model.Asset.GetDisplayLocators();
+}
+<fieldset>
+    <table id="asset-locators" class="items asset-locators">
+        <thead>
+            <tr>
+                <th scope="col">@T("Type")</th>
+                <th scope="col">@T("Id")</th>
+                <th scope="col">@T("Url")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var locator in locators) {
+                <tr>
+                    <td>@T(locator.Name)</td>
+                    <td>@locator.Id</td>
+                    <td><a href="@locator.Url" target="_blank">@locator.Url</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</fieldset>

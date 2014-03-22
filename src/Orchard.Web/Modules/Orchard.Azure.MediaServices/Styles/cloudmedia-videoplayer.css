@@ -1,0 +1,20 @@
+.cloudvideo-player-alt-wrapper {
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-color: black;
+  padding: 1em;
+}
+.cloudvideo-player-alt-wrapper .cloudvideo-player-alt-inner {
+  width: 60%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 1em;
+  color: black;
+}
+.cloudvideo-player-alt-wrapper span {
+  display: block;
+  margin-bottom: 1em;
+}

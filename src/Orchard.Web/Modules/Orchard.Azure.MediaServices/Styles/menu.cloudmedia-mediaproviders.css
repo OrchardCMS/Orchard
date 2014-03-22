@@ -1,0 +1,15 @@
+.navicon-windows-azure-media {
+  white-space: nowrap;
+  padding-right: 6px !important;
+}
+.navicon-windows-azure-media:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+  content: '\f0c2';
+  font-size: 14px;
+  color: black;
+  padding-right: 5px;
+}

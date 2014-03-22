@@ -1,0 +1,73 @@
+﻿@using Orchard.Azure.MediaServices.ViewModels.Media
+@model CloudVideoPartViewModel
+@{
+    Script.Include("cloudmedia-edit-cloudvideopart-proxied.js");
+    var isCreatingItem = Model.Id == 0;
+}
+
+@helper AsyncUpload(string fileUploadName, string prefix, string caption, TemporaryFileViewModel tempFileViewModel, IEnumerable<string> allowedExtensions) {
+    var extensions = allowedExtensions as IList<string> ?? allowedExtensions.ToArray();
+    var acceptFileTypes = allowedExtensions != null && extensions.Any() ? String.Format(@"(\.|\/)({0})$", String.Join("|", extensions)) : null;
+    <fieldset data-upload-accept-file-types="@acceptFileTypes"
+              data-upload-fallback-url="@Url.Action("Upload", "Media", new { area = "Orchard.Azure.MediaServices" })"
+              data-generate-asset-url="@Url.Action("GenerateWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices" })">
+        <label>@T(caption)</label>
+        <input type="hidden" name="@String.Format("{0}.OriginalFileName", prefix)" value="@tempFileViewModel.OriginalFileName" />
+        <input type="hidden" name="@String.Format("{0}.TemporaryFileName", prefix)" value="@tempFileViewModel.TemporaryFileName" />
+        <input type="hidden" name="@String.Format("{0}.FileSize", prefix)" value="@tempFileViewModel.FileSize" />
+        @if (String.IsNullOrWhiteSpace(tempFileViewModel.TemporaryFileName)) {
+            <input class="async-upload-input" name="@fileUploadName" type="file" />
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <span class="progress-text"></span>
+            <span class="validation-text">@T("The selected file must have one of the following filename extensions: {0}", String.Join(", ", extensions))</span>
+            <a class="cancel-upload" href="#">@T("Cancel")</a>
+        }
+        else {
+            <span>@T("Successfully uploaded video file '{0}'.", tempFileViewModel.OriginalFileName)</span>
+        }
+    </fieldset>
+}
+
+@helper SyncUpload(string fileUploadName) {
+    <input class="sync-upload-input" name="@fileUploadName" type="file" />
+}
+
+@helper ThumbnailUpload(string caption) {
+    <fieldset>
+        <label>@T(caption)</label>
+        <input class="sync-upload-input" name="ThumbnailFile.Proxied" type="file" />
+    </fieldset>
+}
+
+@helper SubtitleUpload(string caption) {
+    <fieldset>
+        <label>@T(caption)</label>
+        @if (Model.SubtitleLanguages.Any()) {
+            @SyncUpload("SubtitleFile.Proxied")
+            <div>
+                @Html.Label(T("Subtitle language").Text, new { @class = "subtitle-label" })
+                @Html.DropDownListFor(m => m.AddedSubtitleLanguage, Model.SubtitleLanguages.Select((s) => new SelectListItem() { Text = s, Value = s }), new { @class = "subtitle-select" })
+            </div>
+        }
+        else {
+            <span>@T("Subtitle assets already exist for all configured subtitle languages. No additional subtitle files can be uploaded.")</span>
+        }
+    </fieldset>
+}
+
+<div class="upload-proxied">
+    @if (isCreatingItem) {
+        <div class="required-uploads-group" data-block-description="@T("You must upload a video file before saving this item.")">
+            @Html.HiddenFor(m => m.Id)
+            @AsyncUpload("OriginalVideoFile", Html.NameFor(m => m.TemporaryVideoFile).ToString(), "Original video file", Model.TemporaryVideoFile, Model.AllowedVideoFilenameExtensions)
+        </div>
+        @ThumbnailUpload("Thumbnail file")
+        @SubtitleUpload("Subtitle file")
+    }
+    else {
+        @ThumbnailUpload("Add another thumbnail file")
+        @SubtitleUpload("Add another subtitle file")
+    }
+</div>

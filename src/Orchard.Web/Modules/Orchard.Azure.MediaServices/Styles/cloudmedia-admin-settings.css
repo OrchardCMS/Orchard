@@ -1,0 +1,35 @@
+﻿h2 {
+    margin-top: 1em !important;
+}
+
+#test-button,
+#save-button {
+    margin-top: 1em;
+}
+
+#presets-table {
+    width: auto;
+}
+
+#presets-table th:nth-child(1),
+#presets-table th:nth-child(3),
+#presets-table td:nth-child(1),
+#presets-table td:nth-child(3) {
+    text-align: center;
+}
+
+#presets-table td:nth-child(2) {
+    width: 400px;
+}
+
+#languages-table {
+    width: auto;
+    /*td:nth-child(2) {
+		width: 400px;
+	}*/
+}
+
+#languages-table th:nth-child(2),
+#languages-table td:nth-child(2) {
+    text-align: center;
+}

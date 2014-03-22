@@ -1,0 +1,58 @@
+﻿@using Orchard.Azure.MediaServices.Helpers
+@using Orchard.Azure.MediaServices.Models.Assets
+@using Orchard.Azure.MediaServices.ViewModels.Media
+@model CloudVideoPartViewModel
+@{
+    var isCreatingItem = Model.Id == 0;
+
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("FontAwesome");
+    Style.Include("cloudmedia-edit-cloudvideopart.css", "cloudmedia-edit-cloudvideopart.min.css");
+    Style.Include("cloudmedia-tabs.css", "cloudmedia-tabs.min.css");
+    Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
+
+    Script.Require("jQuery");
+    Script.Require("jQueryUI");
+    Script.Require("jQueryUI_Tabs");
+    Script.Require("ShapesBase");
+    Script.Include("Lib/jquery.blockui.js");
+    Script.Include("Lib/jquery.fileupload.js");
+    Script.Include("Lib/jquery.fileupload-process.js");
+    Script.Include("Lib/jquery.fileupload-validate.js");
+    Script.Include("cloudmedia-autorefresh.js");
+    Script.Include("cloudmedia-edit-cloudvideopart.js");
+}
+<div id="tabs" class="tabs-container" data-cloudvideo-iscreating="@isCreatingItem.ToString().ToLower()">
+    <ul>
+        <li><a href="#cloudvideo-upload">@T("Upload")</a></li>
+        <li><a href="#cloudvideo-assets">@T("Assets")</a></li>
+        <li><a href="#cloudvideo-jobs">@T("Jobs")</a></li>
+        <li><a href="#cloudvideo-preview">@T("Preview")</a></li>
+    </ul>
+    <div id="cloudvideo-upload">
+        @{
+            Html.RenderPartial("CloudVideoEditor.Direct");
+            Html.RenderPartial("CloudVideoEditor.Proxied");
+        }
+    </div>
+    <div id="cloudvideo-assets" @if (Model.Part.Id > 0) { <text> data-refresh-url="@Url.Action("AssetsTable", "Job", new { Model.Part.Id, Area = "Orchard.Azure.MediaServices" })" </text>      }>
+        @Display.CloudVideo_Edit_Assets(CloudVideoPart: Model.Part)
+    </div>
+    <div id="cloudvideo-jobs" @if (Model.Part.Id > 0) { <text> data-refresh-url="@Url.Action("JobsTable", "Job", new { Model.Part.Id, Area = "Orchard.Azure.MediaServices" })" </text>       }>
+        @Display.CloudVideo_Edit_Jobs(CloudVideoPart: Model.Part)
+    </div>
+    <div id="cloudvideo-preview">
+        @Display.CloudVideoPlayer(
+            CloudVideoPart: Model.Part,
+            AssetId: null,
+            IgnoreIncludeInPlayer: false,
+            AllowPrivateUrls: true,
+            PlayerWidth: 400,
+            PlayerHeight: 300,
+            ApplyMediaQueries: true,
+            AutoPlay: false)
+        @if (!Model.Part.Assets.Filter<VideoAsset>().Any()) {
+            <div class="message message-Warning">@T("No video assets exist on this cloud video item other than the mezzanine. Mezzanine assets are not supported for preview or playback. To create additional video assets, start an encoding job.")</div>
+        }
+    </div>
+</div>

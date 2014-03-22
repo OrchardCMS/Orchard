@@ -1,0 +1,69 @@
+﻿@using Orchard.Azure.MediaServices.Models
+@using Orchard.Azure.MediaServices.Models.Assets
+@using Orchard.Azure.MediaServices.Services.Tasks
+@using Orchard.Azure.MediaServices.ViewModels.Jobs
+@{
+    Style.Include("cloudmedia-admin-job.css", "cloudmedia-admin-job.min.css");
+    Script.Require("JQuery");
+    Script.Include("cloudmedia-admin-job.js");
+
+    var taskProvider = (ITaskProvider)Model.TaskProvider;
+    var cloudVideoPart = (CloudVideoPart)Model.CloudVideoPart;
+    var jobViewModel = (JobViewModel)Model.JobViewModel;
+    
+    var inputAssetListItemQuery =
+        from asset in cloudVideoPart.Assets
+        where asset is MezzanineAsset
+        select new SelectListItem {
+            Text = asset.ToString(), 
+            Value = asset.Record.Id.ToString(), 
+            Selected = asset.Record.Id == jobViewModel.SelectedInputAssetId
+        };
+        
+    Layout.Title = "Create Cloud Job";
+}
+@Display.FrameBuster()
+<h2>@taskProvider.Description</h2>
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset style="display: none"> @* Hidden for now. *@
+        <div class="form-group">   
+            @Html.LabelFor(m => jobViewModel.SelectedInputAssetId, T("Input Asset"))
+            @Html.DropDownListFor(m => jobViewModel.SelectedInputAssetId, inputAssetListItemQuery)
+            <span class="hint">@T("Select the input asset for the job.")</span>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => jobViewModel.OutputAssetName, T("Output Asset Name"))
+            @Html.TextBoxFor(m => jobViewModel.OutputAssetName, new { @class = "text medium" })
+            <span class="hint">@T("Optional. Specify the name you wish to assign to the output asset. When left blank, the task name will be used.")</span>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => jobViewModel.OutputAssetDescription, T("Output Asset Description"))
+            @Html.TextBoxFor(m => jobViewModel.OutputAssetDescription, new { @class = "text large" })
+            <span class="hint">@T("Optional. Specify a description you wish to assign to the output asset.")</span>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => jobViewModel.Name, T("Job Name"))
+            @Html.TextBoxFor(m => jobViewModel.Name, new { @class = "text medium" })
+            <span class="hint">@T("Optional. Specify the name of this job. When left blank, the task name will be used.")</span>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => jobViewModel.Description, T("Job Description"))
+            @Html.TextBoxFor(m => jobViewModel.Description, new { @class = "text large" })
+            <span class="hint">@T("Optional. Specify a description for this job.")</span>
+        </div>
+    </fieldset>
+    <fieldset>
+        @Display(jobViewModel.TaskEditorShape)
+    </fieldset>
+    <fieldset>
+        @if (taskProvider.CanExecute) {
+            <button type="submit">@T("Create Job")</button>
+        }
+        <a class="button" href="@Url.ItemEditUrl(cloudVideoPart)">@T("Cancel")</a>
+    </fieldset>
+}    
