@@ -67,9 +67,14 @@ namespace Orchard.Logging {
                 ThreadContext.Properties["Tenant"] = ShellSettings.Name;
             }
 
-            var ctx = HttpContext.Current;
-            if (ctx != null && ctx.Request != null) {
-                ThreadContext.Properties["Url"] = ctx.Request.Url.ToString();
+            try {
+                var ctx = HttpContext.Current;
+                if (ctx != null) {
+                    ThreadContext.Properties["Url"] = ctx.Request.Url.ToString();
+                }
+            }
+            catch(HttpException) {
+                // can happen on cloud service for an unknown reason
             }
         }
 
