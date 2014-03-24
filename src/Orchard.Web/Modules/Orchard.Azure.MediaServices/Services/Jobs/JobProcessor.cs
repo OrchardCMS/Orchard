@@ -47,14 +47,14 @@ namespace Orchard.Azure.MediaServices.Services.Jobs {
 
         public void Sweep() {
             if (Monitor.TryEnter(_sweepLock)) {
-                Logger.Debug("Beginning sweep.");
-
-                if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
-                    Logger.Debug("Settings are invalid; going back to sleep.");
-                    return;
-                }
-
                 try {
+                    Logger.Debug("Beginning sweep.");
+
+                    if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
+                        Logger.Debug("Settings are invalid; going back to sleep.");
+                        return;
+                    }
+
                     // Only allow this task to run on one farm node at a time.
                     if (_taskLeaseService.Acquire(GetType().FullName, _clock.UtcNow.AddHours(1)) != null) {
                         var jobs = _jobManager.GetActiveJobs().ToDictionary(job => job.WamsJobId);

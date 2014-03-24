@@ -10,8 +10,6 @@ using Orchard.Azure.MediaServices.Models.Assets;
 using Orchard.Azure.MediaServices.Models.Records;
 using Orchard.Azure.MediaServices.Services.TempFiles;
 using Orchard.Azure.MediaServices.Services.Wams;
-using Microsoft.WindowsAzure.MediaServices.Client;
-using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Logging;
@@ -55,14 +53,13 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
 
         void IBackgroundTask.Sweep() {
             if (Monitor.TryEnter(_sweepLock)) {
-                Logger.Debug("Beginning sweep.");
-
-                if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
-                    Logger.Debug("Settings are invalid; going back to sleep.");
-                    return;
-                }
-
                 try {
+                    Logger.Debug("Beginning sweep.");
+
+                    if (!_orchardServices.WorkContext.CurrentSite.As<CloudMediaSettingsPart>().IsValid()) {
+                        Logger.Debug("Settings are invalid; going back to sleep.");
+                        return;
+                    }
                     var pendingAssetsQuery =
                         from asset in _assetManager.LoadPendingAssets()
                         where _fileManager.FileExists(asset.LocalTempFileName)
