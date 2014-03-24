@@ -296,7 +296,8 @@ namespace Orchard.OutputCache.Filters {
                 _filter = null;
                 if (_previousFilter != null) {
                     response.Filter = _previousFilter;
-                }
+                } 
+                return;
             }
             
             // ignore error results from cache
