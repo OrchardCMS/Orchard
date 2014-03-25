@@ -18,7 +18,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         private readonly DataCache _cache;
         private readonly string _regionAlphaNumeric;
 
-        public AzureOutputCacheStorageProvider(ShellSettings shellSettings, IAzureOutputCacheHolder cacheHolder, IPlatformConfigurationAccessor pca) {
+        public AzureOutputCacheStorageProvider(ShellSettings shellSettings, IAzureOutputCacheHolder cacheHolder) {
 
             var region = shellSettings.Name;
 
@@ -33,7 +33,7 @@ namespace Orchard.Azure.Services.Caching.Output {
                 CacheClientConfiguration cacheConfig;
 
                 try {
-                    cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix, pca);
+                    cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(shellSettings.Name, Constants.OutputCacheSettingNamePrefix);
                     cacheConfig.Validate();
                 }
                 catch (Exception ex) {
