@@ -103,7 +103,6 @@
   <ItemGroup>
     <Compile Include="Services\Environment\Configuration\DefaultPlatformConfigurationAccessor.cs" />
     <Compile Include="Services\Environment\Configuration\IPlatformConfigurationAccessor.cs" />
-    <Compile Include="Services\Environment\Configuration\PlatformConfiguration.cs" />
     <Compile Include="Services\TaskLease\AzureMachineNameProvider.cs" />
     <Content Include="Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />

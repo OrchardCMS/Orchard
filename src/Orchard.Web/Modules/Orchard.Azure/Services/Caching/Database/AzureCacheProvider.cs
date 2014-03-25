@@ -1,7 +1,8 @@
-using Microsoft.ApplicationServer.Caching;
-using NHibernate.Cache;
 using System;
 using System.Collections.Generic;
+using Microsoft.ApplicationServer.Caching;
+using NHibernate.Cache;
+using Orchard.Azure.Services.Environment.Configuration;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
@@ -39,7 +40,8 @@ namespace Orchard.Azure.Services.Caching.Database {
                 if (properties.TryGetValue("compression_enabled", out enableCompressionString))
                     enableCompression = Boolean.Parse(enableCompressionString);
 
-                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenantName, Constants.DatabaseCacheSettingNamePrefix);
+                var pca = new DefaultPlatformConfigurationAccessor();
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenantName, Constants.DatabaseCacheSettingNamePrefix, pca);
                 configuration.CompressionIsEnabled = enableCompression;
                 configuration.Validate();
             }
