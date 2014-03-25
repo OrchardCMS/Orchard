@@ -4,6 +4,7 @@
 
         /// <summary>
         /// Reads a setting using the available implementation(s).
+        /// Implementations other than DefaultPlatformConfigurationAccessor do not have any effect on the behavior of caching services.
         /// </summary>
         /// <param name="name">The name of the setting to read.</param>
         /// <param name="tenant">The current tenant's name.</param>
