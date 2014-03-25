@@ -20,7 +20,7 @@ namespace Orchard.Azure.Services.Environment.Configuration {
 
         public string GetSetting(string name, string tenant, string namePrefix = null) {
             var tenantName = String.Format("{0}:{1}{2}", tenant, namePrefix, name);
-            var fallbackName = String.Format("{0}{2}", namePrefix, name);
+            var fallbackName = String.Format("{0}{1}", namePrefix, name);
 
             var cloudConfigurationValue = CloudConfigurationManager.GetSetting(tenantName) ?? CloudConfigurationManager.GetSetting(fallbackName);
             if (!String.IsNullOrEmpty(cloudConfigurationValue))
