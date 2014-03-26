@@ -232,7 +232,6 @@
     <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
-    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
     <Compile Include="DisplayManagement\SubsystemTests.cs" />
     <Compile Include="DisplayManagement\ShapeHelperTests.cs" />
@@ -369,6 +368,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample7\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

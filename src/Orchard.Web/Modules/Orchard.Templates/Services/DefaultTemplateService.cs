@@ -10,13 +10,9 @@ namespace Orchard.Templates.Services {
 
         public const string TemplatesSignal = "Orchard.Templates";
 
-        private readonly IContentManager _contentManager;
         private readonly IEnumerable<ITemplateProcessor> _processors;
 
-        public DefaultTemplateService(
-            IContentManager contentManager, 
-            IEnumerable<ITemplateProcessor> processors) {
-            _contentManager = contentManager;
+        public DefaultTemplateService(IEnumerable<ITemplateProcessor> processors) {
             _processors = processors;
         }
 
@@ -28,10 +24,6 @@ namespace Orchard.Templates.Services {
             var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, processorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
             return processor.Process(template, name, context, model);
         }
-
-        public IEnumerable<ShapePart> GetTemplates(VersionOptions versionOptions = null) {
-            return _contentManager.Query<ShapePart>(versionOptions ?? VersionOptions.Published).List();
-        }
-
+        
     }
 }

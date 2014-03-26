@@ -1,6 +1,10 @@
-﻿using Autofac;
+﻿using System.Web;
+using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
+using Orchard.Templates.Compilation.Razor;
 using Orchard.Templates.Services;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Templates.Tests {
     [TestFixture]
@@ -11,6 +15,11 @@ namespace Orchard.Templates.Tests {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<RazorTemplateProcessor>().As<ITemplateProcessor>();
+            builder.RegisterType<RazorCompiler>().As<IRazorCompiler>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<StubHttpContext>().As<HttpContextBase>();
+
             _container = builder.Build();
         }
 

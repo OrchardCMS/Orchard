@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.WebPages;
 
-namespace Orchard.Compilation.Razor {
+namespace Orchard.Templates.Compilation.Razor {
     public interface IRazorTemplateBase
     {
         dynamic Model { get; }

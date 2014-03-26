@@ -13,7 +13,7 @@ using Orchard.Caching;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Compilation.Razor {
+namespace Orchard.Templates.Compilation.Razor {
     public class RazorCompiler : IRazorCompiler {
         private readonly ICacheManager _cache;
         private readonly ISignals _signals;
@@ -34,7 +34,7 @@ namespace Orchard.Compilation.Razor {
                     "System.Web.Mvc.Ajax",
                     "System.Web.UI",
                     "System.Web.Routing",
-                    "Orchard.Compilation.Razor",
+                    "Orchard.Templates.Compilation.Razor",
                     "Orchard.ContentManagement",
                     "Orchard.DisplayManagement",
                     "Orchard.DisplayManagement.Shapes",
@@ -61,14 +61,6 @@ namespace Orchard.Compilation.Razor {
 
         public IRazorTemplateBase CompileRazor(string code, string name, IDictionary<string, object> parameters) {
             return (IRazorTemplateBase) Compile(code, name, null, parameters);
-        }
-
-        public object Compile(string code, IDictionary<string, object> parameters) {
-            return CompileRazor<RazorTemplateBase<dynamic>>(code, null, parameters);
-        }
-
-        public T Compile<T>(string code, IDictionary<string, object> parameters) {
-            return (T) Compile(code, null, null, parameters);
         }
 
         private object Compile(string code, string name, Type modelType, IDictionary<string, object> parameters) {

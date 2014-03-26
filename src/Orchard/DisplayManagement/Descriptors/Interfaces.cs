@@ -16,8 +16,4 @@ namespace Orchard.DisplayManagement.Descriptors {
         void ShapeTableCreated(ShapeTable shapeTable);
     }
 
-    public interface IShapeTableMonitor : IDependency {
-        void Monitor(Action<IVolatileToken> monitor);
-    }
-
 }

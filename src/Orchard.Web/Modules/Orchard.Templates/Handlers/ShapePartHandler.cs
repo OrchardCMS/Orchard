@@ -1,19 +1,22 @@
 ﻿using Orchard.Caching;
-using Orchard.Compilation.Razor;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Templates.Models;
 using Orchard.Templates.Services;
 
 namespace Orchard.Templates.Handlers {
     public class ShapePartHandler : ContentHandler {
-        private readonly IRazorTemplateHolder _razorTemplateHolder;
+        private ISignals _signals;
 
-        public ShapePartHandler(ISignals signals, IRazorTemplateHolder razorTemplateHolder) {
-            _razorTemplateHolder = razorTemplateHolder;
+        public ShapePartHandler(ISignals signals) {
+            _signals = signals;
 
-            OnUpdated<ShapePart>((ctx, part) => _razorTemplateHolder.Set(part.Name, part.Template));
-            OnCreated<ShapePart>((ctx, part) => signals.Trigger(DefaultTemplateService.TemplatesSignal));
-            OnRemoved<ShapePart>((ctx, part) => signals.Trigger(DefaultTemplateService.TemplatesSignal));
+            OnPublished<ShapePart>((ctx, part) => InvalidateTemplatesCache());
+            OnUnpublished<ShapePart>((ctx, part) => InvalidateTemplatesCache());
+            OnRemoved<ShapePart>((ctx, part) => InvalidateTemplatesCache());
+        }
+
+        public void InvalidateTemplatesCache() {
+            _signals.Trigger(DefaultTemplateService.TemplatesSignal);
         }
     }
 }
