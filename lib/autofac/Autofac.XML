@@ -158,57 +158,6 @@
               Looks up a localized string similar to {0} ---&gt; {1} (See inner exception for details.).
             </summary>
         </member>
-        <member name="T:Autofac.Core.Registration.IModuleRegistrar">
-            <summary>
-            Interface providing fluent syntax for chaining module registrations.
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.Registration.IModuleRegistrar.RegisterModule(Autofac.Core.IModule)">
-            <summary>
-            Add a module to the container.
-            </summary>
-            <param name="module">The module to add.</param>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="T:Autofac.Core.Registration.ModuleRegistrar">
-            <summary>
-            Basic implementation of the <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/>
-            interface allowing registration of modules into a <see cref="T:Autofac.ContainerBuilder"/>
-            in a fluent format.
-            </summary>
-        </member>
-        <member name="F:Autofac.Core.Registration.ModuleRegistrar._builder">
-            <summary>
-            The <see cref="T:Autofac.ContainerBuilder"/> into which registrations will be made.
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.Registration.ModuleRegistrar.#ctor(Autofac.ContainerBuilder)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ModuleRegistrar"/> class.
-            </summary>
-            <param name="builder">
-            The <see cref="T:Autofac.ContainerBuilder"/> into which registrations will be made.
-            </param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> is <see langword="null"/>.
-            </exception>
-        </member>
-        <member name="M:Autofac.Core.Registration.ModuleRegistrar.RegisterModule(Autofac.Core.IModule)">
-            <summary>
-            Add a module to the container.
-            </summary>
-            <param name="module">The module to add.</param>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="module"/> is <see langword="null"/>.
-            </exception>
-        </member>
         <member name="T:Autofac.Features.LazyDependencies.LazyWithMetadataRegistrationSource">
             <summary>
             Support the <c>System.Lazy&lt;T, TMetadata&gt;</c>
@@ -361,156 +310,6 @@
             </summary>
             <param name="targetType">Type to search for constructors.</param>
             <returns>Suitable constructors.</returns>
-        </member>
-        <member name="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceExtensions">
-            <summary>
-            Extension methods for configuring the <see cref="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource"/>.
-            </summary>
-        </member>
-        <member name="M:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceExtensions.WithRegistrationsAs(Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource,System.Action{Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.ConcreteReflectionActivatorData,Autofac.Builder.SingleRegistrationStyle}})">
-            <summary>
-            Fluent method for setting the registration configuration on <see cref="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource"/>.
-            </summary>
-            <param name="source">The registration source to configure.</param>
-            <param name="configurationAction">A configuration action that will run on any registration provided by the source.</param>
-            <returns>
-            The <paramref name="source"/> with the registration configuration set.
-            </returns>
-        </member>
-        <member name="T:Autofac.ModuleRegistrationExtensions">
-            <summary>
-            Extension methods for registering <see cref="T:Autofac.Core.IModule"/> instances with a container.
-            </summary>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="builder">The builder to register the modules with.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules(Autofac.Core.Registration.IModuleRegistrar,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="registrar">The module registrar that will make the registrations into the container.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules``1(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="builder">The builder to register the modules with.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <typeparam name="TModule">The type of the module to add.</typeparam>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules``1(Autofac.Core.Registration.IModuleRegistrar,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="registrar">The module registrar that will make the registrations into the container.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <typeparam name="TModule">The type of the module to add.</typeparam>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Type,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="builder">The builder to register the modules with.</param>
-            <param name="moduleType">The <see cref="T:System.Type"/> of the module to add.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> or <paramref name="moduleType"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterAssemblyModules(Autofac.Core.Registration.IModuleRegistrar,System.Type,System.Reflection.Assembly[])">
-            <summary>
-            Registers modules found in an assembly.
-            </summary>
-            <param name="registrar">The module registrar that will make the registrations into the container.</param>
-            <param name="moduleType">The <see cref="T:System.Type"/> of the module to add.</param>
-            <param name="assemblies">The assemblies from which to register modules.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registrar"/> or <paramref name="moduleType"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterModule``1(Autofac.ContainerBuilder)">
-            <summary>
-            Add a module to the container.
-            </summary>
-            <param name="builder">The builder to register the module with.</param>
-            <typeparam name="TModule">The module to add.</typeparam>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterModule``1(Autofac.Core.Registration.IModuleRegistrar)">
-            <summary>
-            Add a module to the container.
-            </summary>
-            <param name="registrar">The module registrar that will make the registration into the container.</param>
-            <typeparam name="TModule">The module to add.</typeparam>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
-        </member>
-        <member name="M:Autofac.ModuleRegistrationExtensions.RegisterModule(Autofac.ContainerBuilder,Autofac.Core.IModule)">
-            <summary>
-            Add a module to the container.
-            </summary>
-            <param name="builder">The builder to register the module with.</param>
-            <param name="module">The module to add.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> or <paramref name="module"/> is <see langword="null"/>.
-            </exception>
-            <returns>
-            The <see cref="T:Autofac.Core.Registration.IModuleRegistrar"/> to allow
-            additional chained module registrations.
-            </returns>
         </member>
         <member name="T:Autofac.ModuleResources">
             <summary>
@@ -2703,15 +2502,6 @@
             of other components (I.e. like Meta, Func or Owned.)
             </summary>
         </member>
-        <member name="P:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource.RegistrationConfiguration">
-            <summary>
-            Gets or sets an expression used to configure generated registrations.
-            </summary>
-            <value>
-            A <see cref="T:System.Action`1"/> that can be used to modify the behavior
-            of registrations that are generated by this source.
-            </value>
-        </member>
         <member name="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -4304,35 +4094,6 @@
             </summary>
             <value></value>
         </member>
-        <member name="T:Autofac.Features.Collections.CollectionRegistrationSource">
-            <summary>
-            Registration source providing implicit collection/list/enumerable support.
-            </summary>
-            <remarks>
-            <para>
-            This registration source provides enumerable support to allow resolving
-            the set of all registered services of a given type.
-            </para>
-            <para>
-            What may not be immediately apparent is that it also means any time there
-            are no items of a particular type registered, it will always return an
-            empty set rather than <see langword="null" /> or throwing an exception.
-            This is by design.
-            </para>
-            <para>
-            Consider the [possibly majority] use case where you're resolving a set
-            of message handlers or event handlers from the container. If there aren't
-            any handlers, you want an empty set - not <see langword="null" /> or
-            an exception. It's valid to have no handlers registered.
-            </para>
-            <para>
-            This implicit support means other areas (like MVC support or manual
-            property injection) must take care to only request enumerable values they
-            expect to get something back for. In other words, "Don't ask the container
-            for something you don't expect to resolve."
-            </para>
-            </remarks>
-        </member>
         <member name="M:Autofac.Features.Collections.CollectionRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
             <summary>
             Retrieve registrations for an unregistered service, to be used
@@ -4856,6 +4617,43 @@
             <summary>
             Adds registration syntax to the <see cref="T:Autofac.ContainerBuilder"/> type.
             </summary>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterModule(Autofac.ContainerBuilder,Autofac.Core.IModule)">
+            <summary>
+            Add a module to the container.
+            </summary>
+            <param name="builder">The builder to register the module with.</param>
+            <param name="module">The module to add.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterModule``1(Autofac.ContainerBuilder)">
+            <summary>
+            Add a module to the container.
+            </summary>
+            <param name="builder">The builder to register the module with.</param>
+            <typeparam name="TModule">The module to add.</typeparam>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules``1(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+            <typeparam name="TModule">The type of the module to add.</typeparam>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Type,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="moduleType">The <see cref="T:System.Type"/> of the module to add.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
         </member>
         <member name="M:Autofac.RegistrationExtensions.RegisterComponent(Autofac.ContainerBuilder,Autofac.Core.IComponentRegistration)">
             <summary>
@@ -5650,18 +5448,6 @@
             </remarks>
             <param name="container">An existing container to make the registrations in.</param>
         </member>
-        <member name="M:Autofac.ContainerBuilder.Update(Autofac.IContainer,Autofac.Builder.ContainerBuildOptions)">
-            <summary>
-            Configure an existing container with the component registrations
-            that have been made and allows additional build options to be specified.
-            </summary>
-            <remarks>
-            Update can only be called once per <see cref="T:Autofac.ContainerBuilder"/>
-            - this prevents ownership issues for provided instances.
-            </remarks>
-            <param name="container">An existing container to make the registrations in.</param>
-            <param name="options">Options that influence the way the container is updated.</param>
-        </member>
         <member name="M:Autofac.ContainerBuilder.Update(Autofac.Core.IComponentRegistry)">
             <summary>
             Configure an existing registry with the component registrations
@@ -6016,47 +5802,6 @@
             <param name="parameters">Parameters for the service.</param>
             <param name="serviceName">The service name.</param>
             <param name="serviceType">Type of the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed(Autofac.IComponentContext,System.Object,System.Type)">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <param name="serviceType">Type of the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed(Autofac.IComponentContext,System.Object,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <param name="serviceType">Type of the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed(Autofac.IComponentContext,System.Object,System.Type,Autofac.Core.Parameter[])">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="serviceKey">Key of the service.</param>
-            <param name="serviceType">Type of the service.</param>
-            <param name="parameters">The parameters.</param>
             <returns>
             The component instance that provides the service.
             </returns>
@@ -6857,11 +6602,6 @@
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources.DuplicateTypesInTypeMappedFuncParameterList">
-            <summary>
-              Looks up a localized string similar to Unable to generate a function to return type &apos;{0}&apos; with input parameter types [{1}]. The input parameter type list has duplicate types. Try registering a custom delegate type instead of using a generic Func relationship..
             </summary>
         </member>
         <member name="P:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources.GeneratedFactoryRegistrationSourceDescription">
