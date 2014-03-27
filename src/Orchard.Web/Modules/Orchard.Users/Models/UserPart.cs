@@ -49,12 +49,12 @@ namespace Orchard.Users.Models {
         }
 
         public UserStatus RegistrationStatus {
-            get { return Retrieve(x => x.RegistrationStatus); }
+            get { return Retrieve(x => x.RegistrationStatus, UserStatus.Approved); }
             set { Store(x => x.RegistrationStatus, value); }
         }
 
         public UserStatus EmailStatus {
-            get { return Retrieve(x => x.EmailStatus); }
+            get { return Retrieve(x => x.EmailStatus, UserStatus.Approved); }
             set { Store(x => x.EmailStatus, value); }
         }
     }

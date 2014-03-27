@@ -116,6 +116,13 @@ namespace Orchard.ContentManagement {
 
             return InfosetHelper.Retrieve(this, targetExpression, defaultExpression);
         }
+        protected TProperty Retrieve<TProperty>(
+                    Expression<Func<TRecord, TProperty>> targetExpression,
+                    TProperty defaultValue) {
+
+            return InfosetHelper.Retrieve(this, targetExpression, (Func<TRecord, TProperty>)(x => defaultValue));
+        }
+
         protected ContentPart<TRecord> Store<TProperty>(
             Expression<Func<TRecord, TProperty>> targetExpression,
             TProperty value) {
