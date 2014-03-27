@@ -7,22 +7,18 @@ namespace Orchard.Localization.Services {
 
 	public class DefaultDateServices : IDateServices {
 
-		private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
 		private readonly IDateTimeFormatProvider _dateTimeLocalization;
-		private readonly ISiteService _siteService;
 		private readonly ICalendarManager _calendarManager;
 
-		public DefaultDateServices(
-			IOrchardServices orchardServices,
-			IDateTimeFormatProvider dateTimeLocalization,
-			ISiteService siteService,
-			ICalendarManager calendarManager) {
-
-			_orchardServices = orchardServices;
-			_dateTimeLocalization = dateTimeLocalization;
-			_siteService = siteService;
-			_calendarManager = calendarManager;
-		}
+        public DefaultDateServices(
+            IWorkContextAccessor workContextAccessor,
+            IDateTimeFormatProvider dateTimeLocalization,
+            ICalendarManager calendarManager) {
+            _workContextAccessor = workContextAccessor;
+            _dateTimeLocalization = dateTimeLocalization;
+            _calendarManager = calendarManager;
+        }
 
 		public virtual DateTime? ConvertToLocal(DateTime date) {
 			return ConvertToLocal(ToNullable(date));
@@ -32,7 +28,8 @@ namespace Orchard.Localization.Services {
 			if (!date.HasValue) {
 				return null;
 			}
-			return TimeZoneInfo.ConvertTimeFromUtc(date.Value, _orchardServices.WorkContext.CurrentTimeZone);
+            var workContext = _workContextAccessor.GetContext();
+            return TimeZoneInfo.ConvertTimeFromUtc(date.Value, workContext.CurrentTimeZone);
 		}
 
 		public virtual string ConvertToLocalString(DateTime date, string nullText = null) {
@@ -91,7 +88,8 @@ namespace Orchard.Localization.Services {
 			if (!date.HasValue) {
 				return null;
 			}
-			return TimeZoneInfo.ConvertTimeToUtc(date.Value, _orchardServices.WorkContext.CurrentTimeZone);
+            var workContext = _workContextAccessor.GetContext();
+			return TimeZoneInfo.ConvertTimeToUtc(date.Value, workContext.CurrentTimeZone);
 		}
 
 		public virtual DateTime? ConvertFromLocalString(string dateString) {
@@ -154,14 +152,16 @@ namespace Orchard.Localization.Services {
 
 		protected virtual CultureInfo CurrentCulture {
 			get {
-				return CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+                var workContext = _workContextAccessor.GetContext();
+				return CultureInfo.GetCultureInfo(workContext.CurrentCulture);
 			}
 		}
 
 		protected virtual Calendar CurrentCalendar {
 			get {
-				if (!String.IsNullOrEmpty(_orchardServices.WorkContext.CurrentCalendar))
-					return _calendarManager.GetCalendarByName(_orchardServices.WorkContext.CurrentCalendar);
+                var workContext = _workContextAccessor.GetContext();
+				if (!String.IsNullOrEmpty(workContext.CurrentCalendar))
+					return _calendarManager.GetCalendarByName(workContext.CurrentCalendar);
 				return CurrentCulture.Calendar;
 			}
 		}

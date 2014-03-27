@@ -616,6 +616,11 @@
               Looks up a localized string similar to Unable to convert object of type &apos;{0}&apos; to type &apos;{1}&apos;..
             </summary>
         </member>
+        <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.TypeConverterAttributeTypeNotConverter">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; specified in the TypeConverterAttribute is not a TypeConverter..
+            </summary>
+        </member>
         <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.TypeNotFound">
             <summary>
               Looks up a localized string similar to The type &apos;{0}&apos; could not be found. It may require assembly qualification, e.g. &quot;MyType, MyAssembly&quot;..
@@ -663,7 +668,7 @@
         </member>
         <member name="T:Autofac.Configuration.Elements.ListElementCollection.ListElementTypeConverter">
             <summary>
-            Helps convert the configuration element into an actuall generic list
+            Helps convert the configuration element into an actual generic list
             </summary>
         </member>
         <member name="T:Autofac.Configuration.Util.Enforce">
@@ -1114,7 +1119,7 @@
             Some handy type conversion routines.
             </summary>
         </member>
-        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type)">
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.ICustomAttributeProvider)">
             <summary>
             Does its best to convert whatever the value is into the destination
             type. Null in yields null out for value types and the default(T)
@@ -1122,6 +1127,7 @@
             </summary>
             <param name="value">The value.</param>
             <param name="destinationType">Type of the destination.</param>
+            <param name="memberInfo">Reflected property or member info for the destination, if available, for retrieving custom type converter information.</param>
             <returns>An object of the destination type.</returns>
         </member>
         <member name="T:Autofac.Configuration.Elements.ListItemElement">

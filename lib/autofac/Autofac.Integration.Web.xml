@@ -442,7 +442,7 @@
             Extends registration syntax for common web scenarios.
             </summary>
         </member>
-        <member name="M:Autofac.Integration.Web.RegistrationExtensions.InstancePerHttpRequest``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+        <member name="M:Autofac.Integration.Web.RegistrationExtensions.InstancePerHttpRequest``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Object[])">
             <summary>
             Share one instance of the component within the context of a single
             HTTP request.
@@ -451,6 +451,7 @@
             <typeparam name="TStyle">Registration style.</typeparam>
             <typeparam name="TActivatorData">Activator data type.</typeparam>
             <param name="registration">The registration to configure.</param>
+            <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.Integration.Web.RegistrationExtensions.CacheInSession``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">

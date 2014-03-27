@@ -171,6 +171,8 @@
     <Compile Include="Migrations\SchemaCommandGeneratorTests.cs" />
     <Compile Include="Scripting.Dlr\ScriptingTests.cs" />
     <Compile Include="Settings\Blueprint\ShellDescriptorManagerTests.cs" />
+    <Compile Include="Stubs\MessageChannelSelectorStub.cs" />
+    <Compile Include="Stubs\ShapeDisplayStub.cs" />
     <Compile Include="Tags\Services\TagsServiceTests.cs" />
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
     <Compile Include="Users\Controllers\AccountControllerTests.cs" />
@@ -213,6 +215,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
+      <Project>{05660f47-d649-48bd-9ded-df4e01e7cff9}</Project>
+      <Name>Orchard.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj">
       <Project>{FE5C5947-D2D5-42C5-992A-13D672946135}</Project>

@@ -20,14 +20,21 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.State;
 using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Services;
+using Orchard.Tests.Modules.ImportExport.Services;
 using Orchard.Tests.Modules.Users;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Modules.Comments.Services {
     [TestFixture]
@@ -58,11 +65,14 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
+            builder.RegisterType<ProcessingEngineStub>().As<IProcessingEngine>();
+            builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>();
 
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+
         }
 
         public override void Init() {
@@ -186,5 +196,19 @@ namespace Orchard.Tests.Modules.Comments.Services {
 
     public class CommentedItemDriver : ContentPartDriver<CommentedItem> {
         public static readonly string ContentTypeName = "commentedItem";
+    }
+
+    public class ProcessingEngineStub : IProcessingEngine {
+
+        public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string messageName, Dictionary<string, object> parameters) {
+            return "";
+        }
+
+        public bool AreTasksPending() {
+            return false;
+        }
+
+        public void ExecuteNextTask() {
+        }
     }
 }

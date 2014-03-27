@@ -3,23 +3,15 @@ using Orchard.Messaging.Services;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Tests.Messaging {
-    public class MessagingChannelStub : IMessagingChannel {
-        public List<MessageContext> Messages { get; private set; }
-
+    public class MessagingChannelStub : IMessageChannel {
+        public List<IDictionary<string, object>> Messages { get; private set; }
+        
         public MessagingChannelStub() {
-            Messages = new List<MessageContext>();
+            Messages = new List<IDictionary<string, object>>();
         }
 
-        #region IMessagingChannel Members
-
-        public void SendMessage(MessageContext message) {
-            Messages.Add(message);
+        public void Process(IDictionary<string, object> parameters) {
+            Messages.Add(parameters);
         }
-
-        public IEnumerable<string> GetAvailableServices() {
-            yield return "email";
-        }
-
-        #endregion
     }
 }

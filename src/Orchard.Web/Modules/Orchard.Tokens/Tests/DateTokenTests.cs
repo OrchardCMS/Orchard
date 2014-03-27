@@ -25,6 +25,9 @@ namespace Orchard.Tokens.Tests {
             builder.RegisterType<CultureDateTimeFormatProvider>().As<IDateTimeFormatProvider>();
             builder.RegisterType<DefaultDateServices>().As<IDateServices>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<SiteCalendarSelector>().As<ICalendarSelector>();
+            builder.RegisterType<DefaultCalendarManager>().As<ICalendarManager>();
+ 
             _container = builder.Build();
             _tokenizer = _container.Resolve<ITokenizer>();
             _clock = _container.Resolve<IClock>();
