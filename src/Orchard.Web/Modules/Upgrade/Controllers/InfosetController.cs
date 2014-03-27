@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Settings.Models;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -22,14 +26,23 @@ namespace Upgrade.Controllers {
     public class InfosetController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IUpgradeService _upgradeService;
+        private readonly ISignals _signals;
+        private readonly IRepository<ContentItemRecord> _contentItemRecord;
+        private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRecord;
 
         private const int BATCH = 50;
 
         public InfosetController(
             IOrchardServices orchardServices,
-            IUpgradeService upgradeService) {
+            IUpgradeService upgradeService,
+            IRepository<ContentItemRecord> contentItemRecord,
+            IRepository<ContentItemVersionRecord> contentItemVersionRecord,
+            ISignals signals) {
             _orchardServices = orchardServices;
             _upgradeService = upgradeService;
+            _signals = signals;
+            _contentItemVersionRecord = contentItemVersionRecord;
+            _contentItemRecord = contentItemRecord;
 
             Logger = NullLogger.Instance;
         }
@@ -65,6 +78,8 @@ namespace Upgrade.Controllers {
                     });
 
                 _upgradeService.ExecuteReader("DROP TABLE " + siteTable, null);
+
+                _signals.Trigger("SiteCurrentTheme");
             }
 
             #endregion
@@ -264,8 +279,6 @@ namespace Upgrade.Controllers {
             }
             #endregion
             
-            // todo: user records
-
             _orchardServices.Notifier.Information(T("Site Settings migrated successfully"));
 
             return View();
@@ -547,6 +560,53 @@ namespace Upgrade.Controllers {
             return new JsonResult { Data = lastContentItemId };
         }
 
+        [HttpPost]
+        public JsonResult FixContentItemVersionPart(int id) {
+            string[] ignoredParts = new string[] { "CommonPart", "WidgetPart", "LayerPart", "IdentityPart", "UserPart", "MenuItemPart"};
+
+            if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
+                throw new AuthenticationException("");
+
+            var lastContentItemVersionId = id;
+
+            var contentItemVersionTable = _upgradeService.GetPrefixedTableName("Orchard_Framework_ContentItemVersionRecord");
+            var contentItemTable = _upgradeService.GetPrefixedTableName("Orchard_Framework_ContentItemRecord");
+            
+            foreach(var contentItemRecord in _contentItemRecord.Table.Take(BATCH).Where(x => x.Id > id)) {
+                    lastContentItemVersionId = contentItemRecord.Id;
+                    if (!String.IsNullOrWhiteSpace(contentItemRecord.Data)) {
+                        var data = XDocument.Parse(contentItemRecord.Data).Root; // <Data /> element
+
+                        foreach (var contentItemVersionRecord in _contentItemVersionRecord.Table.Where(x => (x.Published || x.Latest) && x.ContentItemRecord == contentItemRecord)) {
+                            var versionData = new XDocument(new XElement("Data")).Root;
+                            if (!String.IsNullOrWhiteSpace(contentItemVersionRecord.Data)) {
+                                versionData = XDocument.Parse(contentItemVersionRecord.Data).Root;
+                            }
+
+                            // copy each XML element from ContentItem to ContentItemVersionRecord
+                            foreach (XElement element in data.Elements()) {
+                                
+                                if (ignoredParts.Contains(element.Name.ToString())) {
+                                    continue;
+                                }
+
+                                if (element.Name.ToString().EndsWith("SettingsPart")) {
+                                    continue;
+                                }
+
+                                var versionElement = versionData.Element(element.Name);
+                                if (versionElement == null) {
+                                    versionData.Add(element);
+                                }
+                            }
+                            
+                            contentItemVersionRecord.Data = versionData.ToString(SaveOptions.DisableFormatting);
+                        }
+                    }
+            }
+
+            return new JsonResult { Data = lastContentItemVersionId };
+        }
 
         private static string ConvertToString(object readerValue) {
             return readerValue == DBNull.Value ? null : (string)readerValue;
@@ -569,5 +629,7 @@ namespace Upgrade.Controllers {
             }
             return false;
         }
+
+        public object SiteThemeService { get; set; }
     }
 }

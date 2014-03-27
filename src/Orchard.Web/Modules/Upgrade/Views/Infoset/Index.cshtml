@@ -75,6 +75,14 @@
     <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMenuItemPart", "Infoset")">@T("Migrate")</button>
 </fieldset>
 
+@if (Request.RawUrl.EndsWith("1.x")) {
+    <fieldset>
+        <legend>@T("FIXING 1.x VERSIONS:")</legend>
+        <span class="hint">@T("This migration step will merge version infosets.")</span>
+        <button type="button" class="button button-migrate" data-url="@Url.Action("FixContentItemVersionPart", "Infoset")">@T("Migrate")</button>
+    </fieldset>
+}
+ 
 @using (Script.Foot()) {
     <script type="text/javascript">
         $(function() {
@@ -87,7 +95,8 @@
                 var startId = 0;
                 $('#message-progress').show();
 
-                var iId = setInterval(function() {
+                var iId = setInterval(function () {
+
                     $.ajax({
                         type: 'POST',
                         url: importUrl,
