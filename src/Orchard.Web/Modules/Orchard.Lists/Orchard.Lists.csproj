@@ -66,10 +66,15 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Drivers\ContainerPartDriver.cs" />
     <Compile Include="Drivers\ContainablePartDriver.cs" />
+    <Compile Include="Projections\ListSortCriteria.cs" />
+    <Compile Include="Services\IFormProvider.cs" />
+    <Compile Include="Forms\ListFilterForm.cs" />
     <Compile Include="Handlers\ContainerPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="ListViews\CondensedListView.cs" />
     <Compile Include="ListViews\DefaultListView.cs" />
+    <Compile Include="Services\IFilterProvider.cs" />
+    <Compile Include="Projections\ListFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Content Include="Scripts\common-admin.js" />
@@ -89,6 +94,7 @@
     <Content Include="Styles\nprogress.css" />
     <Content Include="Scripts\nprogress.js" />
     <Content Include="Scripts\orchard-lists-admin.js" />
+    <Compile Include="Services\ISortCriterionProvider.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\ListContentsViewModel.cs" />
     <Content Include="Module.txt" />
@@ -193,9 +199,7 @@
   <ItemGroup>
     <Content Include="Views\Content.SummaryAdminCondensed.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\ListViewButtons.cshtml" />
   </ItemGroup>
