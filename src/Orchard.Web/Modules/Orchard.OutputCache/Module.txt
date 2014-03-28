@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: Sébastien Ros
 Website: http://orchardproject.net/
-Version: 1.7.2
-OrchardVersion: 1.7.2
+Version: 1.7.3
+OrchardVersion: 1.7.3
 Description: Adds Output Caching functionality.
 Features:
     Orchard.OutputCache:

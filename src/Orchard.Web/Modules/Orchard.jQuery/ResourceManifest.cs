@@ -63,7 +63,7 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.js").SetDependencies("jQuery");
 
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.9.2.custom.css").SetVersion("1.9.2");
-            manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
+            manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.3");
             manifest.DefineStyle("jQueryUI_TimePicker").SetUrl("jquery-ui-timepicker-addon.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.0.5");
 
             // jQuery File Upload

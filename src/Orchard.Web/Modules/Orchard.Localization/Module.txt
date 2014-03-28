@@ -2,7 +2,7 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.7.2
+Version: 1.7.3
 OrchardVersion: 1.4
 Description: The localization module enables the localization of content items.
 FeatureDescription: Localize content items.

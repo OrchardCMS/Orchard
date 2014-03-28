@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.7.2
+OrchardVersion: 1.7.3
 Description: Provides a set of Orchard service implementations targeting Windows Azure services.
 Features:
 	Orchard.Azure:

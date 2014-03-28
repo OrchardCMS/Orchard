@@ -713,7 +713,7 @@
 				return;
 			}
 			
-			function removeFilter() { // Needed for IE7 & IE8 in versions of jQuery prior to 1.7.2
+			function removeFilter() { // Needed for IE7 & IE8 in versions of jQuery prior to 1.7.3
 				if ($.support.opacity === false) {
 					$box[0].style.removeAttribute('filter');
 				}
