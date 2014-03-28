@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.CustomForms.Models;
+using Orchard.Data;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
@@ -15,19 +16,27 @@ namespace Orchard.CustomForms {
         public static readonly Permission ManageForms = new Permission { Description = "Manage custom forms", Name = "ManageForms" };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
-        
+        private readonly IRepository<CustomFormPartRecord> _customFormPartRepository;
+
         public virtual Feature Feature { get; set; }
 
-        public Permissions(IContentDefinitionManager contentDefinitionManager) {
+        public Permissions(IContentDefinitionManager contentDefinitionManager, IRepository<CustomFormPartRecord> customFormPartRepository) {
             _contentDefinitionManager = contentDefinitionManager;
+            _customFormPartRepository = customFormPartRepository;
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            var formTypeDefinitions = _contentDefinitionManager
-                .ListTypeDefinitions()
-                .Where(x => x.Parts.Any(xx => xx.PartDefinition.Name == typeof(CustomFormPart).Name));
+            var formContentTypes = _customFormPartRepository.Table
+                .Select(r => r.ContentType)
+                .Distinct()
+                .ToList();
 
-            foreach (var typeDefinition in formTypeDefinitions) {
+            foreach (var contentType in formContentTypes) {
+                var typeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+                if (typeDefinition == null)
+                {
+                    continue;
+                }
                 yield return CreateSubmitPermission(typeDefinition);
             }
 
