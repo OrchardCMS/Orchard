@@ -111,6 +111,7 @@
     <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
+    <Compile Include="Containers\Models\OrderByDirection.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
