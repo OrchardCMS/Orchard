@@ -3,10 +3,10 @@
     Layout.Title = T("Manage Lists");
 }
 <div class="manage">
-    @Html.ActionLink(T("New List Definition").ToString(), "Create", new { area = "Orchard.Lists" }, new { @class = "button primaryAction" })
+    @Html.ActionLink(T("New List").ToString(), "Create", new { area = "Orchard.Lists" }, new { @class = "button primaryAction" })
 </div>
 @if (Model.Lists.Items.Count == 0) {
-    <div class="message info">@T("There are no list definitions yet. <a href=\"{0}\">Create a List Definition<a/>.", Url.Action("Create", "Admin", new { id = "", area = "Orchard.Lists" }))</div>
+    <div class="message info">@T("There are no lists yet. <a href=\"{0}\">Create a List<a/>.", Url.Action("Create", "Admin", new { id = "", area = "Orchard.Lists" }))</div>
 } else { 
     using (Html.BeginFormAntiForgeryPost()) {
         <fieldset class="bulk-actions">
