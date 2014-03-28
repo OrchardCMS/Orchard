@@ -595,9 +595,11 @@ namespace Upgrade.Controllers {
                                 }
 
                                 var versionElement = versionData.Element(element.Name);
-                                if (versionElement == null) {
-                                    versionData.Add(element);
+                                if (versionElement != null) {
+                                    versionElement.Remove();
                                 }
+                                
+                                versionData.Add(element);
                             }
                             
                             contentItemVersionRecord.Data = versionData.ToString(SaveOptions.DisableFormatting);
