@@ -2,8 +2,8 @@ Name: Rules
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardrules.codeplex.com
-Version: 1.7.2
-OrchardVersion: 1.7.2
+Version: 1.8
+OrchardVersion: 1.8
 Description: Provides a system de trigger actions based on events.
 Features:
     Orchard.Rules:

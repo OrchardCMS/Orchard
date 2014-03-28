@@ -3,8 +3,8 @@ Path: MediaPicker
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.7.2
-OrchardVersion: 1.7.2
+Version: 1.8
+OrchardVersion: 1.8
 Description: UI for browsing for, uploading, or selecting an image for an HTML editor.
 Dependencies: Orchard.Media, Orchard.jQuery
 FeatureDescription: UI for browsing for, uploading, or selecting an image for an HTML editor.
