@@ -59,20 +59,20 @@ namespace Orchard.Users.Services {
 
             var user = _orchardServices.ContentManager.New<UserPart>("User");
 
-            user.Record.UserName = createUserParams.Username;
-            user.Record.Email = createUserParams.Email;
-            user.Record.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
-            user.Record.HashAlgorithm = "SHA1";
+            user.UserName = createUserParams.Username;
+            user.Email = createUserParams.Email;
+            user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
+            user.HashAlgorithm = "SHA1";
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
-                user.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
-                user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+                user.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+                user.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
             }
 
             if(createUserParams.IsApproved) {
-                user.Record.RegistrationStatus = UserStatus.Approved;
-                user.Record.EmailStatus = UserStatus.Approved;
+                user.RegistrationStatus = UserStatus.Approved;
+                user.EmailStatus = UserStatus.Approved;
             }
 
             var userContext = new UserContext {User = user, Cancel = false, UserParameters = createUserParams};
