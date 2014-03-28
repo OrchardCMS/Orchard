@@ -20,8 +20,8 @@ namespace Orchard.Lists.Projections {
             bool ascending = Boolean.Parse(Convert.ToString(context.State.Sort));
             var query = (IHqlQuery)context.Query;
             query = ascending
-                ? query.OrderBy(alias => alias.ContentPartRecord<ContainablePartRecord>(), x => x.Asc("Position"))
-                : query.OrderBy(alias => alias.ContentPartRecord<ContainablePartRecord>(), x => x.Desc("Position"));
+                ? query.OrderBy(alias => alias.ContentPartRecord<ContainablePartRecord>(), x => x.Desc("Position"))
+                : query.OrderBy(alias => alias.ContentPartRecord<ContainablePartRecord>(), x => x.Asc("Position"));
 
             context.Query = query;
         }
