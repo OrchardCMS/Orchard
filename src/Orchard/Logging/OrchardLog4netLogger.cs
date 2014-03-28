@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-
 using System.Web;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
@@ -14,13 +13,17 @@ namespace Orchard.Logging {
     [Serializable]
     public class OrchardLog4netLogger : MarshalByRefObject, Logger, IShim {
         private static readonly Type declaringType = typeof(OrchardLog4netLogger);
+
+        private readonly Lazy<ShellSettings> _shellSettings;
+
         public IOrchardHostContainer HostContainer { get; set; }
-        private ShellSettings _shellSettings;
 
         public OrchardLog4netLogger(log4net.Core.ILogger logger, OrchardLog4netFactory factory) {
             OrchardHostContainerRegistry.RegisterShim(this);
             Logger = logger;
             Factory = factory;
+
+            _shellSettings = new Lazy<ShellSettings>(LoadSettings);
         }
 
         internal OrchardLog4netLogger() {
@@ -30,41 +33,35 @@ namespace Orchard.Logging {
             : this(log.Logger, factory) {
         }
 
-        // Return a per class variable for each instance of the logger, which is for each tenant.  This variable allows outputting the tenant name
-        private ShellSettings ShellSettings {
-            get {
-                if (_shellSettings == null) {
-                    var ctx = HttpContext.Current;
-                    if (ctx == null)
-                        return null;
+        private ShellSettings LoadSettings() {
+            var ctx = HttpContext.Current;
+            if (ctx == null)
+                return null;
 
-                    var runningShellTable = HostContainer.Resolve<IRunningShellTable>();
-                    if (runningShellTable == null)
-                        return null;
+            var runningShellTable = HostContainer.Resolve<IRunningShellTable>();
+            if (runningShellTable == null)
+                return null;
 
-                    var shellSettings = runningShellTable.Match(new HttpContextWrapper(ctx));
-                    if (shellSettings == null)
-                        return null;
+            var shellSettings = runningShellTable.Match(new HttpContextWrapper(ctx));
+            if (shellSettings == null)
+                return null;
 
-                    var orchardHost = HostContainer.Resolve<IOrchardHost>();
-                    if (orchardHost == null)
-                        return null;
+            var orchardHost = HostContainer.Resolve<IOrchardHost>();
+            if (orchardHost == null)
+                return null;
 
-                    var shellContext = orchardHost.GetShellContext(shellSettings);
-                    if (shellContext == null || shellContext.Settings == null)
-                        return null;
+            var shellContext = orchardHost.GetShellContext(shellSettings);
+            if (shellContext == null || shellContext.Settings == null)
+                return null;
 
-                    _shellSettings = shellContext.Settings;
-                }
 
-                return _shellSettings;
-            }
+            return shellContext.Settings;
         }
 
         // Load the log4net thread with additional properties if they are available
         protected internal void AddExtendedThreadInfo() {
-            if (ShellSettings != null) {
-                ThreadContext.Properties["Tenant"] = ShellSettings.Name;
+            if (_shellSettings.Value != null) {
+                ThreadContext.Properties["Tenant"] = _shellSettings.Value.Name;
             }
 
             try {
