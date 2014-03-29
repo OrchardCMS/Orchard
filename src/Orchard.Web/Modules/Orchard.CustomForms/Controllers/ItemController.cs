@@ -156,7 +156,7 @@ namespace Orchard.CustomForms.Controllers {
 
             // trigger any workflow
             _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, contentItem,
-                    () => new Dictionary<string, object> { { "Content", contentItem } });
+                    () => new Dictionary<string, object> { { "Content", contentItem} , { "CustomForm", customForm.ContentItem } });
 
             if (customForm.Redirect) {
                 returnUrl = _tokenizer.Replace(customForm.RedirectUrl, new Dictionary<string, object> { { "Content", contentItem } });
