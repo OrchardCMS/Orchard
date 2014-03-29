@@ -114,7 +114,10 @@
                     var selectedData = $.colorbox.selectedData;
                     if (selectedData == null) // Dialog cancelled, do nothing
                         return;
-                    for (var i = 0; i < multiple ? selectedData.length : Math.min(selectedData.length, 1); i++) {
+
+                    var selectionLength = multiple ? selectedData.length : Math.min(selectedData.length, 1);
+                    
+                    for (var i = 0; i < selectionLength ; i++) {
                         var template = @(fieldIdForIds)_Template
                             .replace(/\{contentItemId\}/g, selectedData[i].id)
                             .replace(/\{thumbnail\}/g, selectedData[i].thumbnail)
