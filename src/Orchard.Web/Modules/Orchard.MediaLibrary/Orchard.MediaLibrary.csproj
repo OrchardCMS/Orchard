@@ -105,6 +105,9 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Models\IMediaFolder.cs" />
+    <Compile Include="MediaFileName\MediaFileNameDriver.cs" />
+    <Compile Include="MediaFileName\MediaFileNameEditorSettings.cs" />
+    <Compile Include="MediaFileName\MediaFileNameEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -350,6 +353,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\MediaLibraryPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\MediaFileNameEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Media.Edit.FileName.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
