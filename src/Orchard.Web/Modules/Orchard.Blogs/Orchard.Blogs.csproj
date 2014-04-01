@@ -72,6 +72,7 @@
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
+    <Compile Include="Feeds\BlogPartFeedItemBuilder.cs" />
     <Compile Include="Handlers\BlogArchivesPartHandler.cs" />
     <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
     <Compile Include="Models\BlogArchivesPart.cs" />
