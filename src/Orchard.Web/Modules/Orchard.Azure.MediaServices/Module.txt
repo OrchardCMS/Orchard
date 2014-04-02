@@ -1,7 +1,7 @@
 ﻿Name: Windows Azure Media Services
 AntiForgery: enabled
 Author: Microsoft Open Technologies, Inc
-Website: http://www.microsoft.com
+Website: http://msopentech.com
 Version: 1.8
 OrchardVersion: 1.8
 Description: Provides integration of Windows Azure Media Services functionality into Orchard.
