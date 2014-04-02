@@ -90,7 +90,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
         [HttpPost]
         public ActionResult Upload() {
-            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Windows Azure Media content.")))
+            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             if (HttpContext.Request.Files.Count < 1)
@@ -109,7 +109,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
         }
 
         private ActionResult EditImplementation(IContent content, string folderPath) {
-            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Windows Azure Media content.")))
+            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             var editorShape = _contentManager.BuildEditor(content);
@@ -118,7 +118,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
         }
 
         private ActionResult UpdateImplementation(CloudVideoPart part, string folderPath, LocalizedString notification, bool publish) {
-            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Windows Azure Media content.")))
+            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             Logger.Debug("User requested to save cloud video item with ID {0}.", part.Id);

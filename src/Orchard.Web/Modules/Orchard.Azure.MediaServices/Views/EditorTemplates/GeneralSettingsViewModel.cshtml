@@ -2,8 +2,8 @@
 
 <fieldset>
     <legend>@T("Account credentials")</legend>
-    <p class="hint">@T("The account name and access key for your Windows Azure Media Services account can be obtained from the Windows Azure management portal at <a href='https://manage.windowsazure.com'>https://manage.windowsazure.com</a>.")</p>
-    <p class="hint">@T("If you do not yet have a Windows Azure subscription, visit <a href='http://www.windowsazure.com/pricing/free-trial'>http://www.windowsazure.com/pricing/free-trial</a> to sign up for a free trial or buy a subscription.")</p>
+    <p class="hint">@T("The account name and access key for your Microsoft Azure Media Services account can be obtained from the Windows Azure management portal at <a href='https://manage.windowsazure.com'>https://manage.windowsazure.com</a>.")</p>
+    <p class="hint">@T("If you do not yet have a Microsoft Azure subscription, visit <a href='http://www.windowsazure.com/pricing/free-trial'>http://www.windowsazure.com/pricing/free-trial</a> to sign up for a free trial or buy a subscription.")</p>
     <div>
         <label>@T("Account name")</label>
         @Html.TextBoxFor(m => m.WamsAccountName, new { @class = "text medium" })
@@ -18,7 +18,7 @@
         <label>@T("Storage account access key")</label>
         @Html.TextBoxFor(m => m.StorageAccountKey, new { @class = "text medium" })
         @Html.ValidationMessageFor(m => m.StorageAccountKey)
-        <p class="hint">@T("Specify the account key for the underlying Windows Azure Storage account used by your Windows Azure Media Services instance if you want to automatically enable CORS support with the appropriate origin URLs for this web site. Enabling CORS support in your Windows Azure Storage account is required for uploading media files directly to Windows Azure Media Services. If you leave this field blank you will have to manually enable the appropriate CORS support for your Windows Azure Storage account using PowerShell.")</p>
+        <p class="hint">@T("Specify the account key for the underlying Microsoft Azure Storage account used by your Windows Azure Media Services instance if you want to automatically enable CORS support with the appropriate origin URLs for this web site. Enabling CORS support in your Windows Azure Storage account is required for uploading media files directly to Windows Azure Media Services. If you leave this field blank you will have to manually enable the appropriate CORS support for your Windows Azure Storage account using PowerShell.")</p>
     </div>
     <button id="test-button" type="submit" formaction="@Url.Action("TestCredentials")" class="button grey">@T("Test")</button>
 </fieldset>

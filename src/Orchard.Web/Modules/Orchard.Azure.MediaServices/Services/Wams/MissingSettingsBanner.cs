@@ -26,7 +26,7 @@ namespace Orchard.Azure.MediaServices.Services.Wams {
 
             if (settings == null || !settings.IsValid()) {
                 var url = _urlHelper.Action("Index", "Settings", new {area = "Orchard.Azure.MediaServices"});
-                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Windows Azure Media settings</a> are either missing or invalid and need to be configured.", url), Type = NotifyType.Warning };
+                yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Microsoft Azure Media settings</a> are either missing or invalid and need to be configured.", url), Type = NotifyType.Warning };
             }
         }
     }
