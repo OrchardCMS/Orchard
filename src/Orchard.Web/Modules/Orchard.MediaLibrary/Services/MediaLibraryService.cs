@@ -260,7 +260,22 @@ namespace Orchard.MediaLibrary.Services {
         public void DeleteFolder(string folderPath) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
 
-            _storageProvider.DeleteFolder(folderPath);
+            try
+            {
+                var contentManager = _orchardServices.ContentManager;
+                var mediaParts = BuildGetMediaContentItemsQuery(contentManager, folderPath, true).List();
+                foreach (var mediaPart in mediaParts)
+                {
+                    contentManager.Remove(mediaPart.ContentItem);
+                }
+
+                _storageProvider.DeleteFolder(folderPath);
+            }
+            catch (Exception)
+            {
+                _orchardServices.TransactionManager.Cancel();
+                throw;
+            }
         }
 
         /// <summary>
