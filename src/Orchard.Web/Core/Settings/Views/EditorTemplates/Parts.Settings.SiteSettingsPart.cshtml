@@ -69,5 +69,10 @@
         @Html.TextBoxFor(m => m.MaxPageSize, new {@class = "text small"})
         <span class="hint">@T("Determines the maximum number of items that are shown per page. Leave 0 for unlimited.")</span>
     </div>
+    <div>
+        <label for="MaxPagedCount">@T("Last index of items in pages")</label>
+        @Html.TextBoxFor(m => m.MaxPagedCount, new { @class = "text small" })
+        <span class="hint">@T("Determines the last element of the database that can be displayed. Leave 0 for unlimited.")</span>
+    </div>
 }
 </fieldset>

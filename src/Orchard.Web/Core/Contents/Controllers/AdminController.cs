@@ -105,7 +105,8 @@ namespace Orchard.Core.Contents.Controllers {
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            var maxPagedCount = _siteService.GetSiteSettings().MaxPagedCount;
+            var pagerShape = Shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
