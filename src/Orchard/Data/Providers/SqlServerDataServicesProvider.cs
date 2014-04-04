@@ -31,6 +31,11 @@ namespace Orchard.Data.Providers {
                 persistence = persistence.Driver<SqlAzureClientDriver>();
             }
 
+            // use MsSql2012Dialect if on Azure or if specified in the connection string
+            if (IsAzureSql() || _connectionString.IndexOf(";Dialect=MsSql2012Dialect", StringComparison.OrdinalIgnoreCase) > 0) {
+                persistence = persistence.Dialect<NHibernate.Dialect.MsSql2012Dialect>();
+            }
+
             return persistence;
         }
 
