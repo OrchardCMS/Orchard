@@ -13,10 +13,11 @@ namespace Orchard.Search {
                     .WithPart("SearchFormPart")
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
+                    .WithPart("IdentityPart")
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -25,6 +26,13 @@ namespace Orchard.Search {
             );
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("SearchForm",
+                cfg => cfg.WithPart("IdentityPart"));
+           
+            return 3;
         }
     }
 
