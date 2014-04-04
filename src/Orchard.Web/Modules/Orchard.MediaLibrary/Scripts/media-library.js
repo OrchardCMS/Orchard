@@ -9,6 +9,66 @@ var baseViewModel = function() {
 $(function () {
     (function (settings) {
 
+        function attachFolderTitleDropEvent (elements) {
+            elements.droppable({
+                accept: function () {
+                    var targetId = $(this).data('term-id');
+                    return targetId != viewModel.displayed();
+                },
+                over: function (event, ui) {
+                    $(ui.helper).addClass('over');
+                    $(this).addClass('dropping');
+                },
+                out: function (event, ui) {
+                    $(ui.helper).removeClass('over');
+                    $(this).removeClass('dropping');
+                },
+                tolerance: "pointer",
+                drop: function () {
+                    $(this).removeClass('dropping');
+                    var folderPath = $(this).data('media-path');
+
+                    if (folderPath == viewModel.displayed()) {
+                        return;
+                    }
+
+                    var ids = [];
+                    viewModel.selection().forEach(function (item) { ids.push(item.data.id); });
+                    var url = settings.moveActionUrl;
+
+                    console.log(folderPath);
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        dataType: "json",
+                        traditional: true,
+                        data: {
+                            folderPath: folderPath,
+                            mediaItemIds: ids,
+                            __RequestVerificationToken: settings.antiForgeryToken
+                        },
+                    }).done(function (result) {
+                        if (result) {
+                            if (viewModel.displayed()) {
+                                viewModel.results.remove(function (item) {
+                                    return ids.indexOf(item.data.id) != -1;
+                                });
+                            }
+
+                            viewModel.clearSelection();
+                        } else {
+                            alert(errorMessage);
+                            console.log('failed to move media items: ' + result.toString());
+                        }
+                    }).fail(function (result) {
+                        alert(errorMessage);
+                        console.log('failed to move media items: ' + result.toString());
+                    });
+                }
+            });
+        };
+
         var listWidth = $('#media-library-main-list').width();
         var listHeight = $('#media-library-main-list').height();
         var itemSize = $('.thumbnail').first().width();
@@ -172,6 +232,11 @@ $(function () {
                     oldValue.hasFocus(false);
                 }
             }, this, "beforeChange");
+
+            self.afterRenderMediaFolderTemplate = function(elements, model) {
+                var childTitles = $(elements).find(".media-library-folder-title");
+                attachFolderTitleDropEvent(childTitles);
+            };
 
             self.focus.subscribe(function(newValue) {
                 if (newValue) {
@@ -376,6 +441,11 @@ $(function () {
                     self.isExpanded(true);
                 }
             };
+
+            self.afterRenderMediaFolderTemplate = function (elements, model) {
+                var childTitles = $(elements).find(".media-library-folder-title");
+                attachFolderTitleDropEvent(childTitles);
+            };
         }
 
         $.map(settings.childFolders, function (childFolder, index) {
@@ -446,64 +516,6 @@ $(function () {
                 parent.$.colorbox.close();
             }
             ;
-        });
-
-        $(".media-library-folder-title").droppable({
-            accept: function() {
-                var targetId = $(this).data('term-id');
-                return targetId != viewModel.displayed();
-            },
-            over: function(event, ui) {
-                $(ui.helper).addClass('over');
-                $(this).addClass('dropping');
-            },
-            out: function(event, ui) {
-                $(ui.helper).removeClass('over');
-                $(this).removeClass('dropping');
-            },
-            tolerance: "pointer",
-            drop: function() {
-                $(this).removeClass('dropping');
-                var folderPath = $(this).data('media-path');
-
-                if (folderPath == viewModel.displayed()) {
-                    return;
-                }
-
-                var ids = [];
-                viewModel.selection().forEach(function(item) { ids.push(item.data.id); });
-                var url = settings.moveActionUrl;
-
-                console.log(folderPath);
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    dataType: "json",
-                    traditional: true,
-                    data: {
-                        folderPath: folderPath,
-                        mediaItemIds: ids,
-                        __RequestVerificationToken: settings.antiForgeryToken
-                    },
-                }).done(function(result) {
-                    if (result) {
-                        if (viewModel.displayed()) {
-                            viewModel.results.remove(function(item) {
-                                return ids.indexOf(item.data.id) != -1;
-                            });
-                        }
-
-                        viewModel.clearSelection();
-                    } else {
-                        alert(errorMessage);
-                        console.log('failed to move media items: ' + result.toString());
-                    }
-                }).fail(function (result) {
-                    alert(errorMessage);
-                    console.log('failed to move media items: ' + result.toString());
-                });
-            }
         });
 
         $("#media-library-main-list").on("mouseover", ".media-thumbnail", function() {
