@@ -70,13 +70,13 @@ namespace Orchard.Core.Settings.Drivers {
             };
 
             var previousBaseUrl = model.Site.BaseUrl;
-            var previousSuperUser = model.Site.SuperUser;
-            var previousMaxPageSize = model.Site.MaxPageSize;
 
-            updater.TryUpdateModel(model, Prefix, null, null);
+            updater.TryUpdateModel(model, Prefix, null, new [] { "Site.SuperUser", "Site.MaxPageSize" });
 
             // only a user with SiteOwner permission can change the site owner
             if (_authorizer.Authorize(StandardPermissions.SiteOwner)) {
+                updater.TryUpdateModel(model, Prefix, new[] { "Site.SuperUser", "Site.MaxPageSize" }, null);
+
                 // ensures the super user is fully empty
                 if (String.IsNullOrEmpty(model.SuperUser)) {
                     model.SuperUser = String.Empty;
@@ -88,10 +88,6 @@ namespace Orchard.Core.Settings.Drivers {
                         updater.AddModelError("SuperUser", T("The user {0} was not found", model.SuperUser));
                     }
                 }
-            }
-            else {
-                model.Site.SuperUser = previousSuperUser;
-                model.Site.MaxPageSize = previousMaxPageSize;
             }
 
             // ensure the base url is absolute if provided
