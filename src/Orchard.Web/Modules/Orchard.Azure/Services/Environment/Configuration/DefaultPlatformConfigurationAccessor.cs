@@ -10,9 +10,9 @@ namespace Orchard.Azure.Services.Environment.Configuration {
     /// </summary>
     /// <remarks>
     /// Settings are read first using the <c>CloudConfigurationManager</c> class, which looks first in cloud service role
-    /// configuration if running in a Windows Azure Cloud Service and secondly in app settings (either in Web.config or in
-    /// Windows Azure Web Site app settings configuration). If the setting is not found using CloudConfigurationManager
-    /// then connection strings (either in Web.config or in Windows Azure Web Site connection strings configuration) is
+    /// configuration if running in a Microsoft Azure Cloud Service and secondly in app settings (either in Web.config or in
+    /// Microsoft Azure Web Site app settings configuration). If the setting is not found using CloudConfigurationManager
+    /// then connection strings (either in Web.config or in Microsoft Azure Web Site connection strings configuration) is
     /// checked. Both the tenant-specific name and the tenant-neutral name are checked within each configuration source
     /// before proceeding to the next one.
     /// </remarks>

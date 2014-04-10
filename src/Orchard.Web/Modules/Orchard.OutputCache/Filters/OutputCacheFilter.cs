@@ -70,6 +70,7 @@ namespace Orchard.OutputCache.Filters {
         private int _maxAge;
         private string _ignoredUrls;
         private bool _applyCulture;
+        private bool _ignoreNoCache;
         private string _cacheKey;
         private string _invariantCacheKey;
         private DateTime _now;
@@ -138,6 +139,14 @@ namespace Orchard.OutputCache.Filters {
                 context => {
                     context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
                     return _workContext.CurrentSite.As<CacheSettingsPart>().DefaultCacheDuration;
+                }
+            );
+
+            // caches the default cache duration to prevent a query to the settings
+            _ignoreNoCache = _cacheManager.Get("CacheSettingsPart.IgnoreNoCache",
+                context => {
+                    context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
+                    return _workContext.CurrentSite.As<CacheSettingsPart>().IgnoreNoCache;
                 }
             );
 
@@ -233,7 +242,7 @@ namespace Orchard.OutputCache.Filters {
 
             // don't retrieve cache content if refused
             // in this case the result of the action will update the current cached version
-            if (filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache") {
+            if (filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || _ignoreNoCache) {
 
                 // fetch cached data
                 _cacheItem = _cacheStorageProvider.GetCacheItem(_cacheKey);
@@ -475,7 +484,7 @@ namespace Orchard.OutputCache.Filters {
                 if (maxAge.TotalMilliseconds < 0) {
                     maxAge = TimeSpan.FromSeconds(0);
                 }
-
+                
                 response.Cache.SetCacheability(HttpCacheability.Public);
                 response.Cache.SetMaxAge(maxAge);
             }
@@ -499,15 +508,6 @@ namespace Orchard.OutputCache.Filters {
             foreach (var varyRequestHeader in _varyRequestHeaders) {
                 response.Cache.VaryByHeaders[varyRequestHeader] = true;
             }
-
-            // create a unique cache per browser, in case a Theme is rendered differently (e.g., mobile)
-            // c.f. http://msdn.microsoft.com/en-us/library/aa478965.aspx
-            // c.f. http://stackoverflow.com/questions/6007287/outputcache-varybyheader-user-agent-or-varybycustom-browser
-            response.Cache.SetVaryByCustom("browser");
-
-            // enabling this would create an entry for each different browser sub-version
-            // response.Cache.VaryByHeaders.UserAgent = true;
-
         }
 
         private string ComputeCacheKey(ControllerContext controllerContext, IEnumerable<KeyValuePair<string, object>> parameters) {

@@ -5,9 +5,9 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Azure.MediaServices {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageCloudMediaContent = new Permission { Description = "Managing Windows Azure Media", Name = "ManageCloudMediaContent" };
-        public static readonly Permission ManageCloudMediaJobs = new Permission { Description = "Managing Windows Azure Media Jobs", Name = "ManageCloudMediaJobs" };
-        public static readonly Permission ManageCloudMediaSettings = new Permission { Description = "Managing Windows Azure Media Settings", Name = "ManageCloudMediaSettings" };
+        public static readonly Permission ManageCloudMediaContent = new Permission { Description = "Managing Microsoft Azure Media", Name = "ManageCloudMediaContent" };
+        public static readonly Permission ManageCloudMediaJobs = new Permission { Description = "Managing Microsoft Azure Media Jobs", Name = "ManageCloudMediaJobs" };
+        public static readonly Permission ManageCloudMediaSettings = new Permission { Description = "Managing Microsoft Azure Media Settings", Name = "ManageCloudMediaSettings" };
 
         public virtual Feature Feature { get; set; }
 

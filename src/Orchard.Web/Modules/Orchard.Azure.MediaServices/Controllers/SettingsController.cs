@@ -36,7 +36,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Index() {
-            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Windows Azure Media settings.")))
+            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Microsoft Azure Media settings.")))
                 return new HttpUnauthorizedResult();
 
             var settings = _services.WorkContext.CurrentSite.As<CloudMediaSettingsPart>();
@@ -67,7 +67,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
         [HttpPost]
         public ActionResult Save(SettingsViewModel viewModel) {
-            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Windows Azure Media settings.")))
+            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Microsoft Azure Media settings.")))
                 return new HttpUnauthorizedResult();
 
             if (!ModelState.IsValid) {
@@ -150,7 +150,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
         [HttpPost]
         public ActionResult TestCredentials(SettingsViewModel viewModel) {
-            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Windows Azure Media settings.")))
+            if (!_services.Authorizer.Authorize(Permissions.ManageCloudMediaSettings, T("You are not authorized to manage Microsoft Azure Media settings.")))
                 return new HttpUnauthorizedResult();
 
             Logger.Debug("User requested to verify WAMS account credentials.");
@@ -171,7 +171,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
                 var ctx = new CloudMediaContext(wamsAccountName, wamsAccountKey);
 
                 if (!String.IsNullOrWhiteSpace(storageAccountKey)) {
-                    // This will trigger an authentication call to Windows Azure Storage.
+                    // This will trigger an authentication call to Microsoft Azure Storage.
                     var storageAccount = new CloudStorageAccount(new StorageCredentials(ctx.DefaultStorageAccount.Name, storageAccountKey), false);
                     storageAccount.CreateCloudBlobClient().GetServiceProperties();
                     Logger.Information("Storage account credentials were verified.");

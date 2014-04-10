@@ -37,7 +37,7 @@ namespace Orchard.Azure.MediaServices.Handlers {
         private void DeferOrPublishAssets(PublishContentContext context, CloudVideoPart part) {
             if (part.MezzanineAsset != null && part.MezzanineAsset.UploadState.Status != AssetUploadStatus.Uploaded) {
                 part.PublishOnUpload = true;
-                _notifier.Warning(T("The cloud video item was saved, but will not be published until the primary video asset has finished uploading to Windows Azure Media Services."));
+                _notifier.Warning(T("The cloud video item was saved, but will not be published until the primary video asset has finished uploading to Microsoft Azure Media Services."));
                 context.Cancel = true;
             }
             else

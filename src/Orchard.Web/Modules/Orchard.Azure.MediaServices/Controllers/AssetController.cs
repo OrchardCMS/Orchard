@@ -119,7 +119,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
         }
 
         public ActionResult Delete(int id) {
-            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Windows Azure Media content.")))
+            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             Logger.Debug("User requested to delete asset with ID {0}.", id);
@@ -154,7 +154,7 @@ namespace Orchard.Azure.MediaServices.Controllers {
         }
 
         private ActionResult Validate(int id, Func<Asset, ActionResult> validationSucceeded) {
-            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Windows Azure Media content.")))
+            if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             var asset = _assetManager.GetAssetById(id);

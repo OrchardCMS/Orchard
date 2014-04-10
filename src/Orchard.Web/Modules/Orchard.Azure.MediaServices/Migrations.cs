@@ -62,7 +62,7 @@ namespace Orchard.Azure.MediaServices {
 
             ContentDefinitionManager.AlterPartDefinition("CloudVideoPart", part => part
                 .Attachable(false)
-                .WithDescription("Stores information about a cloud video item and its related assets and jobs in Windows Azure Media Services."));
+                .WithDescription("Stores information about a cloud video item and its related assets and jobs in Microsoft Azure Media Services."));
 
             ContentDefinitionManager.AlterTypeDefinition("CloudVideo", type => type
                 .WithPart("CommonPart")
