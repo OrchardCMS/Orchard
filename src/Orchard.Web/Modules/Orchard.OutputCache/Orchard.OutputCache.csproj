@@ -98,11 +98,15 @@
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
+    <Compile Include="DatabaseOutputCacheMigrations.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CacheItem.cs" />
+    <Compile Include="Models\CacheItemRecord.cs" />
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
+    <Compile Include="Services\DatabaseOutputCacheProvider.cs" />
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />
     <Compile Include="Services\DefaultTagCache.cs" />
     <Compile Include="Services\ICacheControlStrategy.cs" />

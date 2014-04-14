@@ -9,3 +9,7 @@ Features:
     Orchard.OutputCache:
         Description: Adds Output Caching functionality.
         Category: Performance
+    Orchard.OutputCache.Database:
+        Description: Stores output cache data in the database.
+        Category: Performance
+		Dependencies: Orchard.OutputCache
