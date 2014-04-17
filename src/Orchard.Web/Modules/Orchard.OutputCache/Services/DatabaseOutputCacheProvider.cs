@@ -5,7 +5,6 @@ using Orchard.OutputCache.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
-using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.Services;
 
