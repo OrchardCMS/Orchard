@@ -50,5 +50,19 @@ namespace Orchard.ContentManagement.DataMigrations {
             return 2;
         }
 
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("ContentTypeRecord",
+               table => table
+                   .CreateIndex("IDX_ContentType_Name", "Name")
+               );
+
+            SchemaBuilder.AlterTable("ContentItemVersionRecord",
+               table => table
+                   .CreateIndex("IDX_ContentItemVersionRecord_Published_Latest", "Published", "Latest")
+               );
+
+            return 3;
+        }
+
     }
 }
