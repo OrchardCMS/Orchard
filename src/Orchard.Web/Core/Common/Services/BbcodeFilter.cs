@@ -32,6 +32,11 @@ namespace Orchard.Core.Common.Services {
 
             foreach(var start in allIndexes) {
                 var end = text.IndexOf("[/url]", start, StringComparison.Ordinal);
+                
+                if (end == -1) {
+                    continue;
+                }
+                
                 var url = text.Substring(start + 5 , end - start - 5);
 
                 // substitue [url] by <a>
@@ -50,6 +55,11 @@ namespace Orchard.Core.Common.Services {
             foreach (var start in allIndexes) {
                 var urlEnd = text.IndexOf("]", start, StringComparison.Ordinal);
                 var end = text.IndexOf("[/url]", start, StringComparison.Ordinal);
+                
+                if (end == -1) {
+                    continue;
+                }
+                
                 var url = text.Substring(start + 5, urlEnd - start - 5);
                 var title = text.Substring(urlEnd + 1, end - urlEnd - 1);
 
@@ -68,6 +78,11 @@ namespace Orchard.Core.Common.Services {
 
             foreach (var start in allIndexes) {
                 var end = text.IndexOf("[/img]", start, StringComparison.Ordinal);
+                
+                if (end == -1) {
+                    continue;
+                }
+                
                 var url = text.Substring(start + 5, end - start - 5);
 
                 // substitue [url] by <a>

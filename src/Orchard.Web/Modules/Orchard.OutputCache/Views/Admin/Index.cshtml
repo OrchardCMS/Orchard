@@ -26,8 +26,8 @@
     </fieldset>
 
     <fieldset>
-        <label>@T("Ignore no-cache headers")</label>
-        @Html.TextAreaFor(m => m.IgnoredUrls, new { @class = "text medium" })
+        <label>@T("Headers")</label>
+        @Html.CheckBoxFor(m => m.IgnoreNoCache) <label for="@Html.FieldIdFor(m => m.IgnoreNoCache)" class="forcheckbox">@T("Ignore no-cache headers")</label>
         <span class="hint">@T("When checked, any request containing a 'Content-Cache: no-cache' header will still return cached values if available.")</span>
     </fieldset>
 

@@ -34,5 +34,28 @@ namespace Orchard.Core.Tests.Common {
             var processed = _filter.ProcessContent(text, null);
             Assert.That(processed, Is.EqualTo("foo <a href=\"alink\">bar</a> baz"));
         }
+
+        [Test]
+        public void ShouldIgnoreMalformedUrl() {
+            const string text = "foo [url]bar baz";
+            var processed = _filter.ProcessContent(text, null);
+            Assert.That(processed, Is.EqualTo("foo [url]bar baz"));
+        }
+
+        [Test]
+        public void ShouldIgnoreMalformedUrlWithTitle() {
+            const string text = "foo [url=alink]bar baz";
+            var processed = _filter.ProcessContent(text, null);
+            Assert.That(processed, Is.EqualTo("foo [url=alink]bar baz"));
+        }
+
+        [Test]
+        public void ShouldIgnoreMalformedImg() {
+            const string text = "foo [img]bar baz";
+            var processed = _filter.ProcessContent(text, null);
+            Assert.That(processed, Is.EqualTo("foo [img]bar baz"));
+        }
+
+
     }
 }

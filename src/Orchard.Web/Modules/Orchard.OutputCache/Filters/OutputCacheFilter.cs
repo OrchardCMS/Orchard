@@ -183,12 +183,6 @@ namespace Orchard.OutputCache.Filters {
             // different tenants with the same urls have different entries
             _varyRequestHeaders.Add("HOST");
 
-            // Set the Vary: Accept-Encoding response header. 
-            // This instructs the proxies to cache two versions of the resource: one compressed, and one uncompressed. 
-            // The correct version of the resource is delivered based on the client request header. 
-            // This is a good choice for applications that are singly homed and depend on public proxies for user locality.
-            _varyRequestHeaders.Add("Accept-Encoding");
-
             // caches the ignored urls to prevent a query to the settings
             _ignoredUrls = _cacheManager.Get("CacheSettingsPart.IgnoredUrls",
                 context => {
@@ -417,8 +411,8 @@ namespace Orchard.OutputCache.Filters {
 
             Logger.Debug("Cache item added: " + _cacheItem.CacheKey);
 
-            // remove old cache data
-            _cacheService.RemoveByTag(_invariantCacheKey);
+            // remove only the current version of the page
+            _cacheService.RemoveByTag(_cacheKey);
 
             // add data to cache
             _cacheStorageProvider.Set(_cacheKey, _cacheItem);
@@ -463,6 +457,7 @@ namespace Orchard.OutputCache.Filters {
                 null
                 );
 
+            // remove all cached version of the same page
             _cacheService.RemoveByTag(invariantCacheKey);
 
             filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult) filterContext.Result).Permanent);

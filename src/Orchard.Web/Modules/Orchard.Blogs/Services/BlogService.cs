@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Autoroute.Models;
+using Orchard.Autoroute.Services;
 using Orchard.Blogs.Models;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Orchard.Environment.Configuration;
@@ -17,19 +19,33 @@ namespace Orchard.Blogs.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly HashSet<int> _processedBlogParts = new HashSet<int>();
+        IPathResolutionService _pathResolutionService;
+
         public BlogService(
             IContentManager contentManager,
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            IPathResolutionService pathResolutionService) {
             _contentManager = contentManager;
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
+            _pathResolutionService = pathResolutionService;
         }
 
         public BlogPart Get(string path) {
-            return _contentManager.Query<AutoroutePart, AutoroutePartRecord>().Where(r => r.DisplayAlias == path).ForPart<BlogPart>().Slice(0, 1).FirstOrDefault();
+            var blog = _pathResolutionService.GetPath(path);
+
+            if (blog == null) {
+                return null;
+            }
+
+            if (!blog.Has<BlogPart>()) {
+                return null;
+            }
+
+            return blog.As<BlogPart>();
         }
 
         public ContentItem Get(int id, VersionOptions versionOptions) {

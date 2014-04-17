@@ -16,13 +16,26 @@ namespace Orchard.Autoroute {
                 .Attachable()
                 .WithDescription("Adds advanced url configuration options to your content type to completely customize the url pattern for a content item."));
 
-            return 2;
+            SchemaBuilder.AlterTable("AutoroutePartRecord", table => table
+                .CreateIndex("IDX_AutoroutePartRecord_DisplayAlias", "DisplayAlias")
+            );
+
+            return 3;
         }
 
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition("AutoroutePart", part => part
                 .WithDescription("Adds advanced url configuration options to your content type to completely customize the url pattern for a content item."));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+
+            SchemaBuilder.AlterTable("AutoroutePartRecord", table => table
+                .CreateIndex("IDX_AutoroutePartRecord_DisplayAlias", "DisplayAlias")
+            );
+
+            return 3;
         }
     }
 }

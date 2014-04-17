@@ -14,6 +14,8 @@ namespace Orchard.Alias.Implementation.Updater {
 
         public ILogger Logger { get; set; }
 
+        public bool Disabled { get; set; }
+
         public AliasHolderUpdater(IAliasHolder aliasHolder, IAliasStorage storage, IAliasUpdateCursor cursor) {
             _aliasHolder = aliasHolder;
             _storage = storage;
@@ -45,7 +47,9 @@ namespace Orchard.Alias.Implementation.Updater {
         }
 
         public void Sweep() {
-            Refresh();
+            if (!Disabled) {
+                Refresh();
+            }
         }
     }
 }
