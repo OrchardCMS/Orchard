@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Services;
@@ -11,6 +12,7 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Workflows.Activities {
+    [OrchardFeature("Orchard.Workflows.Timer")]
     public class TimerActivity : Event {
         private readonly IClock _clock;
 
@@ -101,6 +103,7 @@ namespace Orchard.Workflows.Activities {
         }
     }
 
+    [OrchardFeature("Orchard.Workflows.Timer")]
     public class TimerBackgroundTask : IBackgroundTask {
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;

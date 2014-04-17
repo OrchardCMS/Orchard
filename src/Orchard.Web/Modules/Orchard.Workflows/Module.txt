@@ -10,3 +10,6 @@ Features:
     Orchard.Workflows:
         Description: Provides tools to create custom workflows.
         Dependencies: Orchard.Tokens, Orchard.Forms, Orchard.jQuery
+    Orchard.Workflows.Timer:
+        Description: Provides a Timer activity.
+        Dependencies: Orchard.Workflows

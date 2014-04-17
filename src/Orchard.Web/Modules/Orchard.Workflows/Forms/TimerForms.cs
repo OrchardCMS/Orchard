@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
 namespace Orchard.Workflows.Forms {
+    [OrchardFeature("Orchard.Workflows.Timer")]
     public class ScheduleForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
