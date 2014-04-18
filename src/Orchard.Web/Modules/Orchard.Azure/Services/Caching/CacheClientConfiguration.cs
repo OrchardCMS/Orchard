@@ -60,9 +60,28 @@ namespace Orchard.Azure.Services.Caching {
             return dataCacheFactory.GetDefaultCache();
         }
 
-        //public override string ToString() {
-        //    var key = HostIdentifier + "_" + CacheName + "_" + Hostname + "_" + Port + "_" + AuthorizationToken + "_" + IsSharedCaching + "_" + CompressionIsEnabled;
-        //    return key;
-        //}
+        public override int GetHashCode() {
+            int hash = 37;
+            hash = hash * 23 + HostIdentifier.GetHashCode();
+            hash = hash * 23 + CacheName.GetHashCode();
+            hash = hash * 23 + AuthorizationToken.GetHashCode();
+            hash = hash * 23 + CompressionIsEnabled.GetHashCode();
+            return hash;
+        }
+
+        public override bool Equals(object obj) {
+            var other = obj as CacheClientConfiguration;
+
+            if (this == other) {
+                return true;
+            }
+
+            return
+                HostIdentifier == other.HostIdentifier &&
+                CacheName == other.CacheName &&
+                AuthorizationToken == other.AuthorizationToken &&
+                CompressionIsEnabled == other.CompressionIsEnabled
+                ;
+        }
     }
 }
