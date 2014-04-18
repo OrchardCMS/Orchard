@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.ApplicationServer.Caching;
@@ -20,21 +22,22 @@ namespace Orchard.Azure.Services.Caching.Output {
         public const string ClientConfigurationKey = "CacheClientConfiguration";
         public const int Retries = 2;
 
+        private CacheClientConfiguration _cacheClientConfiguration;
+        private static ConcurrentDictionary<CacheClientConfiguration, DataCache> _dataCaches = new ConcurrentDictionary<CacheClientConfiguration, DataCache>();
+        private static ConcurrentBag<string> _regions = new ConcurrentBag<string>();
+        
         private readonly string _regionAlphaNumeric;
         private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
         private readonly IPlatformConfigurationAccessor _pca;
-        private readonly ISignals _signals;
 
         public AzureOutputCacheStorageProvider(
             ShellSettings shellSettings, 
             IPlatformConfigurationAccessor pca, 
-            ICacheManager cacheManager,
-            ISignals signals) {
+            ICacheManager cacheManager) {
             _cacheManager = cacheManager;
             _shellSettings = shellSettings;
             _pca = pca;
-            _signals = signals;
 
             var region = shellSettings.Name;
 
@@ -47,37 +50,54 @@ namespace Orchard.Azure.Services.Caching.Output {
             Logger = NullLogger.Instance;
         }
 
-        public ILogger Logger { get; set; }
-
         public CacheClientConfiguration CacheConfiguration {
             get {
-                return _cacheManager.Get(ClientConfigurationKey, ctx => {
-                    CacheClientConfiguration cacheConfig ;
-                    try {
-                        cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(
-                            _shellSettings.Name, 
-                            Constants.OutputCacheSettingNamePrefix, 
-                            _pca);
+                // the configuration is backed by a field so that we don't call the cacheManager multiple times in the same request
+                // cache configurations are stored in the cacheManager so that we don't read the config on each request
+                if (_cacheClientConfiguration == null) {
 
-                        cacheConfig.Validate();
-                        return cacheConfig;
+                    _cacheClientConfiguration = _cacheManager.Get(ClientConfigurationKey, ctx => {
+                        CacheClientConfiguration cacheConfig;
+                        try {
+                            cacheConfig = CacheClientConfiguration.FromPlatformConfiguration(
+                                _shellSettings.Name,
+                                Constants.OutputCacheSettingNamePrefix,
+                                _pca);
+
+                            cacheConfig.Validate();
+                            return cacheConfig;
+                        }
+                        catch (Exception ex) {
+                            throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.OutputCacheFeatureName), ex);
+                        }
+                    });
+
+                    if (_cacheClientConfiguration == null) {
+                        throw new InvalidOperationException("Could not create a valid cache configuration");
                     }
-                    catch (Exception ex) {
-                        throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.OutputCacheFeatureName), ex);
-                    } 
-                });
+                }
+
+                return _cacheClientConfiguration;
             }
         }
 
         public DataCache Cache {
             get {
-                return _cacheManager.Get(DataCacheKey, ctx => {
-                    ctx.Monitor(_signals.When(DataCacheKey));
-                    var cache = CacheConfiguration.CreateCache();
-                    cache.CreateRegion(_regionAlphaNumeric);
 
-                    return cache;
+                var cache = _dataCaches.GetOrAdd(CacheConfiguration, cfg => {
+                    Logger.Debug("Creating a new cache client ({0})", CacheConfiguration.GetHashCode());
+                    return cfg.CreateCache();
                 });
+                
+                
+                // creating a region uses a network call, try to optimise it
+                if (!_regions.Contains(_regionAlphaNumeric)) {
+                    Logger.Debug("Creating a new region: {0}", _regionAlphaNumeric);
+                    cache.CreateRegion(_regionAlphaNumeric);
+                    _regions.Add(_regionAlphaNumeric);
+                }
+
+                return cache;
             }
         }
 
@@ -102,7 +122,9 @@ namespace Orchard.Azure.Services.Caching.Output {
                 return function.Invoke();
             }
             catch (DataCacheException) {
-                _signals.Trigger(DataCacheKey);
+                DataCache cache;
+                Logger.Debug("Retrying cache operation");
+                _dataCaches.TryRemove(CacheConfiguration, out cache);
                 return Retry(function, times--);
             }
         } 
@@ -111,7 +133,6 @@ namespace Orchard.Azure.Services.Caching.Output {
             if (cacheItem.ValidFor <= 0) {
                 return;
             }
-
             Logger.Debug("Set() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
             SafeCall(() => Cache.Put(key, cacheItem, TimeSpan.FromSeconds(cacheItem.ValidFor), _regionAlphaNumeric));
         }
