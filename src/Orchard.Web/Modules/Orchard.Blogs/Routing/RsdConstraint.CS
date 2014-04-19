@@ -1,16 +1,15 @@
+using Orchard.Alias.Implementation.Holder;
 using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
-using Orchard.Autoroute.Services;
-using Orchard.Blogs.Models;
-using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Routing {
     public class RsdConstraint : IRsdConstraint {
-        private readonly IPathResolutionService _pathResolutionService;
+        private readonly IAliasHolder _aliasHolder;
 
-        public RsdConstraint(IPathResolutionService pathResolutionService) {
-            _pathResolutionService = pathResolutionService;
+        public RsdConstraint(IAliasHolder aliasHolder) {
+            _aliasHolder = aliasHolder;
         }
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
@@ -26,9 +25,20 @@ namespace Orchard.Blogs.Routing {
                     return false;
                 }
 
-                var autoroute = _pathResolutionService.GetPath(path);
+                IDictionary<string, string> routeValues;
+                if (!_aliasHolder.GetMap("Orchard.Blogs").TryGetAlias(path, out routeValues)) {
+                    return false;
+                }
 
-                return autoroute != null && autoroute.Is<BlogPart>();
+                var isBlog =
+                    //routeValues.ContainsKey("area") &&
+                    //routeValues["area"] == "Orchard.Blogs" &&
+                    routeValues.ContainsKey("controller") &&
+                    routeValues["area"] == "Blog" &&
+                    routeValues.ContainsKey("action") &&
+                    routeValues["area"] == "Item"
+                    ;
+
             }
 
             return false;

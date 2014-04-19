@@ -24,7 +24,7 @@ namespace Orchard.Autoroute.Services {
                 return null;
             }
 
-            return _contentManager.Get(autorouteRecord.Id).As<AutoroutePart>();
+            return _contentManager.Get(autorouteRecord.ContentItemRecord.Id).As<AutoroutePart>();
         }
     }
 }
