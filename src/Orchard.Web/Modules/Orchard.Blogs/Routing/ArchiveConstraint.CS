@@ -59,12 +59,12 @@ namespace Orchard.Blogs.Routing {
 
         public string FindPath(string path) {
             // my-blog/archive
-            if (path.EndsWith("/archive")) {
+            if (path.EndsWith("/archive", StringComparison.OrdinalIgnoreCase)) {
                 return path.Substring(0, path.Length - "/archive".Length);
             }
 
             // my-blog/archive/
-            if (path.EndsWith("/archive/")) {
+            if (path.EndsWith("/archive/", StringComparison.OrdinalIgnoreCase)) {
                 return null;
             }
 
@@ -74,12 +74,12 @@ namespace Orchard.Blogs.Routing {
             if (archiveIndex == -1) {
 
                 // archive/
-                if (path.EndsWith("archive/")) {
+                if (path.EndsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
                     return null;
                 }
 
                 // archive
-                if (path.EndsWith("archive")) {
+                if (path.EndsWith("archive", StringComparison.OrdinalIgnoreCase)) {
                     return String.Empty;
                 }
 
@@ -96,12 +96,12 @@ namespace Orchard.Blogs.Routing {
 
         public ArchiveData FindArchiveData(string path) {
             // my-blog/archive
-            if (path.EndsWith("/archive")) {
+            if (path.EndsWith("/archive", StringComparison.OrdinalIgnoreCase)) {
                 return new ArchiveData("");
             }
 
             // my-blog/archive/
-            if (path.EndsWith("/archive/")) {
+            if (path.EndsWith("/archive/", StringComparison.OrdinalIgnoreCase)) {
                 return null;
             }
 
@@ -110,12 +110,12 @@ namespace Orchard.Blogs.Routing {
             if (archiveIndex == -1) {
 
                 // archive/
-                if (path.EndsWith("archive/")) {
+                if (path.EndsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
                     return null;
                 }
 
                 // archive
-                if (path.EndsWith("archive")) {
+                if (path.EndsWith("archive", StringComparison.OrdinalIgnoreCase)) {
                     return new ArchiveData("");
                 }
 
