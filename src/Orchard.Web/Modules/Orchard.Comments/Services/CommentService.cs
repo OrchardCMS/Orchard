@@ -33,7 +33,6 @@ namespace Orchard.Comments.Services {
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly IMessageService _messageService;
-        private readonly IMembershipService _membershipService;
 
         public CommentService(
             IOrchardServices orchardServices, 
@@ -44,8 +43,7 @@ namespace Orchard.Comments.Services {
             IShellDescriptorManager shellDescriptorManager,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay,
-            IMessageService messageService,
-            IMembershipService membershipService
+            IMessageService messageService
             ) {
             _orchardServices = orchardServices;
             _clock = clock;
@@ -56,7 +54,6 @@ namespace Orchard.Comments.Services {
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
             _messageService = messageService;
-            _membershipService = membershipService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
