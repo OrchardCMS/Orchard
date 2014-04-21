@@ -40,9 +40,8 @@ namespace Orchard.Azure.Services.Caching {
             }
         }
 
-        public DataCache CreateCache() {
+        public DataCacheFactory CreateCache() {
             var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration {
-                MaxConnectionsToServer = 32,
                 UseLegacyProtocol = false,
                 IsCompressionEnabled = CompressionIsEnabled
             };
@@ -51,13 +50,9 @@ namespace Orchard.Azure.Services.Caching {
             if (!String.IsNullOrEmpty(AuthorizationToken))
                 dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity(AuthorizationToken, sslEnabled: false);
 
-            var dataCacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
-
-            if (!String.IsNullOrEmpty(CacheName)) {
-                return dataCacheFactory.GetCache(CacheName);
-            }
-
-            return dataCacheFactory.GetDefaultCache();
+            return new DataCacheFactory(dataCacheFactoryConfiguration);
+            
+            
         }
 
         public override int GetHashCode() {
