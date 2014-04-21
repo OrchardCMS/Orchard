@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.ApplicationServer.Caching;
@@ -23,7 +22,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         public const int Retries = 2;
 
         private CacheClientConfiguration _cacheClientConfiguration;
-        private static ConcurrentDictionary<CacheClientConfiguration, DataCache> _dataCaches = new ConcurrentDictionary<CacheClientConfiguration, DataCache>();
+        private static ConcurrentDictionary<CacheClientConfiguration, DataCacheFactory> _dataCacheFactories = new ConcurrentDictionary<CacheClientConfiguration, DataCacheFactory>();
         private static ConcurrentBag<string> _regions = new ConcurrentBag<string>();
         
         private readonly string _regionAlphaNumeric;
@@ -84,12 +83,13 @@ namespace Orchard.Azure.Services.Caching.Output {
         public DataCache Cache {
             get {
 
-                var cache = _dataCaches.GetOrAdd(CacheConfiguration, cfg => {
+                var cacheFactory = _dataCacheFactories.GetOrAdd(CacheConfiguration, cfg => {
                     Logger.Debug("Creating a new cache client ({0})", CacheConfiguration.GetHashCode());
                     return cfg.CreateCache();
                 });
-                
-                
+
+                var cache = String.IsNullOrEmpty(CacheConfiguration.CacheName) ? cacheFactory.GetDefaultCache() : cacheFactory.GetCache(CacheConfiguration.CacheName);
+
                 // creating a region uses a network call, try to optimise it
                 if (!_regions.Contains(_regionAlphaNumeric)) {
                     Logger.Debug("Creating a new region: {0}", _regionAlphaNumeric);
@@ -122,9 +122,11 @@ namespace Orchard.Azure.Services.Caching.Output {
                 return function.Invoke();
             }
             catch (DataCacheException) {
-                DataCache cache;
+                DataCacheFactory cacheFactory;
                 Logger.Debug("Retrying cache operation");
-                _dataCaches.TryRemove(CacheConfiguration, out cache);
+                if (_dataCacheFactories.TryRemove(CacheConfiguration, out cacheFactory)) {
+                    cacheFactory.Dispose();
+                }
                 return Retry(function, times--);
             }
         } 
