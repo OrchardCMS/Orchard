@@ -34,9 +34,9 @@ namespace Orchard.Blogs.Routing {
                     //routeValues.ContainsKey("area") &&
                     //routeValues["area"] == "Orchard.Blogs" &&
                     routeValues.ContainsKey("controller") &&
-                    routeValues["area"] == "Blog" &&
+                    routeValues["controller"] == "Blog" &&
                     routeValues.ContainsKey("action") &&
-                    routeValues["area"] == "Item"
+                    routeValues["action"] == "Item"
                     ;
 
             }
