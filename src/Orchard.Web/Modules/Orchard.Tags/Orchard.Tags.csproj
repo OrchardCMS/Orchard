@@ -68,6 +68,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\TagCloudDriver.cs" />
+    <Compile Include="Feeds\TagFeedQuery.cs" />
     <Compile Include="Feeds\TagsFeedItemBuilder.cs" />
     <Compile Include="Handlers\TagCloudHandler.cs" />
     <Compile Include="Migrations.cs" />
