@@ -21,7 +21,7 @@ namespace Orchard.Core.Containers.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.Name != "ContainerPart")
+            if (builder.Name != "ContainablePart")
                 yield break;
 
             var model = new ContainableTypePartSettings();
