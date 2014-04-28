@@ -17,7 +17,7 @@ namespace Orchard.Autoroute.Services {
 
         public AutoroutePart GetPath(string path) {
             var autorouteRecord = _autorouteRepository.Table
-                .Where(part => part.DisplayAlias == path && part.ContentItemVersionRecord.Latest && part.ContentItemVersionRecord.Published)
+                .Where(part => part.DisplayAlias == path && part.ContentItemVersionRecord.Published)
                 .FirstOrDefault();
 
             if (autorouteRecord == null) {
