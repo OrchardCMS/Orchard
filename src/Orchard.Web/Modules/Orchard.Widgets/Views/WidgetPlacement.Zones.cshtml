@@ -22,7 +22,7 @@
                     foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
                             @using (Html.BeginFormAntiForgeryPost()) {
-                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
+                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
                                 <div class="widgets-actions">
                                     @if (widget.LayerId != Model.CurrentLayer.Id) {
                                     <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>
