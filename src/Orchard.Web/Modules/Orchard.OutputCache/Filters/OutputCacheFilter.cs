@@ -228,6 +228,11 @@ namespace Orchard.OutputCache.Filters {
                 }
             }
 
+            // don't enable public caching for requests with query string 
+            if (queryString.AllKeys.Any()) {
+                _maxAge = 0;
+            }
+
             // compute the cache key
             _cacheKey = ComputeCacheKey(filterContext, parameters);
 
