@@ -228,11 +228,6 @@ namespace Orchard.OutputCache.Filters {
                 }
             }
 
-            // don't enable public caching for requests with query string 
-            if (queryString.AllKeys.Any()) {
-                _maxAge = 0;
-            }
-
             // compute the cache key
             _cacheKey = ComputeCacheKey(filterContext, parameters);
 
@@ -489,6 +484,11 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.SetMaxAge(maxAge);
             }
 
+            // keeping this examples for later usage
+            // response.Cache.VaryByParams["*"] = true;
+            // response.DisableUserCache();
+            // response.DisableKernelCache();
+
             // an ETag is a string that uniquely identifies a specific version of a component.
             // we use the cache item to detect if it's a new one
             if (HttpRuntime.UsingIntegratedPipeline) {
@@ -654,7 +654,11 @@ namespace Orchard.OutputCache.Filters {
         }
 
         protected override void Dispose(bool disposing) {
-            _mem.Dispose();
+            if (disposing) {
+                _mem.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 
