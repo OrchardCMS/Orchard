@@ -314,14 +314,30 @@ namespace Orchard.OutputCache.Filters {
                 _filter = null;
                 if (_previousFilter != null) {
                     response.Filter = _previousFilter;
-                } 
+                }
+ 
+                // if the result of a POST is a Redirect, remove any Cache Item for this url
+                // so that the redirected client gets a fresh result
+                // i.e., Comment creation
+                if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase) &&
+                    !String.IsNullOrWhiteSpace(filterContext.HttpContext.Response.RedirectLocation)) {
+                    
+                    var url = filterContext.HttpContext.Response.RedirectLocation;
+                    if (!VirtualPathUtility.IsAbsolute(url)) {
+                        var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
+                        if (url.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
+                            url = url.Substring(applicationRoot.Length);
+                        }
+                    }
+                    
+                    var redirectionInvariantCacheKey = ComputeCacheKey(_shellSettings.Name, url, () => _workContext.CurrentCulture, _themeManager.GetRequestTheme(filterContext.RequestContext).Id, null);
+
+                    _cacheService.RemoveByTag(redirectionInvariantCacheKey);
+                }
+
                 return;
             }
 
-            // if the result of a POST is a Redirect, remove any Cache Item for this url
-            // so that the redirected client gets a fresh result
-            // also add a random token to the query string so that public cachers (IIS, proxies, ...) don't return cached content
-            // i.e., Comment creation
 
             // ignore in admin
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
