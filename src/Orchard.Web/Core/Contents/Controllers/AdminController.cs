@@ -249,13 +249,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-
             var model = _contentManager.UpdateEditor(contentItem, this);
+
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
+
+            _contentManager.Create(contentItem, VersionOptions.Draft);
 
             conditionallyPublish(contentItem);
 
