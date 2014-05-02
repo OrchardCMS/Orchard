@@ -4,7 +4,7 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.8
 OrchardVersion: 1.8
-Description: Provides anti-spam services to protect your content from malicious submissions.
+Description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
 Features:
     Orchard.Roles:
 		Name: Roles
@@ -13,6 +13,6 @@ Features:
 		Dependencies: Orchard.Users
 	Orchard.Roles.Workflows:
 		Name: Roles Workflows Activities
-		Description: Provides an role based activities.
+        Description: Provides a role based activities.
 		Category: Workflows
 		Dependencies: Orchard.Roles, Orchard.Workflows
