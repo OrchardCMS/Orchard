@@ -27,10 +27,7 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
-            Services.ContentManager.Create(comment, VersionOptions.Draft);
-            
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
-
 
             if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
