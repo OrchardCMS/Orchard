@@ -142,16 +142,28 @@ Website:      http://www.jacklmoore.com/colorbox/
 Copyright:    (c) 2013 Jack Moore - jacklmoore.com/colorbox
 License:      MIT
 
+jQuery File Upload
+-----
+Website:      https://blueimp.net
+Copyright:    Copyright 2010, Sebastian Tschan
+License       MIT
+
 jQuery UI (Core, Widget, Datepicker)
 -----
 Website:      http://docs.jquery.com/UI
 Copyright:    Copyright (c) 2010 lib/jquery.ui/AUTHORS.txt (http://jqueryui.com/about)
 License:      MIT
 
-jQuery ui.timepickr, jQuery utils
+jQuery Calendar
 -----
-Website:      http://code.google.com/p/jquery-utils/
-Copyright:    Copyright (c) Maxime Haineault (http://haineault.com)
+Website:      http://keith-wood.name/calendars.html
+Author:       Keith Wood
+License:      MIT
+
+jQuery Date/Time Entry
+-----
+Website:      http://keith-wood.name/datetimeEntry.html
+Copyright:    Keith Wood
 License:      MIT
 
 jQuery ScrollTo
@@ -214,6 +226,12 @@ NHibernate Lambda Extensions
 Website:      http://code.google.com/p/nhlambdaextensions/
 Copyright:    Unknown http://code.google.com/p/nhlambdaextensions/people/list
 License:      LGPL 2.1
+
+NProgress
+-----
+Website:      http://ricostacruz.com/nprogress/
+Copyright:    Copyright (c) 2013-2014 Rico Sta. Cruz
+License:      MIT
 
 NuGet
 -----
