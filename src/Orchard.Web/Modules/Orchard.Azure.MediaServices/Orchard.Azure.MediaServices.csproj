@@ -184,15 +184,15 @@
     <Content Include="Scripts\lib\dash.all.js" />
     <Content Include="Scripts\lib\dash.min.js" />
     <Content Include="Scripts\lib\jquery.blockui.js" />
-    <None Include="Scripts\cloudmedia-admin-job.ts" />
-    <None Include="Scripts\cloudmedia-admin-common.ts" />
-    <None Include="Scripts\cloudmedia-autorefresh.ts" />
-    <None Include="Scripts\cloudmedia-edit-asset-video.ts" />
-    <None Include="Scripts\cloudmedia-edit-asset.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
-    <None Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
+    <Content Include="Scripts\cloudmedia-admin-job.ts" />
+    <Content Include="Scripts\cloudmedia-admin-common.ts" />
+    <Content Include="Scripts\cloudmedia-autorefresh.ts" />
+    <Content Include="Scripts\cloudmedia-edit-asset-video.ts" />
+    <Content Include="Scripts\cloudmedia-edit-asset.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
+    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
     <Content Include="Scripts\lib\jquery.fileupload-process.js" />
     <Content Include="Scripts\lib\jquery.fileupload-validate.js" />
     <Content Include="Scripts\lib\jquery.fileupload.js" />
@@ -283,13 +283,13 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <None Include="Scripts\cloudmedia-videoplayer-data.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
-    <None Include="Scripts\cloudmedia-videoplayer-main.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-data.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
+    <Content Include="Scripts\cloudmedia-videoplayer-main.ts" />
     <TypeScriptCompile Include="Scripts\typings\moment.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\underscore.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\uri.d.ts" />
@@ -449,7 +449,7 @@
     <TypeScriptCompile Include="Scripts\typings\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
-    <None Include="Scripts\cloudmedia-admin-settings.ts" />
+    <Content Include="Scripts\cloudmedia-admin-settings.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CloudVideo.Edit.Assets.cshtml" />
