@@ -53,3 +53,55 @@
         </div>
     </div>
 </fieldset>
+<fieldset>
+    <legend>@T("Test those settings:")</legend>
+    <div>
+        <label for="emailtestto">@T("To:")</label>
+        <input type="text" id="emailtestto" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestsubject">@T("Subject:")</label>
+        <input type="text" id="emailtestsubject" class="large text" />
+    </div>
+    <div>
+        <textarea id="emailtestbody"></textarea>
+    </div>
+    <div>
+        <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
+    </div>
+    <div id="emailtesterror" class="message-Error" style="display:none;"></div>
+    <div id="emailtestinfo" class="message-Information" style="display:none;"></div>
+    @using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function() {
+                var url = "@Url.Action("TestMailSettings", "EmailAdmin", new {area = "Orchard.Email"})",
+                    error = $("#emailtesterror"),
+                    info = $("#emailtestinfo"),
+                    to = $("#emailtestto"),
+                    subject = $("#emailtestsubject"),
+                    body = $("#emailtestbody");
+                $("#emailtestsend").click(function() {
+                    $.post(url, {
+                            to: to.val(),
+                            subject: subject.val(),
+                            body: body.val(),
+                            __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
+                        })
+                        .fail(function(data) {
+                            error.html(data.statusText).show();
+                            info.hide();
+                        })
+                        .done(function(data) {
+                            if (data.error) {
+                                error.html(data.error).show();
+                                info.hide();
+                            } else {
+                                info.html(data.status).show();
+                                error.hide();
+                            }
+                        });
+                });
+            });
+        </script>
+    }
+</fieldset>

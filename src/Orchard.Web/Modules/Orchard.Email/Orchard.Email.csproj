@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\EmailActivity.cs" />
+    <Compile Include="Controllers\EmailAdminController.cs" />
     <Compile Include="Forms\MailForms.cs" />
     <Compile Include="Forms\EmailForm.cs" />
     <Compile Include="Migrations.cs" />
@@ -132,6 +133,7 @@
   <ItemGroup>
     <Content Include="Views\Template.Smtp.Wrapper.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
