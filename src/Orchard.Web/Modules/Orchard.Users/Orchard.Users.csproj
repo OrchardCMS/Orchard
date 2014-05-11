@@ -129,7 +129,7 @@
       <Name>Orchard.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
-      <Project>{7059493C-8251-4764-9C1E-2368B8B485BC}</Project>
+      <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
       <Name>Orchard.Workflows</Name>
     </ProjectReference>
   </ItemGroup>
