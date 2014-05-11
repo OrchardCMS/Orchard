@@ -12,7 +12,7 @@ namespace Orchard.Comments.Models {
         public LazyField<ContentItem> CommentedOnContentItemField { get { return _commentedOnContentItem; } }
         public LazyField<ContentItemMetadata> CommentedOnContentItemMetadataField { get { return _commentedOnContentItemMetadata; } }
 
-        [StringLength(255)]
+        [Required, StringLength(255)]
         public string Author {
             get { return Record.Author; }
             set { Record.Author = value; }
@@ -31,7 +31,7 @@ namespace Orchard.Comments.Models {
             set { Record.UserName = value; }
         }
 
-        [RegularExpression(@"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$")]
+        [Required, RegularExpression(@"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$")]
         public string Email {
             get { return Record.Email; }
             set { Record.Email = value; }

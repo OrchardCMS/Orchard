@@ -29,11 +29,11 @@ namespace Orchard.Comments.Controllers {
             var comment = Services.ContentManager.New<CommentPart>("Comment");
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
-            if (!ModelState.IsValidField("Comments.Author") && Services.WorkContext.CurrentUser == null) {
+            if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Comments.Email") && Services.WorkContext.CurrentUser == null) {
+            if (!ModelState.IsValidField("Comments.Email")) {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
