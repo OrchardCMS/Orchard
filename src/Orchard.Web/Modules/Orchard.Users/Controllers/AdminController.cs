@@ -275,10 +275,10 @@ namespace Orchard.Users.Controllers {
 
             if (user != null) {
                 if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal)) {
-                    Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account"));
+                    Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account."));
                 }
                 else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
-                    Services.Notifier.Error(T("You can't remove your own account. Please log in with another account"));
+                    Services.Notifier.Error(T("You can't remove your own account. Please log in with another account."));
                 }
                 else{
                     Services.ContentManager.Remove(user.ContentItem);
