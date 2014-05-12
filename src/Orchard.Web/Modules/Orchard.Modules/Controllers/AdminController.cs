@@ -81,7 +81,7 @@ namespace Orchard.Modules.Controllers {
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType) &&
-                                              ModuleIsAllowed(extensionDescriptor) &&
+                                              
                                               (string.IsNullOrEmpty(options.SearchText) || extensionDescriptor.Name.ToLowerInvariant().Contains(options.SearchText.ToLowerInvariant())))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
@@ -174,7 +174,7 @@ namespace Orchard.Modules.Controllers {
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             IEnumerable<ModuleFeature> features = _featureManager.GetAvailableFeatures()
-                .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType) && ModuleIsAllowed(f.Extension))
+                .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType))
                 .Select(f => new ModuleFeature {
                                 Descriptor = f,
                                 IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
@@ -184,7 +184,10 @@ namespace Orchard.Modules.Controllers {
                             })
                 .ToList();
 
-            return View(new FeaturesViewModel { Features = features });
+            return View(new FeaturesViewModel { 
+                Features = features,
+                IsAllowed = ModuleIsAllowed
+            });
         }
 
         [HttpPost, ActionName("Features")]
