@@ -17,6 +17,11 @@ Features:
 		Description: Activates an Orchard output cache provider that targets Windows Azure Cache.
 		Dependencies: Orchard.Azure, Orchard.OutputCache
 		Category: Performance
+	Orchard.Azure.RedisOutputCache:
+		Name: Microsoft Azure Redis Output Cache
+		Description: Activates an Orchard output cache provider that targets Windows Azure Redis Cache.
+		Dependencies: Orchard.Azure, Orchard.OutputCache
+		Category: Performance
 	Orchard.Azure.DatabaseCache:
 		Name: Microsoft Azure Database Cache
 		Description: Activates an NHibernate second-level cache provider that targets Microsoft Azure Cache.

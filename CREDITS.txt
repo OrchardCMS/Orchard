@@ -258,6 +258,12 @@ Website:      http://www.microsoft.com
 Copyright:    Copyright Microsoft Corporation
 License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/microsoft_web_xmltransform.htm
 
+StackExchange.Redis
+------
+Websites:     https://github.com/StackExchange/StackExchange.Redis
+Copyright:    Copyright (c) 2014 Stack Exchange
+License:      MIT - https://raw.githubusercontent.com/StackExchange/StackExchange.Redis/master/LICENSE
+
 SlowCheetah
 -----
 Website:      https://github.com/sayedihashimi/package-web/
