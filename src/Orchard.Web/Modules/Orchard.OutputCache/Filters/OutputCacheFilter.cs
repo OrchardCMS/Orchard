@@ -20,6 +20,7 @@ using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
+using System.Collections.Specialized;
 
 namespace Orchard.OutputCache.Filters {
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
@@ -36,6 +37,9 @@ namespace Orchard.OutputCache.Filters {
         private readonly ShellSettings _shellSettings;
         private readonly ICacheControlStrategy _cacheControlStrategy;
         private Stream _previousFilter;
+
+        private static string RefreshKey = "__r";
+        private static long Epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
 
         public OutputCacheFilter(
             ICacheManager cacheManager,
@@ -151,12 +155,7 @@ namespace Orchard.OutputCache.Filters {
             );
 
             // caches the default max age duration to prevent a query to the settings
-            _maxAge = _cacheManager.Get("CacheSettingsPart.MaxAge",
-                context => {
-                    context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
-                    return _workContext.CurrentSite.As<CacheSettingsPart>().DefaultMaxAge;
-                }
-            );
+            _maxAge = GetMaxAge();
 
             _varyQueryStringParameters = _cacheManager.Get("CacheSettingsPart.VaryQueryStringParameters",
                 context => {
@@ -218,6 +217,11 @@ namespace Orchard.OutputCache.Filters {
 
             foreach (var key in queryString.AllKeys) {
                 if (key == null) continue;
+
+                // ignore pages with the RefreshKey
+                if (String.Equals(RefreshKey, key, StringComparison.OrdinalIgnoreCase)) {
+                    return;
+                }
 
                 parameters[key] = queryString[key];
             }
@@ -448,14 +452,16 @@ namespace Orchard.OutputCache.Filters {
                 throw new ArgumentNullException();
             }
 
+            var redirectResult = filterContext.Result as RedirectResult;
+
             // status code can't be tested at this point, so test the result type instead
-            if (!filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
-                || !(filterContext.Result is RedirectResult)) {
+            if (redirectResult == null ||
+                !filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
                 return false;
             }
 
             Logger.Debug("Redirect on POST");
-            var redirectUrl = ((RedirectResult)(filterContext.Result)).Url ;
+            var redirectUrl = redirectResult.Url ;
 
             if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
                 var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
@@ -476,7 +482,34 @@ namespace Orchard.OutputCache.Filters {
             // remove all cached version of the same page
             _cacheService.RemoveByTag(invariantCacheKey);
 
-            filterContext.Result = new RedirectResult(redirectUrl, ((RedirectResult) filterContext.Result).Permanent);
+            // adding a refresh key so that the redirection doesn't get restored
+            // from a cached version on a proxy
+            // this can happen when using public caching, we want to force the 
+            // client to get a fresh copy of the redirectUrl page
+
+            if (GetMaxAge() > 0) {
+                var epIndex = redirectUrl.IndexOf('?');
+                var qs = new NameValueCollection();
+                if (epIndex > 0) {
+                    qs = HttpUtility.ParseQueryString(redirectUrl.Substring(epIndex));
+                }
+
+                // substract Epoch to get a smaller number
+                var refresh = _now.Ticks - Epoch;
+                qs.Remove(RefreshKey);
+
+                qs.Add(RefreshKey, refresh.ToString("x"));
+                var querystring = "?" + string.Join("&", Array.ConvertAll(qs.AllKeys, k => string.Format("{0}={1}", HttpUtility.UrlEncode(k), HttpUtility.UrlEncode(qs[k]))));
+
+                if (epIndex > 0) {
+                    redirectUrl = redirectUrl.Substring(0, epIndex) + querystring;
+                }
+                else {
+                    redirectUrl = redirectUrl + querystring;
+                }
+            }
+
+            filterContext.Result = new RedirectResult(redirectUrl, redirectResult.Permanent);
             filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
 
             return true;
@@ -602,6 +635,14 @@ namespace Orchard.OutputCache.Filters {
             return false;
         }
 
+        private int GetMaxAge() {
+            return _cacheManager.Get("CacheSettingsPart.MaxAge",
+                context => {
+                    context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
+                    return _workContext.CurrentSite.As<CacheSettingsPart>().DefaultMaxAge;
+                }
+            );
+        }
     }
 
     /// <summary>
@@ -676,6 +717,7 @@ namespace Orchard.OutputCache.Filters {
 
             base.Dispose(disposing);
         }
+
     }
 
     public class ViewDataContainer : IViewDataContainer {
