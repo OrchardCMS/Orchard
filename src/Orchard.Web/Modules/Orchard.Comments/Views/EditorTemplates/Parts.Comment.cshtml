@@ -7,11 +7,11 @@
         <ol>
             <li>
                 @Html.LabelFor(m => m.Author, T("Name"))
-                @Html.TextBoxFor(m => m.Author, new { required = "required" })
+                @Html.TextBoxFor(m => m.Author)
             </li>
             <li>
                 @Html.LabelFor(m => m.Email, T("Email"))
-                @Html.TextBoxFor(m => m.Email, new { required = "required" })
+                @Html.TextBoxFor(m => m.Email)
             </li>
             <li>
                 @Html.LabelFor(m => m.SiteName, T("Url"))
@@ -21,7 +21,7 @@
     </fieldset>
 }
 else {
-    @Html.Hidden("Author", WorkContext.CurrentUser.UserName ?? "")
+    @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
     @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
 }
 
