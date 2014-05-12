@@ -1,4 +1,5 @@
 ﻿using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Projections {
@@ -12,7 +13,7 @@ namespace Orchard.Projections {
                     .Add(T("Queries"), "1.0",
                         qi => qi.Action("Index", "Admin", new { area = "Orchard.Projections" }).Permission(Permissions.ManageQueries).LocalNav())
                     .Add(T("Bindings"), "2.0", 
-                        bi => bi.Action("Index", "Binding", new { area = "Orchard.Projections" }).Permission(Permissions.ManageQueries).LocalNav())
+                        bi => bi.Action("Index", "Binding", new { area = "Orchard.Projections" }).Permission(StandardPermissions.SiteOwner).LocalNav())
             );
         }
     }
