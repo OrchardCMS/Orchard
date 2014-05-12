@@ -46,7 +46,7 @@ namespace Orchard.Projections.Controllers {
         public dynamic Shape { get; set; }
 
         public ActionResult Add(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new PropertyAddViewModel { Id = id, Properties = _projectionManager.DescribeProperties() };
@@ -55,7 +55,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id, int propertyId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var property = _repository.Get(propertyId);
@@ -72,7 +72,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Edit(int id, string category, string type, int propertyId = -1) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var property = _projectionManager.DescribeProperties().SelectMany(x => x.Descriptors).Where(x => x.Category == category && x.Type == type).FirstOrDefault();
@@ -140,7 +140,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(int id, string category, string type, [DefaultValue(-1)]int propertyId, FormCollection formCollection) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
             var layout = _layoutRepository.Get(id);
 
@@ -213,7 +213,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Move(string direction, int id, int layoutId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             switch (direction) {
