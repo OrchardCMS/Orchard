@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Features;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
 namespace Orchard.Email.Forms {
+
+    [OrchardSuppressDependency("Orchard.Email.Workflows")]
     public class EmailForm : Component, IFormProvider {
         private readonly IFeatureManager _featureManager;
         protected dynamic New { get; set; }

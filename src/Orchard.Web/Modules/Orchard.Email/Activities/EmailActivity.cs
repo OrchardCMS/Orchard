@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Email.Services;
+using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Messaging.Services;
@@ -11,6 +12,7 @@ namespace Orchard.Email.Activities {
         void Enqueue(string message, object parameters, int priority);
     }
 
+    [OrchardSuppressDependency("Orchard.Email.Workflows")]
     public class EmailActivity : Task {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
