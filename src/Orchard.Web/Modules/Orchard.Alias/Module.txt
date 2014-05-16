@@ -2,7 +2,7 @@ Name: Alias
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.8
+Version: 1.8.1
 OrchardVersion: 1.8
 Description: Maps friendly urls to specific module actions.
 FeatureDescription: Maps friendly urls to specific module actions.
