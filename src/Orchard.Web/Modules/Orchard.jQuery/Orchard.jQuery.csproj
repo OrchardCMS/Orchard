@@ -254,7 +254,11 @@
     <Content Include="Scripts\calendars\jquery.calendars.ummalqura.min.js" />
     <Content Include="Scripts\calendars\jquery.calendars.validation.js" />
     <Content Include="Scripts\calendars\jquery.calendars.validation.min.js" />
+    <Content Include="Scripts\jquery-1.11.1.js" />
+    <Content Include="Scripts\jquery-1.11.1.min.js" />
     <Content Include="Scripts\jquery-datetime-editor.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ca.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-cs.js" />
@@ -290,10 +294,6 @@
     <Content Include="Styles\images\colorbox\controls.png" />
     <Content Include="Styles\images\colorbox\loading.gif" />
     <Content Include="Styles\images\colorbox\loading_background.png" />
-    <Content Include="Scripts\jquery-1.9.1.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
-    <Content Include="Scripts\jquery-migrate-1.1.1.js" />
-    <Content Include="Scripts\jquery-migrate-1.1.1.min.js" />
     <Content Include="Scripts\jquery-ui-sliderAccess.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui.js" />
@@ -460,6 +460,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\DateTimeEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.11.1.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

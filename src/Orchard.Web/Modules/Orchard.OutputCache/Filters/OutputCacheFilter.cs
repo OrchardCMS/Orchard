@@ -86,7 +86,6 @@ namespace Orchard.OutputCache.Filters {
         private CapturingResponseFilter _filter;
         private CacheItem _cacheItem;
 
-
         public ILogger Logger { get; set; }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -291,11 +290,21 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
+            // this means the cache module is not applied in this context
+            if (_workContext == null) {
+                return;
+            }
+
             // handle redirections
             _transformRedirect = TransformRedirect(filterContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
+
+            // this means the cache module is not applied in this context
+            if (_workContext == null) {
+                return;
+            }
 
             var response = filterContext.HttpContext.Response;
 
@@ -467,6 +476,7 @@ namespace Orchard.OutputCache.Filters {
                 var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
                 if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
                     redirectUrl = "~/" + redirectUrl.Substring(applicationRoot.Length);
+                    redirectUrl = VirtualPathUtility.ToAbsolute(redirectUrl);
                 }
             }
 

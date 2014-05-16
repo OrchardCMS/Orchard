@@ -46,6 +46,18 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
             _host.ReloadExtensions();
         }
 
+        public static void RestartTenant(string name) {
+            var settings = _container.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
+            if (settings == null) {
+                settings = new ShellSettings {
+                    Name = name,
+                    State = TenantState.Uninitialized
+                };
+            }
+
+            ((DefaultOrchardHost)_host).ActivateShell(settings);
+        }
+
         public static IWorkContextScope CreateStandaloneEnvironment(string name) {
             var settings = _container.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
             if (settings == null) {

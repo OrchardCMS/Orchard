@@ -326,6 +326,15 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Enumeration.feature.cs</LastGenOutput>
     </None>
+    <WebConfigsToTransform Include="Hosting\Orchard.Web\Config\HostComponents.config">
+      <SubType>Designer</SubType>
+    </WebConfigsToTransform>
+    <None Include="Hosting\Orchard.Web\Config\HostComponents.Debug.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
+    <None Include="Hosting\Orchard.Web\Config\HostComponents.Release.config">
+      <DependentUpon>HostComponents.config</DependentUpon>
+    </None>
     <None Include="Input.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Input.feature.cs</LastGenOutput>
