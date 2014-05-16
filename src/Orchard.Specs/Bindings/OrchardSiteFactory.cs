@@ -59,6 +59,11 @@ namespace Orchard.Specs.Bindings {
                         descriptor.Features.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
+
+                // this is needed to force the tenant to restart when a new feature is enabled,
+                // as DefaultOrchardHost maintains this list in a thread context otherwise
+                // and looses the information
+                MvcApplication.RestartTenant("Default");
             });
 
         }
