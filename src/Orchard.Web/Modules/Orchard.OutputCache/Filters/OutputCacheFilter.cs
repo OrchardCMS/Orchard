@@ -476,6 +476,7 @@ namespace Orchard.OutputCache.Filters {
                 var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
                 if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
                     redirectUrl = "~/" + redirectUrl.Substring(applicationRoot.Length);
+                    redirectUrl = VirtualPathUtility.ToAbsolute(redirectUrl);
                 }
             }
 
