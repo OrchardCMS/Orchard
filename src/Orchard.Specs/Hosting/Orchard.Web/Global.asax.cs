@@ -40,6 +40,8 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
             builder.Register(ctx => RouteTable.Routes).SingleInstance();
             builder.Register(ctx => ModelBinders.Binders).SingleInstance();
             builder.Register(ctx => ViewEngines.Engines).SingleInstance();
+
+            builder.RegisterType<SpecHostEnvironment>().As<IHostEnvironment>();
         }
 
         public static void ReloadExtensions() {

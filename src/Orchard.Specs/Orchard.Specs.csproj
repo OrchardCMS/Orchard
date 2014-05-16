@@ -171,6 +171,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Hosting\SpecHostEnvironment.cs" />
     <Compile Include="Input.feature.cs">
       <DependentUpon>Input.feature</DependentUpon>
       <AutoGen>True</AutoGen>
