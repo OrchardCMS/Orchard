@@ -74,6 +74,6 @@ Scenario: Moderated comments are not displayed
         And I hit "Submit Comment"
         And I am redirected
         # because the ToUrlString extension method breaks in this specific (test) environment, the returnUrl is broken...
-        # And I go to "my-blog/my-post"
+        And I go to "my-blog/my-post"
     Then I should see "Hi there"
         And I should not see "This is a moderated comment"
