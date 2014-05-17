@@ -109,7 +109,7 @@ var mediaLibrarySettings = {
             <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
                 <a href="#" class="media-library-navigation-folder-link"><i data-bind="    css: {'icon-folder-open-alt': isExpanded(), 'icon-folder-close-alt': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
             </div>
-            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders}, afterRender: afterRenderMediaFolderTemplate}, visible: childFolders().length > 0">
+            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: childFolders().length > 0">
             </ul>
         </div>
     </li>
