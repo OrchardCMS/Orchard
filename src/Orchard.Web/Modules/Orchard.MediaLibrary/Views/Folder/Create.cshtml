@@ -5,11 +5,13 @@
 
 <div class="breadCrumbs">
     <p>@Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, new {}) &#62; 
-    @foreach (var folder in Model.FolderPath.Split('/')) {
-        if (!String.IsNullOrEmpty(folder)) {
-            @Html.ActionLink(folder, "Edit", new {folderPath = folder})
-            <text>&#62;</text>
-        }
+    @if (Model.FolderPath != null) {
+        foreach (var folder in Model.FolderPath.Split('/')) {
+             if (!String.IsNullOrEmpty(folder)) {
+                 @Html.ActionLink(folder, "Edit", new {folderPath = folder})
+                 <text>&#62;</text>
+             }
+         }
     }
     @T("Add a Folder") </p>
 </div> 
