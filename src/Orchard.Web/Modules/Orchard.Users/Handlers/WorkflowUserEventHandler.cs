@@ -24,6 +24,12 @@ namespace Orchard.Users.Handlers {
                                          () => new Dictionary<string, object> {{"User", context}});
         }
 
+        public void LoggingIn(string userNameOrEmail, string password) {
+            _workflowManager.TriggerEvent("UserLoggingIn",
+                                         null,
+                                         () => new Dictionary<string, object>{{"UserNameOrEmail", userNameOrEmail}, {"Password", password}});
+        }
+
         public void LoggedIn(Security.IUser user) {
             _workflowManager.TriggerEvent("UserLoggedIn",
                                          user,

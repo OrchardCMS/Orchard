@@ -52,6 +52,17 @@ namespace Orchard.Users.Activities {
     }
 
     [OrchardFeature("Orchard.Users.Workflows")]
+    public class UserLoggingInActivity : UserActivity {
+        public override string Name {
+            get { return "UserLoggingIn"; }
+        }
+
+        public override LocalizedString Description {
+            get { return T("User is logging in."); }
+        }
+    }
+
+    [OrchardFeature("Orchard.Users.Workflows")]
     public class UserLoggedInActivity : UserActivity {
         public override string Name {
             get { return "UserLoggedIn"; }

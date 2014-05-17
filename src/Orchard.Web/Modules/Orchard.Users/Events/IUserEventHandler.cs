@@ -14,6 +14,11 @@ namespace Orchard.Users.Events {
         void Created(UserContext context);
 
         /// <summary>
+        /// Called before a user has logged in
+        /// </summary>
+        void LoggingIn(string userNameOrEmail, string password);
+
+        /// <summary>
         /// Called after a user has logged in
         /// </summary>
         void LoggedIn(IUser user);
