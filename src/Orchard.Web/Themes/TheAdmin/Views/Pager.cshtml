@@ -68,9 +68,13 @@
             </div>
         }
 
-        <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1) * (int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page) * (int)Model.PageSize), Model.TotalItemCount)</span>
-
-        @pagerLinks
+        @if ((int) Model.PageSize >= 1) {
+            <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1)*(int) Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page)*(int) Model.PageSize), Model.TotalItemCount)</span>
+            @pagerLinks
+        }
+        else {
+            <span class="page-results">@T("Showing all {0} items", Model.TotalItemCount)</span>
+        }
     </div>
 }
 @using (Script.Foot()) {
