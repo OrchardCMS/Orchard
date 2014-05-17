@@ -21,7 +21,7 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
         public MediaLibraryService(
-            IOrchardServices orchardServices, 
+            IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider,
             IStorageProvider storageProvider,
             IEnumerable<IMediaFactorySelector> mediaFactorySelectors) {
@@ -168,7 +168,7 @@ namespace Orchard.MediaLibrary.Services {
                 .Where(x => x != null)
                 .OrderByDescending(x => x.Priority);
 
-            if (!requestMediaFactoryResults.Any() )
+            if (!requestMediaFactoryResults.Any())
                 return null;
 
             return requestMediaFactoryResults.First().MediaFactory;
@@ -260,19 +260,16 @@ namespace Orchard.MediaLibrary.Services {
         public void DeleteFolder(string folderPath) {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
 
-            try
-            {
+            try {
                 var contentManager = _orchardServices.ContentManager;
                 var mediaParts = BuildGetMediaContentItemsQuery(contentManager, folderPath, true).List();
-                foreach (var mediaPart in mediaParts)
-                {
+                foreach (var mediaPart in mediaParts) {
                     contentManager.Remove(mediaPart.ContentItem);
                 }
 
                 _storageProvider.DeleteFolder(folderPath);
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 _orchardServices.TransactionManager.Cancel();
                 throw;
             }
