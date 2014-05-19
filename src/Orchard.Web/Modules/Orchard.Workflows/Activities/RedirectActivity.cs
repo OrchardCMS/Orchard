@@ -21,13 +21,13 @@ namespace Orchard.Workflows.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return Enumerable.Empty<LocalizedString>();
+            yield return T("Done");
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
             var url = activityContext.GetState<string>("Url");
             _wca.GetContext().HttpContext.Response.Redirect(url);
-            return Enumerable.Empty<LocalizedString>();
+            yield return T("Done");
         }
 
         public override string Name {
