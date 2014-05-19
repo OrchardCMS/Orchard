@@ -104,6 +104,8 @@ namespace Orchard.Specs.Bindings {
                 using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
                     environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
                 }
+
+                MvcApplication.RestartTenant(shellName);
             });
 
             webApp.WhenIGoToPathOnHost("Setup", hostName);
