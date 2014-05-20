@@ -22,7 +22,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private Localizer _localizer = NullLocalizer.Instance;
         private object _display;
         private object _layout;
-        private WorkContext _workContext;
 
         public Localizer T { 
             get {
@@ -61,35 +60,35 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public dynamic Display { get { return _display; } }
         // review: (heskew) is it going to be a problem?
         public new dynamic Layout { get { return _layout; } }
-        public WorkContext WorkContext { get { return _workContext; } }
+        public WorkContext WorkContext { get; set; }
 
         public dynamic New { get { return ShapeFactory; } }
 
         private IDisplayHelperFactory _displayHelperFactory;
         public IDisplayHelperFactory DisplayHelperFactory {
             get {
-                return _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+                return _displayHelperFactory ?? (_displayHelperFactory = WorkContext.Resolve<IDisplayHelperFactory>());
             }
         }
 
         private IShapeFactory _shapeFactory;
         public IShapeFactory ShapeFactory {
             get {
-                return _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+                return _shapeFactory ?? (_shapeFactory = WorkContext.Resolve<IShapeFactory>());
             }
         }
 
         private IAuthorizer _authorizer;
         public IAuthorizer Authorizer { 
             get {
-                return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+                return _authorizer ?? (_authorizer = WorkContext.Resolve<IAuthorizer>());
             }
         }
 
         private IContentManager _contentManager;
         public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
             if (_contentManager == null) {
-                _contentManager = _workContext.Resolve<IContentManager>();
+                _contentManager = WorkContext.Resolve<IContentManager>();
             }
 
             return _contentManager.BuildDisplay(content, displayType, groupId);
@@ -104,7 +103,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private IResourceManager _resourceManager;
         public IResourceManager ResourceManager {
-            get { return _resourceManager ?? (_resourceManager = _workContext.Resolve<IResourceManager>()); }
+            get { return _resourceManager ?? (_resourceManager = WorkContext.Resolve<IResourceManager>()); }
         }
 
         public ResourceRegister Style {
@@ -164,10 +163,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public override void InitHelpers() {
             base.InitHelpers();
 
-            _workContext = ViewContext.GetWorkContext();
+            WorkContext = ViewContext.GetWorkContext();
             
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
-            _layout = _workContext.Layout;
+            _layout = WorkContext.Layout;
         }
 
         public bool AuthorizedFor(Permission permission) {

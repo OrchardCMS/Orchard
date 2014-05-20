@@ -16,6 +16,7 @@ namespace Orchard.Templates.Services {
     public class RazorTemplateProcessor : TemplateProcessorImpl {
         private readonly IRazorCompiler _compiler;
         private readonly HttpContextBase _httpContextBase;
+        private readonly IWorkContextAccessor _wca;
 
         public override string Type {
             get { return "Razor"; }
@@ -23,9 +24,11 @@ namespace Orchard.Templates.Services {
 
         public RazorTemplateProcessor(
             IRazorCompiler compiler,
-            HttpContextBase httpContextBase) {
+            HttpContextBase httpContextBase, 
+            IWorkContextAccessor wca) {
             _compiler = compiler;
             _httpContextBase = httpContextBase;
+            _wca = wca;
             Logger = NullLogger.Instance;
         }
 
@@ -68,6 +71,7 @@ namespace Orchard.Templates.Services {
 
                         obj.ViewData = new ViewDataDictionary(model);
                         obj.WebPageContext = new WebPageContext(_httpContextBase, obj as WebPageRenderingBase, model);
+                        obj.WorkContext = _wca.GetContext();
                     }
 
                     obj.VirtualPath = templateVirtualPath ?? "~/Themes/Orchard.Templates";
