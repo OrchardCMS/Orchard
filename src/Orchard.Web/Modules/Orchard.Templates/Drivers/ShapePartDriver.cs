@@ -36,19 +36,19 @@ namespace Orchard.Templates.Drivers {
                 Template = part.Template
             };
 
-            if (updater != null 
+            if (updater != null
                 && updater.TryUpdateModel(viewModel, Prefix, null, new[] { "AvailableLanguages" })
                 && ValidateShapeName(part, updater)) {
-                    part.Template = viewModel.Template;
+                part.Template = viewModel.Template;
 
-                    try {
-                        var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.ProcessorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
-                        processor.Verify(part.Template);
-                    }
-                    catch (Exception ex) {
-                        updater.AddModelError("", T("Template processing error: {0}", ex.Message));
-                        _transactions.Cancel();
-                    }
+                try {
+                    var processor = _processors.FirstOrDefault(x => String.Equals(x.Type, part.ProcessorName, StringComparison.OrdinalIgnoreCase)) ?? _processors.First();
+                    processor.Verify(part.Template);
+                }
+                catch (Exception ex) {
+                    updater.AddModelError("", T("Template processing error: {0}", ex.Message));
+                    _transactions.Cancel();
+                }
             }
             return ContentShape("Parts_Shape_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts.Shape", Model: viewModel, Prefix: Prefix));
         }
@@ -60,7 +60,7 @@ namespace Orchard.Templates.Drivers {
         protected override void Importing(ShapePart part, ImportContentContext context) {
             var shapeElement = context.Data.Element(part.PartDefinition.Name);
 
-            if(shapeElement != null)
+            if (shapeElement != null)
                 part.Template = shapeElement.Value;
         }
 
@@ -70,9 +70,9 @@ namespace Orchard.Templates.Drivers {
                 return false;
 
             var name = titleViewModel.Title;
-            if (!string.IsNullOrWhiteSpace(name) && 
-                name[0].IsLetter() && 
-                name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '.' || c == '-' )) {
+            if (!string.IsNullOrWhiteSpace(name) &&
+                name[0].IsLetter() &&
+                name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '.' || c == '-')) {
                 return true;
             }
 

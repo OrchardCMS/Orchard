@@ -19,7 +19,7 @@ namespace Orchard.Templates.Services {
         }
 
         public RazorTemplateProcessor(
-            IRazorCompiler compiler, 
+            IRazorCompiler compiler,
             HttpContextBase httpContextBase) {
             _compiler = compiler;
             _httpContextBase = httpContextBase;
@@ -58,7 +58,7 @@ namespace Orchard.Templates.Services {
                         obj.WebPageContext = new WebPageContext(displayContext.ViewContext.HttpContext, obj as WebPageRenderingBase, model);
                         obj.ViewContext = shapeViewContext;
 
-                        obj.ViewData = new ViewDataDictionary(displayContext.ViewDataContainer.ViewData) {Model = model};
+                        obj.ViewData = new ViewDataDictionary(displayContext.ViewDataContainer.ViewData) { Model = model };
                         obj.InitHelpers();
                     }
                     else {

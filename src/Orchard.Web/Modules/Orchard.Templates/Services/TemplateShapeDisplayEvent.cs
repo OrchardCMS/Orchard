@@ -15,8 +15,8 @@ namespace Orchard.Templates.Services {
         private IContentManager _contentManager;
         private ITemplateService _templateService;
 
-        public TemplateShapeDisplayEvent (
-            ICacheManager cacheManager, 
+        public TemplateShapeDisplayEvent(
+            ICacheManager cacheManager,
             ISignals signals,
             IContentManager contentManager,
             ITemplateService templateService
@@ -41,7 +41,7 @@ namespace Orchard.Templates.Services {
 
         public IDictionary<string, Func<dynamic, IHtmlString>> BuildShapeProcessors() {
             return _cacheManager.Get("Template.ShapeProcessors", ctx => {
-               ctx.Monitor(_signals.When(DefaultTemplateService.TemplatesSignal));
+                ctx.Monitor(_signals.When(DefaultTemplateService.TemplatesSignal));
 
                 var allTemplates = _contentManager.Query<ShapePart>().List();
 

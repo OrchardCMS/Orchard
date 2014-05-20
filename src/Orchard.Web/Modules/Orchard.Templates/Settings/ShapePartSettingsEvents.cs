@@ -35,7 +35,7 @@ namespace Orchard.Templates.Settings {
                 AvailableProcessors = _processors.ToArray()
             };
 
-            updateModel.TryUpdateModel(model, "ShapePartSettingsViewModel", new[] {"Processor"}, null);
+            updateModel.TryUpdateModel(model, "ShapePartSettingsViewModel", new[] { "Processor" }, null);
             builder.WithSetting("ShapePartSettings.Processor", model.Processor);
             yield return DefinitionTemplate(model);
         }
