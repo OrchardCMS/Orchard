@@ -10,10 +10,12 @@ using System.Text;
 using System.Web.Razor;
 using Microsoft.CSharp;
 using Orchard.Caching;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Templates.Compilation.Razor {
+    [OrchardFeature("Orchard.Templates.Razor")]
     public class RazorCompiler : IRazorCompiler {
         private readonly ICacheManager _cache;
         private readonly ISignals _signals;

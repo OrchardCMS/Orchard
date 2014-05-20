@@ -167,8 +167,10 @@
     <Compile Include="Drivers\ShapePartDriver.cs" />
     <Compile Include="Models\ShapePart.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="RazorMigrations.cs" />
     <Compile Include="Services\ITemplateProcessor.cs" />
     <Compile Include="Services\ITemplateService.cs" />
+    <Compile Include="Services\NoTemplateProcessorBanner.cs" />
     <Compile Include="Services\Razor\IRazorCompiler.cs" />
     <Compile Include="Services\Razor\RazorCompiler.cs" />
     <Compile Include="Services\Razor\RazorTemplateBase.cs" />

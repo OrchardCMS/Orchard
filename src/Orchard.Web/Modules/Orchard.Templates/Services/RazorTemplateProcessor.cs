@@ -7,9 +7,12 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Templates.Compilation.Razor;
+
 namespace Orchard.Templates.Services {
+    [OrchardFeature("Orchard.Templates.Razor")]
     public class RazorTemplateProcessor : TemplateProcessorImpl {
         private readonly IRazorCompiler _compiler;
         private readonly HttpContextBase _httpContextBase;
