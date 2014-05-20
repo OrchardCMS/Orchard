@@ -70,13 +70,13 @@ namespace Orchard.Templates.Drivers {
                 return false;
 
             var name = titleViewModel.Title;
-            if (!string.IsNullOrWhiteSpace(name) &&
+            if (!String.IsNullOrWhiteSpace(name) &&
                 name[0].IsLetter() &&
-                name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '.' || c == '-')) {
+                name.All(c => c.IsLetter() || Char.IsDigit(c) || c == '_')) {
                 return true;
             }
 
-            updater.AddModelError("Title", T("{0} names can only contain alphanumerical, dot (.) or dash (-) characters and have to start with a letter.", part.ContentItem.TypeDefinition.DisplayName));
+            updater.AddModelError("Title", T("{0} names can only contain alphanumerical or underscore (_) characters and have to start with a letter.", part.ContentItem.TypeDefinition.DisplayName));
             return false;
         }
 
