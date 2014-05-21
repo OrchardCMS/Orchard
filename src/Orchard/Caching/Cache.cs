@@ -17,7 +17,7 @@ namespace Orchard.Caching {
             var entry = _entries.AddOrUpdate(key,
                 // "Add" lambda
                 k => AddEntry(k, acquire),
-                // "Update" lamdba
+                // "Update" lambda
                 (k, currentEntry) => UpdateEntry(currentEntry, k, acquire));
 
             return entry.Result;
