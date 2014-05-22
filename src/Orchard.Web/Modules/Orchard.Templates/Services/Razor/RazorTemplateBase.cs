@@ -3,8 +3,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 
 namespace Orchard.Templates.Compilation.Razor {
-    public interface IRazorTemplateBase
-    {
+    public interface IRazorTemplateBase {
         dynamic Model { get; }
         WebPageContext WebPageContext { get; set; }
         ViewContext ViewContext { get; set; }
@@ -15,8 +14,7 @@ namespace Orchard.Templates.Compilation.Razor {
 
     }
 
-    public interface IRazorTemplateBase<TModel> : IRazorTemplateBase
-    {
+    public interface IRazorTemplateBase<TModel> : IRazorTemplateBase {
         new TModel Model { get; }
         new ViewDataDictionary<TModel> ViewData { get; set; }
     }

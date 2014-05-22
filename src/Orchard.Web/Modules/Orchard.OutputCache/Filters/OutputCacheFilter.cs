@@ -95,6 +95,8 @@ namespace Orchard.OutputCache.Filters {
             var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
 
+            _workContext = _workContextAccessor.GetContext();
+
             if (outputCacheAttribute != null) {
                 if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore) {
                     Logger.Debug("Request ignored based on OutputCache attribute");
@@ -127,8 +129,6 @@ namespace Orchard.OutputCache.Filters {
                 Logger.Debug("Request ignored on Child actions");
                 return;
             }
-
-            _workContext = _workContextAccessor.GetContext();
 
             // don't return any cached content, or cache any content, if the user is authenticated
             if (_workContext.CurrentUser != null) {
@@ -290,19 +290,14 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            // this means the cache module is not applied in this context
-            if (_workContext == null) {
-                return;
-            }
-
+        
             // handle redirections
             _transformRedirect = TransformRedirect(filterContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
 
-            // this means the cache module is not applied in this context
-            if (_workContext == null) {
+            if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
                 return;
             }
 
@@ -461,6 +456,10 @@ namespace Orchard.OutputCache.Filters {
                 throw new ArgumentNullException();
             }
 
+            if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
+                return false;
+            }
+
             var redirectResult = filterContext.Result as RedirectResult;
 
             // status code can't be tested at this point, so test the result type instead
@@ -475,8 +474,7 @@ namespace Orchard.OutputCache.Filters {
             if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
                 var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
                 if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
-                    redirectUrl = "~/" + redirectUrl.Substring(applicationRoot.Length);
-                    redirectUrl = VirtualPathUtility.ToAbsolute(redirectUrl);
+                    redirectUrl = redirectUrl.Substring(applicationRoot.Length);
                 }
             }
 
