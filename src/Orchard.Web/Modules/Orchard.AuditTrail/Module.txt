@@ -1,0 +1,12 @@
+﻿Name: AuditTrail
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: Logs user initiated events, such as content changes, providing a trail for auditing.
+Features:
+    Orchard.AuditTrail:
+        Name: AuditTrail
+        Description: Provides the core audit trail framework.
+        Category: Security
