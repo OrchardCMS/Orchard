@@ -1,0 +1,27 @@
+﻿@using Orchard.AuditTrail.Models
+@{
+    var record = (AuditTrailEventRecord)Model.Record;
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var detailsUrl = Url.Action("Detail", "Admin", new {id = record.Id, area = "Orchard.AuditTrail"});
+    var title = eventData.ContainsKey("Title") ? (string)eventData["Title"] : "-";
+}
+<div class="audit-trail-record">
+    <div class="event-header">
+        <div class="group">
+            <div class="event-name">
+                <a href="@detailsUrl">@record.Event</a> - <span>@record.Category</span>
+            </div>
+            <div class="event-actions">
+                <a href="@detailsUrl">@T("Details")</a>
+            </div>
+        </div>
+    </div>
+    <div class="event-details">
+        @Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))
+        @if (!String.IsNullOrWhiteSpace(record.UserName)) {
+            @T(" | ")@T("by {0}", record.UserName)
+        }
+        @T(" | ")<a href="@Url.Action("Preview", "Item" , new { area="Contents" , id=record.ContentItemVersion.ContentItemRecord.Id, version=record.ContentItemVersion.Number })" class="event-contentitem">@title</a>
+        @T(" | ")@T("version {0}", record.ContentItemVersion.Number)
+    </div>
+</div>

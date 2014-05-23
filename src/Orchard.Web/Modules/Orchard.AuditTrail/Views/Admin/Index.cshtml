@@ -1,0 +1,27 @@
+﻿@model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
+@{
+    Style.Include("admin.css");
+}
+<section class="audit-trail-filter">
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Filter:")</label>
+        <select id="publishActions" name="Options.BulkAction">
+            <option></option>
+        </select>
+        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+    </fieldset>
+    <div class="manage">
+        <a id="auditTrailSettings" href="#" class="button primaryAction">@T("Settings")</a>
+    </div>
+</section>
+<section class="audit-trail-list">
+    @if (!Model.Records.Any()) {
+        <p class="info">@T("There are no records to display.")</p>
+    }
+    else {
+        @Display(Model.List)
+    }
+</section>
+<section class="pager">
+    @Display(Model.Pager)
+</section>

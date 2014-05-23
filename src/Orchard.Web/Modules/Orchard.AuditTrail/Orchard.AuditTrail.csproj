@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -19,6 +19,11 @@
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -62,17 +71,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Recipes\audit-trail.recipe.xml" />
+    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\menu.audit-trail-admin.css" />
+    <Content Include="Styles\menu.audit-trail.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Folder Include="Properties" />
-    <Folder Include="Controllers" />
-    <Folder Include="Views" />
-    <Folder Include="Models" />
-    <Folder Include="Scripts" />
-    <Folder Include="Styles" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -83,6 +90,51 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\AuditTrailPartDriver.cs" />
+    <Compile Include="Models\AuditTrailPart.cs" />
+    <Compile Include="ViewModels\AuditTrailDetailsViewModel.cs" />
+    <Compile Include="Handlers\GlobalContentHandler.cs" />
+    <Compile Include="Models\AuditTrailEventDescriptor.cs" />
+    <Compile Include="Models\AuditTrailEventTypeDescriptor.cs" />
+    <Compile Include="Models\DescribeContext.cs" />
+    <Compile Include="Models\DescribeFor.cs" />
+    <Compile Include="Models\AuditTrailContext.cs" />
+    <Compile Include="Models\AuditTrailCreateContext.cs" />
+    <Compile Include="Services\AuditTrailEventProviderBase.cs" />
+    <Compile Include="Providers\ContentAuditTrailEventProvider.cs" />
+    <Compile Include="Services\IAuditTrailEventHandler.cs" />
+    <Compile Include="Services\IAuditTrailEventProvider.cs" />
+    <Compile Include="ViewModels\AuditTrailViewModel.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\AuditTrailEventRecord.cs" />
+    <Compile Include="Permissions.cs" />
+    <Compile Include="Services\AuditTrailManager.cs" />
+    <Compile Include="Services\IAuditTrailManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Detail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-Content.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-Content.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.AuditTrail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

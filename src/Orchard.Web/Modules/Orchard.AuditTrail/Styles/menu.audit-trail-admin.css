@@ -1,0 +1,7 @@
+﻿.navicon-audit-trail {
+    background-image:url(menu.audit-trail.png) !important;
+}
+
+.navicon-audit-trail:hover {
+    background-position:0 -30px !important;
+}

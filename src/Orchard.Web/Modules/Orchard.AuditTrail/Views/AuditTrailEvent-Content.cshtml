@@ -1,0 +1,21 @@
+﻿@using Orchard.AuditTrail.Models
+@{
+    var record = (AuditTrailEventRecord)Model.Record;
+}
+<div class="audit-trail-record-details">
+    <fieldset>
+        <legend>@record.Event - <span>@record.Category</span></legend>
+        <div>
+            <span>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</span>
+            @if (!String.IsNullOrWhiteSpace(record.UserName)) {
+                @T(" | ")<span>@record.UserName</span>
+            }
+        </div>
+        @if (record.ContentItemVersion != null) {
+            <div>
+                <a href="@Url.Action("Preview", "Item" , new { area="Contents" , id=record.ContentItemVersion.ContentItemRecord.Id, version=record.ContentItemVersion.Number })" class="event-contentitem">Welcome to Orchard!</a>
+                @T(" | ")@T("version {0}", record.ContentItemVersion.Number)
+            </div>
+        }
+    </fieldset>
+</div>

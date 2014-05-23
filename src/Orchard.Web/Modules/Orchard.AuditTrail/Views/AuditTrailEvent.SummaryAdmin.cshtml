@@ -1,0 +1,23 @@
+﻿@using Orchard.AuditTrail.Models
+@{
+    var record = (AuditTrailEventRecord)Model.Record;
+    var detailsUrl = Url.Action("Detail", "Admin", new {id = record.Id, area = "Orchard.AuditTrail"});
+}
+<div class="audit-trail-record">
+    <div class="event-header">
+        <div class="group">
+            <div class="event-name">
+                <a href="@detailsUrl">@record.Event</a> - <span>@record.Category</span>
+            </div>
+            <div class="event-actions">
+                <a href="@detailsUrl">@T("Details")</a>
+            </div>
+        </div>
+    </div>
+    <div class="event-details">
+        @Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))
+        @if (!String.IsNullOrWhiteSpace(record.UserName)) {
+            @T(" | ")@record.UserName
+        }
+    </div>
+</div>
