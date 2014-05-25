@@ -18,7 +18,7 @@ namespace Orchard.AuditTrail {
                 .Column<string>("EventFilterData", c => c.WithLength(256))
                 .Column<string>("Comment", c => c.Unlimited()));
 
-            ContentDefinitionManager.AlterPartDefinition("AuditTrailCommentPart", part => part
+            ContentDefinitionManager.AlterPartDefinition("AuditTrailPart", part => part
                 .Attachable()
                 .WithDescription("Enables the user to enter a comment about the change when saving a content item."));
 

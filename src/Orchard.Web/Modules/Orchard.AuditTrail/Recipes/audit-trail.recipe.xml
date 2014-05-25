@@ -2,7 +2,7 @@
 <Orchard>
     <Recipe>
         <Name>Audit Trail</Name>
-        <Description>Attaches the AuditTrailCommentPart to the Page content type.</Description>
+        <Description>Attaches the AuditTrailPart to the Page content type.</Description>
         <Author>The Orchard Team</Author>
         <WebSite>http://orchardproject.net</WebSite>
         <Tags>developer</Tags>
@@ -12,7 +12,7 @@
     <Metadata>
         <Types>
             <Page>
-                <AuditTrailCommentPart />
+                <AuditTrailPart />
             </Page>
         </Types>
     </Metadata>

@@ -82,6 +82,7 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Views\Parts.Contents.AuditTrail.SummaryAdmin.cshtml" />
+    <Content Include="Views\DefinitionTemplates\AuditTrailPartSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -100,10 +101,12 @@
     <Compile Include="Handlers\AuditTrailEventHandler.cs" />
     <Compile Include="Helpers\EventDataHelper.cs" />
     <Compile Include="Models\AuditTrailFilterParameters.cs" />
+    <Compile Include="Settings\AuditTrailPartSettings.cs" />
+    <Compile Include="Settings\AuditTrailPartSettingsEvents.cs" />
     <Compile Include="ViewModels\AuditTrailEventSummaryViewModel.cs" />
-    <Compile Include="Drivers\AuditTrailCommentPartDriver.cs" />
+    <Compile Include="Drivers\AuditTrailPartDriver.cs" />
     <Compile Include="Helpers\EventNameHelper.cs" />
-    <Compile Include="Models\AuditTrailCommentPart.cs" />
+    <Compile Include="Models\AuditTrailPart.cs" />
     <Compile Include="Services\AuditTrailEventDisplayBuilder.cs" />
     <Compile Include="Services\EventDataSerializer.cs" />
     <Compile Include="Services\IAuditTrailEventDisplayBuilder.cs" />
@@ -148,7 +151,7 @@
     <Content Include="Views\AuditTrailEvent-Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts.AuditTrailComment.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.AuditTrail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
