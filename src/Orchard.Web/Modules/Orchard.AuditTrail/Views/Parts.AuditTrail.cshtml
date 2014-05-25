@@ -1,0 +1,61 @@
+﻿@using Orchard.AuditTrail.Models
+@using Orchard.AuditTrail.ViewModels
+@{
+    Script.Require("ShapesBase");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("audit-trail-admin.js").AtFoot();
+}
+@{
+    var records = (IEnumerable<AuditTrailEventSummaryViewModel>)Model.Records;
+    var auditTrailPart = (AuditTrailPart)Model.ContentPart;
+}
+@if (auditTrailPart.Id > 0) {
+
+    <fieldset class="expando-wrapper">
+        <legend>@T("Audit Trail")</legend>
+        <div class="expando">
+            <section class="audit-trail-list">
+                @if (!records.Any()) {
+                    <p class="info">@T("There are no audit trail events to display.")</p>
+                }
+                else {
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th>@T("Event")</th>
+                                <th>@T("Category")</th>
+                                <th>@T("User")</th>
+                                <th>@T("Timestamp")</th>
+                                <th>@T("Comment")</th>
+                                <th>@T("Event Data")</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in records) {
+                                <tr>
+                                    <td>@record.EventDescriptor.Name</td>
+                                    <td>@record.CategoryDescriptor.Name</td>
+                                    <td>@record.Record.UserName</td>
+                                    <td>@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
+                                    <td>@record.Record.Comment</td>
+                                    <td>@Display(record.SummaryShape)</td>
+                                    <td>@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (Model.Pager.TotalItemCount > Model.Pager.PageSize) {
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        @Html.ActionLink(T("Show more events").Text, "Index", "Admin", new { filterKey = "content", filterValue = auditTrailPart.Id, page = 2, area = "Orchard.AuditTrail" }, null)
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        }
+                    </table>
+                }
+            </section>
+        </div>
+    </fieldset>
+}

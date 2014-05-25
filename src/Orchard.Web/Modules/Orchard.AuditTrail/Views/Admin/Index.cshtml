@@ -9,6 +9,8 @@
         new SelectListItem {Text = T("Date (desc)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.DateDescending},
         new SelectListItem {Text = T("Event (asc)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.EventAscending},
     };
+    
+    Layout.Title = T("Audit Trail");
 }
 <section class="audit-trail-filter">
     @using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
@@ -17,9 +19,9 @@
             @Html.Hidden("filtervalue", Model.Filter.FilterValue)
             @Html.Label("username", T("User:").Text)
             @Html.TextBox("username", Model.Filter.UserName, new { @class = "text" })
-            @Html.LabelFor(m => from, T("Between:"))
+            @Html.LabelFor(m => from, T("From:"))
             @Html.EditorFor(m => from)
-            @Html.LabelFor(m => to, T("And:"))
+            @Html.LabelFor(m => to, T("To:"))
             @Html.EditorFor(m => to)
             @Html.LabelFor(m => orderBy, T("Ordered by:"))
             @Html.DropDownListFor(m => orderBy, orderByItems)

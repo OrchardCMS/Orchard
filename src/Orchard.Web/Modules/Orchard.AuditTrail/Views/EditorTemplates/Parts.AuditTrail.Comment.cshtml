@@ -1,8 +1,7 @@
 ﻿@model Orchard.AuditTrail.Models.AuditTrailPart
 <fieldset>
-	<legend>@T("Audit Trail")</legend>
 	<div>
-		@Html.LabelFor(m => m.Comment)
+		@Html.LabelFor(m => m.Comment, T("Audit Trail Comment"))
 		@Html.TextBoxFor(m => m.Comment, new { @class = "text large" })
 		<span class="hint">@T("Optionally provide a comment about this change. This comment will be stored as part of an audit trail event.")</span>
 	</div>

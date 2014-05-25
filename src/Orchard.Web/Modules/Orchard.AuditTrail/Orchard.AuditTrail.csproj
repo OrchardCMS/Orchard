@@ -83,6 +83,8 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Parts.Contents.AuditTrail.SummaryAdmin.cshtml" />
     <Content Include="Views\DefinitionTemplates\AuditTrailPartSettings.cshtml" />
+    <Content Include="Views\Parts.AuditTrail.Link.cshtml" />
+    <Content Include="Views\Parts.AuditTrail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -151,7 +153,7 @@
     <Content Include="Views\AuditTrailEvent-Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts.AuditTrail.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
