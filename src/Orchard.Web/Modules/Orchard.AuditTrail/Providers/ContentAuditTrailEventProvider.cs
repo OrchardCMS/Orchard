@@ -11,11 +11,11 @@ namespace Orchard.AuditTrail.Providers {
 
         public override void Describe(DescribeContext context) {
             context.For("Content", T("Content"))
-                .Event(Created, T("Created"), T("Content was created."), enableByDefault: true)
-                .Event(Saved, T("Saved"), T("Content was saved."), enableByDefault: true)
-                .Event(Published, T("Published"), T("Content was published."), enableByDefault: true)
-                .Event(Unpublished, T("Unpublished"), T("Content was unpublished."), enableByDefault: true)
-                .Event(Removed, T("Removed"), T("Content was deleted."), enableByDefault: true);
+                .Event(this, Created, T("Created"), T("Content was created."), enableByDefault: true)
+                .Event(this, Saved, T("Saved"), T("Content was saved."), enableByDefault: true)
+                .Event(this, Published, T("Published"), T("Content was published."), enableByDefault: true)
+                .Event(this, Unpublished, T("Unpublished"), T("Content was unpublished."), enableByDefault: true)
+                .Event(this, Removed, T("Removed"), T("Content was deleted."), enableByDefault: true);
         }
     }
 }

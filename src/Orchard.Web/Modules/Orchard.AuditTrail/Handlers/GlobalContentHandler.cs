@@ -3,6 +3,7 @@ using Orchard.AuditTrail.Providers;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.AuditTrail.Handlers {
     public class GlobalContentHandler : ContentHandler {
@@ -21,7 +22,8 @@ namespace Orchard.AuditTrail.Handlers {
         }
 
         protected override void Updated(UpdateContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem);
+            // TODO: Update ContentManager to expose the previous version of the updated content item.
+            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem, context.ContentItem.VersionRecord);
         }
 
         protected override void Published(PublishContentContext context) {
@@ -36,11 +38,25 @@ namespace Orchard.AuditTrail.Handlers {
             RecordAuditTrail(ContentAuditTrailEventProvider.Removed, context.ContentItem);
         }
 
-        private void RecordAuditTrail(string eventName, IContent content) {
+        private void RecordAuditTrail(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {
             var title = _contentManager.GetItemMetadata(content).DisplayText;
-            _auditTrailManager.Record(eventName, _wca.GetContext().CurrentUser, content, new Dictionary<string, object> {
+
+            var properties = new Dictionary<string, object> {
+                {"Content", content}
+            };
+
+            var eventData = new Dictionary<string, object> {
+                {"ContentItemId", content.Id},
+                {"ContentItemVersionId", content.ContentItem.VersionRecord.Id},
+                {"ContentItemVersionNumber", content.ContentItem.VersionRecord.Number},
                 {"Title", title}
-            });
+            };
+
+            if (previousContentItemVersion != null) {
+                eventData["PreviousContentItemVersionId"] = previousContentItemVersion.Id;
+            }
+
+            _auditTrailManager.Record<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString());
         }
     }
 }

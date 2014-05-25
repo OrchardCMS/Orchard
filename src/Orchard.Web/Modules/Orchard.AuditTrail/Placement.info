@@ -1,0 +1,6 @@
+﻿<Placement>
+    <Place Parts_AuditTrailComment_Edit="Content:after" />
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Contents_AuditTrail_SummaryAdmin="Actions:7"/>
+    </Match>
+</Placement>

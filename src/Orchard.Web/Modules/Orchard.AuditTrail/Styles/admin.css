@@ -6,38 +6,8 @@
     line-height: 25px;
 }
 
-.audit-trail-list ul {
-    margin: 1em 0 1em 0;
-    border: 1px solid #eaeaea;
-}
-
-.audit-trail-list li {
-    border-bottom: 1px solid #eaeaea;
-    padding: 1em;
-}
-
-.audit-trail-list li:nth-child(even) {
-    background: #F9F9F9;
-}
-
-.audit-trail-list li.last {
-    border-bottom: none;
-}
-
-.audit-trail-list .audit-trail-record .event-header {
-    
-}
-
-.audit-trail-list .audit-trail-record .event-header .event-name {
-    float: left;
-}
-
-.audit-trail-list .audit-trail-record .event-header .event-name a {
-    font-size: 1.231em;
-}
-
-.audit-trail-list .audit-trail-record .event-header .event-actions {
-    float: right;
+.audit-trail-list .event-content .version {
+    font-size: 0.8em;
 }
 
 .audit-trail-list .audit-trail-record .event-details {

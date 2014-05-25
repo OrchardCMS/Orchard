@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Orchard.AuditTrail.Helpers;
+using Orchard.AuditTrail.Services;
 using Orchard.Localization;
 
 namespace Orchard.AuditTrail.Models {
@@ -17,10 +19,14 @@ namespace Orchard.AuditTrail.Models {
         public string Category { get; private set; }
         public LocalizedString Name { get; private set; }
 
-        public DescribeFor Event(string eventName, LocalizedString name, LocalizedString description, bool enableByDefault = false) {
+        public DescribeFor Event(IAuditTrailEventProvider provider, string eventName, LocalizedString name, LocalizedString description, bool enableByDefault = false) {
             _events.Add(new AuditTrailEventDescriptor {
-                Category = Category, 
-                Event = eventName, 
+                CategoryDescriptor = new AuditTrailCategoryDescriptor {
+                    Category = Category,
+                    Name = Name,
+                    Events = Events
+                }, 
+                Event = EventNameHelper.GetFullyQualifiedEventName(provider.GetType(), eventName), 
                 Name = name, 
                 Description = description, 
                 IsEnabledByDefault = enableByDefault

@@ -1,15 +1,31 @@
-﻿@model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
+﻿@using Orchard.AuditTrail.Models
+@model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
     Style.Include("admin.css");
+    var from = Model.Filter.From;
+    var to = Model.Filter.To;
+    var orderBy = Model.Filter.OrderBy;
+    var orderByItems = new List<SelectListItem> {
+        new SelectListItem {Text = T("Date (desc)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.DateDescending},
+        new SelectListItem {Text = T("Event (asc)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.EventAscending},
+    };
 }
 <section class="audit-trail-filter">
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Filter:")</label>
-        <select id="publishActions" name="Options.BulkAction">
-            <option></option>
-        </select>
-        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-    </fieldset>
+    @using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
+        <fieldset class="bulk-actions">
+            @Html.Hidden("filterkey", Model.Filter.FilterKey)
+            @Html.Hidden("filtervalue", Model.Filter.FilterValue)
+            @Html.Label("username", T("User:").Text)
+            @Html.TextBox("username", Model.Filter.UserName, new { @class = "text" })
+            @Html.LabelFor(m => from, T("Between:"))
+            @Html.EditorFor(m => from)
+            @Html.LabelFor(m => to, T("And:"))
+            @Html.EditorFor(m => to)
+            @Html.LabelFor(m => orderBy, T("Ordered by:"))
+            @Html.DropDownListFor(m => orderBy, orderByItems)
+            <button type="submit" value="yes">@T("Apply")</button>
+        </fieldset>
+    }
     <div class="manage">
         <a id="auditTrailSettings" href="#" class="button primaryAction">@T("Settings")</a>
     </div>
@@ -19,7 +35,32 @@
         <p class="info">@T("There are no records to display.")</p>
     }
     else {
-        @Display(Model.List)
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>@T("Event")</th>
+                    <th>@T("Category")</th>
+                    <th>@T("User")</th>
+                    <th>@T("Timestamp")</th>
+                    <th>@T("Comment")</th>
+                    <th>@T("Event Data")</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.Records) {
+                    <tr>
+                        <td>@record.EventDescriptor.Name</td>
+                        <td>@record.CategoryDescriptor.Name</td>
+                        <td>@record.Record.UserName</td>
+                        <td>@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
+                        <td>@record.Record.Comment</td>
+                        <td>@Display(record.SummaryShape)</td>
+                        <td>@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </section>
 <section class="pager">
