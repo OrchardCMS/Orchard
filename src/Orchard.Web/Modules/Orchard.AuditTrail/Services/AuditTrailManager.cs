@@ -44,10 +44,10 @@ namespace Orchard.AuditTrail.Services {
 
             switch (orderBy) {
                 default:
-                    query = query.OrderByDescending(x => x.CreatedUtc);
+                    query = query.OrderByDescending(x => x.CreatedUtc).ThenByDescending(x => x.Id);
                     break;
                 case AuditTrailOrderBy.EventAscending:
-                    query = query.OrderBy(x => x.Event);
+                    query = query.OrderBy(x => x.Event).ThenByDescending(x => x.Id);
                     break;
             }
 
