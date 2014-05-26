@@ -86,9 +86,15 @@ namespace Orchard.Roles.Services {
         }
 
         public void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions) {
-            RoleRecord roleRecord = GetRole(id);
+            var roleRecord = GetRole(id);
+            var currentRoleName = roleRecord.Name;
             roleRecord.Name = roleName;
             roleRecord.RolesPermissions.Clear();
+
+            if (!String.Equals(currentRoleName, roleName)) {
+                _roleEventHandlers.Renamed(new RoleRenamedContext {Role = roleRecord, NewRoleName = roleName, PreviousRoleName = currentRoleName});
+            }
+
             foreach (var rolePermission in rolePermissions) {
                 string permission = rolePermission;
                 if (_permissionRepository.Get(x => x.Name == permission) == null) {

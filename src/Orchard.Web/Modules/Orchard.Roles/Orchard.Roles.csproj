@@ -79,6 +79,7 @@
     <Compile Include="Events\RoleContext.cs" />
     <Compile Include="Events\RoleCreatedContext.cs" />
     <Compile Include="Events\RoleRemovedContext.cs" />
+    <Compile Include="Events\RoleRenamedContext.cs" />
     <Compile Include="Events\UserAddedContext.cs" />
     <Compile Include="Events\UserRemovedContext.cs" />
     <Compile Include="Events\UserRoleContext.cs" />
