@@ -80,7 +80,7 @@ namespace Orchard.Roles.Services {
             RoleRecord roleRecord = GetRoleByName(roleName);
             PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permissionName);
             roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
-            _roleEventHandlers.PermissionsChanged(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
+            _roleEventHandlers.PermissionAdded(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
             TriggerSignal();
             
         }
@@ -88,6 +88,7 @@ namespace Orchard.Roles.Services {
         public void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions) {
             var roleRecord = GetRole(id);
             var currentRoleName = roleRecord.Name;
+            var currentPermissions = roleRecord.RolesPermissions.ToDictionary(x => x.Permission.Name);
             roleRecord.Name = roleName;
             roleRecord.RolesPermissions.Clear();
 
@@ -106,8 +107,17 @@ namespace Orchard.Roles.Services {
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
                 roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
-                _roleEventHandlers.PermissionsChanged(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
+
+                if(!currentPermissions.ContainsKey(permission))
+                    _roleEventHandlers.PermissionAdded(new PermissionAddedContext { Role = roleRecord, Permission = permissionRecord });
+                else {
+                    currentPermissions.Remove(permission);
+                }
             }
+
+            foreach(var permission in currentPermissions.Values)
+                _roleEventHandlers.PermissionRemoved(new PermissionRemovedContext { Role = roleRecord, Permission = permission.Permission });
+
             TriggerSignal();
         }
 

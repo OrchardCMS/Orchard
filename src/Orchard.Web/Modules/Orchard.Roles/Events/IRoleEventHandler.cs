@@ -5,7 +5,8 @@ namespace Orchard.Roles.Events {
         void Created(RoleCreatedContext context);
         void Removed(RoleRemovedContext context);
         void Renamed(RoleRenamedContext context);
-        void PermissionsChanged(PermissionAddedContext context);
+        void PermissionAdded(PermissionAddedContext context);
+        void PermissionRemoved(PermissionRemovedContext context);
         void UserAdded(UserAddedContext context);
         void UserRemoved(UserRemovedContext context);
     }
