@@ -87,6 +87,10 @@
     <Content Include="Views\Parts.AuditTrail.Link.cshtml" />
     <Content Include="Views\Parts.AuditTrail.cshtml" />
     <Content Include="Views\AuditTrailEvent-User.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-RoleRenamed.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-RoleCreated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -105,6 +109,9 @@
     <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
     <Compile Include="Helpers\EventDataHelper.cs" />
     <Compile Include="Models\AuditTrailFilterParameters.cs" />
+    <Compile Include="Providers\Role\IRoleEventHandler.cs" />
+    <Compile Include="Providers\Role\RoleEventHandler.cs" />
+    <Compile Include="Providers\Role\RoleAuditTrailEventProvider.cs" />
     <Compile Include="Providers\User\UserAuditTrailEventProvider.cs" />
     <Compile Include="Providers\User\IUserEventHandler.cs" />
     <Compile Include="Providers\User\UserEventHandler.cs" />

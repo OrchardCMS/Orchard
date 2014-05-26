@@ -10,3 +10,4 @@ Features:
         Name: AuditTrail
         Description: Provides the core audit trail framework.
         Category: Security
+        Dependencies: Orchard.Users, Orchard.Roles

@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var previousRoleName = eventData.Get<string>("PreviousRoleName");
+    var newRoleName = eventData.Get<string>("NewRoleName");
+}
+
+<section class="event-role">
+    @T("Renamed <strong>{0}</strong> to <strong>{1}</strong>.", previousRoleName, newRoleName)
+</section>

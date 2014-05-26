@@ -5,7 +5,7 @@ using Orchard.ContentManagement;
 namespace Orchard.AuditTrail.Providers.Content {
     public class AuditTrailEventHandler : IAuditTrailEventHandler {
         public void Create(AuditTrailCreateContext context) {
-            var content = (IContent)context.Properties["Content"];
+            var content = context.Properties.ContainsKey("Content") ? (IContent)context.Properties["Content"] : default(IContent);
             var auditTrailPart = content != null ? content.As<AuditTrailPart>() : default(AuditTrailPart);
 
             if (auditTrailPart == null)
