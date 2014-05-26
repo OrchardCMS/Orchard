@@ -1,7 +1,7 @@
 ﻿using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services;
 
-namespace Orchard.AuditTrail.Providers {
+namespace Orchard.AuditTrail.Providers.Content {
     public class ContentAuditTrailEventProvider : AuditTrailEventProviderBase {
         public const string Created = "Created";
         public const string Saved = "Saved";

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Orchard.AuditTrail.Providers;
+using System.Globalization;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.AuditTrail.Handlers {
+namespace Orchard.AuditTrail.Providers.Content {
     public class GlobalContentHandler : ContentHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
@@ -56,7 +56,7 @@ namespace Orchard.AuditTrail.Handlers {
                 eventData["PreviousContentItemVersionId"] = previousContentItemVersion.Id;
             }
 
-            _auditTrailManager.Record<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString());
+            _auditTrailManager.Record<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

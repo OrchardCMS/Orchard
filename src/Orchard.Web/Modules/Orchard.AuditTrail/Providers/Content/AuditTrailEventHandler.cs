@@ -2,7 +2,7 @@
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement;
 
-namespace Orchard.AuditTrail.Handlers {
+namespace Orchard.AuditTrail.Providers.Content {
     public class AuditTrailEventHandler : IAuditTrailEventHandler {
         public void Create(AuditTrailCreateContext context) {
             var content = (IContent)context.Properties["Content"];

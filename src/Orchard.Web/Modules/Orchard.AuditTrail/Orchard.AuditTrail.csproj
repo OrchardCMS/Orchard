@@ -73,6 +73,7 @@
   <ItemGroup>
     <None Include="Placement.info" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
+    <Content Include="Scripts\audit-trail-admin.js" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
     <Content Include="Styles\menu.audit-trail.png" />
@@ -100,9 +101,12 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\ContentsDriver.cs" />
-    <Compile Include="Handlers\AuditTrailEventHandler.cs" />
+    <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
     <Compile Include="Helpers\EventDataHelper.cs" />
     <Compile Include="Models\AuditTrailFilterParameters.cs" />
+    <Compile Include="Providers\User\UserAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\User\IUserEventHandler.cs" />
+    <Compile Include="Providers\User\UserEventHandler.cs" />
     <Compile Include="Settings\AuditTrailPartSettings.cs" />
     <Compile Include="Settings\AuditTrailPartSettingsEvents.cs" />
     <Compile Include="ViewModels\AuditTrailEventSummaryViewModel.cs" />
@@ -114,7 +118,7 @@
     <Compile Include="Services\IAuditTrailEventDisplayBuilder.cs" />
     <Compile Include="Services\IEventDataSerializer.cs" />
     <Compile Include="ViewModels\AuditTrailDetailsViewModel.cs" />
-    <Compile Include="Handlers\GlobalContentHandler.cs" />
+    <Compile Include="Providers\Content\GlobalContentHandler.cs" />
     <Compile Include="Models\AuditTrailEventDescriptor.cs" />
     <Compile Include="Models\AuditTrailCategoryDescriptor.cs" />
     <Compile Include="Models\DescribeContext.cs" />
@@ -122,7 +126,7 @@
     <Compile Include="Models\AuditTrailContext.cs" />
     <Compile Include="Models\AuditTrailCreateContext.cs" />
     <Compile Include="Services\AuditTrailEventProviderBase.cs" />
-    <Compile Include="Providers\ContentAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\Content\ContentAuditTrailEventProvider.cs" />
     <Compile Include="Services\IAuditTrailEventHandler.cs" />
     <Compile Include="Services\IAuditTrailEventProvider.cs" />
     <Compile Include="ViewModels\AuditTrailFilterViewModel.cs" />
@@ -155,6 +159,7 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
