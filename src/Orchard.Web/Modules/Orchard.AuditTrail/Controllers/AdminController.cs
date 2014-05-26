@@ -40,11 +40,12 @@ namespace Orchard.AuditTrail.Controllers {
                 To = _dateServices.ConvertFromLocalString(filterParameters.To.Date, filterParameters.To.Time),
             }, filterParameters.OrderBy);
             var pagerShape = New.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-            var eventDescriptors = from c in _auditTrailManager.Describe()
+            var eventDescriptorsQuery = from c in _auditTrailManager.Describe()
                                    from e in c.Events
                                    select e;
-            var recordViewModels = from record in pageOfData
-                                   let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.Event)
+            var eventDescriptors = eventDescriptorsQuery.ToDictionary(x => x.Event);
+            var recordViewModelsQuery = from record in pageOfData
+                                   let descriptor = eventDescriptors.ContainsKey(record.Event) ? eventDescriptors[record.Event] : default(AuditTrailEventDescriptor)
                                    where descriptor != null
                                    select new AuditTrailEventSummaryViewModel {
                                        Record = record,
@@ -54,7 +55,7 @@ namespace Orchard.AuditTrail.Controllers {
                                    };
 
             var viewModel = new AuditTrailViewModel {
-                Records = recordViewModels,
+                Records = recordViewModelsQuery.ToArray(),
                 Pager = pagerShape,
                 Filter = filterParameters
             };
