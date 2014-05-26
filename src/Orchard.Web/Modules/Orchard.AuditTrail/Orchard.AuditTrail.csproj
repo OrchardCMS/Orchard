@@ -86,6 +86,7 @@
     <Content Include="Views\DefinitionTemplates\AuditTrailPartSettings.cshtml" />
     <Content Include="Views\Parts.AuditTrail.Link.cshtml" />
     <Content Include="Views\Parts.AuditTrail.cshtml" />
+    <Content Include="Views\AuditTrailEvent-User.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
