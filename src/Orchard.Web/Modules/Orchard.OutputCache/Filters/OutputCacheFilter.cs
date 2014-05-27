@@ -487,10 +487,12 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.SetMaxAge(maxAge);
             }
 
+            response.Cache.VaryByParams["*"] = true;
+            response.DisableUserCache();
+
             // keeping this examples for later usage
-            // response.Cache.VaryByParams["*"] = true;
-            // response.DisableUserCache();
             // response.DisableKernelCache();
+            // response.Cache.SetOmitVaryStar(true);
 
             // an ETag is a string that uniquely identifies a specific version of a component.
             // we use the cache item to detect if it's a new one
@@ -499,8 +501,6 @@ namespace Orchard.OutputCache.Filters {
                     response.Cache.SetETag(cacheItem.GetHashCode().ToString(CultureInfo.InvariantCulture));
                 }
             }
-
-            response.Cache.SetOmitVaryStar(true);
 
             if (_varyQueryStringParameters != null) {
                 foreach (var queryStringParam in _varyQueryStringParameters) {
