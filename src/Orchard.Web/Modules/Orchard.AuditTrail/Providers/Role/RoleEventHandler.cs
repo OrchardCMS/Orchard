@@ -13,11 +13,11 @@ namespace Orchard.AuditTrail.Providers.Role {
         }
 
         public void Created(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.RoleCreated, context.Role.Name);
+            RecordAuditTrail(RoleAuditTrailEventProvider.Created, context.Role.Name);
         }
 
         public void Removed(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.RoleRemoved, context.Role.Name);
+            RecordAuditTrail(RoleAuditTrailEventProvider.Removed, context.Role.Name);
         }
 
         public void Renamed(dynamic context) {
@@ -27,7 +27,7 @@ namespace Orchard.AuditTrail.Providers.Role {
                 {"NewRoleName", (string)context.NewRoleName},
             };
 
-            RecordAuditTrail(RoleAuditTrailEventProvider.RoleRenamed, context.Role.Name, properties: null, eventData:eventData);
+            RecordAuditTrail(RoleAuditTrailEventProvider.Renamed, context.Role.Name, properties: null, eventData:eventData);
         }
 
         public void PermissionAdded(dynamic context) {

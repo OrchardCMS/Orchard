@@ -3,9 +3,9 @@ using Orchard.AuditTrail.Services;
 
 namespace Orchard.AuditTrail.Providers.Role {
     public class RoleAuditTrailEventProvider : AuditTrailEventProviderBase {
-        public const string RoleCreated = "RoleCreated";
-        public const string RoleRemoved = "RoleRemoved";
-        public const string RoleRenamed = "RoleRenamed";
+        public const string Created = "Created";
+        public const string Removed = "Removed";
+        public const string Renamed = "Renamed";
         public const string PermissionAdded = "PermissionAdded";
         public const string PermissionRemoved = "PermissionRemoved";
         public const string UserAdded = "UserAdded";
@@ -13,9 +13,9 @@ namespace Orchard.AuditTrail.Providers.Role {
 
         public override void Describe(DescribeContext context) {
             context.For("Role", T("Role"))
-                .Event(this, RoleCreated, T("Role created"), T("A role was created."), enableByDefault: true)
-                .Event(this, RoleRemoved, T("Role removed"), T("A role was removed."), enableByDefault: true)
-                .Event(this, RoleRenamed, T("Role renamed"), T("A role was renamed."), enableByDefault: true)
+                .Event(this, Created, T("Created"), T("A role was created."), enableByDefault: true)
+                .Event(this, Removed, T("Removed"), T("A role was removed."), enableByDefault: true)
+                .Event(this, Renamed, T("Renamed"), T("A role was renamed."), enableByDefault: true)
                 .Event(this, PermissionAdded, T("Permission added"), T("Permission was added to a role."), enableByDefault: true)
                 .Event(this, PermissionRemoved, T("Permission removed"), T("Permission was removed from a role."), enableByDefault: true)
                 .Event(this, UserAdded, T("User added"), T("A user was added to a role."), enableByDefault: true)
