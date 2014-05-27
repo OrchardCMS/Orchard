@@ -22,6 +22,12 @@ namespace Orchard.AuditTrail {
                 .Attachable()
                 .WithDescription("Enables the user to enter a comment about the change when saving a content item."));
 
+            ContentDefinitionManager.AlterPartDefinition("AuditTrailSiteSettingsPart", part => part
+                .Attachable(false)
+                .WithDescription("Stores the audit trail settings."));
+
+            ContentDefinitionManager.AlterTypeDefinition("Site", type => type.WithPart("AuditTrailSiteSettingsPart"));
+
             return 1;
         }
     }

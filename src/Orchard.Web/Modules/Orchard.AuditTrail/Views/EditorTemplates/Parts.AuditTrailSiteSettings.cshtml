@@ -1,0 +1,56 @@
+﻿@model Orchard.AuditTrail.ViewModels.AuditTrailSiteSettingsViewModel
+@{
+    Style.Include("admin.css");
+}
+<div class="audit-trail-site-settings">
+    <fieldset>
+        <legend>@T("Auto Trim Settings")</legend>
+        <div>
+            @Html.CheckBoxFor(m => m.AutoTrim)
+            @Html.LabelFor(m => m.AutoTrim, T("Automatically trim the audit trail for this site").Text, new { @class = "forcheckbox" })
+            <span class="hint">@T("Check this option to automatically trim the audit trail.")</span>
+        </div>
+        <div id="auditTrailAutoTrimthresholdSetting">
+            @Html.LabelFor(m => m.AutoTrimThreshold, T("Auto-trim threshold"))
+            @Html.TextBoxFor(m => m.AutoTrimThreshold, new { @class = "text small" })
+            <span class="hint">@T("Specify the number of days of audit log data to retain.")</span>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>@T("Specify the events to audit")</legend>
+            @{
+                var i = 0;
+            }
+            @foreach (var category in Model.Categories) {
+                <fieldset>
+                    <legend>@category.Name</legend>
+                    <input type="hidden" name="AuditTrailSiteSettingsPart.Categories[@i].Category" value="@category.Category" />
+                    <table class="items">
+                        <thead>
+                            <tr>
+                                <th class="event-name">@T("Event")</th>
+                                <th>@T("Description")</th>
+                                <th class="event-enabled">@T("Enabled")</th>
+                            </tr>
+                        </thead>
+                        @{ var j = 0; }
+                        @foreach (var evnt in category.Events) {
+                            var checkboxId = String.Format("Event{0}{1}", i, j);
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="AuditTrailSiteSettingsPart.Categories[@i].Events[@j].Event" value="@evnt.Event" />
+                                    @evnt.Name
+                                </td>
+                                <td>@evnt.Description</td>
+                                <td>
+                                    <input type="checkbox" id="@checkboxId" name="AuditTrailSiteSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if(evnt.IsEnabled){<text>checked="checked"</text>} />
+                                </td>
+                            </tr>
+                            j++;
+                        }
+                    </table>
+                </fieldset>
+                i++;
+            }
+    </fieldset>
+</div>

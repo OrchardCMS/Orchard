@@ -10,9 +10,14 @@
     font-size: 0.8em;
 }
 
-.audit-trail-list .audit-trail-record .event-details {
-}
-
 .audit-trail-record-details fieldset legend span {
     font-size: 0.8em;
+}
+
+.audit-trail-site-settings table th.event-name {
+    width: 250px;
+}
+
+.audit-trail-site-settings table th.event-enabled {
+    width: 60px;
 }

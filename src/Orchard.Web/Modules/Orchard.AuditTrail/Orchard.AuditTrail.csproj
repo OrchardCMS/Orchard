@@ -103,6 +103,7 @@
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.AuditTrailSiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -117,7 +118,14 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\AuditTrailSiteSettingsPartDriver.cs" />
+    <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailSiteSettingsViewModel.cs" />
     <Compile Include="Drivers\ContentsDriver.cs" />
+    <Compile Include="Handlers\AuditTrailSiteSettingsPartHandler.cs" />
+    <Compile Include="Models\AuditTrailEventSetting.cs" />
+    <Compile Include="Models\AuditTrailSiteSettingsPart.cs" />
     <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
     <Compile Include="Providers\ContentDefinition\GlobalContentDefinitionEditorEvents.cs" />
     <Compile Include="Providers\ContentDefinition\ContentPartAuditTrailEventProvider.cs" />
