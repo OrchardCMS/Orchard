@@ -159,7 +159,7 @@ namespace Orchard.Templates.Controllers {
         public ActionResult Create(string id) {
             var types = GetShapeTypes();
             var typeName = String.IsNullOrWhiteSpace(id) ? types.Count() == 1 ? types.First().Name : null : id;
-            return String.IsNullOrEmpty(typeName) ? CreatableTypeList() : RedirectToAction("Create", "Admin", new {area = "Contents", id = typeName});
+            return String.IsNullOrEmpty(typeName) ? CreatableTypeList() : RedirectToAction("Create", "Admin", new { area = "Contents", id = typeName });
         }
 
         private ActionResult CreatableTypeList() {

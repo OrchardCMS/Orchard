@@ -10,10 +10,12 @@ using System.Text;
 using System.Web.Razor;
 using Microsoft.CSharp;
 using Orchard.Caching;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Templates.Compilation.Razor {
+    [OrchardFeature("Orchard.Templates.Razor")]
     public class RazorCompiler : IRazorCompiler {
         private readonly ICacheManager _cache;
         private readonly ISignals _signals;
@@ -46,7 +48,7 @@ namespace Orchard.Templates.Compilation.Razor {
                 };
 
         public RazorCompiler(
-            ICacheManager cache, 
+            ICacheManager cache,
             ISignals signals) {
             _cache = cache;
             _signals = signals;
@@ -56,15 +58,15 @@ namespace Orchard.Templates.Compilation.Razor {
         private ILogger Logger { get; set; }
 
         public IRazorTemplateBase<TModel> CompileRazor<TModel>(string code, string name, IDictionary<string, object> parameters) {
-            return (RazorTemplateBase<TModel>) Compile(code, name, typeof (TModel), parameters);
+            return (RazorTemplateBase<TModel>)Compile(code, name, typeof(TModel), parameters);
         }
 
         public IRazorTemplateBase CompileRazor(string code, string name, IDictionary<string, object> parameters) {
-            return (IRazorTemplateBase) Compile(code, name, null, parameters);
+            return (IRazorTemplateBase)Compile(code, name, null, parameters);
         }
 
         private object Compile(string code, string name, Type modelType, IDictionary<string, object> parameters) {
-           
+
             var cacheKey = (name ?? DynamicallyGeneratedClassName) + GetHash(code);
             var generatedClassName = name != null ? name.Strip(c => !c.IsLetter() && !Char.IsDigit(c)) : DynamicallyGeneratedClassName;
 

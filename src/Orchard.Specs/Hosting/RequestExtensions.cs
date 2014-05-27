@@ -181,7 +181,7 @@ namespace Orchard.Specs.Hosting {
             }
 
             public override void SendUnknownResponseHeader(string name, string value) {
-                _details.ResponseHeaders.Add(name, value);
+                _details.ResponseHeaders[name] = value;
 
                 base.SendUnknownResponseHeader(name, value);
             }
