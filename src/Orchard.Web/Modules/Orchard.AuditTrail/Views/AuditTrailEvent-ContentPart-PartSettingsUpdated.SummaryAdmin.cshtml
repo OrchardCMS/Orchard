@@ -1,0 +1,9 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+}
+
+<section class="event-content-part">
+    @T("Settings for the <strong>{0}</strong> content part were updated.", contentPartName)
+</section>

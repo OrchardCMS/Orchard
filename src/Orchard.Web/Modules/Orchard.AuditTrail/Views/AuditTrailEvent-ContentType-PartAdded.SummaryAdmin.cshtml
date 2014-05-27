@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var contentPartName = eventData.Get<string>("ContentPartName");
+}
+
+<section class="event-content-type">
+    @T("Added the <strong>{0}</strong> content part to the <strong>{1}</strong> content type.", contentPartName, contentTypeName)
+</section>

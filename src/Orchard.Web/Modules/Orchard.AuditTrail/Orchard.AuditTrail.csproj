@@ -91,6 +91,18 @@
     <Content Include="Views\AuditTrailEvent-Role-RoleCreated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Created.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Removed.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Created.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Removed.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -106,6 +118,11 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\ContentsDriver.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
+    <Compile Include="Providers\ContentDefinition\GlobalContentDefinitionEditorEvents.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentPartAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentTypeAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\ContentDefinition\IContentDefinitionEventHandler.cs" />
     <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
     <Compile Include="Helpers\EventDataHelper.cs" />
     <Compile Include="Models\AuditTrailFilterParameters.cs" />
