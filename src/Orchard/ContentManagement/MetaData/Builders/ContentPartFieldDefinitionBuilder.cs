@@ -21,6 +21,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         public abstract string Name { get; }
         public abstract string FieldType { get; }
+        public abstract string PartName { get; }
 
         public abstract ContentPartFieldDefinitionBuilder OfType(ContentFieldDefinition fieldDefinition);
         public abstract ContentPartFieldDefinitionBuilder OfType(string fieldType);

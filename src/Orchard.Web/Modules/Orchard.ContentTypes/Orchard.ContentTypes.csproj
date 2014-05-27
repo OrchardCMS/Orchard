@@ -65,6 +65,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Events\ContentFieldAttachedContext.cs" />
+    <Compile Include="Events\ContentFieldDetachedContext.cs" />
+    <Compile Include="Events\ContentPartAttachedContext.cs" />
+    <Compile Include="Events\ContentPartContext.cs" />
+    <Compile Include="Events\ContentPartCreatedContext.cs" />
+    <Compile Include="Events\ContentPartDetachedContext.cs" />
+    <Compile Include="Events\ContentPartFieldContext.cs" />
+    <Compile Include="Events\ContentPartRemovedContext.cs" />
+    <Compile Include="Events\ContentTypeContext.cs" />
+    <Compile Include="Events\ContentTypeCreatedContext.cs" />
+    <Compile Include="Events\ContentTypePartContext.cs" />
+    <Compile Include="Events\ContentTypeRemovedContext.cs" />
+    <Compile Include="Events\IContentDefinitionEventHandler.cs" />
     <Compile Include="Extensions\MetadataExtensions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

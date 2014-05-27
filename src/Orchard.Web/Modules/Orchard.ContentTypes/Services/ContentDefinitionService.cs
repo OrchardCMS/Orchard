@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Events;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Localization;
@@ -16,19 +17,22 @@ namespace Orchard.ContentTypes.Services {
         private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IContentDefinitionEditorEvents _contentDefinitionEditorEvents;
+        private readonly IContentDefinitionEventHandler _contentDefinitionEventHandlers;
 
         public ContentDefinitionService(
                 IOrchardServices services,
                 IContentDefinitionManager contentDefinitionManager,
                 IEnumerable<IContentPartDriver> contentPartDrivers,
                 IEnumerable<IContentFieldDriver> contentFieldDrivers,
-                IContentDefinitionEditorEvents contentDefinitionEditorEvents)
-        {
+                IContentDefinitionEditorEvents contentDefinitionEditorEvents,
+                IContentDefinitionEventHandler contentDefinitionEventHandlers) {
+
             Services = services;
             _contentDefinitionManager = contentDefinitionManager;
             _contentPartDrivers = contentPartDrivers;
             _contentFieldDrivers = contentFieldDrivers;
             _contentDefinitionEditorEvents = contentDefinitionEditorEvents;
+            _contentDefinitionEventHandlers = contentDefinitionEventHandlers;
             T = NullLocalizer.Instance;
         }
 
@@ -83,8 +87,8 @@ namespace Orchard.ContentTypes.Services {
 
             var contentTypeDefinition = new ContentTypeDefinition(name, displayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
-            _contentDefinitionManager.AlterTypeDefinition(name,
-                cfg => cfg.Creatable().Draftable());
+            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable().Draftable());
+            _contentDefinitionEventHandlers.ContentTypeCreated(new ContentTypeCreatedContext { ContentTypeDefinition = contentTypeDefinition});
 
             return contentTypeDefinition;
         }
@@ -169,15 +173,17 @@ namespace Orchard.ContentTypes.Services {
                     Services.ContentManager.Remove(contentItem);
                 }
             }
-
+            _contentDefinitionEventHandlers.ContentTypeRemoved(new ContentTypeRemovedContext { ContentTypeDefinition = typeDefinition });
         }
 
         public void AddPartToType(string partName, string typeName) {
             _contentDefinitionManager.AlterTypeDefinition(typeName, typeBuilder => typeBuilder.WithPart(partName));
+            _contentDefinitionEventHandlers.ContentPartAttached(new ContentPartAttachedContext { ContentTypeName = typeName, ContentPartName = partName});
         }
 
         public void RemovePartFromType(string partName, string typeName) {
             _contentDefinitionManager.AlterTypeDefinition(typeName, typeBuilder => typeBuilder.RemovePart(partName));
+            _contentDefinitionEventHandlers.ContentPartDetached(new ContentPartDetachedContext {ContentTypeName = typeName, ContentPartName = partName});
         }
 
         public IEnumerable<EditPartViewModel> GetParts(bool metadataPartsOnly) {
@@ -191,8 +197,8 @@ namespace Orchard.ContentTypes.Services {
                 .Select(cpd => new EditPartViewModel(cpd));
 
             // code-defined parts
-            var codeDefinedParts = metadataPartsOnly ? 
-                Enumerable.Empty<EditPartViewModel>() : 
+            var codeDefinedParts = metadataPartsOnly ?
+                Enumerable.Empty<EditPartViewModel>() :
                 _contentPartDrivers.SelectMany(d => d.GetPartInfo().Where(cpd => !userContentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
 
             // Order by display name
@@ -220,7 +226,9 @@ namespace Orchard.ContentTypes.Services {
 
             if (!String.IsNullOrEmpty(name)) {
                 _contentDefinitionManager.AlterPartDefinition(name, builder => builder.Attachable());
-                return new EditPartViewModel(_contentDefinitionManager.GetPartDefinition(name));
+                var partDefinition = _contentDefinitionManager.GetPartDefinition(name);
+                _contentDefinitionEventHandlers.ContentPartCreated(new ContentPartCreatedContext {ContentPartDefinition = partDefinition});
+                return new EditPartViewModel(partDefinition);
             }
 
             return null;
@@ -236,11 +244,12 @@ namespace Orchard.ContentTypes.Services {
         public void RemovePart(string name) {
             var partDefinition = _contentDefinitionManager.GetPartDefinition(name);
             var fieldDefinitions = partDefinition.Fields.ToArray();
-            foreach(var fieldDefinition in fieldDefinitions) {
+            foreach (var fieldDefinition in fieldDefinitions) {
                 RemoveFieldFromPart(fieldDefinition.Name, name);
             }
-            
+
             _contentDefinitionManager.DeletePartDefinition(name);
+            _contentDefinitionEventHandlers.ContentPartRemoved(new ContentPartRemovedContext {ContentPartDefinition = partDefinition});
         }
 
         public IEnumerable<ContentFieldInfo> GetFields() {
@@ -258,10 +267,21 @@ namespace Orchard.ContentTypes.Services {
             }
             _contentDefinitionManager.AlterPartDefinition(partName,
                 partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName).WithDisplayName(displayName)));
+
+            _contentDefinitionEventHandlers.ContentFieldAttached(new ContentFieldAttachedContext {
+                ContentPartName = partName,
+                ContentFieldTypeName = fieldTypeName,
+                ContentFieldName = fieldName,
+                ContentFieldDisplayName = displayName
+            });
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {
             _contentDefinitionManager.AlterPartDefinition(partName, typeBuilder => typeBuilder.RemoveField(fieldName));
+            _contentDefinitionEventHandlers.ContentFieldDetached(new ContentFieldDetachedContext {
+                ContentPartName = partName,
+                ContentFieldName = fieldName
+            });
         }
 
         public string GenerateContentTypeNameFromDisplayName(string displayName) {
@@ -279,23 +299,23 @@ namespace Orchard.ContentTypes.Services {
             var part = _contentDefinitionManager.GetPartDefinition(partName);
             displayName = displayName.ToSafeName();
 
-            if(part == null) {
+            if (part == null) {
                 var type = _contentDefinitionManager.GetTypeDefinition(partName);
 
-                if(type == null) {
+                if (type == null) {
                     throw new ArgumentException("The part doesn't exist: " + partName);
                 }
 
                 var typePart = type.Parts.FirstOrDefault(x => x.PartDefinition.Name == partName);
-                
+
                 // id passed in might be that of a type w/ no implicit field
-                if(typePart == null) {
+                if (typePart == null) {
                     return displayName;
                 }
                 else {
-                    fieldDefinitions = typePart.PartDefinition.Fields.ToArray();    
+                    fieldDefinitions = typePart.PartDefinition.Fields.ToArray();
                 }
-                
+
             }
             else {
                 fieldDefinitions = part.Fields.ToArray();
