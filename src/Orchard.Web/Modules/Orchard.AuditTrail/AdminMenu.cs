@@ -9,7 +9,7 @@ namespace Orchard.AuditTrail {
             builder.AddImageSet("audit-trail")
                 .Add(T("Audit Trail"), "12", menuItem => menuItem
                     .Action("Index", "Admin", new { area = "Orchard.AuditTrail" })
-                    .Permission(Permissions.ManageAuditTrail));
+                    .Permission(Permissions.ManageAuditTrailSettings));
         }
     }
 }

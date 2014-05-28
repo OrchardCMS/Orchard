@@ -37,33 +37,34 @@ namespace Orchard.AuditTrail.Drivers {
                     return shapeHelper.EditorTemplate(Model: part, TemplateName: "Parts.AuditTrail.Comment", Prefix: Prefix);
                 }));
             }
+            if (_services.Authorizer.Authorize(Permissions.ViewAuditTrail)) {
+                if (settings.ShowAuditTrailLink) {
+                    results.Add(ContentShape("Parts_AuditTrail_Link", () => shapeHelper.Parts_AuditTrail_Link()));
+                }
 
-            if (settings.ShowAuditTrailLink) {
-                results.Add(ContentShape("Parts_AuditTrail_Link", () => shapeHelper.Parts_AuditTrail_Link()));
-            }
-
-            if (settings.ShowAuditTrail) {
-                results.Add(ContentShape("Parts_AuditTrail", () => {
-                    var pager = new Pager(_services.WorkContext.CurrentSite, null, null);
-                    var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, new AuditTrailFilterParameters {
-                        FilterKey = "content",
-                        FilterValue = part.Id.ToString(CultureInfo.InvariantCulture)
-                    });
-                    var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-                    var eventDescriptors = from c in _auditTrailManager.Describe()
-                                           from e in c.Events
-                                           select e;
-                    var recordViewModels = from record in pageOfData
-                                           let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.Event)
-                                           where descriptor != null
-                                           select new AuditTrailEventSummaryViewModel {
-                                               Record = record,
-                                               EventDescriptor = descriptor,
-                                               CategoryDescriptor = descriptor.CategoryDescriptor,
-                                               SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
-                                           };
-                    return shapeHelper.Parts_AuditTrail(Records: recordViewModels, Pager: pagerShape);
-                }));
+                if (settings.ShowAuditTrail) {
+                    results.Add(ContentShape("Parts_AuditTrail", () => {
+                        var pager = new Pager(_services.WorkContext.CurrentSite, null, null);
+                        var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, new AuditTrailFilterParameters {
+                            FilterKey = "content",
+                            FilterValue = part.Id.ToString(CultureInfo.InvariantCulture)
+                        });
+                        var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
+                        var eventDescriptors = from c in _auditTrailManager.Describe()
+                            from e in c.Events
+                            select e;
+                        var recordViewModels = from record in pageOfData
+                            let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.Event)
+                            where descriptor != null
+                            select new AuditTrailEventSummaryViewModel {
+                                Record = record,
+                                EventDescriptor = descriptor,
+                                CategoryDescriptor = descriptor.CategoryDescriptor,
+                                SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
+                            };
+                        return shapeHelper.Parts_AuditTrail(Records: recordViewModels, Pager: pagerShape);
+                    }));
+                }
             }
 
             return Combined(results.ToArray());

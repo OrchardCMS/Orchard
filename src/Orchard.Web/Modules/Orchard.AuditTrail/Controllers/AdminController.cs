@@ -28,7 +28,7 @@ namespace Orchard.AuditTrail.Controllers {
         public dynamic New { get; private set; }
 
         public ActionResult Index(PagerParameters pagerParameters, AuditTrailFilterViewModel filterParameters) {
-            if(!_authorizer.Authorize(Permissions.ManageAuditTrail))
+            if(!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
@@ -64,7 +64,7 @@ namespace Orchard.AuditTrail.Controllers {
         }
 
         public ActionResult Detail(int id) {
-            if (!_authorizer.Authorize(Permissions.ManageAuditTrail))
+            if (!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 
             var record = _auditTrailManager.GetRecord(id);

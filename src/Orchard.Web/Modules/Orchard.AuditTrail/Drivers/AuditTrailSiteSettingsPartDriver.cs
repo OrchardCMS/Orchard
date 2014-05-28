@@ -4,13 +4,16 @@ using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Security;
 
 namespace Orchard.AuditTrail.Drivers {
     public class AuditTrailSiteSettingsPartDriver : ContentPartDriver<AuditTrailSiteSettingsPart> {
         private readonly IAuditTrailManager _auditTrailManager;
+        private readonly IAuthorizer _authorizer;
 
-        public AuditTrailSiteSettingsPartDriver(IAuditTrailManager auditTrailManager) {
+        public AuditTrailSiteSettingsPartDriver(IAuditTrailManager auditTrailManager, IAuthorizer authorizer) {
             _auditTrailManager = auditTrailManager;
+            _authorizer = authorizer;
         }
 
         protected override DriverResult Editor(AuditTrailSiteSettingsPart part, dynamic shapeHelper) {
@@ -18,6 +21,9 @@ namespace Orchard.AuditTrail.Drivers {
         }
 
         protected override DriverResult Editor(AuditTrailSiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+            if (!_authorizer.Authorize(Permissions.ManageAuditTrailSettings))
+                return null;
+
             return ContentShape("Parts_AuditTrailSiteSettings_Edit", () => {
                 var descriptors = _auditTrailManager.Describe();
                 var eventSettings = part.EventSettings.ToList();
