@@ -119,6 +119,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\AuditTrailSiteSettingsPartDriver.cs" />
+    <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailSiteSettingsViewModel.cs" />

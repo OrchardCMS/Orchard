@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.AuditTrail.Models;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
@@ -10,7 +11,10 @@ using Orchard.Logging;
 
 namespace Orchard.AuditTrail.Handlers {
     public class AuditTrailSiteSettingsPartHandler : ContentHandler {
-        public AuditTrailSiteSettingsPartHandler() {
+        private readonly ISignals _signals;
+
+        public AuditTrailSiteSettingsPartHandler(ISignals signals) {
+            _signals = signals;
             OnActivated<AuditTrailSiteSettingsPart>(SetupLazyFields);
             OnGetContentItemMetadata<AuditTrailSiteSettingsPart>(GetMetadata);
             T = NullLocalizer.Instance;
@@ -26,6 +30,7 @@ namespace Orchard.AuditTrail.Handlers {
             part._eventProviderSettingsField.Loader(() => DeserializeProviderConfiguration(part.Retrieve<string>("Events")));
             part._eventProviderSettingsField.Setter(value => {
                 part.Store("Events", SerializeProviderConfiguration(value));
+                _signals.Trigger("AuditTrail.EventSettings");
                 return value;
             });
         }

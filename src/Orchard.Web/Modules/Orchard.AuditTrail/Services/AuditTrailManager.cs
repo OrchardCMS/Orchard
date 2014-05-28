@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
+using Orchard.Caching;
 using Orchard.Collections;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Security;
 using Orchard.Services;
+using Orchard.Settings;
 
 namespace Orchard.AuditTrail.Services {
     public class AuditTrailManager : Component, IAuditTrailManager {
@@ -15,19 +18,28 @@ namespace Orchard.AuditTrail.Services {
         private readonly IClock _clock;
         private readonly IAuditTrailEventHandler _auditTrailEventHandlers;
         private readonly IEventDataSerializer _serializer;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISiteService _siteService;
+        private readonly ISignals _signals;
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
             IAuditTrailEventProvider providers, 
             IClock clock,
             IAuditTrailEventHandler auditTrailEventHandlers, 
-            IEventDataSerializer serializer) {
+            IEventDataSerializer serializer, 
+            ICacheManager cacheManager, 
+            ISiteService siteService, 
+            ISignals signals) {
 
             _auditTrailRepository = auditTrailRepository;
             _providers = providers;
             _clock = clock;
             _auditTrailEventHandlers = auditTrailEventHandlers;
             _serializer = serializer;
+            _cacheManager = cacheManager;
+            _siteService = siteService;
+            _signals = signals;
         }
 
         public IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, AuditTrailFilterParameters filter = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending) {
@@ -66,7 +78,14 @@ namespace Orchard.AuditTrail.Services {
             return _auditTrailRepository.Get(id);
         }
 
-        public AuditTrailEventRecord Record<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T:IAuditTrailEventProvider {
+        public AuditTrailEventRecordResult Record<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T:IAuditTrailEventProvider {
+            var eventDescriptor = Describe<T>(eventName);
+            if(!IsEnabled(eventDescriptor))
+                return new AuditTrailEventRecordResult {
+                    Record = null,
+                    IsDisabled = true
+                };
+
             if (properties == null) properties = new Dictionary<string, object>();
             if (eventData == null) eventData = new Dictionary<string, object>();
 
@@ -80,7 +99,6 @@ namespace Orchard.AuditTrail.Services {
             };
 
             _auditTrailEventHandlers.Create(context);
-            var eventDescriptor = Describe<T>(eventName);
 
             var record = new AuditTrailEventRecord {
                 Category = eventDescriptor.CategoryDescriptor.Category,
@@ -94,7 +112,19 @@ namespace Orchard.AuditTrail.Services {
             };
 
             _auditTrailRepository.Create(record);
-            return record;
+            return new AuditTrailEventRecordResult {
+                Record = record,
+                IsDisabled = false
+            };
+        }
+
+        private bool IsEnabled(AuditTrailEventDescriptor eventDescriptor) {
+            var settingsDictionary = _cacheManager.Get("AuditTrail.EventSettings", context => {
+                context.Monitor(_signals.When("AuditTrail.EventSettings"));
+                return _siteService.GetSiteSettings().As<AuditTrailSiteSettingsPart>().EventSettings.ToDictionary(x => x.EventName);
+            });
+            var setting = settingsDictionary.ContainsKey(eventDescriptor.Event) ? settingsDictionary[eventDescriptor.Event] : default(AuditTrailEventSetting);
+            return setting != null ? setting.IsEnabled : eventDescriptor.IsEnabledByDefault;
         }
 
         public IEnumerable<AuditTrailCategoryDescriptor> Describe() {

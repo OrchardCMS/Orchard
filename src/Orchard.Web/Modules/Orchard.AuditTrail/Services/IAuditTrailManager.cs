@@ -33,8 +33,8 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="eventData">A property bag of custom event data that will be stored with the event record.</param>
         /// <param name="eventFilterKey">The name of a custom key to use when filtering events.</param>
         /// <param name="eventFilterData">The value of a custom filter key to filter on.</param>
-        /// <returns>Returns the created audit trail event record.</returns>
-        AuditTrailEventRecord Record<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider;
+        /// <returns>Returns the created audit trail event record if the specified event was not disabled.</returns>
+        AuditTrailEventRecordResult Record<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider;
 
         /// <summary>
         /// Describes all audit trail events provided by the system.
