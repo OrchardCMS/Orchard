@@ -291,9 +291,9 @@ namespace Orchard.OutputCache.Filters {
             // get contents 
             ApplyCacheControl(_cacheItem, response);
 
-            // no cache content available, intercept the execution results for caching
-            _cachingWriter = new StringWriter(CultureInfo.InvariantCulture);
+            // no cache content available, intercept the execution results for caching, using the targetted encoding
             _originalWriter = filterContext.HttpContext.Response.Output;
+            _cachingWriter = new StringWriterWithEncoding(_originalWriter.Encoding, _originalWriter.FormatProvider);
             filterContext.HttpContext.Response.Output = _cachingWriter;
 
             _completeResponse = CaptureResponse;
@@ -389,6 +389,8 @@ namespace Orchard.OutputCache.Filters {
             filterContext.HttpContext.Response.Output = _originalWriter;
 
             string capturedText = _cachingWriter.ToString();
+            _cachingWriter.Dispose();
+
             filterContext.HttpContext.Response.Write(capturedText);
             return capturedText;
         }
@@ -604,4 +606,16 @@ namespace Orchard.OutputCache.Filters {
         public ViewDataDictionary ViewData { get; set; }
     }
 
+    public sealed class StringWriterWithEncoding : StringWriter {
+        private readonly Encoding encoding;
+
+        public StringWriterWithEncoding(Encoding encoding, IFormatProvider formatProvider)
+            : base(formatProvider) {
+            this.encoding = encoding;
+        }
+
+        public override Encoding Encoding {
+            get { return encoding; }
+        }
+    }
 }
