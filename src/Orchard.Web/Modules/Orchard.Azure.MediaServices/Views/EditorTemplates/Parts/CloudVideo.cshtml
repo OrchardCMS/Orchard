@@ -1,6 +1,7 @@
 ﻿@using Orchard.Azure.MediaServices.Helpers
 @using Orchard.Azure.MediaServices.Models.Assets
 @using Orchard.Azure.MediaServices.ViewModels.Media
+@using Orchard.ContentManagement
 @model CloudVideoPartViewModel
 @{
     var isCreatingItem = Model.Id == 0;
@@ -43,7 +44,9 @@
     </div>
     <div id="cloudvideo-preview">
         @Display.CloudVideoPlayer(
-            CloudVideoPart: Model.Part,
+            ContentPart: Model.Part,
+            ContentItem: Model.Part.ContentItem,
+            AlternateText: Model.Part.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
             AssetId: null,
             IgnoreIncludeInPlayer: false,
             AllowPrivateUrls: true,
