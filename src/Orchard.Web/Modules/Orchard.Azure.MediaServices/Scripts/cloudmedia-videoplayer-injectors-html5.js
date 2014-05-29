@@ -53,7 +53,7 @@ var Orchard;
 
                             // "Raw" asset video file URLs from dynamic assets (in decending bitrate order).
                             _(this.assetData.DynamicVideoAssets).forEach(function (asset) {
-                                _(asset.EncoderMetadata.AssetFiles).filter(function (assetFile) {
+                                _((asset.EncoderMetadata && asset.EncoderMetadata.AssetFiles) || []).filter(function (assetFile) {
                                     return _(assetFile.VideoTracks).any();
                                 }).sort(function (assetFile) {
                                     return assetFile.Bitrate;
