@@ -101,9 +101,26 @@
     <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.AuditTrailSiteSettings.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-RoleCreated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-RoleRenamed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-User.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -120,6 +137,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\AuditTrailSiteSettingsPartDriver.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
+    <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailSiteSettingsViewModel.cs" />

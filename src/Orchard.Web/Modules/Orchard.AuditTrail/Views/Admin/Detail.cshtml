@@ -2,6 +2,21 @@
 @{
     Style.Include("admin.css");
 }
-<section class="audit-trail-details">
-    @Display(Model.Record)
+@{
+    var record = Model.Record;
+    var descriptor = Model.Descriptor;
+}
+<section class="audit-trail-event">
+    <fieldset>
+        <legend>@descriptor.Name - <span>@descriptor.CategoryDescriptor.Name</span></legend>
+        <div>
+            <span>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</span>
+            @if (!String.IsNullOrWhiteSpace(record.UserName)) {
+                @T(" | ")<span>@record.UserName</span>
+            }
+        </div>
+    </fieldset>
+</section>
+<section class="audit-trail-event-details">
+    @Display(Model.DetailsShape)
 </section>

@@ -22,12 +22,14 @@ namespace Orchard.AuditTrail.Providers.Content {
         }
 
         protected override void Updated(UpdateContentContext context) {
-            // TODO: Update ContentManager to expose the previous version of the updated content item.
-            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem, context.ContentItem.VersionRecord);
+            var currentVersion = context.UpdatingItemVersionRecord;
+            var previousVersion = GetPreviousVersion(currentVersion);
+            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem, previousVersion);
         }
 
         protected override void Published(PublishContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Published, context.ContentItem);
+            var previousVersion = context.PreviousItemVersionRecord;
+            RecordAuditTrail(ContentAuditTrailEventProvider.Published, context.ContentItem, previousVersion);
         }
 
         protected override void Unpublished(PublishContentContext context) {
@@ -36,6 +38,17 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Removed(RemoveContentContext context) {
             RecordAuditTrail(ContentAuditTrailEventProvider.Removed, context.ContentItem);
+        }
+
+        private ContentItemVersionRecord GetPreviousVersion(ContentItemVersionRecord currentVersion) {
+            var number = currentVersion.Number;
+            var previousVersion = default(ContentItemVersionRecord);
+
+            while (previousVersion == null) {
+                var contentItem = _contentManager.Get(currentVersion.ContentItemRecord.Id, VersionOptions.Number(--number));
+                previousVersion = contentItem != null ? contentItem.VersionRecord : default(ContentItemVersionRecord);
+            }
+            return previousVersion;
         }
 
         private void RecordAuditTrail(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {

@@ -1,21 +1,16 @@
-﻿@using Orchard.AuditTrail.Helpers
-@using Orchard.AuditTrail.Models
+﻿@using Orchard.ContentManagement
 @{
-    var record = (AuditTrailEventRecord)Model.Record;
-    var descriptor = (AuditTrailEventDescriptor) Model.Descriptor;
-    var eventData = (IDictionary<string, object>)Model.EventData;
-    var title = eventData.Get<string>("Title");
-    var contentItemId = eventData.Get<int>("ContentItemId");
-    var contentItemVersionNumber = eventData.Get<int>("ContentItemVersionNumber");
+    var contentItem = (ContentItem) Model.ContentItem;
+    var previousVersion = (ContentItem) Model.PreviousVersion;
 }
-<div class="audit-trail-record-details">
-    <fieldset>
-        <legend>@descriptor.Name - <span>@descriptor.CategoryDescriptor.Name</span></legend>
-        <div>
-            <span>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</span>
-            @if (!String.IsNullOrWhiteSpace(record.UserName)) {
-                @T(" | ")<span>@record.UserName</span>
-            }
-        </div>
-    </fieldset>
+
+<div>
+    @T("This version:")
+    @Html.ItemEditLink(contentItem)
 </div>
+@if (previousVersion != null) {
+    <div>
+        @T("Previous version:")
+        @Html.ItemEditLink(previousVersion)
+    </div>
+}

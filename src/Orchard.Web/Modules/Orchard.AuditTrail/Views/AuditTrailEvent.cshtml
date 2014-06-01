@@ -1,15 +1,3 @@
-﻿@using Orchard.AuditTrail.Models
-@{
-    var record = (AuditTrailEventRecord)Model.Record;
+﻿@{
+	var model = Model;
 }
-<div class="audit-trail-record-details">
-    <fieldset>
-        <legend>@record.Event - <span>@record.Category</span></legend>
-        <div>
-            <span>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</span>
-            @if (!String.IsNullOrWhiteSpace(record.UserName)) {
-                @T(" | ")<span>@record.UserName</span>
-            }
-        </div>
-    </fieldset>
-</div>

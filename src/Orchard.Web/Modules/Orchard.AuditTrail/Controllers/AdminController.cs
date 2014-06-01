@@ -68,9 +68,12 @@ namespace Orchard.AuditTrail.Controllers {
                 return new HttpUnauthorizedResult();
 
             var record = _auditTrailManager.GetRecord(id);
-            var recordShape = _displayBuilder.BuildDisplay(record, "Detail");
+            var descriptor = _auditTrailManager.Describe(record.Event);
+            var detailsShape = _displayBuilder.BuildDisplay(record, "Detail");
             var viewModel = new AuditTrailDetailsViewModel {
-                Record = recordShape
+                Record = record,
+                Descriptor = descriptor,
+                DetailsShape = detailsShape
             };
             return View(viewModel);
         }

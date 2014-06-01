@@ -25,7 +25,7 @@ namespace Orchard.AuditTrail.Services {
             metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}", displayType));
             metaData.Alternates.Add(String.Format("AuditTrailEvent__{0}", record.Category));
             metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}", displayType, record.Category));
-            metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}", record.Category, GetShortName(record.Event)));
+            metaData.Alternates.Add(String.Format("AuditTrailEvent__{0}__{1}", record.Category, GetShortName(record.Event)));
             metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}__{2}", displayType, record.Category, GetShortName(record.Event)));
             return auditTrailEventShape;
         }
