@@ -136,6 +136,9 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\AuditTrailSiteSettingsPartDriver.cs" />
+    <Compile Include="ImportExport\AuditTrailExportStep.cs" />
+    <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
+    <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
