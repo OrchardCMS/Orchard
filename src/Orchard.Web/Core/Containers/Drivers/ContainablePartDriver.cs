@@ -37,7 +37,8 @@ namespace Orchard.Core.Containers.Drivers {
                     var commonPart = part.As<CommonPart>();
                     var model = new ContainableViewModel {
                         ShowContainerPicker = settings.ShowContainerPicker,
-                        ShowPositionEditor = settings.ShowPositionEditor
+                        ShowPositionEditor = settings.ShowPositionEditor,
+                        Position = part.Position
                     };
 
                     if (commonPart != null && commonPart.Container != null) {

@@ -42,7 +42,7 @@ module Orchard.Azure.MediaServices.VideoPlayer.Injectors {
 
             // "Raw" asset video file URLs from dynamic assets (in decending bitrate order).
             _(this.assetData.DynamicVideoAssets).forEach(asset => { // Read from assetData because browser will do media query filtering.
-                _(asset.EncoderMetadata.AssetFiles)
+                _((asset.EncoderMetadata && asset.EncoderMetadata.AssetFiles) || [])
                     .filter(assetFile => _(assetFile.VideoTracks).any())
                     .sort(assetFile => assetFile.Bitrate).reverse()
                     .forEach(assetFile => {
