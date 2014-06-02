@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using Orchard.AuditTrail.Services;
 using Orchard.Security;
 
@@ -11,6 +10,22 @@ namespace Orchard.AuditTrail.Providers.User {
         public UserEventHandler(IAuditTrailManager auditTrailManager, IWorkContextAccessor wca) {
             _auditTrailManager = auditTrailManager;
             _wca = wca;
+        }
+
+        public void LoggedIn(IUser user) {
+            RecordAuditTrail(UserAuditTrailEventProvider.LoggedIn, user);
+        }
+
+        public void LoggedOut(IUser user) {
+            RecordAuditTrail(UserAuditTrailEventProvider.LoggedOut, user);
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+            var eventData = new Dictionary<string, object> {
+                {"UserName", userNameOrEmail}
+            };
+
+            _auditTrailManager.Record<UserAuditTrailEventProvider>(UserAuditTrailEventProvider.LogInFailed, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "user", eventFilterData: userNameOrEmail);
         }
 
         public void ChangedPassword(IUser user) {
@@ -28,7 +43,7 @@ namespace Orchard.AuditTrail.Providers.User {
                 {"UserName", user.UserName}
             };
 
-            _auditTrailManager.Record<UserAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "user", eventFilterData: user.Id.ToString(CultureInfo.InvariantCulture));
+            _auditTrailManager.Record<UserAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "user", eventFilterData: user.UserName);
         }
     }
 }

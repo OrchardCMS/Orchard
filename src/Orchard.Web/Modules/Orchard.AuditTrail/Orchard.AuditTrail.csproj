@@ -127,6 +127,7 @@
     <Content Include="Views\AuditTrailEvent-Role-RoleRenamed.cshtml" />
     <Content Include="Views\AuditTrailEvent-User.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.AuditTrailSettings.cshtml" />
+    <Content Include="Views\AuditTrailEvent-User-LoginFailed..cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
