@@ -69,9 +69,14 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="xmldiffpatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\XmlDiffPatch\xmldiffpatch.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Placement.info" />
+    <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
     <Content Include="Scripts\audit-trail-admin.js" />
     <Content Include="Styles\admin.css" />
@@ -141,6 +146,10 @@
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
+    <Compile Include="Providers\Content\DiffGramAnalyzer.cs" />
+    <Compile Include="Providers\Content\DiffNode.cs" />
+    <Compile Include="Providers\Content\DiffType.cs" />
+    <Compile Include="Providers\Content\IDiffGramAnalyzer.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailSiteSettingsViewModel.cs" />
