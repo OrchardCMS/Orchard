@@ -22,9 +22,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         }
 
         protected override void Updated(UpdateContentContext context) {
-            var currentVersion = context.UpdatingItemVersionRecord;
-            var previousVersion = GetPreviousVersion(currentVersion);
-            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem, previousVersion);
+            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem);
         }
 
         protected override void Published(PublishContentContext context) {
@@ -38,17 +36,6 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Removed(RemoveContentContext context) {
             RecordAuditTrail(ContentAuditTrailEventProvider.Removed, context.ContentItem);
-        }
-
-        private ContentItemVersionRecord GetPreviousVersion(ContentItemVersionRecord currentVersion) {
-            var number = currentVersion.Number;
-            var previousVersion = default(ContentItemVersionRecord);
-
-            while (previousVersion == null) {
-                var contentItem = _contentManager.Get(currentVersion.ContentItemRecord.Id, VersionOptions.Number(--number));
-                previousVersion = contentItem != null ? contentItem.VersionRecord : default(ContentItemVersionRecord);
-            }
-            return previousVersion;
         }
 
         private void RecordAuditTrail(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {
