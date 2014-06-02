@@ -19,6 +19,10 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.Address, value); }
         }
 
+        private readonly LazyField<string> _addressPlaceholder = new LazyField<string>();
+        internal LazyField<string> AddressPlaceholderField { get { return _addressPlaceholder; } }
+        public string AddressPlaceholder { get { return _addressPlaceholder.Value; } }
+
         public string Host {
             get { return this.Retrieve(x => x.Host); }
             set { this.Store(x => x.Host, value); }
