@@ -7,29 +7,27 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Security;
 
 namespace Orchard.AuditTrail.Drivers {
-    public class AuditTrailSiteSettingsPartDriver : ContentPartDriver<AuditTrailSiteSettingsPart> {
+    public class AuditTrailSettingsPartDriver : ContentPartDriver<AuditTrailSettingsPart> {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IAuthorizer _authorizer;
 
-        public AuditTrailSiteSettingsPartDriver(IAuditTrailManager auditTrailManager, IAuthorizer authorizer) {
+        public AuditTrailSettingsPartDriver(IAuditTrailManager auditTrailManager, IAuthorizer authorizer) {
             _auditTrailManager = auditTrailManager;
             _authorizer = authorizer;
         }
 
-        protected override DriverResult Editor(AuditTrailSiteSettingsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(AuditTrailSettingsPart part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(AuditTrailSiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(AuditTrailSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (!_authorizer.Authorize(Permissions.ManageAuditTrailSettings))
                 return null;
 
-            return ContentShape("Parts_AuditTrailSiteSettings_Edit", () => {
+            return ContentShape("Parts_AuditTrailSettings_Edit", () => {
                 var descriptors = _auditTrailManager.Describe();
                 var eventSettings = part.EventSettings.ToList();
-                var viewModel = new AuditTrailSiteSettingsViewModel {
-                    AutoTrim = part.AutoTrim,
-                    AutoTrimThreshold = part.AutoTrimThreshold,
+                var viewModel = new AuditTrailSettingsViewModel {
                     Categories = (from categoryDescriptor in descriptors
                         select new AuditTrailCategorySettingsViewModel {
                             Category = categoryDescriptor.Category,
@@ -58,12 +56,10 @@ namespace Orchard.AuditTrail.Drivers {
                             eventSetting.IsEnabled = eventSettingViewModel.IsEnabled;
                         }
                         part.EventSettings = eventSettings;
-                        part.AutoTrim = viewModel.AutoTrim;
-                        part.AutoTrimThreshold = viewModel.AutoTrimThreshold;
                     }
                 }
 
-                return shapeHelper.EditorTemplate(TemplateName: "Parts.AuditTrailSiteSettings", Model: viewModel, Prefix: Prefix);
+                return shapeHelper.EditorTemplate(TemplateName: "Parts.AuditTrailSettings", Model: viewModel, Prefix: Prefix);
             }).OnGroup("Audit Trail");
         }
     }

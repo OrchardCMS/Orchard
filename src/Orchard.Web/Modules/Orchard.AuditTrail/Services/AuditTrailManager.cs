@@ -121,7 +121,7 @@ namespace Orchard.AuditTrail.Services {
         private bool IsEnabled(AuditTrailEventDescriptor eventDescriptor) {
             var settingsDictionary = _cacheManager.Get("AuditTrail.EventSettings", context => {
                 context.Monitor(_signals.When("AuditTrail.EventSettings"));
-                return _siteService.GetSiteSettings().As<AuditTrailSiteSettingsPart>().EventSettings.ToDictionary(x => x.EventName);
+                return _siteService.GetSiteSettings().As<AuditTrailSettingsPart>().EventSettings.ToDictionary(x => x.EventName);
             });
             var setting = settingsDictionary.ContainsKey(eventDescriptor.Event) ? settingsDictionary[eventDescriptor.Event] : default(AuditTrailEventSetting);
             return setting != null ? setting.IsEnabled : eventDescriptor.IsEnabledByDefault;

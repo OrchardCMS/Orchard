@@ -11,3 +11,8 @@ Features:
         Description: Provides the core audit trail framework.
         Category: Security
         Dependencies: Orchard.Users, Orchard.Roles, Orchard.ContentTypes
+    Orchard.AuditTrail.Trimming:
+        Name: AuditTrail Trimming
+        Description: A background task that trims the audit trail.
+        Category: Security
+        Dependencies: Orchard.AuditTrail

@@ -10,23 +10,24 @@ using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.AuditTrail.Handlers {
-    public class AuditTrailSiteSettingsPartHandler : ContentHandler {
+    public class AuditTrailSettingsPartHandler : ContentHandler {
         private readonly ISignals _signals;
 
-        public AuditTrailSiteSettingsPartHandler(ISignals signals) {
+        public AuditTrailSettingsPartHandler(ISignals signals) {
             _signals = signals;
-            OnActivated<AuditTrailSiteSettingsPart>(SetupLazyFields);
-            OnGetContentItemMetadata<AuditTrailSiteSettingsPart>(GetMetadata);
+            Filters.Add(new ActivatingFilter<AuditTrailSettingsPart>("Site"));
+            OnActivated<AuditTrailSettingsPart>(SetupLazyFields);
+            OnGetContentItemMetadata<AuditTrailSettingsPart>(GetMetadata);
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        private void GetMetadata(GetContentItemMetadataContext context, AuditTrailSiteSettingsPart part) {
+        private void GetMetadata(GetContentItemMetadataContext context, AuditTrailSettingsPart part) {
             context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Audit Trail")));
         }
 
-        private void SetupLazyFields(ActivatedContentContext context, AuditTrailSiteSettingsPart part) {
+        private void SetupLazyFields(ActivatedContentContext context, AuditTrailSettingsPart part) {
             part._eventProviderSettingsField.Loader(() => DeserializeProviderConfiguration(part.Retrieve<string>("Events")));
             part._eventProviderSettingsField.Setter(value => {
                 part.Store("Events", SerializeProviderConfiguration(value));
