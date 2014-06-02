@@ -31,9 +31,7 @@ namespace Orchard.AuditTrail.Providers.Content {
 
             using (var reader = diffGram.CreateReader()) {
                 while (!reader.EOF) {
-                    var doRead = true;
-                    if (reader.LocalName == "xmldiff")
-                        reader.Read();
+                    var readNext = true;
                     switch (reader.NodeType) {
                         case XmlNodeType.Element:
                             var match = reader.GetAttribute("match");
@@ -54,7 +52,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                                             var attributeName = match.Substring(1);
                                             var originalValue = currentElement.Attribute(attributeName).Value;
                                             var currentValue = reader.ReadElementContentAsString();
-                                            doRead = false;
+
+                                            readNext = false;
                                             yield return
                                                 new DiffNode {
                                                     Type = DiffType.Change,
@@ -66,8 +65,9 @@ namespace Orchard.AuditTrail.Providers.Content {
                                         else {
                                             var originalContent = currentElement.Value;
                                             var currentContent = reader.ReadElementContentAsString();
+
                                             stack.Pop();
-                                            doRead = false;
+                                            readNext = false;
                                             yield return
                                                 new DiffNode {
                                                     Type = DiffType.Change,
@@ -89,7 +89,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                             stack.Pop();
                             break;
                     }
-                    if (doRead)
+                    if (readNext)
                         reader.Read();
                 }
             }
