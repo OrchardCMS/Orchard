@@ -24,6 +24,11 @@ namespace Orchard.Users.Events {
         void LoggedIn(IUser user);
 
         /// <summary>
+        /// Called when a login attempt failed
+        /// </summary>
+        void LogInFailed(string userNameOrEmail, string password);
+
+        /// <summary>
         /// Called when a user explicitly logs out (as opposed to one whose session cookie simply expires)
         /// </summary>
         void LoggedOut(IUser user);
