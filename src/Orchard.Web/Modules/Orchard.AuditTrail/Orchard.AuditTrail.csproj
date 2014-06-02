@@ -154,6 +154,7 @@
     <Compile Include="Providers\Content\DiffNode.cs" />
     <Compile Include="Providers\Content\DiffType.cs" />
     <Compile Include="Providers\Content\IDiffGramAnalyzer.cs" />
+    <Compile Include="Services\AuditTrailTrimmingBackgroundTask.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailTrimmingSettingsViewModel.cs" />

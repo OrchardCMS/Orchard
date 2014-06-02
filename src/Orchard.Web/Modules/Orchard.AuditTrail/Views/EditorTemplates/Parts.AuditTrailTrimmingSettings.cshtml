@@ -2,8 +2,8 @@
 <fieldset>
     <legend>@T("Auto Trim Settings")</legend>
     <div id="auditTrailAutoTrimthresholdSetting">
-        @Html.LabelFor(m => m.AutoTrimThreshold, T("Auto-trim threshold"))
-        @Html.TextBoxFor(m => m.AutoTrimThreshold, new { @class = "text small" })
+        @Html.LabelFor(m => m.Threshold, T("Auto-trim threshold"))
+        @Html.TextBoxFor(m => m.Threshold, new { @class = "text small" })
         <span class="hint">@T("Specify the number of days of audit log data to retain.")</span>
     </div>
 </fieldset>

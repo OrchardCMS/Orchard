@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
 using Orchard.Caching;
@@ -151,6 +152,18 @@ namespace Orchard.AuditTrail.Services {
             }
 
             return eventDescriptors.First();
+        }
+
+        public IEnumerable<AuditTrailEventRecord> Trim(TimeSpan threshold) {
+            var dateThreshold = _clock.UtcNow.Date - threshold;
+            var query = _auditTrailRepository.Table.Where(x => x.CreatedUtc < dateThreshold);
+            var records = query.ToArray();
+
+            foreach (var record in records) {
+                _auditTrailRepository.Delete(record);
+            }
+
+            return records;
         }
     }
 }

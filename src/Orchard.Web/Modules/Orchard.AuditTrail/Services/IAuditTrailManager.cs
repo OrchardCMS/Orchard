@@ -56,5 +56,11 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="fullyQualifiedEventName">The fully qualified event name to describe.</param>
         /// <returns>Returns a single audit trail event descriptor.</returns>
         AuditTrailEventDescriptor Describe(string fullyQualifiedEventName);
+
+        /// <summary>
+        /// Trims the audit trail by deleting all records older than the specified threshold.
+        /// </summary>
+        /// <returns>Returns the deleted records.</returns>
+        IEnumerable<AuditTrailEventRecord> Trim(TimeSpan threshold);
     }
 }
