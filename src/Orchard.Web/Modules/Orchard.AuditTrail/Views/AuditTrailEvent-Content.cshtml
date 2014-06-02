@@ -1,7 +1,9 @@
-﻿@using Orchard.ContentManagement
+﻿@using Orchard.AuditTrail.Providers.Content
+@using Orchard.ContentManagement
 @{
     var contentItem = (ContentItem) Model.ContentItem;
     var previousVersion = (ContentItem) Model.PreviousVersion;
+    var diffNodes = (IEnumerable<DiffNode>) Model.DiffNodes;
 }
 
 <div>
@@ -13,4 +15,33 @@
         @T("Previous version:")
         @Html.ItemEditLink(previousVersion)
     </div>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Diff Type")</th>
+                <th>@T("Element")</th>
+                <th>@T("Before")</th>
+                <th>@T("After")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!diffNodes.Any()) {
+                <tr>
+                    <td colspan="4">@T("")</td>
+                </tr>
+            }
+            else {
+                foreach (var node in diffNodes) {
+                    <tr>
+                        <td>@T(node.Type.ToString())</td>
+                        <td>@node.ElementName</td>
+                        <td>@node.Previous</td>
+                        <td>@node.Current</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    
 }
