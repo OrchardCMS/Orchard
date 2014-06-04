@@ -40,7 +40,7 @@ namespace Orchard.Workflows.Tokens {
                                contentItemId = workflowContext.Content.Id;
                            }
 
-                           var url = "~/Orchard.Workflows/Signal/Trigger?nonce=" + HttpUtility.UrlEncode(_signalService.Value.CreateNonce(contentItemId, token));
+                           var url = "~/Workflows/Signal/Trigger?nonce=" + HttpUtility.UrlEncode(_signalService.Value.CreateNonce(contentItemId, token));
                            return new UrlHelper(_workContextAccessor.GetContext().HttpContext.Request.RequestContext).MakeAbsolute(url);
                        });
         }
