@@ -48,6 +48,9 @@ namespace Orchard.Scripting.CSharp.Activities {
             var script = activityContext.GetState<string>("Script");
             object outcome = null;
 
+            // Start the script with the new token syntax.
+            script = "// #{ }" + System.Environment.NewLine + script; 
+
             _csharpService.SetParameter("Services", _orchardServices);
             _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
             _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
