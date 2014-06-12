@@ -46,11 +46,11 @@ namespace Orchard.Taxonomies.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().WithQueryHints(new QueryHints().ExpandParts<AutoroutePart, TitlePart>()).List();
+            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().List();
         }
 
         public TaxonomyPart GetTaxonomy(int id) {
-            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart, AutoroutePart, TitlePart>()).As<TaxonomyPart>();
+            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart>()).As<TaxonomyPart>();
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
