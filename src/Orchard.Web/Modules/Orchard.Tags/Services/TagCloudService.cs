@@ -84,8 +84,8 @@ namespace Orchard.Tags.Services {
 
                     // initialize centroids with a linear distribution
                     var centroids = new int[buckets];
-                    var maxCount = tagCounts.Max(tc => tc.Count);
-                    var minCount = tagCounts.Min(tc => tc.Count);
+                    var maxCount = tagCounts.Any() ? tagCounts.Max(tc => tc.Count) : 0;
+                    var minCount = tagCounts.Any() ? tagCounts.Min(tc => tc.Count) : 0;
                     var maxDistance = maxCount - minCount;
                     for (int i = 0; i < centroids.Length; i++) {
                         centroids[i] = maxDistance/buckets * (i+1);
