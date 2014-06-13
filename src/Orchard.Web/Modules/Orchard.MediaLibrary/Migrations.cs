@@ -121,5 +121,14 @@ namespace Orchard.MediaLibrary {
 
             return 4;
         }
+
+        public int UpdateFrom4() {
+
+            SchemaBuilder.AlterTable("MediaPartRecord", t => t
+                .CreateIndex("IDX_MediaPartRecord_FolderPath", "FolderPath")
+            );
+            
+            return 5;
+        }
     }
 }
