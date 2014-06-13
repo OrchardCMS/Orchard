@@ -14,7 +14,7 @@ namespace Orchard.Core.Settings.Descriptor {
         private readonly IRepository<ShellDescriptorRecord> _shellDescriptorRepository;
         private readonly IShellDescriptorManagerEventHandler _events;
         private readonly ShellSettings _shellSettings;
-        private Lazy<ShellDescriptorRecord> _shellDescriptorRecordCache;
+        private ShellDescriptorRecord _shellDescriptorRecord;
 
         public ShellDescriptorManager(
             IRepository<ShellDescriptorRecord> shellDescriptorRepository,
@@ -23,16 +23,10 @@ namespace Orchard.Core.Settings.Descriptor {
             _shellDescriptorRepository = shellDescriptorRepository;
             _events = events;
             _shellSettings = shellSettings;
-
-            _shellDescriptorRecordCache = new Lazy<ShellDescriptorRecord>(() => {
-                return _shellDescriptorRepository.Table.ToList().SingleOrDefault();
-            });
-
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-
 
         public ShellDescriptor GetShellDescriptor() {
             ShellDescriptorRecord shellDescriptorRecord = GetDescriptorRecord();
@@ -62,7 +56,11 @@ namespace Orchard.Core.Settings.Descriptor {
         }
 
         private ShellDescriptorRecord GetDescriptorRecord() {
-            return _shellDescriptorRecordCache.Value;
+            if (_shellDescriptorRecord == null) {
+                return _shellDescriptorRepository.Table.ToList().SingleOrDefault();
+            }
+
+            return _shellDescriptorRecord;
         }
 
         public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {
@@ -74,6 +72,7 @@ namespace Orchard.Core.Settings.Descriptor {
             if (shellDescriptorRecord == null) {
                 shellDescriptorRecord = new ShellDescriptorRecord { SerialNumber = 1 };
                 _shellDescriptorRepository.Create(shellDescriptorRecord);
+                _shellDescriptorRecord = shellDescriptorRecord;
             }
             else {
                 shellDescriptorRecord.SerialNumber++;
