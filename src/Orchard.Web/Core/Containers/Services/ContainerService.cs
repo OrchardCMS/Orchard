@@ -71,7 +71,7 @@ namespace Orchard.Core.Containers.Services {
 
         public IContentQuery<ContainerPart> GetContainersQuery(VersionOptions options = null) {
             options = options ?? VersionOptions.Published;
-            return _contentManager.Query<ContainerPart>(options);
+            return _contentManager.Query<ContainerPart, ContainerPartRecord>(options);
         }
 
         public ContainerPart Get(int id, VersionOptions options = null) {

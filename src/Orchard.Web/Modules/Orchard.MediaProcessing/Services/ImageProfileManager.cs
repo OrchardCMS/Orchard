@@ -111,7 +111,7 @@ namespace Orchard.MediaProcessing.Services {
 
                 using (var image = GetImage(path)) {
 
-                    var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, path)) };
+                    var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path))) };
 
                     if (image == null) {
                         return filterContext.FilePath;
