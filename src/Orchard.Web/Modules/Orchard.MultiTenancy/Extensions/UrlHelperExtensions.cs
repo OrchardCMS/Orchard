@@ -11,7 +11,8 @@ namespace Orchard.MultiTenancy.Extensions {
             if (host.Contains(":"))
                 port = host.Substring(host.IndexOf(":"));
 
-            var result = string.Format("http://{0}",
+            var result = string.Format("{0}://{1}",
+                                       urlHelper.RequestContext.HttpContext.Request.Url.Scheme,
                                        !string.IsNullOrEmpty(tenantShellSettings.RequestUrlHost)
                                            ? tenantShellSettings.RequestUrlHost + port : host);
 
