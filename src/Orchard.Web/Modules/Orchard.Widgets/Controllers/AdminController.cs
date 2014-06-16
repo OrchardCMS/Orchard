@@ -16,6 +16,8 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents.Settings;
 
 namespace Orchard.Widgets.Controllers {
 
@@ -316,11 +318,27 @@ namespace Orchard.Widgets.Controllers {
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+            return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("EditWidget")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditWidgetPublishPOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+            return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
+                Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        public ActionResult EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = null;
-            widgetPart = _widgetsService.GetWidget(id);
+            widgetPart = Services.ContentManager.Get<WidgetPart>(id, VersionOptions.DraftRequired);
+
             if (widgetPart == null)
                 return HttpNotFound();
             try {
@@ -332,8 +350,11 @@ namespace Orchard.Widgets.Controllers {
                     return View(model);
                 }
 
+                conditionallyPublish(widgetPart.ContentItem);
+
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
             }
