@@ -57,7 +57,7 @@ namespace Orchard.Core.Settings.Descriptor {
 
         private ShellDescriptorRecord GetDescriptorRecord() {
             if (_shellDescriptorRecord == null) {
-                return _shellDescriptorRepository.Table.ToList().SingleOrDefault();
+                return _shellDescriptorRecord = _shellDescriptorRepository.Table.ToList().SingleOrDefault();
             }
 
             return _shellDescriptorRecord;
@@ -72,11 +72,12 @@ namespace Orchard.Core.Settings.Descriptor {
             if (shellDescriptorRecord == null) {
                 shellDescriptorRecord = new ShellDescriptorRecord { SerialNumber = 1 };
                 _shellDescriptorRepository.Create(shellDescriptorRecord);
-                _shellDescriptorRecord = shellDescriptorRecord;
             }
             else {
                 shellDescriptorRecord.SerialNumber++;
             }
+            
+            _shellDescriptorRecord = shellDescriptorRecord;
 
             shellDescriptorRecord.Features.Clear();
             foreach (var feature in enabledFeatures) {

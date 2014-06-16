@@ -28,5 +28,5 @@ namespace Orchard.JobsQueue.Services {
 
             return queuedJob;
         }
-   }
+    }
 }
