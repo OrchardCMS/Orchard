@@ -8,7 +8,7 @@ namespace Orchard.AuditTrail.Helpers {
         }
 
         public static string GetFullyQualifiedEventName(Type providerType, string eventName) {
-            return String.Concat(providerType.FullName, ".", eventName);
+            return String.Format("{0}.{1}", providerType.FullName, eventName);
         }
     }
 }

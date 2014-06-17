@@ -13,7 +13,7 @@ namespace Orchard.AuditTrail.Services {
                 return xml.ToString(SaveOptions.DisableFormatting);
             }
             catch (Exception ex) {
-                Logger.Error(ex, "Error during serialization of eventData");
+                Logger.Error(ex, "Error during serialization of event data.");
             }
             return null;
         }
@@ -28,7 +28,7 @@ namespace Orchard.AuditTrail.Services {
                 return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             }
             catch (Exception ex) {
-                Logger.Error(ex, "Error during deserialization of eventData");
+                Logger.Error(ex, "Error during deserialization of event data.");
             }
             return new Dictionary<string, object>();
         }

@@ -34,13 +34,13 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="eventFilterKey">The name of a custom key to use when filtering events.</param>
         /// <param name="eventFilterData">The value of a custom filter key to filter on.</param>
         /// <returns>Returns the created audit trail event record if the specified event was not disabled.</returns>
-        AuditTrailEventRecordResult Record<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider;
+        AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider;
 
         /// <summary>
         /// Describes all audit trail events provided by the system.
         /// </summary>
         /// <returns>Returns a list of audit trail category descriptors.</returns>
-        IEnumerable<AuditTrailCategoryDescriptor> Describe();
+        IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories();
 
         /// <summary>
         /// Describes a single audit trail event.
@@ -48,14 +48,14 @@ namespace Orchard.AuditTrail.Services {
         /// <typeparam name="T">The scope of the specified event name.</typeparam>
         /// <param name="eventName">The shorthand name of the event.</param>
         /// <returns>Returns a single audit trail event descriptor.</returns>
-        AuditTrailEventDescriptor Describe<T>(string eventName) where T : IAuditTrailEventProvider;
+        AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T : IAuditTrailEventProvider;
 
         /// <summary>
         /// Describes a single audit trail event.
         /// </summary>
         /// <param name="fullyQualifiedEventName">The fully qualified event name to describe.</param>
         /// <returns>Returns a single audit trail event descriptor.</returns>
-        AuditTrailEventDescriptor Describe(string fullyQualifiedEventName);
+        AuditTrailEventDescriptor DescribeEvent(string fullyQualifiedEventName);
 
         /// <summary>
         /// Trims the audit trail by deleting all records older than the specified threshold.

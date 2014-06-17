@@ -18,7 +18,7 @@ namespace Orchard.AuditTrail.Services {
 
         public dynamic BuildDisplay(AuditTrailEventRecord record, string displayType) {
             var eventData = _serializer.Deserialize(record.EventData);
-            var descriptor = _auditTrailManager.Describe(record.Event);
+            var descriptor = _auditTrailManager.DescribeEvent(record.Event);
             var auditTrailEventShape = New.AuditTrailEvent(Record: record, EventData: eventData, Descriptor: descriptor);
             var metaData = (ShapeMetadata)auditTrailEventShape.Metadata;
             metaData.DisplayType = displayType;

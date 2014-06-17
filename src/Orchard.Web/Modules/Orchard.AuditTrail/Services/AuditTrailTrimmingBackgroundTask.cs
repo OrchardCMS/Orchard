@@ -38,7 +38,7 @@ namespace Orchard.AuditTrail.Services {
 
                     Logger.Debug("Starting audit trail trimming operation.");
                     var deletedRecords = _auditTrailManager.Trim(TimeSpan.FromDays(Settings.Threshold));
-                    Logger.Debug("Audit trail trimming operation completed. {0} Records were deleted.", deletedRecords.Count());
+                    Logger.Debug("Audit trail trimming operation completed. {0} records were deleted.", deletedRecords.Count());
                     Settings.LastRunUtc = _clock.UtcNow;
                 }
                 catch (Exception ex) {

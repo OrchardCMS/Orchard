@@ -18,27 +18,27 @@ namespace Orchard.AuditTrail.Providers.Content {
         }
 
         protected override void Created(CreateContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Created, context.ContentItem);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Created, context.ContentItem);
         }
 
         protected override void Updated(UpdateContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Saved, context.ContentItem);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Saved, context.ContentItem);
         }
 
         protected override void Published(PublishContentContext context) {
             var previousVersion = context.PreviousItemVersionRecord;
-            RecordAuditTrail(ContentAuditTrailEventProvider.Published, context.ContentItem, previousVersion);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Published, context.ContentItem, previousVersion);
         }
 
         protected override void Unpublished(PublishContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Unpublished, context.ContentItem);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Unpublished, context.ContentItem);
         }
 
         protected override void Removed(RemoveContentContext context) {
-            RecordAuditTrail(ContentAuditTrailEventProvider.Removed, context.ContentItem);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Removed, context.ContentItem);
         }
 
-        private void RecordAuditTrail(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {
+        private void RecordAuditTrailEvent(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {
             var title = _contentManager.GetItemMetadata(content).DisplayText;
 
             var properties = new Dictionary<string, object> {
@@ -56,7 +56,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                 eventData["PreviousContentItemVersionId"] = previousContentItemVersion.Id;
             }
 
-            _auditTrailManager.Record<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString(CultureInfo.InvariantCulture));
+            _auditTrailManager.CreateRecord<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

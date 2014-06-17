@@ -28,6 +28,7 @@ namespace Orchard.AuditTrail.Controllers {
         public dynamic New { get; private set; }
 
         public ActionResult Index(PagerParameters pagerParameters, AuditTrailFilterViewModel filterParameters) {
+
             if(!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 
@@ -40,19 +41,21 @@ namespace Orchard.AuditTrail.Controllers {
                 To = _dateServices.ConvertFromLocalString(filterParameters.To.Date, filterParameters.To.Time),
             }, filterParameters.OrderBy);
             var pagerShape = New.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-            var eventDescriptorsQuery = from c in _auditTrailManager.Describe()
-                                   from e in c.Events
-                                   select e;
+            var eventDescriptorsQuery =
+                from c in _auditTrailManager.DescribeCategories()
+                from e in c.Events
+                select e;
             var eventDescriptors = eventDescriptorsQuery.ToDictionary(x => x.Event);
-            var recordViewModelsQuery = from record in pageOfData
-                                   let descriptor = eventDescriptors.ContainsKey(record.Event) ? eventDescriptors[record.Event] : default(AuditTrailEventDescriptor)
-                                   where descriptor != null
-                                   select new AuditTrailEventSummaryViewModel {
-                                       Record = record,
-                                       EventDescriptor = descriptor,
-                                       CategoryDescriptor = descriptor.CategoryDescriptor,
-                                       SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
-                                   };
+            var recordViewModelsQuery =
+                from record in pageOfData
+                let descriptor = eventDescriptors.ContainsKey(record.Event) ? eventDescriptors[record.Event] : default(AuditTrailEventDescriptor)
+                where descriptor != null
+                select new AuditTrailEventSummaryViewModel {
+                    Record = record,
+                    EventDescriptor = descriptor,
+                    CategoryDescriptor = descriptor.CategoryDescriptor,
+                    SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
+                };
 
             var viewModel = new AuditTrailViewModel {
                 Records = recordViewModelsQuery.ToArray(),
@@ -68,7 +71,7 @@ namespace Orchard.AuditTrail.Controllers {
                 return new HttpUnauthorizedResult();
 
             var record = _auditTrailManager.GetRecord(id);
-            var descriptor = _auditTrailManager.Describe(record.Event);
+            var descriptor = _auditTrailManager.DescribeEvent(record.Event);
             var detailsShape = _displayBuilder.BuildDisplay(record, "Detail");
             var viewModel = new AuditTrailDetailsViewModel {
                 Record = record,

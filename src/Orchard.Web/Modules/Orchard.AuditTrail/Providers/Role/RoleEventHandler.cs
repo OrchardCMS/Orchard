@@ -13,11 +13,11 @@ namespace Orchard.AuditTrail.Providers.Role {
         }
 
         public void Created(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.Created, context.Role.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.Created, context.Role.Name);
         }
 
         public void Removed(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.Removed, context.Role.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.Removed, context.Role.Name);
         }
 
         public void Renamed(dynamic context) {
@@ -27,44 +27,35 @@ namespace Orchard.AuditTrail.Providers.Role {
                 {"NewRoleName", (string)context.NewRoleName},
             };
 
-            RecordAuditTrail(RoleAuditTrailEventProvider.Renamed, context.Role.Name, properties: null, eventData:eventData);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.Renamed, context.Role.Name, properties: null, eventData:eventData);
         }
 
         public void PermissionAdded(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.PermissionAdded, context.Role.Name, context.Permission.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionAdded, (string) context.Role.Name, (IUser) context.Permission.Name);
         }
 
         public void PermissionRemoved(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.PermissionRemoved, context.Role.Name, context.Permission.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionRemoved, (string) context.Role.Name, (IUser) context.Permission.Name);
         }
 
         public void UserAdded(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.UserAdded, context.Role.Name, context.User);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserAdded, (string) context.Role.Name, (IUser) context.User);
         }
 
         public void UserRemoved(dynamic context) {
-            RecordAuditTrail(RoleAuditTrailEventProvider.UserRemoved, context.Role.Name, context.User);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserRemoved, (string) context.Role.Name, (IUser) context.User);
         }
 
-        private void RecordAuditTrail(string eventName, string roleName) {
+        private void RecordAuditTrailEvent(string eventName, string roleName) {
             var eventData = new Dictionary<string, object> {
                 {"RoleName", roleName}
             };
 
-            RecordAuditTrail(eventName, roleName, properties: null, eventData: eventData);
-        }
-
-        private void RecordAuditTrail(string eventName, string roleName, string permissionName) {
-            var eventData = new Dictionary<string, object> {
-                {"RoleName", roleName},
-                {"PermissionName", permissionName}
-            };
-
-            RecordAuditTrail(eventName, roleName, properties: null, eventData: eventData);
+            RecordAuditTrailEvent(eventName, roleName, properties: null, eventData: eventData);
         }
 
 
-        private void RecordAuditTrail(string eventName, string roleName, IUser user) {
+        private void RecordAuditTrailEvent(string eventName, string roleName, IUser user) {
 
             var properties = new Dictionary<string, object> {
                 {"User", user}
@@ -75,11 +66,11 @@ namespace Orchard.AuditTrail.Providers.Role {
                 {"UserName", user.UserName}
             };
 
-            RecordAuditTrail(eventName, roleName, properties, eventData);
+            RecordAuditTrailEvent(eventName, roleName, properties, eventData);
         }
 
-        private void RecordAuditTrail(string eventName, string roleName, IDictionary<string, object> properties, IDictionary<string, object> eventData) {
-            _auditTrailManager.Record<RoleAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "role", eventFilterData: roleName);
+        private void RecordAuditTrailEvent(string eventName, string roleName, IDictionary<string, object> properties, IDictionary<string, object> eventData) {
+            _auditTrailManager.CreateRecord<RoleAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "role", eventFilterData: roleName);
         }
     }
 }

@@ -51,11 +51,11 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         }
 
         private void RecordContentTypeAuditTrail(string eventName, IDictionary<string, object> eventData, string contentTypeName) {
-            _auditTrailManager.Record<ContentTypeAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contenttype", eventFilterData: contentTypeName);
+            _auditTrailManager.CreateRecord<ContentTypeAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contenttype", eventFilterData: contentTypeName);
         }
 
         private void RecordContentPartAuditTrail(string eventName, IDictionary<string, object> eventData, string contentPartName) {
-            _auditTrailManager.Record<ContentPartAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contentpart", eventFilterData: contentPartName);
+            _auditTrailManager.CreateRecord<ContentPartAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contentpart", eventFilterData: contentPartName);
         }
     }
 }

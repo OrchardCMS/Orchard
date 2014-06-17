@@ -50,7 +50,7 @@ namespace Orchard.AuditTrail.Drivers {
                             FilterValue = part.Id.ToString(CultureInfo.InvariantCulture)
                         });
                         var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-                        var eventDescriptors = from c in _auditTrailManager.Describe()
+                        var eventDescriptors = from c in _auditTrailManager.DescribeCategories()
                             from e in c.Events
                             select e;
                         var recordViewModels = from record in pageOfData

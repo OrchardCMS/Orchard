@@ -25,14 +25,15 @@ namespace Orchard.AuditTrail.Drivers {
                 return null;
 
             return ContentShape("Parts_AuditTrailSettings_Edit", () => {
-                var descriptors = _auditTrailManager.Describe();
+                var descriptors = _auditTrailManager.DescribeCategories();
                 var eventSettings = part.EventSettings.ToList();
                 var viewModel = new AuditTrailSettingsViewModel {
                     Categories = (from categoryDescriptor in descriptors
                         select new AuditTrailCategorySettingsViewModel {
                             Category = categoryDescriptor.Category,
                             Name = categoryDescriptor.Name,
-                            Events = (from eventDescriptor in categoryDescriptor.Events
+                            Events = 
+                                (from eventDescriptor in categoryDescriptor.Events
                                 let eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventDescriptor.Event)
                                 select new AuditTrailEventSettingsViewModel {
                                     Event = eventDescriptor.Event,

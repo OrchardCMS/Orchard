@@ -191,7 +191,7 @@
     <Compile Include="ViewModels\AuditTrailDetailsViewModel.cs" />
     <Compile Include="Providers\Content\GlobalContentHandler.cs" />
     <Compile Include="Models\AuditTrailEventDescriptor.cs" />
-    <Compile Include="Models\AuditTrailCategoryDescriptor.cs" />
+    <Compile Include="Services\Models\AuditTrailCategoryDescriptor.cs" />
     <Compile Include="Models\DescribeContext.cs" />
     <Compile Include="Models\DescribeFor.cs" />
     <Compile Include="Models\AuditTrailContext.cs" />
