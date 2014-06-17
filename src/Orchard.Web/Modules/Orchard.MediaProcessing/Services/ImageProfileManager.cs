@@ -109,52 +109,62 @@ namespace Orchard.MediaProcessing.Services {
                     profilePart.Filters.Add(customFilter);
                 }
 
-                using (var image = GetImage(path)) {
+                // prevent two requests from processing the same file at the same time
+                // this is only thread safe at the machine level, so there is a try/catch later
+                // to handle cross machines concurrency
+                lock (String.Intern(path)) {
+                    using (var image = GetImage(path)) {
 
-                    var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path))) };
+                        var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path))) };
 
-                    if (image == null) {
-                        return filterContext.FilePath;
-                    }
+                        if (image == null) {
+                            return filterContext.FilePath;
+                        }
 
-                    var tokens = new Dictionary<string, object>();
-                    // if a content item is provided, use it while tokenizing
-                    if (contentItem != null) {
-                        tokens.Add("Content", contentItem);
-                    }
+                        var tokens = new Dictionary<string, object>();
+                        // if a content item is provided, use it while tokenizing
+                        if (contentItem != null) {
+                            tokens.Add("Content", contentItem);
+                        }
 
-                    foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
-                        var descriptor = _processingManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
-                        if (descriptor == null)
-                            continue;
+                        foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
+                            var descriptor = _processingManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
+                            if (descriptor == null)
+                                continue;
 
-                        var tokenized = _tokenizer.Replace(filter.State, tokens);
-                        filterContext.State = FormParametersHelper.ToDynamic(tokenized);
-                        descriptor.Filter(filterContext);
-                    }
+                            var tokenized = _tokenizer.Replace(filter.State, tokens);
+                            filterContext.State = FormParametersHelper.ToDynamic(tokenized);
+                            descriptor.Filter(filterContext);
+                        }
 
-                    _fileNameProvider.UpdateFileName(profileName, path, filterContext.FilePath);
+                        _fileNameProvider.UpdateFileName(profileName, path, filterContext.FilePath);
 
-                    if (!filterContext.Saved) {
-                        var newFile = _storageProvider.OpenOrCreate(filterContext.FilePath);
-                        using (var imageStream = newFile.OpenWrite()) {
-                            using (var sw = new BinaryWriter(imageStream)) {
-                                if (filterContext.Media.CanSeek) {
-                                    filterContext.Media.Seek(0, SeekOrigin.Begin);
-                                }
-                                using (var sr = new BinaryReader(filterContext.Media)) {
-                                    int count;
-                                    var buffer = new byte[8192];
-                                    while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
-                                        sw.Write(buffer, 0, count);
+                        if (!filterContext.Saved) {
+                            try {
+                                var newFile = _storageProvider.OpenOrCreate(filterContext.FilePath);
+                                using (var imageStream = newFile.OpenWrite()) {
+                                    using (var sw = new BinaryWriter(imageStream)) {
+                                        if (filterContext.Media.CanSeek) {
+                                            filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                        }
+                                        using (var sr = new BinaryReader(filterContext.Media)) {
+                                            int count;
+                                            var buffer = new byte[8192];
+                                            while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
+                                                sw.Write(buffer, 0, count);
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            catch(Exception e) {
+                                Logger.Error(e, "A profile could not be processed: " + path);
+                            }
                         }
-                    }
 
-                    filterContext.Media.Dispose();
-                    filePath = filterContext.FilePath;
+                        filterContext.Media.Dispose();
+                        filePath = filterContext.FilePath;
+                    }
                 }
             }
 
