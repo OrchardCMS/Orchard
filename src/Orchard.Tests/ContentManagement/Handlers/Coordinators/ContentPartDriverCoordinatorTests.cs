@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -50,6 +52,35 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             contentHandler.BuildDisplay(context);
             driver1.Verify(x => x.BuildDisplayAsync(context));
             driver2.Verify(x => x.BuildDisplayAsync(context));
+        }
+
+        [Test]
+        public async Task AsyncDriversAreAsync() {
+            var driver1 = new Mock<IContentPartDriver>();
+            var driver2 = new Mock<IContentPartDriver>();
+            driver1.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(100);
+                return null;
+            });
+            driver2.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(100);
+                return null;
+            });
+            var builder = new ContainerBuilder();
+            builder.RegisterInstance(driver1.Object);
+            builder.RegisterInstance(driver2.Object);
+            builder.Update(_container);
+            var contentHandler = _container.Resolve<IContentHandler>();
+
+            var contentItem = new ContentItem();
+            var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
+
+            var watch = new Stopwatch();
+            watch.Start();
+            await contentHandler.BuildDisplayAsync(context);
+            watch.Stop();
+            Assert.GreaterOrEqual(watch.ElapsedMilliseconds, 100);
+            Assert.LessOrEqual(watch.ElapsedMilliseconds, 200);
         }
 
         [Test, Ignore("no implementation for IZoneCollection")]
