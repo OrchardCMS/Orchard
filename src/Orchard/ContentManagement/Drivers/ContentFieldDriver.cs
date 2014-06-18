@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
@@ -17,40 +18,61 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
-            return Process(context.ContentItem, (part, field) => {
-                DriverResult result = Display(part, field, context.DisplayType, context.New);
-                
-                if (result != null) {
-                    result.ContentPart = part;
-                    result.ContentField = field;
-                }
-                
-                return result;
-            }, context.Logger);
+            return ((IContentFieldDriver) this).BuildDisplayShapeAsync(context).Result;
         }
 
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
-            return Process(context.ContentItem, (part, field) => {
-                DriverResult result =  Editor(part, field, context.New);
-                
-                if (result != null) {
+            return ((IContentFieldDriver)this).BuildEditorShapeAsync(context).Result;
+        }
+
+        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
+            return ((IContentFieldDriver)this).UpdateEditorShapeAsync(context).Result;
+        }
+
+        Task<DriverResult> IContentFieldDriver.BuildDisplayShapeAsync(BuildDisplayContext context)
+        {
+            return ProcessResultAsync(context.ContentItem, async (part, field) =>
+            {
+                DriverResult result = await DisplayAsync(part, field, context.DisplayType, context.New);
+
+                if (result != null)
+                {
                     result.ContentPart = part;
                     result.ContentField = field;
                 }
-                
+
                 return result;
             }, context.Logger);
         }
 
-        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
-            return Process(context.ContentItem, (part, field) => {
-                DriverResult result = Editor(part, field, context.Updater, context.New);
-                
-                if (result != null) {
+         Task<DriverResult> IContentFieldDriver.BuildEditorShapeAsync(BuildEditorContext context)
+        {
+            return ProcessResultAsync(context.ContentItem, async (part, field) =>
+            {
+                DriverResult result = await EditorAsync(part, field, context.New);
+
+                if (result != null)
+                {
                     result.ContentPart = part;
                     result.ContentField = field;
                 }
-                
+
+                return result;
+            }, context.Logger);
+        }
+
+         Task<DriverResult> IContentFieldDriver.UpdateEditorShapeAsync(UpdateEditorContext context)
+        {
+            return ProcessResultAsync(context.ContentItem, async (part, field) =>
+            {
+                DriverResult result = await EditorAsync(part, field, context.Updater, context.New);
+
+                if (result != null)
+                {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+
                 return result;
             }, context.Logger);
         }
@@ -80,12 +102,15 @@ namespace Orchard.ContentManagement.Drivers {
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
         }
 
-        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
+        async Task<DriverResult> ProcessResultAsync(ContentItem item, Func<ContentPart, TField, Task<DriverResult>> effort, ILogger logger)
+        {
             var results = item.Parts
                 .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
-                .Invoke(pf => effort(pf.part, pf.field), logger);
+                .InvokeAsync(pf => effort(pf.part, pf.field), logger).ToArray();
 
-            return Combined(results.ToArray());
+            await Task.WhenAll(results);
+
+            return Combined(results.Select(r => r.Result).ToArray());
         }
 
         public IEnumerable<ContentFieldInfo> GetFieldInfo() {
@@ -107,6 +132,10 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
+        protected virtual Task<DriverResult> DisplayAsync(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return Display(part, field, displayType, shapeHelper); }
+        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, dynamic shapeHelper) { return Editor(part, field, shapeHelper); }
+        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return Editor( part,  field,  updater, shapeHelper); }
+        
         
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }

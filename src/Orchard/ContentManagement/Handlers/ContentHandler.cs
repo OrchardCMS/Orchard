@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -347,19 +348,33 @@ namespace Orchard.ContentManagement.Handlers {
             GetItemMetadata(context);
         }
         void IContentHandler.BuildDisplay(BuildDisplayContext context) {
+            ((IContentHandler)this).BuildDisplayAsync(context).Wait();
+        }
+
+        void IContentHandler.BuildEditor(BuildEditorContext context) {
+            ((IContentHandler)this).BuildEditorAsync(context).Wait();
+        }
+
+        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
+            ((IContentHandler)this).BuildEditorAsync(context).Wait();
+        }
+
+        Task IContentHandler.BuildDisplayAsync(BuildDisplayContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildDisplayShape(context);
-            BuildDisplayShape(context);
+            return BuildDisplayShapeAsync(context);
         }
-        void IContentHandler.BuildEditor(BuildEditorContext context) {
+
+        Task IContentHandler.BuildEditorAsync(BuildEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildEditorShape(context);
-            BuildEditorShape(context);
+            return BuildEditorShapeAsync(context);
         }
-        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
+
+        Task IContentHandler.UpdateEditorAsync(UpdateEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.UpdateEditorShape(context);
-            UpdateEditorShape(context);
+            return UpdateEditorShapeAsync(context);
         }
 
         protected virtual void Activating(ActivatingContentContext context) { }
@@ -398,8 +413,13 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Exported(ExportContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
+
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }
         protected virtual void BuildEditorShape(BuildEditorContext context) { }
         protected virtual void UpdateEditorShape(UpdateEditorContext context) { }
+
+        protected virtual async Task BuildDisplayShapeAsync(BuildDisplayContext context) { BuildDisplayShape(context); }
+        protected virtual async Task BuildEditorShapeAsync(BuildEditorContext context) { BuildEditorShape(context); }
+        protected virtual async Task UpdateEditorShapeAsync(UpdateEditorContext context) { UpdateEditorShape(context); }
     }
 }

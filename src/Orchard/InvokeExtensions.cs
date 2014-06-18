@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Orchard.Security;
 using Orchard.Logging;
 using Orchard.Exceptions;
@@ -55,6 +57,57 @@ namespace Orchard {
             }
         }
 
+        /// <summary>
+        /// Safely invoke methods by catching non fatal exceptions and logging them
+        /// </summary>
+        public static Task InvokeAsync<TEvents>(this IEnumerable<TEvents> events, Func<TEvents, Task> dispatch, ILogger logger) {
+            return Task.WhenAll(events.Select(async sink => {
+
+                try {
+                    var task = dispatch(sink);
+
+                    if (task != null)
+                        await task;
+                }
+                catch (Exception ex) {
+                    if (IsLogged(ex)) {
+                        logger.Error(ex, "{2} thrown from {0} by {1}",
+                            typeof (TEvents).Name,
+                            sink.GetType().FullName,
+                            ex.GetType().Name);
+                    }
+
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
+                }
+            }));
+        }
+
+        public static IEnumerable<Task<TResult>> InvokeAsync<TEvents, TResult>(this IEnumerable<TEvents> events, Func<TEvents, Task<TResult>> dispatch, ILogger logger)
+        {
+            return events.Select(async sink => {
+                TResult result = default(TResult);
+
+                try {
+                    return await dispatch(sink);
+                }
+                catch (Exception ex) {
+                    if (IsLogged(ex)) {
+                        logger.Error(ex, "{2} thrown from {0} by {1}",
+                            typeof (TEvents).Name,
+                            sink.GetType().FullName,
+                            ex.GetType().Name);
+                    }
+
+                    if (ex.IsFatal()) {
+                        throw;
+                    }
+                }
+
+                return result;
+            });
+        }
 
         private static bool IsLogged(Exception ex) {
             return ex is OrchardSecurityException || !ex.IsFatal();

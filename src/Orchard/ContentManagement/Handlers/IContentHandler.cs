@@ -1,4 +1,6 @@
-﻿namespace Orchard.ContentManagement.Handlers {
+﻿using System.Threading.Tasks;
+
+namespace Orchard.ContentManagement.Handlers {
     public interface IContentHandler : IDependency {
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
@@ -29,5 +31,9 @@
         void BuildDisplay(BuildDisplayContext context);
         void BuildEditor(BuildEditorContext context);
         void UpdateEditor(UpdateEditorContext context);
+
+        Task BuildDisplayAsync(BuildDisplayContext context);
+        Task BuildEditorAsync(BuildEditorContext context);
+        Task UpdateEditorAsync(UpdateEditorContext context);
     }
 }

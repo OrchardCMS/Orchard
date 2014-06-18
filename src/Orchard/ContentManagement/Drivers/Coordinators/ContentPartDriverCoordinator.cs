@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
@@ -31,8 +33,8 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             foreach (var typePartDefinition in contentTypeDefinition.Parts) {
                 var partName = typePartDefinition.PartDefinition.Name;
                 var partInfo = partInfos.FirstOrDefault(pi => pi.PartName == partName);
-                var part = partInfo != null 
-                    ? partInfo.Factory(typePartDefinition) 
+                var part = partInfo != null
+                    ? partInfo.Factory(typePartDefinition)
                     : new ContentPart { TypePartDefinition = typePartDefinition };
                 context.Builder.Weld(part);
             }
@@ -42,25 +44,40 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
+        [Obsolete("Use BuildDisplayAsync")]
         public override void BuildDisplay(BuildDisplayContext context) {
-            _drivers.Invoke(driver => {
-                var result = driver.BuildDisplay(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+            BuildDisplayAsync(context).Wait();
         }
 
+        [Obsolete("Use BuildEditorAsync")]
         public override void BuildEditor(BuildEditorContext context) {
-            _drivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
+            BuildEditorAsync(context).Wait();
+        }
+
+        [Obsolete("Use UpdateEditorAsync")]
+        public override void UpdateEditor(UpdateEditorContext context) {
+            UpdateEditorAsync(context).Wait();
+        }
+
+        public override Task BuildDisplayAsync(BuildDisplayContext context) {
+            return _drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildDisplayAsync(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
         }
 
-        public override void UpdateEditor(UpdateEditorContext context) {
-            _drivers.Invoke(driver => {
-                var result = driver.UpdateEditor(context);
+        public override Task BuildEditorAsync(BuildEditorContext context) {
+            return _drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildEditorAsync(context);
+                if (result != null)
+                    result.Apply(context);
+            }, Logger);
+        }
+
+        public override Task UpdateEditorAsync(UpdateEditorContext context) {
+            return _drivers.InvokeAsync(async driver => {
+                var result = await driver.UpdateEditorAsync(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);

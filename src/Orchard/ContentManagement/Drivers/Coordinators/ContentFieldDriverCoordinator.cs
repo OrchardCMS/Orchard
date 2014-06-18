@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
@@ -50,28 +52,43 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
+        [Obsolete("Use BuildDisplayAsync")]
         public override void BuildDisplay(BuildDisplayContext context) {
-            _drivers.Invoke(driver => {
-                context.Logger = Logger;
-                var result = driver.BuildDisplayShape(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+            BuildDisplayAsync(context).Wait();
         }
 
+        [Obsolete("Use BuildEditorAsync")]
         public override void BuildEditor(BuildEditorContext context) {
-            _drivers.Invoke(driver => {
+            BuildEditorAsync(context).Wait();
+        }
+
+        [Obsolete("Use UpdateEditorAsync")]
+        public override void UpdateEditor(UpdateEditorContext context) {
+            UpdateEditorAsync(context).Wait();
+        }
+
+        public override Task BuildDisplayAsync(BuildDisplayContext context) {
+            return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
-                var result = driver.BuildEditorShape(context);
+                var result = await driver.BuildDisplayShapeAsync(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
         }
 
-        public override void UpdateEditor(UpdateEditorContext context) {
-            _drivers.Invoke(driver => {
+        public override Task BuildEditorAsync(BuildEditorContext context) {
+            return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
-                var result = driver.UpdateEditorShape(context);
+                var result = await driver.BuildEditorShapeAsync(context);
+                if (result != null)
+                    result.Apply(context);
+            }, Logger);
+        }
+
+        public override Task UpdateEditorAsync(UpdateEditorContext context) {
+            return _drivers.InvokeAsync(async driver => {
+                context.Logger = Logger;
+                var result = await driver.UpdateEditorShapeAsync(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);

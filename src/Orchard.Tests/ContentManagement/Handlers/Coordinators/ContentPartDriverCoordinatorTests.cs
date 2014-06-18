@@ -45,11 +45,11 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentItem = new ContentItem();
             var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
 
-            driver1.Verify(x => x.BuildDisplay(context), Times.Never());
-            driver2.Verify(x => x.BuildDisplay(context), Times.Never());
+            driver1.Verify(x => x.BuildDisplayAsync(context), Times.Never());
+            driver2.Verify(x => x.BuildDisplayAsync(context), Times.Never());
             contentHandler.BuildDisplay(context);
-            driver1.Verify(x => x.BuildDisplay(context));
-            driver2.Verify(x => x.BuildDisplay(context));
+            driver1.Verify(x => x.BuildDisplayAsync(context));
+            driver2.Verify(x => x.BuildDisplayAsync(context));
         }
 
         [Test, Ignore("no implementation for IZoneCollection")]

@@ -57,7 +57,8 @@ namespace Orchard.ContentManagement {
 
             BindPlacement(context, actualDisplayType, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
+            _handlers.Value.InvokeAsync(handler => handler.BuildDisplayAsync(context), Logger).Wait();
+
             return context.Shape;
         }
 
@@ -78,7 +79,7 @@ namespace Orchard.ContentManagement {
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
+            _handlers.Value.InvokeAsync(handler => handler.BuildEditorAsync(context), Logger).Wait();
 
             
             return context.Shape;
@@ -106,7 +107,7 @@ namespace Orchard.ContentManagement {
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
+            _handlers.Value.InvokeAsync(handler => handler.UpdateEditorAsync(context), Logger).Wait();
             
             return context.Shape;
         }

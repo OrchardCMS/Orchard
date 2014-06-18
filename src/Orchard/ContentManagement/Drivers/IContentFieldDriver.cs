@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 
@@ -7,6 +8,9 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult BuildDisplayShape(BuildDisplayContext context);
         DriverResult BuildEditorShape(BuildEditorContext context);
         DriverResult UpdateEditorShape(UpdateEditorContext context);
+        Task<DriverResult> BuildDisplayShapeAsync(BuildDisplayContext context);
+        Task<DriverResult> BuildEditorShapeAsync(BuildEditorContext context);
+        Task<DriverResult> UpdateEditorShapeAsync(UpdateEditorContext context);
         void Importing(ImportContentContext context);
         void Imported(ImportContentContext context);
         void Exporting(ExportContentContext context);
