@@ -74,10 +74,10 @@ namespace Orchard.Tags.Controllers {
 
             var viewModel = new TagsAdminCreateViewModel();
 
-            TryUpdateModel(viewModel);
-
-            if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
-                ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be added because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+            if (TryUpdateModel(viewModel)) {
+                if (viewModel.TagName.Intersect(TagsPartDriver.DisalowedChars).Any()) {
+                    ModelState.AddModelError("_FORM", T("The tag \"{0}\" could not be added because it contains forbidden chars: {1}", viewModel.TagName, String.Join(", ", TagsPartDriver.DisalowedChars)));
+                }
             }
 
             if(!ModelState.IsValid) {
