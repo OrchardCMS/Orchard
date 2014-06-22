@@ -66,13 +66,28 @@
     <Content Include="Scripts\license.txt" />
     <Content Include="Scripts\orchard-tinymce.js" />
     <Content Include="Scripts\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\plugins\code\plugin.min.js" />
     <Content Include="Scripts\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\plugins\link\plugin.min.js" />
     <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
     <Content Include="Scripts\plugins\medialibrary\plugin.min.js" />
     <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
     <Content Include="Scripts\plugins\mediapicker\plugin.min.js" />
     <Content Include="Scripts\plugins\mediapicker\plugin_src.js" />
     <Content Include="Scripts\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.dev.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.dev.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\img\anchor.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\loader.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\object.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\trans.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
     <Content Include="Scripts\skins\lightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\lightgray\content.min.css" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.dev.svg" />
@@ -118,6 +133,27 @@
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
