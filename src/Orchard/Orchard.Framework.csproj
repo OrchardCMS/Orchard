@@ -604,6 +604,7 @@
     <Compile Include="WebApi\DefaultOrchardWebApiHttpControllerSelector.cs" />
     <Compile Include="WebApi\DefaultOrchardWebApiHttpHttpControllerActivator.cs" />
     <Compile Include="WebApi\Extensions\RouteExtension.cs" />
+    <Compile Include="WebApi\Filters\OrchardApiAuthorizationFilterDispatcher.cs" />
     <Compile Include="WebApi\Filters\UnhandledApiExceptionFilter.cs" />
     <Compile Include="WebApi\Filters\IFilterProvider.cs" />
     <Compile Include="WebApi\Filters\OrchardApiExceptionFilterDispatcher.cs" />

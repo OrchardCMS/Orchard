@@ -158,6 +158,7 @@ namespace Orchard.Environment {
 
             GlobalConfiguration.Configuration.Filters.Add(new OrchardApiActionFilterDispatcher());
             GlobalConfiguration.Configuration.Filters.Add(new OrchardApiExceptionFilterDispatcher());
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiAuthorizationFilterDispatcher());
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
