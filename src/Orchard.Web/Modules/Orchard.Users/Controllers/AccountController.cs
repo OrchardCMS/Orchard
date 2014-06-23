@@ -214,6 +214,7 @@ namespace Orchard.Users.Controllers {
         [Authorize]
         [HttpPost]
         [AlwaysAccessible]
+        [ValidateInput(false)]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {
