@@ -39,6 +39,8 @@ namespace Orchard.Projections.Providers.Layouts {
 
             dynamic shape = ((IShapeFactory) Shape).Create(shapeType);
             shape.ContentItems = layoutComponentResults.Select(x => x.ContentItem);
+
+            // TODO: call BuildDisplayAsync - would require change to LayoutDescriptor and usage
             shape.BuildShapes= (Func<IEnumerable<dynamic>>) (() => context.LayoutRecord.Display == (int)LayoutRecord.Displays.Content
                    ? layoutComponentResults.Select(x => _contentManager.BuildDisplay(x.ContentItem, context.LayoutRecord.DisplayType))
                    : layoutComponentResults.Select(x => x.Properties));

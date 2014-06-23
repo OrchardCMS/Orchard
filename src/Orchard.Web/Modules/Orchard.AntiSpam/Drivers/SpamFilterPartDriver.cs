@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Orchard.AntiSpam.Models;
 using Orchard.AntiSpam.Services;
 using Orchard.AntiSpam.Settings;
@@ -24,8 +25,8 @@ namespace Orchard.AntiSpam.Drivers {
             get { return "SpamFilter"; }
         }
 
-        protected override DriverResult Editor(SpamFilterPart part, ContentManagement.IUpdateModel updater, dynamic shapeHelper) {
-            part.Status = _spamService.CheckForSpam(part);
+        protected override async Task<DriverResult> EditorAsync(SpamFilterPart part, ContentManagement.IUpdateModel updater, dynamic shapeHelper) {
+            part.Status = await _spamService.CheckForSpam(part);
 
             if (part.Settings.GetModel<SpamFilterPartSettings>().DeleteSpam) {
                 updater.AddModelError("Spam", T("Spam detected."));

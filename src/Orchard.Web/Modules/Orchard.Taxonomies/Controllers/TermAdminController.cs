@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Taxonomies.Models;
 using Orchard.Localization;
@@ -142,7 +143,7 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index", new { taxonomyId });
         }
 
-        public ActionResult Create(int taxonomyId, int parentTermId) {
+        public async Task<ActionResult> Create(int taxonomyId, int parentTermId) {
             if (!Services.Authorizer.Authorize(Permissions.CreateTerm, T("Not allowed to create terms")))
                 return new HttpUnauthorizedResult();
 
@@ -153,12 +154,12 @@ namespace Orchard.Taxonomies.Controllers {
             // assign a container to show the full route while editing
             term.Container = parentTerm == null ? taxonomy : (IContent)parentTerm;
 
-            var model = Services.ContentManager.BuildEditor(term);
+            var model = await Services.ContentManager.BuildEditorAsync(term);
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePost(int taxonomyId, int parentTermId) {
+        public async Task<ActionResult> CreatePost(int taxonomyId, int parentTermId) {
             if (!Services.Authorizer.Authorize(Permissions.CreateTerm, T("Couldn't create term")))
                 return new HttpUnauthorizedResult();
 
@@ -170,7 +171,7 @@ namespace Orchard.Taxonomies.Controllers {
             // Create content item before updating so attached fields save correctly
             Services.ContentManager.Create(term, VersionOptions.Draft);
 
-            var model = Services.ContentManager.UpdateEditor(term, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(term, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -184,7 +185,7 @@ namespace Orchard.Taxonomies.Controllers {
             return RedirectToAction("Index", "TermAdmin", new { taxonomyId });
         }
 
-        public ActionResult Edit(int id) {
+        public async Task<ActionResult> Edit(int id) {
 
             if (!Services.Authorizer.Authorize(Permissions.ManageTerms, T("Not allowed to manage taxonomies")))
                 return new HttpUnauthorizedResult();
@@ -193,12 +194,12 @@ namespace Orchard.Taxonomies.Controllers {
             if (term == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(term);
+            var model = await Services.ContentManager.BuildEditorAsync(term);
             return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPost(int id) {
+        public async Task<ActionResult> EditPost(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageTaxonomies, T("Couldn't edit taxonomy")))
                 return new HttpUnauthorizedResult();
 
@@ -208,7 +209,7 @@ namespace Orchard.Taxonomies.Controllers {
                 return HttpNotFound();
 
             var contentItem = Services.ContentManager.Get(term.ContentItem.Id, VersionOptions.DraftRequired);
-            var model = Services.ContentManager.UpdateEditor(contentItem, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(contentItem, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

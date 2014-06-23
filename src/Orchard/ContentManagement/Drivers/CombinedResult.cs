@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
@@ -10,7 +11,7 @@ namespace Orchard.ContentManagement.Drivers {
             _results = results.Where(x => x != null);
         }
 
-        public override void Apply(BuildDisplayContext context) {
+        public override async Task ApplyAsync(BuildDisplayContext context) {
             foreach (var result in _results) {
 
                 // copy the ContentPart which was used to render this result to its children
@@ -25,11 +26,11 @@ namespace Orchard.ContentManagement.Drivers {
                     result.ContentField = ContentField;
                 }
 
-                result.Apply(context);
+                await result.ApplyAsync(context);
             }
         }
 
-        public override void Apply(BuildEditorContext context) {
+        public override async Task ApplyAsync(BuildEditorContext context) {
             foreach (var result in _results) {
 
                 // copy the ContentPart which was used to render this result to its children
@@ -43,8 +44,8 @@ namespace Orchard.ContentManagement.Drivers {
                 if (result.ContentField == null && ContentField != null) {
                     result.ContentField = ContentField;
                 }
-                
-                result.Apply(context);
+
+                await result.ApplyAsync(context);
             }
         }
 

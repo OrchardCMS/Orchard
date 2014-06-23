@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Services;
@@ -44,13 +45,16 @@ namespace Orchard.Blogs.Controllers {
         protected ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult List() {
-            var blogs = _blogService.Get()
+        public async Task<ActionResult> List() {
+            var blogTasks = _blogService.Get()
                 .Where(b => _services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent,b))
-                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
 
             var list = Shape.List();
-            list.AddRange(blogs);
+
+            await Task.WhenAll(blogTasks);
+
+            list.AddRange(blogTasks.Select(task => task.Result));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list);
@@ -58,7 +62,7 @@ namespace Orchard.Blogs.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Item(int blogId, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
@@ -69,14 +73,16 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-
             _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
-            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
-                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
-            dynamic blog = _services.ContentManager.BuildDisplay(blogPart);
+            var blogPostTasks = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
+                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
+            var blogTask = _services.ContentManager.BuildDisplayAsync(blogPart);
+
+            await Task.WhenAll(blogPostTasks.Cast<Task>().Concat(new Task[] { blogTask }));
 
             var list = Shape.List();
-            list.AddRange(blogPosts);
+            list.AddRange(blogPostTasks.Select(task => task.Result));
+            var blog = blogTask.Result;
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
 
             var totalItemCount = _blogPostService.PostCount(blogPart);

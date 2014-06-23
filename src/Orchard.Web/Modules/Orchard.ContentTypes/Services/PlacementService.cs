@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -64,7 +65,7 @@ namespace Orchard.ContentTypes.Services {
 
         public ILogger Logger { get; set; }
 
-        public IEnumerable<DriverResultPlacement> GetDisplayPlacement(string contentType) {
+        public async Task<IList<DriverResultPlacement>> GetDisplayPlacement(string contentType) {
             var content = _contentManager.New(contentType);
             const string actualDisplayType = "Detail";
 
@@ -80,26 +81,25 @@ namespace Orchard.ContentTypes.Services {
 
             var placementSettings = new List<DriverResultPlacement>();
 
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildDisplay(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
+            // TODO: verify this doesn't deadlock, or convert method to Task<IEnumerable<DriverResultPlacement>>
+            await Task.WhenAll(
+                _contentPartDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildDisplayAsync(context);
+                    if (result != null) {
+                        placementSettings.AddRange(ExtractPlacement(result, context));
+                    }
+                }, Logger),
+                _contentFieldDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildDisplayShapeAsync(context);
+                    if (result != null) {
+                        placementSettings.AddRange(ExtractPlacement(result, context));
+                    }
+                }, Logger));
 
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            foreach (var placementSetting in placementSettings) {
-                yield return placementSetting;    
-            }
+            return placementSettings;
         }
 
-        public IEnumerable<DriverResultPlacement> GetEditorPlacement(string contentType) {
+        public async Task<IList<DriverResultPlacement>> GetEditorPlacement(string contentType) {
             var content = _contentManager.New(contentType);
 
             dynamic itemShape = CreateItemShape("Content_Edit");
@@ -110,23 +110,21 @@ namespace Orchard.ContentTypes.Services {
 
             var placementSettings = new List<DriverResultPlacement>();
 
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
+            await Task.WhenAll(
+                _contentPartDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildEditorAsync(context);
+                    if (result != null) {
+                        placementSettings.AddRange(ExtractPlacement(result, context));
+                    }
+                }, Logger),
+                _contentFieldDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildEditorShapeAsync(context);
+                    if (result != null) {
+                        placementSettings.AddRange(ExtractPlacement(result, context));
+                    }
+                }, Logger));
 
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            foreach (var placementSetting in placementSettings) {
-                yield return placementSetting;
-            }
+            return placementSettings;
         }
 
         public IEnumerable<string> GetZones() {

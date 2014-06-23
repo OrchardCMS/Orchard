@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Azure.MediaServices.Models;
 using Orchard.Azure.MediaServices.Models.Assets;
@@ -50,40 +51,40 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
         private dynamic New { get; set; }
 
-        public ActionResult Import(string folderPath) {
+        public Task<ActionResult> Import(string folderPath) {
             var part = _contentManager.New<CloudVideoPart>("CloudVideo");
             return EditImplementation(part, folderPath);
         }
 
         [HttpPost, ActionName("Import")]
         [FormValueRequired("submit.Save")]
-        public ActionResult ImportSave(string folderPath) {
+        public Task<ActionResult> ImportSave(string folderPath) {
             var part = _contentManager.Create<CloudVideoPart>("CloudVideo", VersionOptions.Draft);
             return UpdateImplementation(part, folderPath, T("The cloud video item was successfully created."), publish: false);
         }
 
         [HttpPost, ActionName("Import")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult ImportPublish(string folderPath) {
+        public Task<ActionResult> ImportPublish(string folderPath) {
             var part = _contentManager.Create<CloudVideoPart>("CloudVideo", VersionOptions.Draft);
             return UpdateImplementation(part, folderPath, T("The cloud video item was successfully created."), publish: true);
         }
 
-        public ActionResult Edit(int id) {
+        public Task<ActionResult> Edit(int id) {
             var part = _contentManager.Get<CloudVideoPart>(id, VersionOptions.Latest);
             return EditImplementation(part, null);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditSave(int id) {
+        public Task<ActionResult> EditSave(int id) {
             var part = _contentManager.Get<CloudVideoPart>(id, VersionOptions.Latest);
             return UpdateImplementation(part, null, T("The cloud video item was successfully updated."), publish: false);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult EditPublish(int id) {
+        public Task<ActionResult> EditPublish(int id) {
             var part = _contentManager.Get<CloudVideoPart>(id, VersionOptions.Latest);
             return UpdateImplementation(part, null, T("The cloud video item was successfully updated."), publish: true);
         }
@@ -108,22 +109,22 @@ namespace Orchard.Azure.MediaServices.Controllers {
             });
         }
 
-        private ActionResult EditImplementation(IContent content, string folderPath) {
+        private async Task<ActionResult> EditImplementation(IContent content, string folderPath) {
             if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
-            var editorShape = _contentManager.BuildEditor(content);
+            var editorShape = await _contentManager.BuildEditorAsync(content);
             var model = New.ViewModel(Editor: editorShape, FolderPath: folderPath);
             return View(model);
         }
 
-        private ActionResult UpdateImplementation(CloudVideoPart part, string folderPath, LocalizedString notification, bool publish) {
+        private async Task<ActionResult> UpdateImplementation(CloudVideoPart part, string folderPath, LocalizedString notification, bool publish) {
             if (!_authorizer.Authorize(Permissions.ManageCloudMediaContent, T("You are not authorized to manage Microsoft Azure Media content.")))
                 return new HttpUnauthorizedResult();
 
             Logger.Debug("User requested to save cloud video item with ID {0}.", part.Id);
 
-            var editorShape = _contentManager.UpdateEditor(part, this);
+            var editorShape = await _contentManager.UpdateEditorAsync(part, this);
             
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();

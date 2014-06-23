@@ -60,14 +60,14 @@ namespace Orchard.Comments.Drivers {
                             List: list,
                             CommentCount: part.CommentsCount);
                     }),
-                ContentShape("Parts_CommentForm",
-                    () => {
+                ContentShapeAsync("Parts_CommentForm",
+                    async () => {
                         if (part.CommentsShown == false)
                             return null;
 
                         var newComment = _contentManager.New("Comment");
                         if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
-                        var editorShape = _contentManager.BuildEditor(newComment);
+                        var editorShape = await _contentManager.BuildEditorAsync(newComment);
 
                         return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),

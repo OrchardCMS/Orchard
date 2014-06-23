@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ImageEditor.Models;
@@ -24,7 +25,7 @@ namespace Orchard.ImageEditor.Controllers {
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Index(int id) {
+        public async Task<ActionResult> Index(int id) {
             var media = Services.ContentManager.Get(id).As<ImagePart>();
 
             if (media == null) {
@@ -36,14 +37,14 @@ namespace Orchard.ImageEditor.Controllers {
             contentItem.ImagePart = media.As<ImagePart>();
             contentItem.MediaPart = media.As<MediaPart>();
 
-            var shape = Services.ContentManager.BuildDisplay(contentItem);
+            var shape = await Services.ContentManager.BuildDisplayAsync(contentItem);
             shape.MediaContentItem(media.ContentItem);
 
             return new ShapeResult(this, shape);
         }
 
         [Themed(false)]
-        public ActionResult Edit(string folderPath, string filename) {
+        public async Task<ActionResult> Edit(string folderPath, string filename) {
             var media = Services.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => x.FolderPath == folderPath && x.FileName == filename).Slice(0, 1).FirstOrDefault();
 
             if (media == null) {
@@ -55,7 +56,7 @@ namespace Orchard.ImageEditor.Controllers {
             contentItem.ImagePart = media.As<ImagePart>();
             contentItem.MediaPart = media.As<MediaPart>();
 
-            var shape = Services.ContentManager.BuildDisplay(contentItem);
+            var shape = await Services.ContentManager.BuildDisplayAsync(contentItem);
             shape.MediaContentItem(media.ContentItem);
 
             return View(shape);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Orchard.ContentManagement.Handlers;
@@ -39,6 +40,18 @@ namespace Orchard.ContentManagement {
         public ILogger Logger { get; set; }
 
         public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
+            return BuildDisplayAsync(content, displayType, groupId).Result;
+        }
+
+        public dynamic BuildEditor(IContent content, string groupId) {
+            return BuildEditorAsync(content, groupId).Result;
+        }
+
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
+            return UpdateEditorAsync(content, updater, groupInfoId).Result;
+        }
+
+        public async Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "") {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -57,12 +70,15 @@ namespace Orchard.ContentManagement {
 
             BindPlacement(context, actualDisplayType, stereotype);
 
-            _handlers.Value.InvokeAsync(handler => handler.BuildDisplayAsync(context), Logger).Wait();
+            // call the async version, the implementation may be synchronous for backwards compatibility
+            await _handlers.Value.InvokeAsync(async handler => {
+                await handler.BuildDisplayAsync(context);
+            }, Logger);
 
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content, string groupId) {
+        public async Task<dynamic> BuildEditorAsync(IContent content, string groupId = "") {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -75,17 +91,19 @@ namespace Orchard.ContentManagement {
 
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
-            
+
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.InvokeAsync(handler => handler.BuildEditorAsync(context), Logger).Wait();
+            // call the async version, the implementation may be synchronous for backwards compatibility
+            await _handlers.Value.InvokeAsync(async handler => {
+                await handler.BuildEditorAsync(context);
+            }, Logger);
 
-            
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
+        public async Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupId = "") {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -104,11 +122,14 @@ namespace Orchard.ContentManagement {
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupId, _shapeFactory, shapeTable);
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.InvokeAsync(handler => handler.UpdateEditorAsync(context), Logger).Wait();
-            
+            // call the async version, the implementation may be synchronous for backwards compatibility
+            await _handlers.Value.InvokeAsync(async handler => {
+                await handler.UpdateEditorAsync(context);
+            }, Logger);
+
             return context.Shape;
         }
 

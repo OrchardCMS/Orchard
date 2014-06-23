@@ -52,18 +52,21 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
-        [Obsolete("Use BuildDisplayAsync")]
         public override void BuildDisplay(BuildDisplayContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
             BuildDisplayAsync(context).Wait();
         }
 
-        [Obsolete("Use BuildEditorAsync")]
         public override void BuildEditor(BuildEditorContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
             BuildEditorAsync(context).Wait();
         }
 
-        [Obsolete("Use UpdateEditorAsync")]
         public override void UpdateEditor(UpdateEditorContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
             UpdateEditorAsync(context).Wait();
         }
 
@@ -71,8 +74,9 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.BuildDisplayShapeAsync(context);
+
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 
@@ -80,8 +84,9 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.BuildEditorShapeAsync(context);
+
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 
@@ -89,8 +94,9 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.UpdateEditorShapeAsync(context);
+
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 

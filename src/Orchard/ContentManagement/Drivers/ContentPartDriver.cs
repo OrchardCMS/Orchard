@@ -149,9 +149,9 @@ namespace Orchard.ContentManagement.Drivers
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
-        protected virtual async Task<DriverResult> DisplayAsync(TContent part, string displayType, dynamic shapeHelper) { return Display(part, displayType, shapeHelper); }
-        protected virtual async Task<DriverResult> EditorAsync(TContent part, dynamic shapeHelper) { return Editor(part, shapeHelper); }
-        protected virtual async Task<DriverResult> EditorAsync(TContent part, IUpdateModel updater, dynamic shapeHelper) { return Editor(part, updater, shapeHelper); }
+        protected virtual Task<DriverResult> DisplayAsync(TContent part, string displayType, dynamic shapeHelper) { return Task.FromResult<DriverResult>(Display(part, displayType, shapeHelper)); }
+        protected virtual Task<DriverResult> EditorAsync(TContent part, dynamic shapeHelper) { return Task.FromResult<DriverResult>(Editor(part, shapeHelper)); }
+        protected virtual Task<DriverResult> EditorAsync(TContent part, IUpdateModel updater, dynamic shapeHelper) { return Task.FromResult<DriverResult>(Editor(part, updater, shapeHelper)); }
 
         protected virtual void Importing(TContent part, ImportContentContext context) { }
         protected virtual void Imported(TContent part, ImportContentContext context) { }
@@ -187,6 +187,27 @@ namespace Orchard.ContentManagement.Drivers
 
                 return AddAlternates(shape, ctx);
             });
+        }
+
+        public AsyncContentShapeResult ContentShapeAsync(string shapeType, Func<Task<dynamic>> factory) {
+            return ContentShapeAsyncImplementation(shapeType, ctx => factory());
+        }
+
+        public AsyncContentShapeResult ContentShapeAsync(string shapeType, Func<dynamic, Task<dynamic>> factory) {
+            return ContentShapeAsyncImplementation(shapeType, ctx => factory(CreateShape(ctx, shapeType)));
+        }
+
+        private AsyncContentShapeResult ContentShapeAsyncImplementation(string shapeType, Func<BuildShapeContext, Task<object>> shapeBuilder) {
+
+            return new AsyncContentShapeResult(shapeType, Prefix, async ctx => {
+               var shape = await shapeBuilder(ctx);
+
+               if (shape == null) {
+                   return null;
+               }
+
+               return AddAlternates(shape, ctx);
+           });
         }
 
         private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx)

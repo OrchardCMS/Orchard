@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentTypes.Settings;
+using System.Threading.Tasks;
 
 namespace Orchard.ContentTypes.Services {
     public interface IPlacementService : IDependency {
-        IEnumerable<DriverResultPlacement> GetDisplayPlacement(string contentType);
-        IEnumerable<DriverResultPlacement> GetEditorPlacement(string contentType);
+        Task<IList<DriverResultPlacement>> GetDisplayPlacement(string contentType);
+        Task<IList<DriverResultPlacement>> GetEditorPlacement(string contentType);
         IEnumerable<string> GetZones();
     }
 }

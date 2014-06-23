@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -35,7 +36,7 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
+        public async Task<ActionResult> Index(PagerParameters pagerParameters, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
             
@@ -60,8 +61,8 @@ namespace Orchard.Search.Controllers {
                     searchHits.TotalItemCount--;
                     continue;
                 }
-
-                list.Add(Services.ContentManager.BuildDisplay(contentItem, "SummaryAdmin"));
+                var shape = await Services.ContentManager.BuildDisplayAsync(contentItem, "SummaryAdmin");
+                list.Add(shape);
             }
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(searchHits.TotalItemCount);

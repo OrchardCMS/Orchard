@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -53,7 +54,7 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+        public async Task<ActionResult> List(ListContentsViewModel model, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var versionOptions = VersionOptions.Latest;
@@ -109,7 +110,11 @@ namespace Orchard.Core.Contents.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            var shapeTasks = pageOfContentItems.Select(ci => _contentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToArray();
+
+            await Task.WhenAll(shapeTasks);
+
+            list.AddRange(shapeTasks.Select(task => task.Result));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
@@ -200,7 +205,7 @@ namespace Orchard.Core.Contents.Controllers {
             return View("CreatableTypeList", viewModel);
         }
 
-        public ActionResult Create(string id, int? containerId) {
+        public async Task<ActionResult> Create(string id, int? containerId) {
             if (string.IsNullOrEmpty(id))
                 return CreatableTypeList(containerId);
 
@@ -216,13 +221,13 @@ namespace Orchard.Core.Contents.Controllers {
                 }
             }
 
-            var model = _contentManager.BuildEditor(contentItem);
+            var model = await _contentManager.BuildEditorAsync(contentItem);
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(string id, string returnUrl) {
+        public Task<ActionResult> CreatePOST(string id, string returnUrl) {
             return CreatePOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
@@ -231,7 +236,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost, ActionName("Create")]
         [Mvc.FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
+        public async Task<ActionResult> CreateAndPublishPOST(string id, string returnUrl) {
 
             // pass a dummy content to the authorization check to check for "own" variations
             var dummyContent = _contentManager.New(id);
@@ -239,10 +244,10 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, dummyContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return await CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult CreatePOST(string id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private async Task<ActionResult> CreatePOST(string id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't create content")))
@@ -250,7 +255,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var model = await _contentManager.UpdateEditorAsync(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -269,7 +274,7 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToRoute(adminRouteValues);
         }
 
-        public ActionResult Edit(int id) {
+        public async Task<ActionResult> Edit(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
@@ -278,13 +283,13 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditor(contentItem);
+            var model = await _contentManager.BuildEditorAsync(contentItem);
             return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(int id, string returnUrl) {
+        public Task<ActionResult> EditPOST(int id, string returnUrl) {
             return EditPOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
@@ -293,7 +298,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [Mvc.FormValueRequired("submit.Publish")]
-        public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+        public async Task<ActionResult> EditAndPublishPOST(int id, string returnUrl) {
             var content = _contentManager.Get(id, VersionOptions.Latest);
 
             if (content == null)
@@ -302,10 +307,10 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, content, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
 
-            return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return await EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private async Task<ActionResult> EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
@@ -324,7 +329,7 @@ namespace Orchard.Core.Contents.Controllers {
                 previousRoute = contentItem.As<IAliasAspect>().Path;
             }
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var model = await _contentManager.UpdateEditorAsync(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View("Edit", model);

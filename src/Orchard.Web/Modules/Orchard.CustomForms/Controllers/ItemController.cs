@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -53,7 +54,7 @@ namespace Orchard.CustomForms.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Create(int id) {
+        public async Task<ActionResult> Create(int id) {
             var form = _contentManager.Get(id);
 
             if(form == null || !form.Has<CustomFormPart>()) {
@@ -71,7 +72,7 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditor(contentItem);
+            var model = await _contentManager.BuildEditorAsync(contentItem);
 
             model
                 .ContentItem(form)
@@ -82,7 +83,7 @@ namespace Orchard.CustomForms.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(int id, string returnUrl) {
+        public Task<ActionResult> CreatePOST(int id, string returnUrl) {
             return CreatePOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
@@ -91,7 +92,7 @@ namespace Orchard.CustomForms.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(int id, string returnUrl) {
+        public async Task<ActionResult> CreateAndPublishPOST(int id, string returnUrl) {
             var form = _contentManager.Get(id);
 
             if (form == null || !form.Has<CustomFormPart>()) {
@@ -106,10 +107,10 @@ namespace Orchard.CustomForms.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), dummyContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+            return await CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult CreatePOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private async Task<ActionResult> CreatePOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var form = _contentManager.Get(id);
 
             if (form == null || !form.Has<CustomFormPart>()) {
@@ -125,7 +126,7 @@ namespace Orchard.CustomForms.Controllers {
             if(customForm.SaveContentItem)
                 _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var model = await _contentManager.UpdateEditorAsync(contentItem, this);
             
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();

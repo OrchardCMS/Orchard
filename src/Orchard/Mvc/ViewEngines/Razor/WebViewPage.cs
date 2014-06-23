@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -59,6 +60,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public dynamic Display { get { return _display; } }
+
         // review: (heskew) is it going to be a problem?
         public new dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }

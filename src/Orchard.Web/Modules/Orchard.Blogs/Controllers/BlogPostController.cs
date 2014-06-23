@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -39,7 +40,7 @@ namespace Orchard.Blogs.Controllers {
         dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult ListByArchive(string path) {
+        public async Task<ActionResult> ListByArchive(string path) {
 
             var blogPath = _archiveConstraint.FindPath(path);
             var archive = _archiveConstraint.FindArchiveData(path);
@@ -61,7 +62,12 @@ namespace Orchard.Blogs.Controllers {
             }
 
             var list = Shape.List();
-            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary")));
+
+            var blogPostTasks = _blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
+
+            await Task.WhenAll(blogPostTasks);
+
+            list.AddRange(blogPostTasks.Select(task => task.Result));
 
             _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
 

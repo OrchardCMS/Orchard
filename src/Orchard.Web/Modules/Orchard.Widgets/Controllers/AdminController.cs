@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -144,7 +145,7 @@ namespace Orchard.Widgets.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult AddWidget(int layerId, string widgetType, string zone, string returnUrl) {
+        public async Task<ActionResult> AddWidget(int layerId, string widgetType, string zone, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -156,7 +157,7 @@ namespace Orchard.Widgets.Controllers {
                 widgetPart.Position = widgetPosition.ToString(CultureInfo.InvariantCulture);
                 widgetPart.Zone = zone;
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
-                var model = Services.ContentManager.BuildEditor(widgetPart);
+                var model = await Services.ContentManager.BuildEditorAsync(widgetPart);
 
                 return View(model);
             }
@@ -168,7 +169,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+        public async Task<ActionResult> AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -176,7 +177,7 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(widgetPart, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(widgetPart, this);
             try {
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
@@ -196,7 +197,7 @@ namespace Orchard.Widgets.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
-        public ActionResult AddLayer(string name, string description, string layerRule) { // <- hints for a new layer
+        public async Task<ActionResult> AddLayer(string name, string description, string layerRule) { // <- hints for a new layer
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -204,7 +205,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(layerPart);
+            var model = await Services.ContentManager.BuildEditorAsync(layerPart);
 
             // only messing with the hints if they're given
             if (!string.IsNullOrWhiteSpace(name))
@@ -218,7 +219,7 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddLayer")]
-        public ActionResult AddLayerPOST() {
+        public async Task<ActionResult> AddLayerPOST() {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -226,7 +227,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(layerPart, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(layerPart, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -237,7 +238,7 @@ namespace Orchard.Widgets.Controllers {
             return RedirectToAction("Index", "Admin", new { layerId = layerPart.Id });
         }
 
-        public ActionResult EditLayer(int id) {
+        public async Task<ActionResult> EditLayer(int id) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -245,13 +246,13 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(layerPart);
+            var model = await Services.ContentManager.BuildEditorAsync(layerPart);
             return View(model);
         }
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditLayerSavePOST(int id, string returnUrl) {
+        public async Task<ActionResult> EditLayerSavePOST(int id, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -259,7 +260,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(layerPart, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(layerPart, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -288,7 +289,7 @@ namespace Orchard.Widgets.Controllers {
             return RedirectToAction("Index", "Admin");
         }
 
-        public ActionResult EditWidget(int id) {
+        public async Task<ActionResult> EditWidget(int id) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -299,7 +300,7 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
             try {
-                var model = Services.ContentManager.BuildEditor(widgetPart);
+                var model = await Services.ContentManager.BuildEditorAsync(widgetPart);
                 return View(model);
             }
             catch (Exception exception) {
@@ -315,7 +316,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+        public async Task<ActionResult> EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -324,7 +325,7 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
             try {
-                var model = Services.ContentManager.UpdateEditor(widgetPart, this);
+                var model = await Services.ContentManager.UpdateEditorAsync(widgetPart, this);
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {

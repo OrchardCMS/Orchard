@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -35,7 +36,7 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Create(int blogId) {
+        public async Task<ActionResult> Create(int blogId) {
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
             if (blog == null)
@@ -47,27 +48,27 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blog, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var model = Services.ContentManager.BuildEditor(blogPost);
+            var model = await Services.ContentManager.BuildEditorAsync(blogPost);
             
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(int blogId) {
+        public  Task<ActionResult> CreatePOST(int blogId) {
             return CreatePOST(blogId, false);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(int blogId) {
+        public async Task<ActionResult> CreateAndPublishPOST(int blogId) {
             if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(blogId, true);
+            return await CreatePOST(blogId, true);
         }
 
-        private ActionResult CreatePOST(int blogId, bool publish = false) {
+        private async Task<ActionResult> CreatePOST(int blogId, bool publish = false) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
             if (blog == null)
@@ -80,7 +81,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
             
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
-            var model = Services.ContentManager.UpdateEditor(blogPost, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(blogPost, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -100,7 +101,7 @@ namespace Orchard.Blogs.Controllers {
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
-        public ActionResult Edit(int blogId, int postId) {
+        public async Task<ActionResult> Edit(int blogId, int postId) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -112,13 +113,13 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, post, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            var model = Services.ContentManager.BuildEditor(post);
+            var model = await Services.ContentManager.BuildEditorAsync(post);
             return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
+        public Task<ActionResult> EditPOST(int blogId, int postId, string returnUrl) {
             return EditPOST(blogId, postId, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
@@ -127,7 +128,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
+        public async Task<ActionResult> EditAndPublishPOST(int blogId, int postId, string returnUrl) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -140,10 +141,10 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
-            return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+            return await EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        public async Task<ActionResult> EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -157,7 +158,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             // Validate form input
-            var model = Services.ContentManager.UpdateEditor(blogPost, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(blogPost, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);

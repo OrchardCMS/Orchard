@@ -1,31 +1,32 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
-    public class ContentShapeResult : DriverResult {
+    public class AsyncContentShapeResult : DriverResult {
         private string _defaultLocation;
         private string _differentiator;
         private readonly string _shapeType;
         private readonly string _prefix;
-        private readonly Func<BuildShapeContext, dynamic> _shapeBuilder;
+        private readonly Func<BuildShapeContext, Task<dynamic>> _shapeBuilder;
         private string _groupId;
 
-        public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder) {
+        public AsyncContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, Task<dynamic>> shapeBuilder) {
             _shapeType = shapeType;
             _prefix = prefix;
             _shapeBuilder = shapeBuilder;
         }
 
-        public override void Apply(BuildDisplayContext context) {
-            ApplyImplementation(context, context.DisplayType);
+        public override Task ApplyAsync(BuildDisplayContext context) {
+            return ApplyImplementation(context, context.DisplayType);
         }
 
-        public override void Apply(BuildEditorContext context) {
-            ApplyImplementation(context, null);
+        public override Task ApplyAsync(BuildEditorContext context) {
+            return ApplyImplementation(context, null);
         }
 
-        private void ApplyImplementation(BuildShapeContext context, string displayType) {
+        private async Task ApplyImplementation(BuildShapeContext context, string displayType) {
             var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
             if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
@@ -42,7 +43,7 @@ namespace Orchard.ContentManagement.Drivers {
             dynamic parentShape = context.Shape;
             context.ContentPart = ContentPart;
 
-            var newShape = _shapeBuilder(context);
+            var newShape = await _shapeBuilder(context);
 
             // ignore it if the driver returned a null shape
             if(newShape == null) {
@@ -95,17 +96,17 @@ namespace Orchard.ContentManagement.Drivers {
             }
         }
 
-        public ContentShapeResult Location(string zone) {
+        public AsyncContentShapeResult Location(string zone) {
             _defaultLocation = zone;
             return this;
         }
 
-        public ContentShapeResult Differentiator(string differentiator) {
+        public AsyncContentShapeResult Differentiator(string differentiator) {
             _differentiator = differentiator;
             return this;
         }
 
-        public ContentShapeResult OnGroup(string groupId) {
+        public AsyncContentShapeResult OnGroup(string groupId) {
             _groupId=groupId;
             return this;
         }
@@ -124,6 +125,27 @@ namespace Orchard.ContentManagement.Drivers {
 
         public string GetShapeType() {
             return _shapeType;
+        }
+    }
+
+    public class ContentShapeResult : AsyncContentShapeResult {
+        public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder)
+            : base(shapeType, prefix, ctx => Task.FromResult(shapeBuilder(ctx))) {
+        }
+
+        public new ContentShapeResult Location(string zone) {
+            base.Location(zone);
+            return this;
+        }
+
+        public new ContentShapeResult Differentiator(string differentiator) {
+            base.Differentiator(differentiator);
+            return this;
+        }
+
+        public new ContentShapeResult OnGroup(string groupId) {
+            base.OnGroup(groupId);
+            return this;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.AntiSpam.Models;
 using Orchard.AntiSpam.Rules;
 using Orchard.AntiSpam.Settings;
@@ -29,7 +30,7 @@ namespace Orchard.AntiSpam.Services {
             _workContextAccessor = workContextAccessor;
         }
 
-        public SpamStatus CheckForSpam(CommentCheckContext context, SpamFilterAction action, IContent content) {
+        public async Task<SpamStatus> CheckForSpam(CommentCheckContext context, SpamFilterAction action, IContent content) {
 
             if (string.IsNullOrWhiteSpace(context.CommentContent)) {
                 return SpamStatus.Ham;
@@ -39,16 +40,24 @@ namespace Orchard.AntiSpam.Services {
 
             var result = SpamStatus.Ham;
 
+            var tasks = spamFilters.Select(x => x.CheckForSpam(context)).ToList();
+
             switch (action) {
                 case SpamFilterAction.AllOrNothing:
-                    if (spamFilters.All(x => x.CheckForSpam(context) == SpamStatus.Spam)) {
+
+                    await Task.WhenAll(tasks);
+
+                    if (tasks.All(x => x.Result == SpamStatus.Spam)) {
                         result = SpamStatus.Spam;
                     }
 
                     break;
                 case SpamFilterAction.One:
-                    if (spamFilters.Any(x => x.CheckForSpam(context) == SpamStatus.Spam)) {
-                        result =  SpamStatus.Spam;
+
+                    await Task.WhenAll(tasks);
+
+                    if (tasks.InCompletionOrder().Any(x => x.Result == SpamStatus.Spam)) {
+                        result = SpamStatus.Spam;
                     }
 
                     break;
@@ -73,7 +82,7 @@ namespace Orchard.AntiSpam.Services {
             return result;
         }
 
-        public SpamStatus CheckForSpam(SpamFilterPart part) {
+        public async Task<SpamStatus> CheckForSpam(SpamFilterPart part) {
             var settings = part.TypePartDefinition.Settings.GetModel<SpamFilterPartSettings>();
             var context = CreateCommentCheckContext(part, _workContextAccessor.GetContext());
 
@@ -81,33 +90,29 @@ namespace Orchard.AntiSpam.Services {
                 return SpamStatus.Ham;
             }
 
-            var result = CheckForSpam(context, settings.Action, part);
+            var result = await CheckForSpam(context, settings.Action, part);
 
             return result;
         }
 
-        public void ReportSpam(CommentCheckContext context) {
+        public Task ReportSpam(CommentCheckContext context) {
             var spamFilters = GetSpamFilters().ToList();
 
-            foreach(var filter in spamFilters) {
-                filter.ReportSpam(context);
-            }
+            return Task.WhenAll(spamFilters.Select(filter => filter.ReportSpam(context)));
         }
 
-        public void ReportSpam(SpamFilterPart part) {
-           ReportSpam(CreateCommentCheckContext(part, _workContextAccessor.GetContext()));
+        public Task ReportSpam(SpamFilterPart part) {
+           return ReportSpam(CreateCommentCheckContext(part, _workContextAccessor.GetContext()));
         }
 
-        public void ReportHam(CommentCheckContext context) {
+        public Task ReportHam(CommentCheckContext context) {
             var spamFilters = GetSpamFilters().ToList();
 
-            foreach (var filter in spamFilters) {
-                filter.ReportHam(context);
-            }
+            return Task.WhenAll(spamFilters.Select(filter => filter.ReportHam(context)));
         }
 
-        public void ReportHam(SpamFilterPart part) {
-            ReportHam(CreateCommentCheckContext(part, _workContextAccessor.GetContext()));
+        public Task ReportHam(SpamFilterPart part) {
+            return ReportHam(CreateCommentCheckContext(part, _workContextAccessor.GetContext()));
         }
 
         public IEnumerable<ISpamFilter> GetSpamFilters() {

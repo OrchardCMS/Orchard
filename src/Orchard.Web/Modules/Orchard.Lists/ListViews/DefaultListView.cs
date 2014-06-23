@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Orchard.ContentManagement;
 using Orchard.Core.Containers.Services;
 
@@ -13,13 +14,17 @@ namespace Orchard.Lists.ListViews {
             get { return 0; }
         }
 
-        public override dynamic BuildDisplay(BuildListViewDisplayContext context) {
+        public override async Task<dynamic> BuildDisplayAsync(BuildListViewDisplayContext context) {
             var pagerShape = context.New.Pager(context.Pager).TotalItemCount(context.ContentQuery.Count());
-            var pageOfContentItems = context.ContentQuery.Slice(context.Pager.GetStartIndex(), context.Pager.PageSize).Select(x => _contentManager.BuildDisplay(x, "SummaryAdmin")).ToList();
+            var pageOfContentItems = context.ContentQuery.Slice(context.Pager.GetStartIndex(), context.Pager.PageSize);
+            var shapeTasks = pageOfContentItems.Select(x => _contentManager.BuildDisplayAsync(x, "SummaryAdmin")).ToList();
+
+            await Task.WhenAll(shapeTasks);
+
             return context.New.ListView_Default()
                 .Container(context.Container)
                 .ContainerDisplayName(context.ContainerDisplayName)
-                .ContentItems(pageOfContentItems)
+                .ContentItems(shapeTasks.Select(task => task.Result))
                 .Pager(pagerShape);
         }
     }

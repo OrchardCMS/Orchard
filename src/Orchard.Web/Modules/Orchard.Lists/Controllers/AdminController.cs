@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -58,7 +59,7 @@ namespace Orchard.Lists.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(Core.Contents.ViewModels.ListContentsViewModel model, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Index(Core.Contents.ViewModels.ListContentsViewModel model, PagerParameters pagerParameters) {
             var query = _containerService.GetContainersQuery(VersionOptions.Latest);
 
             if (!String.IsNullOrEmpty(model.TypeName)) {
@@ -94,7 +95,13 @@ namespace Orchard.Lists.Controllers {
             var pageOfLists = query.Slice(pager.GetStartIndex(), pager.PageSize);
             
             var listsShape = Shape.List();
-            listsShape.AddRange(pageOfLists.Select(x => _contentManager.BuildDisplay(x, "SummaryAdmin")).ToList());
+
+            var tasks = pageOfLists.Select(item => _contentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+
+            await Task.WhenAll(tasks);
+
+            listsShape.AddRange(tasks.Select(t => t.Result));
+
             var viewModel = Shape.ViewModel()
                 .Lists(listsShape)
                 .Pager(pagerShape)
@@ -182,7 +189,7 @@ namespace Orchard.Lists.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+        public async Task<ActionResult> List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
             var container = _contentManager.GetLatest(model.ContainerId);
             if (container == null || !container.Has<ContainerPart>()) {
@@ -221,7 +228,7 @@ namespace Orchard.Lists.Controllers {
                 }
             }
 
-            var listView = containerPart.AdminListView.BuildDisplay(new BuildListViewDisplayContext {
+            var listView = await containerPart.AdminListView.BuildDisplayAsync(new BuildListViewDisplayContext {
                 New = _services.New,
                 Container = containerPart,
                 ContentQuery = query,

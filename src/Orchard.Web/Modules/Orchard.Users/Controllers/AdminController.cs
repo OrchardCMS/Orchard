@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -150,21 +151,21 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index", ControllerContext.RouteData.Values);
         }
 
-        public ActionResult Create() {
+        public async Task<ActionResult> Create() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            var model = await Services.ContentManager.BuildEditorAsync(user);
             model.Content.Add(editor);
 
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST(UserCreateViewModel createModel) {
+        public async Task<ActionResult> CreatePOST(UserCreateViewModel createModel) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
@@ -192,7 +193,7 @@ namespace Orchard.Users.Controllers {
                                                   null, null, true));
             }
 
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(user, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -208,28 +209,28 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int id) {
+        public async Task<ActionResult> Edit(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            var model = await Services.ContentManager.BuildEditorAsync(user);
             model.Content.Add(editor);
 
             return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(int id) {
+        public async Task<ActionResult> EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id, VersionOptions.DraftRequired);
             string previousName = user.UserName;
 
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(user, this);
 
             var editModel = new UserEditViewModel {User = user};
             if (TryUpdateModel(editModel)) {

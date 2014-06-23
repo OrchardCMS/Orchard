@@ -44,26 +44,11 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
-        [Obsolete("Use BuildDisplayAsync")]
-        public override void BuildDisplay(BuildDisplayContext context) {
-            BuildDisplayAsync(context).Wait();
-        }
-
-        [Obsolete("Use BuildEditorAsync")]
-        public override void BuildEditor(BuildEditorContext context) {
-            BuildEditorAsync(context).Wait();
-        }
-
-        [Obsolete("Use UpdateEditorAsync")]
-        public override void UpdateEditor(UpdateEditorContext context) {
-            UpdateEditorAsync(context).Wait();
-        }
-
         public override Task BuildDisplayAsync(BuildDisplayContext context) {
             return _drivers.InvokeAsync(async driver => {
                 var result = await driver.BuildDisplayAsync(context);
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 
@@ -71,7 +56,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 var result = await driver.BuildEditorAsync(context);
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 
@@ -79,7 +64,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 var result = await driver.UpdateEditorAsync(context);
                 if (result != null)
-                    result.Apply(context);
+                    await result.ApplyAsync(context);
             }, Logger);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -44,7 +45,7 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, string q = "") {
+        public async Task<ActionResult> Index(PagerParameters pagerParameters, string q = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
 
@@ -71,9 +72,13 @@ namespace Orchard.Search.Controllers {
 
             // ignore search results which content item has been removed or unpublished
             var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
-            foreach (var contentItem in foundItems) {
-                list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
-            }
+
+            var shapeTasks = foundItems.Select(contentItem => _contentManager.BuildDisplayAsync(contentItem, "Summary")).ToArray();
+
+            await Task.WhenAll(shapeTasks);
+
+            list.AddRange(shapeTasks.Select(task => task.Result));
+
             searchHits.TotalItemCount -= foundIds.Count() - foundItems.Count();
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(searchHits.TotalItemCount);

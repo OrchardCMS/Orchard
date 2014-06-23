@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
@@ -216,23 +217,23 @@ namespace Orchard.Comments.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
-        public ActionResult Edit(int id) {
+        public async Task<ActionResult> Edit(int id) {
             var commentPart = _contentManager.Get<CommentPart>(id);
             if (commentPart == null)
                 return new HttpNotFoundResult();
 
-            dynamic editorShape = _contentManager.BuildEditor(commentPart);
+            dynamic editorShape = await _contentManager.BuildEditorAsync(commentPart);
             return View(editorShape);
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection input) {
+        public async Task<ActionResult> Edit(int id, FormCollection input) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't edit comment")))
                 return new HttpUnauthorizedResult();
 
             var commentPart = _contentManager.Get<CommentPart>(id);
 
-            var editorShape = _contentManager.UpdateEditor(commentPart, this);
+            var editorShape = await _contentManager.UpdateEditorAsync(commentPart, this);
 
             if (!ModelState.IsValid) {
                 foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select(e => e.ErrorMessage)) {

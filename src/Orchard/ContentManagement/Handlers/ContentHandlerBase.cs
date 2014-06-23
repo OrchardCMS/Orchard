@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 
-namespace Orchard.ContentManagement.Handlers
-{
-    public class ContentHandlerBase : IContentHandler
-    {
+namespace Orchard.ContentManagement.Handlers {
+    public class ContentHandlerBase : IContentHandler {
         public virtual void Activating(ActivatingContentContext context) { }
         public virtual void Activated(ActivatedContentContext context) { }
         public virtual void Initializing(InitializingContentContext context) { }
@@ -30,20 +28,38 @@ namespace Orchard.ContentManagement.Handlers
         public virtual void Exported(ExportContentContext context) { }
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) { }
-        public virtual void BuildDisplay(BuildDisplayContext context) { }
-        public virtual void BuildEditor(BuildEditorContext context) { }
-        public virtual void UpdateEditor(UpdateEditorContext context) { }
 
-        public virtual async Task BuildDisplayAsync(BuildDisplayContext context) {
-            BuildDisplay(context);
+        public virtual void BuildDisplay(BuildDisplayContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
+            BuildDisplayAsync(context).Wait();
         }
 
-        public virtual async Task BuildEditorAsync(BuildEditorContext context) {
-            BuildEditor(context);
+        public virtual void BuildEditor(BuildEditorContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
+            BuildEditorAsync(context).Wait();
         }
 
-        public virtual async Task UpdateEditorAsync(UpdateEditorContext context) {
-            UpdateEditor(context);
+        public virtual void UpdateEditor(UpdateEditorContext context) {
+            // provided for backwards compatibility, invokes the async method.
+            // TODO: verify this won't dead lock or remove it.
+            UpdateEditorAsync(context).Wait();
+        }
+
+        public virtual Task BuildDisplayAsync(BuildDisplayContext context) {
+            // default async implementation. basically returns synchronously
+            return Task.Delay(0);
+        }
+
+        public virtual Task BuildEditorAsync(BuildEditorContext context) {
+            // default async implementation. basically returns synchronously
+            return Task.Delay(0);
+        }
+
+        public virtual Task UpdateEditorAsync(UpdateEditorContext context) {
+            // default async implementation. basically returns synchronously
+            return Task.Delay(0);
         }
     }
 }

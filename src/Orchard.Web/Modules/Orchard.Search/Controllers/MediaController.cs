@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -22,7 +23,7 @@ namespace Orchard.Search.Controllers {
             _contentManager = contentManager;
         }
 
-        public ActionResult MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "", string search = "") {
+        public async Task<ActionResult> MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "", string search = "") {
             var builder = _indexProvider.CreateSearchBuilder("Media");
 
             if (!String.IsNullOrEmpty(search)) {
@@ -52,9 +53,13 @@ namespace Orchard.Search.Controllers {
             var contentItemIds = builder.Slice(skip, count).Search().Select(x => x.ContentItemId).ToArray();
             var mediaParts = _contentManager.GetMany<MediaPart>(contentItemIds, VersionOptions.Published, QueryHints.Empty);
 
-            var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
-                MediaPart = x,
-                Shape = _contentManager.BuildDisplay(x, "Thumbnail")
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, _contentManager.BuildDisplayAsync(p, "Thumbnail"))).ToArray();
+
+            await Task.WhenAll(shapeTasks.Select(t => t.Item2));
+
+            var mediaItems = shapeTasks.Select(x => new MediaManagerMediaItemViewModel {
+                MediaPart = x.Item1,
+                Shape = x.Item2.Result
             }).ToList();
 
             var viewModel = new MediaManagerMediaItemsViewModel {

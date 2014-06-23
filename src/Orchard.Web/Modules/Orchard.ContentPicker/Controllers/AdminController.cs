@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -40,7 +41,7 @@ namespace Orchard.ContentPicker.Controllers {
         public Localizer T { get; set; }
 
         [Themed(false)]
-        public ActionResult Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field, string types) {
+        public async Task<ActionResult> Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field, string types) {
             var menuItems = _navigationManager.BuildMenu("content-picker").ToList();
             var contentPickerMenuItem = menuItems.FirstOrDefault();
             if (contentPickerMenuItem == null) {
@@ -131,7 +132,11 @@ namespace Orchard.ContentPicker.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
             var list = Services.New.List();
 
-            list.AddRange(pageOfContentItems.Select(ci => Services.ContentManager.BuildDisplay(ci, "SummaryAdmin")));
+            var tasks = pageOfContentItems.Select(ci =>  Services.ContentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToArray();
+
+            await Task.WhenAll(tasks);
+
+            list.AddRange(tasks.Select(t => t.Result));
 
             foreach(IShape item in list.Items) {
                 item.Metadata.Type = "ContentPicker";

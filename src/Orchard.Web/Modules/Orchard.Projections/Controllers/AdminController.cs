@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Core.Title.Models;
@@ -238,12 +239,16 @@ namespace Orchard.Projections.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Preview(int id) {
+        public async Task<ActionResult> Preview(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var contentItems = _projectionManager.GetContentItems(id, 0, 20);
-            var contentShapes = contentItems.Select(item => _services.ContentManager.BuildDisplay(item, "Summary"));
+            var shapeTasks = contentItems.Select(item => _services.ContentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+
+            await Task.WhenAll(shapeTasks);
+
+            var contentShapes = shapeTasks.Select(task => task.Result);
 
             var list = Shape.List();
             list.AddRange(contentShapes);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NHibernate.Criterion;
 using Orchard.ContentManagement.Records;
 
@@ -199,9 +200,6 @@ namespace Orchard.ContentManagement {
                 return null;
             return manager.UpdateEditor(content, updater);
         }
-
-
-
 
         /* Aggregate item/part type casting extension methods */
 

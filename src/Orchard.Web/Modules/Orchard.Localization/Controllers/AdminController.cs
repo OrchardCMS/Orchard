@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -36,7 +37,7 @@ namespace Orchard.Localization.Controllers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Translate(int id, string to) {
+        public async Task<ActionResult> Translate(int id, string to) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             // only support translations from the site culture, at the moment at least
@@ -66,7 +67,7 @@ namespace Orchard.Localization.Controllers {
                 Id = id,
                 SelectedCulture = selectedCulture,
                 SiteCultures = siteCultures,
-                Content = _contentManager.BuildEditor(contentItem)
+                Content = await _contentManager.BuildEditorAsync(contentItem)
             };
 
             // Cancel transaction so that the routepart is not modified.
@@ -77,7 +78,7 @@ namespace Orchard.Localization.Controllers {
 
         [HttpPost, ActionName("Translate")]
         [FormValueRequired("submit.Save")]
-        public ActionResult TranslatePOST(int id) {
+        public Task<ActionResult> TranslatePOST(int id) {
             return TranslatePOST(id, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
@@ -86,11 +87,11 @@ namespace Orchard.Localization.Controllers {
 
         [HttpPost, ActionName("Translate")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult TranslateAndPublishPOST(int id) {
+        public Task<ActionResult> TranslateAndPublishPOST(int id) {
             return TranslatePOST(id, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
+        public async Task<ActionResult> TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
@@ -114,7 +115,7 @@ namespace Orchard.Localization.Controllers {
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
             }
 
-            model.Content = _contentManager.UpdateEditor(contentItemTranslation, this);
+            model.Content = await _contentManager.UpdateEditorAsync(contentItemTranslation, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -123,7 +124,7 @@ namespace Orchard.Localization.Controllers {
                 if (culture != null) {
                     culture.Culture = null;
                 }
-                model.Content = _contentManager.BuildEditor(contentItem);
+                model.Content = await _contentManager.BuildEditorAsync(contentItem);
                 return View(model);
             }
 

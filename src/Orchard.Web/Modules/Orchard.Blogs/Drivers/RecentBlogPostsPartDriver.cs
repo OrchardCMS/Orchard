@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
@@ -21,7 +22,7 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
+            return ContentShapeAsync("Parts_Blogs_RecentBlogPosts", async () => {
             var blog = _contentManager.Get<BlogPart>(part.BlogId);
 
                 if (blog == null) {
@@ -35,7 +36,12 @@ namespace Orchard.Blogs.Drivers {
                     .Select(ci => ci.As<BlogPostPart>());
 
                 var list = shapeHelper.List();
-                list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
+
+                var shapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "Summary")).ToArray();
+
+                await Task.WhenAll(shapeTasks);
+
+                list.AddRange(shapeTasks.Select(task => task.Result));
 
                 var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentItems: list);
 
