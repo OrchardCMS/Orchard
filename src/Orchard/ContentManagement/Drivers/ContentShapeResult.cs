@@ -130,7 +130,7 @@ namespace Orchard.ContentManagement.Drivers {
 
     public class ContentShapeResult : AsyncContentShapeResult {
         public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder)
-            : base(shapeType, prefix, ctx => Task.FromResult(shapeBuilder(ctx))) {
+            : base(shapeType, prefix, ctx => Task.FromResult<dynamic>(shapeBuilder(ctx))) {
         }
 
         public new ContentShapeResult Location(string zone) {
