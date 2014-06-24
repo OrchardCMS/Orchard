@@ -42,7 +42,7 @@ namespace Orchard.ContentManagement.Drivers
                 return null;
             }
 
-            DriverResult result = await Display(part, context.DisplayType, context.New);
+            DriverResult result = await DisplayAsync(part, context.DisplayType, context.New);
 
             if (result != null)
             {
