@@ -27,10 +27,10 @@ var Orchard;
                             return;
                     }
 
-                    var originalFileName = data.files[0].name;
+                    var editedFileName = scope.find("input[name$='.FileName']").val();
                     var statusUploaded = scope.find(".status.uploaded").show();
 
-                    statusUploaded.text(statusUploaded.data("text-template").replace("{filename}", originalFileName));
+                    statusUploaded.text(statusUploaded.data("text-template").replace("{filename}", editedFileName));
                     scope.data("upload-isactive", false);
                     scope.data("upload-iscompleted", true);
                     scope.data("upload-start-time", null);
@@ -40,7 +40,7 @@ var Orchard;
                     var wamsAssetInput = scope.find("input[name$='.WamsAssetId']");
                     var fileNameInput = scope.find("input[name$='.FileName']");
                     var assetId = $.trim(wamsAssetInput.val());
-                    var wrapper = data.fileInput.closest(".file-upload-wrapper");
+                    var fileUploadWrapper = data.fileInput.closest(".file-upload-wrapper");
 
                     if (assetId.length > 0) {
                         var url = scope.data("delete-asset-url");
@@ -69,7 +69,7 @@ var Orchard;
                         });
                     }
 
-                    wrapper.show();
+                    fileUploadWrapper.show();
                 }
 
                 function pad(value, length) {
@@ -156,24 +156,35 @@ var Orchard;
                     return flag;
                 }
 
-                var isSubmitting = function () {
+                function isSubmitting() {
                     var scope = $(".upload-direct");
                     return scope.data("is-submitting") == true;
-                };
+                }
+                ;
 
                 function initializeUpload(fileInput) {
                     var scope = fileInput.closest(".async-upload");
-                    var acceptFileTypes = scope.data("upload-accept-file-types");
+                    var fileUploadWrapper = scope.find(".file-upload-wrapper");
+                    var acceptFileTypesRegex = new RegExp(scope.data("upload-accept-file-types"));
                     var antiForgeryToken = scope.closest("form").find("[name='__RequestVerificationToken']").val();
+
+                    var selectedFileWrapper = scope.find(".selected-file-wrapper");
+                    var filenameInput = scope.find(".filename-input");
+                    var resetButton = scope.find(".reset-button");
+                    var uploadButton = scope.find(".upload-button");
+                    var filenameText = scope.find(".filename-text");
+
+                    var validationText = scope.find(".validation-text");
                     var preparingText = scope.find(".status.preparing");
                     var uploadingContainer = scope.find(".status.uploading");
+                    var progressBar = scope.find(".progress-bar");
                     var progressText = scope.find(".progress-text");
                     var progressDetails = scope.find(".progress-details");
                     var cancelLink = scope.find(".cancel-link");
 
                     fileInput.fileupload({
                         autoUpload: false,
-                        acceptFileTypes: new RegExp(acceptFileTypes, "i"),
+                        acceptFileTypes: acceptFileTypesRegex,
                         type: "PUT",
                         maxChunkSize: 4 * 1024 * 1024,
                         beforeSend: function (xhr, data) {
@@ -201,7 +212,7 @@ var Orchard;
                             var uploaded = Math.floor(data.loaded / 1000);
                             var total = Math.floor(data.total / 1000);
 
-                            scope.find(".progress-bar").show().find('.progress').css('width', percentComplete + '%');
+                            progressBar.show().find(".progress").css("width", percentComplete + "%");
                             progressText.text(progressText.data("text-template").replace("{percentage}", percentComplete)).show();
                             progressDetails.text(progressDetails.data("text-template").replace("{uploaded}", uploaded).replace("{total}", total).replace("{kbps}", kbps).replace("{elapsed}", elapsed.humanize()).replace("{remaining}", remaining.humanize())).show();
                         },
@@ -215,49 +226,78 @@ var Orchard;
                             uploadCompleted(this, e, data);
                         },
                         processdone: function (e, data) {
-                            scope.find(".validation-text").hide();
+                            var selectedFilename = data.files[0].name;
+                            scope.data("selected-filename", selectedFilename);
+                            window.setTimeout(function () {
+                                fileUploadWrapper.hide();
+                                validationText.hide();
+                                selectedFileWrapper.show();
+                                filenameText.text(filenameText.data("text-template").replace("{filename}", selectedFilename));
+                            }, 10);
 
-                            var filename = data.files[0].name;
-                            scope.data("upload-isactive", true);
-                            scope.data("upload-start-time", Date.now());
-                            var generateAssetUrl = scope.data("generate-asset-url");
-                            preparingText.show();
-                            scope.find(".file-upload-wrapper").hide();
-                            scope.data("block-index", 0);
-                            scope.data("block-ids", new Array());
+                            scope[0].doReset = function () {
+                                fileUploadWrapper.show();
+                                filenameInput.val("");
+                                filenameText.text("");
+                                selectedFileWrapper.hide();
+                                validationText.hide();
+                            };
 
-                            $.ajax({
-                                url: generateAssetUrl,
-                                data: {
-                                    filename: filename,
-                                    __RequestVerificationToken: antiForgeryToken
-                                },
-                                type: "POST"
-                            }).done(function (asset) {
-                                data.url = asset.sasLocator;
-                                data.multipart = false;
+                            scope[0].doUpload = function () {
+                                var editedFilename = filenameInput.val() || selectedFilename;
+                                if (!acceptFileTypesRegex.test(editedFilename)) {
+                                    validationText.show();
+                                    return;
+                                }
 
-                                scope.data("sas-locator", asset.sasLocator);
-                                scope.find("input[name$='.FileName']").val(filename);
-                                scope.find("input[name$='.WamsAssetId']").val(asset.assetId);
+                                scope.data("upload-isactive", true);
+                                scope.data("upload-start-time", Date.now());
+                                var generateAssetUrl = scope.data("generate-asset-url");
+                                scope.data("block-index", 0);
+                                scope.data("block-ids", new Array());
 
-                                preparingText.hide();
-                                progressText.text(progressText.data("text-template").replace("{percentage}", 0)).show();
-                                uploadingContainer.show();
+                                preparingText.show();
+                                selectedFileWrapper.hide();
+                                validationText.hide();
 
-                                var xhr = data.submit();
-                                scope.data("xhr", xhr);
-                            }).fail(function (xhr, status, error) {
-                                preparingText.hide();
-                                uploadingContainer.hide();
-                                scope.data("upload-isactive", false);
-                                scope.data("upload-start-time", null);
-                                scope.find(".file-upload-wrapper").show();
-                                alert("An error occurred. Error: " + error);
-                            });
+                                $.ajax({
+                                    url: generateAssetUrl,
+                                    data: {
+                                        filename: editedFilename,
+                                        __RequestVerificationToken: antiForgeryToken
+                                    },
+                                    type: "POST"
+                                }).done(function (asset) {
+                                    data.url = asset.sasLocator;
+                                    data.multipart = false;
+
+                                    scope.data("sas-locator", asset.sasLocator);
+                                    scope.find("input[name$='.FileName']").val(editedFilename);
+                                    scope.find("input[name$='.WamsAssetId']").val(asset.assetId);
+
+                                    preparingText.hide();
+                                    progressText.text(progressText.data("text-template").replace("{percentage}", 0)).show();
+                                    uploadingContainer.show();
+
+                                    var xhr = data.submit();
+                                    scope.data("xhr", xhr);
+                                }).fail(function (xhr, status, error) {
+                                    fileUploadWrapper.show();
+                                    selectedFileWrapper.show();
+                                    preparingText.hide();
+                                    uploadingContainer.hide();
+
+                                    scope.data("upload-isactive", false);
+                                    scope.data("upload-start-time", null);
+                                    alert("An error occurred. Error: " + error);
+                                });
+                            };
                         },
                         processfail: function (e, data) {
-                            scope.find(".validation-text").show();
+                            validationText.show();
+                            filenameInput.val("");
+                            filenameText.text("");
+                            selectedFileWrapper.hide();
                         },
                         change: function (e, data) {
                             var prompt = fileInput.data("prompt");
@@ -272,7 +312,7 @@ var Orchard;
                     cancelLink.on("click", function (e) {
                         e.preventDefault();
 
-                        if (confirm($(this).data("prompt"))) {
+                        if (confirm($(this).data("cancel-prompt"))) {
                             var xhr = scope.data("xhr");
                             xhr.abort();
                         }
@@ -281,9 +321,22 @@ var Orchard;
 
                 function initializeUploadDirect() {
                     var scope = $(".upload-direct").show();
+
+                    scope.find(".reset-button").on("click", function (e) {
+                        var doReset = $(this).closest(".async-upload")[0].doReset;
+                        if (!!doReset)
+                            doReset();
+                    });
+
+                    scope.find(".upload-button").on("click", function (e) {
+                        var doUpload = $(this).closest(".async-upload")[0].doUpload;
+                        if (!!doUpload)
+                            doUpload();
+                    });
+
                     requiredUploads = scope.find(".required-upload");
 
-                    scope.find(".async-upload-input").each(function () {
+                    scope.find(".async-upload-file-input").each(function () {
                         initializeUpload($(this));
                     });
 
@@ -297,10 +350,13 @@ var Orchard;
                         scope.data("is-submitting", true);
                     });
 
-                    window.onbeforeunload = function (e) {
-                        if ((hasActiveUploads() || hasCompletedUploads()) && !isSubmitting())
-                            e.returnValue = scope.data("navigate-away-prompt");
-                    };
+                    $(window).on("beforeunload", function (e) {
+                        if ((hasActiveUploads() || hasCompletedUploads()) && !isSubmitting()) {
+                            var message = scope.data("navigate-away-prompt");
+                            e.result = message;
+                            return message;
+                        }
+                    });
                 }
                 CloudVideoEdit.initializeUploadDirect = initializeUploadDirect;
             })(MediaServices.CloudVideoEdit || (MediaServices.CloudVideoEdit = {}));

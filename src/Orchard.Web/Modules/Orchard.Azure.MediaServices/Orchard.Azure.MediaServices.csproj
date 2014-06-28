@@ -553,6 +553,30 @@
   <ItemGroup>
     <Content Include="Scripts\lib\MPEG Dash Notice.docx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cloudmedia-edit-cloudvideopart.css.map">
+      <DependentUpon>cloudmedia-edit-cloudvideopart.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\cloudmedia-admin-common.js.map" />
+    <Content Include="Scripts\cloudmedia-admin-job.js.map" />
+    <Content Include="Scripts\cloudmedia-admin-settings.js.map" />
+    <Content Include="Scripts\cloudmedia-autorefresh.js.map" />
+    <Content Include="Scripts\cloudmedia-edit-asset-video.js.map" />
+    <Content Include="Scripts\cloudmedia-edit-asset.js.map" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.js.map" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.js.map" />
+    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.js.map" />
+    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-data.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-injectors.js.map" />
+    <Content Include="Scripts\cloudmedia-videoplayer-main.js.map" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -601,7 +625,7 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>True</UseCustomServer>
+          <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
