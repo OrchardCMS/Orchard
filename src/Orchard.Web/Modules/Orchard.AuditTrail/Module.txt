@@ -1,18 +1,23 @@
-﻿Name: AuditTrail
+﻿Name: Audit Trail
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.8.1
 OrchardVersion: 1.8
-Description: Logs user initiated events, such as content changes, providing a trail for auditing.
+Description: Provides a log for recording and viewing back-end changes.
 Features:
     Orchard.AuditTrail:
-        Name: AuditTrail
-        Description: Provides the core audit trail framework.
+        Name: Audit Trail
+        Description: Provides a log for recording and viewing back-end changes.
         Category: Security
         Dependencies: Orchard.Users, Orchard.Roles, Orchard.ContentTypes
+    Orchard.AuditTrail.ImportExport:
+        Name: Audit Trail Import Export
+        Description: Provides import/export functionality for the Audit Trail feature.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.ImportExport
     Orchard.AuditTrail.Trimming:
-        Name: AuditTrail Trimming
-        Description: A background task that trims the audit trail.
+        Name: Audit Trail Trimming
+        Description: Provides a background task that regularly deletes old audit trail records.
         Category: Security
         Dependencies: Orchard.AuditTrail

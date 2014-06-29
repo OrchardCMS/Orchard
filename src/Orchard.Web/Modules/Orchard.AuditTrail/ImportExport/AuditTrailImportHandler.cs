@@ -2,10 +2,12 @@
 using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.AuditTrail.ImportExport {
+    [OrchardFeature("Orchard.AuditTrail.ImportExport")]
     public class AuditTrailImportHandler : Component, IRecipeHandler {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailEventRepository;
 

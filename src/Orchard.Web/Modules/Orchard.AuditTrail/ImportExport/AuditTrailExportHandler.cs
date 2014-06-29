@@ -4,14 +4,12 @@ using System.Linq;
 using System.Xml.Linq;
 using Orchard.AuditTrail.Models;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Events;
+using Orchard.ImportExport.Services;
 
 namespace Orchard.AuditTrail.ImportExport {
-    public interface IExportEventHandler : IEventHandler {
-        void Exporting(dynamic context);
-        void Exported(dynamic context);
-    }
-
+    [OrchardFeature("Orchard.AuditTrail.ImportExport")]
     public class AuditTrailExportEventHandler : IExportEventHandler {
         private readonly IRepository<AuditTrailEventRecord> _auditTrailEventRepository;
 
@@ -19,10 +17,10 @@ namespace Orchard.AuditTrail.ImportExport {
             _auditTrailEventRepository = auditTrailEventRepository;
         }
 
-        public void Exporting(dynamic context) {
+        public void Exporting(ExportContext context) {
         }
 
-        public void Exported(dynamic context) {
+        public void Exported(ExportContext context) {
 
             if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("AuditTrail")) {
                 return;
