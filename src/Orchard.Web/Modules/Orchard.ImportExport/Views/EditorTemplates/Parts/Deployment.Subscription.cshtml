@@ -1,0 +1,150 @@
+﻿@using Orchard.ImportExport.ViewModels
+@model SubscriptionPartViewModel
+@{
+    Layout.Title = Model.DeploymentDescription;
+    Style.Require("jQueryUI_Multiselect");
+    Script.Require("jQueryUI_Multiselect").AtFoot();
+}
+ <fieldset>
+    <div>
+        <p>@(Model.DeploymentType == "Import" ? T("Deployment import source") : T("Deployment export target"))</p>
+        @Html.DropDownListFor(m => m.DeploymentConfigurationId, Model.DeploymentConfigurations.Select(q => new SelectListItem { Text = Html.ItemDisplayText(q).ToString(), Value = q.Id.ToString(), Selected = q.Id == Model.DeploymentConfigurationId }))
+    </div>
+ </fieldset>
+<fieldset>
+    <p>@T("Choose a pre-defined query to retrieve your content:")</p>
+    <div>
+        @Html.DropDownListFor(m => m.SelectedQueryIdentity, Model.Queries.Select(q => new SelectListItem { Text = q.Name, Value = q.Identity, Selected = q.Identity == Model.SelectedQueryIdentity }))
+        <span class="hint">@T("Note: If a query is used, content will not be automatically filtered by content types or date but these values will be available as tokens {Deployment.ContentTypes} and {Deployment.ImportChangesAfter} for use in the query")</span>
+    </div>
+</fieldset>
+<fieldset>
+    <p>@T("Choose the types to include in the subscription:")</p>
+    @Html.ListBox("SelectedContentTypes", Model.ContentTypes.Select(c => new SelectListItem { Text = c.DisplayName, Value = c.Name, Selected = Model.SelectedContentTypes.Contains(c.Name) }), new { @class = "multiselect", style = "width: 480px;height: 200px;" })
+</fieldset>
+<fieldset>
+    <div class="subscription-filter-options">
+        <p>@T("Filter Options")</p>
+        @Html.RadioButtonFor(m => m.FilterChoice, "AllItems", new { id = "AllItems" })
+        <label for="AllItems" class="forcheckbox">@T("All content items")</label>
+        <br />
+        @Html.RadioButtonFor(m => m.FilterChoice, "QueuedDeployableItems", new { id = "QueuedDeployableItems" })
+        <label for="QueuedDeployableItems" class="forcheckbox">@T("Only queued deployment items")</label>
+        <br />
+        @Html.RadioButtonFor(m => m.FilterChoice, "ChangesSinceLastImport", new { id = "ChangesSinceLastImport" })
+        <label for="ChangesSinceLastImport" class="forcheckbox">@T("Only items changed since last deployment")</label>
+    </div>
+    <div id="DeployedChangesToUtcPicker">
+        <p>@T("Only import changes after"):</p>
+        <span class="hint">@T("After each successful deployment this is updated to the date and time the content was exported from the publishing source. Leave blank to keep current value.")</span>
+        <span class="hint">@T("Current value"): @(Model.DeployedChangesToDisplay ?? T("Not set").Text)</span>
+        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("DeployedChangesToDate")">@T("Date")</label>
+        @Html.EditorFor(m => m.DeployedChangesToDate)
+        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("DeployedChangesToTime")">@T("Time")</label>
+        @Html.EditorFor(m => m.DeployedChangesToTime)
+    </div>
+</fieldset>
+<hr />
+<fieldset>
+    <legend>@T("Choose what to import for these types:")</legend>
+    <div>
+        @Html.EditorFor(m => m.Metadata)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Metadata)">@T("Metadata")</label>
+        <span class="hint">@T("Metadata is the definition of your content types: what parts and fields they have, with what settings.")</span>
+    </div>
+    <div>
+        @Html.EditorFor(m => m.Data)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Data)">@T("Data")</label>
+        <span class="hint">@T("Data is the actual content of your site.")</span>
+    </div>
+    <div>
+        <p>@T("Version History")</p>
+        @Html.RadioButtonFor(m => m.DataImportChoice, "Published", new { id = "Published", Checked = "Checked" })
+        <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Published Versions")</label>
+        <br />
+        @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new { id = "Draft" })
+        <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Drafts")</label>
+    </div>
+</fieldset>
+@if (Model.CustomSteps.Any())
+{
+    <fieldset>
+        <legend>@T("Choose the custom steps to execute in the export file:")</legend>
+        <ol>
+            @for (int customStepIndex = 0; customStepIndex < Model.CustomSteps.Count; customStepIndex++)
+            {
+                <li>
+                    <input type="hidden" value="@Model.CustomSteps[customStepIndex].CustomStep" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].CustomStep)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" id="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)" />
+                    <label class="forcheckbox" for="@Html.NameOf(m => m.CustomSteps[customStepIndex].IsChecked)">@Model.CustomSteps[customStepIndex].CustomStep.CamelFriendly()</label>
+                </li>
+            }
+        </ol>
+    </fieldset>
+}
+@using (Script.Foot())
+{
+
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            // choose either the full version
+            $(".multiselect").multiselect();
+        });
+        //]]>
+    </script>
+    
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            function getFilterChangesRadios() {
+                return $("input[name='@ViewData.TemplateInfo.GetFullHtmlFieldName("FilterChoice")']", 'div.subscription-filter-options');
+            }
+            
+            function setFilterChangesSinceVisibility() {
+                var selectedVal = getFilterChangesRadios().filter(':checked').val();
+                if (selectedVal == "ChangesSinceLastImport") {
+                    $("#DeployedChangesToUtcPicker").show();
+                } else {
+                    $("#DeployedChangesToUtcPicker").hide();
+                }
+            }
+            
+            getFilterChangesRadios().change(function () {
+                setFilterChangesSinceVisibility();
+            });
+
+            setFilterChangesSinceVisibility();
+        })
+        //]]>
+    </script>
+    
+@* generates the localization script *@
+    @Display(New.DatePickerLocalization())
+    @Display(New.TimePickerLocalization())
+
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+
+            var clearHint = function ($this) { if ($this.val() == $this.data("hint")) { $this.removeClass("hinted").val("") } };
+            var resetHint = function ($this) { setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) };
+            $("label.forpicker").each(function () {
+                var $this = $(this);
+                var pickerInput = $("#" + $this.attr("for"));
+                if (!pickerInput.val()) {
+                    pickerInput.data("hint", $this.text());
+                    pickerInput.addClass("hinted")
+                        .val(pickerInput.data("hint"))
+                        .focus(function () { clearHint($(this)); })
+                        .blur(function () { resetHint($(this)); });
+                    $this.closest("form").submit(function () { clearHint(pickerInput); pickerInput = 0; });
+                }
+            });
+
+            $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("DeployedChangesToDate")').datepicker({ showAnim: "" });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("DeployedChangesToTime")').timepicker({ stepMinute: 5 });
+        })
+        //]]>
+    </script>
+}

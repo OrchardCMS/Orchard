@@ -1,0 +1,13 @@
+﻿@using Orchard.Utility.Extensions
+@using Orchard.ImportExport.ViewModels
+@model EditDeploymentUserViewModel
+<fieldset>
+    @Html.CheckBoxFor(m => m.EnableApiAccess)
+    <label class="forcheckbox" for="@Html.FieldIdFor(m => m.EnableApiAccess)">@T("Enable deployment API access for this user")</label>
+    <span class="hint">@T("When deployment API access is added for this user the private API key must be set.")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.PrivateApiKey, T("Orchard Deployment Private API Key"))
+    @Html.PasswordFor(m => m.PrivateApiKey, new { @class = "textMedium" })
+    <span class="hint">@T("Set the private API key for another Orchard CMS to use to Import from or Export to this CMS. The key is a strong password at least 20 characters in length.")</span>
+</fieldset>

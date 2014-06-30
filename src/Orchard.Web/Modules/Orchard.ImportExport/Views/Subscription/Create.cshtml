@@ -1,0 +1,56 @@
+﻿@using System.Linq
+@using Orchard.ImportExport.ViewModels
+@model CreateSubscriptionViewModel
+@{
+    Layout.Title = "Create Subscription";
+}
+@using (Html.BeginFormAntiForgeryPost())
+{
+  Html.ValidationSummary();
+<fieldset>
+    <legend>@T("Choose a title for this subscription")</legend>
+    @Html.EditorFor(m => m.Title)
+</fieldset>
+    <fieldset>
+        <legend>@T("Choose the type of subscription:")</legend>
+        <div>
+            @Html.RadioButtonFor(m => m.SelectedDeploymentType, "Export", new { id = "DeploymentTypeExport", Checked = "Checked" })
+            <label for="@Html.FieldIdFor(m => m.SelectedDeploymentType)" class="forcheckbox">@T("Export content out to a deployment target")</label>
+            <br />
+            @Html.RadioButtonFor(m => m.SelectedDeploymentType, "Import", new { id = "DeploymentTypeImport" })
+            <label for="@Html.FieldIdFor(m => m.SelectedDeploymentType)" class="forcheckbox">@T("Import content from a deployment source")</label>
+        </div>
+        <div id="subscription-deployment-target">
+            <p>@T("Deployment target")</p>
+            @Html.DropDownListFor(m => m.SelectedDeploymentTargetId, Model.Targets.Select(q => new SelectListItem { Text = Html.ItemDisplayText(q).ToString(), Value = q.Id.ToString(), Selected = q.Id == Model.SelectedDeploymentTargetId }))
+            <span class="hint">@T("The deployment target which subscription content will be pushed to.")</span>
+        </div>
+        <div id="subscription-deployment-source">
+            <p>@T("Deployment source")</p>
+            @Html.DropDownListFor(m => m.SelectedDeploymentSourceId, Model.Sources.Select(q => new SelectListItem { Text = Html.ItemDisplayText(q).ToString(), Value = q.Id.ToString(), Selected = q.Id == Model.SelectedDeploymentSourceId }))
+            <span class="hint">@T("The deployment sourch which subscription content will be pulled from.")</span>
+        </div>
+    </fieldset>
+    <button type="submit" class="primaryAction">@T("Create")</button>
+}
+
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            //default open or closed
+            $("#subscription-deployment-source").hide();
+            $("input[name='@ViewData.TemplateInfo.GetFullHtmlFieldName("SelectedDeploymentType")']").change(function () {
+                if ($("#DeploymentTypeExport").is(':checked')) {
+                    $("#subscription-deployment-target").show();
+                    $("#subscription-deployment-source").hide();
+                } else {
+                    $("#subscription-deployment-target").hide();
+                    $("#subscription-deployment-source").show();
+                }
+            });
+        })
+        //]]>
+  </script>
+}

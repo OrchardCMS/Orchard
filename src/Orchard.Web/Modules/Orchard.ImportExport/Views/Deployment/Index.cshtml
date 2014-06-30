@@ -1,0 +1,114 @@
+﻿@using Orchard.Utility.Extensions
+@using Orchard.ContentManagement
+@using Orchard.ImportExport.ViewModels
+@using Orchard.ImportExport.Models
+@{
+    IList<DeploymentHistoryViewModel> historyItems = Model.HistoryItems;
+
+    Layout.Title = T("Deployment History");
+
+    var getRecipeJournalActionUrl = Url.Action("GetRecipeJournal", "Subscription");
+
+    Script.Require("jQuery").AtFoot();
+
+    using (Script.Foot())
+    {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+
+            function loadRecipeJournal(container, executionId) {
+                container.empty();
+                var ul = $('<ul></ul>');
+                container.append(ul);
+                $.get('@getRecipeJournalActionUrl' + '?executionId=' + executionId, function (data) {
+                    for (var i = 0; i < data.Messages.length; i++) {
+                        ul.append($('<li></li>').html(data.Messages[i].Message));
+                    }
+                });
+            }
+
+            $('a.show-messages').click(function () {
+                var messageRow = $(this).parents('tr:first').next();
+                messageRow.toggle();
+                if (messageRow.is(":visible")) {
+                    loadRecipeJournal(messageRow.children("td:first"), $(this).data('executionid'));
+                }
+            });
+        });
+        //]]>
+    </script>
+    }
+}
+
+
+@using (Html.BeginFormAntiForgeryPost())
+{ 
+    @Html.ValidationSummary()
+   
+    <fieldset>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Description")
+                    </th>
+                    <th scope="col">@T("Started")
+                    </th>
+                    <th scope="col">@T("Status")
+                    </th>
+                    <th scope="col" class="actions">&nbsp;
+                    </th>
+                </tr>
+            </thead>
+            @if (historyItems.Count > 0)
+            {
+                foreach (var entry in historyItems)
+                {
+                <tr>
+                    @if (entry.SubscriptionId.HasValue)
+                    {
+                        <td>
+                            @entry.DeploymentType from @entry.Source to @entry.Target
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @entry.DeploymentType from @entry.Source to @entry.Target
+                        </td>
+                    }
+                    <td>
+                        @(entry.RunStarted.HasValue ? Display.DateTime(DateTimeUtc: entry.RunStarted.Value, CustomFormat: null) : string.Empty)    
+                    </td>
+                    <td>
+                        @entry.RecipeStatus
+                    </td>
+                    <td>
+                        @if (entry.SubscriptionId.HasValue)
+                        {
+                            @Html.ActionLink(T("Edit Subscription").ToString(), "Edit", "Subscription", new { id = entry.SubscriptionId, executionId = entry.ExecutionId }, null) 
+                            <text>|</text>                                                                                                                                  
+                        }
+                        @if (entry.RecipeFileAvailable)
+                        {
+                            @Html.ActionLink(T("Download Recipe").ToString(), "DownloadRecipe", new { executionId = entry.ExecutionId }, null)     
+                            <text>|</text>                                                                                                                                   
+                        }
+                        <a class="show-messages" data-executionid="@entry.ExecutionId">@T("Messages")</a>
+                    </td>
+                </tr>
+                <tr class="messages" style="display: none">
+                    <td colspan="5"></td>
+                </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">@T("No history is available for this subscription")
+                    </td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+}

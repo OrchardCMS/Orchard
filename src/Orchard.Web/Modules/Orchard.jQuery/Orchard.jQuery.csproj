@@ -259,6 +259,10 @@
     <Content Include="Scripts\jquery-datetime-editor.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
+    <Content Include="Scripts\jquery.ui.multiselect.js" />
+    <Content Include="Scripts\jquery.ui.multiselect.min.js">
+      <DependentUpon>jquery.ui.multiselect.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ca.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-cs.js" />
@@ -285,6 +289,7 @@
     <Content Include="Scripts\timeentry\jquery.timeentry-zh-TW.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.min.js" />
+    <Content Include="Scripts\ui.multiselect.js" />
     <Content Include="Styles\colorbox.css" />
     <Content Include="Styles\jquery-datetime-editor.css" />
     <Content Include="Styles\images\calendar-blue.gif" />
@@ -438,6 +443,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\ui.multiselect.css" />
+    <Content Include="Styles\ui.multiselect.min.css">
+      <DependentUpon>ui.multiselect.css</DependentUpon>
+    </Content>
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -463,6 +472,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.11.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.ui.multiselect.min.js.map">
+      <DependentUpon>jquery.ui.multiselect.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

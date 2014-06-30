@@ -1,0 +1,73 @@
+﻿@using Orchard.ImportExport.Permissions
+@using Orchard.ImportExport.ViewModels
+@model SubscriptionsViewModel
+@{
+    var pageSizes = new List<int?> { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize))
+    {
+        pageSizes.Add(defaultPageSize);
+    }
+
+    var returnUrl = Request.RawUrl;
+}
+<table class="items">
+    <thead>
+        <tr>
+            <th scope="col">@T("Name")
+            </th>
+            <th scope="col">@T("Type")
+            </th>
+            <th scope="col">@T("Last Run")
+            </th>
+            <th scope="col">@T("Next Run")
+            </th>
+            <th scope="col" class="actions">&nbsp;
+            </th>
+        </tr>
+    </thead>
+    @if (Model.Subscriptions.Count > 0)
+    {
+        foreach (var entry in Model.Subscriptions)
+        {
+        <tr>
+            <td>
+                @Html.ActionLink(entry.Name, "Edit", new { id = entry.Id }, null)
+            </td>
+            <td>
+                @entry.DeploymentType
+            </td>
+            <td>
+               @(entry.LastRunDateTime.HasValue ? Display.DateTime(DateTimeUtc: entry.LastRunDateTime.Value, CustomFormat: null) : string.Empty) <br />
+                <span 
+              @if (entry.LastRunStatus == "Success")
+              { 
+                @:style="color:green;" 
+                }
+                  >@entry.LastRunStatus</span>
+            </td>
+            <td>
+                @(entry.NextRun.HasValue ? Display.DateTime(DateTimeUtc: entry.NextRun.Value, CustomFormat: null) : T("On demand"))
+            </td>
+            <td>
+                @Html.ActionLink(T("Download").ToString(), "DownloadSubscription", new { id = entry.Id }, null)
+                |
+            @Html.ActionLink(T("Run Now").ToString(), "RunSubscriptionTask", new { id = entry.Id }, null)
+                |
+            @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.Id }, null)
+                |
+            @if (Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, entry.ContentItem)) {
+                @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(entry.ContentItem, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+            }
+            </td>
+        </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6">@T("No subscriptions currently scheduled.")
+            </td>
+        </tr>
+    }
+</table>

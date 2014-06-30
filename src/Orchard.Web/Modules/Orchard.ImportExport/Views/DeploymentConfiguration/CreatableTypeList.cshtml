@@ -1,0 +1,5 @@
+@{ Layout.Title = T("Configure a new Deployment Source / Target").ToString(); }
+
+@foreach (var type in Model.ContentTypes) {
+    <p>@Html.ActionLink((string)type.DisplayName, "Create", new { Area = "Contents", Controller = "Admin", Id = (string)type.Name, ReturnUrl = Request.QueryString["ReturnUrl"] })</p>
+}

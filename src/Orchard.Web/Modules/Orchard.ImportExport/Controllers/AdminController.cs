@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Services;
 using Orchard.ImportExport.ViewModels;
 using Orchard.Localization;
@@ -44,7 +45,7 @@ namespace Orchard.ImportExport.Controllers {
 
         [HttpPost, ActionName("Import")]
         public ActionResult ImportPOST() {
-            if (!Services.Authorizer.Authorize(Permissions.Import, T("Not allowed to import.")))
+            if (!Services.Authorizer.Authorize(ImportExportPermissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
             if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
@@ -84,7 +85,7 @@ namespace Orchard.ImportExport.Controllers {
 
         [HttpPost, ActionName("Export")]
         public ActionResult ExportPOST() {
-            if (!Services.Authorizer.Authorize(Permissions.Export, T("Not allowed to export.")))
+            if (!Services.Authorizer.Authorize(ImportExportPermissions.Export, T("Not allowed to export.")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new ExportViewModel {

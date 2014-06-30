@@ -1,0 +1,20 @@
+﻿@using Orchard.ImportExport.Models
+@model RemoteOrchardDeploymentPart
+<fieldset>
+    @Html.LabelFor(m => m.BaseUrl, @T("Base Url for remote Orchard CMS Instance"))
+    @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
+    @Html.ValidationMessageFor(m => m.BaseUrl, "*")
+    <span class="hint">@T("Enter the fully qualified base url of the Orchard CMS you would like to import / export content from or to e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com  (Can be also be a tenant)")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.UserName, T("User Name"))
+    @Html.TextBoxFor(m=>m.UserName, new { @class = "textMedium" })
+    @Html.ValidationMessageFor(m=>m.UserName, "*")
+    <span class="hint">@T("Provide the details for a user on the target Orchard CMS with permissions to Import / Export to deployment targets.")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.PrivateApiKey, T("Private API Key"))
+    @Html.PasswordFor(m=>m.PrivateApiKey, new { @class = "textMedium" })
+    @Html.ValidationMessageFor(m=>m.PrivateApiKey, "*")
+    <span class="hint">@T("The private API key is used to sign messages to import and export content to the target CMS.")</span>
+</fieldset>

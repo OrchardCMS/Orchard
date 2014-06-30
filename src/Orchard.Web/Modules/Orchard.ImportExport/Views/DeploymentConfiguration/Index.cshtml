@@ -1,0 +1,62 @@
+﻿@using Orchard.Utility.Extensions
+@using Orchard.ContentManagement
+@using Orchard.ImportExport.ViewModels
+
+@{
+    var index = 0;
+
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize)) {
+        pageSizes.Add(defaultPageSize);
+    }
+    var items = (IEnumerable<IContent>)Model.ContentItems;
+    
+    Layout.Title = T("Deployment Sources and Targets");
+
+    var returnUrl = Request.RawUrl;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <fieldset>
+        <p>@T("Configure deployment locations to push content out or pull content in from")</p>
+    </fieldset>
+    <fieldset class="bulk-actions">
+        <input type="hidden" name="Page" value="1" />
+        <label for="pageSize">@T("Show:")</label>
+        <select id="pageSize" name="PageSize">
+            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+            @foreach (int size in pageSizes.OrderBy(p => p)) {
+                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+            }
+        </select>
+        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+    </fieldset>
+    <div class="manage">
+        @Html.ActionLink(T("Configure a new deployment source / target").ToString(), "Create", new { area = "Wng.Deployment", controller = "DeploymentConfiguration", ReturnUrl = Context.Request.RawUrl }, new { @class = "button primaryAction" })
+    </div>
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Description")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+        @foreach (var item in items) { 
+            <tr>
+                <td>
+                    @Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(item).ToString(), item)
+                </td>
+                <td style="text-align: right">
+                    @Html.ActionLink(T("Test").Text, "TestConnection", new {id = item.Id}) |
+                    @Html.ItemEditLinkWithReturnUrl(T("Edit").Text, item) |
+                    @if (Authorizer.Authorize(Orchard.ImportExport.ImportExportPermissions.ConfigureDeployments, item)) {
+                        @Html.Link(T("Delete").Text, Url.ItemRemoveUrl(item, new {returnUrl}), new {itemprop = "RemoveUrl UnsafeUrl"})
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    @Display(Model.Pager)
+}

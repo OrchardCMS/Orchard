@@ -1,0 +1,38 @@
+﻿@using Orchard.Utility.Extensions@model Orchard.ImportExport.ViewModels.RecurringTaskViewModel
+<fieldset>
+    <legend>@T("Schedule Details"):</legend>
+    <br />
+    <div>
+        @Html.RadioButtonFor(m => m.IsActive, "false", new { @class = "scheduleisactiveradio" })
+        <label for="@Html.FieldIdFor(m => m.IsActive)" class="forcheckbox">@T("Run on demand")</label>
+        <br />
+        @Html.RadioButtonFor(m => m.IsActive, "true", new { @class = "scheduleisactiveradio" })
+        <label for="@Html.FieldIdFor(m => m.IsActive)" class="forcheckbox">@T("Create schedule")</label>
+    </div>
+    <div class="recurring-task-schedule-detail">
+        <div>
+            @Html.LabelFor(m => m.RepeatFrequencyInMinutes, T("Repeat every"))
+            @Html.DropDownListFor(m => m.RepeatFrequencyInMinutes, Model.RepeatFreqencyOptions)
+        </div>
+    </div>
+</fieldset>
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function () {
+            //default open or closed
+            if ($("input.scheduleisactiveradio").first().attr("checked") == "checked") {
+                $("div.recurring-task-schedule-detail").hide();
+            }
+            $("input.scheduleisactiveradio").change(function () {
+                if ($(this).attr("value") == 'true') {
+                    $("div.recurring-task-schedule-detail").show("slow");
+                } else {
+                    $("div.recurring-task-schedule-detail").hide("slow");
+                }
+            });
+        })
+        //]]>
+    </script>
+}

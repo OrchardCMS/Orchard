@@ -1,0 +1,37 @@
+﻿@using Orchard.Utility.Extensions
+@using System.Linq
+@model Orchard.ImportExport.ViewModels.DeployablePartViewModel
+
+<fieldset>
+    @Html.Label(T("Deployment Summary").Text)
+</fieldset>
+<table class="items">
+    <thead>
+        <tr>
+            <th scope="col">@T("Target")</th>
+            <th scope="col">@T("Last deployed")</th>
+            <th scope="col">@T("Status of last deploy")</th>
+            <th scope="col" class="actions">&nbsp;</th>
+        </tr>
+    </thead>
+    @foreach (var target in Model.Targets)
+    { 
+        <tr>
+            <td>
+                @target.Target
+            </td>
+            <td>
+                @(target.LastDeploy.HasValue ? Display.DateTime(DateTimeUtc: target.LastDeploy.Value, CustomFormat: null) : string.Empty) 
+            </td>
+            <td>
+                @target.Status
+            </td>
+            <td style="text-align: right">
+
+                @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Wng.Deployment" }, null)
+                <text>|</text>
+                @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Wng.Deployment" }, null)
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,10 @@
+﻿@{ Layout.Title = T("Edit Subscription").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.ValidationSummary()
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
+    <div class="settings">
+        @Display(Model)
+    </div>
+}

@@ -1,10 +1,23 @@
 ﻿Name: Import Export
 Path: ImportExport
 AntiForgery: enabled
-Author: The Orchard Team
+Author: The Orchard Team, Damien Clarke
 Website: http://orchardproject.net
 Version: 1.8.1
 OrchardVersion: 1.8
 Description: Provides content item data import and export capability.
 FeatureDescription: Imports and exports content item data
 Category: Content
+Features:
+    Orchard.Deployment:
+        Name: Orchard Deployment
+        Description: Deploy content between CMS instances using workflows, subscriptions or individual items
+        Dependencies: Orchard.ImportExport,Orchard.Projections,Orchard.Recipes,Orchard.Workflows
+    Orchard.Deployment.ImportApi:
+        Name: Orchard Deployment Import API
+        Description: Exposes remote export APIs for use by the deployment feature.
+        Dependencies: Orchard.Deployment
+    Orchard.Deployment.ExportApi:
+        Name: Orchard Deployment Export API
+        Description: Exposes remote import APIs for use by the deployment feature.
+        Dependencies: Orchard.Deployment
