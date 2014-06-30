@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
-using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -17,7 +15,11 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IContentManager _contentManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
 
-        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers) {
+        public SettingsRecipeHandler(
+            ISiteService siteService,
+            IContentManager contentManager,
+            Lazy<IEnumerable<IContentHandler>> handlers
+            ) {
             _siteService = siteService;
             _contentManager = contentManager;
             _handlers = handlers;

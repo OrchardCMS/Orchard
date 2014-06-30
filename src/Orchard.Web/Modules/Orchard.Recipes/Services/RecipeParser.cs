@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Localization;
@@ -9,6 +10,7 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeParser : IRecipeParser {
+        private const int BatchCountLimit = 20;
         public RecipeParser() {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -60,8 +62,7 @@ namespace Orchard.Recipes.Services {
                     }
                     // Recipe step
                     else {
-                        var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
-                        recipeSteps.Add(recipeStep);
+                        recipeSteps.Add(new RecipeStep { Name = element.Name.LocalName, Step = element });
                     }
                 }
                 recipe.RecipeSteps = recipeSteps;

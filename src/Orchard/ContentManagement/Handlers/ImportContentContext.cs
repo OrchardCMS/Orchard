@@ -43,8 +43,11 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         public ContentItem GetItemFromSession(string id) {
-            return Session.Get(id);
+            return GetItemFromSession(id, VersionOptions.Latest);
         }
 
+        public ContentItem GetItemFromSession(string id, VersionOptions versionOptions, string contentTypeHint = null) {
+            return Session.Get(id, versionOptions, contentTypeHint);
+        }
     }
 }

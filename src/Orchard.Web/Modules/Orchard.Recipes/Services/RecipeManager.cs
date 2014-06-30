@@ -11,8 +11,12 @@ namespace Orchard.Recipes.Services {
         private readonly IRecipeJournal _recipeJournal;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
 
-        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeScheduler recipeScheduler, IRecipeJournal recipeJournal,
-            IRecipeExecuteEventHandler recipeExecuteEventHandler) {
+        public RecipeManager(
+            IRecipeStepQueue recipeStepQueue, 
+            IRecipeScheduler recipeScheduler, 
+            IRecipeJournal recipeJournal,
+            IRecipeExecuteEventHandler recipeExecuteEventHandler
+            ) {
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
             _recipeJournal = recipeJournal;
@@ -30,6 +34,7 @@ namespace Orchard.Recipes.Services {
                 return null;
 
             var executionId = Guid.NewGuid().ToString("n");
+            
             _recipeJournal.ExecutionStart(executionId);
             _recipeExecuteEventHandler.ExecutionStart(executionId, recipe);
 

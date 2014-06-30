@@ -35,7 +35,6 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
-        private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
         private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
@@ -54,7 +53,6 @@ namespace Orchard.ContentManagement {
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ISessionLocator> sessionLocator,
             Lazy<IEnumerable<IContentHandler>> handlers,
-            Lazy<IEnumerable<IIdentityResolverSelector>> identityResolverSelectors,
             Lazy<IEnumerable<ISqlStatementProvider>> sqlStatementProviders,
             ShellSettings shellSettings,
             ISignals signals) {
@@ -65,7 +63,6 @@ namespace Orchard.ContentManagement {
             _contentDefinitionManager = contentDefinitionManager;
             _cacheManager = cacheManager;
             _contentManagerSession = contentManagerSession;
-            _identityResolverSelectors = identityResolverSelectors;
             _sqlStatementProviders = sqlStatementProviders;
             _shellSettings = shellSettings;
             _signals = signals;
@@ -86,10 +83,8 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem New(string contentType) {
-            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-            if (contentTypeDefinition == null) {
-                contentTypeDefinition = new ContentTypeDefinitionBuilder().Named(contentType).Build();
-            }
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType)
+                ?? new ContentTypeDefinitionBuilder().Named(contentType).Build();
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
@@ -135,7 +130,7 @@ namespace Orchard.ContentManagement {
             var session = _contentManagerSession();
             ContentItem contentItem;
 
-            ContentItemVersionRecord versionRecord = null;
+            ContentItemVersionRecord versionRecord;
 
             // obtain the root records based on version options
             if (options.VersionRecordId != 0) {
@@ -387,15 +382,11 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual void Unpublish(ContentItem contentItem) {
-            ContentItem publishedItem;
-            if (contentItem.VersionRecord.Published) {
+            var publishedItem = contentItem.VersionRecord.Published
                 // the version passed in is the published one
-                publishedItem = contentItem;
-            }
-            else {
+                ? contentItem
                 // try to locate the published version of this item
-                publishedItem = Get(contentItem.Id, VersionOptions.Published);
-            }
+                : Get(contentItem.Id, VersionOptions.Published);
 
             if (publishedItem == null) {
                 // no published version exists. no work to perform.
@@ -486,9 +477,7 @@ namespace Orchard.ContentManagement {
             if (contentItem.VersionRecord == null) {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
-                    ContentItemRecord = new ContentItemRecord {
-                        
-                    },
+                    ContentItemRecord = new ContentItemRecord(),
                     Number = 1,
                     Latest = true,
                     Published = true
@@ -559,40 +548,16 @@ namespace Orchard.ContentManagement {
             return importContentSession.Get(copyId, element.Name.LocalName);
         }
 
-        /// <summary>
-        /// Lookup for a content item based on a <see cref="ContentIdentity"/>. If multiple 
-        /// resolvers can give a result, the one with the highest priority is used. As soon as 
-        /// only one content item is returned from resolvers, it is returned as the result.
-        /// </summary>
-        /// <param name="contentIdentity">The <see cref="ContentIdentity"/> instance to lookup</param>
-        /// <returns>The <see cref="ContentItem"/> instance represented by the identity object.</returns>
+        public bool HasResolverForIdentity(ContentIdentity contentIdentity) {
+            var context = new RegisteringIdentityResolversContext();
+            Handlers.Invoke(handler => handler.RegisteringIdentityResolvers(context), Logger);
+            return context.HasResolverForIdentity(contentIdentity);
+        }
+
         public ContentItem ResolveIdentity(ContentIdentity contentIdentity) {
-            var resolvers = _identityResolverSelectors.Value
-                .Select(x => x.GetResolver(contentIdentity))
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
-
-            if (!resolvers.Any())
-                return null;
-
-            IEnumerable<ContentItem> contentItems = null;
-            foreach (var resolver in resolvers) {
-                var resolved = resolver.Resolve(contentIdentity).ToArray();
-                
-                // first pass
-                if (contentItems == null) {
-                    contentItems = resolved;
-                }
-                else { // subsquent passes means we need to intersect 
-                    contentItems = contentItems.Intersect(resolved).ToArray();
-                }
-
-                if (contentItems.Count() == 1) {
-                    return contentItems.First();
-                }
-            }
-
-            return contentItems.FirstOrDefault();
+            var context = new RegisteringIdentityResolversContext();
+            Handlers.Invoke(handler => handler.RegisteringIdentityResolvers(context), Logger);
+            return context.ResolveIdentity(contentIdentity);
         }
         
         public ContentItemMetadata GetItemMetadata(IContent content) {

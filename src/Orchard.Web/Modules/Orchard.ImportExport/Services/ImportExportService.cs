@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
@@ -60,18 +59,24 @@ namespace Orchard.ImportExport.Services {
         public string Import(string recipeText) {
             var recipe = _recipeParser.ParseRecipe(recipeText);
             var executionId = _recipeManager.Execute(recipe);
-            UpdateShell();
+            if (ShellUpdateRequired(recipe)) {
+                UpdateShell();
+            }
             return executionId;
         }
 
         public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
             //items need to be retrieved
-            IEnumerable<ContentItem> contentItems = null;
             if (exportOptions.ExportData) {
-                contentItems = _orchardServices.ContentManager.Query(GetContentExportVersionOptions(exportOptions.VersionHistoryOptions), contentTypes.ToArray()).List();
+                var contentTypeList = contentTypes.ToArray();
+                IEnumerable<ContentItem> contentItems =
+                    _orchardServices.ContentManager.Query(
+                        GetContentExportVersionOptions(exportOptions.VersionHistoryOptions),
+                        contentTypeList).List();
+                return Export(contentTypeList, contentItems, exportOptions);
             }
 
-            return Export(contentTypes, contentItems, exportOptions);
+            return Export(contentTypes, null, exportOptions);
         }
 
         public string Export(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, ExportOptions exportOptions) {
@@ -167,23 +172,23 @@ namespace Orchard.ImportExport.Services {
         }
 
         private IEnumerable<XAttribute> ExportSettingsPartAttributes(ContentPart sitePart) {
-            foreach (var property in sitePart.GetType().GetProperties()) {
-                var propertyType = property.PropertyType;
-
-                // Supported types (we also know they are not indexed properties).
-                if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
-                    // Exclude read-only properties.
-                    if (property.GetSetMethod() != null) {
-                        var value = property.GetValue(sitePart, null);
-                        if (value == null)
-                            continue;
-
-                        yield return new XAttribute(property.Name, value);
-                    }
-                }
-            }
+            return sitePart.GetType().GetProperties()
+                .Select(property => new {property, type = property.PropertyType})
+                .Where(propertyAndType => 
+                    (propertyAndType.type == typeof (string)
+                    || propertyAndType.type == typeof (bool)
+                    || propertyAndType.type == typeof (int))
+                    && (propertyAndType.property.GetSetMethod() != null))
+                .Select(propertyNameAndValue => new {
+                    name = propertyNameAndValue.property.Name,
+                    value = propertyNameAndValue.property.GetValue(sitePart, null)
+                })
+                .Where(propertyNameAndValue => propertyNameAndValue.value != null)
+                .Select(propertyTypeAndValue => new XAttribute(
+                    propertyTypeAndValue.name,
+                    propertyTypeAndValue.value));
         }
-   
+
         private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
             var data = new XElement("Data");
 
@@ -195,8 +200,9 @@ namespace Orchard.ImportExport.Services {
                 var items = contentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
                     var contentItemElement = ExportContentItem(contentItem);
-                    if (contentItemElement != null)
+                    if (contentItemElement != null) {
                         data.Add(contentItemElement);
+                    }
                 }
             }
 
@@ -225,6 +231,10 @@ namespace Orchard.ImportExport.Services {
             _appDataFolder.CreateFile(path, exportDocument);
 
             return _appDataFolder.MapPath(path);
+        }
+
+        private bool ShellUpdateRequired(Recipe recipe) {
+            return recipe.RecipeSteps.Any(step => step.Name != "Data");
         }
 
         private void UpdateShell() {

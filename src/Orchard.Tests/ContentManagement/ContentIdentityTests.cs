@@ -39,6 +39,58 @@ namespace Orchard.Tests.ContentManagement {
             var identity2 = new ContentIdentity(@"/foo=bar/abaz=quux\/fr\\ed=foo/yarg=yiu=foo");
             Assert.That(comparer.Equals(identity2, new ContentIdentity(identity2.ToString())));
         }
+
+        [Test]
+        public void IdentitiesCanBeAddedWithNoPriority() {
+            var contentIdentity = new ContentIdentity();
+
+            contentIdentity.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1");
+            contentIdentity.Add("alias", "some-unique-item-alias/sub-alias");
+
+            Assert.AreEqual("/alias=some-unique-item-alias\\/sub-alias/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentity.ToString());
+        }
+
+        [Test]
+        public void IdentitiesCanBeAddedWithSamePriority() {
+            var contentIdentity = new ContentIdentity();
+            contentIdentity.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", 5);
+            contentIdentity.Add("alias", "some-unique-item-alias/sub-alias", 5);
+
+            var contentIdentityNegative = new ContentIdentity();
+            contentIdentityNegative.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", -5);
+            contentIdentityNegative.Add("alias", "some-unique-item-alias/sub-alias", -5);
+
+            Assert.AreEqual("/alias=some-unique-item-alias\\/sub-alias/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentity.ToString());
+            Assert.AreEqual("/alias=some-unique-item-alias\\/sub-alias/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentityNegative.ToString());
+        }
+
+        [Test]
+        public void LowestPriorityIdentityIsIgnored() {
+            var contentIdentity = new ContentIdentity();
+            contentIdentity.Add("alias", "some-unique-item-alias/sub-alias", 0);
+            contentIdentity.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", 5);
+
+            var contentIdentityNegative = new ContentIdentity();
+            contentIdentityNegative.Add("alias", "some-unique-item-alias/sub-alias", -5);
+            contentIdentityNegative.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", 0);
+
+            Assert.AreEqual("/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentity.ToString());
+            Assert.AreEqual("/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentityNegative.ToString());
+        }
+
+        [Test]
+        public void HighestPriorityIdentityIsRetained() {
+            var contentIdentity = new ContentIdentity();
+            contentIdentity.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", 5);
+            contentIdentity.Add("alias", "some-unique-item-alias/sub-alias", 0);
+
+            var contentIdentityNegative = new ContentIdentity();
+            contentIdentityNegative.Add("identifier", "CAEEB150-F5E9-481D-9FF9-3053D23329C1", 0);
+            contentIdentityNegative.Add("alias", "some-unique-item-alias/sub-alias", -5);
+
+            Assert.AreEqual("/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentity.ToString());
+            Assert.AreEqual("/identifier=CAEEB150-F5E9-481D-9FF9-3053D23329C1", contentIdentityNegative.ToString());
+        }
     }
 }
 

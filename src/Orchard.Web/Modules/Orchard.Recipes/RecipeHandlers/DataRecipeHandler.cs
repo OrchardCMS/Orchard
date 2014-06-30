@@ -13,7 +13,10 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IOrchardServices _orchardServices;
         private readonly ITransactionManager _transactionManager;
 
-        public DataRecipeHandler(IOrchardServices orchardServices, ITransactionManager transactionManager) {
+        public DataRecipeHandler(
+            IOrchardServices orchardServices,
+            ITransactionManager transactionManager
+            ) {
             _orchardServices = orchardServices;
             _transactionManager = transactionManager;
             Logger = NullLogger.Instance;
@@ -42,17 +45,16 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             //Determine if the import is to be batched in multiple transactions
             var startIndex = 0;
-            int batchSize = GetBatchSizeForDataStep(recipeContext.RecipeStep.Step);
+            var batchSize = GetBatchSizeForDataStep(recipeContext.RecipeStep.Step);
 
             //Run the import
-            ContentIdentity nextIdentity = null;
             try {
                 while (startIndex < elementDictionary.Count) {
                     importContentSession.InitializeBatch(startIndex, batchSize);
 
                     //the session determines which items are included in the current batch
                     //so that dependencies can be managed within the same transaction
-                    nextIdentity = importContentSession.GetNextInBatch();
+                    var nextIdentity = importContentSession.GetNextInBatch();
                     while (nextIdentity != null) {
                         _orchardServices.ContentManager.Import(elementDictionary[nextIdentity], importContentSession);
                         nextIdentity = importContentSession.GetNextInBatch();

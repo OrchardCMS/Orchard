@@ -6,6 +6,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
@@ -84,6 +85,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
             builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
+            builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
+            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
 
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
@@ -193,7 +196,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         public void ScheduleWork(string executionId) {
-            while (_recipeStepExecutor.ExecuteNextStep(executionId)) ;
+            while (_recipeStepExecutor.ExecuteNextStep(executionId)) { }
         }
     }
 

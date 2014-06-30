@@ -9,6 +9,3 @@ namespace Orchard.ImportExport.Services {
         string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions);
     }
 }
-
-
-

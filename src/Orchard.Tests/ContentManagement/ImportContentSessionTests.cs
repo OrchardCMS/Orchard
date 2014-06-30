@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Collections.Generic;
+using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
@@ -39,6 +40,7 @@ namespace Orchard.Tests.ContentManagement {
 
             _contentManager.Setup(m => m.New(It.IsAny<string>())).Returns(draftItem5);
 
+            _contentManager.Setup(m => m.HasResolverForIdentity(It.Is<ContentIdentity>(id => id.Get("ItemId") != null))).Returns(true);
             _contentManager.Setup(m => m.ResolveIdentity(It.Is<ContentIdentity>(id => id.Get("ItemId") == "1"))).Returns(publishedItem);
         }
         #endregion
@@ -154,7 +156,7 @@ namespace Orchard.Tests.ContentManagement {
             session.InitializeBatch(0, 2);
             var firstIdentity = session.GetNextInBatch();
             //get later item as dependency
-            var dependencyItem = session.Get(_testItemIdentity5.ToString(), VersionOptions.Latest);
+            session.Get(_testItemIdentity5.ToString(), VersionOptions.Latest);
             var dependencyIdentity = session.GetNextInBatch();
             var secondIdentity = session.GetNextInBatch();
             var afterBatch1 = session.GetNextInBatch();
