@@ -57,7 +57,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                                             yield return
                                                 new DiffNode {
                                                     Type = DiffType.Change,
-                                                    ElementName = attributeName,
+                                                    Context = BuildContextName(stack, attributeName),
                                                     Previous = originalValue,
                                                     Current = currentValue
                                                 };
@@ -71,7 +71,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                                             yield return
                                                 new DiffNode {
                                                     Type = DiffType.Change,
-                                                    ElementName = currentElement.Name.ToString(),
+                                                    Context = currentElement.Name.ToString(),
                                                     Previous = originalContent,
                                                     Current = currentContent
                                                 };
@@ -80,7 +80,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                                     case "add":
                                         reader.Read();
                                         var addedElementContent = reader.ReadElementContentAsString();
-                                        yield return new DiffNode { Type = DiffType.Addition, ElementName = reader.Name, Current = addedElementContent };
+                                        yield return new DiffNode { Type = DiffType.Addition, Context = reader.Name, Current = addedElementContent };
                                         break;
                                 }
                             }
@@ -93,6 +93,10 @@ namespace Orchard.AuditTrail.Providers.Content {
                         reader.Read();
                 }
             }
+        }
+
+        private string BuildContextName(IEnumerable<XElement> stack, string attributeName) {
+            return String.Join("/", stack.Reverse().Skip(1).Select(x => x.Name)) + "/" + attributeName;
         }
     }
 }

@@ -20,7 +20,7 @@
         <thead>
             <tr>
                 <th>@T("Diff Type")</th>
-                <th>@T("Element")</th>
+                <th>@T("Context")</th>
                 <th>@T("Before")</th>
                 <th>@T("After")</th>
             </tr>
@@ -35,7 +35,7 @@
                 foreach (var node in diffNodes) {
                     <tr>
                         <td>@T(node.Type.ToString())</td>
-                        <td>@node.ElementName</td>
+                        <td>@node.Context</td>
                         <td>@node.Previous</td>
                         <td>@node.Current</td>
                     </tr>
