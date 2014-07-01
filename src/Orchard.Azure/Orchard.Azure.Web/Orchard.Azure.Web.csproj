@@ -245,6 +245,10 @@
       <Name>Orchard.ArchiveLater</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj">
+      <Project>{3dd574cd-9c5d-4a45-85e1-ebba64c22b5f}</Project>
+      <Name>Orchard.AuditTrail</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
