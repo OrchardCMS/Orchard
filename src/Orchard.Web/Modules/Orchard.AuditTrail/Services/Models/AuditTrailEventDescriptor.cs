@@ -1,6 +1,6 @@
 using Orchard.Localization;
 
-namespace Orchard.AuditTrail.Models {
+namespace Orchard.AuditTrail.Services.Models {
     public class AuditTrailEventDescriptor {
         public AuditTrailCategoryDescriptor CategoryDescriptor { get; set; }
         public string Event { get; set; }

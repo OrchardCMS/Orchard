@@ -1,4 +1,5 @@
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Services.Models;
 
 namespace Orchard.AuditTrail.ViewModels {
     public class AuditTrailDetailsViewModel {

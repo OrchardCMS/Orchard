@@ -1,4 +1,4 @@
-﻿using Orchard.AuditTrail.Models;
+﻿using Orchard.AuditTrail.Services.Models;
 
 namespace Orchard.AuditTrail.Services {
     public abstract class AuditTrailEventProviderBase : Component, IAuditTrailEventProvider {

@@ -11,7 +11,7 @@
             @foreach (var category in Model.Categories) {
                 <fieldset>
                     <legend>@category.Name</legend>
-                    <input type="hidden" name="AuditTrailSiteSettingsPart.Categories[@i].Category" value="@category.Category" />
+                    <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
                     <table class="items">
                         <thead>
                             <tr>
@@ -25,12 +25,12 @@
                             var checkboxId = String.Format("Event{0}{1}", i, j);
                             <tr>
                                 <td>
-                                    <input type="hidden" name="AuditTrailSiteSettingsPart.Categories[@i].Events[@j].Event" value="@evnt.Event" />
+                                    <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Events[@j].Event" value="@evnt.Event" />
                                     @evnt.Name
                                 </td>
                                 <td>@evnt.Description</td>
                                 <td>
-                                    <input type="checkbox" id="@checkboxId" name="AuditTrailSiteSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if(evnt.IsEnabled){<text>checked="checked"</text>} />
+                                    <input type="checkbox" id="@checkboxId" name="AuditTrailSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if(evnt.IsEnabled){<text>checked="checked"</text>} />
                                 </td>
                             </tr>
                             j++;

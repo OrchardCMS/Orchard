@@ -48,7 +48,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="6">
-                                        @Html.ActionLink(T("Show more events").Text, "Index", "Admin", new { filterKey = "content", filterValue = auditTrailPart.Id, page = 2, area = "Orchard.AuditTrail" }, null)
+                                        @Html.ActionLink(T("Show more events").Text, "Index", "Admin", new { content = auditTrailPart.Id, page = 2, area = "Orchard.AuditTrail" }, null)
                                     </td>
                                 </tr>
                             </tfoot>

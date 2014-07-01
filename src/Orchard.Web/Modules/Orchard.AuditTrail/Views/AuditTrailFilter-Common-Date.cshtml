@@ -1,0 +1,11 @@
+﻿@using Orchard.Core.Common.ViewModels
+@{
+    var from = (DateTimeEditor)Model.From;
+    var to = (DateTimeEditor)Model.To;
+}
+<fieldset>
+    @Html.Label("from.Date", T("From:").Text)
+    @Html.EditorFor(m => from)
+    @Html.Label("to.Date", T("To:").Text, new { @class = "inline" })
+    @Html.EditorFor(m => to)
+</fieldset>

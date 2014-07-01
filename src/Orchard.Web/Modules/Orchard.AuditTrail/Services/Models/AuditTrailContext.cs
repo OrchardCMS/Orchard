@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.Models {
+namespace Orchard.AuditTrail.Services.Models {
     public class AuditTrailContext {
         public AuditTrailContext() {
             EventData = new Dictionary<string, object>();

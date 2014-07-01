@@ -1,36 +1,47 @@
-﻿@using Orchard.AuditTrail.Models
+﻿@using Orchard.AuditTrail.Services.Models
 @model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
+    Style.Include("custom-grid.css");
     Style.Include("admin.css");
-    var from = Model.Filter.From;
-    var to = Model.Filter.To;
-    var orderBy = Model.Filter.OrderBy;
+    var orderBy = Model.OrderBy;
     var orderByItems = new List<SelectListItem> {
-        new SelectListItem {Text = T("Date (desc)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.DateDescending},
-        new SelectListItem {Text = T("Event (asc)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.Filter.OrderBy == AuditTrailOrderBy.EventAscending},
+        new SelectListItem {Text = T("Date (desc)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.DateDescending},
+        new SelectListItem {Text = T("Category (asc)").Text, Value = AuditTrailOrderBy.CategoryAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.CategoryAscending},
+        new SelectListItem {Text = T("Event (asc)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.EventAscending},
     };
     
     Layout.Title = T("Audit Trail");
 }
 <section class="audit-trail-filter">
     @using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
-        <fieldset class="bulk-actions">
-            @Html.Hidden("filterkey", Model.Filter.FilterKey)
-            @Html.Hidden("filtervalue", Model.Filter.FilterValue)
-            @Html.Label("username", T("User:").Text)
-            @Html.TextBox("username", Model.Filter.UserName, new { @class = "text" })
-            @Html.LabelFor(m => from, T("From:"))
-            @Html.EditorFor(m => from)
-            @Html.LabelFor(m => to, T("To:"))
-            @Html.EditorFor(m => to)
-            @Html.LabelFor(m => orderBy, T("Ordered by:"))
-            @Html.DropDownListFor(m => orderBy, orderByItems)
-            <button type="submit" value="yes">@T("Apply")</button>
-        </fieldset>
+        <div class="table">
+            <div class="row">
+                <div class="cell span-12">
+                    @Display(Model.FilterLayout)
+                </div>
+            </div>
+            <div class="row">
+                <div class="cell span-4">
+                    @Display(Model.FilterLayout.TripleFirst)
+                    <fieldset>
+                        @Html.LabelFor(m => orderBy, T("Ordered by:"))
+                        @Html.DropDownListFor(m => orderBy, orderByItems)
+                    </fieldset>
+                </div>
+                <div class="cell span-4">
+                    @Display(Model.FilterLayout.TripleSecond)
+                </div>
+                <div class="cell span-4">
+                    @Display(Model.FilterLayout.TripleThird)
+                </div>
+            </div>
+            <div class="row">
+                <div class="cell span-12">
+                    <button type="submit" value="yes">@T("Apply")</button>
+                </div>
+            </div>
+        </div>
     }
-    <div class="manage">
-        <a id="auditTrailSettings" href="#" class="button primaryAction">@T("Settings")</a>
-    </div>
 </section>
 <section class="audit-trail-list">
     @if (!Model.Records.Any()) {

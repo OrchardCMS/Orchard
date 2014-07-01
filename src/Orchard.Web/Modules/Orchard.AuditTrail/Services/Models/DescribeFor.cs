@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using Orchard.AuditTrail.Helpers;
-using Orchard.AuditTrail.Services;
 using Orchard.Localization;
 
-namespace Orchard.AuditTrail.Models {
+namespace Orchard.AuditTrail.Services.Models {
     public class DescribeFor {
         private readonly IList<AuditTrailEventDescriptor> _events = new List<AuditTrailEventDescriptor>();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Services.Models;
 using Orchard.Collections;
 using Orchard.Security;
 
@@ -12,9 +13,9 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="page">The page number to get records from.</param>
         /// <param name="pageSize">The number of records to get.</param>
         /// <param name="orderBy">The value to order by.</param>
-        /// <param name="filter">Optional. An object to filter the records on.</param>
+        /// <param name="filters">Optional. An object to filter the records on.</param>
         /// <returns>Returns a page of event records.</returns>
-        IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, AuditTrailFilterParameters filter = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending);
+        IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, Filters filters = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending);
 
         /// <summary>
         /// Returns a single event record by ID.
@@ -22,6 +23,13 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="id">The event record ID.</param>
         /// <returns>Returns a single event record by ID.</returns>
         AuditTrailEventRecord GetRecord(int id);
+
+        /// <summary>
+        /// Builds a shape tree of filter displays.
+        /// </summary>
+        /// <param name="filters">Input for each filter builder.</param>
+        /// <returns>Returns a tree of shapes.</returns>
+        dynamic BuildFilterDisplays(Filters filters);
         
         /// <summary>
         /// Records an audit trail event.
@@ -43,6 +51,11 @@ namespace Orchard.AuditTrail.Services {
         IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories();
 
         /// <summary>
+        /// Describes all audit trail event providers.
+        /// </summary>
+        DescribeContext DescribeProviders();
+
+        /// <summary>
         /// Describes a single audit trail event.
         /// </summary>
         /// <typeparam name="T">The scope of the specified event name.</typeparam>
@@ -62,5 +75,6 @@ namespace Orchard.AuditTrail.Services {
         /// </summary>
         /// <returns>Returns the deleted records.</returns>
         IEnumerable<AuditTrailEventRecord> Trim(TimeSpan threshold);
+
     }
 }

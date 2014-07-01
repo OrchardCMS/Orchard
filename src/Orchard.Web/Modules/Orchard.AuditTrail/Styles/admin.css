@@ -2,6 +2,16 @@
     margin-bottom: 1em;
 }
 
+    .audit-trail-filter fieldset label {
+        display: inline-block;
+        width: 10em;
+    }
+
+        .audit-trail-filter fieldset label.inline {
+            display: inline;
+            width: auto;
+        }
+
 .audit-trail-list .info {
     line-height: 25px;
 }

@@ -56,7 +56,13 @@ namespace Orchard.AuditTrail.Providers.Content {
                 eventData["PreviousContentItemVersionId"] = previousContentItemVersion.Id;
             }
 
-            _auditTrailManager.CreateRecord<ContentAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "content", eventFilterData: content.Id.ToString(CultureInfo.InvariantCulture));
+            _auditTrailManager.CreateRecord<ContentAuditTrailEventProvider>(
+                eventName, 
+                _wca.GetContext().CurrentUser, 
+                properties, 
+                eventData, 
+                eventFilterKey: "content", 
+                eventFilterData: content.Id.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

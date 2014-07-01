@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Providers.Content;
 using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.Settings;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
@@ -45,10 +47,7 @@ namespace Orchard.AuditTrail.Drivers {
                 if (settings.ShowAuditTrail) {
                     results.Add(ContentShape("Parts_AuditTrail", () => {
                         var pager = new Pager(_services.WorkContext.CurrentSite, null, null);
-                        var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, new AuditTrailFilterParameters {
-                            FilterKey = "content",
-                            FilterValue = part.Id.ToString(CultureInfo.InvariantCulture)
-                        });
+                        var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, ContentAuditTrailEventProvider.CreateFilters(part.Id));
                         var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
                         var eventDescriptors = from c in _auditTrailManager.DescribeCategories()
                             from e in c.Events

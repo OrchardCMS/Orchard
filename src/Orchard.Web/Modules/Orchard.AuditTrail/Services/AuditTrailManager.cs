@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Services.Models;
 using Orchard.Caching;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Settings;
@@ -22,6 +23,7 @@ namespace Orchard.AuditTrail.Services {
         private readonly ICacheManager _cacheManager;
         private readonly ISiteService _siteService;
         private readonly ISignals _signals;
+        private readonly IShapeFactory _shapeFactory;
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
@@ -31,7 +33,8 @@ namespace Orchard.AuditTrail.Services {
             IEventDataSerializer serializer, 
             ICacheManager cacheManager, 
             ISiteService siteService, 
-            ISignals signals) {
+            ISignals signals, 
+            IShapeFactory shapeFactory) {
 
             _auditTrailRepository = auditTrailRepository;
             _providers = providers;
@@ -41,23 +44,39 @@ namespace Orchard.AuditTrail.Services {
             _cacheManager = cacheManager;
             _siteService = siteService;
             _signals = signals;
+            _shapeFactory = shapeFactory;
         }
 
-        public IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, AuditTrailFilterParameters filter = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending) {
+        public IPageOfItems<AuditTrailEventRecord> GetRecords(
+            int page, 
+            int pageSize, 
+            Filters filters = null, 
+            AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending) {
             
             var query = _auditTrailRepository.Table;
+            
 
-            if (filter != null) {
-                if (!String.IsNullOrWhiteSpace(filter.FilterKey)) query = query.Where(x => x.EventFilterKey == filter.FilterKey);
-                if (!String.IsNullOrWhiteSpace(filter.FilterValue)) query = query.Where(x => x.EventFilterData == filter.FilterValue);
-                if (!String.IsNullOrWhiteSpace(filter.UserName)) query = query.Where(x => x.UserName == filter.UserName);
-                if (filter.From != null) query = query.Where(x => x.CreatedUtc >= filter.From);
-                if (filter.To != null) query = query.Where(x => x.CreatedUtc <= filter.To);
+            if (filters != null) {
+                var filterContext = new QueryFilterContext(query, filters);
+
+                // Invoke event handlers.
+                _auditTrailEventHandlers.Filter(filterContext);
+
+                // Give each provider a chance to modify the query.
+                var providersContext = DescribeProviders();
+                foreach (var queryFilter in providersContext.QueryFilters) {
+                    queryFilter(filterContext);
+                }
+
+                query = filterContext.Query;
             }
 
             switch (orderBy) {
                 case AuditTrailOrderBy.EventAscending:
                     query = query.OrderBy(x => x.Event).ThenByDescending(x => x.Id);
+                    break;
+                case AuditTrailOrderBy.CategoryAscending:
+                    query = query.OrderBy(x => x.Category).ThenByDescending(x => x.Id);
                     break;
                 default:
                     query = query.OrderByDescending(x => x.CreatedUtc).ThenByDescending(x => x.Id);
@@ -77,6 +96,27 @@ namespace Orchard.AuditTrail.Services {
 
         public AuditTrailEventRecord GetRecord(int id) {
             return _auditTrailRepository.Get(id);
+        }
+
+        public dynamic BuildFilterDisplays(Filters filters) {
+            var layout = (dynamic)_shapeFactory.Create("AuditTrailFilters", Arguments.From(new {
+                TripleFirst = _shapeFactory.Create("AuditTrailFilters_TripleFirst"),
+                TripleSecond = _shapeFactory.Create("AuditTrailFilters_TripleSecond"),
+                TripleThird = _shapeFactory.Create("AuditTrailFilters_TripleThird")
+            }));
+            var displayContext = new DisplayFilterContext(_shapeFactory, filters, layout);
+
+            // Invoke event handlers.
+            _auditTrailEventHandlers.DisplayFilter(displayContext);
+
+            // Give each provider a chance to provide a filter display.
+            var providersContext = DescribeProviders();
+
+            foreach (var action in providersContext.FilterDisplays) {
+                action(displayContext);
+            }
+
+            return layout;
         }
 
         public AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T:IAuditTrailEventProvider {
@@ -129,9 +169,14 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories() {
+            var context = DescribeProviders();
+            return context.Describe();
+        }
+
+        public DescribeContext DescribeProviders() {
             var context = new DescribeContext();
             _providers.Describe(context);
-            return context.Describe();
+            return context;
         }
 
         public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T:IAuditTrailEventProvider {

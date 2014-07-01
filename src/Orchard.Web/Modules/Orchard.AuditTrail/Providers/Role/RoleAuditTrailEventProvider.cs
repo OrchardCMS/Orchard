@@ -1,5 +1,6 @@
 ﻿using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Services.Models;
 
 namespace Orchard.AuditTrail.Providers.Role {
     public class RoleAuditTrailEventProvider : AuditTrailEventProviderBase {

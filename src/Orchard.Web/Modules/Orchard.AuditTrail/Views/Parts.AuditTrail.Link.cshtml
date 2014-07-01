@@ -3,6 +3,6 @@
 }
 @if (contentId > 0) {
 	<fieldset>
-		@Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new { filterkey = "content", filtervalue = contentId, area = "Orchard.AuditTrail" }, null)
+		@Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new { content = contentId, area = "Orchard.AuditTrail" }, null)
 	</fieldset>
 }

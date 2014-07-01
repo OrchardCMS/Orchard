@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.Localization.Services;
 using Orchard.Security;
@@ -27,20 +28,16 @@ namespace Orchard.AuditTrail.Controllers {
 
         public dynamic New { get; private set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, AuditTrailFilterViewModel filterParameters) {
+        public ActionResult Index(PagerParameters pagerParameters, AuditTrailOrderBy? orderBy = null) {
 
             if(!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
-            var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, new AuditTrailFilterParameters {
-                UserName = filterParameters.UserName,
-                FilterKey = filterParameters.FilterKey,
-                FilterValue = filterParameters.FilterValue,
-                From = _dateServices.ConvertFromLocalString(filterParameters.From.Date, filterParameters.From.Time),
-                To = _dateServices.ConvertFromLocalString(filterParameters.To.Date, filterParameters.To.Time),
-            }, filterParameters.OrderBy);
+            var filters = Filters.From(Request.QueryString);
+            var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, filters, orderBy ?? AuditTrailOrderBy.DateDescending);
             var pagerShape = New.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
+            var filterLayout = _auditTrailManager.BuildFilterDisplays(filters);
             var eventDescriptorsQuery =
                 from c in _auditTrailManager.DescribeCategories()
                 from e in c.Events
@@ -60,7 +57,8 @@ namespace Orchard.AuditTrail.Controllers {
             var viewModel = new AuditTrailViewModel {
                 Records = recordViewModelsQuery.ToArray(),
                 Pager = pagerShape,
-                Filter = filterParameters
+                OrderBy = orderBy ?? AuditTrailOrderBy.DateDescending,
+                FilterLayout = filterLayout
             };
 
             return View(viewModel);
