@@ -33,7 +33,7 @@
     @Html.ActionLink(T("Add a new subscription").ToString(), "Create", new { }, new { @class = "button primaryAction" })
   </div>
     <fieldset>
-        @Display.SubscriptionList(Model)
+        @Display.SubscriptionList(Subscriptions: Model.Subscriptions)
         @Display(Model.Pager)
     </fieldset>
 }

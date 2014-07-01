@@ -12,12 +12,15 @@ Features:
     Orchard.Deployment:
         Name: Orchard Deployment
         Description: Deploy content between CMS instances using workflows, subscriptions or individual items
+        Category: Content
         Dependencies: Orchard.ImportExport,Orchard.Projections,Orchard.Recipes,Orchard.Workflows
     Orchard.Deployment.ImportApi:
         Name: Orchard Deployment Import API
+        Category: Content
         Description: Exposes remote export APIs for use by the deployment feature.
         Dependencies: Orchard.Deployment
     Orchard.Deployment.ExportApi:
         Name: Orchard Deployment Export API
+        Category: Content
         Description: Exposes remote import APIs for use by the deployment feature.
         Dependencies: Orchard.Deployment

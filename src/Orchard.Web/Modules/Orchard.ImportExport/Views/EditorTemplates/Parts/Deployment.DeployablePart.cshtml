@@ -28,9 +28,9 @@
             </td>
             <td style="text-align: right">
 
-                @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Wng.Deployment" }, null)
+                @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
                 <text>|</text>
-                @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Wng.Deployment" }, null)
+                @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
             </td>
         </tr>
     }

@@ -13,21 +13,22 @@ namespace Orchard.ImportExport.Menus {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Deployment"), "42", BuildMenu);
+            builder.AddImageSet("importexport")
+                .Add(T("Import/Export"), "42", BuildMenu);
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
-            menu.Add(T("Deployments"), "0", item => item
-                .Action("Index", "Subscription", new { area = "Wng.Deployment" })
+            menu.Add(T("Sources and Targets"), "10", item => item
+                .Action("Index", "DeploymentConfiguration", new { area = "Orchard.ImportExport" })
                 .Permission(DeploymentPermissions.ConfigureDeployments)
                 .LocalNav());
-            menu.Add(T("History"), "1", item => item
-                .Action("Index", "Deployment", new { area = "Wng.Deployment" })
+            menu.Add(T("Deployments"), "11", item => item
+                .Action("Index", "Subscription", new { area = "Orchard.ImportExport" })
+                .Permission(DeploymentPermissions.ConfigureDeployments)
+                .LocalNav());
+            menu.Add(T("History"), "12", item => item
+                .Action("Index", "Deployment", new { area = "Orchard.ImportExport" })
                 .Permission(DeploymentPermissions.ViewDeploymentHistory)
-                .LocalNav());
-            menu.Add(T("Sources and Targets"), "2", item => item
-                .Action("Index", "DeploymentConfiguration", new { area = "Wng.Deployment" })
-                .Permission(DeploymentPermissions.ConfigureDeployments)
                 .LocalNav());
         }
     }

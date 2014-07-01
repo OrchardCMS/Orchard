@@ -20,7 +20,7 @@ namespace Orchard.ImportExport.Routes {
                     Priority = 5,
                     RouteTemplate = "api/deployment/{controller}/{action}/{id}",
                     Defaults = new {
-                        area = "wng.deployment",
+                        area = "Orchard.ImportExport",
                         id = RouteParameter.Optional
                     }
                 }

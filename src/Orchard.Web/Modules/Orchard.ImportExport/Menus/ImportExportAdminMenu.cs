@@ -20,7 +20,7 @@ namespace Orchard.ImportExport.Menus {
                 .Action("Import", "Admin", new {area = "Orchard.ImportExport"})
                 .Permission(ImportExportPermissions.Import)
                 .LocalNav());
-            menu.Add(T("Export"), "0", item => item
+            menu.Add(T("Export"), "1", item => item
                 .Action("Export", "Admin", new {area = "Orchard.ImportExport"})
                 .Permission(ImportExportPermissions.Export)
                 .LocalNav());

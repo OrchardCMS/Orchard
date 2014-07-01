@@ -1,7 +1,7 @@
 ﻿@using Orchard.ImportExport.Permissions
 @using Orchard.ImportExport.ViewModels
-@model SubscriptionsViewModel
 @{
+    var subscriptions = Model.Subscriptions as IList<SubscriptionSummaryViewModel>;
     var pageSizes = new List<int?> { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
     if (!pageSizes.Contains(defaultPageSize))
@@ -26,9 +26,9 @@
             </th>
         </tr>
     </thead>
-    @if (Model.Subscriptions.Count > 0)
+    @if (subscriptions.Count > 0)
     {
-        foreach (var entry in Model.Subscriptions)
+        foreach (var entry in subscriptions)
         {
         <tr>
             <td>

@@ -89,8 +89,8 @@ namespace Orchard.jQuery {
             manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.4.10");
 
             // jQuery Multiselect
-            manifest.DefineScript("jQueryMultiSelect").SetUrl("jquery.ui.multiselect.min.js", "jquery.ui.multiselect.js").SetVersion("0.3.1").SetDependencies("jQueryUI_Core", "jQueryUI_Sortable");
-            manifest.DefineStyle("jQueryMultiSelect").SetUrl("jquery.ui.multiselect.min.css", "jquery.ui.multiselect.css").SetVersion("0.3.1");
+            manifest.DefineScript("jQueryUI_MultiSelect").SetUrl("jquery.ui.multiselect.min.js", "jquery.ui.multiselect.js").SetVersion("0.3.1").SetDependencies("jQueryUI_Core", "jQueryUI_Sortable");
+            manifest.DefineStyle("jQueryUI_MultiSelect").SetUrl("jquery.ui.multiselect.min.css", "jquery.ui.multiselect.css").SetVersion("0.3.1");
         }
     }
 }
