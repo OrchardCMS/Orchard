@@ -133,6 +133,7 @@
     <Content Include="Views\AuditTrailFilter-ContentType.cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-Date.cshtml" />
     <Content Include="Views\AuditTrailFilter-ContentItem.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
