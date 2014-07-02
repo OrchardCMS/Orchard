@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Orchard.Environment.Extensions;
-using Orchard.Events;
 using Orchard.ImportExport.Services;
 
 namespace Orchard.AuditTrail.ImportExport {

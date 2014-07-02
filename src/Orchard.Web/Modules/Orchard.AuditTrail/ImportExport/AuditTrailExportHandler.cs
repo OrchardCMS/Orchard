@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.AuditTrail.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
-using Orchard.Events;
 using Orchard.ImportExport.Services;
 
 namespace Orchard.AuditTrail.ImportExport {
@@ -22,7 +20,7 @@ namespace Orchard.AuditTrail.ImportExport {
 
         public void Exported(ExportContext context) {
 
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("AuditTrail")) {
+            if (!context.ExportOptions.CustomSteps.Contains("AuditTrail")) {
                 return;
             }
 
@@ -37,14 +35,14 @@ namespace Orchard.AuditTrail.ImportExport {
 
             foreach (var record in records) {
                 root.Add(new XElement("Event",
-                    new XAttribute("Name", record.Event),
-                    new XAttribute("Category", record.Category),
-                    new XAttribute("User", record.UserName),
-                    new XAttribute("CreatedUtc", record.CreatedUtc),
-                    new XAttribute("EventFilterKey", record.EventFilterKey),
-                    new XAttribute("EventFilterData", record.EventFilterData),
+                    CreateAttribute("Name", record.Event),
+                    CreateAttribute("Category", record.Category),
+                    CreateAttribute("User", record.UserName),
+                    CreateAttribute("CreatedUtc", record.CreatedUtc),
+                    CreateAttribute("EventFilterKey", record.EventFilterKey),
+                    CreateAttribute("EventFilterData", record.EventFilterData),
                     CreateElement("Comment", record.Comment),
-                    CreateCDataElement("EventData", record.EventData)));
+                    ParseEventData(record.EventData)));
             }
         }
 
@@ -52,8 +50,19 @@ namespace Orchard.AuditTrail.ImportExport {
             return !String.IsNullOrWhiteSpace(value) ? new XElement(name, value) : null;
         }
 
-        private static XElement CreateCDataElement(string name, string value) {
-            return !String.IsNullOrWhiteSpace(value) ? new XElement(name, new XCData(value)) : null;
+        private static XAttribute CreateAttribute(string name, string value) {
+            return !String.IsNullOrWhiteSpace(value) ? new XAttribute(name, value) : null;
+        }
+
+        private static XAttribute CreateAttribute(string name, object value) {
+            return new XAttribute(name, value);
+        }
+
+        private static XElement ParseEventData(string eventData) {
+            if(String.IsNullOrWhiteSpace(eventData))
+                return new XElement("EventData");
+
+            return XElement.Parse(eventData);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Orchard.AuditTrail.ImportExport {
                     EventFilterKey = eventElement.Attr<string>("EventFilterKey"),
                     EventFilterData = eventElement.Attr<string>("EventFilterData"),
                     Comment = eventElement.El("Comment"),
-                    EventData = eventElement.El("EventData"),
+                    EventData = eventElement.Element("EventData").ToString(),
                 };
                 
                 _auditTrailEventRepository.Create(record);
