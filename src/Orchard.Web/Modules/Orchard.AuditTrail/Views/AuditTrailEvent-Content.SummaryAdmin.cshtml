@@ -2,8 +2,8 @@
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var title = eventData.Get<string>("Title");
-    var contentItemId = eventData.Get<int>("ContentItemId");
-    var contentItemVersionNumber = eventData.Get<int>("ContentItemVersionNumber");
+    var contentItemId = eventData.Get<int>("ContentId");
+    var contentItemVersionNumber = eventData.Get<int>("VersionNumber");
 }
 
 <section class="event-content">

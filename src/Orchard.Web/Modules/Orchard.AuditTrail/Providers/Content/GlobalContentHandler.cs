@@ -52,14 +52,16 @@ namespace Orchard.AuditTrail.Providers.Content {
             };
 
             var eventData = new Dictionary<string, object> {
-                {"ContentItemId", content.Id},
-                {"ContentItemVersionId", content.ContentItem.VersionRecord.Id},
-                {"ContentItemVersionNumber", content.ContentItem.VersionRecord.Number},
+                {"ContentId", content.Id},
+                {"ContentIdentity", _contentManager.GetItemMetadata(content).Identity.ToString()},
+                {"VersionId", content.ContentItem.VersionRecord.Id},
+                {"VersionNumber", content.ContentItem.VersionRecord.Number},
                 {"Title", title}
             };
 
             if (previousContentItemVersion != null) {
-                eventData["PreviousContentItemVersionId"] = previousContentItemVersion.Id;
+                eventData["PreviousVersionId"] = previousContentItemVersion.Id;
+                eventData["PreviousVersionNumber"] = previousContentItemVersion.Number;
             }
 
             _auditTrailManager.CreateRecord<ContentAuditTrailEventProvider>(
