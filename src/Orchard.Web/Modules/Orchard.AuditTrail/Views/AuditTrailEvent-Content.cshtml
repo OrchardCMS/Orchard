@@ -1,21 +1,21 @@
-﻿@using Orchard.AuditTrail.Providers.Content
+﻿@using Orchard.AuditTrail.Models
+@using Orchard.AuditTrail.Providers.Content
 @using Orchard.ContentManagement
 @{
+    var record = (AuditTrailEventRecord)Model.Record;
     var contentItem = (ContentItem) Model.ContentItem;
     var previousVersion = (ContentItem) Model.PreviousVersion;
     var diffNodes = (IEnumerable<DiffNode>) Model.DiffNodes;
 }
 
-<div>
-    @T("This version:")
-    @Html.ItemEditLink(contentItem)
-</div>
+<fieldset>
+    <strong>@Html.ItemDisplayText(contentItem)</strong>@T(" - ")@contentItem.ContentType
+    <span class="hint">@T("Version {0}", contentItem.Version)</span>
+    @if (!String.IsNullOrWhiteSpace(record.Comment)) {
+        <text>&quot;@record.Comment&quot;</text>
+    }
+</fieldset>
 @if (previousVersion != null) {
-    <div>
-        @T("Previous version:")
-        @Html.ItemEditLink(previousVersion)
-    </div>
-
     <table class="items">
         <thead>
             <tr>
