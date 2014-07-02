@@ -31,3 +31,22 @@
 .audit-trail-site-settings table th.event-enabled {
     width: 60px;
 }
+
+.content-disabled {
+    position: relative;
+}
+
+.content-disabled .overlay {
+    position: absolute;
+    left: -24px;
+    top: -16px;
+    right: -24px;
+    bottom: -28px;
+    background: url('overlay.png');
+}
+
+.content-disabled .edit-item-secondary,
+.content-disabled .audit-trail.expando-wrapper,
+.content-disabled .audit-trail-link {
+    display: none;
+}

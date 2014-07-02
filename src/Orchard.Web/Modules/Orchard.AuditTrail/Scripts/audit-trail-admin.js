@@ -1,7 +1,6 @@
 ﻿(function($) {
 
     var initExpandoControl = function() {
-        // Initialize Expando control
         $(".expando-wrapper legend").expandoControl(
             function(controller) {
                 return controller.nextAll(".expando");
@@ -12,7 +11,6 @@
     };
 
     var initCheckAll = function() {
-        // Check all / uncheck all.
         $("table.check-all").each(function() {
             var table = $(this);
             var controller = table.find("thead input[type=\"checkbox\"]");
@@ -36,9 +34,16 @@
         });
     };
 
+    var disableContentEditor = function () {
+        $(".content-disabled input").prop("disabled", true);
+        $(".content-disabled textarea").prop("disabled", true);
+        $(".content-disabled button").prop("disabled", true);
+    };
+
     $(function() {
         initExpandoControl();
         initCheckAll();
+        disableContentEditor();
     });
 
 })(jQuery);

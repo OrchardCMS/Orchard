@@ -8,5 +8,5 @@
 
 <section class="event-content">
     <span class="version">@T("version {0}", contentItemVersionNumber)</span>@T(" - ")
-    <a href="@Url.Action("Preview", "Item", new { area = "Contents", id = contentItemId, version = contentItemVersionNumber })" class="event-contentitem">@title</a>
+    <a href="@Url.Action("Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber })" class="event-contentitem">@title</a>
 </section>

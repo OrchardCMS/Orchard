@@ -83,6 +83,7 @@
     <Content Include="Styles\custom-grid.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
     <Content Include="Styles\menu.audit-trail.png" />
+    <Content Include="Styles\overlay.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -134,6 +135,7 @@
     <Content Include="Views\AuditTrailFilter-Common-Date.cshtml" />
     <Content Include="Views\AuditTrailFilter-ContentItem.cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-Category.cshtml" />
+    <Content Include="Views\Content\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -151,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
