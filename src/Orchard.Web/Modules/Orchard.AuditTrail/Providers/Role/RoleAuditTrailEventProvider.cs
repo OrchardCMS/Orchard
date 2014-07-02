@@ -1,8 +1,9 @@
-﻿using Orchard.AuditTrail.Models;
-using Orchard.AuditTrail.Services;
+﻿using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.Role {
+    [OrchardFeature("Orchard.AuditTrail.Role")]
     public class RoleAuditTrailEventProvider : AuditTrailEventProviderBase {
         public const string Created = "Created";
         public const string Removed = "Removed";

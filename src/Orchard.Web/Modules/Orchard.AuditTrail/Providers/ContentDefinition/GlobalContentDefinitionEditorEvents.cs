@@ -4,8 +4,10 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
+    [OrchardFeature("Orchard.AuditTrail.ContentTypeDefinition")]
     public class GlobalContentDefinitionEditorEvents : ContentDefinitionEditorEventsBase {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;

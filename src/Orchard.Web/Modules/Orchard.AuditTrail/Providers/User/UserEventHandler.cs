@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Services;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 
 namespace Orchard.AuditTrail.Providers.User {
+    [OrchardFeature("Orchard.AuditTrail.User")]
     public class UserEventHandler : IUserEventHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;

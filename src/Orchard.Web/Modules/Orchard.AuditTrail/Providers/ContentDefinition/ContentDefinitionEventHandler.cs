@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Events;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
+    [OrchardFeature("Orchard.AuditTrail.ContentTypeDefinition")]
     public class ContentDefinitionEventHandler : IContentDefinitionEventHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
@@ -76,5 +79,14 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             };
             _auditTrailManager.CreateRecord<ContentTypeAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contenttype", eventFilterData: contentTypeName);
         }
+
+        public void ContentTypeCreated(ContentTypeCreatedContext context) {}
+        public void ContentTypeRemoved(ContentTypeRemovedContext context) {}
+        public void ContentPartCreated(ContentPartCreatedContext context) {}
+        public void ContentPartRemoved(ContentPartRemovedContext context) {}
+        public void ContentPartAttached(ContentPartAttachedContext context) {}
+        public void ContentPartDetached(ContentPartDetachedContext context) {}
+        public void ContentFieldAttached(ContentFieldAttachedContext context) {}
+        public void ContentFieldDetached(ContentFieldDetachedContext context) {}
     }
 }

@@ -147,6 +147,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.ImportExport\Orchard.ImportExport.csproj">
       <Project>{fe5c5947-d2d5-42c5-992a-13d672946135}</Project>
       <Name>Orchard.ImportExport</Name>
@@ -195,7 +199,6 @@
     <Compile Include="Providers\ContentDefinition\GlobalContentDefinitionEditorEvents.cs" />
     <Compile Include="Providers\ContentDefinition\ContentPartAuditTrailEventProvider.cs" />
     <Compile Include="Providers\ContentDefinition\ContentTypeAuditTrailEventProvider.cs" />
-    <Compile Include="Providers\ContentDefinition\IContentDefinitionEventHandler.cs" />
     <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
     <Compile Include="Helpers\EventDataHelper.cs" />
     <Compile Include="Services\Models\AuditTrailFilterParameters.cs" />
