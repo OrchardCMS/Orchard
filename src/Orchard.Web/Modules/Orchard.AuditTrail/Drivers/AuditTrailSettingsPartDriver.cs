@@ -39,13 +39,14 @@ namespace Orchard.AuditTrail.Drivers {
                                     Event = eventDescriptor.Event,
                                     Name = eventDescriptor.Name,
                                     Description = eventDescriptor.Description,
-                                    IsEnabled = eventSetting != null ? eventSetting.IsEnabled : eventDescriptor.IsEnabledByDefault
+                                    IsEnabled = eventDescriptor.IsMandatory || (eventSetting != null ? eventSetting.IsEnabled : eventDescriptor.IsEnabledByDefault),
+                                    IsMandatory = eventDescriptor.IsMandatory
                                 }).ToList()
                         }).ToList()
                 };
 
                 if (updater != null) {
-                    if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                    if (updater.TryUpdateModel(viewModel, Prefix, new[] { "IsEnabled" }, null)) {
                         foreach (var eventSettingViewModel in viewModel.Categories.SelectMany(x => x.Events)) {
                             var eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventSettingViewModel.Event);
 
@@ -54,7 +55,7 @@ namespace Orchard.AuditTrail.Drivers {
                                 eventSettings.Add(eventSetting);
                             }
 
-                            eventSetting.IsEnabled = eventSettingViewModel.IsEnabled;
+                            eventSetting.IsEnabled = eventSettingViewModel.IsEnabled || eventSettingViewModel.IsMandatory;
                         }
                         part.EventSettings = eventSettings;
                     }

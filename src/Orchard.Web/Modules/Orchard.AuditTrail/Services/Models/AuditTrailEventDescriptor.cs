@@ -7,5 +7,10 @@ namespace Orchard.AuditTrail.Services.Models {
         public LocalizedString Name { get; set; }
         public LocalizedString Description { get; set; }
         public bool IsEnabledByDefault { get; set; }
+
+        /// <summary>
+        /// Wether the event can be disabled or not.
+        /// </summary>
+        public bool IsMandatory { get; set; }
     }
 }

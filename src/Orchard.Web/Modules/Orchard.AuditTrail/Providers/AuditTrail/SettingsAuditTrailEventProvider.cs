@@ -8,7 +8,7 @@ namespace Orchard.AuditTrail.Providers.AuditTrail {
 
         public override void Describe(DescribeContext context) {
             context.For("AuditTrailSettings", T("Audit Trail Settings"))
-                .Event(this, EventsChanged, T("Events Changed"), T("Audit Trail event settings were changed."), enableByDefault: true);
+                .Event(this, EventsChanged, T("Events Changed"), T("Audit Trail event settings were changed."), enableByDefault: true, isMandatory: true);
         }
     }
 }

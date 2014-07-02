@@ -7,5 +7,6 @@ namespace Orchard.AuditTrail.ViewModels {
         public LocalizedString Name { get; set; }
         public LocalizedString Description { get; set; }
         public bool IsEnabled { get; set; }
+        public bool IsMandatory { get; set; }
     }
 }

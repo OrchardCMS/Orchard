@@ -14,7 +14,7 @@
         $("table.check-all").each(function() {
             var table = $(this);
             var controller = table.find("thead input[type=\"checkbox\"]");
-            var checkboxes = table.find("tbody input[type=\"checkbox\"]");
+            var checkboxes = table.find("tbody input[type=\"checkbox\"]:not(:disabled)");
 
             var updateController = function () {
                 var allChecked = checkboxes.filter(":not(:checked)").length == 0;

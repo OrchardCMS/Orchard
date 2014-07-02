@@ -18,7 +18,14 @@ namespace Orchard.AuditTrail.Services.Models {
         public string Category { get; private set; }
         public LocalizedString Name { get; private set; }
 
-        public DescribeFor Event(IAuditTrailEventProvider provider, string eventName, LocalizedString name, LocalizedString description, bool enableByDefault = false) {
+        public DescribeFor Event(
+            IAuditTrailEventProvider provider, 
+            string eventName, 
+            LocalizedString name, 
+            LocalizedString description, 
+            bool enableByDefault = false, 
+            bool isMandatory = false) {
+
             _events.Add(new AuditTrailEventDescriptor {
                 CategoryDescriptor = new AuditTrailCategoryDescriptor {
                     Category = Category,
@@ -28,7 +35,8 @@ namespace Orchard.AuditTrail.Services.Models {
                 Event = EventNameHelper.GetFullyQualifiedEventName(provider.GetType(), eventName), 
                 Name = name, 
                 Description = description, 
-                IsEnabledByDefault = enableByDefault
+                IsEnabledByDefault = enableByDefault,
+                IsMandatory = isMandatory
             });
             return this;
         }
