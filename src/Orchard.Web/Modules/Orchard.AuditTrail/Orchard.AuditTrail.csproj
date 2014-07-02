@@ -136,6 +136,7 @@
     <Content Include="Views\AuditTrailFilter-ContentItem.cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-Category.cshtml" />
     <Content Include="Views\Content\Detail.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Content - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -166,8 +167,12 @@
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
+    <Compile Include="Providers\AuditTrail\TrimmingSettingsAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\AuditTrail\SettingsAuditTrailEventProvider.cs" />
+    <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
+    <Compile Include="Services\IAuditTrailSettingsEventHandler.cs" />
     <Compile Include="Services\Models\DisplayFilterContext.cs" />
     <Compile Include="Services\Models\QueryFilterContext.cs" />
     <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
@@ -247,7 +252,7 @@
     <Content Include="Views\AuditTrailEvent-Content.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AuditTrailEvent-Content.cshtml" />
+    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-TrimmingSettingsChanged.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />

@@ -10,9 +10,9 @@
     <fieldset>
         <legend>@descriptor.Name - <span>@descriptor.CategoryDescriptor.Name</span></legend>
         <div>
-            <span>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</span>
+            <span>@T("On: <strong>{0}</strong>", Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g")))</span>
             @if (!String.IsNullOrWhiteSpace(record.UserName)) {
-                @T(" | ")<span>@record.UserName</span>
+                @T(" | ")<span>@T("By: <strong>{0}</strong>", record.UserName)</span>
             }
         </div>
     </fieldset>

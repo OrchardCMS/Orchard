@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var oldThreshold = eventData.Get<int>("OldThreshold");
+    var newThreshold = eventData.Get<int>("NewThreshold");
+}
+
+<fieldset>
+    @T("Trimming threshold changed from <strong>{0}</strong> to <strong>{1}</strong>", oldThreshold, newThreshold)
+</fieldset>

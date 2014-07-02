@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -39,6 +40,11 @@ namespace Orchard.AuditTrail.Providers.Content {
         }
 
         private void RecordAuditTrailEvent(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null) {
+            var blackList = new[] {"Site"};
+
+            if (blackList.Contains(content.ContentItem.ContentType))
+                return;
+
             var title = _contentManager.GetItemMetadata(content).DisplayText;
 
             var properties = new Dictionary<string, object> {
@@ -58,7 +64,7 @@ namespace Orchard.AuditTrail.Providers.Content {
 
             _auditTrailManager.CreateRecord<ContentAuditTrailEventProvider>(
                 eventName, 
-                _wca.GetContext().CurrentUser, 
+                _wca.GetContext().CurrentUser,
                 properties, 
                 eventData, 
                 eventFilterKey: "content", 

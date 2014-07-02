@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Providers.AuditTrail;
+using Orchard.AuditTrail.Services;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -12,11 +14,18 @@ using Orchard.Logging;
 namespace Orchard.AuditTrail.Handlers {
     public class AuditTrailSettingsPartHandler : ContentHandler {
         private readonly ISignals _signals;
+        private string _oldEventSettings;
+        private readonly IAuditTrailManager _auditTrailManager;
+        private readonly IWorkContextAccessor _wca;
 
-        public AuditTrailSettingsPartHandler(ISignals signals) {
+        public AuditTrailSettingsPartHandler(ISignals signals, IAuditTrailManager auditTrailManager, IWorkContextAccessor wca) {
             _signals = signals;
+            _auditTrailManager = auditTrailManager;
+            _wca = wca;
             Filters.Add(new ActivatingFilter<AuditTrailSettingsPart>("Site"));
             OnActivated<AuditTrailSettingsPart>(SetupLazyFields);
+            OnUpdating<AuditTrailSettingsPart>(BeginUpdateEvent);
+            OnUpdated<AuditTrailSettingsPart>(EndUpdateEvent);
             OnGetContentItemMetadata<AuditTrailSettingsPart>(GetMetadata);
             T = NullLocalizer.Instance;
         }
@@ -35,6 +44,22 @@ namespace Orchard.AuditTrail.Handlers {
                 return value;
             });
         }
+
+        private void BeginUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part) {
+            _oldEventSettings = part.Retrieve<string>("Events");
+        }
+
+        private void EndUpdateEvent(UpdateContentContext context, AuditTrailSettingsPart part) {
+            var newEventSettings = part.Retrieve<string>("Events");
+
+            if (newEventSettings == _oldEventSettings)
+                return;
+
+            _auditTrailManager.CreateRecord<SettingsAuditTrailEventProvider>(
+                eventName: SettingsAuditTrailEventProvider.EventsChanged,
+                user: _wca.GetContext().CurrentUser);
+        }
+
 
         private IEnumerable<AuditTrailEventSetting> DeserializeProviderConfiguration(string data) {
             if (String.IsNullOrWhiteSpace(data))
