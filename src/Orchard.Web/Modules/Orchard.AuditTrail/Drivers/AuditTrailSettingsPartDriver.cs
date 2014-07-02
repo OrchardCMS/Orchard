@@ -46,7 +46,7 @@ namespace Orchard.AuditTrail.Drivers {
                 };
 
                 if (updater != null) {
-                    if (updater.TryUpdateModel(viewModel, Prefix, new[] { "IsEnabled" }, null)) {
+                    if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                         foreach (var eventSettingViewModel in viewModel.Categories.SelectMany(x => x.Events)) {
                             var eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventSettingViewModel.Event);
 
