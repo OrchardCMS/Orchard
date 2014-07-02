@@ -1,6 +1,9 @@
 ﻿@model Orchard.AuditTrail.ViewModels.AuditTrailSettingsViewModel
 @{
     Style.Include("admin.css");
+    Script.Require("ShapesBase");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("audit-trail-admin.js").AtFoot();
 }
 <div class="audit-trail-site-settings">
     <fieldset>
@@ -12,12 +15,17 @@
                 <fieldset>
                     <legend>@category.Name</legend>
                     <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
-                    <table class="items">
+                    <table class="items check-all">
                         <thead>
                             <tr>
                                 <th class="event-name">@T("Event")</th>
                                 <th>@T("Description")</th>
-                                <th class="event-enabled">@T("Enabled")</th>
+                                <th class="event-enabled">
+                                    <label>
+                                        <input type="checkbox"/>
+                                        @T("Enabled")
+                                    </label>
+                                </th>
                             </tr>
                         </thead>
                         @{ var j = 0; }
