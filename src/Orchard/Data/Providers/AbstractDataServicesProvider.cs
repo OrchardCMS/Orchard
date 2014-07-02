@@ -54,7 +54,9 @@ namespace Orchard.Data.Providers {
                                     .SetProperty(NHibernate.Cfg.Environment.StatementFetchSize, "100")
                                     .SetProperty(NHibernate.Cfg.Environment.UseProxyValidator, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.UseSqlComments, Boolean.FalseString)
-                                    .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, Boolean.TrueString);
+                                    .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, Boolean.TrueString)
+                                    .SetProperty(NHibernate.Cfg.Environment.BatchSize, "256")
+                                    ;
 
                                cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] {new OrchardLoadEventListener()};
                                cfg.EventListeners.PostLoadEventListeners = new IPostLoadEventListener[0];

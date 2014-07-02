@@ -17,17 +17,21 @@ namespace Orchard.Widgets.Commands {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IMenuService _menuService;
+        private readonly IContentManager _contentManager;
+
         private const string LoremIpsum = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
 
         public WidgetCommands(
             IWidgetsService widgetsService, 
             ISiteService siteService, 
             IMembershipService membershipService,
-            IMenuService menuService) {
+            IMenuService menuService,
+            IContentManager contentManager) {
             _widgetsService = widgetsService;
             _siteService = siteService;
             _membershipService = membershipService;
             _menuService = menuService;
+            _contentManager = contentManager;
 
             RenderTitle = true;
         }
@@ -126,6 +130,7 @@ namespace Orchard.Widgets.Commands {
                 widget.As<IdentityPart>().Identifier = Identity;
             }
 
+            _contentManager.Publish(widget.ContentItem);
             Context.Output.WriteLine(T("Widget created successfully.").Text);
         }
 

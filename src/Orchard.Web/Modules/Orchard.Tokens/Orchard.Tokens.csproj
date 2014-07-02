@@ -77,6 +77,7 @@
     <Content Include="Styles\orchard-tokens-admin.css" />
     <Content Include="Styles\Images\tokensPopup.gif" />
     <Content Include="Web.config" />
+    <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\RssPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -53,19 +53,33 @@ namespace Orchard.Taxonomies.Handlers {
                 return;
             }
 
+            var queryHint = new QueryHints()
+                .ExpandRecords("ContentTypeRecord", "CommonPartRecord", "TermsPartRecord");
+
+
             foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
                 var tempField = field.Name;
                 field.TermsField.Loader(value => {
                     var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
-                    return fieldTermRecordIds.Select(id => _contentManager.Get<TermPart>(id)).ToList();
+                    var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
+                    return terms.ToList();
                 });
             }
 
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
-            part._termParts.Loader(value => 
-                part.Terms.Select(
-                    x => new TermContentItemPart { Field = x.Field, TermPart = _contentManager.Get<TermPart>(x.TermRecord.Id) }
-                    ));
+            part._termParts.Loader(value => {
+                var ids = part.Terms.Select(t => t.TermRecord.Id);
+                var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
+                    .ToDictionary(t => t.Id, t => t);
+                return
+                    part.Terms.Select(
+                        x =>
+                            new TermContentItemPart {
+                                Field = x.Field,
+                                TermPart = terms[x.TermRecord.Id]
+                            }
+                        );
+            });
         }
 
         // Retrieve the number of associated content items, for the whole hierarchy

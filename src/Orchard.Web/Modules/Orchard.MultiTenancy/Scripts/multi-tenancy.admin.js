@@ -2,7 +2,7 @@
     $(function () {
         $(".select-all").click(function () {
             var $checkbox = $(this);
-            var $allCheckboxes = $checkbox.parent().find(":checkbox");
+            var $allCheckboxes = $checkbox.closest("ol").find(":checkbox");
             if ($checkbox.is(':checked')) {
                 $allCheckboxes.prop("checked", true);
             }

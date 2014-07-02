@@ -39,7 +39,7 @@ namespace Orchard.JobsQueue.Services {
                     IEnumerable<QueuedJobRecord> messages;
 
                     while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
-                        foreach (var message in messages.AsParallel()) {
+                        foreach (var message in messages) {
                             ProcessMessage(message);
                         }
                     }

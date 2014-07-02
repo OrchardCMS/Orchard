@@ -162,6 +162,9 @@
   <ItemGroup>
     <Content Include="Views\UserTask.ActionButton.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-AssignRole.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
