@@ -10,7 +10,7 @@ using Orchard.Localization;
 namespace Orchard.AuditTrail.Handlers {
     [OrchardFeature("Orchard.AuditTrail.Trimming")]
     public class AuditTrailTrimmingSettingsPartHandler : ContentHandler {
-        private int _oldThreshold;
+        private int _oldRetentionPeriod;
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
 
@@ -31,21 +31,21 @@ namespace Orchard.AuditTrail.Handlers {
         }
 
         private void BeginUpdateEvent(UpdateContentContext context, AuditTrailTrimmingSettingsPart part) {
-            _oldThreshold = part.Threshold;
+            _oldRetentionPeriod = part.RetentionPeriod;
         }
 
         private void EndUpdateEvent(UpdateContentContext context, AuditTrailTrimmingSettingsPart part) {
-            var newThreshold = part.Threshold;
+            var newRetentionPeriod = part.RetentionPeriod;
 
-            if (newThreshold == _oldThreshold)
+            if (newRetentionPeriod == _oldRetentionPeriod)
                 return;
 
             _auditTrailManager.CreateRecord<TrimmingSettingsAuditTrailEventProvider>(
                 eventName: TrimmingSettingsAuditTrailEventProvider.TrimmingSettingsChanged,
                 user: _wca.GetContext().CurrentUser,
                 eventData: new Dictionary<string, object> {
-                    {"OldThreshold", _oldThreshold},
-                    {"NewThreshold", newThreshold}
+                    {"OldRetentionPeriod", _oldRetentionPeriod},
+                    {"NewRetentionPeriod", newRetentionPeriod}
                 });
         }
     }

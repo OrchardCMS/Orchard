@@ -8,27 +8,27 @@ using Orchard.Security;
 namespace Orchard.AuditTrail.Services {
     public interface IAuditTrailManager : IDependency {
         /// <summary>
-        /// Gets a page of event records.
+        /// Returns a page of event records.
         /// </summary>
         /// <param name="page">The page number to get records from.</param>
         /// <param name="pageSize">The number of records to get.</param>
         /// <param name="orderBy">The value to order by.</param>
         /// <param name="filters">Optional. An object to filter the records on.</param>
-        /// <returns>Returns a page of event records.</returns>
+        /// <returns>A page of event records.</returns>
         IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, Filters filters = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending);
 
         /// <summary>
         /// Returns a single event record by ID.
         /// </summary>
         /// <param name="id">The event record ID.</param>
-        /// <returns>Returns a single event record by ID.</returns>
+        /// <returns>A single event record by ID.</returns>
         AuditTrailEventRecord GetRecord(int id);
 
         /// <summary>
         /// Builds a shape tree of filter displays.
         /// </summary>
         /// <param name="filters">Input for each filter builder.</param>
-        /// <returns>Returns a tree of shapes.</returns>
+        /// <returns>A tree of shapes.</returns>
         dynamic BuildFilterDisplays(Filters filters);
         
         /// <summary>
@@ -41,13 +41,13 @@ namespace Orchard.AuditTrail.Services {
         /// <param name="eventData">A property bag of custom event data that will be stored with the event record.</param>
         /// <param name="eventFilterKey">The name of a custom key to use when filtering events.</param>
         /// <param name="eventFilterData">The value of a custom filter key to filter on.</param>
-        /// <returns>Returns the created audit trail event record if the specified event was not disabled.</returns>
+        /// <returns>The created audit trail event record if the specified event was not disabled.</returns>
         AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider;
 
         /// <summary>
         /// Describes all audit trail events provided by the system.
         /// </summary>
-        /// <returns>Returns a list of audit trail category descriptors.</returns>
+        /// <returns>A list of audit trail category descriptors.</returns>
         IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories();
 
         /// <summary>
@@ -60,21 +60,21 @@ namespace Orchard.AuditTrail.Services {
         /// </summary>
         /// <typeparam name="T">The scope of the specified event name.</typeparam>
         /// <param name="eventName">The shorthand name of the event.</param>
-        /// <returns>Returns a single audit trail event descriptor.</returns>
+        /// <returns>A single audit trail event descriptor.</returns>
         AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T : IAuditTrailEventProvider;
 
         /// <summary>
         /// Describes a single audit trail event.
         /// </summary>
         /// <param name="fullyQualifiedEventName">The fully qualified event name to describe.</param>
-        /// <returns>Returns a single audit trail event descriptor.</returns>
+        /// <returns>A single audit trail event descriptor.</returns>
         AuditTrailEventDescriptor DescribeEvent(string fullyQualifiedEventName);
 
         /// <summary>
-        /// Trims the audit trail by deleting all records older than the specified threshold.
+        /// Trims the audit trail by deleting all records older than the specified retention period.
         /// </summary>
-        /// <returns>Returns the deleted records.</returns>
-        IEnumerable<AuditTrailEventRecord> Trim(TimeSpan threshold);
+        /// <returns>A list of deleted records.</returns>
+        IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod);
 
     }
 }

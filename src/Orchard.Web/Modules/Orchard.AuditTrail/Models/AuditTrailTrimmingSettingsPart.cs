@@ -4,15 +4,15 @@ using Orchard.ContentManagement;
 namespace Orchard.AuditTrail.Models {
     public class AuditTrailTrimmingSettingsPart : ContentPart {
         /// <summary>
-        /// Threshold in days.
+        /// Gets or sets the retention period in days of audit trail records before they are deleted.
         /// </summary>
-        public int Threshold {
-            get { return this.Retrieve(x => x.Threshold, defaultValue: 10); }
-            set { this.Store(x => x.Threshold, value); }
+        public int RetentionPeriod {
+            get { return this.Retrieve(x => x.RetentionPeriod, defaultValue: 10); }
+            set { this.Store(x => x.RetentionPeriod, value); }
         }
 
         /// <summary>
-        /// The timestamp the audit trail was last trimmed.
+        /// Gets or sets the time in UTC at which the audit trail was last trimmed.
         /// </summary>
         public DateTime? LastRunUtc {
             get { return this.Retrieve(x => x.LastRunUtc); }

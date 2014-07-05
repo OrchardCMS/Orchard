@@ -24,12 +24,12 @@ namespace Orchard.AuditTrail.Drivers {
 
             return ContentShape("Parts_AuditTrailTrimmingSettings_Edit", () => {
                 var viewModel = new AuditTrailTrimmingSettingsViewModel {
-                    Threshold = part.Threshold,
+                    RetentionPeriod = part.RetentionPeriod,
                 };
 
                 if (updater != null) {
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                        part.Threshold = viewModel.Threshold;
+                        part.RetentionPeriod = viewModel.RetentionPeriod;
                     }
                 }
 

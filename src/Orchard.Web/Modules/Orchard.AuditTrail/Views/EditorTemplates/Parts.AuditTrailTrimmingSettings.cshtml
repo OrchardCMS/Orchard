@@ -1,9 +1,9 @@
 ﻿@model Orchard.AuditTrail.ViewModels.AuditTrailTrimmingSettingsViewModel
 <fieldset>
-    <legend>@T("Auto Trim Settings")</legend>
-    <div id="auditTrailAutoTrimthresholdSetting">
-        @Html.LabelFor(m => m.Threshold, T("Auto-trim threshold"))
-        @Html.TextBoxFor(m => m.Threshold, new { @class = "text small" })
-        <span class="hint">@T("Specify the number of days of audit log data to retain.")</span>
+    <legend>@T("Trimming Settings")</legend>
+    <div id="audittrail-trimming-retentionperiod-setting">
+        @Html.LabelFor(m => m.RetentionPeriod, T("Retention period"))
+        @Html.TextBoxFor(m => m.RetentionPeriod, new { @class = "text small" })
+        <span class="hint">@T("The number of days of audit log data to retain.")</span>
     </div>
 </fieldset>
