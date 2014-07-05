@@ -51,24 +51,24 @@
         <table class="items">
             <thead>
                 <tr>
-                    <th>@T("Event")</th>
                     <th>@T("Category")</th>
+                    <th>@T("Event")</th>
                     <th>@T("User")</th>
                     <th>@T("Timestamp")</th>
-                    <th>@T("Comment")</th>
                     <th>@T("Summary")</th>
+                    <th>@T("Comment")</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var record in Model.Records) {
                     <tr>
-                        <td>@record.EventDescriptor.Name</td>
                         <td>@record.CategoryDescriptor.Name</td>
+                        <td>@record.EventDescriptor.Name</td>
                         <td>@record.Record.UserName</td>
                         <td>@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
-                        <td>@record.Record.Comment</td>
                         <td>@Display(record.SummaryShape)</td>
+                        <td>@record.Record.Comment</td>
                         <td>@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
                     </tr>
                 }
