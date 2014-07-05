@@ -10,15 +10,8 @@
             });
     };
 
-    var disableContentEditor = function () {
-        $(".content-disabled input").prop("disabled", true);
-        $(".content-disabled textarea").prop("disabled", true);
-        $(".content-disabled button").prop("disabled", true);
-    };
-
     $(function() {
         initExpandoControl();
-        disableContentEditor();
     });
 
 })(jQuery);

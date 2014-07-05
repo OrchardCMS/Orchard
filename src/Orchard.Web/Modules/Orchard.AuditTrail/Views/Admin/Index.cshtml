@@ -1,8 +1,8 @@
 ﻿@using Orchard.AuditTrail.Services.Models
 @model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
-    Style.Include("custom-grid.css");
     Style.Include("audittrail-admin.css");
+    Style.Include("audittrail-grid.css");
     var orderBy = Model.OrderBy;
     var orderByItems = new List<SelectListItem> {
         new SelectListItem {Text = T("Date (desc)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.DateDescending},

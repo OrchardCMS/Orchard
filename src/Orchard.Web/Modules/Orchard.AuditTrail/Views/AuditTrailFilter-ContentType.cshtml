@@ -5,6 +5,6 @@
     var listItems = contentTypes.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.Name, Selected = x.Name == currentContentType});
 }
 <fieldset>
-    @Html.Label("contenttype", T("Content Type:").Text)
+    @Html.Label("contenttype", T("Content type:").Text)
     @Html.DropDownList("contenttype", listItems, "")
 </fieldset>

@@ -80,12 +80,12 @@
     <Content Include="Recipes\audit-trail.recipe.xml" />
     <Content Include="Scripts\audittrail-admin.js" />
     <Content Include="Scripts\audittrail-checkall.js" />
+    <Content Include="Scripts\audittrail-disabledcontent.js" />
     <Content Include="Styles\audittrail-admin.css" />
+    <Content Include="Styles\audittrail-disabledcontent.css" />
     <Content Include="Styles\audittrail-settings.css" />
-    <Content Include="Styles\custom-grid.css" />
+    <Content Include="Styles\audittrail-grid.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
-    <Content Include="Styles\menu.audit-trail.png" />
-    <Content Include="Styles\overlay.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />

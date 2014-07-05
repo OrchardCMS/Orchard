@@ -6,7 +6,7 @@ namespace Orchard.AuditTrail {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.AddImageSet("audit-trail")
+            builder.AddImageSet("audittrail")
                 .Add(T("Audit Trail"), "12", menuItem => menuItem
                     .Action("Index", "Admin", new { area = "Orchard.AuditTrail" })
                     .Permission(Permissions.ManageAuditTrailSettings));
