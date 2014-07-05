@@ -1,7 +1,7 @@
 ﻿using Orchard.Events;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.Providers.User {
+namespace Orchard.AuditTrail.Providers.Users {
     public interface IUserEventHandler : IEventHandler {
 
         /// <summary>

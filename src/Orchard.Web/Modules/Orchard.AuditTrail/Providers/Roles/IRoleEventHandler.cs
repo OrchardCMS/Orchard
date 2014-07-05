@@ -1,6 +1,6 @@
 ﻿using Orchard.Events;
 
-namespace Orchard.AuditTrail.Providers.Role {
+namespace Orchard.AuditTrail.Providers.Roles {
     public interface IRoleEventHandler : IEventHandler {
         void Created(dynamic context);
         void Removed(dynamic context);

@@ -3,7 +3,7 @@ using Orchard.AuditTrail.Services.Models;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
-    [OrchardFeature("Orchard.AuditTrail.ContentTypeDefinition")]
+    [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
     public class ContentPartAuditTrailEventProvider : AuditTrailEventProviderBase {
         public const string Created = "Created";
         public const string Removed = "Removed";

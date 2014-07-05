@@ -2,8 +2,8 @@
 using Orchard.AuditTrail.Services.Models;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.AuditTrail.Providers.User {
-    [OrchardFeature("Orchard.AuditTrail.User")]
+namespace Orchard.AuditTrail.Providers.Users {
+    [OrchardFeature("Orchard.AuditTrail.Users")]
     public class UserAuditTrailEventProvider : AuditTrailEventProviderBase {
         public const string LoggedIn = "LoggedIn";
         public const string LoggedOut = "LoggedOut";

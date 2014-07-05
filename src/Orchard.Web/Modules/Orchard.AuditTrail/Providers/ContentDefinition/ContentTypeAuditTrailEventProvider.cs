@@ -7,7 +7,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
-    [OrchardFeature("Orchard.AuditTrail.ContentTypeDefinition")]
+    [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
     public class ContentTypeAuditTrailEventProvider : AuditTrailEventProviderBase {
         private readonly IContentDefinitionManager _contentDefinitionManager;
 

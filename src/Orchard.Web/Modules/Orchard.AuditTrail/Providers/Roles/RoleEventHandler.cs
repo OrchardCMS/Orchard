@@ -3,8 +3,8 @@ using Orchard.AuditTrail.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.Providers.Role {
-    [OrchardFeature("Orchard.AuditTrail.Role")]
+namespace Orchard.AuditTrail.Providers.Roles {
+    [OrchardFeature("Orchard.AuditTrail.Roles")]
     public class RoleEventHandler : IRoleEventHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;

@@ -21,18 +21,18 @@ Features:
         Description: Provides a background task that regularly deletes old audit trail records.
         Category: Security
         Dependencies: Orchard.AuditTrail
-    Orchard.AuditTrail.User:
+    Orchard.AuditTrail.Users:
         Name: Audit Trail User Events
-        Description: Provides event providers for user related events.
+        Description: Provides audit trail support for user related events.
         Category: Security
         Dependencies: Orchard.AuditTrail, Orchard.Users
-    Orchard.AuditTrail.Role:
+    Orchard.AuditTrail.Roles:
         Name: Audit Trail Role Events
-        Description: Provides event providers for role related events.
+        Description: Provides audit trail support for role related events.
         Category: Security
         Dependencies: Orchard.AuditTrail, Orchard.Roles
-    Orchard.AuditTrail.ContentTypeDefinition:
-        Name: Audit Trail Content Type Definition Events
-        Description: Provides event providers for content type definition related events.
+    Orchard.AuditTrail.ContentDefinition:
+        Name: Audit Trail Content Definition Events
+        Description: Provides audit trail support for content definition related events.
         Category: Security
         Dependencies: Orchard.AuditTrail, Orchard.ContentTypes

@@ -3,8 +3,8 @@ using Orchard.AuditTrail.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 
-namespace Orchard.AuditTrail.Providers.User {
-    [OrchardFeature("Orchard.AuditTrail.User")]
+namespace Orchard.AuditTrail.Providers.Users {
+    [OrchardFeature("Orchard.AuditTrail.Users")]
     public class UserEventHandler : IUserEventHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
