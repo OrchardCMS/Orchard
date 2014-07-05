@@ -10,7 +10,7 @@ namespace Orchard.AuditTrail.Providers.AuditTrail {
 
         public override void Describe(DescribeContext context) {
             context.For("AuditTrailSettings", T("Audit Trail Settings"))
-                .Event(this, TrimmingSettingsChanged, T("Trimming Settings Changed"), T("Audit Trail trimming settings were changed."), enableByDefault: true);
+                .Event(this, TrimmingSettingsChanged, T("Trimming settings changed"), T("Audit trail trimming settings were changed."), enableByDefault: true);
         }
     }
 }

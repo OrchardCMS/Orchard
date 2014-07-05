@@ -25,12 +25,12 @@ namespace Orchard.AuditTrail.Providers.Content {
         }
 
         public override void Describe(DescribeContext context) {
-            context.For("Content", T("Content"))
-                .Event(this, Created, T("Created"), T("Content was created."), enableByDefault: true)
-                .Event(this, Saved, T("Saved"), T("Content was saved."), enableByDefault: true)
-                .Event(this, Published, T("Published"), T("Content was published."), enableByDefault: true)
-                .Event(this, Unpublished, T("Unpublished"), T("Content was unpublished."), enableByDefault: true)
-                .Event(this, Removed, T("Removed"), T("Content was deleted."), enableByDefault: true);
+            context.For("Content", T("Content Items"))
+                .Event(this, Created, T("Created"), T("A content item was created."), enableByDefault: true)
+                .Event(this, Saved, T("Saved"), T("A content item was saved."), enableByDefault: true)
+                .Event(this, Published, T("Published"), T("A content item was published."), enableByDefault: true)
+                .Event(this, Unpublished, T("Unpublished"), T("A content item was unpublished."), enableByDefault: true)
+                .Event(this, Removed, T("Removed"), T("A content item was deleted."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);

@@ -3,7 +3,7 @@
 @{
     Script.Require("ShapesBase");
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
-    Script.Include("audit-trail-admin.js").AtFoot();
+    Script.Include("audittrail-admin.js").AtFoot();
 }
 @{
     var records = (IEnumerable<AuditTrailEventSummaryViewModel>)Model.Records;

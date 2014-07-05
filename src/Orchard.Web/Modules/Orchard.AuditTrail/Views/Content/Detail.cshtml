@@ -1,9 +1,9 @@
 ﻿@using Orchard.ContentManagement
 @{
-    Style.Include("admin.css");
+    Style.Include("audittrail-admin.css");
     Script.Require("ShapesBase");
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
-    Script.Include("audit-trail-admin.js").AtFoot();
+    Script.Include("audittrail-admin.js").AtFoot();
 
     var contentItem = (ContentItem)Model.ContentItem;
     Layout.Title = T("{0} - (version {1})", contentItem.ContentType, contentItem.Version);

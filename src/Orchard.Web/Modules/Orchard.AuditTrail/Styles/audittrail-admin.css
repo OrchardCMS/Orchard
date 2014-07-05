@@ -1,0 +1,40 @@
+﻿.audit-trail-filter {
+    margin-bottom: 1em;
+}
+
+    .audit-trail-filter fieldset label {
+        display: inline-block;
+        width: 10em;
+    }
+
+        .audit-trail-filter fieldset label.inline {
+            display: inline;
+            width: auto;
+        }
+
+.audit-trail-list .info {
+    line-height: 25px;
+}
+
+.audit-trail-list .event-content .version {
+    font-size: 0.8em;
+}
+
+.content-disabled {
+    position: relative;
+}
+
+    .content-disabled .overlay {
+        position: absolute;
+        left: -24px;
+        top: -16px;
+        right: -24px;
+        bottom: -28px;
+        background: url('overlay.png');
+    }
+
+    .content-disabled .edit-item-secondary,
+    .content-disabled .audit-trail.expando-wrapper,
+    .content-disabled .audit-trail-link {
+        display: none;
+    }

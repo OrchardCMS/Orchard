@@ -11,10 +11,10 @@ namespace Orchard.AuditTrail.Providers.Users {
         public const string PasswordChanged = "PasswordChanged";
 
         public override void Describe(DescribeContext context) {
-            context.For("User", T("User"))
+            context.For("User", T("Users"))
                 .Event(this, LoggedIn, T("Logged in"), T("A user was successfully logged in."), enableByDefault: true)
-                .Event(this, LoggedOut, T("Logged out"), T("A user explicitly logged out."), enableByDefault: true)
-                .Event(this, LogInFailed, T("Login failed"), T("An attempt to login failed due to an incorrect username/email and/or password."), enableByDefault: true)
+                .Event(this, LoggedOut, T("Logged out"), T("A user actively logged out."), enableByDefault: true)
+                .Event(this, LogInFailed, T("Login failed"), T("An attempt to login failed due to incorrect credentials."), enableByDefault: true)
                 .Event(this, PasswordChanged, T("Password changed"), T("A user's password was changed."), enableByDefault: true);
         }
     }

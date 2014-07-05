@@ -1,51 +1,53 @@
 ﻿@model Orchard.AuditTrail.ViewModels.AuditTrailSettingsViewModel
 @{
-    Style.Include("admin.css");
+    Style.Include("audittrail-settings.css");
     Script.Require("ShapesBase");
-    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
-    Script.Include("audit-trail-admin.js").AtFoot();
+    //Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("audittrail-checkall.js").AtFoot();
 }
-<div class="audit-trail-site-settings">
-    <fieldset>
-        <legend>@T("Specify the events to audit")</legend>
-            @{
-                var i = 0;
-            }
-            @foreach (var category in Model.Categories) {
-                <fieldset>
-                    <legend>@category.Name</legend>
-                    <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
-                    <table class="items check-all">
-                        <thead>
-                            <tr>
-                                <th class="event-name">@T("Event")</th>
-                                <th>@T("Description")</th>
-                                <th class="event-enabled">
-                                    <label>
-                                        <input type="checkbox"/>
-                                        @T("Enabled")
-                                    </label>
-                                </th>
-                            </tr>
-                        </thead>
-                        @{ var j = 0; }
-                        @foreach (var evnt in category.Events) {
-                            var checkboxId = String.Format("Event{0}{1}", i, j);
-                            <tr>
-                                <td>
-                                    <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Events[@j].Event" value="@evnt.Event" />
-                                    @evnt.Name
-                                </td>
-                                <td>@evnt.Description</td>
-                                <td>
-                                    <input type="checkbox" id="@checkboxId" name="AuditTrailSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if(evnt.IsEnabled || evnt.IsMandatory){<text>checked="checked"</text>} @if(evnt.IsMandatory){<text>disabled="disabled"</text>}/>
-                                </td>
-                            </tr>
-                            j++;
-                        }
-                    </table>
-                </fieldset>
-                i++;
-            }
-    </fieldset>
-</div>
+<section class="audittrail-settings-section">
+    <h2>@T("Events to record in the audit trail")</h2>
+    <table class="audittrail-events-table items">
+        <thead>
+            <tr>
+                <th class="event-name">@T("Event")</th>
+                <th>@T("Description")</th>
+                <th class="audittrail-event-enabled-cell">
+                    <label>
+                        @T("Enabled")
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        @{ var i = 0; }
+        @foreach (var category in Model.Categories) {
+            <tbody class="audittrail-category-body check-all-container">
+                <tr>
+                    <th colspan="2">
+                        @category.Name
+                        <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Category" value="@category.Category" />
+                    </th>
+                    <th class="audittrail-event-enabled-cell">
+                        <input type="checkbox" class="check-all-master" />
+                    </th>
+                </tr>
+                @{ var j = 0; }
+                @foreach (var e in category.Events) {
+                    var checkboxId = String.Format("Event{0}{1}", i, j);
+                    <tr>
+                        <td>
+                            <input type="hidden" name="AuditTrailSettingsPart.Categories[@i].Events[@j].Event" value="@e.Event" />
+                            @e.Name
+                        </td>
+                        <td>@e.Description</td>
+                        <td class="audittrail-event-enabled-cell">
+                            <input id="@checkboxId" type="checkbox" class="check-all-slave" name="AuditTrailSettingsPart.Categories[@i].Events[@j].IsEnabled" value="@Boolean.TrueString" @if (e.IsEnabled || e.IsMandatory) { <text> checked="checked" </text>  } @if (e.IsMandatory) { <text> disabled="disabled" </text>  } />
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+        i++;
+        }
+    </table>
+</section>

@@ -78,8 +78,10 @@
     <None Include="Placement.info" />
     <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
-    <Content Include="Scripts\audit-trail-admin.js" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Scripts\audittrail-admin.js" />
+    <Content Include="Scripts\audittrail-checkall.js" />
+    <Content Include="Styles\audittrail-admin.css" />
+    <Content Include="Styles\audittrail-settings.css" />
     <Content Include="Styles\custom-grid.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
     <Content Include="Styles\menu.audit-trail.png" />
