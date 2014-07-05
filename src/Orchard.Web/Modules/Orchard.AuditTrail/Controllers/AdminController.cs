@@ -27,7 +27,6 @@ namespace Orchard.AuditTrail.Controllers {
         public dynamic New { get; private set; }
 
         public ActionResult Index(PagerParameters pagerParameters, AuditTrailOrderBy? orderBy = null) {
-
             if(!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 

@@ -1,22 +1,18 @@
 ﻿@model Orchard.AuditTrail.ViewModels.AuditTrailDetailsViewModel
 @{
-    Style.Include("audittrail-admin.css");
-}
-@{
+    Style.Include("audittrail-display.css");
+
     var record = Model.Record;
     var descriptor = Model.Descriptor;
+
+    Layout.Title = T("Audit Trail Event");
 }
-<section class="audit-trail-event">
-    <fieldset>
-        <legend>@descriptor.Name - <span>@descriptor.CategoryDescriptor.Name</span></legend>
-        <div>
-            <span>@T("On: <strong>{0}</strong>", Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g")))</span>
-            @if (!String.IsNullOrWhiteSpace(record.UserName)) {
-                @T(" | ")<span>@T("By: <strong>{0}</strong>", record.UserName)</span>
-            }
-        </div>
-    </fieldset>
+<section class="audittrail-event-metadata-section">
+    @T("Event:") <strong>@descriptor.Name</strong><br />
+    @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
+    @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</strong><br />
+    @T("Username:") <strong>@record.UserName</strong>
 </section>
-<section class="audit-trail-event-details">
+<section class="audittrail-event-details-section">
     @Display(Model.DetailsShape)
 </section>

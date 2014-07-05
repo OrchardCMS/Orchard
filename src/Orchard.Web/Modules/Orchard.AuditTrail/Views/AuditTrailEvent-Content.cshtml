@@ -3,45 +3,50 @@
 @using Orchard.ContentManagement
 @{
     var record = (AuditTrailEventRecord)Model.Record;
-    var contentItem = (ContentItem) Model.ContentItem;
-    var previousVersion = (ContentItem) Model.PreviousVersion;
-    var diffNodes = (IEnumerable<DiffNode>) Model.DiffNodes;
+    var contentItem = (ContentItem)Model.ContentItem;
+    var previousVersion = (ContentItem)Model.PreviousVersion;
+    var diffNodes = (IEnumerable<DiffNode>)Model.DiffNodes;
 }
 
-<fieldset>
-    <strong>@Html.ItemDisplayText(contentItem)</strong>@T(" - ")@contentItem.ContentType
-    <span class="hint">@T("Version {0}", contentItem.Version)</span>
+<section class="audittrail-event-metadata-section">
+    @T("ID:") <strong>@contentItem.Id</strong><br />
+    @contentItem.ContentType: <strong>@Html.ItemDisplayText(contentItem)</strong><br />
+    @T("Version:") <strong>@contentItem.Version</strong>
     @if (!String.IsNullOrWhiteSpace(record.Comment)) {
-        <text>&quot;@record.Comment&quot;</text>
+        <br />
+        @T("Comment:")<br />
+        @record.Comment
     }
-</fieldset>
-@if (previousVersion != null) {
-    <table class="items">
-        <thead>
-            <tr>
-                <th>@T("Diff Type")</th>
-                <th>@T("Context")</th>
-                <th>@T("Before")</th>
-                <th>@T("After")</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!diffNodes.Any()) {
+</section>
+
+<section class="audittrail-event-changes-section">
+    @if (previousVersion != null) {
+        <table class="items">
+            <thead>
                 <tr>
-                    <td colspan="4">@T("")</td>
+                    <th>@T("Action")</th>
+                    <th>@T("Context")</th>
+                    <th>@T("Before")</th>
+                    <th>@T("After")</th>
                 </tr>
-            }
-            else {
-                foreach (var node in diffNodes) {
+            </thead>
+            <tbody>
+                @if (!diffNodes.Any()) {
                     <tr>
-                        <td>@T(node.Type.ToString())</td>
-                        <td>@node.Context</td>
-                        <td>@node.Previous</td>
-                        <td>@node.Current</td>
+                        <td colspan="4">@T("")</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
-    
-}
+                else {
+                    foreach (var node in diffNodes) {
+                        <tr>
+                            <td>@T(node.Type.ToString())</td>
+                            <td>@node.Context</td>
+                            <td>@node.Previous</td>
+                            <td>@node.Current</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+</section>

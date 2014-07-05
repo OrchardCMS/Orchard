@@ -24,12 +24,12 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public override void Describe(DescribeContext context) {
             context.For("ContentType", T("Content Type"))
-                .Event(this, Created, T("Created"), T("Content Type was created."), enableByDefault: true)
-                .Event(this, Removed, T("Removed"), T("Content Type was removed."), enableByDefault: true)
-                .Event(this, PartAdded, T("Part added"), T("Content Part was added."), enableByDefault: true)
-                .Event(this, PartRemoved, T("Part removed"), T("Content Part was removed."), enableByDefault: true)
-                .Event(this, TypeSettingsUpdated, T("Type Settings updated"), T("Content Type settings were updated."), enableByDefault: true)
-                .Event(this, PartSettingsUpdated, T("Part Settings updated"), T("Content Part settings were updated."), enableByDefault: true);
+                .Event(this, Created, T("Created"), T("A content type was created."), enableByDefault: true)
+                .Event(this, Removed, T("Removed"), T("A content type was removed."), enableByDefault: true)
+                .Event(this, PartAdded, T("Part added"), T("A content part was added to a content type."), enableByDefault: true)
+                .Event(this, PartRemoved, T("Part removed"), T("A content part was removed from a content type."), enableByDefault: true)
+                .Event(this, TypeSettingsUpdated, T("Type settings updated"), T("The settings of a content type were updated."), enableByDefault: true)
+                .Event(this, PartSettingsUpdated, T("Part settings updated"), T("The settings of a content part were updated."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);

@@ -1,0 +1,20 @@
+﻿.audittrail-filter {
+    margin-bottom: 1em;
+}
+
+    .audittrail-filter fieldset label {
+        display: inline-block;
+        width: 10em;
+    }
+
+        .audittrail-filter fieldset label.inline {
+            display: inline;
+        }
+
+.audittrail-event-metadata-section {
+    margin-bottom: 1em;
+}
+
+    .audittrail-event-metadata-section strong {
+        font-weight: bold;
+    }
