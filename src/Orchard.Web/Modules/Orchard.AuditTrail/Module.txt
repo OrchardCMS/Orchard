@@ -20,7 +20,7 @@ Features:
         Name: Audit Trail Trimming
         Description: Provides a background task that regularly deletes old audit trail records.
         Category: Security
-        Dependencies: Orchard.AuditTrail
+        Dependencies: Orchard.AuditTrail, Orchard.TaskLease
     Orchard.AuditTrail.Users:
         Name: Audit Trail User Events
         Description: Provides audit trail support for user related events.
