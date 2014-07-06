@@ -29,7 +29,7 @@ namespace Orchard.AuditTrail.Services {
         /// </summary>
         /// <param name="filters">Input for each filter builder.</param>
         /// <returns>A tree of shapes.</returns>
-        dynamic BuildFilterDisplays(Filters filters);
+        dynamic BuildFilterDisplay(Filters filters);
         
         /// <summary>
         /// Records an audit trail event.

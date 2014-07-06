@@ -98,25 +98,21 @@ namespace Orchard.AuditTrail.Services {
             return _auditTrailRepository.Get(id);
         }
 
-        public dynamic BuildFilterDisplays(Filters filters) {
-            var layout = (dynamic)_shapeFactory.Create("AuditTrailFilters", Arguments.From(new {
-                TripleFirst = _shapeFactory.Create("AuditTrailFilters_TripleFirst"),
-                TripleSecond = _shapeFactory.Create("AuditTrailFilters_TripleSecond"),
-                TripleThird = _shapeFactory.Create("AuditTrailFilters_TripleThird")
-            }));
-            var displayContext = new DisplayFilterContext(_shapeFactory, filters, layout);
+        public dynamic BuildFilterDisplay(Filters filters) {
+            var filterDisplay = (dynamic)_shapeFactory.Create("AuditTrailFilter");
+            var filterDisplayContext = new DisplayFilterContext(_shapeFactory, filters, filterDisplay);
 
             // Invoke event handlers.
-            _auditTrailEventHandlers.DisplayFilter(displayContext);
+            _auditTrailEventHandlers.DisplayFilter(filterDisplayContext);
 
             // Give each provider a chance to provide a filter display.
             var providersContext = DescribeProviders();
 
             foreach (var action in providersContext.FilterDisplays) {
-                action(displayContext);
+                action(filterDisplayContext);
             }
 
-            return layout;
+            return filterDisplay;
         }
 
         public AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T:IAuditTrailEventProvider {

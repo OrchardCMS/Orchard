@@ -42,16 +42,16 @@ namespace Orchard.AuditTrail.Services {
             var toDate = context.Filters.Get("to.Date");
             var category = context.Filters.Get("category");
             var userNameFilterDisplay = context.ShapeFactory.AuditTrailFilter__Common__User(UserName: userName);
-            var dateFilterDisplay = context.ShapeFactory.AuditTrailFilter__Common__Date(
-                From: new DateTimeEditor {Date = fromDate, ShowDate = true},
-                To: new DateTimeEditor {Date = toDate, ShowDate = true});
+            var dateFromFilterDisplay = context.ShapeFactory.AuditTrailFilter__Common__Date__From(Editor: new DateTimeEditor {Date = fromDate, ShowDate = true});
+            var dateToFilterDisplay = context.ShapeFactory.AuditTrailFilter__Common__Date__To(Editor: new DateTimeEditor { Date = toDate, ShowDate = true }); 
             var categoryFilterDisplay = context.ShapeFactory.AuditTrailFilter__Common__Category(
                 Categories: _auditTrailManager.Value.DescribeCategories().ToArray(),
                 Category: category);
 
-            context.FilterLayout.TripleFirst.Add(dateFilterDisplay);
-            context.FilterLayout.TripleFirst.Add(categoryFilterDisplay);
-            context.FilterLayout.TripleSecond.Add(userNameFilterDisplay);
+            context.FilterDisplay.Add(dateFromFilterDisplay);
+            context.FilterDisplay.Add(dateToFilterDisplay);
+            context.FilterDisplay.Add(categoryFilterDisplay);
+            context.FilterDisplay.Add(userNameFilterDisplay);
         }
     }
 }

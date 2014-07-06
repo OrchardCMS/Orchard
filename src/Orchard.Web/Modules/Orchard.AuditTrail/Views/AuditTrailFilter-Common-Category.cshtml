@@ -4,7 +4,5 @@
     var currentCategory = (string)Model.Category;
     var listItems = categories.Select(x => new SelectListItem { Text = x.Name.Text, Value = x.Category, Selected = x.Category == currentCategory });
 }
-<fieldset>
-    @Html.Label("category", T("Category:").Text)
-    @Html.DropDownList("category", listItems, "")
-</fieldset>
+@Html.Label("category", T("Category:").Text)
+@Html.DropDownList("category", listItems, "")

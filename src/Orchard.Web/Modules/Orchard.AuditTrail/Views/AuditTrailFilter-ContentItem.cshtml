@@ -2,10 +2,6 @@
 @{
     var contentItem = (ContentItem)Model.ContentItem;
 }
-@if (contentItem != null) { 
-    <fieldset>
-        @Html.Label("contentitem", T("Content Item:").Text)
-        @Html.ItemEditLink(contentItem)
-        @Html.Hidden("content", contentItem.Id)
-    </fieldset>
-}
+@Html.Label("contentitem", T("Content Item:").Text)
+@Html.TextBox("contentitemname", Html.ItemDisplayText(contentItem), new { @class = "text", disabled = "disabled"})
+@Html.Hidden("content", contentItem.Id)

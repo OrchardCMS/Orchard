@@ -46,10 +46,12 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         private void DisplayFilter(DisplayFilterContext context) {
             var contentItemId = context.Filters.Get("content").ToInt32();
-            var contentItem = contentItemId != null ? _contentManager.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
-            var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentItem(ContentItem: contentItem);
+            if (contentItemId != null) {
+                var contentItem = contentItemId != null ? _contentManager.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
+                var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentItem(ContentItem: contentItem);
 
-            context.FilterLayout.TripleSecond.Add(filterDisplay);
+                context.FilterDisplay.Add(filterDisplay);
+            }
         }
     }
 }

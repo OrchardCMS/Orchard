@@ -1,20 +1,35 @@
-﻿.audittrail-filter {
+﻿
+.audittrail-filter-section {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    align-content: flex-end;
     margin-bottom: 1em;
+    border: 1px solid #eaeaea;
+    background: #f5f5f5;
+    padding: 4px 10px 3px;
 }
 
-    .audittrail-filter fieldset label {
-        display: inline-block;
-        width: 10em;
-    }
+.filter-control-group {
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
 
-        .audittrail-filter fieldset label.inline {
-            display: inline;
-        }
+.filter-control-group label {
+    padding-bottom: 0;
+}
+
+.filter-control-group select {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
 
 .audittrail-event-metadata-section {
     margin-bottom: 1em;
 }
 
     .audittrail-event-metadata-section strong {
-        font-weight: bold;
+        /*font-weight: bold;*/
     }

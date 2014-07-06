@@ -34,7 +34,7 @@ namespace Orchard.AuditTrail.Controllers {
             var filters = Filters.From(Request.QueryString);
             var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, filters, orderBy ?? AuditTrailOrderBy.DateDescending);
             var pagerShape = New.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-            var filterLayout = _auditTrailManager.BuildFilterDisplays(filters);
+            var filterDisplay = _auditTrailManager.BuildFilterDisplay(filters);
             var eventDescriptorsQuery =
                 from c in _auditTrailManager.DescribeCategories()
                 from e in c.Events
@@ -55,7 +55,7 @@ namespace Orchard.AuditTrail.Controllers {
                 Records = recordViewModelsQuery.ToArray(),
                 Pager = pagerShape,
                 OrderBy = orderBy ?? AuditTrailOrderBy.DateDescending,
-                FilterLayout = filterLayout
+                FilterDisplay = filterDisplay
             };
 
             return View(viewModel);

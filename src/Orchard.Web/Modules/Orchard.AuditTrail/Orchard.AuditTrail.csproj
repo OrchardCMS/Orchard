@@ -85,7 +85,6 @@
     <Content Include="Styles\audittrail-disabledcontent.css" />
     <Content Include="Styles\audittrail-part.css" />
     <Content Include="Styles\audittrail-settings.css" />
-    <Content Include="Styles\audittrail-grid.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -135,13 +134,15 @@
     <Content Include="Views\AuditTrailEvent-User-LoginFailed..cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-User.cshtml" />
     <Content Include="Views\AuditTrailFilter-ContentType.cshtml" />
-    <Content Include="Views\AuditTrailFilter-Common-Date.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Date-From.cshtml" />
     <Content Include="Views\AuditTrailFilter-ContentItem.cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-Category.cshtml" />
     <Content Include="Views\Content\Detail.cshtml" />
     <Content Include="Views\AuditTrailEvent-Content.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\AuditTrailFilter.cshtml" />
+    <Content Include="Views\AuditTrailFilter-Common-Date-To.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

@@ -49,7 +49,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
                 ContentType: context.Filters.Get("contenttype"),
                 ContentTypes: _contentDefinitionManager.ListTypeDefinitions().OrderBy(x => x.DisplayName).ToArray());
 
-            context.FilterLayout.TripleFirst.Add(filterDisplay);
+            context.FilterDisplay.Add(filterDisplay);
         }
     }
 }
