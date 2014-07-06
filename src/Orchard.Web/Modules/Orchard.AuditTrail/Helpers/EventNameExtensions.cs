@@ -2,7 +2,7 @@
 using Orchard.AuditTrail.Services;
 
 namespace Orchard.AuditTrail.Helpers {
-    internal static class EventNameHelper {
+    internal static class EventNameExtensions {
         public static string GetFullyQualifiedEventName<T>(string eventName) where T : IAuditTrailEventProvider {
             return GetFullyQualifiedEventName(typeof(T), eventName);
         }

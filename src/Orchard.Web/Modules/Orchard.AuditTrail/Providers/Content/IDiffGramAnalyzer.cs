@@ -9,8 +9,8 @@ namespace Orchard.AuditTrail.Providers.Content {
         XElement GenerateDiffGram(XElement element1, XElement element2);
 
         /// <summary>
-        /// Analyzes the specified DiffGram against the specified original XML element and returns a list of diff nodes,
-        /// where each node describes the difference between the original and updated document.
+        /// Analyzes the specified DiffGram element against the specified original XML element and returns a list of diff nodes,
+        /// where each node describes a difference between the original and updated document.
         /// </summary>
         IEnumerable<DiffNode> Analyze(XElement original, XElement diffGram);
     }

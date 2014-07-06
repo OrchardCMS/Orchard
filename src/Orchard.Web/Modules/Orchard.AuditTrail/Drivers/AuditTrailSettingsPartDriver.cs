@@ -27,22 +27,26 @@ namespace Orchard.AuditTrail.Drivers {
             return ContentShape("Parts_AuditTrailSettings_Edit", () => {
                 var descriptors = _auditTrailManager.DescribeCategories();
                 var eventSettings = part.EventSettings.ToList();
+                var categoriesQuery =
+                    from categoryDescriptor in descriptors
+                    let eventsQuery =
+                        from eventDescriptor in categoryDescriptor.Events
+                        let eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventDescriptor.Event)
+                        select new AuditTrailEventSettingsViewModel {
+                            Event = eventDescriptor.Event,
+                            Name = eventDescriptor.Name,
+                            Description = eventDescriptor.Description,
+                            IsEnabled = eventDescriptor.IsMandatory || (eventSetting != null ? eventSetting.IsEnabled : eventDescriptor.IsEnabledByDefault),
+                            IsMandatory = eventDescriptor.IsMandatory
+                        }
+                    select new AuditTrailCategorySettingsViewModel {
+                        Category = categoryDescriptor.Category,
+                        Name = categoryDescriptor.Name,
+                        Events = eventsQuery.ToArray()
+                    };
+
                 var viewModel = new AuditTrailSettingsViewModel {
-                    Categories = (from categoryDescriptor in descriptors
-                        select new AuditTrailCategorySettingsViewModel {
-                            Category = categoryDescriptor.Category,
-                            Name = categoryDescriptor.Name,
-                            Events = 
-                                (from eventDescriptor in categoryDescriptor.Events
-                                let eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventDescriptor.Event)
-                                select new AuditTrailEventSettingsViewModel {
-                                    Event = eventDescriptor.Event,
-                                    Name = eventDescriptor.Name,
-                                    Description = eventDescriptor.Description,
-                                    IsEnabled = eventDescriptor.IsMandatory || (eventSetting != null ? eventSetting.IsEnabled : eventDescriptor.IsEnabledByDefault),
-                                    IsMandatory = eventDescriptor.IsMandatory
-                                }).ToList()
-                        }).ToList()
+                    Categories = categoriesQuery.ToArray() 
                 };
 
                 if (updater != null) {
@@ -55,6 +59,7 @@ namespace Orchard.AuditTrail.Drivers {
                                 eventSettings.Add(eventSetting);
                             }
 
+                            // TODO: Security hole! IsMandatory could be spoofed in the request!
                             eventSetting.IsEnabled = eventSettingViewModel.IsEnabled || eventSettingViewModel.IsMandatory;
                         }
                         part.EventSettings = eventSettings;

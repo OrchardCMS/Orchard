@@ -2,6 +2,7 @@
 using Orchard.AuditTrail.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Users.Events;
 
 namespace Orchard.AuditTrail.Providers.Users {
     [OrchardFeature("Orchard.AuditTrail.Users")]
@@ -46,6 +47,27 @@ namespace Orchard.AuditTrail.Providers.Users {
             };
 
             _auditTrailManager.CreateRecord<UserAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties, eventData, eventFilterKey: "user", eventFilterData: user.UserName);
+        }
+
+        public void Creating(UserContext context) {
+        }
+
+        public void Created(UserContext context) {
+        }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+        }
+
+        public void AccessDenied(IUser user) {
+        }
+
+        public void SentChallengeEmail(IUser user) {
+        }
+
+        public void ConfirmedEmail(IUser user) {
+        }
+
+        public void Approved(IUser user) {
         }
     }
 }

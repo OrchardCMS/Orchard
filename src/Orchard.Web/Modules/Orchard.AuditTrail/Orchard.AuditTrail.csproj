@@ -161,6 +161,14 @@
       <Project>{fe5c5947-d2d5-42c5-992a-13d672946135}</Project>
       <Name>Orchard.ImportExport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -169,9 +177,9 @@
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
-    <Compile Include="Helpers\FiltersHelper.cs" />
-    <Compile Include="Helpers\DateTimeHelper.cs" />
-    <Compile Include="Helpers\StringConversionHelper.cs" />
+    <Compile Include="Helpers\FiltersExtensions.cs" />
+    <Compile Include="Helpers\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="ImportExport\AuditTrailExportStep.cs" />
     <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
@@ -206,19 +214,17 @@
     <Compile Include="Providers\ContentDefinition\ContentPartAuditTrailEventProvider.cs" />
     <Compile Include="Providers\ContentDefinition\ContentTypeAuditTrailEventProvider.cs" />
     <Compile Include="Providers\Content\AuditTrailEventHandler.cs" />
-    <Compile Include="Helpers\EventDataHelper.cs" />
+    <Compile Include="Helpers\EventDataExtensions.cs" />
     <Compile Include="Services\Models\AuditTrailFilterParameters.cs" />
-    <Compile Include="Providers\Roles\IRoleEventHandler.cs" />
     <Compile Include="Providers\Roles\RoleEventHandler.cs" />
     <Compile Include="Providers\Roles\RoleAuditTrailEventProvider.cs" />
     <Compile Include="Providers\Users\UserAuditTrailEventProvider.cs" />
-    <Compile Include="Providers\Users\IUserEventHandler.cs" />
     <Compile Include="Providers\Users\UserEventHandler.cs" />
     <Compile Include="Settings\AuditTrailPartSettings.cs" />
     <Compile Include="Settings\AuditTrailPartSettingsEvents.cs" />
     <Compile Include="ViewModels\AuditTrailEventSummaryViewModel.cs" />
     <Compile Include="Drivers\AuditTrailPartDriver.cs" />
-    <Compile Include="Helpers\EventNameHelper.cs" />
+    <Compile Include="Helpers\EventNameExtensions.cs" />
     <Compile Include="Models\AuditTrailPart.cs" />
     <Compile Include="Services\AuditTrailEventDisplayBuilder.cs" />
     <Compile Include="Services\EventDataSerializer.cs" />

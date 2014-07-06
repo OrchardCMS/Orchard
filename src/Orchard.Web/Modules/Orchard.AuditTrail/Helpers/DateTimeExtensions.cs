@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Orchard.AuditTrail.Helpers {
-    public static class DateTimeHelper {
+    public static class DateTimeExtensions {
         public static DateTime? Earliest(this DateTime? value) {
             if (value == null)
                 return null;

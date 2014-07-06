@@ -8,13 +8,11 @@ using Microsoft.XmlDiffPatch;
 namespace Orchard.AuditTrail.Providers.Content {
     public class DiffGramAnalyzer : IDiffGramAnalyzer {
         public XElement GenerateDiffGram(XElement element1, XElement element2) {
-            using(var node1Reader = element1.CreateReader())
+            using (var node1Reader = element1.CreateReader())
             using (var node2Reader = element2.CreateReader()) {
                 var result = new XDocument();
                 using (var writer = result.CreateWriter()) {
-                    var diff =
-                        new XmlDiff(XmlDiffOptions.IgnoreChildOrder | XmlDiffOptions.IgnoreWhitespace |
-                                    XmlDiffOptions.IgnoreComments | XmlDiffOptions.IgnoreXmlDecl);
+                    var diff = new XmlDiff(XmlDiffOptions.IgnoreChildOrder | XmlDiffOptions.IgnoreWhitespace | XmlDiffOptions.IgnoreComments | XmlDiffOptions.IgnoreXmlDecl);
                     diff.Compare(node1Reader, node2Reader, writer);
                     writer.Flush();
                     writer.Close();

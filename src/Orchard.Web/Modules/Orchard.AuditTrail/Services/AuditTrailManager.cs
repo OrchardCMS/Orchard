@@ -179,7 +179,7 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T:IAuditTrailEventProvider {
-            var fullyQualifiedEventName = EventNameHelper.GetFullyQualifiedEventName<T>(eventName);
+            var fullyQualifiedEventName = EventNameExtensions.GetFullyQualifiedEventName<T>(eventName);
             return DescribeEvent(fullyQualifiedEventName);
         }
 

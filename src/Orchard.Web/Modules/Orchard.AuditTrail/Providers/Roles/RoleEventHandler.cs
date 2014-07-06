@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Services;
 using Orchard.Environment.Extensions;
+using Orchard.Roles.Events;
 using Orchard.Security;
 
 namespace Orchard.AuditTrail.Providers.Roles {
@@ -14,38 +15,38 @@ namespace Orchard.AuditTrail.Providers.Roles {
             _wca = wca;
         }
 
-        public void Created(dynamic context) {
+        public void Created(RoleCreatedContext context) {
             RecordAuditTrailEvent(RoleAuditTrailEventProvider.Created, context.Role.Name);
         }
 
-        public void Removed(dynamic context) {
+        public void Removed(RoleRemovedContext context) {
             RecordAuditTrailEvent(RoleAuditTrailEventProvider.Removed, context.Role.Name);
         }
 
-        public void Renamed(dynamic context) {
+        public void Renamed(RoleRenamedContext context) {
             var eventData = new Dictionary<string, object> {
-                {"RoleName", (string)context.Role.Name},
-                {"PreviousRoleName", (string)context.PreviousRoleName},
-                {"NewRoleName", (string)context.NewRoleName},
+                {"RoleName", context.Role.Name},
+                {"PreviousRoleName", context.PreviousRoleName},
+                {"NewRoleName", context.NewRoleName},
             };
 
             RecordAuditTrailEvent(RoleAuditTrailEventProvider.Renamed, context.Role.Name, properties: null, eventData:eventData);
         }
 
-        public void PermissionAdded(dynamic context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionAdded, (string) context.Role.Name, (IUser) context.Permission.Name);
+        public void PermissionAdded(PermissionAddedContext context) {
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionAdded, context.Role.Name);
         }
 
-        public void PermissionRemoved(dynamic context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionRemoved, (string) context.Role.Name, (IUser) context.Permission.Name);
+        public void PermissionRemoved(PermissionRemovedContext context) {
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionRemoved, context.Role.Name);
         }
 
-        public void UserAdded(dynamic context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserAdded, (string) context.Role.Name, (IUser) context.User);
+        public void UserAdded(UserAddedContext context) {
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserAdded, context.Role.Name, context.User);
         }
 
-        public void UserRemoved(dynamic context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserRemoved, (string) context.Role.Name, (IUser) context.User);
+        public void UserRemoved(UserRemovedContext context) {
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.UserRemoved, context.Role.Name, context.User);
         }
 
         private void RecordAuditTrailEvent(string eventName, string roleName) {

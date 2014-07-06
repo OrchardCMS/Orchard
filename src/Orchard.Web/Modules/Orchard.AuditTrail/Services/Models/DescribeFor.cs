@@ -32,7 +32,7 @@ namespace Orchard.AuditTrail.Services.Models {
                     Name = Name,
                     Events = Events
                 }, 
-                Event = EventNameHelper.GetFullyQualifiedEventName(provider.GetType(), eventName), 
+                Event = EventNameExtensions.GetFullyQualifiedEventName(provider.GetType(), eventName), 
                 Name = name, 
                 Description = description, 
                 IsEnabledByDefault = enableByDefault,
