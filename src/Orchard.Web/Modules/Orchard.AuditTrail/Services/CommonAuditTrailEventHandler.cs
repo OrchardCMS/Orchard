@@ -16,7 +16,6 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public override void Filter(QueryFilterContext context) {
-            // Common filters (username, from and to, category).
             var userName = context.Filters.Get("username");
             var fromDate = context.Filters.Get("from.Date");
             var fromTime = context.Filters.Get("from.Time");
@@ -27,16 +26,23 @@ namespace Orchard.AuditTrail.Services {
             var to = _dateServices.ConvertFromLocalString(toDate, toTime).Latest();
             var query = context.Query;
 
-            if (!String.IsNullOrWhiteSpace(userName)) query = query.Where(x => x.UserName == userName);
-            if (!String.IsNullOrWhiteSpace(category)) query = query.Where(x => x.Category == category);
-            if (from != null) query = query.Where(x => x.CreatedUtc >= from);
-            if (to != null) query = query.Where(x => x.CreatedUtc <= to);
+            if (!String.IsNullOrWhiteSpace(userName)) {
+                query = query.Where(x => x.UserName == userName);
+            }
+            if (!String.IsNullOrWhiteSpace(category)) {
+                query = query.Where(x => x.Category == category);
+            }
+            if (from != null) {
+                query = query.Where(x => x.CreatedUtc >= from);
+            }
+            if (to != null) {
+                query = query.Where(x => x.CreatedUtc <= to);
+            }
 
             context.Query = query;
         }
 
         public override void DisplayFilter(DisplayFilterContext context) {
-            // Common filters (username, from and to, category).
             var userName = context.Filters.Get("username");
             var fromDate = context.Filters.Get("from.Date");
             var toDate = context.Filters.Get("to.Date");

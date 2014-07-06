@@ -8,7 +8,7 @@ using Orchard.Security;
 namespace Orchard.AuditTrail.Services {
     public interface IAuditTrailManager : IDependency {
         /// <summary>
-        /// Returns a page of event records.
+        /// Gets a page of event records from the audit trail.
         /// </summary>
         /// <param name="page">The page number to get records from.</param>
         /// <param name="pageSize">The number of records to get.</param>
@@ -18,10 +18,10 @@ namespace Orchard.AuditTrail.Services {
         IPageOfItems<AuditTrailEventRecord> GetRecords(int page, int pageSize, Filters filters = null, AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending);
 
         /// <summary>
-        /// Returns a single event record by ID.
+        /// Gets a single event record from the audit trail by ID.
         /// </summary>
         /// <param name="id">The event record ID.</param>
-        /// <returns>A single event record by ID.</returns>
+        /// <returns>A single event record.</returns>
         AuditTrailEventRecord GetRecord(int id);
 
         /// <summary>

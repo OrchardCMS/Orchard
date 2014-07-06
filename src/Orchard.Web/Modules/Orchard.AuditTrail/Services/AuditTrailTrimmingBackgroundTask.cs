@@ -29,16 +29,15 @@ namespace Orchard.AuditTrail.Services {
 
         public void Sweep() {
             if (Monitor.TryEnter(_sweepLock)) {
+                Logger.Debug("Beginning sweep.");
                 try {
-                    Logger.Debug("Beginning sweep.");
-
                     // We don't need to check the audit trail for events to remove every minute. Let's stick with twice a day.
-                    if (!TimeToTrim())
+                    if (!GetIsTimeToTrim())
                         return;
 
-                    Logger.Debug("Starting audit trail trimming operation.");
+                    Logger.Debug("Starting audit trail trimming.");
                     var deletedRecords = _auditTrailManager.Trim(TimeSpan.FromDays(Settings.RetentionPeriod));
-                    Logger.Debug("Audit trail trimming operation completed. {0} records were deleted.", deletedRecords.Count());
+                    Logger.Debug("Audit trail trimming completed. {0} records were deleted.", deletedRecords.Count());
                     Settings.LastRunUtc = _clock.UtcNow;
                 }
                 catch (Exception ex) {
@@ -51,7 +50,7 @@ namespace Orchard.AuditTrail.Services {
             }
         }
 
-        private bool TimeToTrim() {
+        private bool GetIsTimeToTrim() {
             var lastRun = Settings.LastRunUtc ?? DateTime.MinValue;
             var now = _clock.UtcNow;
             var interval = TimeSpan.FromHours(12);

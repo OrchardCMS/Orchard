@@ -27,13 +27,13 @@ namespace Orchard.AuditTrail.Services {
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
-            IAuditTrailEventProvider providers, 
+            IAuditTrailEventProvider providers,
             IClock clock,
-            IAuditTrailEventHandler auditTrailEventHandlers, 
-            IEventDataSerializer serializer, 
-            ICacheManager cacheManager, 
-            ISiteService siteService, 
-            ISignals signals, 
+            IAuditTrailEventHandler auditTrailEventHandlers,
+            IEventDataSerializer serializer,
+            ICacheManager cacheManager,
+            ISiteService siteService,
+            ISignals signals,
             IShapeFactory shapeFactory) {
 
             _auditTrailRepository = auditTrailRepository;
@@ -48,13 +48,13 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public IPageOfItems<AuditTrailEventRecord> GetRecords(
-            int page, 
-            int pageSize, 
-            Filters filters = null, 
+            int page,
+            int pageSize,
+            Filters filters = null,
             AuditTrailOrderBy orderBy = AuditTrailOrderBy.DateDescending) {
-            
+
             var query = _auditTrailRepository.Table;
-            
+
 
             if (filters != null) {
                 var filterContext = new QueryFilterContext(query, filters);
@@ -115,9 +115,9 @@ namespace Orchard.AuditTrail.Services {
             return filterDisplay;
         }
 
-        public AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T:IAuditTrailEventProvider {
+        public AuditTrailEventRecordResult CreateRecord<T>(string eventName, IUser user, IDictionary<string, object> properties = null, IDictionary<string, object> eventData = null, string eventFilterKey = null, string eventFilterData = null) where T : IAuditTrailEventProvider {
             var eventDescriptor = DescribeEvent<T>(eventName);
-            if(!IsEventEnabled(eventDescriptor))
+            if (!IsEventEnabled(eventDescriptor))
                 return new AuditTrailEventRecordResult {
                     Record = null,
                     IsDisabled = true
@@ -156,7 +156,7 @@ namespace Orchard.AuditTrail.Services {
         }
 
         private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor) {
-            if(eventDescriptor.IsMandatory)
+            if (eventDescriptor.IsMandatory)
                 return true;
 
             var settingsDictionary = _cacheManager.Get("AuditTrail.EventSettings", context => {
@@ -178,17 +178,18 @@ namespace Orchard.AuditTrail.Services {
             return context;
         }
 
-        public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T:IAuditTrailEventProvider {
+        public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T : IAuditTrailEventProvider {
             var fullyQualifiedEventName = EventNameExtensions.GetFullyQualifiedEventName<T>(eventName);
             return DescribeEvent(fullyQualifiedEventName);
         }
 
         public AuditTrailEventDescriptor DescribeEvent(string fullyQualifiedEventName) {
             var categoryDescriptors = DescribeCategories();
-            var eventDescriptorQuery = from c in categoryDescriptors
-                                       from e in c.Events
-                                       where e.Event == fullyQualifiedEventName
-                                       select e;
+            var eventDescriptorQuery =
+                from c in categoryDescriptors
+                from e in c.Events
+                where e.Event == fullyQualifiedEventName
+                select e;
             var eventDescriptors = eventDescriptorQuery.ToArray();
 
             if (!eventDescriptors.Any()) {

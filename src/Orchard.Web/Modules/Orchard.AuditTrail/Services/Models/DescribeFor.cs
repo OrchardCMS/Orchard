@@ -38,6 +38,7 @@ namespace Orchard.AuditTrail.Services.Models {
                 IsEnabledByDefault = enableByDefault,
                 IsMandatory = isMandatory
             });
+
             return this;
         }
     }
