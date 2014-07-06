@@ -25,6 +25,7 @@ namespace Orchard.AuditTrail.Drivers {
             return ContentShape("Parts_AuditTrailTrimmingSettings_Edit", () => {
                 var viewModel = new AuditTrailTrimmingSettingsViewModel {
                     RetentionPeriod = part.RetentionPeriod,
+                    LastRunUtc = part.LastRunUtc
                 };
 
                 if (updater != null) {
