@@ -10,7 +10,6 @@ Features:
         Name: Audit Trail
         Description: Provides a log for recording and viewing back-end changes.
         Category: Security
-        Dependencies: Orchard.Users, Orchard.Roles, Orchard.ContentTypes
     Orchard.AuditTrail.ImportExport:
         Name: Audit Trail Import Export
         Description: Provides import/export functionality for the Audit Trail feature.
