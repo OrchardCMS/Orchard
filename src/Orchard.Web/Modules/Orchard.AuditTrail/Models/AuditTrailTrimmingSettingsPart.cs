@@ -12,6 +12,14 @@ namespace Orchard.AuditTrail.Models {
         }
 
         /// <summary>
+        /// Gets or sets the miminum wait time in hours between audit trail trimming runs.
+        /// </summary>
+        public int MinimumRunInterval {
+            get { return this.Retrieve(x => x.MinimumRunInterval, defaultValue: 12); }
+            set { this.Store(x => x.MinimumRunInterval, value); }
+        }
+
+        /// <summary>
         /// Gets or sets the time in UTC at which the audit trail was last trimmed.
         /// </summary>
         public DateTime? LastRunUtc {

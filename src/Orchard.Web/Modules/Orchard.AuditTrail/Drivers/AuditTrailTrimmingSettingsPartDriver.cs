@@ -3,6 +3,7 @@ using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Security;
 
@@ -11,11 +12,16 @@ namespace Orchard.AuditTrail.Drivers {
     public class AuditTrailTrimmingSettingsPartDriver : ContentPartDriver<AuditTrailTrimmingSettingsPart> {
         private readonly IAuthorizer _authorizer;
         private readonly IDateServices _dateServices;
+        private readonly IDateTimeFormatProvider _dateTimeLocalization;
 
-        public AuditTrailTrimmingSettingsPartDriver(IAuthorizer authorizer, IDateServices dateServices) {
+        public AuditTrailTrimmingSettingsPartDriver(IAuthorizer authorizer, IDateServices dateServices, IDateTimeFormatProvider dateTimeLocalization) {
             _authorizer = authorizer;
             _dateServices = dateServices;
+            _dateTimeLocalization = dateTimeLocalization;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected override DriverResult Editor(AuditTrailTrimmingSettingsPart part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
@@ -28,7 +34,8 @@ namespace Orchard.AuditTrail.Drivers {
             return ContentShape("Parts_AuditTrailTrimmingSettings_Edit", () => {
                 var viewModel = new AuditTrailTrimmingSettingsViewModel {
                     RetentionPeriod = part.RetentionPeriod,
-                    LastRun = _dateServices.ConvertToLocal(part.LastRunUtc)
+                    MinimumRunInterval = part.MinimumRunInterval,
+                    LastRunDateString = _dateServices.ConvertToLocalString(part.LastRunUtc, _dateTimeLocalization.ShortDateTimeFormat, T("Never").Text)
                 };
 
                 if (updater != null) {

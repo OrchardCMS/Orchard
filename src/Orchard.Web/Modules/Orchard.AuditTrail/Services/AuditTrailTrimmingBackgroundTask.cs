@@ -66,8 +66,8 @@ namespace Orchard.AuditTrail.Services {
         private bool GetIsTimeToTrim() {
             var lastRun = Settings.LastRunUtc ?? DateTime.MinValue;
             var now = _clock.UtcNow;
-            var interval = TimeSpan.FromHours(12);
-            return now - lastRun > interval;
+            var interval = TimeSpan.FromHours(Settings.MinimumRunInterval);
+            return now - lastRun >= interval;
         }
     }
 }
