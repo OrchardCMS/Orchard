@@ -7,8 +7,8 @@
         <span class="hint">@T("The number of days of audit log data to retain.")</span>
     </fieldset>
     <fieldset>
-        @Html.LabelFor(m => m.LastRunUtc, T("Last run"))
-        @Html.TextBoxFor(m => m.LastRunUtc, new { @class = "text", disabled = "disabled" })
+        @Html.LabelFor(m => m.LastRun, T("Last run"))
+        @Html.TextBoxFor(m => m.LastRun, new { @class = "text", disabled = "disabled" })
         <span class="hint">@T("Indicates the last time the audit trail trimming process was run. The trimming process runs every 12 hours.")</span>
     </fieldset>
 </section>

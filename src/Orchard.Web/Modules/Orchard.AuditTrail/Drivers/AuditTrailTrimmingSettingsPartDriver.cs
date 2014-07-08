@@ -3,15 +3,18 @@ using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Services;
 using Orchard.Security;
 
 namespace Orchard.AuditTrail.Drivers {
     [OrchardFeature("Orchard.AuditTrail.Trimming")]
     public class AuditTrailTrimmingSettingsPartDriver : ContentPartDriver<AuditTrailTrimmingSettingsPart> {
         private readonly IAuthorizer _authorizer;
+        private readonly IDateServices _dateServices;
 
-        public AuditTrailTrimmingSettingsPartDriver(IAuthorizer authorizer) {
+        public AuditTrailTrimmingSettingsPartDriver(IAuthorizer authorizer, IDateServices dateServices) {
             _authorizer = authorizer;
+            _dateServices = dateServices;
         }
 
         protected override DriverResult Editor(AuditTrailTrimmingSettingsPart part, dynamic shapeHelper) {
@@ -25,7 +28,7 @@ namespace Orchard.AuditTrail.Drivers {
             return ContentShape("Parts_AuditTrailTrimmingSettings_Edit", () => {
                 var viewModel = new AuditTrailTrimmingSettingsViewModel {
                     RetentionPeriod = part.RetentionPeriod,
-                    LastRunUtc = part.LastRunUtc
+                    LastRun = _dateServices.ConvertToLocal(part.LastRunUtc)
                 };
 
                 if (updater != null) {
