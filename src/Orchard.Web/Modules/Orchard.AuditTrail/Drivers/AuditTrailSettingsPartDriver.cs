@@ -42,11 +42,11 @@ namespace Orchard.AuditTrail.Drivers {
                     select new AuditTrailCategorySettingsViewModel {
                         Category = categoryDescriptor.Category,
                         Name = categoryDescriptor.Name,
-                        Events = eventsQuery.ToArray()
+                        Events = eventsQuery.ToList()
                     };
 
                 var viewModel = new AuditTrailSettingsViewModel {
-                    Categories = categoriesQuery.ToArray() 
+                    Categories = categoriesQuery.ToList() 
                 };
 
                 if (updater != null) {
