@@ -73,7 +73,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncScripts\BindingStrategies\RequireJS.cs" />
+    <Compile Include="AsyncScripts\BindingStrategies\RequireJSResourceWriter.cs" />
     <Compile Include="AsyncScripts\Filters\RequireJS.cs" />
     <Compile Include="Common\Controllers\ErrorController.cs" />
     <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
@@ -371,7 +371,6 @@
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\Gamma\" />
   </ItemGroup>
   <ItemGroup>

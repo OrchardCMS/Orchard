@@ -393,25 +393,78 @@ namespace Orchard.Core.Shapes {
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
             var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
-            foreach (var context in requiredResources.Where(r =>
+            var requiredResourcesQuery = requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
-                (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
+                (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true));
+            var filteredResources = requiredResourcesQuery.ToArray();
 
-                var path = context.GetResourceUrl(defaultSettings, appPath);
+            var resourceWriter = New.ResourceWriter(DefaultSettings: defaultSettings, AppPath: appPath, Resources: filteredResources);
+
+            switch (resourceType) {
+                case "stylesheet":
+                    resourceWriter.Metadata.Type = "StyleSheetsResourceWriter";
+                    break;
+                case "script":
+                    var scripts = filteredResources.Where(x => !x.Settings.LoadAsync);
+                    var asyncScripts = filteredResources.Where(x => x.Settings.LoadAsync);
+
+                    resourceWriter.Metadata.Type = "ScriptsResourceWriter";
+                    resourceWriter.Add(New.SyncScriptsResourceWriter(DefaultSettings: defaultSettings, AppPath: appPath, Resources: scripts));
+                    resourceWriter.Add(New.AsyncScriptsResourceWriter(DefaultSettings: defaultSettings, AppPath: appPath, Resources: asyncScripts));
+                    break;
+                default:
+                    resourceWriter.Metadata.Type = "DefaultResourceWriter";
+                    break;
+            }
+
+            Output.Write(Display(resourceWriter));
+        }
+
+        [Shape]
+        public void DefaultResourceWriter(dynamic Display, TextWriter Output, RequireSettings DefaultSettings, string AppPath, IEnumerable<ResourceRequiredContext> Resources) {
+            foreach (var context in Resources) {
+                var path = context.GetResourceUrl(DefaultSettings, AppPath);
                 var condition = context.Settings.Condition;
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
-                IHtmlString result;
-                if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
-                }
-                else if (resourceType == "script") {
-                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
-                }
-                else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
-                }
+                IHtmlString result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
                 Output.Write(result);
             }
+        }
+
+        [Shape]
+        public void StyleSheetsResourceWriter(dynamic Display, TextWriter Output, RequireSettings DefaultSettings, string AppPath, IEnumerable<ResourceRequiredContext> Resources) {
+            foreach (var context in Resources) {
+                var path = context.GetResourceUrl(DefaultSettings, AppPath);
+                var condition = context.Settings.Condition;
+                var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
+                IHtmlString result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
+                Output.Write(result);
+            }
+        }
+
+        [Shape]
+        public void ScriptsResourceWriter(dynamic Shape, dynamic Display, TextWriter Output, RequireSettings DefaultSettings, string AppPath, IEnumerable<ResourceRequiredContext> Resources) {
+            foreach (var child in Shape) {
+                Output.Write(Display(child));
+            }
+        }
+
+        [Shape]
+        public void SyncScriptsResourceWriter(dynamic Display, TextWriter Output, RequireSettings DefaultSettings, string AppPath, IEnumerable<ResourceRequiredContext> Resources) {
+            foreach (var context in Resources) {
+                var path = context.GetResourceUrl(DefaultSettings, AppPath);
+                var condition = context.Settings.Condition;
+                var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
+                IHtmlString result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
+                Output.Write(result);
+            }
+        }
+
+        [Shape]
+        public void AsyncScriptsResourceWriter(dynamic Shape, dynamic Display, TextWriter Output, RequireSettings DefaultSettings, string AppPath, IEnumerable<ResourceRequiredContext> Resources) {
+            // The default implementation is the same as the synchronous scripts resource writer.
+            Shape.Metadata.Type = "SyncScriptsResourceWriter";
+            Output.Write(Display(Shape));
         }
 
         [Shape]
