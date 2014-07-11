@@ -85,7 +85,7 @@ namespace Orchard.Utility.Extensions {
                 return true;
             }
 
-            // at this point, check for an fully qualified url
+            // at this point, check for a fully qualified url
             try {
                 var uri = new Uri(url);
                 if (uri.Authority.Equals(request.Headers["Host"], StringComparison.OrdinalIgnoreCase)) {
@@ -106,7 +106,7 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
             catch {
-                // mall-formed url e.g, "abcdef"
+                // malformed url e.g, "abcdef"
                 return false;
             }
 

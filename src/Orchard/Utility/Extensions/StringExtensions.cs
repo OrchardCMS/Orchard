@@ -324,5 +324,9 @@ namespace Orchard.Utility.Extensions {
             var pattern = String.Format("({0})", String.Join("|", replacements.Keys.ToArray()));
             return Regex.Replace(original, pattern, (match) => replacements[match.Value]);
         }
+
+        public static bool IsAbsoluteUrl(this string url) {
+            return url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("//");
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Orchard.Core.Shapes {
         private readonly Work<IShapeFactory> _shapeFactory;
 
         public CoreShapes(
-            Work<WorkContext> workContext, 
+            Work<WorkContext> workContext,
             Work<IResourceManager> resourceManager,
             Work<IHttpContextAccessor> httpContextAccessor,
             Work<IShapeFactory> shapeFactory
@@ -44,7 +44,7 @@ namespace Orchard.Core.Shapes {
         }
 
         public Localizer T { get; set; }
-        public dynamic New { get { return _shapeFactory.Value;  } }
+        public dynamic New { get { return _shapeFactory.Value; } }
 
         public void Discover(ShapeTableBuilder builder) {
             // the root page shape named 'Layout' is wrapped with 'Document'
@@ -54,7 +54,7 @@ namespace Orchard.Core.Shapes {
                 .OnCreating(creating => creating.Create = () => new ZoneHolding(() => creating.New.Zone()))
                 .OnCreated(created => {
                     var layout = created.Shape;
-                    
+
                     layout.Head = created.New.DocumentZone(ZoneName: "Head");
                     layout.Body = created.New.DocumentZone(ZoneName: "Body");
                     layout.Tail = created.New.DocumentZone(ZoneName: "Tail");
@@ -104,7 +104,7 @@ namespace Orchard.Core.Shapes {
                     string menuName = menuItem.Menu.MenuName;
                     string contentType = null;
                     if (menuItem.Content != null) {
-                        contentType = ((IContent) menuItem.Content).ContentItem.ContentType;
+                        contentType = ((IContent)menuItem.Content).ContentItem.ContentType;
                     }
 
                     // MenuItemLink__[ContentType] e.g. MenuItemLink-HtmlMenuItem
@@ -119,7 +119,7 @@ namespace Orchard.Core.Shapes {
                     if (contentType != null) {
                         menuItem.Metadata.Alternates.Add("MenuItemLink__" + EncodeAlternateElement(menuName) + "__" + EncodeAlternateElement(contentType));
                     }
-                    
+
                 });
 
             builder.Describe("LocalMenu")
@@ -130,7 +130,7 @@ namespace Orchard.Core.Shapes {
                     menu.Classes.Add("localmenu");
                     menu.Metadata.Alternates.Add("LocalMenu__" + EncodeAlternateElement(menuName));
                 });
-            
+
             builder.Describe("LocalMenuItem")
                 .OnDisplaying(displaying => {
                     var menuItem = displaying.Shape;
@@ -218,8 +218,8 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
-                    if (!string.IsNullOrEmpty(fileName)) {
+                    var fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    if (!String.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Style__" + fileName);
                     }
                 });
@@ -228,7 +228,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Script__" + fileName);
                     }
@@ -238,7 +238,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Resource__" + fileName);
                     }
@@ -329,14 +329,14 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void Metas(TextWriter Output) {
-            foreach (var meta in _resourceManager.Value.GetRegisteredMetas() ) {
+            foreach (var meta in _resourceManager.Value.GetRegisteredMetas()) {
                 Output.WriteLine(meta.GetTag());
             }
         }
 
         [Shape]
         public void HeadLinks(TextWriter Output) {
-            foreach (var link in _resourceManager.Value.GetRegisteredLinks() ) {
+            foreach (var link in _resourceManager.Value.GetRegisteredLinks()) {
                 Output.WriteLine(link.GetTag());
             }
         }
@@ -354,7 +354,7 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void Script(HtmlHelper Html, TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            // do not write to Output directly as Styles are rendered in Zones
+            // do not write to Output directly as Scripts are rendered in Zones
             ResourceManager.WriteResource(Html.ViewContext.Writer, Resource, Url, Condition, TagAttributes);
         }
 
@@ -402,13 +402,13 @@ namespace Orchard.Core.Shapes {
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
                 }
-                else if (resourceType == "script") { 
-                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                else if (resourceType == "script") {
+                    result = Display.Script(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
                 }
                 else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
+                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes, Settings: context.Settings);
                 }
                 Output.Write(result);
             }
@@ -442,7 +442,7 @@ namespace Orchard.Core.Shapes {
             var numberOfPagesToShow = Quantity ?? 0;
             if (Quantity == null || Quantity < 0)
                 numberOfPagesToShow = 7;
-    
+
             var totalPageCount = (int)Math.Ceiling(TotalItemCount / pageSize);
 
             var firstText = FirstText ?? T("<<");
@@ -467,7 +467,7 @@ namespace Orchard.Core.Shapes {
                 if (shapeRouteData == null) {
                     var route = shapeRoute as RouteData;
                     if (route != null) {
-                        shapeRouteData = (route).Values;    
+                        shapeRouteData = (route).Values;
                     }
                 }
 
@@ -535,7 +535,7 @@ namespace Orchard.Core.Shapes {
             if (lastPage < totalPageCount && numberOfPagesToShow > 0) {
                 Shape.Add(New.Pager_Gap(Value: gapText, Pager: Shape));
             }
-    
+
             // next and last pages
             if (Page < totalPageCount) {
                 // next
@@ -551,47 +551,47 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public IHtmlString Pager(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Alternates.Clear();
             Shape.Metadata.Type = "Pager_Links";
             return Display(Shape);
         }
 
         [Shape]
         public IHtmlString Pager_First(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Alternates.Clear();
             Shape.Metadata.Type = "Pager_Link";
             return Display(Shape);
         }
-        
+
         [Shape]
         public IHtmlString Pager_Previous(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Alternates.Clear();
             Shape.Metadata.Type = "Pager_Link";
             return Display(Shape);
         }
-        
+
         [Shape]
         public IHtmlString Pager_CurrentPage(HtmlHelper Html, dynamic Display, object Value) {
             var tagBuilder = new TagBuilder("span");
             tagBuilder.InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString();
-            
+
             return MvcHtmlString.Create(tagBuilder.ToString());
         }
-        
+
         [Shape]
         public IHtmlString Pager_Next(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Alternates.Clear();
             Shape.Metadata.Type = "Pager_Link";
             return Display(Shape);
         }
-        
+
         [Shape]
         public IHtmlString Pager_Last(dynamic Shape, dynamic Display) {
-            Shape.Metadata.Alternates.Clear(); 
+            Shape.Metadata.Alternates.Clear();
             Shape.Metadata.Type = "Pager_Link";
             return Display(Shape);
         }
-        
+
         [Shape]
         public IHtmlString Pager_Link(HtmlHelper Html, dynamic Shape, dynamic Display, object Value) {
             Shape.Metadata.Alternates.Clear();
@@ -645,7 +645,7 @@ namespace Orchard.Core.Shapes {
 
             if (Items == null)
                 return;
-            
+
             // prevent multiple enumerations
             var items = Items.ToList();
 
@@ -655,7 +655,7 @@ namespace Orchard.Core.Shapes {
                 return;
 
             string listTagName = null;
-            
+
             if (Tag != "-") {
                 listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
             }
@@ -664,7 +664,7 @@ namespace Orchard.Core.Shapes {
 
             string itemTagName = null;
             if (ItemTag != "-") {
-             itemTagName = string.IsNullOrEmpty(ItemTag) ? "li" : ItemTag;
+                itemTagName = string.IsNullOrEmpty(ItemTag) ? "li" : ItemTag;
             }
 
             if (listTag != null) {
@@ -677,7 +677,7 @@ namespace Orchard.Core.Shapes {
             // give the item shape the possibility to alter its container tag
             var index = 0;
             foreach (var item in items) {
-                
+
                 var itemTag = String.IsNullOrEmpty(itemTagName) ? null : GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);
 
                 if (item is IShape) {
@@ -698,7 +698,7 @@ namespace Orchard.Core.Shapes {
             }
 
             index = 0;
-            foreach(var itemOutput in itemOutputs) {
+            foreach (var itemOutput in itemOutputs) {
                 var itemTag = itemTags[index];
 
                 if (itemTag != null) {
@@ -792,7 +792,7 @@ namespace Orchard.Core.Shapes {
             if (Value is IShape) {
                 return Display(Value).ToString();
             }
-            
+
             return Html.Raw(Html.Encode(Value.ToString()));
         }
     }

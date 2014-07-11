@@ -198,6 +198,8 @@
     <Compile Include="Data\ISessionConfigurationEvents.cs" />
     <Compile Include="Data\ISessionInterceptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\ScriptBindingStrategy.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StaticFileBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
@@ -337,6 +339,7 @@
     <Compile Include="UI\Navigation\PagerParameters.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
+    <Compile Include="UI\Resources\ResourceSynchronicity.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />

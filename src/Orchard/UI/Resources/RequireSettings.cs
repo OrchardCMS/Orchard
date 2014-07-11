@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
     public class RequireSettings {
@@ -14,6 +13,7 @@ namespace Orchard.UI.Resources {
         public bool DebugMode { get; set; }
         public bool CdnMode { get; set; }
         public ResourceLocation Location { get; set; }
+        public ResourceSynchronicity Synchronicity { get; set; }
         public string Condition { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
         public Dictionary<string, string> Attributes {
@@ -47,6 +47,19 @@ namespace Orchard.UI.Resources {
             // if head is specified it takes precedence since it's safer than foot
             Location = (ResourceLocation)Math.Max((int)Location, (int)location);
             return this;
+        }
+
+        public RequireSettings Async(bool async = true) {
+            return UseSynchronicity(async ? ResourceSynchronicity.Asynchronous : ResourceSynchronicity.Synchronous);
+        }
+
+        public RequireSettings UseSynchronicity(ResourceSynchronicity synchronicity) {
+            Synchronicity = (ResourceSynchronicity)Math.Max((int)Synchronicity, (int)synchronicity);
+            return this;
+        }
+
+        public bool LoadAsync {
+            get { return Synchronicity == ResourceSynchronicity.Asynchronous && Location == ResourceLocation.Unspecified; }
         }
 
         public RequireSettings UseCulture(string cultureName) {
@@ -129,6 +142,7 @@ namespace Orchard.UI.Resources {
                 Name = Name,
                 Type = Type
             }).AtLocation(Location).AtLocation(other.Location)
+                .UseSynchronicity(Synchronicity).UseSynchronicity(other.Synchronicity)
                 .WithBasePath(BasePath).WithBasePath(other.BasePath)
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)

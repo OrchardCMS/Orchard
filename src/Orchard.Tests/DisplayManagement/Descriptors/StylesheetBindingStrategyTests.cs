@@ -22,7 +22,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         private TestVirtualPathProvider _testVirtualPathProvider;
 
 
-        protected override void Register(Autofac.ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder) {
             _descriptor = new ShellDescriptor { };
             _testViewEngine = new TestViewEngine();
             _testVirtualPathProvider = new TestVirtualPathProvider { TestViewEngine = _testViewEngine };
