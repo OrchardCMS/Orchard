@@ -95,23 +95,7 @@
     <Content Include="Views\DefinitionTemplates\AuditTrailPartSettings.cshtml" />
     <Content Include="Views\Parts.AuditTrail.Link.cshtml" />
     <Content Include="Views\Parts.AuditTrail.cshtml" />
-    <Content Include="Views\AuditTrailEvent-User.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-RoleRenamed.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-RoleCreated.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-Created.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-Removed.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-Created.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-Removed.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.SummaryAdmin.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.AuditTrailTrimmingSettings.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-Created.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.cshtml" />
@@ -122,7 +106,6 @@
     <Content Include="Views\AuditTrailEvent-ContentType-Created.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-Removed.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.cshtml" />
@@ -263,9 +246,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AuditTrailEvent.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\AuditTrailEvent.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AuditTrailEvent-Content.SummaryAdmin.cshtml" />

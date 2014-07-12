@@ -1,9 +1,0 @@
-﻿@using Orchard.AuditTrail.Helpers
-@{
-    var eventData = (IDictionary<string, object>) Model.EventData;
-    var roleName = eventData.Get<string>("RoleName");
-}
-
-<section class="audittrail-role-summary">
-    @T("Created <strong>{0}</strong> role.", roleName)
-</section>
