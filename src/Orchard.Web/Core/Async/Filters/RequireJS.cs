@@ -3,8 +3,8 @@ using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Resources;
 
-namespace Orchard.Core.AsyncScripts.Filters {
-    [OrchardFeature("AsyncScripts.RequireJS")]
+namespace Orchard.Core.Async.Filters {
+    [OrchardFeature("Async.RequireJS")]
     public class RequireJS : FilterProvider, IResultFilter {
         public RequireJS(IResourceManager resourceManager) {
             _resourceManager = resourceManager;

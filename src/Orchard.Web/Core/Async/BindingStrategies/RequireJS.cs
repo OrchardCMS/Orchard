@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
@@ -10,9 +9,9 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Extensions;
 using Orchard.UI.Resources;
 
-namespace Orchard.Core.AsyncScripts.BindingStrategies {
-    [OrchardFeature("AsyncScripts.RequireJS")]
-    public class RequireJSResourceWriter : IShapeTableProvider {
+namespace Orchard.Core.Async.BindingStrategies {
+    [OrchardFeature("Async.RequireJS")]
+    public class RequireJS : IShapeTableProvider {
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("AsyncScriptsResourceWriter").OnDisplaying(context => {
                 context.ShapeMetadata.Type = "RequireJSAsyncScriptsWriter";

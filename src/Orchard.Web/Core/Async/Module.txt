@@ -5,10 +5,10 @@ Website: http://orchardproject.net
 Version: 1.8.1
 OrchardVersion: 1.8
 Description: Provides static file binding strategies and supporting scripts that implement the loading of scripts in an asynchronous fashion.
-Category: Async Scripts
+Category: Async
 Features:
-    AsyncScripts.RequireJS:
+    Async.RequireJS:
         Name: RequireJS
         Description: Uses RequireJS to load scripts asynchronously.
-        Category: Async Scripts
+        Category: Async
         Dependencies: AsyncScripts
