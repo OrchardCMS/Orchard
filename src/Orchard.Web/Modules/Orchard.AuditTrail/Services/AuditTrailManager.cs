@@ -85,9 +85,13 @@ namespace Orchard.AuditTrail.Services {
 
             var totalItemCount = query.Count();
             var startIndex = (page - 1) * pageSize;
-            var records = query.Skip(startIndex).Take(pageSize);
 
-            return new PageOfItems<AuditTrailEventRecord>(records) {
+            query = query.Skip(startIndex);
+
+            if (pageSize > 0)
+                query = query.Take(pageSize);
+
+            return new PageOfItems<AuditTrailEventRecord>(query) {
                 PageNumber = page,
                 PageSize = pageSize,
                 TotalItemCount = totalItemCount
