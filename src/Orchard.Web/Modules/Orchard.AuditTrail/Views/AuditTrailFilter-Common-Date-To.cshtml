@@ -1,6 +1,6 @@
 ﻿@using Orchard.Core.Common.ViewModels
 @{
-    var editor = (DateTimeEditor)Model.Editor;
+    var to = (DateTimeEditor)Model.Editor;
 }
 @Html.Label("to.Date", T("To:").Text)
-@Html.EditorFor(m => editor)
+@Html.EditorFor(m => to)
