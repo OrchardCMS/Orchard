@@ -17,7 +17,7 @@ namespace Orchard.Core.Async.Filters {
                 return;
             }
 
-            _resourceManager.Include("script", "~/Core/AsyncScripts/RequireJS/Scripts/require.js", null).AtHead();
+            _resourceManager.Include("script", "~/Core/Async/RequireJS/Scripts/require.js", null).AtHead();
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
