@@ -23,6 +23,7 @@
             <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
         </div>
     </section>
+    <input type="hidden" name="pageSize" value="@Model.Pager.PageSize" />
 }
 <section class="audittrail-list-section">
     @if (!Model.Records.Any()) {
