@@ -1,7 +1,5 @@
-﻿@using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
-    foreach (var item in Model) {
-        <div class="filter-control-group">
-            @Display(item)
-        </div>
-    }
+﻿@foreach (var item in Model) {
+    <div class="filter-control-group">
+        @Display(item)
+    </div>
 }
