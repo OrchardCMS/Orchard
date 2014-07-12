@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Providers.Content;
 using Orchard.AuditTrail.Services;
-using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.Settings;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
@@ -53,7 +51,7 @@ namespace Orchard.AuditTrail.Drivers {
                             from e in c.Events
                             select e;
                         var recordViewModels = from record in pageOfData
-                            let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.Event)
+                            let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.FullEventName)
                             where descriptor != null
                             select new AuditTrailEventSummaryViewModel {
                                 Record = record,

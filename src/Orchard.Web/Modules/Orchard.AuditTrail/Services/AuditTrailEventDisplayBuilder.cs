@@ -18,21 +18,16 @@ namespace Orchard.AuditTrail.Services {
 
         public dynamic BuildDisplay(AuditTrailEventRecord record, string displayType) {
             var eventData = _serializer.Deserialize(record.EventData);
-            var descriptor = _auditTrailManager.DescribeEvent(record.Event);
+            var descriptor = _auditTrailManager.DescribeEvent(record.FullEventName);
             var auditTrailEventShape = New.AuditTrailEvent(Record: record, EventData: eventData, Descriptor: descriptor);
             var metaData = (ShapeMetadata)auditTrailEventShape.Metadata;
             metaData.DisplayType = displayType;
             metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}", displayType));
             metaData.Alternates.Add(String.Format("AuditTrailEvent__{0}", record.Category));
             metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}", displayType, record.Category));
-            metaData.Alternates.Add(String.Format("AuditTrailEvent__{0}__{1}", record.Category, GetShortEventName(record.Event)));
-            metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}__{2}", displayType, record.Category, GetShortEventName(record.Event)));
+            metaData.Alternates.Add(String.Format("AuditTrailEvent__{0}__{1}", record.Category, record.EventName));
+            metaData.Alternates.Add(String.Format("AuditTrailEvent_{0}__{1}__{2}", displayType, record.Category, record.EventName));
             return auditTrailEventShape;
-        }
-
-        private string GetShortEventName(string fullyQualifiedEventName) {
-            var index = fullyQualifiedEventName.LastIndexOf('.') + 1;
-            return fullyQualifiedEventName.Substring(index);
         }
     }
 }

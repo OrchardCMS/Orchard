@@ -73,7 +73,7 @@ namespace Orchard.AuditTrail.Services {
 
             switch (orderBy) {
                 case AuditTrailOrderBy.EventAscending:
-                    query = query.OrderBy(x => x.Event).ThenByDescending(x => x.Id);
+                    query = query.OrderBy(x => x.EventName).ThenByDescending(x => x.Id);
                     break;
                 case AuditTrailOrderBy.CategoryAscending:
                     query = query.OrderBy(x => x.Category).ThenByDescending(x => x.Id);
@@ -139,7 +139,8 @@ namespace Orchard.AuditTrail.Services {
 
             var record = new AuditTrailEventRecord {
                 Category = eventDescriptor.CategoryDescriptor.Category,
-                Event = eventDescriptor.Event,
+                EventName = eventName,
+                FullEventName = eventDescriptor.Event,
                 CreatedUtc = _clock.UtcNow,
                 UserName = user != null ? user.UserName : null,
                 EventData = _serializer.Serialize(context.EventData),

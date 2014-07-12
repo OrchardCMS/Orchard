@@ -35,7 +35,8 @@ namespace Orchard.AuditTrail.ImportExport {
 
             foreach (var record in records) {
                 root.Add(new XElement("Event",
-                    CreateAttribute("Name", record.Event),
+                    CreateAttribute("Name", record.EventName),
+                    CreateAttribute("FullName", record.FullEventName),
                     CreateAttribute("Category", record.Category),
                     CreateAttribute("User", record.UserName),
                     CreateAttribute("CreatedUtc", record.CreatedUtc),

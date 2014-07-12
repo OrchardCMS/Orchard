@@ -5,7 +5,8 @@ namespace Orchard.AuditTrail.Models {
         public virtual int Id { get; set; }
         public virtual DateTime CreatedUtc { get; set; }
         public virtual string UserName { get; set; }
-        public virtual string Event { get; set; }
+        public virtual string EventName { get; set; }
+        public virtual string FullEventName { get; set; }
         public virtual string Category { get; set; }
         public virtual string EventData { get; set; }
         public virtual string EventFilterKey { get; set; }

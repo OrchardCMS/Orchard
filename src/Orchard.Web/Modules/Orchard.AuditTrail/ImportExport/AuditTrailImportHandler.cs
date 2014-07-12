@@ -22,7 +22,8 @@ namespace Orchard.AuditTrail.ImportExport {
 
             foreach (var eventElement in recipeContext.RecipeStep.Step.Elements()) {
                 var record = new AuditTrailEventRecord {
-                    Event = eventElement.Attr<string>("Name"),
+                    EventName = eventElement.Attr<string>("Name"),
+                    FullEventName = eventElement.Attr<string>("FullName"),
                     Category = eventElement.Attr<string>("Category"),
                     UserName = eventElement.Attr<string>("User"),
                     CreatedUtc = eventElement.Attr<DateTime>("CreatedUtc"),
