@@ -31,7 +31,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         public abstract string GetShapePrefix();
 
         public virtual void WriteResource(dynamic display, TextWriter output, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
-            ResourceManager.WriteResource(output, resource, url, condition, attributes);
+            ResourceManager.WriteResource(output, resource, display.Url, condition, attributes);
         }
 
         private static string SafeName(string name) {
