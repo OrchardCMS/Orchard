@@ -11,4 +11,4 @@ Features:
         Name: RequireJS
         Description: Uses RequireJS to load scripts asynchronously.
         Category: Async
-        Dependencies: AsyncScripts
+        Dependencies: Async
