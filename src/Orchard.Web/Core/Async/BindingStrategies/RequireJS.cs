@@ -84,12 +84,8 @@ namespace Orchard.Core.Async.BindingStrategies {
         }
 
         private static bool IsAbsoluteUrl(string url) {
-            Uri uri;
-
-            if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
-                return false;
-
-            return uri.IsAbsoluteUri;
+            var segments = new[] {"http", "https", "ftp", "ftps", "//"};
+            return segments.Any(url.StartsWith);
         }
     }
 }
