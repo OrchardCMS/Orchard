@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
-using Orchard.Comments.Settings;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
@@ -12,14 +11,12 @@ namespace Orchard.Comments.Controllers {
     public class CommentController : Controller, IUpdateModel {
         public IOrchardServices Services { get; set; }
         private readonly ICommentService _commentService;
-        private readonly INotifier _notifier;
 
         public Localizer T { get; set; }
 
-        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier) {
+        public CommentController(IOrchardServices services, ICommentService commentService) {
             Services = services;
             _commentService = commentService;
-            _notifier = notifier;
 
             T = NullLocalizer.Instance;
         }
@@ -30,24 +27,21 @@ namespace Orchard.Comments.Controllers {
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
-            Services.ContentManager.Create(comment);
-            
             var editorShape = Services.ContentManager.UpdateEditor(comment, this);
 
-
-            if (!ModelState.IsValidField("Author")) {
+            if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Email")) {
+            if (!ModelState.IsValidField("Comments.Email")) {
                 Services.Notifier.Error(T("Email is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("Site")) {
+            if (!ModelState.IsValidField("Comments.Site")) {
                 Services.Notifier.Error(T("Site url is invalid or is longer than 255 chars"));
             }
 
-            if (!ModelState.IsValidField("CommentText")) {
+            if (!ModelState.IsValidField("Comments.CommentText")) {
                 Services.Notifier.Error(T("Comment is mandatory"));
             }
 
@@ -57,20 +51,13 @@ namespace Orchard.Comments.Controllers {
                 var commentPart = comment.As<CommentPart>();
 
                 // ensure the comments are not closed on the container, as the html could have been tampered manually
-                var container = Services.ContentManager.Get(commentPart.CommentedOn);
-                CommentsPart commentsPart = null;
-                if(container != null) {
-                    commentsPart = container.As<CommentsPart>();
-                    if (commentsPart != null) {
-                        var settings = commentsPart.TypePartDefinition.Settings.GetModel<CommentsPartSettings>();
-                        if (!commentsPart.CommentsActive
-                            || (settings.MustBeAuthenticated && Services.WorkContext.CurrentUser == null)) {
-                            Services.TransactionManager.Cancel();
-                            return this.RedirectLocal(returnUrl, "~/");
-                        }
-                    }
+                if (!_commentService.CanCreateComment(commentPart)) {
+                    Services.TransactionManager.Cancel();
+                    return this.RedirectLocal(returnUrl, "~/");
                 }
 
+                var commentsPart = Services.ContentManager.Get(commentPart.CommentedOn).As<CommentsPart>();
+           
                 // is it a response to another comment ?
                 if(commentPart.RepliedOn.HasValue && commentsPart != null && commentsPart.ThreadedComments) {
                     var replied = Services.ContentManager.Get(commentPart.RepliedOn.Value);
@@ -118,11 +105,22 @@ namespace Orchard.Comments.Controllers {
                     // if the user who submitted the comment has the right to moderate, don't make this comment moderated
                     if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
                         commentPart.Status = CommentStatus.Approved;
+                        Services.Notifier.Information(T("Your comment has been posted."));
                     }
                     else {
                         Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
                     }
                 }
+                else {
+                    Services.Notifier.Information(T("Your comment has been posted."));
+                }
+
+                // send email notification
+                var siteSettings = Services.WorkContext.CurrentSite.As<CommentSettingsPart>();
+                if (siteSettings.NotificationEmail) {
+                    _commentService.SendNotificationEmail(commentPart);
+                }
+
             }
             else {
                 Services.TransactionManager.Cancel();

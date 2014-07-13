@@ -30,6 +30,8 @@ namespace Orchard.Comments.Feeds {
                 Int32.TryParse(Convert.ToString(limitValue), out limit);
             }
 
+            limit = Math.Min(limit, 100);
+
             var comments = _contentManager
                 .Query<CommentPart, CommentPartRecord>()
                 .Where(x => x.CommentedOnContainer == commentedOnContainer && x.Status == CommentStatus.Approved)

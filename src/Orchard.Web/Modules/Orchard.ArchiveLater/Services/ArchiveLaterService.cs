@@ -32,10 +32,8 @@ namespace Orchard.ArchiveLater.Services {
         }
 
         DateTime? IArchiveLaterService.GetScheduledArchiveUtc(ArchiveLaterPart archiveLaterPart) {
-            var task = _scheduledTaskManager
-                .GetTasks(archiveLaterPart.ContentItem)
-                .Where(t => t.TaskType == UnpublishTaskType)
-                .SingleOrDefault();
+            var task = _scheduledTaskManager.GetTasks(archiveLaterPart.ContentItem)
+                .SingleOrDefault(t => t.TaskType == UnpublishTaskType);
             
             return (task == null ? null : task.ScheduledUtc);
         }

@@ -39,7 +39,7 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public IContent GetMenu(int menuId) {
-            return _contentManager.Get(menuId, VersionOptions.Published, new QueryHints().ExpandRecords<TitlePartRecord>());    
+            return _contentManager.Get(menuId, VersionOptions.Published);    
         }
 
         public MenuPart Get(int menuPartId) {

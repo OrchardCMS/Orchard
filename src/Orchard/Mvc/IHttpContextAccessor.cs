@@ -4,14 +4,19 @@ using System.Web;
 namespace Orchard.Mvc {
     public interface IHttpContextAccessor {
         HttpContextBase Current();
+        void Set(HttpContextBase stub);
     }
 
     public class HttpContextAccessor : IHttpContextAccessor {
+        private HttpContextBase _stub;
+
         public HttpContextBase Current() {
             var httpContext = GetStaticProperty();
-            if (httpContext == null)
-                return null;
-            return new HttpContextWrapper(httpContext);
+            return httpContext != null ? new HttpContextWrapper(httpContext) : _stub;
+        }
+
+        public void Set(HttpContextBase stub) {
+            _stub = stub;
         }
 
         private HttpContext GetStaticProperty() {

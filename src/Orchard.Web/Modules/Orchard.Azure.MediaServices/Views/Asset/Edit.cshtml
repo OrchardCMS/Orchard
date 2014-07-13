@@ -1,0 +1,47 @@
+﻿@using Orchard.Azure.MediaServices.Infrastructure.Assets
+@using Orchard.Utility.Extensions
+@model Orchard.Azure.MediaServices.ViewModels.Media.AssetViewModel
+@{
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("FontAwesome");
+    Style.Include("cloudmedia-tabs.css", "cloudmedia-tabs.min.css");
+    Style.Include("cloudmedia-admin-asset.css", "cloudmedia-admin-asset.min.css");
+    
+    Script.Require("jQuery");
+    Script.Require("jQueryUI");
+    Script.Require("jQueryUI_Tabs");
+    Script.Include("cloudmedia-admin-common.js");
+    Script.Include("cloudmedia-edit-asset.js");
+    
+    Layout.Title = T("Edit {0}", Model.Asset.GetType().Name.CamelFriendly());
+
+    var specializedSettings = Model.SpecializedSettings as IList<AssetDriverResult> ?? Model.SpecializedSettings.ToArray();
+}
+@Display.FrameBuster()
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div id="tabs" class="tabs-container">
+        <ul>
+            <li><a href="#asset-general">@T("General")</a></li>
+            <li><a href="#asset-locators">@T("Locators")</a></li>
+            @foreach (var specializedSetting in specializedSettings) {
+                <li><a href="#@specializedSetting.TabTitle.Text.HtmlClassify()">@specializedSetting.TabTitle</a></li>
+            }
+        </ul>
+        <div id="asset-general">
+            @Html.EditorForModel("Asset.Edit.General")
+        </div>
+        <div id="asset-locators">
+            @Html.EditorForModel("Asset.Edit.Locators")
+        </div>
+        @foreach (var specializedSetting in specializedSettings) {
+            <div id="@specializedSetting.TabTitle.Text.HtmlClassify()">
+                @Display(specializedSetting.EditorShape)
+            </div>
+        }
+    </div>
+    <section class="commands">
+        <button type="submit" name="button.Save" value="button.Save">@T("Save")</button>
+        <button type="submit" name="button.Delete" value="button.Delete" data-prompt="@T("Are you sure you want to delete this asset?")">@T("Delete")</button>
+        <a href="@Url.ItemEditUrl(Model.Asset.VideoPart)" class="button">@T("Back")</a>
+    </section>
+}

@@ -4,22 +4,18 @@ using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Extensions;
 using Orchard.Tokens;
 
 namespace Orchard.Comments.Tokens {
 
     public class CommentTokens : ITokenProvider {
         private readonly IContentManager _contentManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICommentService _commentService;
 
         public CommentTokens(
             IContentManager contentManager,
-            IWorkContextAccessor workContextAccessor,
             ICommentService commentService) {
             _contentManager = contentManager;
-            _workContextAccessor = workContextAccessor;
             _commentService = commentService;
             T = NullLocalizer.Instance;
         }
@@ -51,20 +47,10 @@ namespace Orchard.Comments.Tokens {
                 .Chain("CommentAuthorUrl", "Text", content => content.As<CommentPart>().SiteName)
                 .Token("CommentAuthorEmail", content => content.As<CommentPart>().Email)
                 .Chain("CommentAuthorEmail", "Text", content => content.As<CommentPart>().Email)
-                .Token("CommentApproveUrl", content => CreateProtectedUrl("Approve", content.As<CommentPart>()))
-                .Token("CommentModerateUrl", content => CreateProtectedUrl("Moderate", content.As<CommentPart>()))
-                .Token("CommentDeleteUrl", content => CreateProtectedUrl("Delete", content.As<CommentPart>()))
+                .Token("CommentApproveUrl", content => _commentService.CreateProtectedUrl("Approve", content.As<CommentPart>()))
+                .Token("CommentModerateUrl", content => _commentService.CreateProtectedUrl("Moderate", content.As<CommentPart>()))
+                .Token("CommentDeleteUrl", content => _commentService.CreateProtectedUrl("Delete", content.As<CommentPart>()))
                 ;
-        }
-
-        private string CreateProtectedUrl(string action, CommentPart part) {
-            var workContext = _workContextAccessor.GetContext();
-            if (workContext.HttpContext != null) {
-                var url = new UrlHelper(workContext.HttpContext.Request.RequestContext);
-                return url.AbsoluteAction(action, "Comment", new {area = "Orchard.Comments", nonce = _commentService.CreateNonce(part, TimeSpan.FromDays(7))});
-            }
-
-            return null;
         }
 
         private static string CommentAuthor(IContent comment) {

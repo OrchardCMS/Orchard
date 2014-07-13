@@ -1,27 +1,34 @@
-﻿@model Orchard.Email.Models.SmtpSettingsPart
-@using System.Net.Mail;
+﻿@using System.Net.Mail
+@model Orchard.Email.Models.SmtpSettingsPart
+@{
+    var smtpClient = new SmtpClient();
+}
 
 <fieldset>
     <legend>@T("Email")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Address)">@T("Sender email address")</label>
-        @Html.EditorFor(m => m.Address)
+        @Html.TextBoxFor(m => m.Address, new { @class = "text medium", placeholder = Model.AddressPlaceholder })
         @Html.ValidationMessage("Address", "*")
+        <span class="hint">@T("The default email address to use as a sender.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Host)">@T("Host name")</label>
-        @Html.EditorFor(m => m.Host)
-        @Html.ValidationMessage("Host", "*") 
+        @Html.TextBoxFor(m => m.Host, new { placeholder = smtpClient.Host, @class = "text medium" })
+        @Html.ValidationMessage("Host", "*")
+        <span class="hint">@T("The SMTP server domain, e.g. <i>smtp.mailprovider.com</i>.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Port)">@T("Port number")</label>
-        @Html.EditorFor(m => m.Port)
+        @Html.TextBoxFor(m => m.Port, new { placeholder = smtpClient.Port, @class = "text small" })
         @Html.ValidationMessage("Port", "*")
+        <span class="hint">@T("The SMTP server port, usually 25.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.EnableSsl)
         <label for="@Html.FieldIdFor(m => m.EnableSsl)" class="forcheckbox">@T("Enable SSL communications")</label>
         @Html.ValidationMessage("EnableSsl", "*")
+        <span class="hint">@T("Check if the SMTP server requires SSL communications.")</span>
     </div>
     <div>
         @Html.EditorFor(m => m.RequireCredentials)
@@ -31,13 +38,67 @@
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
         <div>
             <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-            @Html.EditorFor(m => m.UserName)
+            @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
             @Html.ValidationMessage("UserName", "*")
+            <span class="hint">@T("The username for authentication.")</span>
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-            @Html.PasswordFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
             @Html.ValidationMessage("Password", "*")
+            <span class="hint">@T("The password for authentication.")</span>
         </div>
     </div>
+</fieldset>
+<fieldset>
+    <legend>@T("Test those settings:")</legend>
+    <div>
+        <label for="emailtestto">@T("To:")</label>
+        <input type="text" id="emailtestto" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestsubject">@T("Subject:")</label>
+        <input type="text" id="emailtestsubject" class="large text" />
+    </div>
+    <div>
+        <textarea id="emailtestbody"></textarea>
+    </div>
+    <div>
+        <button type="button" id="emailtestsend" class="button grey">@T("Send")</button>
+    </div>
+    <div id="emailtesterror" class="message-Error" style="display:none;"></div>
+    <div id="emailtestinfo" class="message-Information" style="display:none;"></div>
+    @using (Script.Foot()) {
+        <script type="text/javascript">
+            $(function() {
+                var url = "@Url.Action("TestMailSettings", "EmailAdmin", new {area = "Orchard.Email"})",
+                    error = $("#emailtesterror"),
+                    info = $("#emailtestinfo"),
+                    to = $("#emailtestto"),
+                    subject = $("#emailtestsubject"),
+                    body = $("#emailtestbody");
+                $("#emailtestsend").click(function() {
+                    $.post(url, {
+                            to: to.val(),
+                            subject: subject.val(),
+                            body: body.val(),
+                            __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
+                        })
+                        .fail(function(data) {
+                            error.html(data.statusText).show();
+                            info.hide();
+                        })
+                        .done(function(data) {
+                            if (data.error) {
+                                error.html(data.error).show();
+                                info.hide();
+                            } else {
+                                info.html(data.status).show();
+                                error.hide();
+                            }
+                        });
+                });
+            });
+        </script>
+    }
 </fieldset>

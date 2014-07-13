@@ -66,12 +66,27 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
+				public string SiteCalendar {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
                 public ResourceDebugMode ResourceDebugMode {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
 
-                public int PageSize{
+                public int PageSize {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
+                public int MaxPageSize {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+                
+                public int MaxPagedCount {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }

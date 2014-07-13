@@ -44,7 +44,7 @@ namespace Orchard.Projections.Controllers {
         public dynamic Shape { get; set; }
 
         public ActionResult Add(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new SortCriterionAddViewModel { Id = id, SortCriteria = _projectionManager.DescribeSortCriteria() };
@@ -53,7 +53,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id, int sortCriterionId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var sortCriterion = _repository.Get(sortCriterionId);
@@ -70,7 +70,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Edit(int id, string category, string type, int sortCriterionId = -1) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var sortCriterion = _projectionManager.DescribeSortCriteria().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
@@ -158,7 +158,7 @@ namespace Orchard.Projections.Controllers {
 
 
         public ActionResult Move(string direction, int id, int queryId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             switch (direction) {

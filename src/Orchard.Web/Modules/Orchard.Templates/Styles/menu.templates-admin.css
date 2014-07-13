@@ -1,0 +1,7 @@
+﻿.navicon-templates {
+    background-image: url(menu.templates.png) !important;
+}
+
+.navicon-templates:hover {
+    background-position: 0 -30px !important;
+}

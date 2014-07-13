@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Orchard.Taxonomies.Models;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -58,7 +60,7 @@ namespace Orchard.Taxonomies.Drivers {
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, dynamic shapeHelper) {
             return ContentShape("Fields_TaxonomyField_Edit", GetDifferentiator(field, part), () => {
                 var settings = field.PartFieldDefinition.Settings.GetModel<TaxonomyFieldSettings>();
-                var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name).Distinct(new TermPartComparer()).ToDictionary(t => t.Id, t => t);
+                var appliedTerms = _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, field.Name, VersionOptions.Latest).Distinct(new TermPartComparer()).ToDictionary(t => t.Id, t => t);
                 var taxonomy = _taxonomyService.GetTaxonomyByName(settings.Taxonomy);
                 var terms = taxonomy != null
                     ? _taxonomyService.GetTerms(taxonomy.Id).Where(t => !string.IsNullOrWhiteSpace(t.Name)).Select(t => t.CreateTermEntry()).ToList()
@@ -107,11 +109,11 @@ namespace Orchard.Taxonomies.Drivers {
             var termIdentities = appliedTerms.Select(x => Services.ContentManager.GetItemMetadata(x).Identity.ToString())
                 .ToArray();
 
-            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Terms", String.Join(",", termIdentities));
+            context.Element(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name)).SetAttributeValue("Terms", String.Join(",", termIdentities));
         }
 
         protected override void Importing(ContentPart part, TaxonomyField field, ImportContentContext context) {
-            var termIdentities = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "Terms");
+            var termIdentities = context.Attribute(XmlConvert.EncodeLocalName(field.FieldDefinition.Name + "." + field.Name), "Terms");
             if (termIdentities == null) {
                 return;
             }

@@ -1,0 +1,27 @@
+﻿Search <form style="display:inline" data-bind="submit: doSearch"><input data-bind="value: searchText" id="input-media-library-search" type="text" class="text"/></form>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+    //<![CDATA[
+
+    var previous = enhanceViewModel;
+    enhanceViewModel = function(viewModel) {
+        previous(viewModel);
+        viewModel.searchText = ko.observable();
+
+
+        viewModel.doSearch = function () {
+            var self = viewModel;
+
+            self.loadMediaItemsUrl = function (folderPath, skip, count, order, mediaType) {
+                var searchActionUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("MediaItems", "Media", new {area = "Orchard.Search"}))';
+                return searchActionUrl + '?folderPath=' + folderPath + '&skip=' + skip + '&count=' + count + '&order=' + order + '&mediaType=' + mediaType + '&search=' + self.searchText();
+            };
+
+            self.getMediaItems(20);
+        };
+    };
+    
+    //]]>
+</script>
+}

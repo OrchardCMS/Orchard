@@ -81,27 +81,10 @@ namespace Orchard.Core.Settings {
                     .Column<string>("Unused")
                 );
 
-            SchemaBuilder.CreateTable("SiteSettingsPartRecord", 
-                table => table
-                    .ContentPartRecord()
-                    .Column<string>("SiteSalt")
-                    .Column<string>("SiteName")
-                    .Column<string>("SuperUser")
-                    .Column<string>("PageTitleSeparator")
-                    .Column<string>("HomePage")
-                    .Column<string>("SiteCulture")
-                    .Column<string>("ResourceDebugMode", c => c.WithDefault("FromAppSetting"))
-                    .Column<int>("PageSize")
-                    .Column<string>("SiteTimeZone")
-                );
+            // declare the Site content type to let users alter it
+            ContentDefinitionManager.AlterTypeDefinition("Site", cfg => { });
 
-            SchemaBuilder.CreateTable("SiteSettings2PartRecord",
-                table => table
-                    .ContentPartRecord()
-                    .Column<string>("BaseUrl", c => c.Unlimited())
-                );
-
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {

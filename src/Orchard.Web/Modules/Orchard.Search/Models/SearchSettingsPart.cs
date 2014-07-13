@@ -2,20 +2,20 @@
 using Orchard.ContentManagement;
 
 namespace Orchard.Search.Models {
-    public class SearchSettingsPart : ContentPart<SearchSettingsPartRecord> {
+    public class SearchSettingsPart : ContentPart {
         public string[] SearchedFields {
-            get { return Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);  }
-            set { Record.SearchedFields = String.Join(", ", value);  }
+            get { return (Retrieve<string>("SearchedFields") ?? "").Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);  }
+            set { Store("SearchedFields", String.Join(", ", value));  }
         }
 
         public bool FilterCulture {
-            get { return Record.FilterCulture; }
-            set { Record.FilterCulture = value; }
+            get { return this.Retrieve(x => x.FilterCulture); }
+            set { this.Store(x => x.FilterCulture, value); }
         }
 
         public string SearchIndex {
-            get { return Record.SearchIndex; }
-            set { Record.SearchIndex = value; }
+            get { return this.Retrieve(x => x.SearchIndex); }
+            set { this.Store(x => x.SearchIndex, value); }
         }
     }
 }

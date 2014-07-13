@@ -9,21 +9,28 @@ using Orchard.AntiSpam.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.UI.Admin;
+using Orchard.UI.Notify;
 
 namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
+        private readonly INotifier _notifier;
         private readonly IWorkContextAccessor _workContextAccessor;
         private const string ReCaptchaUrl = "http://www.google.com/recaptcha/api";
         private const string ReCaptchaSecureUrl = "https://www.google.com/recaptcha/api";
         
-        public ReCaptchaPartDriver(IWorkContextAccessor workContextAccessor) {
+        public ReCaptchaPartDriver(
+            INotifier notifier,
+            IWorkContextAccessor workContextAccessor) {
+            _notifier = notifier;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
-
+        public ILogger Logger { get; set; }
         protected override DriverResult Editor(ReCaptchaPart part, dynamic shapeHelper) {
             var workContext = _workContextAccessor.GetContext();
 
@@ -65,15 +72,22 @@ namespace Orchard.AntiSpam.Drivers {
             if(updater.TryUpdateModel(submitViewModel, String.Empty, null, null)) {
                 var context = workContext.HttpContext;
 
-                var result = ExecuteValidateRequest(
-                    settings.PrivateKey, 
-                    context.Request.ServerVariables["REMOTE_ADDR"], 
-                    submitViewModel.recaptcha_challenge_field, 
-                    submitViewModel.recaptcha_response_field
-                    );
+                try {
+                    var result = ExecuteValidateRequest(
+                        settings.PrivateKey,
+                        context.Request.ServerVariables["REMOTE_ADDR"],
+                        submitViewModel.recaptcha_challenge_field,
+                        submitViewModel.recaptcha_response_field
+                        );
 
-                if(!HandleValidateResponse(context, result)) {
-                    updater.AddModelError("Parts_ReCaptcha_Fields", T("The text you entered in the Captcha field does not match the image"));
+                    if (!HandleValidateResponse(context, result)) {
+	                _notifier.Error(T("The text you entered in the Captcha field does not match the image"));
+                    	updater.AddModelError("", T("The text you entered in the Captcha field does not match the image"));
+                    }
+                }
+                catch(Exception e) {
+                    Logger.Error(e, "An unexcepted error occured while submitting a reCaptcha");
+                    updater.AddModelError("Parts_ReCaptcha_Fields", T("There was an error while validating the Captcha image"));
                 }
             }
 

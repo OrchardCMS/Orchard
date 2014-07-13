@@ -35,6 +35,8 @@ namespace Orchard.Scripting.CSharp.Drivers {
 
             if (!String.IsNullOrWhiteSpace(script)) {
 
+                script = "// #{ }" + System.Environment.NewLine + script;
+ 
                 _csharpService.SetParameter("Services", _orchardServices);
                 _csharpService.SetParameter("ContentItem", (dynamic)part.ContentItem);
                 _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());

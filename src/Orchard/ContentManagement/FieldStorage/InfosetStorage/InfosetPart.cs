@@ -1,5 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
+using Autofac;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
     public class InfosetPart : ContentPart {
@@ -17,26 +19,33 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         public string Get<TPart>(string fieldName, string valueName) {
-            return Get(typeof(TPart).Name, fieldName, valueName);
+            return Get(typeof(TPart).Name, fieldName, valueName, typeof(TPart).IsAssignableTo<ContentItemVersionRecord>());
         }
 
         public string Get(string partName, string fieldName) {
-            return Get(partName, fieldName, null);
+            return Get(partName, fieldName, null, false);
         }
 
-        public string Get(string partName, string fieldName, string valueName) {
-            var partElement = Infoset.Element.Element(partName);
+        public string GetVersioned(string partName, string fieldName) {
+            return Get(partName, fieldName, null, true);
+        }
+
+        public string Get(string partName, string fieldName, string valueName, bool versionable = false) {
+
+            var element = versionable ? VersionInfoset.Element : Infoset.Element;
+
+            var partElement = element.Element(XmlConvert.EncodeName(partName));
             if (partElement == null) {
                 return null;
             }
-            var fieldElement = partElement.Element(fieldName);
+            var fieldElement = partElement.Element(XmlConvert.EncodeName(fieldName));
             if (fieldElement == null) {
                 return null;
             }
             if (string.IsNullOrEmpty(valueName)) {
                 return fieldElement.Value;
             }
-            var valueAttribute = fieldElement.Attribute(XmlConvert.EncodeLocalName(valueName));
+            var valueAttribute = fieldElement.Attribute(XmlConvert.EncodeName(valueName));
             if (valueAttribute == null) {
                 return null;
             }
@@ -48,29 +57,40 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
         }
 
         public void Set<TPart>(string fieldName, string value) {
-            Set(typeof(TPart).Name, fieldName, null, value);
+            Set(typeof(TPart).Name, fieldName, null, value, typeof(TPart).IsAssignableTo<ContentItemVersionRecord>());
         }
 
         public void Set(string partName, string fieldName, string value) {
-            Set(partName, fieldName, null, value);
+            Set(partName, fieldName, null, value, false);
         }
 
-        public void Set(string partName, string fieldName, string valueName, string value) {
-            var partElement = Infoset.Element.Element(partName);
+        public void SetVersioned(string partName, string fieldName, string value) {
+            Set(partName, fieldName, null, value, true);
+        }
+
+        public void Set(string partName, string fieldName, string valueName, string value, bool versionable = false) {
+
+            var element = versionable ? VersionInfoset.Element : Infoset.Element;
+
+            var encodedPartName = XmlConvert.EncodeName(partName);
+            var partElement = element.Element(encodedPartName);
             if (partElement == null) {
-                partElement = new XElement(partName);
+                partElement = new XElement(encodedPartName);
                 Infoset.Element.Add(partElement);
             }
-            var fieldElement = partElement.Element(fieldName);
+
+            var encodedFieldName = XmlConvert.EncodeName(fieldName);
+            var fieldElement = partElement.Element(encodedFieldName);
             if (fieldElement == null) {
-                fieldElement = new XElement(fieldName);
+                fieldElement = new XElement(encodedFieldName);
                 partElement.Add(fieldElement);
             }
+
             if (string.IsNullOrEmpty(valueName)) {
-                fieldElement.Value = value;
+                fieldElement.Value = value ?? "";
             }
             else {
-                fieldElement.SetAttributeValue(XmlConvert.EncodeLocalName(valueName), value);
+                fieldElement.SetAttributeValue(XmlConvert.EncodeName(valueName), value);
             }
         }
     }

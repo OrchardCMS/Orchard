@@ -69,6 +69,7 @@
     <Compile Include="Services\CodeGenerationCommandInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGenerationTemplates\ModuleTestsCsProj.txt" />
     <Content Include="CodeGenerationTemplates\StaticFilesWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\Theme.png" />
     <Content Include="CodeGenerationTemplates\ThemeManifest.txt" />
@@ -78,7 +79,6 @@
     <Content Include="CodeGenerationTemplates\ModuleAssemblyInfo.txt" />
     <Content Include="CodeGenerationTemplates\ModuleCsProj.txt" />
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
-    <Content Include="CodeGenerationTemplates\ViewsWebConfig.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config">

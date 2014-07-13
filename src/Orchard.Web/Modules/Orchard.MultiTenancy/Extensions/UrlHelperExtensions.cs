@@ -11,12 +11,14 @@ namespace Orchard.MultiTenancy.Extensions {
             if (host.Contains(":"))
                 port = host.Substring(host.IndexOf(":"));
 
-            var result = string.Format("http://{0}",
+            var result = string.Format("{0}://{1}",
+                                       urlHelper.RequestContext.HttpContext.Request.Url.Scheme,
                                        !string.IsNullOrEmpty(tenantShellSettings.RequestUrlHost)
                                            ? tenantShellSettings.RequestUrlHost + port : host);
 
-            if (!string.IsNullOrEmpty(urlHelper.RequestContext.HttpContext.Request.ApplicationPath))
-                result += urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+            var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+            if (!string.IsNullOrEmpty(applicationPath) && !string.Equals(applicationPath, "/"))
+                result += applicationPath;
 
             if (!string.IsNullOrEmpty(tenantShellSettings.RequestUrlPrefix))
                 result += "/" + tenantShellSettings.RequestUrlPrefix;

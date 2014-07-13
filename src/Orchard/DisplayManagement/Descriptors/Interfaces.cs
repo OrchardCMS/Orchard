@@ -1,4 +1,6 @@
-﻿using Orchard.Events;
+﻿using System;
+using Orchard.Caching;
+using Orchard.Events;
 
 namespace Orchard.DisplayManagement.Descriptors {
 

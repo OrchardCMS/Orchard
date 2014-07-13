@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Messaging.Services {
+    [Obsolete]
     public interface IMessagingChannel : IDependency {
         /// <summary>
         /// Actually sends the message though this channel

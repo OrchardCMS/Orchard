@@ -10,12 +10,14 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc;
 
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
         private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IEnumerable<IShapeDisplayEvents> _shapeDisplayEvents;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
         private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
@@ -28,10 +30,12 @@ namespace Orchard.DisplayManagement.Implementation {
         public DefaultDisplayManager(
             IWorkContextAccessor workContextAccessor,
             IEnumerable<IShapeDisplayEvents> shapeDisplayEvents,
+            IHttpContextAccessor httpContextAccessor,
             Lazy<IShapeTableLocator> shapeTableLocator) {
             _shapeTableLocator = shapeTableLocator;
             _workContextAccessor = workContextAccessor;
             _shapeDisplayEvents = shapeDisplayEvents;
+            _httpContextAccessor = httpContextAccessor;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -52,8 +56,10 @@ namespace Orchard.DisplayManagement.Implementation {
             if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
                 return CoerceHtmlString(context.Value);
 
-            var workContext = _workContextAccessor.GetContext(context.ViewContext);
-            var shapeTable = _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id);
+            var workContext = _workContextAccessor.GetContext();
+            var shapeTable = _httpContextAccessor.Current() != null
+                ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
+                : _shapeTableLocator.Value.Lookup(null);
 
             var displayingContext = new ShapeDisplayingContext {
                 Shape = shape,

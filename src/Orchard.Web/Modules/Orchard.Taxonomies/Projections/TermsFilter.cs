@@ -14,6 +14,7 @@ namespace Orchard.Taxonomies.Projections {
 
     public class TermsFilter : IFilterProvider {
         private readonly ITaxonomyService _taxonomyService;
+        private int _termsFilterId;
 
         public TermsFilter(ITaxonomyService taxonomyService) {
             _taxonomyService = taxonomyService;
@@ -55,14 +56,13 @@ namespace Orchard.Taxonomies.Projections {
                 var allIds = allChildren.Select(x => x.Id).ToList();
 
                 switch(op) {
-                    case 0:
-                        // is one of
-                        Action<IAliasFactory> s = alias => alias.ContentPartRecord<TermsPartRecord>().Property("Terms", "terms").Property("TermRecord", "termRecord");
-                        Action<IHqlExpressionFactory> f = x => x.InG("Id", allIds);
+                    case 0: // is one of
+                        // Unique alias so we always get a unique join everytime so can have > 1 HasTerms filter on a query.
+                        Action<IAliasFactory> s = alias => alias.ContentPartRecord<TermsPartRecord>().Property("Terms", "terms" + _termsFilterId++); 
+                        Action<IHqlExpressionFactory> f = x => x.InG("TermRecord.Id", allIds);                        
                         context.Query.Where(s, f);
                         break;
-                    case 1:
-                        // is all of
+                    case 1: // is all of
                         foreach (var id in allIds) {
                             var termId = id;
                             Action<IAliasFactory> selector =

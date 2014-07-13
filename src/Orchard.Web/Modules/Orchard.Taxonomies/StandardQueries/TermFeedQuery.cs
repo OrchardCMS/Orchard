@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using Orchard.Mvc.Extensions;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using JetBrains.Annotations;
@@ -55,7 +56,7 @@ namespace Orchard.Taxonomies.StandardQueries {
 
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                    var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                     link.Add(uriBuilder.Uri.OriginalString);
                 });
             }

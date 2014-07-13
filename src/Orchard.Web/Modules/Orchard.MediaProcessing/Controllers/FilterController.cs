@@ -65,6 +65,8 @@ namespace Orchard.MediaProcessing.Controllers {
             filter.ImageProfilePartRecord.Filters.Remove(filter);
             _filterRepository.Delete(filter);
 
+            _signals.Trigger("MediaProcessing_Saved_" + filter.ImageProfilePartRecord.Name);
+
             Services.Notifier.Information(T("Filter deleted"));
 
             return RedirectToAction("Edit", "Admin", new {id});
@@ -134,7 +136,7 @@ namespace Orchard.MediaProcessing.Controllers {
                 // set profile as updated
                 profile.ModifiedUtc = DateTime.UtcNow;
                 profile.FileNames.Clear();
-                _signals.Trigger("MediaProcessing_" + profile.Name + "_Saved");
+                _signals.Trigger("MediaProcessing_Saved_" + profile.Name);
 
                 return RedirectToAction("Edit", "Admin", new {id});
             }

@@ -2,14 +2,12 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Extensions;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
-using Orchard.Data;
 using Orchard.Localization;
 
 namespace Orchard.Core.Containers.Drivers {
@@ -32,9 +30,6 @@ namespace Orchard.Core.Containers.Drivers {
                     IContentQuery<ContentItem> query = _contentManager
                         .Query(VersionOptions.Published)
                         .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
-
-                    var descendingOrder = part.Record.OrderByDirection == (int)OrderByDirection.Descending;
-                    query = query.OrderBy(part.Record.OrderByProperty, descendingOrder);
 
                     if (part.Record.ApplyFilter)
                         query = query.Where(part.Record.FilterByProperty, part.Record.FilterByOperator, part.Record.FilterByValue);
@@ -91,31 +86,6 @@ namespace Orchard.Core.Containers.Drivers {
                 part.Record.PageSize = Convert.ToInt32(pageSize);
             }
 
-            var orderByProperty = context.Attribute(part.PartDefinition.Name, "OrderByProperty");
-            if (orderByProperty != null) {
-                part.Record.OrderByProperty = orderByProperty;
-            }
-
-            var orderByDirection = context.Attribute(part.PartDefinition.Name, "OrderByDirection");
-            if (orderByDirection != null) {
-                part.Record.OrderByDirection = Convert.ToInt32(orderByDirection);
-            }
-
-            var applyByFilter = context.Attribute(part.PartDefinition.Name, "ApplyFilter");
-            if (applyByFilter != null) {
-                part.Record.ApplyFilter = Convert.ToBoolean(applyByFilter);
-            }
-
-            var filterByProperty = context.Attribute(part.PartDefinition.Name, "FilterByProperty");
-            if (filterByProperty != null) {
-                part.Record.FilterByProperty = filterByProperty;
-            }
-
-            var filterByOperator = context.Attribute(part.PartDefinition.Name, "FilterByOperator");
-            if (filterByOperator != null) {
-                part.Record.FilterByOperator = filterByOperator;
-            }
-
             var filterByValue = context.Attribute(part.PartDefinition.Name, "FilterByValue");
             if (filterByValue != null) {
                 part.Record.FilterByValue = filterByValue;
@@ -130,26 +100,6 @@ namespace Orchard.Core.Containers.Drivers {
             }
 
             context.Element(part.PartDefinition.Name).SetAttributeValue("PageSize", part.Record.PageSize);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByProperty", part.Record.OrderByProperty);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByDirection", part.Record.OrderByDirection);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ApplyFilter", part.Record.ApplyFilter);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByProperty", part.Record.FilterByProperty);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByOperator", part.Record.FilterByOperator);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByValue", part.Record.FilterByValue);
-        }
-    }
-
-    public class ContainerWidgetPartHandler : ContentHandler {
-        public ContainerWidgetPartHandler(IRepository<ContainerWidgetPartRecord> repository, IOrchardServices orchardServices) {
-            Filters.Add(StorageFilter.For(repository));
-            OnInitializing<ContainerWidgetPart>((context, part) => {
-                part.Record.ContainerId = 0;
-                part.Record.PageSize = 5;
-                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.CreatedUtc" : string.Empty;
-                part.Record.OrderByDirection = (int)OrderByDirection.Descending;
-                part.Record.FilterByProperty = "CustomPropertiesPart.CustomOne";
-                part.Record.FilterByOperator = "=";
-            });
         }
     }
 }

@@ -3,13 +3,13 @@ using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Containers.Models {
     public class ContainablePart : ContentPart<ContainablePartRecord> {
-        public int Weight {
-            get { return Record.Weight; }
-            set { Record.Weight = value; }
+        public int Position {
+            get { return Record.Position; }
+            set { Record.Position = value; }
         }
     }
 
     public class ContainablePartRecord : ContentPartRecord {
-        public virtual int Weight { get; set; }
+        public virtual int Position { get; set; }
     }
 }

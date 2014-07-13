@@ -33,22 +33,6 @@ namespace Orchard.Tests.Mvc {
             _container = builder.Build();
         }
 
-
-        [Test]
-        public void PublisherShouldAddRoutesThenReplaceTheOnesWhichWereAdded() {
-            
-            _routes.MapRoute("foo", "{controller}");
-
-            var publisher = _container.Resolve<IRoutePublisher>();
-            publisher.Publish(new[] { Desc("barname", "bar"), Desc("quuxname", "quux") });
-
-            Assert.That(_routes.Count(), Is.EqualTo(3));
-
-            publisher.Publish(new[] { Desc("baazname", "baaz")});
-
-            Assert.That(_routes.Count(), Is.EqualTo(2));
-        }
-
         [Test]
         public void RoutesCanHaveNullOrEmptyNames() {
             _routes.MapRoute("foo", "{controller}");

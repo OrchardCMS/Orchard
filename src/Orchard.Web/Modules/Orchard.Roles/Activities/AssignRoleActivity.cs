@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Roles.Models;
@@ -11,6 +12,7 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Activities {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class AssignRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRepository<UserRolesPartRecord> _repository;

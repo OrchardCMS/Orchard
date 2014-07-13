@@ -1,0 +1,20 @@
+﻿@{
+    Model.Classes.Add("breadcrumbs");
+
+    var items = ((IEnumerable<dynamic>)Model.Items).ToList();
+    var index = 0;
+    var tag = Tag(Model, "ul");
+}
+@if (items.Count > 1) {
+    @tag.StartElement
+    foreach (var item in items) {
+        if (++index == items.Count) {
+            item.Metadata.Type = "BreadcrumbItem_Last";
+            <li>@Display(item)</li>
+        }
+        else {
+            <li>@Display(item) &#62;</li>
+        }
+    }
+    @tag.EndElement
+}

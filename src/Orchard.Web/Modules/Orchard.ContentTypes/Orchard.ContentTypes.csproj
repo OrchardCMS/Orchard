@@ -127,7 +127,6 @@
     <Content Include="Views\EditorTemplates\Fields.cshtml" />
     <Content Include="Views\EditorTemplates\TypePart.cshtml" />
     <Content Include="Views\EditorTemplates\TypeParts.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">

@@ -6,6 +6,8 @@ using System.Xml;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Warmup;
 using Orchard.FileSystems.AppData;
@@ -54,8 +56,10 @@ namespace Orchard.Tests.Modules.Warmup {
             _orchardServices = new StubOrchardServices();
             ((StubWorkContextAccessor.WorkContextImpl.StubSite) _orchardServices.WorkContext.CurrentSite).BaseUrl = "http://orchardproject.net";
 
-            _settings = new WarmupSettingsPart { Record = new WarmupSettingsPartRecord() };
+            _settings = new WarmupSettingsPart();
+
             _orchardServices.WorkContext.CurrentSite.ContentItem.Weld(_settings);
+            _orchardServices.WorkContext.CurrentSite.ContentItem.Weld(new InfosetPart());
  
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();

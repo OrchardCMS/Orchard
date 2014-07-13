@@ -80,6 +80,8 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />
+    <Compile Include="Services\CommentsCountProcessor.cs" />
+    <Compile Include="Services\ICommentsCountProcessor.cs" />
     <Compile Include="Settings\CommentsPartSettings.cs" />
     <Compile Include="Settings\CommentsPartSettingsEvents.cs" />
     <Compile Include="Shapes.cs" />
@@ -98,7 +100,6 @@
     <Compile Include="ViewModels\CommentCountViewModel.cs" />
     <Compile Include="Models\CommentSettingsPart.cs" />
     <Compile Include="Handlers\CommentSettingsPartHandler.cs" />
-    <Compile Include="Models\CommentSettingsPartRecord.cs" />
     <Compile Include="Handlers\CommentsPartHandler.cs" />
     <Compile Include="Models\CommentsPart.cs" />
     <Compile Include="Permissions.cs" />
@@ -109,13 +110,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Release notes.txt" />
     <Content Include="Styles\images\menu.comments.png" />
     <Content Include="Styles\menu.comments-admin.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
     <Content Include="Styles\workflows-activity-close-comments.css" />
     <Content Include="Views\Admin\Details.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -178,6 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CommentText.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template.Comment.Notification.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

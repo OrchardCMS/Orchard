@@ -1,5 +1,6 @@
 ﻿@model Orchard.Autoroute.ViewModels.AutoroutePartEditViewModel
 @using Orchard.Autoroute
+@using Orchard.Mvc.Extensions
 @using Orchard.Utility.Extensions;
 @using Orchard.Environment.Configuration
 
@@ -20,11 +21,19 @@
     <fieldset class="permalink">
         <label>@T("Permalink")</label>
         @if (Model.Settings.AllowCustomPattern) {
-            <span>@ViewContext.RequestContext.HttpContext.Request.ToApplicationRootUrlString()/@urlPrefix</span>
+            <span>@Url.MakeAbsolute("/")@urlPrefix</span>
             <span>@Html.TextBoxFor(m => m.CurrentUrl, new {@class = "text"})</span>
         }
         else {
-            <span>@ViewContext.RequestContext.HttpContext.Request.ToApplicationRootUrlString()/@urlPrefix</span>
+            <span>@Url.MakeAbsolute("/")@urlPrefix</span>
+        }
+        @if (!String.IsNullOrEmpty(Model.CurrentUrl)) {
+            <span>
+                @Html.Link(
+                    T("View").Text,
+                    Url.MakeAbsolute("/") + urlPrefix + Model.CurrentUrl.TrimStart('/'),
+                    new { target = "_blank" })
+            </span>
         }
 
         <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>

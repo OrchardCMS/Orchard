@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 using Orchard.Alias.Records;
 using Orchard.Data;
@@ -13,8 +14,9 @@ namespace Orchard.Alias.Implementation.Storage {
         void Remove(string path);
         void Remove(string path, string aliasSource);
         void RemoveBySource(string aliasSource);
-        IEnumerable<Tuple<string, string, IDictionary<string, string>, string>> List();
-        IEnumerable<Tuple<string, string, IDictionary<string, string>, string>> List(string sourceStartsWith);
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(Expression<Func<AliasRecord, bool>> predicate);
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List();
+        IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(string sourceStartsWith);
     }
 
     public class AliasStorage : IAliasStorage {
@@ -124,15 +126,25 @@ namespace Orchard.Alias.Implementation.Storage {
             }
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string>> List() {
-            return _aliasRepository.Table.OrderBy(a => a.Id).Select(ToDictionary).ToList();
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List() {
+            return List((Expression<Func<AliasRecord, bool>>) null);
         }
 
-        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string>> List(string sourceStartsWith) {
-            return _aliasRepository.Table.Where(a => a.Source.StartsWith(sourceStartsWith)).OrderBy(a => a.Id).Select(ToDictionary).ToList();
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(Expression<Func<AliasRecord, bool>> predicate) {
+            var table = _aliasRepository.Table;
+
+            if (predicate != null) {
+                table = table.Where(predicate);
+            }
+
+            return table.OrderBy(a => a.Id).Select(ToDictionary).ToList();
         }
 
-        private static Tuple<string, string, IDictionary<string, string>, string> ToDictionary(AliasRecord aliasRecord) {
+        public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(string sourceStartsWith) {
+            return List(a => a.Source.StartsWith(sourceStartsWith));
+        }
+
+        private static Tuple<string, string, IDictionary<string, string>, string, int> ToDictionary(AliasRecord aliasRecord) {
             IDictionary<string, string> routeValues = new Dictionary<string, string>();
             if (aliasRecord.Action.Area != null) {
                 routeValues.Add("area", aliasRecord.Action.Area);
@@ -148,7 +160,7 @@ namespace Orchard.Alias.Implementation.Storage {
                     routeValues.Add(attr.Name.LocalName, attr.Value);
                 }
             }
-            return Tuple.Create(aliasRecord.Path, aliasRecord.Action.Area, routeValues, aliasRecord.Source);
+            return Tuple.Create(aliasRecord.Path, aliasRecord.Action.Area, routeValues, aliasRecord.Source, aliasRecord.Id);
         }
     }
 }

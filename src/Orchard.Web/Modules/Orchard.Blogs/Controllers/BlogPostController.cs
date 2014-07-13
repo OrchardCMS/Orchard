@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
@@ -7,6 +8,7 @@ using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Themes;
 
 namespace Orchard.Blogs.Controllers {
@@ -49,14 +51,19 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             BlogPart blogPart = _blogService.Get(blogPath);
-
             if (blogPart == null)
                 return HttpNotFound();
+
+
+            if (archive.ToDateTime() == DateTime.MinValue) {
+                // render the archive data
+                return new ShapeResult(this, Shape.Parts_Blogs_BlogArchives(Blog: blogPart, Archives: _blogPostService.GetArchives(blogPart)));
+            }
 
             var list = Shape.List();
             list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary")));
 
-            _feedManager.Register(blogPart);
+            _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)

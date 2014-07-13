@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Localization;
@@ -8,11 +9,19 @@ using Orchard.MediaProcessing.Models;
 namespace Orchard.MediaProcessing.Services {
     public class ImageProfileService : IImageProfileService {
         private readonly IContentManager _contentManager;
+        private readonly ICacheManager _cacheManager;
         private readonly IRepository<FilterRecord> _filterRepository;
+        private readonly ISignals _signals;
 
-        public ImageProfileService(IContentManager contentManager, IRepository<FilterRecord> filterRepository) {
+        public ImageProfileService(
+            IContentManager contentManager, 
+            ICacheManager cacheManager,
+            IRepository<FilterRecord> filterRepository,
+            ISignals signals) {
             _contentManager = contentManager;
+            _cacheManager = cacheManager;
             _filterRepository = filterRepository;
+            _signals = signals;
         }
 
         public Localizer T { get; set; }
@@ -22,7 +31,25 @@ namespace Orchard.MediaProcessing.Services {
         }
 
         public ImageProfilePart GetImageProfileByName(string name) {
-            return _contentManager.Query<ImageProfilePart, ImageProfilePartRecord>().Where(x => x.Name == name).Slice(0, 1).FirstOrDefault();
+
+            var profileId = _cacheManager.Get("ProfileId_" + name, ctx => {
+                var profile = _contentManager.Query<ImageProfilePart, ImageProfilePartRecord>()
+                    .Where(x => x.Name == name)
+                    .Slice(0, 1)
+                    .FirstOrDefault();
+
+                if (profile == null) {
+                    return -1;
+                }
+
+                return profile.Id;
+            });
+
+            if (profileId == -1) {
+                return null;
+            }
+
+            return _contentManager.Get<ImageProfilePart>(profileId);
         }
 
         public IEnumerable<ImageProfilePart> GetAllImageProfiles() {
@@ -55,6 +82,8 @@ namespace Orchard.MediaProcessing.Services {
                 .Where(x => x.Position < filter.Position && x.ImageProfilePartRecord.Id == filter.ImageProfilePartRecord.Id)
                 .OrderByDescending(x => x.Position)
                 .FirstOrDefault();
+
+            _signals.Trigger("MediaProcessing_Saved_" + filter.ImageProfilePartRecord.Name);
 
             // nothing to do if already at the top
             if (previous == null) {

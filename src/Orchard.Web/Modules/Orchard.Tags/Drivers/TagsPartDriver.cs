@@ -14,7 +14,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Tags.Drivers {
     [UsedImplicitly]
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
-        private static readonly char[] _disalowedChars = new [] { '<', '>', '*', '%', ':', '&', '\\', '"', '|' };
+        public static readonly char[] DisalowedChars =  { '<', '>', '*', '%', ':', '&', '\\', '"', '|', '/' };
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;
         private readonly INotifier _notifier;
@@ -33,7 +33,7 @@ namespace Orchard.Tags.Drivers {
 
         protected override DriverResult Display(TagsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Tags_ShowTags",
-                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags));
+                            () => shapeHelper.Parts_Tags_ShowTags(Tags: part.CurrentTags.Select(x => new ShowTagViewModel { TagName = x })));
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
@@ -50,10 +50,10 @@ namespace Orchard.Tags.Drivers {
             // as the tag names are used in the route directly, prevent them from having ASP.NET disallowed chars
             // c.f., http://www.hanselman.com/blog/ExperimentsInWackinessAllowingPercentsAnglebracketsAndOtherNaughtyThingsInTheASPNETIISRequestURL.aspx
 
-            var disallowedTags = tagNames.Where(x => _disalowedChars.Intersect(x).Any()).ToList();
+            var disallowedTags = tagNames.Where(x => DisalowedChars.Intersect(x).Any()).ToList();
 
             if (disallowedTags.Any()) {
-                _notifier.Warning(T("The tags \"{0}\" could not be added because they contain forbidden chars: {1}", String.Join(", ", disallowedTags), String.Join(", ", _disalowedChars)));
+                _notifier.Warning(T("The tags \"{0}\" could not be added because they contain forbidden chars: {1}", String.Join(", ", disallowedTags), String.Join(", ", DisalowedChars)));
                 tagNames = tagNames.Where(x => !disallowedTags.Contains(x)).ToList();
             }
 
@@ -67,7 +67,7 @@ namespace Orchard.Tags.Drivers {
 
         private static EditTagsViewModel BuildEditorViewModel(TagsPart part) {
             return new EditTagsViewModel {
-                Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
+                Tags = string.Join(", ", part.CurrentTags)
             };
         }
 
@@ -77,14 +77,14 @@ namespace Orchard.Tags.Drivers {
                 var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
                 // Merge tags.
                 if (tags.Length > 0) {
-                    var currentTags = part.CurrentTags.Select(t => t.TagName);
+                    var currentTags = part.CurrentTags;
                     _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags).Distinct()); 
                 }
             }
         }
 
         protected override void Exporting(TagsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags.Select(t => t.TagName)));
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags));
         }
     }
 }

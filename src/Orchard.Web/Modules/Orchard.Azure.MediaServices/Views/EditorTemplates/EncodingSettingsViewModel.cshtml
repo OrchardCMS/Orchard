@@ -1,0 +1,39 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.EncodingSettingsViewModel
+@using (Script.Head()) {
+    <script type="text/javascript">
+        var initWamsEncodingPresets = [ @(Model.WamsEncodingPresets != null && Model.WamsEncodingPresets.Any() ? Html.Raw(String.Join(", ", from s in Model.WamsEncodingPresets select String.Format("'{0}'", s))) : Html.Raw(""))];
+        var initDefaultWamsEncodingPresetIndex = @Model.DefaultWamsEncodingPresetIndex +0;
+    </script>
+}
+
+<p class="hint">
+    For information about which encoding presets are supported by Microsoft Azure Media Services please see <a href="http://msdn.microsoft.com/en-us/library/windowsazure/jj129582.aspx">http://msdn.microsoft.com/en-us/library/windowsazure/jj129582.aspx</a>.
+</p>
+
+<fieldset>
+    <legend>@T("Encoding presets")</legend>
+    <input id="@Html.IdFor(m => m.DefaultWamsEncodingPresetIndex)" name="@Html.NameFor(m => m.DefaultWamsEncodingPresetIndex)" type="hidden" data-bind="value: defaultWamsEncodingPresetIndex" />
+    <table id="presets-table" class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Default")</th>
+                <th scope="col">@T("Name")</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: wamsEncodingPresets">
+            <tr>
+                <td><input type="radio" name="presets-requiredUploads" data-bind="value: $index(), checked: $parent.defaultWamsEncodingPresetIndex" /></td>
+                <td><input type="text" class="text large" data-bind="value: value, attr: { id: 'EncodingSettings_WamsEncodingPresets_' + $index(), name: 'EncodingSettings.WamsEncodingPresets[' + $index() + ']'}" /></td>
+                <td><a href="#" data-bind="click: Orchard.Azure.MediaServices.Admin.Settings.deleteWamsEncodingPreset">@T("Delete")</a></td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td></td>
+                <td><a href="#" data-bind="click: Orchard.Azure.MediaServices.Admin.Settings.addNewWamsEncodingPreset"><i class="icon-plus-sign icon-large"></i> Add new</a></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>

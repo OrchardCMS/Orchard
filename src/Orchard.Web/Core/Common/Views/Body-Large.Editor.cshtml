@@ -1,1 +1,3 @@
-﻿@Html.TextBox("Text", (string)Model.Text, new { @class = "text large" })
+﻿@(Model.Required != null && Model.Required
+         ? Html.TextBox("Text", (string)Model.Text, new { @class = "text large", required = "required" })
+         : Html.TextBox("Text", (string)Model.Text, new { @class = "text large" }))

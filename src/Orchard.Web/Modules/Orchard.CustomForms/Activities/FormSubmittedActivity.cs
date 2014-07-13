@@ -27,13 +27,13 @@ namespace Orchard.CustomForms.Activities {
                     return true;
                 }
 
-                var content = workflowContext.Content;
+                var content = workflowContext.Tokens["CustomForm"] as ContentItem;
 
                 if (content == null) {
                     return false;
                 }
 
-                var contentManager = content.ContentItem.ContentManager;
+                var contentManager = content.ContentManager;
                 var identities = state.Split(',').Select(x => new ContentIdentity(x));
                 var customForms = identities.Select(contentManager.ResolveIdentity);
 

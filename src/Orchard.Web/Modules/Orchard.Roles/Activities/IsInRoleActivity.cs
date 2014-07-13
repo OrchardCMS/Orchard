@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Activities {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class IsInRoleActivity : Task {
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -46,8 +48,9 @@ namespace Orchard.Roles.Activities {
             if (UserIsInRole(activityContext)) {
                 yield return T("Yes");
             }
-            
-            yield return T("No");
+            else {
+                yield return T("No");
+            }
         }
 
         private bool UserIsInRole(ActivityContext context) {

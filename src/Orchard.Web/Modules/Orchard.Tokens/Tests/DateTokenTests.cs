@@ -2,7 +2,7 @@
 using System.Globalization;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Core.Shapes.Localization;
+using Orchard.Localization.Services;
 using Orchard.Services;
 using Orchard.Tokens.Implementation;
 using Orchard.Tokens.Providers;
@@ -22,8 +22,12 @@ namespace Orchard.Tokens.Tests {
             builder.RegisterType<Tokenizer>().As<ITokenizer>();
             builder.RegisterType<DateTokens>().As<ITokenProvider>();
             builder.RegisterType<StubClock>().As<IClock>();
-            builder.RegisterType<DateTimeLocalization>().As<IDateTimeLocalization>();
+            builder.RegisterType<CultureDateTimeFormatProvider>().As<IDateTimeFormatProvider>();
+            builder.RegisterType<DefaultDateServices>().As<IDateServices>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<SiteCalendarSelector>().As<ICalendarSelector>();
+            builder.RegisterType<DefaultCalendarManager>().As<ICalendarManager>();
+ 
             _container = builder.Build();
             _tokenizer = _container.Resolve<ITokenizer>();
             _clock = _container.Resolve<IClock>();
@@ -31,10 +35,10 @@ namespace Orchard.Tokens.Tests {
 
         [Test]
         public void TestDateTokens() {
-            var dateTimeLocalization = _container.Resolve<IDateTimeLocalization>();
+            var dateTimeLocalization = _container.Resolve<IDateTimeFormatProvider>();
             var culture = CultureInfo.GetCultureInfo(_container.Resolve<IOrchardServices>().WorkContext.CurrentCulture);
 
-            var dateTimeFormat = dateTimeLocalization.ShortDateFormat.Text + " " + dateTimeLocalization.ShortTimeFormat.Text;
+            var dateTimeFormat = dateTimeLocalization.ShortDateFormat + " " + dateTimeLocalization.ShortTimeFormat;
 
             Assert.That(_tokenizer.Replace("{Date}", null), Is.EqualTo(_clock.UtcNow.ToString(dateTimeFormat, culture)));
             Assert.That(_tokenizer.Replace("{Date}", new { Date = new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc) }), Is.EqualTo(new DateTime(1978, 11, 15, 0, 0, 0, DateTimeKind.Utc).ToString(dateTimeFormat, culture)));

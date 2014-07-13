@@ -1,5 +1,6 @@
 using System;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Cfg;
 
 namespace Orchard.Data.Providers {
     public class MySqlDataServicesProvider : AbstractDataServicesProvider {
@@ -22,6 +23,10 @@ namespace Orchard.Data.Providers {
             }
             persistence = persistence.ConnectionString(_connectionString);
             return persistence;
+        }
+
+        protected override void AlterConfiguration(Configuration config) {
+            config.SetProperty(NHibernate.Cfg.Environment.PrepareSql, Boolean.TrueString);
         }
     }
 }

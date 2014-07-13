@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Castle.Core.Interceptor;
 using Castle.DynamicProxy;
 
 namespace Orchard.Events {

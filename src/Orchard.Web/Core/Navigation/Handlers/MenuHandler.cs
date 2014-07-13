@@ -15,14 +15,6 @@ namespace Orchard.Core.Navigation.Handlers {
             _contentManager = contentManager;
         }
 
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            if(context.ContentItem.ContentType != "Menu") {
-                return;
-            }
-
-            context.Metadata.Identity.Add("name", context.ContentItem.As<TitlePart>().Title);
-        }
-
         protected override void Removing(RemoveContentContext context) {
             if (context.ContentItem.ContentType != "Menu") {
                 return;

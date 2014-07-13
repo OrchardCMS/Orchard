@@ -148,7 +148,17 @@ namespace Orchard.ContentManagement {
                 if (contentIdentity1._dictionary.Keys.Count != contentIdentity2._dictionary.Keys.Count)
                     return false;
 
-                return contentIdentity1._dictionary.OrderBy(kvp => kvp.Key).SequenceEqual(contentIdentity2._dictionary.OrderBy(kvp => kvp.Key));
+                foreach (var key in contentIdentity1._dictionary.Keys) {
+                    if (!contentIdentity2._dictionary.ContainsKey(key)) {
+                        return false;
+                    }
+
+                    if (contentIdentity2._dictionary[key] != contentIdentity1._dictionary[key]) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             public int GetHashCode(ContentIdentity contentIdentity) {

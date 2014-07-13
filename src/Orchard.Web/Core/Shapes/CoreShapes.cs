@@ -263,26 +263,24 @@ namespace Orchard.Core.Shapes {
             IDictionary<string, string> attributes = Shape.Attributes;
             var zoneWrapper = GetTagBuilder("div", id, classes, attributes);
             Output.Write(zoneWrapper.ToString(TagRenderMode.StartTag));
-            foreach (var item in ordered_hack(Shape))
+            foreach (var item in Order(Shape))
                 Output.Write(Display(item));
             Output.Write(zoneWrapper.ToString(TagRenderMode.EndTag));
         }
 
         [Shape]
         public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in ordered_hack(Shape))
+            foreach (var item in Order(Shape))
                 Output.Write(Display(item));
         }
 
         [Shape]
         public void DocumentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in ordered_hack(Shape))
+            foreach (var item in Order(Shape))
                 Output.Write(Display(item));
         }
 
-        #region ordered_hack
-
-        private static IEnumerable<dynamic> ordered_hack(dynamic shape) {
+        public static IEnumerable<dynamic> Order(dynamic shape) {
             IEnumerable<dynamic> unordered = shape;
             if (unordered == null || unordered.Count() < 2)
                 return shape;
@@ -316,8 +314,6 @@ namespace Orchard.Core.Shapes {
 
             return ordering.Select(ordered => ordered.item).ToList();
         }
-
-        #endregion
 
         [Shape]
         public void HeadScripts(dynamic Display, TextWriter Output) {
@@ -618,7 +614,7 @@ namespace Orchard.Core.Shapes {
 
             IEnumerable<string> classes = Shape.Classes;
             IDictionary<string, string> attributes = Shape.Attributes;
-            attributes.Add("href", action);
+            attributes["href"] = action;
             string id = Shape.Id;
             var tag = GetTagBuilder("a", id, classes, attributes);
             tag.InnerHtml = EncodeOrDisplay(Value, Display, Html).ToString();

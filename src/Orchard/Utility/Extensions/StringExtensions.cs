@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Orchard.Localization;
+using System.Web;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
@@ -88,7 +90,7 @@ namespace Orchard.Utility.Extensions {
                 : new LocalizedString(text);
         }
 
-        public static string RemoveTags(this string html) {
+        public static string RemoveTags(this string html, bool htmlDecode = false) {
             if (String.IsNullOrEmpty(html)) {
                 return String.Empty;
             }
@@ -114,7 +116,13 @@ namespace Orchard.Utility.Extensions {
                 }
             }
 
-            return new string(result, 0, cursor);
+            var stringResult = new string(result, 0, cursor);
+
+            if (htmlDecode) {
+                stringResult = HttpUtility.HtmlDecode(stringResult);
+            }
+
+            return stringResult;
         }
 
         // not accounting for only \r (e.g. Apple OS 9 carriage return only new lines)
@@ -166,9 +174,7 @@ namespace Orchard.Utility.Extensions {
 
             name = RemoveDiacritics(name);
             name = name.Strip(c => 
-                c != '_' 
-                && c != '-' 
-                && !c.IsLetter()
+                !c.IsLetter()
                 && !Char.IsDigit(c)
                 );
 
@@ -312,6 +318,11 @@ namespace Orchard.Utility.Extensions {
             }
 
             return new string(result);
+        }
+
+        public static string ReplaceAll(this string original, IDictionary<string, string> replacements) {
+            var pattern = String.Format("({0})", String.Join("|", replacements.Keys.ToArray()));
+            return Regex.Replace(original, pattern, (match) => replacements[match.Value]);
         }
     }
 }

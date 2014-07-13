@@ -84,7 +84,6 @@
     <Content Include="Styles\images\synchronizing.gif" />
     <Content Include="Styles\media-gallery-admin.css" />
     <Content Include="Styles\mediapicker.css" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Drivers\MediaGalleryFieldDriver.cs" />

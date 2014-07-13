@@ -9,6 +9,8 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Mvc;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]
@@ -25,6 +27,7 @@ namespace Orchard.Tests.DisplayManagement {
                 CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
 
+            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<TestShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();

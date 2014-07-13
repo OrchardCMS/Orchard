@@ -37,11 +37,8 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void RemoveByTag(string tag) {
-            Collection<string> itemKeys;
-            if (_tagCache.TryGetValue(tag, out itemKeys)) {
-                foreach (var key in itemKeys) {
-                    _cacheStorageProvider.Remove(key);
-                }
+            foreach(var key in _tagCache.GetTaggedItems(tag)) {
+                _cacheStorageProvider.Remove(key);
             }
         }
 
@@ -63,8 +60,18 @@ namespace Orchard.OutputCache.Services {
 
         public string GetRouteDescriptorKey(HttpContextBase httpContext, RouteBase routeBase) {
             var route = routeBase as Route;
+            var dataTokens = new RouteValueDictionary();
 
-            var dataTokens = route != null ? route.DataTokens : routeBase.GetRouteData(httpContext).DataTokens;
+            if (route != null) {
+                dataTokens = route.DataTokens;
+            }
+            else {
+            var routeData = routeBase.GetRouteData(httpContext);
+
+                if (routeData != null) {
+                    dataTokens = routeData.DataTokens;
+                }
+            }
 
             var keyBuilder = new StringBuilder();
 

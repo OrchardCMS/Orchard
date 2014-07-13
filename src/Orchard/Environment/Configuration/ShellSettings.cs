@@ -12,12 +12,14 @@ namespace Orchard.Environment.Configuration {
         public const string DefaultName = "Default";
         private TenantState _tenantState;
         private string[] _themes;
+        private string[] _modules;
         private readonly IDictionary<string, string> _values;
 
         public ShellSettings() {
             _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             State = TenantState.Invalid;
             Themes = new string[0];
+            Modules = new string[0];
         }
 
         public ShellSettings(ShellSettings settings) {
@@ -35,6 +37,7 @@ namespace Orchard.Environment.Configuration {
             HashKey = settings.HashKey;
             State = settings.State;
             Themes = settings.Themes;
+            Modules = settings.Modules;
         }
 
         public string this[string key] {
@@ -142,6 +145,21 @@ namespace Orchard.Environment.Configuration {
             set {
                 _themes = value;
                 this["Themes"] = string.Join(";", value);
+            }
+        }
+
+        /// <summary>
+        /// List of available modules for this tenant
+        /// </summary>
+        public string[] Modules {
+            get {
+                return _modules ?? (Modules = (_values["Modules"] ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                                                                     .Select(t => t.Trim())
+                                                                     .ToArray();
+            }
+            set {
+                _modules = value;
+                this["Modules"] = string.Join(";", value);
             }
         }
 

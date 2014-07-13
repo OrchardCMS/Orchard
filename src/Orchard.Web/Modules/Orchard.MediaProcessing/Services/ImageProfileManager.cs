@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
@@ -57,8 +58,10 @@ namespace Orchard.MediaProcessing.Services {
 
         public string GetImageProfileUrl(string path, string profileName, FilterRecord customFilter, ContentItem contentItem) {
 
+            // path is the publicUrl of the media, so it might contain url-encoded chars
+
             // try to load the processed filename from cache
-            var filePath = _fileNameProvider.GetFileName(profileName, path);
+            var filePath = _fileNameProvider.GetFileName(profileName, System.Web.HttpUtility.UrlDecode(path));
             bool process = false;
 
             // if the filename is not cached, process it
@@ -106,49 +109,62 @@ namespace Orchard.MediaProcessing.Services {
                     profilePart.Filters.Add(customFilter);
                 }
 
-                using (var image = GetImage(path)) {
+                // prevent two requests from processing the same file at the same time
+                // this is only thread safe at the machine level, so there is a try/catch later
+                // to handle cross machines concurrency
+                lock (String.Intern(path)) {
+                    using (var image = GetImage(path)) {
 
-                    var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", _storageProvider.Combine(profileName, CreateDefaultFileName(path))) };
+                        var filterContext = new FilterContext { Media = image, FilePath = _storageProvider.Combine("_Profiles", FormatProfilePath(profileName, System.Web.HttpUtility.UrlDecode(path))) };
 
-                    var tokens = new Dictionary<string, object>();
-                    // if a content item is provided, use it while tokenizing
-                    if (contentItem != null) {
-                        tokens.Add("Content", contentItem);
-                    }
+                        if (image == null) {
+                            return filterContext.FilePath;
+                        }
 
-                    foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
-                        var descriptor = _processingManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
-                        if (descriptor == null)
-                            continue;
+                        var tokens = new Dictionary<string, object>();
+                        // if a content item is provided, use it while tokenizing
+                        if (contentItem != null) {
+                            tokens.Add("Content", contentItem);
+                        }
 
-                        var tokenized = _tokenizer.Replace(filter.State, tokens);
-                        filterContext.State = FormParametersHelper.ToDynamic(tokenized);
-                        descriptor.Filter(filterContext);
-                    }
+                        foreach (var filter in profilePart.Filters.OrderBy(f => f.Position)) {
+                            var descriptor = _processingManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == filter.Category && x.Type == filter.Type);
+                            if (descriptor == null)
+                                continue;
 
-                    _fileNameProvider.UpdateFileName(profileName, path, filterContext.FilePath);
+                            var tokenized = _tokenizer.Replace(filter.State, tokens);
+                            filterContext.State = FormParametersHelper.ToDynamic(tokenized);
+                            descriptor.Filter(filterContext);
+                        }
 
-                    if (!filterContext.Saved) {
-                        _storageProvider.TryCreateFolder(_storageProvider.Combine("_Profiles", profilePart.Name));
-                        var newFile = _storageProvider.OpenOrCreate(filterContext.FilePath);
-                        using (var imageStream = newFile.OpenWrite()) {
-                            using (var sw = new BinaryWriter(imageStream)) {
-                                if (filterContext.Media.CanSeek) {
-                                    filterContext.Media.Seek(0, SeekOrigin.Begin);
-                                }
-                                using (var sr = new BinaryReader(filterContext.Media)) {
-                                    int count;
-                                    var buffer = new byte[8192];
-                                    while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
-                                        sw.Write(buffer, 0, count);
+                        _fileNameProvider.UpdateFileName(profileName, path, filterContext.FilePath);
+
+                        if (!filterContext.Saved) {
+                            try {
+                                var newFile = _storageProvider.OpenOrCreate(filterContext.FilePath);
+                                using (var imageStream = newFile.OpenWrite()) {
+                                    using (var sw = new BinaryWriter(imageStream)) {
+                                        if (filterContext.Media.CanSeek) {
+                                            filterContext.Media.Seek(0, SeekOrigin.Begin);
+                                        }
+                                        using (var sr = new BinaryReader(filterContext.Media)) {
+                                            int count;
+                                            var buffer = new byte[8192];
+                                            while ((count = sr.Read(buffer, 0, buffer.Length)) != 0) {
+                                                sw.Write(buffer, 0, count);
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            catch(Exception e) {
+                                Logger.Error(e, "A profile could not be processed: " + path);
+                            }
                         }
-                    }
 
-                    filterContext.Media.Dispose();
-                    filePath = filterContext.FilePath;
+                        filterContext.Media.Dispose();
+                        filePath = filterContext.FilePath;
+                    }
                 }
             }
 
@@ -160,14 +176,18 @@ namespace Orchard.MediaProcessing.Services {
 
         // TODO: Update this method once the storage provider has been updated
         private Stream GetImage(string path) {
+            if (path == null) {
+                throw new ArgumentNullException("path");
+            }
+
             var storagePath = _storageProvider.GetStoragePath(path);
             if (storagePath != null) {
                 try {
                     var file = _storageProvider.GetFile(storagePath);
                     return file.OpenRead();
                 }
-                catch {
-                    Logger.Error("path:" + path + " storagePath:" + storagePath);
+                catch(Exception e) {
+                    Logger.Error(e, "path:" + path + " storagePath:" + storagePath);
                 }
             }
 
@@ -197,20 +217,14 @@ namespace Orchard.MediaProcessing.Services {
             return false;
         }
 
-        private static readonly char[] _disallowed = @"/:?#\[\]@!$&'()*+,.;=\s\""\<\>\\\|%".ToCharArray();
+        private string FormatProfilePath(string profileName, string path) {
+            
+            var filenameWithExtension = Path.GetFileName(path) ?? "";
+            var fileLocation = path.Substring(0, path.Length - filenameWithExtension.Length);
 
-        private static string CreateDefaultFileName(string path) {
-            var extention = Path.GetExtension(path);
-            var newPath = Path.ChangeExtension(path, "");
-            newPath = newPath.TrimEnd('.').RemoveDiacritics();
-            var normalized = newPath.ToCharArray();
-            for (var i = 0; i < normalized.Length; i++) {
-                if (Array.IndexOf(_disallowed, normalized[i]) >= 0) {
-                    normalized[i] = '_';
-                }
-            }
-
-            return new string(normalized) + extention;
+            return _storageProvider.Combine(
+                _storageProvider.Combine(profileName.GetHashCode().ToString("x").ToLowerInvariant(), fileLocation.GetHashCode().ToString("x").ToLowerInvariant()),
+                    filenameWithExtension);
         }
     }
 }

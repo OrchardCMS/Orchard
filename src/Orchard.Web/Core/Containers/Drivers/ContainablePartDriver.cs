@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
+using Orchard.Core.Containers.Services;
+using Orchard.Core.Containers.Settings;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
 using Orchard.ContentManagement.Handlers;
@@ -12,9 +15,11 @@ using Orchard.ContentManagement.Handlers;
 namespace Orchard.Core.Containers.Drivers {
     public class ContainablePartDriver : ContentPartDriver<ContainablePart> {
         private readonly IContentManager _contentManager;
+        private readonly IContainerService _containerService;
 
-        public ContainablePartDriver(IContentManager contentManager) {
+        public ContainablePartDriver(IContentManager contentManager, IContainerService containerService) {
             _contentManager = contentManager;
+            _containerService = containerService;
             T = NullLocalizer.Instance;
         }
 
@@ -28,28 +33,38 @@ namespace Orchard.Core.Containers.Drivers {
             return ContentShape(
                 "Parts_Containable_Edit",
                 () => {
+                    var settings = part.TypePartDefinition.Settings.GetModel<ContainableTypePartSettings>();
                     var commonPart = part.As<CommonPart>();
+                    var model = new ContainableViewModel {
+                        ShowContainerPicker = settings.ShowContainerPicker,
+                        ShowPositionEditor = settings.ShowPositionEditor,
+                        Position = part.Position
+                    };
 
-                    var model = new ContainableViewModel();
                     if (commonPart != null && commonPart.Container != null) {
                         model.ContainerId = commonPart.Container.Id;
                     }
 
+                    if (part.Id == 0 && commonPart != null && commonPart.Container != null) {
+                        part.Position = _containerService.GetFirstPosition(commonPart.Container.Id) + 1;
+                    }
+
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
-                        updater.TryUpdateModel(model, "Containable", null, null);
+                        updater.TryUpdateModel(model, "Containable", null, new[] { "ShowContainerPicker", "ShowPositionEditor" });
                         if (oldContainerId != model.ContainerId) {
                             if (commonPart != null) {
                                 var containerItem = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
                                 commonPart.Container = containerItem;
                             }
                         }
-                        part.Weight = model.Weight;
+                        part.Position = model.Position;
                     }
 
-                    // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
-                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
-                        .Where(ctr => ctr.ItemContentType == null || ctr.ItemContentType == "" || ctr.ItemContentType == part.ContentItem.ContentType).List();
+                    var containers = _contentManager
+                        .Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
+                        .List()
+                        .Where(container => container.ItemContentTypes.Any(type => type.Name == part.TypeDefinition.Name));
 
                     var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
                         .Concat(containers.Select(x => new SelectListItem {
@@ -60,21 +75,18 @@ namespace Orchard.Core.Containers.Drivers {
                         .ToList();
 
                     model.AvailableContainers = new SelectList(listItems, "Value", "Text", model.ContainerId);
-                    model.Weight = part.Weight;
+                    model.Position = part.Position;
 
                     return shapeHelper.EditorTemplate(TemplateName: "Containable", Model: model, Prefix: "Containable");
                 });
         }
 
         protected override void Importing(ContainablePart part, ImportContentContext context) {
-            var weight = context.Attribute(part.PartDefinition.Name, "Weight");
-            if (weight != null) {
-                part.Weight = Convert.ToInt32(weight);
-            }
+            context.ImportAttribute(part.PartDefinition.Name, "Position", s => part.Position = XmlConvert.ToInt32(s));
         }
 
         protected override void Exporting(ContainablePart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Position);
         }
     }
 }

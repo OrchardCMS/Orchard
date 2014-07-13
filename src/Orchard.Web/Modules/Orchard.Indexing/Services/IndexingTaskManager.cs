@@ -30,6 +30,10 @@ namespace Orchard.Indexing.Services {
                 throw new ArgumentNullException("contentItem");
             }
 
+            foreach (var task in _repository.Table.Where(task => task.ContentItemRecord == contentItem.Record)) {
+                _repository.Delete(task);
+            }
+
             var taskRecord = new IndexingTaskRecord {
                 CreatedUtc = _clock.UtcNow,
                 ContentItemRecord = contentItem.Record,

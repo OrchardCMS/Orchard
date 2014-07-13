@@ -1,48 +1,60 @@
-﻿using System.Linq;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Data;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
-using Orchard.Search.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Indexing;
 
 namespace Orchard.Search {
     public class SearchDataMigration : DataMigrationImpl {
-        private readonly IRepository<SearchSettingsPartRecord> _searchSettingsPartRecordRepository;
-
-        public SearchDataMigration(IRepository<SearchSettingsPartRecord> searchSettingsPartRecordRepository) {
-            _searchSettingsPartRecordRepository = searchSettingsPartRecordRepository;
-        }
 
         public int Create() {
-
-            SchemaBuilder.CreateTable("SearchSettingsPartRecord", table => table
-                .ContentPartRecord()
-                    .Column<bool>("FilterCulture")
-                    .Column<string>("SearchedFields", c => c.Unlimited())
-                    .Column<string>("SearchIndex")
-                );
 
             ContentDefinitionManager.AlterTypeDefinition("SearchForm",
                 cfg => cfg
                     .WithPart("SearchFormPart")
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
+                    .WithPart("IdentityPart")
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
             SchemaBuilder.AlterTable("SearchSettingsPartRecord", table => table
-                .AddColumn<string>("SearchIndex")
+                .AddColumn<string>("SearchIndex", c => c.WithDefault("Search"))
             );
 
-            var settings = _searchSettingsPartRecordRepository.Table.FirstOrDefault();
-            if (settings != null) {
-                settings.SearchIndex = "Search";
-            }
-
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("SearchForm",
+                cfg => cfg.WithPart("IdentityPart"));
+           
+            return 3;
+        }
+    }
+
+    [OrchardFeature("Orchard.Search.MediaLibrary")]
+    public class MediaMigration : DataMigrationImpl {
+        private readonly IIndexManager _indexManager;
+
+        public MediaMigration(IIndexManager indexManager) {
+            _indexManager = indexManager;
+        }
+
+        public int Create() {
+
+            _indexManager.GetSearchIndexProvider().CreateIndex("Media");
+
+            ContentDefinitionManager.AlterTypeDefinition("Image", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+            ContentDefinitionManager.AlterTypeDefinition("Video", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+            ContentDefinitionManager.AlterTypeDefinition("Document", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+            ContentDefinitionManager.AlterTypeDefinition("Audio", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+            ContentDefinitionManager.AlterTypeDefinition("OEmbed", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Media"));
+
+            return 1;
         }
     }
 }

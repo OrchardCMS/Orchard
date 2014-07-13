@@ -42,5 +42,12 @@ namespace Orchard.Modules.Services {
         /// <param name="extensionDescriptor">The extension descriptor.</param>
         /// <returns>True if the feature was recently installed; false otherwise.</returns>
         bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor);
+
+        /// <summary>
+        /// Gets a list of dependent features of a given feature.
+        /// </summary>
+        /// <param name="featureId">ID of a feature.</param>
+        /// <returns>List of dependent feature descriptors.</returns>
+        IEnumerable<FeatureDescriptor> GetDependentFeatures(string featureId);
     }
 }

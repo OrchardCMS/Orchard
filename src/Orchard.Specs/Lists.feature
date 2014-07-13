@@ -6,34 +6,30 @@
 Scenario: I can create a new list
     Given I have installed Orchard
 		And I have installed "Orchard.Lists"
-    When I go to "Admin/Contents/Create/List"
+    When I go to "Admin/ContentTypes"
+		And I go to "Admin/ContentTypes/Create"
         And I fill in
-            | name | value |
-            | Title.Title | MyList |
-        And I hit "Save"
-        And I go to "Admin/Contents/List/List"
-    Then I should see "MyList"
+            | name        | value |
+            | DisplayName | Event |
+            | Name        | Event |
+        And I hit "Create"
+		And I am redirected
+        And I fill in
+            | name                          | value |
+            | PartSelections[5].IsSelected  | True  |
+		And I hit "Save"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Event"
 
-Scenario: I can add content items to a list
-    Given I have installed Orchard
-		And I have installed "Orchard.Lists"
-        And I have a containable content type "MyType"
     When I go to "Admin/Contents/Create/List"
         And I fill in
-            | name | value |
-            | Title.Title | MyList |
+            | name                               | value  |
+            | Title.Title                        | MyList |
+            | Container.SelectedItemContentTypes | Event  |
         And I hit "Save"
-        And I go to "Admin/Contents/List/List"
+		And I am redirected
+	Then I should see "Your List has been created"
+    When I go to "Admin/Lists"
     Then I should see "MyList"
-    When I follow "Contained Items"
-    Then I should see "The 'MyList' List has no content items."
-    When I follow "Create New Content" where href has "ReturnUrl"
-    Then I should see "MyType"
-    When I follow "MyType" where href has "ReturnUrl"
-        And I fill in
-            | name | value |
-            | Title.Title | MyContentItem |
-        And I hit "Save"
-        And I am redirected
-    Then I should see "Manage MyList"
-        And I should see "MyContentItem"
+    When I follow "Contained Items (0)"
+    Then I should see "'MyList' has no content items"

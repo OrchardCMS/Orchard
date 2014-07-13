@@ -35,6 +35,13 @@ namespace Orchard.MultiTenancy.Services {
             return GetThemes(_extensionManager.AvailableExtensions());
         }
 
+        /// <summary>
+        /// Loads only installed modules
+        /// </summary>
+        public IEnumerable<ExtensionDescriptor> GetInstalledModules() {
+            return _extensionManager.AvailableExtensions().Where(descriptor => DefaultExtensionTypes.IsModule(descriptor.ExtensionType));
+        }
+
         private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
             var themes = new List<ExtensionDescriptor>();
             foreach (var descriptor in extensions) {

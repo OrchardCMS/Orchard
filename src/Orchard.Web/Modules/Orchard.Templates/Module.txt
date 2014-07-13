@@ -1,0 +1,18 @@
+﻿Name: Orchard.Templates
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: Provides a Template type that can be used to store template code and used as a shape.
+Features:
+    Orchard.Templates:
+        Name: Templates
+        Description: Provides a Template type that represents a shape template, stored as a content item.
+        Category: Content
+        Dependencies: Contents, Orchard.Tokens
+    Orchard.Templates.Razor:
+        Name: Razor Templates
+        Description: Extends Templates with Razor templates.
+        Category: Content
+        Dependencies: Orchard.Templates

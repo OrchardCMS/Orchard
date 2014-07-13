@@ -20,7 +20,7 @@ namespace Orchard.Tests.Modules.Warmup {
 
         [Test]
         public void StatusCodeShouldBe404ForUnexistingResources() {
-            var download = _webDownloader.Download("http://www.microsoft.com/yepyep");
+            var download = _webDownloader.Download("http://orchardproject.net/yepyep");
             Assert.That(download, Is.Not.Null);
             Assert.That(download.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
             Assert.That(download.Content, Is.Null);
@@ -28,7 +28,7 @@ namespace Orchard.Tests.Modules.Warmup {
 
         [Test]
         public void StatusCodeShouldBe200ForValidRequests() {
-            var download = _webDownloader.Download("http://www.microsoft.com/");
+            var download = _webDownloader.Download("http://orchardproject.net/");
             Assert.That(download, Is.Not.Null);
             Assert.That(download.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(download.Content, Is.Not.Empty);

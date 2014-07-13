@@ -7,8 +7,8 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
+using Orchard.Mvc.Extensions;
 using Orchard.Services;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
     [UsedImplicitly]
@@ -34,9 +34,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
                     _contentManager.GetItemMetadata(feedItem.Item), 
                     _htmlFilters);
 
-
-                // TODO: author
-
+                // author is intentionally left empty as it could result in unwanted spam
 
                 // add to known formats
                 if (context.Format == "rss") {
@@ -45,7 +43,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
                     context.Response.Contextualize(requestContext => {
                                                         var urlHelper = new UrlHelper(requestContext, _routes);
-                                                        var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                                                        var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                                                         link.Add(uriBuilder.Uri.OriginalString);
                                                         guid.Add(uriBuilder.Uri.OriginalString);
                                                    });

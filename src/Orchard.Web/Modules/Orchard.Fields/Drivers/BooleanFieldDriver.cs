@@ -52,7 +52,8 @@ namespace Orchard.Fields.Drivers {
                 }
             }
 
-            return Editor(part, field, shapeHelper);
+            return ContentShape("Fields_Boolean_Edit", GetDifferentiator(field, part),
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: field, Prefix: GetPrefix(field, part)));
         }
 
         protected override void Importing(ContentPart part, BooleanField field, ImportContentContext context) {

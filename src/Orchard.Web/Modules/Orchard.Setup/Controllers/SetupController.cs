@@ -11,7 +11,6 @@ using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
@@ -72,6 +71,9 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
+            // sets the setup request timeout to 10 minutes to give enough time to execute custom recipes.  
+            HttpContext.Server.ScriptTimeout = 600;
+
             var recipes = OrderRecipes(_setupService.Recipes());
 
             // if no builtin provider, a connection string is mandatory

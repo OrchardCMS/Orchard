@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
@@ -139,33 +140,50 @@ namespace Orchard.ImportExport.Services {
         }
 
         private XElement ExportSiteSettings() {
-            var settings = new XElement("Settings");
-            var hasSetting = false;
+            var siteContentItem = _orchardServices.WorkContext.CurrentSite.ContentItem;
+            var exportedElements = ExportContentItem(siteContentItem).Elements().ToList();
+            
+            foreach (var contentPart in siteContentItem.Parts) {
+                var exportedElement = exportedElements.FirstOrDefault(element => element.Name == contentPart.PartDefinition.Name);
 
-            foreach (var sitePart in _orchardServices.WorkContext.CurrentSite.ContentItem.Parts) {
-                var setting = new XElement(sitePart.PartDefinition.Name);
+                //Get all simple attributes if exported element is null
+                //Get exclude the simple attributes that already exist if element is not null
+                var simpleAttributes =
+                    ExportSettingsPartAttributes(contentPart)
+                    .Where(attribute => exportedElement == null || exportedElement.Attributes().All(xAttribute => xAttribute.Name != attribute.Name))
+                    .ToList();
 
-                foreach (var property in sitePart.GetType().GetProperties()) {
-                    var propertyType = property.PropertyType;
-                    // Supported types (we also know they are not indexed properties).
-                    if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
-                        // Exclude read-only properties.
-                        if (property.GetSetMethod() != null) {
-                            setting.SetAttributeValue(property.Name, property.GetValue(sitePart, null));
-                            hasSetting = true;
-                        }
+                if (simpleAttributes.Any()) {
+                    if (exportedElement == null) {
+                        exportedElement = new XElement(contentPart.PartDefinition.Name);
+                        exportedElements.Add(exportedElement);
                     }
-                }
 
-                if (hasSetting) {
-                    settings.Add(setting);
-                    hasSetting = false;
+                    exportedElement.Add(simpleAttributes);
                 }
             }
 
-            return settings;
+            return new XElement("Settings", exportedElements);
         }
 
+        private IEnumerable<XAttribute> ExportSettingsPartAttributes(ContentPart sitePart) {
+            foreach (var property in sitePart.GetType().GetProperties()) {
+                var propertyType = property.PropertyType;
+
+                // Supported types (we also know they are not indexed properties).
+                if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
+                    // Exclude read-only properties.
+                    if (property.GetSetMethod() != null) {
+                        var value = property.GetValue(sitePart, null);
+                        if (value == null)
+                            continue;
+
+                        yield return new XAttribute(property.Name, value);
+                    }
+                }
+            }
+        }
+   
         private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
             var data = new XElement("Data");
 

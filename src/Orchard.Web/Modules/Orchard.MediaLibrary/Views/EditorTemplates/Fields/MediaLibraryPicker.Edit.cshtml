@@ -7,7 +7,7 @@
     Script.Require("jQueryUI_Sortable").AtFoot();
     Style.Include("media-library-picker-admin.css");
 
-    Script.Require("jQueryColorBox");
+    Script.Require("jQueryColorBox").AtFoot();
     Style.Require("jQueryColorBox");
     
     var settings = Model.Field.PartFieldDefinition.Settings.GetModel<MediaLibraryPickerFieldSettings>();
@@ -60,7 +60,7 @@
         var multiple = @(settings.Multiple ? "true" : "false");
         var addButton = $('#btn-@fieldIdForIds');
         var @(fieldIdForIds)_Template = 
-            '<li><div data-id="{contentItemId}" data-fieldid="@fieldIdForIds" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div><div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")<a href="{editLink}?ReturnUrl=@Request.RawUrl">@T("Edit")</a></li>';
+            '<li><div data-id="{contentItemId}" data-fieldid="@fieldIdForIds" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">@T("Remove")</a>@T(" | ")<a href="{editLink}?ReturnUrl=@Request.RawUrl">@T("Edit")</a></li>';
         
         var refreshIds = function() {
             var id = $('#@fieldIdForSelectedIds');
@@ -114,7 +114,10 @@
                     var selectedData = $.colorbox.selectedData;
                     if (selectedData == null) // Dialog cancelled, do nothing
                         return;
-                    for (var i = 0; i < selectedData.length; i++) {
+
+                    var selectionLength = multiple ? selectedData.length : Math.min(selectedData.length, 1);
+                    
+                    for (var i = 0; i < selectionLength ; i++) {
                         var template = @(fieldIdForIds)_Template
                             .replace(/\{contentItemId\}/g, selectedData[i].id)
                             .replace(/\{thumbnail\}/g, selectedData[i].thumbnail)

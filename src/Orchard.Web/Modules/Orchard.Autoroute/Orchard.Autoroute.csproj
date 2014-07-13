@@ -101,6 +101,8 @@
     <Compile Include="Commands\AutorouteCommands.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AliasResolverSelector.cs" />
+    <Compile Include="Services\PathResolutionService.cs" />
+    <Compile Include="Services\IPathResolutionService.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
     <Compile Include="Settings\AutorouteSettingsEvents.cs" />
     <Compile Include="Settings\RoutePattern.cs" />
@@ -129,7 +131,6 @@
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\AutorouteSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Autoroute.Edit.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

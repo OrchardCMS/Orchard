@@ -3,12 +3,13 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.ViewModels;
+using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
-using Orchard.Localization;
-using System.Globalization;
 using Orchard.Services;
 
 namespace Orchard.PublishLater.Drivers {
@@ -17,29 +18,35 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
+        private readonly IDateServices _dateServices;
 
-        private readonly Lazy<CultureInfo> _cultureInfo;
- 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
-            IClock clock) {
+            IClock clock,
+            IDateServices dateServices) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;
+            _dateServices = dateServices;
             T = NullLocalizer.Instance;
             Services = services;
-
-            // initializing the culture info lazy initializer
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
         }
 
-        public Localizer T { get; set; }
-        public IOrchardServices Services { get; set; }
+        public Localizer T {
+            get;
+            set;
+        }
+        public IOrchardServices Services {
+            get;
+            set;
+        }
 
         protected override string Prefix {
-            get { return "PublishLater"; }
+            get {
+                return "PublishLater";
+            }
         }
 
         protected override DriverResult Display(PublishLaterPart part, string displayType, dynamic shapeHelper) {
@@ -54,49 +61,42 @@ namespace Orchard.PublishLater.Drivers {
         }
 
         protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
-            // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
-            var localDate = new Lazy<DateTime>( () => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledPublishUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
             var model = new PublishLaterViewModel(part) {
-                ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString("d", _cultureInfo.Value) : String.Empty,
-                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? localDate.Value.ToString("t", _cultureInfo.Value) : String.Empty,
-            };
+                 Editor = new DateTimeEditor() {
+                    ShowDate = true,
+                    ShowTime = true,
+                    Date = !part.IsPublished() ? _dateServices.ConvertToLocalDateString(part.ScheduledPublishUtc.Value, "") : "",
+                    Time = !part.IsPublished() ? _dateServices.ConvertToLocalTimeString(part.ScheduledPublishUtc.Value, "") : "",
+                }
+           };
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
+
         protected override DriverResult Editor(PublishLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new PublishLaterViewModel(part);
 
             updater.TryUpdateModel(model, Prefix, null, null);
             var httpContext = _httpContextAccessor.Current();
-
             if (httpContext.Request.Form["submit.Save"] == "submit.PublishLater") {
-                if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
-                    DateTime scheduled;
-                    
-                    string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
-
-                    // use current culture
-                    if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
-                        
-                        // the date time is entered locally for the configured timezone
-                        var timeZone = Services.WorkContext.CurrentTimeZone;
-
-                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = TimeZoneInfo.ConvertTimeToUtc(scheduled, timeZone);
-
-                        if (model.ScheduledPublishUtc < _clock.UtcNow) {
-                            updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past"));
-                        }
-                        else {
-                            _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
+                    try {
+                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        if (utcDateTime.HasValue) {
+                            if (utcDateTime.Value < _clock.UtcNow) {
+                                updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past."));
+                            }
+                            else {
+                                _publishLaterService.Publish(model.ContentItem, utcDateTime.Value);
+                            }
                         }
                     }
-                    else {
-                        updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                    catch (FormatException) {
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                                             
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) || !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                     updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
             }

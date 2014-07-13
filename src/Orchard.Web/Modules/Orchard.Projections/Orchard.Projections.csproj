@@ -93,7 +93,6 @@
     <Content Include="Views\Binding\Select.cshtml" />
     <Content Include="Views\Binding\Edit.cshtml" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Permissions.cs" />
@@ -136,6 +135,8 @@
     <Compile Include="Models\NavigationQueryPart.cs" />
     <Compile Include="Models\NavigationQueryPartRecord.cs" />
     <Compile Include="Models\QueryPart.cs" />
+    <Compile Include="Providers\Filters\ContentPartRecordsForm.cs" />
+    <Compile Include="Providers\Filters\EagerFetchFilter.cs" />
     <Compile Include="Providers\Layouts\RawLayout.cs" />
     <Compile Include="Providers\Layouts\RawLayoutForms.cs" />
     <Compile Include="Providers\Layouts\RawShapes.cs" />

@@ -8,6 +8,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Common.Models;
@@ -150,6 +151,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
                 .Weld<CommonPart>()
                 .Weld<TitlePart>()
                 .Weld<BodyPart>()
+                .Weld<InfosetPart>()
                 .Build();
             hello.As<CommonPart>().Record = new CommonPartRecord();
             hello.As<TitlePart>().Record = new TitlePartRecord();

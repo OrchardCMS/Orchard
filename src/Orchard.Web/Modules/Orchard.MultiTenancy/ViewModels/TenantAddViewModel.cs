@@ -8,6 +8,7 @@ namespace Orchard.MultiTenancy.ViewModels {
             // define "Allow the tenant to set up the database" as default value 
             DataProvider = "";
             Themes = new List<ThemeEntry>();
+            Modules = new List<ModuleEntry>();
         }
 
         [Required]
@@ -20,6 +21,7 @@ namespace Orchard.MultiTenancy.ViewModels {
         public string DatabaseTablePrefix { get; set; }
 
         public List<ThemeEntry> Themes { get; set; }
+        public List<ModuleEntry> Modules { get; set; }
     }
 }
 

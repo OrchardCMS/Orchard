@@ -8,6 +8,7 @@ namespace Orchard.Core.Settings.ViewModels {
     public class SiteSettingsPartViewModel  {
         public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
+		public IEnumerable<string> SiteCalendars { get; set; }
         public IEnumerable<TimeZoneInfo> TimeZones { get; set; }
 
         [HiddenInput(DisplayValue = false)]
@@ -30,6 +31,11 @@ namespace Orchard.Core.Settings.ViewModels {
             set { Site.SiteCulture = value; }
         }
 
+        public string SiteCalendar {
+            get { return Site.SiteCalendar; }
+            set { Site.SiteCalendar = value; }
+        }
+
         public string SuperUser {
             get { return Site.SuperUser; }
             set { Site.SuperUser = value; }
@@ -43,6 +49,16 @@ namespace Orchard.Core.Settings.ViewModels {
         public int PageSize {
             get { return Site.PageSize; }
             set { Site.PageSize = value; }
+        }
+
+        public int MaxPageSize {
+            get { return Site.MaxPageSize; }
+            set { Site.MaxPageSize = value; }
+        }
+
+        public int MaxPagedCount {
+            get { return Site.MaxPagedCount; }
+            set { Site.MaxPagedCount = value; }
         }
 
         public string BaseUrl {

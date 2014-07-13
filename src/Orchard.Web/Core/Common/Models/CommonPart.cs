@@ -24,18 +24,18 @@ namespace Orchard.Core.Common.Models {
         }
 
         public DateTime? CreatedUtc {
-            get { return Record.CreatedUtc; }
-            set { Record.CreatedUtc = value; }
+            get { return Retrieve(x => x.CreatedUtc); }
+            set { Store(x => x.CreatedUtc, value); }
         }
 
         public DateTime? PublishedUtc {
-            get { return Record.PublishedUtc; }
-            set { Record.PublishedUtc = value; }
+            get { return Retrieve(x => x.PublishedUtc); }
+            set { Store(x => x.PublishedUtc, value); }
         }
 
         public DateTime? ModifiedUtc {
-            get { return Record.ModifiedUtc; }
-            set { Record.ModifiedUtc = value; }
+            get { return Retrieve(x => x.ModifiedUtc); }
+            set { Store(x => x.ModifiedUtc, value); }
         }
 
         CommonPartVersionRecord PartVersionRecord {

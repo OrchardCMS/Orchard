@@ -62,6 +62,9 @@ namespace Orchard.Logging {
 
                 yield return (ctx, instance) => {
                     string component = componentType.ToString();
+                    if (component != instance.GetType().ToString()) {
+                        return;
+                    }
                     var logger = _loggerCache.GetOrAdd(component, key => ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType)));
                     propertyInfo.SetValue(instance, logger, null);
                 };

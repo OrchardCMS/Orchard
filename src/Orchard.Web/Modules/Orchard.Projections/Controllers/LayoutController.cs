@@ -42,7 +42,7 @@ namespace Orchard.Projections.Controllers {
         public dynamic Shape { get; set; }
 
         public ActionResult Add(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new LayoutAddViewModel { Id = id, Layouts = _projectionManager.DescribeLayouts() };
@@ -51,7 +51,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var layout = _repository.Get(id);
@@ -70,7 +70,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Create(int id, string category, string type) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var layout = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);
@@ -93,7 +93,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePost(LayoutEditViewModel model, FormCollection formCollection) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             // validating form values
@@ -129,7 +129,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             LayoutRecord layoutRecord = _repository.Get(id);

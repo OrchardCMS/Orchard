@@ -1,9 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
+using Orchard.DisplayManagement;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Settings;
 using Orchard.Users.Models;
 using Orchard.Security;
 using System.Xml.Linq;
@@ -17,24 +20,41 @@ namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class UserService : IUserService {
         private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
-        private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to validate email
+        private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
 
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly IClock _clock;
-        private readonly IMessageManager _messageManager;
+        private readonly IMessageService _messageService;
         private readonly IEncryptionService _encryptionService;
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
+        private readonly ISiteService _siteService;
 
-        public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager, ShellSettings shellSettings, IEncryptionService encryptionService) {
+        public UserService(
+            IContentManager contentManager, 
+            IMembershipService membershipService, 
+            IClock clock, 
+            IMessageService messageService, 
+            ShellSettings shellSettings, 
+            IEncryptionService encryptionService,
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay,
+            ISiteService siteService
+            ) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _clock = clock;
-            _messageManager = messageManager;
+            _messageService = messageService;
             _encryptionService = encryptionService;
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
+            _siteService = siteService;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public bool VerifyUserUnicity(string userName, string email) {
             string normalizedUserName = userName.ToLowerInvariant();
@@ -111,7 +131,25 @@ namespace Orchard.Users.Services {
         public void SendChallengeEmail(IUser user, Func<string, string> createUrl) {
             string nonce = CreateNonce(user, DelayToValidate);
             string url = createUrl(nonce);
-            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "email", new Dictionary<string, string> { { "ChallengeUrl", url } });
+
+            if (user != null) {
+                var site = _siteService.GetSiteSettings();
+
+                var template = _shapeFactory.Create("Template_User_Validated", Arguments.From(new {
+                    RegisteredWebsite = site.As<RegistrationSettingsPart>().ValidateEmailRegisteredWebsite,
+                    ContactEmail = site.As<RegistrationSettingsPart>().ValidateEmailContactEMail,
+                    ChallengeUrl = url
+                }));
+                template.Metadata.Wrappers.Add("Template_User_Wrapper");
+                
+                var parameters = new Dictionary<string, object> {
+                            {"Subject", T("Verification E-Mail").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", user.Email}
+                        };
+
+                _messageService.Send("Email", parameters);
+            }
         }
 
         public bool SendLostPasswordEmail(string usernameOrEmail, Func<string, string> createUrl) {
@@ -122,7 +160,19 @@ namespace Orchard.Users.Services {
                 string nonce = CreateNonce(user, DelayToResetPassword);
                 string url = createUrl(nonce);
 
-                _messageManager.Send(user.ContentItem.Record, MessageTypes.LostPassword, "email", new Dictionary<string, string> { { "LostPasswordUrl", url } });
+                var template = _shapeFactory.Create("Template_User_LostPassword", Arguments.From(new {
+                    User = user,
+                    LostPasswordUrl = url
+                }));
+                template.Metadata.Wrappers.Add("Template_User_Wrapper");
+
+                var parameters = new Dictionary<string, object> {
+                            {"Subject", T("Lost password").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", user.Email }
+                        };
+
+                _messageService.Send("Email", parameters);
                 return true;
             }
 

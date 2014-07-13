@@ -11,9 +11,7 @@ namespace Orchard.Autoroute.Services {
 
         string GenerateAlias(AutoroutePart part);
         void PublishAlias(AutoroutePart part);
-
         void RemoveAliases(AutoroutePart part);
-
         void CreatePattern(string contentType, string name, string pattern, string description, bool makeDefault);
         RoutePattern GetDefaultPattern(string contentType);
         IEnumerable<RoutePattern> GetPatterns(string contentType);

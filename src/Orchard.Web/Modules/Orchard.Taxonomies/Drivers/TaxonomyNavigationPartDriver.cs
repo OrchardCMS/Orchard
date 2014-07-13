@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
@@ -11,9 +12,11 @@ using Orchard.Taxonomies.ViewModels;
 namespace Orchard.Taxonomies.Drivers {
     public class TaxonomyNavigationPartDriver : ContentPartDriver<TaxonomyNavigationPart> {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IContentManager _contentManager;
 
-        public TaxonomyNavigationPartDriver(ITaxonomyService taxonomyService) {
+        public TaxonomyNavigationPartDriver(ITaxonomyService taxonomyService, IContentManager contentManager) {
             _taxonomyService = taxonomyService;
+            _contentManager = contentManager;
         }
 
         public Localizer T { get; set; }
@@ -78,5 +81,50 @@ namespace Orchard.Taxonomies.Drivers {
                 });
         }
 
+        protected override void Exporting(TaxonomyNavigationPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayContentCount", part.DisplayContentCount);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayRootTerm", part.DisplayRootTerm);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("HideEmptyTerms", part.HideEmptyTerms);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LevelsToDisplay", part.LevelsToDisplay);
+
+            var taxonomy = _contentManager.Get(part.TaxonomyId);
+            var taxonomyId = _contentManager.GetItemMetadata(taxonomy).Identity.ToString();
+
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", taxonomyId);
+
+            if (part.TermId != -1) {
+                var term = _contentManager.Get(part.TermId);
+                var termId = _contentManager.GetItemMetadata(term).Identity.ToString();
+
+                context.Element(part.PartDefinition.Name).SetAttributeValue("TermId", termId);
+            }
+        }
+
+        protected override void Importing(TaxonomyNavigationPart part, ImportContentContext context) {
+            part.DisplayContentCount = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayContentCount"));
+            part.DisplayRootTerm = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "DisplayRootTerm"));
+            part.HideEmptyTerms = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "HideEmptyTerms"));
+            part.LevelsToDisplay = Int32.Parse(context.Attribute(part.PartDefinition.Name, "LevelsToDisplay"));
+
+            var taxonomyId = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
+            var taxonomy = context.GetItemFromSession(taxonomyId);
+
+            if (taxonomy == null) {
+                throw new OrchardException(T("Unknown taxonomy: {0}", taxonomyId));
+            }
+
+            part.TaxonomyId = taxonomy.Id;
+
+            var termId = context.Attribute(part.PartDefinition.Name, "TermId");
+            if (!String.IsNullOrEmpty(termId)) {
+                var term = context.GetItemFromSession(termId);
+
+                if (term == null) {
+                    throw new OrchardException(T("Unknown term: {0}", termId));
+                }
+
+                part.TermId = term.Id;
+            }
+        }
     }
 }

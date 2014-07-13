@@ -24,8 +24,8 @@ namespace Orchard.Specs.Bindings {
             webApp.GivenIHaveACleanSiteWith(
                 virtualDirectory,
                 TableData(
-                new { extension = "Module", names = "Orchard.Setup, Orchard.Pages, Orchard.ContentPicker, Orchard.Blogs, Orchard.Messaging, Orchard.MediaLibrary, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Recipes, Orchard.Warmup, Orchard.Alias, Orchard.Forms, Orchard.Tokens, Orchard.Autoroute, Orchard.Projections, Orchard.Fields, Orchard.MediaProcessing, Orchard.OutputCache, Orchard.Taxonomies, Orchard.Workflows, Orchard.Scripting.CSharp" }, 
-                new { extension = "Core", names = "Common, Containers, Dashboard, Feeds, Navigation, Contents, Scheduling, Settings, Shapes, XmlRpc, Title, Reports" },
+                new { extension = "Module", names = "Lucene, Markdown, Orchard.Alias, Orchard.AntiSpam, Orchard.ArchiveLater, Orchard.Autoroute, Orchard.Azure, Orchard.Blogs, Orchard.Caching, Orchard.CodeGeneration, Orchard.Comments, Orchard.ContentPermissions, Orchard.ContentPicker, Orchard.ContentTypes, Orchard.CustomForms, Orchard.DesignerTools, Orchard.Email, Orchard.Fields, Orchard.Forms, Orchard.ImageEditor, Orchard.ImportExport, Orchard.Indexing, Orchard.JobsQueue, Orchard.jQuery, Orchard.Lists, Orchard.Localization, Orchard.Media, Orchard.MediaLibrary, Orchard.MediaPicker, Orchard.MediaProcessing, Orchard.Migrations, Orchard.Modules, Orchard.MultiTenancy, Orchard.OutputCache, Orchard.Packaging, Orchard.Pages, Orchard.Projections, Orchard.PublishLater, Orchard.Recipes, Orchard.Roles, Orchard.Rules, Orchard.Scripting, Orchard.Scripting.CSharp, Orchard.Scripting.Dlr, Orchard.Search, Orchard.SecureSocketsLayer, Orchard.Setup, Orchard.Tags, Orchard.TaskLease, Orchard.Taxonomies, Orchard.Templates, Orchard.Themes, Orchard.Tokens, Orchard.Users, Orchard.Warmup, Orchard.Widgets, Orchard.Workflows, SysCache, TinyMce, Upgrade" },
+                new { extension = "Core", names = "Common, Containers, Contents, Dashboard, Feeds, Navigation, Reports, Scheduling, Settings, Shapes, Title, XmlRpc" },
                 new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");
@@ -59,6 +59,11 @@ namespace Orchard.Specs.Bindings {
                         descriptor.Features.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
+
+                // this is needed to force the tenant to restart when a new feature is enabled,
+                // as DefaultOrchardHost maintains this list in a thread context otherwise
+                // and looses the information
+                MvcApplication.RestartTenant("Default");
             });
 
         }
@@ -99,6 +104,8 @@ namespace Orchard.Specs.Bindings {
                 using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
                     environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
                 }
+
+                MvcApplication.RestartTenant(shellName);
             });
 
             webApp.WhenIGoToPathOnHost("Setup", hostName);

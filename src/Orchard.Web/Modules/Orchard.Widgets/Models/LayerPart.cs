@@ -9,16 +9,16 @@ namespace Orchard.Widgets.Models {
         /// </summary>
         [Required]
         public string Name {
-            get { return Record.Name; }
-            set { Record.Name = value; }
+            get { return Retrieve(x => x.Name); }
+            set { Store(x => x.Name, value); }
         }
 
         /// <summary>
         /// The layer's description.
         /// </summary>
         public string Description {
-            get { return Record.Description; }
-            set { Record.Description = value; }
+            get { return Retrieve(x => x.Description); }
+            set { Store(x => x.Description, value); }
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Orchard.Widgets.Models {
         /// The rule defines when the layer is active (should or not be displayed).
         /// </summary>
         public string LayerRule {
-            get { return Record.LayerRule; }
-            set { Record.LayerRule = value; }
+            get { return Retrieve(x => x.LayerRule); }
+            set { Store(x => x.LayerRule, value); }
         }
     }
 }

@@ -47,10 +47,13 @@
         try {
             var container = $(this).closest("[data-id]");
             var result = {
-                id: container.attr("data-id"),
-                displayText: container.attr("data-display-text"),
-                editLink: container.attr("data-edit-link"),
-                displayLink: container.attr("data-display-link")
+                id: container.data("id"),
+                displayText: container.data("display-text"),
+                editLink: container.data("edit-link"),
+                editUrl: container.data("edit-url"),
+                adminUrl: container.data("admin-url"),
+                displayLink: container.data("display-link"),
+                published: container.data("published"),
             };
 
             window.opener.jQuery[query("callback")](result);

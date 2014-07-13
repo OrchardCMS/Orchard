@@ -36,7 +36,7 @@ namespace Orchard.Core.Common {
             if (dateTimeUtc == null)
                 return T("as a Draft");
 
-            return Display.DateTimeRelative(dateTimeUtc: dateTimeUtc);
+            return Display.DateTimeRelative(DateTimeUtc: dateTimeUtc);
         }
     }
 }

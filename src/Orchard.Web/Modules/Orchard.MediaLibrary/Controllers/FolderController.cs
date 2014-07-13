@@ -88,18 +88,10 @@ namespace Orchard.MediaLibrary.Controllers {
 
             try {
                 _mediaLibraryService.RenameFolder(viewModel.FolderPath, viewModel.Name);
-
-                var segments = viewModel.FolderPath.Split(new char[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var newFolderPath = String.Join(Path.DirectorySeparatorChar.ToString(), segments.Take(segments.Length - 1).Union(new [] { viewModel.Name }));
-
-                foreach (var media in Services.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(m => m.FolderPath.StartsWith(viewModel.FolderPath)).List()) {
-                    media.FolderPath = newFolderPath + media.FolderPath.Substring(viewModel.FolderPath.Length);
-                }
                 Services.Notifier.Information(T("Media folder renamed"));
             }
-            catch (ArgumentException argumentException) {
-                Services.Notifier.Error(T("Editing Folder failed: {0}", argumentException.Message));
-                Services.TransactionManager.Cancel();
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Editing Folder failed: {0}", exception.Message));
                 return View(viewModel);
             }
 

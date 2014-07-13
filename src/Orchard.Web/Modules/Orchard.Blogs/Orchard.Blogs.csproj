@@ -72,6 +72,7 @@
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
+    <Compile Include="Feeds\BlogPartFeedItemBuilder.cs" />
     <Compile Include="Handlers\BlogArchivesPartHandler.cs" />
     <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
     <Compile Include="Models\BlogArchivesPart.cs" />
@@ -92,13 +93,10 @@
     <Compile Include="Handlers\BlogPartArchiveHandler.cs" />
     <Compile Include="Models\BlogPartArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Routing\BlogPathConstraint.cs" />
-    <Compile Include="Routing\BlogPathConstraintUpdator.cs" />
     <Compile Include="Routing\ArchiveConstraint.cs" />
     <Compile Include="Routing\IArchiveConstraint.cs" />
     <Compile Include="Routing\RsdConstraint.cs" />
     <Compile Include="Routing\IRsdConstraint.cs" />
-    <Compile Include="Routing\IBlogPathConstraint.cs" />
     <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
     <Compile Include="Services\ArchiveService.cs" />
     <Compile Include="Services\BlogService.cs" />
@@ -107,13 +105,14 @@
     <Compile Include="Handlers\BlogPartHandler.cs" />
     <Compile Include="Models\BlogPostPart.cs" />
     <Compile Include="Handlers\BlogPostPartHandler.cs" />
-    <Compile Include="Models\BlogPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
+    <Compile Include="Services\BlogPostsCountProcessor.cs" />
     <Compile Include="Services\IArchiveService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
+    <Compile Include="Services\IBlogPostsCountProcessor.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
     <Compile Include="ViewModels\RecentBlogPostsViewModel.cs" />
@@ -144,7 +143,6 @@
     <Content Include="Views\Parts.Blogs.BlogPost.ListAdmin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -154,6 +152,14 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Alias\Orchard.Alias.csproj">
+      <Project>{475b6c45-b27c-438b-8966-908b9d6d1077}</Project>
+      <Name>Orchard.Alias</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.ContentPicker\Orchard.ContentPicker.csproj">
       <Project>{f301ef7d-f19c-4d83-aa94-cb64f29c037d}</Project>

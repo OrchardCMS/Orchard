@@ -1,8 +1,8 @@
-﻿using Orchard.DisplayManagement.Shapes;
+﻿using Orchard.Core.Common.ViewModels;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorViewModel : Shape {
-        public virtual string CreatedDate { get; set; }
-        public virtual string CreatedTime { get; set; }
+        public virtual DateTimeEditor Editor { get; set; }
     }
 }

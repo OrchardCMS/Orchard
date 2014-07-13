@@ -1,0 +1,18 @@
+﻿@model Orchard.Azure.MediaServices.Models.Assets.VideoAsset
+@using Orchard.ContentManagement;
+
+<fieldset>
+    <div class="preview">
+        @Display.CloudVideoPlayer(
+        ContentPart: Model.VideoPart,
+        ContentItem: Model.VideoPart.ContentItem,
+        AlternateText: Model.VideoPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
+        AssetId: Model.Record.Id,
+        IgnoreIncludeInPlayer: true,
+        AllowPrivateUrls: true,
+        PlayerWidth: 500,
+        PlayerHeight: 400,
+        ApplyMediaQueries: false,
+        AutoPlay: false)
+    </div>
+</fieldset>

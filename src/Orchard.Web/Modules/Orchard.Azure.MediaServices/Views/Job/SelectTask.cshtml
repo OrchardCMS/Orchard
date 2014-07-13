@@ -1,0 +1,19 @@
+﻿@using Orchard.Azure.MediaServices.Services.Tasks
+@{
+    Style.Include("cloudmedia-admin-selecttask.css", "cloudmedia-admin-selecttask.min.css");
+    
+    var cloudVideoPartId = (int) Model.CloudVideoPartId;
+    var taskProviders = (IEnumerable<ITaskProvider>) Model.TaskProviders;
+
+    Layout.Title = "Create Cloud Job";
+}
+@Display.FrameBuster()
+<h2>@T("Select a Microsoft Azure Media task to perform")</h2>
+<ul id="task-list">
+    @foreach (var provider in taskProviders) {
+        <li class="task-list-item">
+            @Html.ActionLink(provider.Name, "Create", new { Id = cloudVideoPartId, task = provider.Name })<br />
+            <span class="task-description">@provider.Description</span>
+        </li>
+    }
+</ul>

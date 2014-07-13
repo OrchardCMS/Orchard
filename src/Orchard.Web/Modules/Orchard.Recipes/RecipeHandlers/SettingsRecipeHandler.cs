@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Policy;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -11,15 +14,20 @@ using Orchard.Settings;
 namespace Orchard.Recipes.RecipeHandlers {
     public class SettingsRecipeHandler : IRecipeHandler {
         private readonly ISiteService _siteService;
+        private readonly IContentManager _contentManager;
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
 
-        public SettingsRecipeHandler(ISiteService siteService) {
+        public SettingsRecipeHandler(ISiteService siteService, IContentManager contentManager, Lazy<IEnumerable<IContentHandler>> handlers) {
             _siteService = siteService;
+            _contentManager = contentManager;
+            _handlers = handlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        private IEnumerable<IContentHandler> Handlers { get { return _handlers.Value; } }
 
         /*  
          <Settings>
@@ -33,41 +41,52 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
-            var site = _siteService.GetSiteSettings();
-            foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
-                var partName = XmlConvert.DecodeName(element.Name.LocalName);
-                foreach (var contentPart in site.ContentItem.Parts) {
-                    if (!String.Equals(contentPart.PartDefinition.Name, partName, StringComparison.OrdinalIgnoreCase)) {
-                        continue;
-                    }
-                    foreach (var attribute in element.Attributes()) {
-                        SetSetting(attribute, contentPart);
-                    }
+            var siteContentItem = _siteService.GetSiteSettings().ContentItem;
+
+            var importContentSession = new ImportContentSession(_contentManager);
+
+            var context = new ImportContentContext(siteContentItem, recipeContext.RecipeStep.Step, importContentSession);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Importing(context);
+            }
+
+            foreach (var contentPart in siteContentItem.Parts) {
+                var partElement = context.Data.Element(contentPart.PartDefinition.Name);
+                if (partElement == null) {
+                    continue;
                 }
+
+                ImportSettingPart(contentPart, partElement);
+            }
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Imported(context);
             }
 
             recipeContext.Executed = true;
         }
 
-        private static void SetSetting(XAttribute attribute, ContentPart contentPart) {
-            var attributeName = attribute.Name.LocalName;
-            var attributeValue = attribute.Value;
-            var property = contentPart.GetType().GetProperty(attributeName);
-            if (property == null) {
-                throw new InvalidOperationException(string.Format("Could set setting {0} for part {1} because it was not found.", attributeName, contentPart.PartDefinition.Name));
-            }
-            var propertyType = property.PropertyType;
-            if (propertyType == typeof(string)) {
-                property.SetValue(contentPart, attributeValue, null);
-            }
-            else if (propertyType == typeof(bool)) {
-                property.SetValue(contentPart, Boolean.Parse(attributeValue), null);
-            }
-            else if (propertyType == typeof(int)) {
-                property.SetValue(contentPart, Int32.Parse(attributeValue), null);
-            }
-            else {
-                throw new InvalidOperationException(string.Format("Could set setting {0} for part {1} because its type is not supported. Settings should be integer,boolean or string.", attributeName, contentPart.PartDefinition.Name));
+        private void ImportSettingPart(ContentPart sitePart, XElement element) {
+
+            foreach (var attribute in element.Attributes()) {
+                var attributeName = attribute.Name.LocalName;
+                var attributeValue = attribute.Value;
+
+                var property = sitePart.GetType().GetProperty(attributeName);
+                if (property == null) {
+                    throw new InvalidOperationException(string.Format("Could set setting {0} for part {1} because it was not found.", attributeName, sitePart.PartDefinition.Name));
+                }
+
+                var propertyType = property.PropertyType;
+                if (propertyType == typeof(string)) {
+                    property.SetValue(sitePart, attributeValue, null);
+                }
+                else if (propertyType == typeof(bool)) {
+                    property.SetValue(sitePart, Boolean.Parse(attributeValue), null);
+                }
+                else if (propertyType == typeof(int)) {
+                    property.SetValue(sitePart, Int32.Parse(attributeValue), null);
+                }
             }
         }
     }

@@ -4,8 +4,8 @@
     Style.Require("BlogsArchives");
     Script.Require("BlogsArchives");
     IEnumerable<KeyValuePair<ArchiveData, int>> archives = Model.Archives;
-    var dateTimeLocalization = WorkContext.Resolve<Orchard.Core.Shapes.Localization.IDateTimeLocalization>();
-    var monthNames = dateTimeLocalization.MonthNames.Text.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+    var dateTimeLocalization = WorkContext.Resolve<Orchard.Localization.Services.IDateTimeFormatProvider>();
+    var monthNames = dateTimeLocalization.MonthNames.ToArray();
 }
 <div class="archives">
     @if (archives.Count() > 20) {

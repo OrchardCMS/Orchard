@@ -32,7 +32,7 @@ namespace Orchard.Environment.Descriptor {
     public class ShellDescriptorCache : IShellDescriptorCache {
         private readonly IAppDataFolder _appDataFolder;
         private const string DescriptorCacheFileName = "cache.dat";
-
+        private static readonly object _synLock = new object();
         public ShellDescriptorCache(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
@@ -42,56 +42,65 @@ namespace Orchard.Environment.Descriptor {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        public bool Disabled { get; set; }
 
-        #region Implementation of IShellDescriptorCache
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StringReader closed by XmlReader.")]
         public ShellDescriptor Fetch(string name) {
-            VerifyCacheFile();
-            var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(text);
-            XmlNode rootNode = xmlDocument.DocumentElement;
-            if (rootNode != null) {
-                foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                    if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                        return GetShellDecriptorForCacheText(tenantNode.InnerText);
-                    }
-                }
+            if (Disabled) {
+                return null;
             }
 
-            return null;
+            lock (_synLock) {
+                VerifyCacheFile();
+                var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
+                var xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml(text);
+                XmlNode rootNode = xmlDocument.DocumentElement;
+                if (rootNode != null) {
+                    foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                        if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                            return GetShellDecriptorForCacheText(tenantNode.InnerText);
+                        }
+                    }
+                }
+
+                return null;
+
+            }
+
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "writer closed by xmlWriter.")]
         public void Store(string name, ShellDescriptor descriptor) {
-            VerifyCacheFile();
-            var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
-            bool tenantCacheUpdated = false;
-            var saveWriter = new StringWriter();
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(text);
-            XmlNode rootNode = xmlDocument.DocumentElement;
-            if (rootNode != null) {
-                foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                    if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                        tenantNode.InnerText = GetCacheTextForShellDescriptor(descriptor);
-                        tenantCacheUpdated = true;
-                        break;
-                    }
-                }
-                if (!tenantCacheUpdated) {
-                    XmlElement newTenant = xmlDocument.CreateElement(name);
-                    newTenant.InnerText = GetCacheTextForShellDescriptor(descriptor);
-                    rootNode.AppendChild(newTenant);
-                }
+            if (Disabled) {
+                return;
             }
 
-            xmlDocument.Save(saveWriter);
-            _appDataFolder.CreateFile(DescriptorCacheFileName, saveWriter.ToString());
-        }
+            lock (_synLock) {
+                VerifyCacheFile();
+                var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
+                bool tenantCacheUpdated = false;
+                var saveWriter = new StringWriter();
+                var xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml(text);
+                XmlNode rootNode = xmlDocument.DocumentElement;
+                if (rootNode != null) {
+                    foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                        if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                            tenantNode.InnerText = GetCacheTextForShellDescriptor(descriptor);
+                            tenantCacheUpdated = true;
+                            break;
+                        }
+                    }
+                    if (!tenantCacheUpdated) {
+                        XmlElement newTenant = xmlDocument.CreateElement(name);
+                        newTenant.InnerText = GetCacheTextForShellDescriptor(descriptor);
+                        rootNode.AppendChild(newTenant);
+                    }
+                }
 
-        #endregion
+                xmlDocument.Save(saveWriter);
+                _appDataFolder.CreateFile(DescriptorCacheFileName, saveWriter.ToString());
+            }
+        }
 
         private static string GetCacheTextForShellDescriptor(ShellDescriptor descriptor) {
             var sb = new StringBuilder();
@@ -119,19 +128,19 @@ namespace Orchard.Environment.Descriptor {
             return shellDescriptor;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        /// <summary>
+        /// Creates an empty cache file if it doesn't exist already
+        /// </summary>
         private void VerifyCacheFile() {
             if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
                 var writer = new StringWriter();
-                using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
-                    if (xmlWriter != null) {
-                        xmlWriter.WriteStartDocument();
-                        xmlWriter.WriteStartElement("Tenants");
-                        xmlWriter.WriteEndElement();
-                        xmlWriter.WriteEndDocument();
-                    }
+                using (var xmlWriter = XmlWriter.Create(writer)) {
+                    xmlWriter.WriteStartDocument();
+                    xmlWriter.WriteStartElement("Tenants");
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndDocument();
                 }
-                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());
+                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());                
             }
         }
     }

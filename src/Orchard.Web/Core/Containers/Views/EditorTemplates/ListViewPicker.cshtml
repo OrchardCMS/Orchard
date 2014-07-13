@@ -1,0 +1,7 @@
+﻿@using Orchard.Core.Containers.Services
+@{
+    var providers = (IEnumerable<IListViewProvider>)ViewBag.Providers;
+    var value = ViewData.TemplateInfo.FormattedModelValue as string;
+    var options = providers.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.Name, Selected = x.Name == value});
+}
+@Html.DropDownList("", options)

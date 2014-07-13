@@ -17,6 +17,7 @@ namespace Orchard.Azure.Services.FileSystems {
 
         protected string _root;
         protected string _absoluteRoot;
+        protected string _publicHostName;
 
         private CloudStorageAccount _storageAccount;
         private CloudBlobClient _blobClient;
@@ -46,12 +47,13 @@ namespace Orchard.Azure.Services.FileSystems {
             }
         }
 
-        public AzureFileSystem(string storageConnectionString, string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider) {
+        public AzureFileSystem(string storageConnectionString, string containerName, string root, bool isPrivate, IMimeTypeProvider mimeTypeProvider, string publicHostName = null) {
             _isPrivate = isPrivate;
             _mimeTypeProvider = mimeTypeProvider;
             StorageConnectionString = storageConnectionString;
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "" : root + "/";
+            _publicHostName = publicHostName;
         }
 
         private void EnsureInitialized() {
@@ -67,15 +69,7 @@ namespace Orchard.Azure.Services.FileSystems {
             // The container is named with DNS naming restrictions (i.e. all lower case)
             _container = _blobClient.GetContainerReference(ContainerName);
 
-            _container.CreateIfNotExists();
-
-            _container.SetPermissions(_isPrivate
-                                            ? new BlobContainerPermissions {
-                                                PublicAccess = BlobContainerPublicAccessType.Off
-                                            }
-                                            : new BlobContainerPermissions {
-                                                PublicAccess = BlobContainerPublicAccessType.Container
-                                            });
+            _container.CreateIfNotExists(_isPrivate ? BlobContainerPublicAccessType.Off : BlobContainerPublicAccessType.Container);
         }
 
         private static string ConvertToRelativeUriPath(string path) {
@@ -295,9 +289,9 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public string GetPublicUrl(string path) {
             path = ConvertToRelativeUriPath(path);
-
-            Container.EnsureBlobExists(String.Concat(_root, path));
-            return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
+            var uri = new UriBuilder(Container.GetBlockBlobReference(String.Concat(_root, path)).Uri);
+            if (!string.IsNullOrEmpty(_publicHostName)) uri.Host = _publicHostName;
+            return uri.ToString();
         }
 
         private class AzureBlobFileStorage : IStorageFile {
@@ -322,6 +316,7 @@ namespace Orchard.Azure.Services.FileSystems {
             }
 
             public DateTime GetLastUpdated() {
+                _blob.FetchAttributes();
                 return _blob.Properties.LastModified.GetValueOrDefault().DateTime;
             }
 
@@ -343,7 +338,6 @@ namespace Orchard.Azure.Services.FileSystems {
                 _blob.DeleteIfExists();
                 _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
                 _blob.UploadFromStream(new MemoryStream(new byte[0]));
-
                 return OpenWrite();
             }
         }

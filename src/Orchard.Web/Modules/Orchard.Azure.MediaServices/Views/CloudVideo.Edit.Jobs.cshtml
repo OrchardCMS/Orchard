@@ -1,0 +1,96 @@
+﻿@using Orchard.Azure.MediaServices
+@using Orchard.Azure.MediaServices.Models
+@using Orchard.Azure.MediaServices.Models.Assets
+@using Orchard.Azure.MediaServices.Models.Jobs
+@using Orchard.Localization.Services
+@{
+    Style.Include("cloudmedia-edit-jobs.css", "cloudmedia-edit-jobs.min.css");
+    Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
+    Script.Require("ShapesBase");
+
+    var cloudVideoPart = (CloudVideoPart)Model.CloudVideoPart;
+    var isCreatingItem = cloudVideoPart == null || cloudVideoPart.Id == 0 || cloudVideoPart.MezzanineAsset == null;
+    var isUploaded = !isCreatingItem && cloudVideoPart.MezzanineAsset.UploadState.Status == AssetUploadStatus.Uploaded;
+    var jobsToDisplay = cloudVideoPart != null ? cloudVideoPart.Jobs.Where(x => x.Status != JobStatus.Archived).ToArray() : Enumerable.Empty<Job>();
+    var authorizedToManageJobs = AuthorizedFor(Permissions.ManageCloudMediaJobs);
+    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
+}
+@helper ShortDateTime(DateTime? value, IDateTimeFormatProvider dateTimeFormatProvider) {
+    if (value != null) {
+        @Display.DateTime(DateTimeUtc: value, CustomFormat: T(dateTimeFormatProvider.ShortDateTimeFormat))
+    }
+}
+@if (!isCreatingItem && jobsToDisplay.Any()) {
+    <fieldset>
+        <legend>@T("Jobs")</legend>
+        <table id="jobs-table" class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col">@T("Description")</th>
+                    <th scope="col">@T("Created")</th>
+                    <th scope="col">@T("Status")</th>
+                    <th scope="col">@T("Started")</th>
+                    <th scope="col">@T("Finished")</th>
+                    <th scope="col">@T("Error")</th>
+                    <th scope="col">@T("Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in jobsToDisplay) {
+                    <tr>
+                        <td>@job.Name</td>
+                        <td>@job.Description</td>
+                        <td>@ShortDateTime(job.CreatedUtc, dateTimeFormatProvider)</td>
+                        <td>
+                            @if (job.Status == JobStatus.Processing) {
+                                var percentComplete = Convert.ToInt32(job.PercentComplete);
+                                <span class="progress-text">
+                                    @String.Format("Processing ({0}%)...", percentComplete)
+                                </span>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @percentComplete%"></div>
+                                </div>
+                            }
+                            else {
+                                @T(job.Status.ToString())
+                            }
+                        </td>
+
+                        <td>@ShortDateTime(job.StartedUtc, dateTimeFormatProvider)</td>
+                        <td>@ShortDateTime(job.FinishedUtc, dateTimeFormatProvider)</td>
+                        <td>@job.ErrorMessage</td>
+                        <td>
+                            @if (authorizedToManageJobs) {
+                                if (job.CanArchive) {
+                                    @Html.ActionLink(T("Archive").ToString(), "Archive", "Job", new { job.Record.Id, Area = "Orchard.Azure.MediaServices" }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                                }
+                                if (job.CanCancel) {
+                                    @Html.ActionLink(T("Cancel").ToString(), "Cancel", "Job", new { job.Record.Id, Area = "Orchard.Azure.MediaServices" }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </fieldset>
+}
+@{
+    var canCreateJobs = !isCreatingItem && isUploaded;
+    var href = canCreateJobs ? Url.Action("Create", "Job", new RouteValueDictionary(new { cloudVideoPart.Id, Area = "Orchard.Azure.MediaServices" })) : "#";
+    var htmlAttributes = new Dictionary<string, object>() {
+        { "id", "create-link" },
+        { "class", "button grey" }
+    };
+}
+@if (authorizedToManageJobs) {
+    if (!canCreateJobs) {
+        <p>@T("Jobs can be created once the mezzanine video asset has finished uploaded and the cloud video item has been saved.")</p>
+    }
+    else {
+        <fieldset>
+            @Html.Link(T("Create Job").Text, href, htmlAttributes)
+        </fieldset>
+    }
+}

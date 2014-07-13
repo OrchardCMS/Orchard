@@ -21,7 +21,7 @@ namespace Orchard.Core.Settings {
             builder.AddImageSet("settings")
                 .Add(T("Settings"), "99",
                     menu => menu.Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
-                        .Permission(StandardPermissions.SiteOwner)), new [] {"collapsed"});
+                        .Permission(Permissions.ManageSettings)), new [] {"collapsed"});
 
             var site = _siteService.GetSiteSettings();
             if (site == null)
@@ -31,7 +31,7 @@ namespace Orchard.Core.Settings {
                 GroupInfo info = groupInfo;
                 builder.Add(T("Settings"),
                     menu => menu.Add(info.Name, info.Position, item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = info.Id })
-                        .Permission(StandardPermissions.SiteOwner)));
+                        .Permission(Permissions.ManageSettings)));
             }
         }
     }

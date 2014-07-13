@@ -7,7 +7,7 @@
     <Match DisplayType="Detail">
       <Place Parts_Container_Contained="Content:7.5"/>
     </Match>
-    <Place Parts_Containable_Edit="Content:before.3"/>
+    <Place Parts_Containable_Edit="Content:2"/>
     <Place Parts_Container_Edit="Content:5"/>
     <Place Parts_CustomProperties_Edit="Content:5"/>
     <Place Parts_ContainerWidget_Edit="Content:5"/>

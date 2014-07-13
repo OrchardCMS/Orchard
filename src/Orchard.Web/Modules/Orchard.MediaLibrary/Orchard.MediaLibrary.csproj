@@ -101,10 +101,9 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +121,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\MediaLibraryExplorerPartDriver.cs" />
     <Compile Include="ModalAdminFilter.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -152,6 +152,7 @@
     <Compile Include="Models\FolderHierarchy.cs" />
     <Compile Include="Models\MediaFile.cs" />
     <Compile Include="Models\MediaFolder.cs" />
+    <Compile Include="Models\MediaLibraryExplorerPart.cs" />
     <Compile Include="Models\WebSearchSettingsPart.cs" />
     <Compile Include="Models\ImagePart.cs" />
     <Compile Include="Models\DocumentPart.cs" />
@@ -171,6 +172,8 @@
     <Compile Include="Settings\MediaLibraryPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\MediaLibraryPickerFieldSettings.cs" />
     <Compile Include="Tokens\FieldTokens.cs" />
+    <Compile Include="ViewModels\MediaManagerChildFoldersViewModel.cs" />
+    <Compile Include="ViewModels\ImportMediaViewModel.cs" />
     <Compile Include="ViewModels\MediaLibraryPickerFieldViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerMediaItemsViewModel.cs" />
     <Compile Include="ViewModels\MediaManagerFolderCreateViewModel.cs" />
@@ -181,9 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Admin\MediaManagerFolder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media.cshtml" />
@@ -333,6 +333,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Media.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\MediaLibrary.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\MediaLibrary.Navigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fields\MediaLibraryPicker.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\ChildFolders.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

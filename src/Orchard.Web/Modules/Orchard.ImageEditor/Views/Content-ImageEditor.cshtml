@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.MediaLibrary.Models
+@using Orchard.Mvc.Extensions
 @using Orchard.Utility.Extensions
 @model dynamic
 @{
@@ -41,7 +42,7 @@
     <div id="image-editor-container" class="editor-shadow">
         <div id="image-editor-image-wrapper" >
             @*<canvas id="image-editor-image" class="canvas-shadow"></canvas>*@        
-            <img id="image-editor-image" class="canvas-shadow" src="@Url.Content(mediaPart.MediaUrl)">    
+            <img id="image-editor-image" class="canvas-shadow" src="@Url.Action("Proxy", "Admin", new { url = Url.MakeAbsolute(Url.Content(mediaPart.MediaUrl)) })">    
         </div>
     </div>
     

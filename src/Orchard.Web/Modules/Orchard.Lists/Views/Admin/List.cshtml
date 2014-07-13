@@ -1,75 +1,42 @@
-﻿@using Orchard.Lists.ViewModels;
+﻿@using Orchard.ContentManagement.MetaData.Models
+@using Orchard.Core.Containers.Models
 @using Orchard.ContentManagement;
 @{
-	Script.Include("orchard-lists-admin.js");
+    Style.Require("jQueryColorBox");
+    Style.Include("nprogress.css", "nprogress.min.css");
+    Style.Include("common-admin.css", "common-admin.min.css");
+    Style.Include("list-admin.css", "list-admin.min.css");
+    Script.Require("ContentPicker").AtFoot();
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryColorBox");
+    Script.Include("nprogress.js", "mprogress.min.js").AtFoot();
+    Script.Include("orchard-lists-admin.js", "orchard-lists-admin.min.js").AtFoot();
 
-	int containerId = ((int?)Model.ContainerId).GetValueOrDefault();
-	
-    string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentDisplayName) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentDisplayName).ToString();
-    
+    var containerId = ((int?)Model.ContainerId).GetValueOrDefault();
+    var container = ((ContentItem)Model.Container).As<ContainerPart>();
+    var itemContentTypes = (IList<ContentTypeDefinition>)Model.ItemContentTypes;
+
     Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
-
-    var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
-        contentItem => new SelectListItem {
-            Text = contentItem.ContentType + ": " + contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
-            Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)
-        }).ToList();
-	lists.Insert(0, new SelectListItem { Text = T("Move to...").ToString(), Value = "" });
 }
-<style type="text/css">
-.dyn #TargetContainerId {
-	display: none /* todo: move to css file */
-}
-</style>
-
-<div>&nbsp;</div>
-@Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
-<div class="manage">
-    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = containerId }) }, new { @class = "button primaryAction" })
-
-    @Html.ActionLink(T("Choose Items").ToString(), "Choose", new { TargetContainerId = (int)Model.ContainerId, Area = "Orchard.Lists" }, new { @class = "button primaryAction" })
+<div id="listManagement" @if (container.EnablePositioning) { <text>class="sortable"</text> }
+     data-baseurl="@WorkContext.CurrentSite.BaseUrl"
+     data-itemtypes="@String.Join(",", itemContentTypes.Select(x => x.Name))"
+     data-update-url="@Url.Action("UpdatePositions", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-insert-url="@Url.Action("Insert", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-refresh-url="@Url.Action("List", "Admin", new { containerId = Model.ContainerId, page = Model.Pager.Page, pageSize = Model.Pager.PageSize })"
+     data-dragdrop="@container.EnablePositioning.ToString().ToLower()">
+    @Display.Breadcrumbs_ContentItem(ContentItem: Model.Container, ContainerAccessor: Model.ContainerAccessor)
+    @Display.Parts_Container_Manage(
+        ContainerDisplayName: Model.ContainerDisplayName, 
+        ContainerContentType: Model.ContainerContentType, 
+        ContainerId: containerId,
+        ItemContentTypes: itemContentTypes)
+    @using (Html.BeginFormAntiForgeryPost()) {
+        @Display.Parts_Container_BulkActions(Options: Model.Options, OtherLists: Model.OtherLists, Container: container)
+        @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
+        @Display(Model.ListView)
+    }
 </div>
-
-@using (Html.BeginFormAntiForgeryPost()) {
-    var options = (ContentOptions) Model.Options;
-    <fieldset class="bulk-actions">
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="Options.BulkAction">
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
-            @Html.SelectOption(options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
-        </select>
-		@Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
-        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-    </fieldset>
-    <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter">@T("Show")</label>
-        <select id="filterResults" name="Options.SelectedFilter"@Html.Raw(Model.HasRestriction ? " disabled=\"disabled\"" : "")>
-            @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
-            @foreach(var filterOption in Model.Options.FilterOptions) {
-                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
-            }
-        </select>
-        <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
-        <select id="orderResults" name="Options.OrderBy">
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
-            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
-        </select>
-        <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
-    </fieldset>
-
-	if ((int)Model.ContentItems.Items.Count == 0) {
-		<div class="message info">@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)</div>
-	}
-	else {
-        <fieldset class="contentItems bulk-items">
-		@Display(Model.ContentItems)
-        </fieldset>
-	}
-
-@Display(Model.Pager)
+@if (Model.ListNavigation != null) {
+    @Display(Model.ListNavigation)
 }

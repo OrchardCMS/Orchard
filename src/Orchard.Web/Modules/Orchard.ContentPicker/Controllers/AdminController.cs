@@ -40,16 +40,14 @@ namespace Orchard.ContentPicker.Controllers {
         public Localizer T { get; set; }
 
         [Themed(false)]
-        public ActionResult Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field) {
-
-            IEnumerable<MenuItem> menuItems = _navigationManager.BuildMenu("content-picker").ToList();
-
+        public ActionResult Index(ListContentsViewModel model, PagerParameters pagerParameters, string part, string field, string types) {
+            var menuItems = _navigationManager.BuildMenu("content-picker").ToList();
             var contentPickerMenuItem = menuItems.FirstOrDefault();
             if (contentPickerMenuItem == null) {
                 return HttpNotFound();
             }
 
-            if (contentPickerMenuItem.Items.All(x => x.Text.ToString() != T("Recent Content").Text)) {
+            if (contentPickerMenuItem.Items.All(x => x.Text.TextHint != "Recent Content")) {
                 // the default tab should not be displayed, redirect to the next one
                 var root = menuItems.FirstOrDefault();
                 if (root == null) {
@@ -82,9 +80,13 @@ namespace Orchard.ContentPicker.Controllers {
                 }
             }
 
-            IEnumerable<ContentTypeDefinition> contentTypes;
             if (settings != null && !String.IsNullOrEmpty(settings.DisplayedContentTypes)) {
-                var rawTypes = settings.DisplayedContentTypes.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
+                types = settings.DisplayedContentTypes;
+            }
+
+            IEnumerable<ContentTypeDefinition> contentTypes;
+            if (!String.IsNullOrEmpty(types)) {
+                var rawTypes = types.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 contentTypes = _contentDefinitionManager
                     .ListTypeDefinitions()
                     .Where(x => x.Parts.Any(p => rawTypes.Contains(p.PartDefinition.Name)) || rawTypes.Contains(x.Name))
@@ -95,7 +97,6 @@ namespace Orchard.ContentPicker.Controllers {
             }
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-
             var query = Services.ContentManager.Query(VersionOptions.Latest, contentTypes.Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.Options.SelectedFilter)) {
@@ -128,15 +129,15 @@ namespace Orchard.ContentPicker.Controllers {
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
-
             var list = Services.New.List();
+
             list.AddRange(pageOfContentItems.Select(ci => Services.ContentManager.BuildDisplay(ci, "SummaryAdmin")));
 
             foreach(IShape item in list.Items) {
                 item.Metadata.Type = "ContentPicker";
             }
 
-            dynamic tab = Services.New.RecentContentTab()
+            var tab = Services.New.RecentContentTab()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .Options(model.Options)
@@ -145,6 +146,7 @@ namespace Orchard.ContentPicker.Controllers {
             // retain the parameter in the pager links
             RouteData.Values["Options.SelectedFilter"] = model.Options.SelectedFilter;
             RouteData.Values["Options.OrderBy"] = model.Options.OrderBy.ToString();
+            RouteData.Values["Options.ContentsStatus"] = model.Options.ContentsStatus.ToString();
 
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }

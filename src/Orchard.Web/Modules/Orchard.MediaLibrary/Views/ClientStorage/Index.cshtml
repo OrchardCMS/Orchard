@@ -1,18 +1,18 @@
-﻿@using System.Text
+﻿@model Orchard.MediaLibrary.ViewModels.ImportMediaViewModel
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     @{
-        Script.Require("jQuery");
-        Script.Require("jQueryUI");
+        Script.Require("jQuery").AtFoot();
+        Script.Require("jQueryUI").AtFoot();
 
         Style.Include("orchard-medialibrary-admin.css");
         Style.Include("orchard-mediaproviders-admin.css");
         Style.Include("orchard-clientstorage-admin.css");
 
-        Script.Require("jQueryFileUpload");
-        Script.Include("knockout-2.3.0.js");
+        Script.Require("jQueryFileUpload").AtFoot();
+        Script.Include("knockout-2.3.0.js").AtFoot();
     }
 
     @Display.Metas()
@@ -87,7 +87,8 @@
                 url: '@Url.Action("Upload", "ClientStorage")',
                 autoUpload: true,
                 formData: {
-                    folderPath: '@HttpUtility.JavaScriptStringEncode(Model)',
+                    folderPath: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FolderPath))',
+                    type: '@HttpUtility.JavaScriptStringEncode(Model.Type)',
                     __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()'
                 },
                 done: function (e, data) {

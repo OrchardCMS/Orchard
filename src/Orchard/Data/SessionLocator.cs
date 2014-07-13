@@ -24,9 +24,11 @@ namespace Orchard.Data {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
             Logger = NullLogger.Instance;
+            IsolationLevel = IsolationLevel.ReadCommitted;
         }
 
         public ILogger Logger { get; set; }
+        public IsolationLevel IsolationLevel { get; set; }
 
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);
@@ -41,21 +43,25 @@ namespace Orchard.Data {
 
             if (_transaction == null) {
                 Logger.Debug("Creating transaction on Demand");
-                _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+                _transaction = _session.BeginTransaction(IsolationLevel);
             }
         }
 
         public void RequireNew() {
-            RequireNew(IsolationLevel.ReadCommitted);
+            RequireNew(IsolationLevel);
         }
 
         public void RequireNew(IsolationLevel level) {
             EnsureSession();
 
             if (_cancelled) {
-                _transaction.Rollback();
-                _transaction.Dispose();
-                _transaction = null;
+                if (_transaction != null) {
+                    _transaction.Rollback();
+                    _transaction.Dispose();
+                    _transaction = null;
+                }
+
+                _cancelled = false;
             }
             else {
                 if (_transaction != null) {
@@ -83,18 +89,24 @@ namespace Orchard.Data {
                         Logger.Debug("Reverting operations from transaction");
                         _transaction.Rollback();
                     }
-
-                    _transaction.Dispose();
-                    Logger.Debug("Transaction disposed");
                 }
                 catch (Exception e) {
                     Logger.Error(e, "Error while disposing the transaction.");
                 }
                 finally {
+                    _transaction.Dispose();
+                    Logger.Debug("Transaction disposed");
+
                     _transaction = null;
                     _cancelled = false;
                 }
             }
+
+            if (_session != null) {
+                _session.Dispose();
+                _session = null;
+            }
+
         }
 
         private void EnsureSession() {
@@ -110,7 +122,6 @@ namespace Orchard.Data {
         class OrchardSessionInterceptor : IInterceptor {
             private readonly ISessionInterceptor[] _interceptors;
             private readonly ILogger _logger;
-            private ISession _session;
 
             public OrchardSessionInterceptor(ISessionInterceptor[] interceptors, ILogger logger) {
                 _interceptors = interceptors;
@@ -232,8 +243,6 @@ namespace Orchard.Data {
             }
 
             void IInterceptor.SetSession(ISession session) {
-                _session = session;
-
                 if (_interceptors.Length == 0) return;
                 _interceptors.Invoke(i => i.SetSession(session), _logger);
             }

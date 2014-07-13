@@ -11,5 +11,6 @@ namespace Orchard.Core.Navigation.ViewModels {
         public bool Breadcrumb { get; set; }
         public bool AddHomePage { get; set; }
         public bool AddCurrentPage { get; set; }
+        public bool ShowFullMenu { get; set; }
     }
 }

@@ -12,5 +12,9 @@ namespace Orchard.Tests.Stubs {
         public HttpContextBase Current() {
             return _httpContext;
         }
+
+        public void Set(HttpContextBase stub) {
+            _httpContext = stub;
+        }
     }
 }

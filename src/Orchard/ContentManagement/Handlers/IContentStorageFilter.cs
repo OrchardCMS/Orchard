@@ -2,6 +2,7 @@ namespace Orchard.ContentManagement.Handlers {
     public interface IContentStorageFilter : IContentFilter {
         void Activated(ActivatedContentContext context);
         void Initializing(InitializingContentContext context);
+        void Initialized(InitializingContentContext context);
         void Creating(CreateContentContext context);
         void Created(CreateContentContext context);
         void Loading(LoadContentContext context);

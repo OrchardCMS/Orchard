@@ -4,7 +4,7 @@ using Orchard.MediaLibrary.Models;
 namespace Orchard.MediaLibrary.Factories {
 
     public interface IMediaFactory {
-        MediaPart CreateMedia(Stream stream, string path, string mimeType);
+        MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType);
     }
 
     public class NullMediaFactory : IMediaFactory {
@@ -12,7 +12,7 @@ namespace Orchard.MediaLibrary.Factories {
             get { return new NullMediaFactory(); }
         }
 
-        public MediaPart CreateMedia(Stream stream, string path, string mimeType) {
+        public MediaPart CreateMedia(Stream stream, string path, string mimeType, string contentType) {
             return null;
         }
     }

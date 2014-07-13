@@ -1,4 +1,6 @@
-﻿using Orchard.Environment.Extensions.Models;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Modules.Models {
     /// <summary>
@@ -29,5 +31,10 @@ namespace Orchard.Modules.Models {
         /// Boolean value indicating if the feature was recently installed.
         /// </summary>
         public bool IsRecentlyInstalled { get; set; }
+
+        /// <summary>
+        /// List of features that depend on this feature.
+        /// </summary>
+        public IEnumerable<FeatureDescriptor> DependentFeatures { get; set; }
     }
 }

@@ -3,26 +3,31 @@ using System.Text;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
+using System.Configuration;
 
 namespace Orchard.Email.Handlers {
     [UsedImplicitly]
     public class SmtpSettingsPartHandler : ContentHandler {
         private readonly IEncryptionService _encryptionService;
 
-        public SmtpSettingsPartHandler(IRepository<SmtpSettingsPartRecord> repository, IEncryptionService encryptionService) {
+        public SmtpSettingsPartHandler(IEncryptionService encryptionService) {
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
 
             _encryptionService = encryptionService;
             Filters.Add(new ActivatingFilter<SmtpSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
 
             OnLoaded<SmtpSettingsPart>(LazyLoadHandlers);
+
+            OnInitializing<SmtpSettingsPart>((context, part) => {
+                part.Port = 25;
+                part.RequireCredentials = false;
+                part.EnableSsl = false;
+            });
         }
 
         public new ILogger Logger { get; set; }
@@ -30,7 +35,8 @@ namespace Orchard.Email.Handlers {
         void LazyLoadHandlers(LoadContentContext context, SmtpSettingsPart part) {
             part.PasswordField.Getter(() => {
                 try {
-                    return String.IsNullOrWhiteSpace(part.Record.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Record.Password)));
+                    var encryptedPassword = part.Retrieve(x => x.Password);
+                    return String.IsNullOrWhiteSpace(encryptedPassword) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(encryptedPassword)));
                 }
                 catch {
                     Logger.Error("The email password could not be decrypted. It might be corrupted, try to reset it.");
@@ -38,7 +44,12 @@ namespace Orchard.Email.Handlers {
                 }
             });
 
-            part.PasswordField.Setter(value => part.Record.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value))));
+            part.PasswordField.Setter(value => {
+                var encryptedPassword = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value)));
+                part.Store(x => x.Password, encryptedPassword);
+            });
+
+            part.AddressPlaceholderField.Loader(value => (string)((dynamic)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
         }
 
         public Localizer T { get; set; }

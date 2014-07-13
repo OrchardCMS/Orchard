@@ -11,8 +11,8 @@ namespace Orchard.Widgets.Models {
         /// The widget's title.
         /// </summary>
         public string Title {
-            get { return Record.Title; }
-            set { Record.Title = value; }
+            get { return Retrieve(x => x.Title); }
+            set { Store(x => x.Title, value); }
         }
 
         /// <summary>
@@ -20,16 +20,16 @@ namespace Orchard.Widgets.Models {
         /// </summary>
         [Required]
         public string Zone {
-            get { return Record.Zone; }
-            set { Record.Zone = value; }
+            get { return Retrieve(x => x.Zone); }
+            set { Store(x => x.Zone, value); }
         }
 
         /// <summary>
         /// Whether or not the Title should be rendered on the front-end
         /// </summary>
         public bool RenderTitle {
-            get { return Record.RenderTitle; }
-            set { Record.RenderTitle = value; }
+            get { return Retrieve(x => x.RenderTitle); }
+            set { Store(x => x.RenderTitle, value); }
         }
 
         /// <summary>
@@ -38,16 +38,16 @@ namespace Orchard.Widgets.Models {
         [Required]
         public string Position
         {
-            get { return Record.Position; }
-            set { Record.Position = value; }
+            get { return Retrieve(x => x.Position); }
+            set { Store(x => x.Position, value); }
         }
 
         /// <summary>
         /// The technical name of the widget.
         /// </summary>
         public string Name {
-            get { return Record.Name; }
-            set { Record.Name = value; }
+            get { return Retrieve(x => x.Name); }
+            set { Store(x => x.Name, value); }
         }
 
         /// <summary>

@@ -6,31 +6,40 @@ using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
-using System.Globalization;
+using Orchard.Localization.Services;
 
 namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
         private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
-        private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly IDateServices _dateServices;
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
-            IArchiveLaterService archiveLaterService) {
+            IArchiveLaterService archiveLaterService,
+            IDateServices dateServices) {
             _archiveLaterService = archiveLaterService;
+            _dateServices = dateServices;
             T = NullLocalizer.Instance;
             Services = services;
-
-            // initializing the culture info lazy initializer
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
-
         }
 
-        public Localizer T { get; set; }
-        public IOrchardServices Services { get; set; }
+        public Localizer T {
+            get;
+            set;
+        }
+        public IOrchardServices Services {
+            get;
+            set;
+        }
 
-        protected override string Prefix { get { return "ArchiveLater"; } }
+        protected override string Prefix {
+            get {
+                return "ArchiveLater";
+            }
+        }
 
         protected override DriverResult Display(ArchiveLaterPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_ArchiveLater_Metadata_SummaryAdmin",
@@ -42,13 +51,14 @@ namespace Orchard.ArchiveLater.Drivers {
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
-            var localDate = new Lazy<DateTime>(() => TimeZoneInfo.ConvertTimeFromUtc(part.ScheduledArchiveUtc.Value.Value, Services.WorkContext.CurrentTimeZone));
-
             var model = new ArchiveLaterViewModel(part) {
-                ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value,
                 ArchiveLater = part.ScheduledArchiveUtc.Value.HasValue,
-                ScheduledArchiveDate = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString("d", _cultureInfo.Value) : String.Empty,
-                ScheduledArchiveTime = part.ScheduledArchiveUtc.Value.HasValue ? localDate.Value.ToString("t", _cultureInfo.Value) : String.Empty
+                Editor = new DateTimeEditor() {
+                    ShowDate = true,
+                    ShowTime = true,
+                    Date = _dateServices.ConvertToLocalDateString(part.ScheduledArchiveUtc.Value, ""),
+                    Time = _dateServices.ConvertToLocalTimeString(part.ScheduledArchiveUtc.Value, ""),
+                }
             };
 
             return ContentShape("Parts_ArchiveLater_Edit",
@@ -58,21 +68,14 @@ namespace Orchard.ArchiveLater.Drivers {
         protected override DriverResult Editor(ArchiveLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new ArchiveLaterViewModel(part);
 
-            if (updater.TryUpdateModel(model, Prefix, null, null) ) {
-                if ( model.ArchiveLater ) {
-                    DateTime scheduled;
-                    var parseDateTime = String.Concat(model.ScheduledArchiveDate, " ", model.ScheduledArchiveTime);
-
-                    // use an english culture as it is the one used by jQuery.datepicker by default
-                    if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
-                        // the date time is entered locally for the configured timezone
-                        var timeZone = Services.WorkContext.CurrentTimeZone;
-
-                        model.ScheduledArchiveUtc = TimeZoneInfo.ConvertTimeToUtc(scheduled, timeZone);
-                        _archiveLaterService.ArchiveLater(model.ContentItem, model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value : DateTime.MaxValue);
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                if (model.ArchiveLater) {
+                    try {
+                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        _archiveLaterService.ArchiveLater(model.ContentItem, utcDateTime.HasValue ? utcDateTime.Value : DateTime.MaxValue);
                     }
-                    else {
-                        updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                    catch (FormatException) {
+                        updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                        
                     }
                 }
                 else {

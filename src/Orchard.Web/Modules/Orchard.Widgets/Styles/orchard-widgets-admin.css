@@ -132,6 +132,10 @@ position:absolute;
 top:1px;
 width:20px;
 }
+.widgets-listed .widgets-zone-widgets h3, 
+.widgets-listed .widgets-zone-widgets .contentType {
+display: inline;
+}
 .widgets-listed .widgets-move {
 background:url(images/arrows.png) 7px -31px no-repeat;
 border:0;

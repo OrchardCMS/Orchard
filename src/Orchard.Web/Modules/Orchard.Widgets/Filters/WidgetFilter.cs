@@ -53,13 +53,13 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart, LayerPartRecord>().List();
+            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
                 // ignore the rule if it fails to execute
                 try {
-                    if (_ruleManager.Matches(activeLayer.Record.LayerRule)) {
+                    if (_ruleManager.Matches(activeLayer.LayerRule)) {
                         activeLayerIds.Add(activeLayer.ContentItem.Id);
                     }
                 }
@@ -103,7 +103,7 @@ namespace Orchard.Widgets.Filters {
                 }
 
                 var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
-                zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
+                zones[widgetPart.Zone].Add(widgetShape, widgetPart.Position);
             }
         }
 

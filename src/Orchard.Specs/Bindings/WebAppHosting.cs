@@ -9,7 +9,6 @@ using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
 using Path = Bleroy.FluentPath.Path;

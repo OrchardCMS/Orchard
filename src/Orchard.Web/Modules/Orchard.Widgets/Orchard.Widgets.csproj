@@ -112,7 +112,6 @@
     <Content Include="Styles\images\widget-zones.gif" />
     <Content Include="Styles\menu.widgets-admin.css" />
     <Content Include="Styles\orchard-widgets-admin.css" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">

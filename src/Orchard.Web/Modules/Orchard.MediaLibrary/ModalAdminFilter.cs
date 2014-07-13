@@ -15,7 +15,7 @@ namespace Orchard.MediaLibrary {
             if (!(filterContext.Result is ViewResult) || !UI.Admin.AdminFilter.IsApplied(filterContext.RequestContext))
                 return;
             _resourceManager.Include("stylesheet", "~/Modules/Orchard.MediaLibrary/Styles/dialog-mode.css", null);
-            _resourceManager.Include("script", "~/Modules/Orchard.MediaLibrary/Scripts/modal-window.js", null);
+            _resourceManager.Include("script", "~/Modules/Orchard.MediaLibrary/Scripts/modal-window.js", null).AtFoot();
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

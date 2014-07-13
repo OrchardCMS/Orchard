@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.ApplicationServer.Caching;
 using NHibernate.Cache;
-using System;
+using Orchard.Azure.Services.Environment.Configuration;
 
 namespace Orchard.Azure.Services.Caching.Database {
 
     public class AzureCacheProvider : ICacheProvider {
 
         private DataCache _dataCache;
+        private DataCacheFactory _dataCacheFactory;
 
         public ICache BuildCache(string regionName, IDictionary<string, string> properties) {
             
@@ -39,7 +41,8 @@ namespace Orchard.Azure.Services.Caching.Database {
                 if (properties.TryGetValue("compression_enabled", out enableCompressionString))
                     enableCompression = Boolean.Parse(enableCompressionString);
 
-                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenantName, Constants.DatabaseCacheSettingNamePrefix);
+                var pca = new DefaultPlatformConfigurationAccessor();
+                configuration = CacheClientConfiguration.FromPlatformConfiguration(tenantName, Constants.DatabaseCacheSettingNamePrefix, pca);
                 configuration.CompressionIsEnabled = enableCompression;
                 configuration.Validate();
             }
@@ -47,11 +50,13 @@ namespace Orchard.Azure.Services.Caching.Database {
                 throw new Exception(String.Format("The {0} configuration settings are missing or invalid.", Constants.DatabaseCacheFeatureName), ex);
             }
 
-            _dataCache = configuration.CreateCache();
+            _dataCacheFactory = configuration.CreateCache();
+            _dataCache = _dataCacheFactory.GetDefaultCache();
         }
 
         public void Stop() {
             _dataCache = null;
+            _dataCacheFactory.Dispose();
         }
     }
 }

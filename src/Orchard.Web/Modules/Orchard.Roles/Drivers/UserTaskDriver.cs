@@ -3,16 +3,18 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Mvc;
+using Orchard.Roles.Activities;
 using Orchard.Security;
 using Orchard.UI.Notify;
-using Orchard.Workflows.Activities;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Roles.Drivers {
+    [OrchardFeature("Orchard.Roles.Workflows")]
     public class UserTaskDriver : ContentPartDriver<ContentPart> {
         private readonly IWorkflowManager _workflowManager;
         private readonly IRepository<AwaitingActivityRecord> _awaitingActivityRepository;

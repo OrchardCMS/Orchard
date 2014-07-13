@@ -1,0 +1,19 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Media.AssetViewModel
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, T("Name"))
+        @Html.TextBoxFor(m => m.Name, new { @class = "text large" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, T("Description"))
+        @Html.TextAreaFor(m => m.Description, new { @class = "text large" })
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.IncludeInPlayer)
+        @Html.LabelFor(m => m.IncludeInPlayer, T("Include In Player").ToString(), new { @class = "forcheckbox" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MediaQuery, T("Media Query"))
+        @Html.TextBoxFor(m => m.MediaQuery, new { @class = "text large" })
+    </div>
+</fieldset>

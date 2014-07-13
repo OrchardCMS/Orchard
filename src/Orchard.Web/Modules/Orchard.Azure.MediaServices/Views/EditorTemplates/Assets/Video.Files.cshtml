@@ -1,0 +1,72 @@
+﻿@using Orchard.Azure.MediaServices.Helpers
+@model Orchard.Azure.MediaServices.Models.Assets.VideoAsset
+@{
+    Style.Include("Lib/JsTree/themes/default/style.css", "Lib/JsTree/themes/default/style.min.css");
+    Script.Require("jQuery");
+    Script.Include("lib/jstree.js", "lib/jstree.min.js");
+    Script.Include("cloudmedia-edit-asset-video.js");
+}
+@if (Model.EncoderMetadata != null && Model.EncoderMetadata.AssetFiles.Any()) {
+    <fieldset>
+        <legend>
+            <span class="legend">@T("Asset Files")</span>
+            <a class="expand-all" href="#">@T("Expand All")</a><span>@T(" | ")</span>
+            <a class="collapse-all" href="#">@T("Collapse All")</a>
+        </legend>
+
+        <div id="asset-files-treeview">
+            <ul>
+                @foreach (var assetFile in Model.EncoderMetadata.AssetFiles) {
+                    <li data-jstree='{"icon": "asset"}'>
+                        @assetFile.Name
+                        <ul>
+                            <li data-jstree='{"icon":"mimetype"}'>@T("Mime Type: {0}", assetFile.MimeType)</li>
+                            <li data-jstree='{"icon":"property"}'>@T("<a href=\"{0}\">Public Url</a>", assetFile.PublicUrl)</li>
+                            <li data-jstree='{"icon":"property"}'>@T("<a href=\"{0}\">Private Url</a>", assetFile.PrivateUrl)</li>
+                            <li data-jstree='{"icon":"property"}'>@T(String.Format(new FileSizeFormatProvider(), "Size: {0:fs}", assetFile.Size))</li>
+                            <li data-jstree='{"icon":"duration"}'>@T("Duration: {0}", assetFile.Duration.ToString(@"hh\:mm\:ss"))</li>
+                            <li data-jstree='{"icon":"tracks"}'>
+                                @T("Video Tracks")
+                                <ul>
+                                    @foreach (var track in assetFile.VideoTracks) {
+                                        <li data-jstree='{"icon":"videotrack"}'>
+                                            @T("Track {0}", track.Index)
+                                            <ul>
+                                                <li data-jstree='{"icon":"property"}'>@T("Bitrate: {0} kbps", track.Bitrate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Target Bitrate: {0} kbps", track.TargetBitrate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Framerate: {0}", track.Framerate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Target Framerate: {0}", track.TargetFramerate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Width: {0}px", track.Width)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Height: {0}px", track.Height)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Display Aspect Ratio: {0}x{1}", Math.Round(track.DisplayAspectRatioX, 2), Math.Round(track.DisplayAspectRatioY, 2))</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("FourCC: {0}", track.FourCc)</li>
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                            <li data-jstree='{"icon":"tracks"}'>
+                                @T("Audio Tracks")
+                                <ul>
+                                    @foreach (var track in assetFile.AudioTracks) {
+                                        <li data-jstree='{"icon":"audiotrack"}'>
+                                            @T("Track {0}", track.Index)
+                                            <ul>
+                                                <li data-jstree='{"icon":"property"}'>@T("Bitrate: {0} kbps", track.Bitrate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Codec: {0}", track.Codec)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Bits Per Sample: {0}", track.BitsPerSample)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Sampling Rate: {0}", track.SamplingRate)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Channels: {0}", track.Channels)</li>
+                                                <li data-jstree='{"icon":"property"}'>@T("Encoder Version: {0}", track.EncoderVersion)</li>
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </fieldset>
+}

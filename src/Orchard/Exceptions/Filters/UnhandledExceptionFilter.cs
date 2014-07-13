@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
+using System.Web.Http.Description;
 using System.Web.Mvc;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -10,7 +10,7 @@ using Orchard.Mvc.Filters;
 using IFilterProvider = Orchard.Mvc.Filters.IFilterProvider;
 
 namespace Orchard.Exceptions.Filters {
-    public class UnhandledExceptionFilter : FilterProvider, IActionFilter {
+    public class UnhandledExceptionFilter : FilterProvider, IActionFilter, IResultFilter {
         private readonly IExceptionPolicy _exceptionPolicy;
         private readonly IOrchardServices _orchardServices;
         private readonly Lazy<IEnumerable<IFilterProvider>> _filterProviders;
@@ -31,25 +31,17 @@ namespace Orchard.Exceptions.Filters {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
+            // for exceptions which occured during the action execution
 
             // don't provide custom errors if the action has some custom code to handle exceptions
-            if(!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any()) {
+            if (!filterContext.ActionDescriptor.GetCustomAttributes(typeof(HandleErrorAttribute), false).Any()) {
                 if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
                     if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
-                        var shape = _orchardServices.New.ErrorPage();
-                        shape.Message = filterContext.Exception.Message;
-                        shape.Exception = filterContext.Exception;
-
                         filterContext.ExceptionHandled = true;
 
                         // inform exception filters of the exception that was suppressed
-                        var filterInfo = new FilterInfo();
-                        foreach (var filterProvider in _filterProviders.Value) {
-                            filterProvider.AddFilters(filterInfo);
-                        }
-
                         var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
-                        foreach (var exceptionFilter in filterInfo.ExceptionFilters) {
+                        foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>()) {
                             exceptionFilter.OnException(exceptionContext);
                         }
 
@@ -57,6 +49,10 @@ namespace Orchard.Exceptions.Filters {
                             filterContext.Result = exceptionContext.Result;
                         }
                         else {
+                            var shape = _orchardServices.New.ErrorPage();
+                            shape.Message = filterContext.Exception.Message;
+                            shape.Exception = filterContext.Exception;
+
                             filterContext.Result = new ShapeResult(filterContext.Controller, shape);
                             filterContext.RequestContext.HttpContext.Response.StatusCode = 500;
 
@@ -79,14 +75,34 @@ namespace Orchard.Exceptions.Filters {
                 // Dont get the user stuck in a 'retry loop' by
                 // allowing the Referrer to be the same as the Request
                 model.ReferrerUrl = request.UrlReferrer != null &&
-                    request.UrlReferrer.OriginalString != model.RequestedUrl ?
+                                    request.UrlReferrer.OriginalString != model.RequestedUrl ?
                     request.UrlReferrer.OriginalString : null;
 
                 filterContext.Result = new ShapeResult(filterContext.Controller, model);
                 filterContext.RequestContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                filterContext.ExceptionHandled = true;
 
                 // prevent IIS 7.0 classic mode from handling the 404/500 itself
                 filterContext.RequestContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            }
+        }
+
+        public void OnResultExecuting(ResultExecutingContext filterContext) {
+            
+        }
+
+        public void OnResultExecuted(ResultExecutedContext filterContext) {
+            // for exceptions which occured during the action execution
+
+            // don't provide custom errors if the action has some custom code to handle exceptions
+            if (!filterContext.ExceptionHandled && filterContext.Exception != null) {
+                if (_exceptionPolicy.HandleException(this, filterContext.Exception)) {
+                    // inform exception filters of the exception that was suppressed
+                    var exceptionContext = new ExceptionContext(filterContext.Controller.ControllerContext, filterContext.Exception);
+                    foreach (var exceptionFilter in _filterProviders.Value.OfType<IExceptionFilter>()) {
+                        exceptionFilter.OnException(exceptionContext);
+                    }
+                }
             }
         }
     }

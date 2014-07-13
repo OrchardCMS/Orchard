@@ -20,7 +20,7 @@ namespace Orchard.Time {
         public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
             
             try {
-                var siteTimeZoneId = _workContextAccessor.GetContext(context).CurrentSite.SiteTimeZone;
+                var siteTimeZoneId = _workContextAccessor.GetContext().CurrentSite.SiteTimeZone;
 
                 if (String.IsNullOrEmpty(siteTimeZoneId)) {
                     return null;

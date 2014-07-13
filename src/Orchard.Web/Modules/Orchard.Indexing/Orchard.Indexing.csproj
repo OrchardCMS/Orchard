@@ -104,9 +104,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\DefinitionTemplates\FieldIndexing.cshtml" />
     <Content Include="Views\DefinitionTemplates\TypeIndexing.cshtml" />

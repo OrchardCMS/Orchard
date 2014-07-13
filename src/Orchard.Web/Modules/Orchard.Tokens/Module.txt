@@ -2,11 +2,21 @@ Name: Tokens
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardtokens.codeplex.com
-Version: 1.7.1
-OrchardVersion: 1.7.1
+Version: 1.8.1
+OrchardVersion: 1.8
 Description: Provides a system for performing string replacements with common site values.
 Features:
-    Orchard.Tokens:
-        Name: Tokens
-        Description: Provides a system for performing string replacements with common site values.
+	Orchard.Tokens:
+		Name: Tokens
+		Description: Provides a system for performing string replacements with common site values.
 		Category: Content
+	Orchard.Tokens.Feeds:
+		Name: Feeds Tokens 
+		Description: Provides a content part to customize RSS fields based on tokens.
+		Category: Content
+		Dependencies: Orchard.Tokens, Feeds
+	Orchard.Tokens.HtmlFilter:
+		Name: Tokens Html Filter
+		Description: Evaluates tokens in a body.
+		Category: Content
+		Dependencies: Orchard.Tokens

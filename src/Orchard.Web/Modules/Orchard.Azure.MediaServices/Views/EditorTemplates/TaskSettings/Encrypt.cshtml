@@ -1,0 +1,48 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Tasks.EncryptViewModel
+<fieldset>
+    <div class="form-requiredUploads">
+        @Html.CheckBoxFor(m => m.AdjustSubSamples)
+        @Html.LabelFor(m => m.AdjustSubSamples, T("Adjust Sub Samples").ToString(), new { @class = "forcheckbox" })
+        <span class="hint">@T("When encrypting subsamples on H.264 tracks, adjusts the clear space at the beginning of each subsample so that a whole number of encryption blocks is used. This leaves slightly more of the sample data unencrypted but maximizes player compatibility.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.ContentKey, T("Content Key"))
+        @Html.TextBoxFor(m => m.ContentKey, new { @class = "text large" })
+        <span class="hint">@T("A base64-encoded 16-byte value, which is produced by the key seed in conjunction with the key ID and is used to encrypt content. You must enter a content key value if no key seed value is specified.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.CustomAttributes, T("Custom Attributes"))
+        @Html.TextBoxFor(m => m.CustomAttributes, new { @class = "text large" })
+        <span class="hint">@T("A comma-delimited list of name:value pairs (in the form name1:value1,name2:value2,name3:value3) to be included in the CUSTOMATTRIBUTES section of the WRM header. The WRM header is XML metadata added to encrypted content and included in the client manifest. It is also included in license challenges made to license servers.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.DataFormats, T("Data Formats"))
+        @Html.TextBoxFor(m => m.DataFormats, new { @class = "text large" })
+        <span class="hint">@T("A comma-delimited list of four-character codes (FourCCs) that specify the data formats to be encrypted. If no value is specified, all data formats are encrypted.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.KeyId, T("Key ID"))
+        @Html.TextBoxFor(m => m.KeyId, new { @class = "text large" })
+        <span class="hint">@T("A globally unique identifier (GUID) that uniquely identifies content for the purposes of licensing. Each presentation should use a unique value. If no value is specified, a random value is used.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.KeySeedValue, T("Key Seed Value"))
+        @Html.TextBoxFor(m => m.KeySeedValue, new { @class = "text large" })
+        <span class="hint">@T("A base64-encoded 30-byte value, which is used in conjunction with the key ID to create the content key. Typically, one key seed is used with many key IDs to protect multiple files or sets of files; for example, all files issued by a license server or perhaps all files by a particular artist. Key seeds are stored on license servers.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.LicenseAcquisitionUrl, T("License Acquisition URL"))
+        @Html.TextBoxFor(m => m.LicenseAcquisitionUrl, new { @class = "text large" })
+        <span class="hint">@T("The Web page address on a license server from which clients can obtain a license to play the encrypted content.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.CheckBoxFor(m => m.UseSencBox)
+        @Html.LabelFor(m => m.UseSencBox, T("Use Senc Box").ToString(), new { @class = "forcheckbox" })
+        <span class="hint">@T("Use a 'senc' box to hold encryption metadata instead of a Protected Interoperable File Format (PIFF) 1.1 'uuid' box.")</span>
+    </div>
+    <div class="form-requiredUploads">
+        @Html.LabelFor(m => m.ServiceId, T("Service ID"))
+        @Html.TextBoxFor(m => m.ServiceId, new { @class = "text large" })
+        <span class="hint">@T("The service ID to include in the PlayReady header that is added to each file and in the client manifest (.ismc). This value must be a globally unique identifier (GUID) in Little Endian string form (like this 237A4EB1-9D01-4F4A-A2D2-79E51468014D).")</span>
+    </div>
+</fieldset>

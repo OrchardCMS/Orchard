@@ -31,11 +31,8 @@ namespace Orchard.Packaging.Controllers {
             ShellSettings shellSettings,
             IOrchardServices services,
             IPackagingSourceManager packagingSourceManager,
-            INotifier notifier,
             IPackageUpdateService packageUpdateService,
             IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus,
-            IReportsCoordinator reportsCoordinator,
-            IReportsManager reportsManager,
             IShapeFactory shapeFactory) {
 
             _shellSettings = shellSettings;
@@ -45,7 +42,6 @@ namespace Orchard.Packaging.Controllers {
 
             Services = services;
             Shape = shapeFactory;
-            PackageUpdateService = packageUpdateService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -55,7 +51,6 @@ namespace Orchard.Packaging.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         public dynamic Shape { get; set; }
-        public IPackageUpdateService PackageUpdateService { get; set; }
 
         public ActionResult ThemesUpdates(int? reportId, PagerParameters pagerParameters) {
             return PackageUpdate("ThemesUpdates", DefaultExtensionTypes.Theme, reportId, pagerParameters);

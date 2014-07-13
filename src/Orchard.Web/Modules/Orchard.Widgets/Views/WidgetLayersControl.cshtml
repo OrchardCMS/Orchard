@@ -2,7 +2,7 @@
 @using Orchard.Widgets.Models;
 @{
     Style.Require("WidgetsAdmin");
-    Script.Require("Switchable");
+    Script.Require("Switchable").AtFoot();
     Style.Require("Switchable");
     IEnumerable<LayerPart> layers = Model.Layers;
     var returnUrl = Request.RawUrl;

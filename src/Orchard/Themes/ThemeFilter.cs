@@ -32,7 +32,11 @@ namespace Orchard.Themes {
 
         public static void Apply(RequestContext context) {
             // the value isn't important
-            context.HttpContext.Items[typeof (ThemeFilter)] = null;
+            context.HttpContext.Items[typeof(ThemeFilter)] = null;
+        }
+
+        public static void Disable(RequestContext context) {
+            context.HttpContext.Items.Remove(typeof(ThemeFilter));
         }
 
         public static bool IsApplied(RequestContext context) {

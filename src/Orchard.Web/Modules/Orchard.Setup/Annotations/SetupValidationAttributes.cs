@@ -44,7 +44,7 @@ namespace Orchard.Setup.Annotations {
                 return T("User name is required.").Text;
 
             return _value.Length < (int)Minimum
-                ? T("User name must be longer than {0} characters.", Minimum).Text
+                ? T("User name must be at least {0} characters.", Minimum).Text
                 : T("User name can be no longer than {0} characters.", Maximum).Text;
         }
     }
@@ -69,7 +69,7 @@ namespace Orchard.Setup.Annotations {
                 return T("Password is required.").Text;
 
             return _value.Length < (int)Minimum
-                ? T("Password must be longer than {0} characters.", Minimum).Text
+                ? T("Password must be at least {0} characters.", Minimum).Text
                 : T("Password can be no longer than {0} characters.", Maximum).Text;
         }
     }

@@ -10,6 +10,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Packaging.Services;
+using Orchard.Services;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using IPackageBuilder = Orchard.Packaging.Services.IPackageBuilder;
@@ -39,6 +40,7 @@ namespace Orchard.Tests.Modules.Packaging.Services {
             builder.RegisterType<DefaultOrchardFrameworkAssemblies>().As<IOrchardFrameworkAssemblies>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();
+            builder.RegisterType<StubClock>().As<IClock>();
         }
 
         [SetUp]

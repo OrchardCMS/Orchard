@@ -1,39 +1,56 @@
 ﻿@model Orchard.Core.Containers.ViewModels.ContainerViewModel
-@using Orchard.Core.Containers.Models;
-<fieldset class="with-checkbox">
+@{
+    Script.Require("ShapesBase");
+}
+<fieldset>
     <span class="checkbox-and-label">
-        @Html.CheckBoxFor(m => m.Part.ItemsShown)
-        <label for="@Html.FieldIdFor(m => m.Part.ItemsShown)" class="forcheckbox">@T("Show contained items list")</label>
+        @Html.EditorFor(m => m.ItemsShown)
+        <label for="@Html.FieldIdFor(m => m.ItemsShown)" class="forcheckbox">@T("Show contained items list")</label>
+        <span class="hint">@T("Renders the contained items when this list is displayed.")</span>
     </span>
 </fieldset>
-<fieldset>
-	@Html.LabelFor(m => m.Part.ItemContentType, T("Contains"))
-	@Html.DropDownListFor(m => m.Part.ItemContentType, Model.AvailableContainables)
-	<span class="hint">@T("Only types with the Containable part can be contained in a list.")</span>
-</fieldset>
-<fieldset>
-    @Html.LabelFor(m => m.Part.OrderByProperty, T("Order by"))
-    <select id="@Html.FieldIdFor(m => m.Part.OrderByProperty)" name="@Html.FieldNameFor(m => m.Part.OrderByProperty)">
-        @Html.SelectOption(Model.Part.OrderByProperty, "ContainablePart.Weight", T("Weight").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "CommonPart.CreatedUtc", T("Date Created").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "TitlePart.Title", T("Title (Title Part)").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "CustomPropertiesPart.CustomOne", T("Custom 1").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "CustomPropertiesPart.CustomTwo", T("Custom 2").Text)
-        @Html.SelectOption(Model.Part.OrderByProperty, "CustomPropertiesPart.CustomThree", T("Custom 3").Text)
-    </select>
-    <select id="@Html.FieldIdFor(m => m.Part.OrderByDirection)" name="@Html.FieldNameFor(m => m.Part.OrderByDirection)">
-        @Html.SelectOption(Model.Part.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
-        @Html.SelectOption(Model.Part.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
-    </select>
-</fieldset>
+@if (Model.OverrideEnablePositioning) {
+    <fieldset>
+        <span class="checkbox-and-label">
+            @Html.EditorFor(m => m.EnablePositioning)
+            @Html.LabelFor(m => m.EnablePositioning, @T("Enable positoning").ToString(), new { @class = "forcheckbox" })
+            <span class="hint">@T("Check this option to enable manual repositioning of items.")</span>
+        </span>
+    </fieldset>
+}
+@if (Model.AvailableItemContentTypes.Any()) {
+    <fieldset>
+        @Html.LabelFor(m => m.SelectedItemContentTypes, T("Contains"))
+        <select name="@Html.FieldNameFor(m => m.SelectedItemContentTypes)" multiple="multiple" size="10" class="text-box">
+            @Html.SelectOption("", !Model.SelectedItemContentTypes.Any(), T("(Any)").ToString())
+            @foreach (var contentType in Model.AvailableItemContentTypes) {
+                @Html.SelectOption(contentType.Name, Model.SelectedItemContentTypes.Contains(contentType.Name), contentType.DisplayName)
+            }
+        </select>
+        <span class="hint">@T("Select zero or more content types. Selecting zero content types means the list can contain any content type. Only types with the Containable part can be contained in a list.")</span>
+    </fieldset>
+}
 <fieldset class="with-checkbox">
     <span>
-        @Html.LabelFor(m => m.Part.PageSize, T("Page size"))
-        @Html.TextBoxFor(m => m.Part.PageSize, new { @class = "text small" })
+        @Html.LabelFor(m => m.PageSize, T("Page size"))
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "text text-small" })
     </span>
     <span class="checkbox-and-label">
-        @Html.CheckBoxFor(m => m.Part.Paginated)
-        <label for="@Html.FieldIdFor(m => m.Part.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
+        @Html.CheckBoxFor(m => m.Paginated)
+        <label for="@Html.FieldIdFor(m => m.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
     </span>
+</fieldset>
+<fieldset>
+    @Html.EditorFor(m => m.ShowOnAdminMenu)
+    @Html.LabelFor(m => m.ShowOnAdminMenu, T("Show on admin menu").ToString(), new { @class = "forcheckbox" })
+    <div data-controllerid="@Html.FieldIdFor(m => m.ShowOnAdminMenu)">
+        @Html.LabelFor(m => m.AdminMenuText, T("Menu text"))
+        @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "text-box single-line" })
+
+        @Html.LabelFor(m => m.AdminMenuPosition, T("Position"))
+        @Html.TextBoxFor(m => m.AdminMenuPosition, new { @class = "text-box single-line" })
+        
+        @Html.LabelFor(m => m.AdminMenuImageSet, T("Image Set"))
+        @Html.TextBoxFor(m => m.AdminMenuImageSet, new { @class = "text-box single-line" })
+    </div>
 </fieldset>

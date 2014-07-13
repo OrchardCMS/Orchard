@@ -11,10 +11,10 @@ namespace Orchard.Indexing {
         ISearchBuilder WithField(string field, string value);
         ISearchBuilder WithField(string field, int value);
         ISearchBuilder WithField(string field, double value);
-        ISearchBuilder WithinRange(string field, int min, int max);
-        ISearchBuilder WithinRange(string field, double min, double max);
-        ISearchBuilder WithinRange(string field, DateTime min, DateTime max);
-        ISearchBuilder WithinRange(string field, string min, string max);
+        ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true);
+        ISearchBuilder WithinRange(string field, double? min, double? max, bool includeMin = true, bool includeMax = true);
+        ISearchBuilder WithinRange(string field, DateTime? min, DateTime? max, bool includeMin = true, bool includeMax = true);
+        ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true);
 
         /// <summary>
         /// Mark a clause as a mandatory match. By default all clauses are optional.

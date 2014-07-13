@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using FluentNHibernate;
 using FluentNHibernate.Automapping;
@@ -10,6 +9,7 @@ using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Diagnostics;
 using NHibernate;
+using NHibernate.Cfg;
 using NHibernate.Engine;
 using NHibernate.Event;
 using NHibernate.Event.Default;
@@ -42,14 +42,42 @@ namespace Orchard.Data.Providers {
 
             config = config.Database(database)
                            .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                           .ExposeConfiguration(cfg => {
+                           .ExposeConfiguration(cfg => { 
+                               cfg
+                                    .SetProperty(NHibernate.Cfg.Environment.FormatSql, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.GenerateStatistics, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.Hbm2ddlKeyWords, Hbm2DDLKeyWords.None.ToString())
+                                    .SetProperty(NHibernate.Cfg.Environment.PropertyBytecodeProvider, "lcg")
+                                    .SetProperty(NHibernate.Cfg.Environment.PropertyUseReflectionOptimizer, Boolean.TrueString)
+                                    .SetProperty(NHibernate.Cfg.Environment.QueryStartupChecking, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.ShowSql, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.StatementFetchSize, "100")
+                                    .SetProperty(NHibernate.Cfg.Environment.UseProxyValidator, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.UseSqlComments, Boolean.FalseString)
+                                    .SetProperty(NHibernate.Cfg.Environment.WrapResultSets, Boolean.TrueString)
+                                    .SetProperty(NHibernate.Cfg.Environment.BatchSize, "256")
+                                    ;
+
                                cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] {new OrchardLoadEventListener()};
+                               cfg.EventListeners.PostLoadEventListeners = new IPostLoadEventListener[0];
+                               cfg.EventListeners.PreLoadEventListeners = new IPreLoadEventListener[0];
+                               
+                               // don't enable PrepareSql by default as it breaks on SqlCe
+                               // this can be done per driver by overriding AlterConfiguration
+                               AlterConfiguration(cfg);
+
                                parameters.Configurers.Invoke(c => c.Building(cfg), Logger);
-                           });
+                               
+                           })
+                           ;
 
             parameters.Configurers.Invoke(c => c.Prepared(config), Logger);
 
             return config.BuildConfiguration();
+        }
+
+        protected virtual void AlterConfiguration(Configuration config) {
+            
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {

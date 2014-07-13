@@ -1,0 +1,13 @@
+﻿@using Orchard.ContentManagement
+@{
+    var content = ((IContent)Model.ContentItem);
+    var breadcrumbs = new List<dynamic>();
+    var containerAccessor = (Func<IContent, IContent>) Model.ContainerAccessor;
+    do {
+        var displayText = content.Id > 0 ? Html.ItemDisplayText(content).ToString() : T("New {0}", content.ContentItem.TypeDefinition.DisplayName).ToString();
+        var breadcrumb = New.BreadcrumbItem(Text: displayText, Url: Url.ItemAdminUrl(content));
+        breadcrumbs.Insert(0, breadcrumb);
+        content = containerAccessor(content);
+    } while (content != null);
+}
+@Display.Breadcrumbs(Items: breadcrumbs)

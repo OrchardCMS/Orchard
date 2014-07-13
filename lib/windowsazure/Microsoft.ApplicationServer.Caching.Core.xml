@@ -4,12 +4,14 @@
     <name>Microsoft.ApplicationServer.Caching.Core</name>
   </assembly>
   <members>
-    <member name="T:Microsoft.ApplicationServer.Caching.AddUserState"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.AddUserState.#ctor"></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.AddUserState"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.AddUserState.#ctor"><summary>Internal.</summary></member>
     <member name="P:Microsoft.ApplicationServer.Caching.AddUserState.NewLogOn">
+      <summary>Internal.</summary>
       <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.AddUserState.NewUser">
+      <summary>Internal.</summary>
       <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.BaseOperationNotification">
@@ -105,14 +107,14 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCacheAlreadyPresent">
       <summary>The named cache already exists in the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCacheConfigWriteError"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCacheConfigWriteError"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCacheCreationInconsistencyFailure">
       <summary>The named cache could not be created due to a detected inconsistency in the configuration store.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCacheNotPresent">
       <summary>The specified named cache does not exist in the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCancelShutdownError"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCancelShutdownError"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterDown">
       <summary>The cache cluster is not running.</summary>
     </member>
@@ -122,14 +124,14 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterRefreshFailed">
       <summary>The cache cluster experienced an error while attempting to refresh the list of cache hosts on all of the cache hosts.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterSettingsNotProvided"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterSettingsNotProvided"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterSettingsReadError">
       <summary>An error occurred attempting to read the configuration store provider name and connection string from the registry.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminClusterTimeout">
       <summary>A Cache Administration timeout occurred.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCommandNotAllowed"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminCommandNotAllowed"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminConfigAddHostError">
       <summary>An error occurred attempt to add a cache host to the cache cluster configuration store.</summary>
     </member>
@@ -145,52 +147,52 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminGrantClientAccountErrorFormat">
       <summary>An error occurred attempting to add an account to the allowed client accounts list.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostConfigWriteError"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostConfigWriteError"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostNameResolveFailure">
       <summary>The name 'localhost' is unable to be resolved to the current host name.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostNotPresent">
       <summary>The specified cache host is not part of the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostNotReachable"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostNotReachable"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostNotRunning">
       <summary>The specified cache host is not currently running.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostOperationError"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostOperationError"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostRefreshFailed">
       <summary>The cache cluster experienced an error while attempting to refresh the list of cache hosts on each of the specified cache host.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostRunning">
       <summary>The specified cache host is already in the running state.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostsNotReachable"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostsNotReachable"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostsNotRunning">
       <summary>No cache hosts are running in the cache cluster.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminHostsRunning">
       <summary>One or more cache hosts are running in the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminIncompatibleExpirationParameters"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminIncompleteParameters"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminIncompatibleExpirationParameters"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminIncompleteParameters"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInstallPathReadError">
       <summary>An error occurred reading the installation path from the registry.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidCacheName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidCacheName"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidClusterSettings">
       <summary>The specified provider string or connection string is invalid. </summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidOperation">
       <summary>The specified operation is invalid.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidParameters"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidParametersForHost"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidParameters"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidParametersForHost"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminInvalidSecuritySettings">
       <summary>The specified security settings are invalid.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminMaxCachesCreated">
       <summary>The specified named cache cannot be created, because the cache cluster has reached the maximum number of named caches.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminMinSecondariesOutOfBounds"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminMinSecondariesOutOfBounds"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNoHosts">
       <summary>There are no cache hosts in the cache cluster.</summary>
     </member>
@@ -200,17 +202,17 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNoSeedNodes">
       <summary>There are no seed nodes present in the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNoValuesProvided"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNoValuesProvided"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNullArgs">
       <summary>A required argument is null.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNullProviderSettingsKey"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminOperationError"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminOperationNotSupported"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminNullProviderSettingsKey"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminOperationError"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminOperationNotSupported"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminPortsDuplicated">
       <summary>One or more port numbers have duplicate values.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminProviderTypeUnspecified"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminProviderTypeUnspecified"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminQuorumNotUp">
       <summary>The required quorum of hosts is not running.</summary>
     </member>
@@ -226,9 +228,9 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminRevokeClientAccountErrorFormat">
       <summary>An error occurred attempting to remove an account from the list of allowed client accounts.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownInProgress"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownNotInProgress"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownNotPossible"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownInProgress"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownNotInProgress"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminShutdownNotPossible"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheAdminStatsIncorrect">
       <summary>The returned status information might be incorrect, because one or more cache hosts could not be reached.</summary>
     </member>
@@ -256,11 +258,8 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheItemVersionMismatch">
       <summary>The object in the cache does not match with the specified version.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheRedirected"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CcrUnhandledException"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ChannelAuthenticationFailed">
-      <summary>Unable to establish an SSL channel.</summary>
-    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CacheRedirected"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.CcrUnhandledException"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ClientServerVersionMismatch">
       <summary>The cache client assemblies are a different version than the cache host assemblies.</summary>
     </member>
@@ -285,23 +284,23 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ConnectionTerminated">
       <summary>The connection was terminated. This could be caused by server or network problems.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ConvertSimpleClient"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.DomainBlockedAccount"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.DuplicateServersSpecified"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ConvertSimpleClient"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.DomainBlockedAccount"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.DuplicateServersSpecified"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.GetComputerDomainError">
       <summary>An error occurred while attempting to get the computer domain.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.HostAdditionFailureError">
       <summary>An error occurred while attempting to add a cache host to the cache cluster.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.HostAlreadyPresent"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.HostAlreadyPresent"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.HostDeletionFailureError">
       <summary>An error occurred while attempting to remove a host from the cache cluster.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.HostEntryNotFound">
       <summary>The specified cache host entry was not found in the cache cluster configuration.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.IncompatibleExpirationParameters"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.IncompatibleExpirationParameters"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.IncompleteConnectionParameters">
       <summary>The specified connection parameters are incomplete.</summary>
     </member>
@@ -310,9 +309,6 @@
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.InvalidArgument">
       <summary>The argument is not valid.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.InvalidAutoDiscoverIdentifier">
-      <summary>AutoDiscover property is not valid.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.InvalidCacheLockHandle">
       <summary>The specified lock handle is not valid.</summary>
@@ -330,7 +326,7 @@
       <summary>The named cache count exceeded the maximum value.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.MessageLargerThanConfiguredSize">
-      <summary>The request failed because either the response or the request message was larger than configured message size in the transport properties.</summary>
+      <summary>The request failed because either the response or the request message was larger than the configured message size in the transport properties.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.NamedCacheDoesNotExist">
       <summary>The named cache does not exist.</summary>
@@ -362,8 +358,8 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ObjectNotLocked">
       <summary>The object is not locked.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.OffloadingWithXml"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.OperationNotSupported"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.OffloadingWithXml"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.OperationNotSupported"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.PermissionsError">
       <summary>An error occurred while setting permissions on the cache cluster configuration.</summary>
     </member>
@@ -373,10 +369,10 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.PortDuplicationError">
       <summary>One or more ports have duplicate values.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderDidNotReturnResult"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderFailure"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderNotFound"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughRegionDoesNotExist"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderDidNotReturnResult"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderFailure"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughProviderNotFound"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.ReadThroughRegionDoesNotExist"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.RegionAlreadyExists">
       <summary>The region already exists.</summary>
     </member>
@@ -413,7 +409,7 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.SqlAuthenticationNotSupported">
       <summary>SQL Server authentication is not permitted with the SQL Server provider for the cache cluster configuration store. Windows authentication must be used.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.StringTooLarge"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.StringTooLarge"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.TestConnectionFailed">
       <summary>The test connection failed.</summary>
     </member>
@@ -423,19 +419,15 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.UndefinedError">
       <summary>An unknown error has occurred.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.UnsupportedOperationAttemptedOnPort">
-      <summary>The current operation is not supported on this port.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.UsageResourceNotFound"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorCode.UsageResourceNotFound"><summary>Internal.</summary></member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus">
       <summary>Used to retrieve substatus codes for errors returned to the client.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus.CacheServerUnavailable">
       <summary>The primary cache server is unavailable.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus.CacheUnderReconfiguration"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus.CertificateRevocationServerOffline">
-      <summary>Unable to validate the SSL certificate.</summary>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus.CacheUnderReconfiguration">
+      <summary>The cache cluster is being reconfigured.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheErrorSubStatus.InternalError">
       <summary>An internal error has occurred.</summary>
@@ -675,14 +667,14 @@
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheObjectSerializerType">
       <summary>An enumeration of the serialization types.</summary>
     </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheObjectSerializerType.NetDataContractSerializer">
+      <summary>Items are serialized with a NetDataContractSerializer formatter. This is the default.</summary>
+    </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheObjectSerializerType.BinaryFormatter">
       <summary>Items are serialized with a binary formatter.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheObjectSerializerType.CustomSerializer">
       <summary>Items are serialized with a custom formatter.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheObjectSerializerType.NetDataContractSerializer">
-      <summary>Items are serialized with a NetDataContractSerializer formatter. This is the default.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheOperationDescriptor">
       <summary>Represents a notification event for operations performed against the cache, such as Add or Remove.</summary>
@@ -713,32 +705,32 @@
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.AddItem">
       <summary>Indicates that an object was added to the cache.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.ClearRegion">
-      <summary>Indicates that a region in the cache was cleared with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCache.ClearRegion(System.String)" /> method.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.CreateRegion">
-      <summary>Indicates that a region in the cache was created with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCache.CreateRegion(System.String,System.Boolean)" /> method. </summary>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.ReplaceItem">
+      <summary>Indicates that an object was replaced in the cache. </summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.RemoveItem">
       <summary>Indicates that an object was removed from the cache. </summary>
     </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.CreateRegion">
+      <summary>Indicates that a region in the cache was created with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCache.CreateRegion(System.String,System.Boolean)" /> method. </summary>
+    </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.RemoveRegion">
       <summary>Indicates that a region in the cache was removed with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCache.RemoveRegion(System.String)" /> method. </summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.ReplaceItem">
-      <summary>Indicates that an object was replaced in the cache. </summary>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheOperations.ClearRegion">
+      <summary>Indicates that a region in the cache was cleared with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCache.ClearRegion(System.String)" /> method.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheProtectionLevel">
       <summary>Enumeration indicating whether data sent between client and server is signed and/or encrypted.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheProtectionLevel.EncryptAndSign">
-      <summary>Indicates both encryption and signing are used.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheProtectionLevel.None">
       <summary>Indicates that neither encryption nor signing is used.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheProtectionLevel.Sign">
       <summary>Indicates that signing without encryption is used.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheProtectionLevel.EncryptAndSign">
+      <summary>Indicates both encryption and signing are used.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheSecurity">
       <summary>Used to enable signing and/or encryption of data sent between client and server.</summary>
@@ -753,20 +745,11 @@
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheSecurity.#ctor(System.Security.SecureString)">
       <summary>Initializes a new instance of the <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheSecurity" /> class. Applies only to Windows Azure Shared Caching.</summary>
-      <param name="authorizationToken">A SecureString object that contains the authorization token from the Windows Azure Management Portal.</param>
+      <param name="authorizationToken">A SecureString object that contains the authorization token from the .</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheSecurity.#ctor(System.Security.SecureString,System.Boolean)">
       <summary>Initializes a new instance of the <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheSecurity" /> class. Applies only to Windows Azure Shared Caching.</summary>
-      <param name="authorizationToken">A SecureString object that contains the authorization token from the Windows Azure Management Portal.</param>
-      <param name="sslEnabled">Specifies whether SSL should be used.</param>
-    </member>
-    <member name="M:Microsoft.ApplicationServer.Caching.DataCacheSecurity.#ctor(System.String)">
-      <summary>Initializes a new instance of the <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheSecurity" /> class. </summary>
-      <param name="authorizationToken">The authorization token.</param>
-    </member>
-    <member name="M:Microsoft.ApplicationServer.Caching.DataCacheSecurity.#ctor(System.String,System.Boolean)">
-      <summary>Initializes a new instance of the <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheSecurity" /> class. </summary>
-      <param name="authorizationToken">The authorization token.</param>
+      <param name="authorizationToken">A SecureString object that contains the authorization token from the .</param>
       <param name="sslEnabled">Specifies whether SSL should be used.</param>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.DataCacheSecurity.ProtectionLevel">
@@ -780,14 +763,14 @@
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheSecurityMode">
       <summary>Enumeration indicating whether channel security is enabled for data sent between client and server. Applies only to the server versions of AppFabric.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheSecurityMode.Message">
-      <summary>Specifies that message security is used. This is the security mode required for AppFabric caches, which use the Access Control Service (ACS). Applies only to the server versions of AppFabric.</summary>
-    </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheSecurityMode.None">
       <summary>Specifies that no security is enabled. Applies only to the server versions of AppFabric.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheSecurityMode.Transport">
       <summary>Specifies that transport security is enabled. Applies only to the server versions of AppFabric.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheSecurityMode.Message">
+      <summary>Specifies that message security is used. This is the security mode required for AppFabric caches, which use the Access Control Service (ACS). Applies only to the server versions of AppFabric.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheSerializationProperties">
       <summary>Specifies the serialization properties for a cache client.</summary>
@@ -808,11 +791,11 @@
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheServiceAccountType">
       <summary>Specifies the type of account that is used to run the AppFabric Caching service.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheServiceAccountType.DomainAccount">
-      <summary>The AppFabric Caching service runs under a domain account on the cache cluster.</summary>
-    </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheServiceAccountType.SystemAccount">
       <summary>The AppFabric Caching service runs under a built-in system account on the cache cluster. For example, NETWORK SERVICE.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheServiceAccountType.DomainAccount">
+      <summary>The AppFabric Caching service runs under a domain account on the cache cluster.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheStoreException">
       <summary>An exception object that should be used by read-through or write-behind providers.</summary>
@@ -877,7 +860,7 @@
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheTag.#ctor(System.String)">
       <summary>Initializes a new instance of the <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheTag" /> class. </summary>
-      <param name="tag">The string-based identifier to associate with a cached object. Tags must be less than 65 KB.</param>
+      <param name="tag">The string-based identifier to associate with a cached object.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheTag.Equals(System.Object)">
       <summary>Compares the current DataCacheTag object for equality with the specified DataCacheTag object.</summary>
@@ -895,11 +878,11 @@
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheTraceSink">
       <summary>Provides fields that specify the type of cache client tracing to use with the <see cref="M:Microsoft.ApplicationServer.Caching.DataCacheClientLogManager.SetSink(Microsoft.ApplicationServer.Caching.DataCacheTraceSink,System.Diagnostics.TraceLevel)" /> method. Applies only to Windows Azure Caching.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheTraceSink.DiagnosticSink">
-      <summary>A trace sink that uses standard Windows Azure Caching diagnostics. Applies only to Windows Azure Caching.</summary>
-    </member>
     <member name="F:Microsoft.ApplicationServer.Caching.DataCacheTraceSink.EtwSink">
       <summary>A trace sink that uses Event Tracing for Windows (ETW) to record the trace data. Not supported in Windows Azure Shared Caching.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.DataCacheTraceSink.DiagnosticSink">
+      <summary>A trace sink that uses standard Windows Azure Caching diagnostics. Applies only to Windows Azure Caching.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheTransportProperties">
       <summary>Specifies the transport settings for a cache client.</summary>
@@ -935,6 +918,75 @@
       <summary>Gets or sets the length of time to wait for a request before aborting the channel.</summary>
       <returns>Returns <see cref="T:System.TimeSpan" />.</returns>
     </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.DiagnosticRule"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.DiagnosticRule.#ctor(System.Collections.Generic.IList{System.Int32},System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{System.String})">
+      <summary>Internal.</summary>
+      <param name="eventIds">Internal.</param>
+      <param name="eventDescription">Internal.</param>
+      <param name="violationDescription">Internal.</param>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.DiagnosticRule.#ctor(System.Collections.Generic.IList{System.Int32},System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{System.Int64},System.Int32)">
+      <summary>Internal.</summary>
+      <param name="eventIds">Internal.</param>
+      <param name="eventDescription">Internal.</param>
+      <param name="violationDescription">Internal.</param>
+      <param name="timeToNext">Internal.</param>
+      <param name="ruleId">Internal.</param>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagnosticRule.EventDescription">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Collections.Generic.IList`1" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagnosticRule.EventIds">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Collections.Generic.IList`1" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagnosticRule.RuleId">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Int32" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagnosticRule.TimeToNextEvent">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Collections.Generic.IList`1" />.</returns>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.DiagnosticRule.ToString">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagnosticRule.ViolationDescription">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Collections.Generic.IList`1" />.</returns>
+    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.DiagRuleViolation"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.DiagRuleViolation.#ctor"><summary>Internal.</summary></member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.IsFinalStateReached">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.IsRuleViolated">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.RuleViolated">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:Microsoft.ApplicationServer.Caching.DiagnosticRule" />.</returns>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.DiagRuleViolation.ToString">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.ViolationClasses">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.ViolationId">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Int32" />.</returns>
+    </member>
+    <member name="P:Microsoft.ApplicationServer.Caching.DiagRuleViolation.ViolationIndex">
+      <summary>Internal.</summary>
+      <returns>Returns <see cref="T:System.Int32" />.</returns>
+    </member>
     <member name="T:Microsoft.ApplicationServer.Caching.EvictionType">
       <summary>Specifies the eviction used for a cache.</summary>
     </member>
@@ -944,21 +996,21 @@
     <member name="F:Microsoft.ApplicationServer.Caching.EvictionType.None">
       <summary>The cache does not evict objects.</summary>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.ExpirationType"></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.AbsoluteExpiration">
-      <summary />
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.Default">
-      <summary />
-    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.ExpirationType"><summary>Internal.</summary></member>
     <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.None">
-      <summary />
+      <summary>Internal.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.NotProvided">
-      <summary />
+    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.AbsoluteExpiration">
+      <summary>Internal.</summary>
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.SlidingExpiration">
-      <summary />
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.NotProvided">
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ExpirationType.Default">
+      <summary>Internal.</summary>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.HostCacheStats">
       <summary>Stores cache statistics used in conjunction with the Get-CacheStatistics Windows PowerShell command.</summary>
@@ -990,7 +1042,7 @@
       <summary>The size in bytes of cached items.</summary>
       <returns>Returns <see cref="T:System.Int64" />.</returns>
     </member>
-    <member name="M:Microsoft.ApplicationServer.Caching.HostCacheStats.ToString"></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.HostCacheStats.ToString"><summary>Internal.</summary></member>
     <member name="T:Microsoft.ApplicationServer.Caching.ICustomProvider">
       <summary>Represent an ICustomProvider interface. Applies only to the server versions of AppFabric.</summary>
     </member>
@@ -1139,7 +1191,7 @@
       <summary>The number of requests on the cache.</summary>
       <returns>Returns <see cref="T:System.Int64" />.</returns>
     </member>
-    <member name="P:Microsoft.ApplicationServer.Caching.NamedCacheStats.RestRequestCount"></member>
+    <member name="P:Microsoft.ApplicationServer.Caching.NamedCacheStats.RestRequestCount"><summary>Internal.</summary></member>
     <member name="P:Microsoft.ApplicationServer.Caching.NamedCacheStats.Size">
       <summary>The size in bytes of the cache.</summary>
       <returns>Returns <see cref="T:System.Int64" />.</returns>
@@ -1148,7 +1200,7 @@
       <summary>The number of write operations to the cache.</summary>
       <returns>Returns <see cref="T:System.Int64" />.</returns>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.SafeStreamWriter"></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.SafeStreamWriter"><summary>Internal.</summary></member>
     <member name="M:Microsoft.ApplicationServer.Caching.SafeStreamWriter.#ctor(System.IO.Stream)">
       <param name="stream">Internal.</param>
     </member>
@@ -1159,48 +1211,68 @@
       <param name="path">Internal.</param>
       <param name="append">Internal.</param>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.VelocityAuthorizationException"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityAuthorizationException.#ctor"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityAuthorizationException.#ctor(System.String)"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityAuthorizationException.#ctor(System.String,System.Exception)"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityAuthorizationException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"></member>
-    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketException"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketException.#ctor"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketException.#ctor(System.String)"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketException.#ctor(System.String,System.Exception)"></member>
-    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException.#ctor"></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.ServiceUtility"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.ServiceUtility.StartService(System.String,System.Func{System.ServiceProcess.ServiceBase},System.String)">
+      <param name="serviceName">Internal.</param>
+      <param name="serviceCreator">Internal.</param>
+      <param name="eventSourceName">Internal.</param>
+    </member>
+    <member name="M:Microsoft.ApplicationServer.Caching.ServiceUtility.StartServiceForCache(System.String,System.Func{System.ServiceProcess.ServiceBase})">
+      <param name="serviceName">Internal.</param>
+      <param name="serviceCreator">Internal.</param>
+    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.VelocityDiagMode"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.VelocityDiagMode.WarningWce">
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.VelocityDiagMode.InfoWc">
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.VelocityDiagMode.NoBuffering">
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.VelocityDiagMode.WarningWcext">
+      <summary>Internal.</summary>
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.VelocityDiagMode.InfoWCBasic">
+      <summary>Internal.</summary>
+    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException.#ctor"><summary>Internal.</summary></member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Internal.</summary>
       <param name="info">Internal.</param>
       <param name="context">Internal.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException.#ctor(System.String)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatException.#ctor(System.String,System.Exception)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
       <param name="innerException">Internal.</param>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-      <param name="info">Internal.</param>
-      <param name="context">Internal.</param>
-    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"><summary>Internal.</summary></member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor(System.String)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketFormatFatalException.#ctor(System.String,System.Exception)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
       <param name="innerException">Internal.</param>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException"></member>
-    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException.#ctor"></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException"><summary>Internal.</summary></member>
+    <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException.#ctor"><summary>Internal.</summary></member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException.#ctor(System.String)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.VelocityPacketTooBigException.#ctor(System.String,System.Exception)">
+      <summary>Internal.</summary>
       <param name="message">Internal.</param>
       <param name="innerException">Internal.</param>
     </member>

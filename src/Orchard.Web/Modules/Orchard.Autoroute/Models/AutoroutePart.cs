@@ -5,18 +5,16 @@ namespace Orchard.Autoroute.Models {
     public class AutoroutePart : ContentPart<AutoroutePartRecord>, IAliasAspect {
 
         public string CustomPattern {
-            get { return Record.CustomPattern; }
-            set { Record.CustomPattern = value; }
+            get { return Retrieve(x => x.CustomPattern); }
+            set { Store(x => x.CustomPattern, value); }
         }
-
         public bool UseCustomPattern {
-            get { return Record.UseCustomPattern; }
-            set { Record.UseCustomPattern = value; }
+            get { return Retrieve(x => x.UseCustomPattern); }
+            set { Store(x => x.UseCustomPattern, value); }
         }
-
         public string DisplayAlias {
-            get { return Record.DisplayAlias; }
-            set { Record.DisplayAlias = value; }
+            get { return Retrieve(x => x.DisplayAlias); }
+            set { Store(x => x.DisplayAlias, value); }
         }
 
         public string Path {

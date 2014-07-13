@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
@@ -30,7 +31,7 @@ namespace Orchard.Workflows.Models {
         }
 
         public void SetState<T>(string key, T value) {
-            State[key] = value;
+            State[key] = JToken.FromObject(value);
             SerializeState();
         }
 
@@ -39,7 +40,8 @@ namespace Orchard.Workflows.Models {
                 return default(T);
             }
 
-            return (T)State[key];
+            var value = State[key];
+            return value != null ? value.ToObject<T>() : default(T);
         }
 
         public object GetState(string key) {

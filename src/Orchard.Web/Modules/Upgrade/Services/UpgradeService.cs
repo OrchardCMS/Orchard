@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using NHibernate.Dialect;
+using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
@@ -32,79 +35,78 @@ namespace Upgrade.Services {
                 for (int i = 0; i < reader.FieldCount; i++) {
                     parameters.Add(reader.GetName(i), reader.GetValue(i));
                 }
-                
+
                 values.Add(parameters);
             });
 
-            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
-            var session = sessionFactory.OpenSession();
 
-            var connection = session.Connection;
+            using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                var connection = session.Connection;
 
-            foreach (var record in values) {
-                var command = connection.CreateCommand();
-                var statement = String.Format("INSERT INTO {0} (", toPrefixedTableName);
+                foreach (var record in values) {
+                    var command = connection.CreateCommand();
+                    var statement = String.Format("INSERT INTO {0} (", toPrefixedTableName);
 
-                foreach (var keyValuePair in record) {
-                    if (ignoreColumns.Contains(keyValuePair.Key)) {
-                        continue;
+                    foreach (var keyValuePair in record) {
+                        if (ignoreColumns.Contains(keyValuePair.Key)) {
+                            continue;
+                        }
+
+                        statement += keyValuePair.Key;
+                        if (keyValuePair.Key != record.Last().Key) {
+                            statement += ", ";
+                        }
                     }
 
-                    statement += keyValuePair.Key;
-                    if (keyValuePair.Key != record.Last().Key) {
-                        statement += ", ";
-                    }
-                }
+                    statement += ") VALUES ( ";
 
-                statement += ") VALUES ( ";
+                    foreach (var keyValuePair in record) {
+                        if (ignoreColumns.Contains(keyValuePair.Key)) {
+                            continue;
+                        }
 
-                foreach (var keyValuePair in record) {
-                    if (ignoreColumns.Contains(keyValuePair.Key)) {
-                        continue;
-                    }
+                        var parameter = command.CreateParameter();
+                        parameter.ParameterName = "@" + keyValuePair.Key;
+                        parameter.Value = keyValuePair.Value;
 
-                    var parameter = command.CreateParameter();
-                    parameter.ParameterName = "@" + keyValuePair.Key;
-                    parameter.Value = keyValuePair.Value;
+                        statement += parameter.ParameterName;
+                        if (keyValuePair.Key != record.Last().Key) {
+                            statement += ", ";
+                        }
 
-                    statement += parameter.ParameterName;
-                    if (keyValuePair.Key != record.Last().Key) {
-                        statement += ", ";
+                        command.Parameters.Add(parameter);
                     }
 
-                    command.Parameters.Add(parameter);
-                }
+                    statement += ")";
 
-                statement += ")";
+                    command.CommandText = statement;
 
-                command.CommandText = statement;
-
-                command.ExecuteNonQuery();                
+                    command.ExecuteNonQuery();
+                } 
             }
         }
 
         public void ExecuteReader(string sqlStatement, Action<IDataReader, IDbConnection> action) {
-            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
-            var session = sessionFactory.OpenSession();
+            using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                var command = session.Connection.CreateCommand();
+                command.CommandText = string.Format(sqlStatement);
 
-            var command = session.Connection.CreateCommand();
-            command.CommandText = string.Format(sqlStatement);
-                
-            var reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
 
-            while (reader != null && reader.Read()) {
-                try {
-                    if (action != null) {
-                        action(reader, session.Connection);
+                while (reader != null && reader.Read()) {
+                    try {
+                        if (action != null) {
+                            action(reader, session.Connection);
+                        }
+                    }
+                    catch (Exception e) {
+                        Logger.Error(e, "Error while executing custom SQL Statement in Upgrade.");
                     }
                 }
-                catch (Exception e) {
-                    Logger.Error(e, "Error while executing custom SQL Statement in Upgrade.");
-                }
-            }
 
-            if (reader != null && !reader.IsClosed) {
-                reader.Close();
+                if (reader != null && !reader.IsClosed) {
+                    reader.Close();
+                } 
             }
         }
 
@@ -114,6 +116,20 @@ namespace Upgrade.Services {
             }
 
             return _shellSettings.DataTablePrefix + "_" + tableName;
+        }
+
+        public bool TableExists(string tableName) {
+            // While not particularly nice (or fast with many tables) this seems to be a database-agnostic way of checking the existence
+            // of a table.
+            using (var session = _sessionFactoryHolder.GetSessionFactory().OpenSession()) {
+                var connection = session.Connection as DbConnection;
+
+                if (connection == null) {
+                    throw new InvalidOperationException("The database connection object should derive from DbConnection to check if a table exists.");
+                }
+
+                return connection.GetSchema("Tables").Rows.Cast<DataRow>().Any(row => row["TABLE_NAME"].ToString() == tableName); 
+            }
         }
     }
 }

@@ -1,42 +1,47 @@
 using Orchard.ContentManagement;
 
 namespace Orchard.OutputCache.Models {
-    public class CacheSettingsPart : ContentPart<CacheSettingsPartRecord> {
+    public class CacheSettingsPart : ContentPart {
         public const string CacheKey = "CacheSettingsPart";
 
         public int DefaultCacheDuration {
-            get { return Record.DefaultCacheDuration; }
-            set { Record.DefaultCacheDuration = value; }
+            get { return this.Retrieve(x => x.DefaultCacheDuration, 300); }
+            set { this.Store(x => x.DefaultCacheDuration, value); }
         }
 
         public int DefaultMaxAge {
-            get { return Record.DefaultMaxAge; }
-            set { Record.DefaultMaxAge = value; }
+            get { return this.Retrieve(x => x.DefaultMaxAge); }
+            set { this.Store(x => x.DefaultMaxAge, value); }
         }
 
         public string VaryQueryStringParameters {
-            get { return Record.VaryQueryStringParameters; }
-            set { Record.VaryQueryStringParameters = value; }
+            get { return this.Retrieve(x => x.VaryQueryStringParameters); }
+            set { this.Store(x => x.VaryQueryStringParameters, value); }
         }
 
         public string VaryRequestHeaders {
-            get { return Record.VaryRequestHeaders; }
-            set { Record.VaryRequestHeaders = value; }
+            get { return this.Retrieve(x => x.VaryRequestHeaders); }
+            set { this.Store(x => x.VaryRequestHeaders, value); }
         }
 
         public string IgnoredUrls {
-            get { return Record.IgnoredUrls; }
-            set { Record.IgnoredUrls = value; }
+            get { return this.Retrieve(x => x.IgnoredUrls); }
+            set { this.Store(x => x.IgnoredUrls, value); }
         }
 
         public bool ApplyCulture {
-            get { return Record.ApplyCulture; }
-            set { Record.ApplyCulture = value; }
+            get { return this.Retrieve(x => x.ApplyCulture); }
+            set { this.Store(x => x.ApplyCulture, value); }
         }
 
         public bool DebugMode {
-            get { return Record.DebugMode; }
-            set { Record.DebugMode = value; }
+            get { return this.Retrieve(x => x.DebugMode); }
+            set { this.Store(x => x.DebugMode, value); }
+        }
+
+        public bool IgnoreNoCache {
+            get { return this.Retrieve(x => x.IgnoreNoCache); }
+            set { this.Store(x => x.IgnoreNoCache, value); }
         }
     }
 }

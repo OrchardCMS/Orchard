@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.ArchiveLater.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.ViewModels;
 
 namespace Orchard.ArchiveLater.ViewModels {
     public class ArchiveLaterViewModel {
@@ -17,10 +18,6 @@ namespace Orchard.ArchiveLater.ViewModels {
             get { return ContentItem.VersionRecord != null && ContentItem.VersionRecord.Published; }
         }
 
-        public DateTime? ScheduledArchiveUtc { get; set; }
-
-        public string ScheduledArchiveDate { get; set; }
-
-        public string ScheduledArchiveTime { get; set; }
+        public DateTimeEditor Editor { get; set; }
     }
 }

@@ -1,0 +1,99 @@
+﻿@using Orchard.Azure.MediaServices.ViewModels.Media
+@using Orchard.Localization
+
+@model CloudVideoPartViewModel
+@{
+    Script.Include("Lib/moment.min.js").AtFoot();
+    Script.Include("cloudmedia-edit-cloudvideopart-direct.js").AtFoot();
+    var isCreatingItem = Model.Id == 0;
+}
+
+@helper AsyncUpload(string fileUploadName, string prefix, WamsAssetViewModel wamsAssetViewModel, IEnumerable<string> allowedExtensions = null, LocalizedString prompt = null, bool isRequired = false) {
+    var extensions = allowedExtensions != null ? allowedExtensions as IList<string> ?? allowedExtensions.ToArray() : default(IEnumerable<string>);
+    var acceptFileTypes = extensions != null && extensions.Any() ? String.Format(@"(\.|\/)({0})$", String.Join("|", extensions)) : null;
+    var wamsAssetFieldName = String.Format("{0}.WamsAssetId", prefix);
+
+    <section class="async-upload" data-upload-accept-file-types="@acceptFileTypes"
+             data-generate-asset-url="@Url.Action("GenerateWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices" })"
+             data-delete-asset-url="@Url.Action("DeleteWamsAsset", "Asset", new { area = "Orchard.Azure.MediaServices"})">
+
+        <input type="hidden" name="@String.Format("{0}.FileName", prefix)" value="@wamsAssetViewModel.FileName" />
+        <input type="hidden" name="@String.Format("{0}.WamsAssetId", prefix)" value="@wamsAssetViewModel.WamsAssetId" />
+        <input type="hidden" name="@String.Format("{0}.AssetId", prefix)" value="@wamsAssetViewModel.AssetId" />
+
+        @if (wamsAssetViewModel.WamsAssetId == null) {
+            <div class="file-upload-wrapper">
+                <input class="async-upload-input @if (isRequired) { <text> required-upload </text> }" name="@fileUploadName" type="file" @if (prompt != null) { <text> data-prompt="@prompt" </text> } />
+            </div>
+
+            <div class="status preparing">@T("Preparing to upload...")</div>
+            <div class="status uploading">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <span class="progress-text" data-text-template="@T("Uploading ({percentage}%)...")"></span>
+                <a class="cancel-link" href="#" data-prompt="@T("Are you sure you want to cancel this upload?")">@T("Cancel")</a><br />
+                <span class="progress-details hint" data-text-template="@T("Uploaded {uploaded} KB / {total} KB | Speed: {kbps} KB/s | Elapsed: {elapsed} | Remaining: {remaining}")"></span>
+            </div>
+            <div class="status uploaded" data-text-template="@T("Successfully uploaded file '{filename}'.")"></div>
+            <div class="status cleanup">@T("Cleaning up...")</div>
+
+            if (extensions != null) { 
+                <span class="validation-text">@T("The selected file must have one of the following filename extensions: {0}", String.Join(", ", extensions))</span>
+            }
+
+            if (!ViewData.ModelState.IsValidField(wamsAssetFieldName)) {
+                <div>@T("You must upload a file.")</div>
+            }
+        }
+        else {
+            <span>@T("Successfully uploaded file '{0}'.", wamsAssetViewModel.FileName)</span>
+        }
+
+    </section>
+}
+
+@helper VideoUpload() {
+    <fieldset>
+        <label>@T("Video File")</label>
+        @AsyncUpload("VideoFile", Html.NameFor(m => m.WamsVideo).ToString(), Model.WamsVideo, Model.AllowedVideoFilenameExtensions, isRequired: true)
+    </fieldset>
+}
+
+@helper ThumbnailUpload(string caption) {
+    <fieldset>
+        <label>@T(caption)</label>
+        @AsyncUpload("ThumbnailFile", Html.FieldNameFor(m => m.WamsThumbnail), Model.WamsThumbnail, allowedExtensions : null)
+    </fieldset>
+}
+
+@helper SubtitleUpload(string caption) {
+    <fieldset>
+        <label>@T(caption)</label>
+        @if (Model.SubtitleLanguages.Any()) {
+            @AsyncUpload("SubtitleFile", Html.FieldNameFor(m => m.WamsSubtitle), Model.WamsSubtitle)
+            <div>
+                @Html.Label(T("Subtitle language").Text, new { @class = "subtitle-label" })
+                @Html.DropDownListFor(m => m.AddedSubtitleLanguage, Model.SubtitleLanguages.Select((s) => new SelectListItem() { Text = s, Value = s }), new { @class = "subtitle-select" })
+            </div>
+        }
+        else {
+            <span>@T("Subtitle assets already exist for all configured subtitle languages. No additional subtitle files can be uploaded.")</span>
+        }
+    </fieldset>
+}
+
+<div class="upload-direct"
+     data-navigate-away-prompt="@T("There are uploads in progress and/or you have unsaved uploaded files. Uploads will be aborted and uploaded files will be discarded if you navigate away.")"
+     data-block-submit-prompt="@T("There are uploads in progress. Please wait for the uploads to complete or cancel them before saving this item.")">
+    @if (isCreatingItem) {
+        @Html.HiddenFor(m => m.Id)
+        @VideoUpload()
+        @ThumbnailUpload("Thumbnail file")
+        @SubtitleUpload("Subtitle file")
+    }
+    else {
+        @ThumbnailUpload("Add another thumbnail file")
+        @SubtitleUpload("Add another subtitle file")
+    }
+</div>

@@ -1,41 +1,39 @@
 ﻿using System;
+using System.Globalization;
 using System.Web;
 using System.Web.Mvc;
-using Orchard.Core.Shapes.Localization;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc.Html;
 using Orchard.Services;
-using System.Globalization;
 
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
-        private readonly IDateTimeLocalization _dateTimeLocalization;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly Lazy<CultureInfo> _cultureInfo;
+        private readonly IDateServices _dateServices;
+        private readonly IDateTimeFormatProvider _dateTimeLocalization;
 
         public DateTimeShapes(
             IClock clock,
-            IDateTimeLocalization dateTimeLocalization,
-            IWorkContextAccessor workContextAccessor
+            IDateServices dateServices,
+            IDateTimeFormatProvider dateTimeLocalization
             ) {
             _clock = clock;
+            _dateServices = dateServices;
             _dateTimeLocalization = dateTimeLocalization;
-            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
-
-            _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
         }
 
         public Localizer T { get; set; }
 
         [Shape]
-        public IHtmlString DateTimeRelative(dynamic Display, DateTime dateTimeUtc) {
-            var time = _clock.UtcNow - dateTimeUtc;
+        public IHtmlString DateTimeRelative(dynamic Display, DateTime DateTimeUtc, DateTime dateTimeUtc) {
+            DateTimeUtc = DateTimeUtc != System.DateTime.MinValue ? DateTimeUtc : dateTimeUtc; // Both capitalizations retained for compatibility.
+            var time = _clock.UtcNow - DateTimeUtc;
 
             if (time.TotalDays > 7 || time.TotalDays < -7)
-                return Display.DateTime(DateTimeUtc: dateTimeUtc, CustomFormat: T("'on' MMM d yyyy 'at' h:mm tt"));
+                return Display.DateTime(DateTimeUtc: DateTimeUtc, CustomFormat: null);
 
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
@@ -67,24 +65,10 @@ namespace Orchard.Core.Shapes {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
-                return DateTime(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat);
+                return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat, null));
             }
 
-            return new MvcHtmlString(ConvertToDisplayTime(DateTimeUtc).ToString(CustomFormat.Text, _cultureInfo.Value));
+            return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, CustomFormat.Text, null));
         }
-
-        /// <summary>
-        /// Converts a Coordinated Universal Time (UTC) to the time in the current time zone.
-        /// </summary>
-        /// <param name="dateTimeUtc">The Coordinated Universal Time (UTC).</param>
-        /// <returns>The date and time in the selected time zone. Its System.DateTime.Kind property is System.DateTimeKind.Utc if the current zone is System.TimeZoneInfo.Utc; otherwise, its System.DateTime.Kind property is System.DateTimeKind.Unspecified.</returns>
-        private DateTime ConvertToDisplayTime(DateTime dateTimeUtc) {
-
-            // get the time zone for the current request
-            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
-
-            return TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
-        }
-
     }
 }

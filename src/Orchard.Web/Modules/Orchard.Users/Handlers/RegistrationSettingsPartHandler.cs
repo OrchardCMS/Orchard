@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Users.Models;
@@ -8,11 +7,10 @@ using Orchard.Users.Models;
 namespace Orchard.Users.Handlers {
     [UsedImplicitly]
     public class RegistrationSettingsPartHandler : ContentHandler {
-        public RegistrationSettingsPartHandler(IRepository<RegistrationSettingsPartRecord> repository) {
+        public RegistrationSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<RegistrationSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<RegistrationSettingsPartRecord>("RegistrationSettings", "Parts/Users.RegistrationSettings", "users"));
+            Filters.Add(new TemplateFilterForPart<RegistrationSettingsPart>("RegistrationSettings", "Parts/Users.RegistrationSettings", "users"));
         }
 
         public Localizer T { get; set; }

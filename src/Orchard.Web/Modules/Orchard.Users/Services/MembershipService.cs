@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
 using JetBrains.Annotations;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
@@ -18,15 +19,26 @@ namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IOrchardServices _orchardServices;
-        private readonly IMessageManager _messageManager;
+        private readonly IMessageService _messageService;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         private readonly IEncryptionService _encryptionService;
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
 
-        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers, IClock clock, IEncryptionService encryptionService) {
+        public MembershipService(
+            IOrchardServices orchardServices, 
+            IMessageService messageService, 
+            IEnumerable<IUserEventHandler> userEventHandlers, 
+            IClock clock, 
+            IEncryptionService encryptionService,
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay) {
             _orchardServices = orchardServices;
-            _messageManager = messageManager;
+            _messageService = messageService;
             _userEventHandlers = userEventHandlers;
             _encryptionService = encryptionService;
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -47,20 +59,20 @@ namespace Orchard.Users.Services {
 
             var user = _orchardServices.ContentManager.New<UserPart>("User");
 
-            user.Record.UserName = createUserParams.Username;
-            user.Record.Email = createUserParams.Email;
-            user.Record.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
-            user.Record.HashAlgorithm = "SHA1";
-            SetPassword(user.Record, createUserParams.Password);
+            user.UserName = createUserParams.Username;
+            user.Email = createUserParams.Email;
+            user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
+            user.HashAlgorithm = "SHA1";
+            SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
-                user.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
-                user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+                user.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+                user.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
             }
 
             if(createUserParams.IsApproved) {
-                user.Record.RegistrationStatus = UserStatus.Approved;
-                user.Record.EmailStatus = UserStatus.Approved;
+                user.RegistrationStatus = UserStatus.Approved;
+                user.EmailStatus = UserStatus.Approved;
             }
 
             var userContext = new UserContext {User = user, Cancel = false, UserParameters = createUserParams};
@@ -81,7 +93,10 @@ namespace Orchard.Users.Services {
                 }
             }
 
-            if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
+            if ( registrationSettings != null  
+                && registrationSettings.UsersAreModerated 
+                && registrationSettings.NotifyModeration 
+                && !createUserParams.IsApproved ) {
                 var usernames = String.IsNullOrWhiteSpace(registrationSettings.NotificationsRecipients)
                                     ? new string[0]
                                     : registrationSettings.NotificationsRecipients.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
@@ -91,8 +106,18 @@ namespace Orchard.Users.Services {
                         continue;
                     }
                     var recipient = GetUser(userName);
-                    if (recipient != null)
-                        _messageManager.Send(recipient.ContentItem.Record, MessageTypes.Moderation, "email" , new Dictionary<string, string> { { "UserName", createUserParams.Username}, { "Email" , createUserParams.Email } });
+                    if (recipient != null) {
+                        var template = _shapeFactory.Create("Template_User_Moderated", Arguments.From(createUserParams));
+                        template.Metadata.Wrappers.Add("Template_User_Wrapper");
+
+                        var parameters = new Dictionary<string, object> {
+                            {"Subject", T("New account").Text},
+                            {"Body", _shapeDisplay.Display(template)},
+                            {"Recipients", new [] { recipient.Email }}
+                        };
+
+                        _messageService.Send("Email", parameters);
+                    }
                 }
             }
 
@@ -113,7 +138,7 @@ namespace Orchard.Users.Services {
             if (user == null)
                 user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if ( user == null || ValidatePassword(user.As<UserPart>().Record, password) == false )
+            if ( user == null || ValidatePassword(user.As<UserPart>(), password) == false )
                 return null;
 
             if ( user.EmailStatus != UserStatus.Approved )
@@ -129,54 +154,50 @@ namespace Orchard.Users.Services {
             if (!user.Is<UserPart>())
                 throw new InvalidCastException();
 
-            var userRecord = user.As<UserPart>().Record;
-            SetPassword(userRecord, password);
-        }
+            var userPart = user.As<UserPart>();
 
-
-        void SetPassword(UserPartRecord partRecord, string password) {
             switch (GetSettings().PasswordFormat) {
                 case MembershipPasswordFormat.Clear:
-                    SetPasswordClear(partRecord, password);
+                    SetPasswordClear(userPart, password);
                     break;
                 case MembershipPasswordFormat.Hashed:
-                    SetPasswordHashed(partRecord, password);
+                    SetPasswordHashed(userPart, password);
                     break;
                 case MembershipPasswordFormat.Encrypted:
-                    SetPasswordEncrypted(partRecord, password);
+                    SetPasswordEncrypted(userPart, password);
                     break;
                 default:
                     throw new ApplicationException(T("Unexpected password format value").ToString());
             }
         }
 
-        private bool ValidatePassword(UserPartRecord partRecord, string password) {
+        private bool ValidatePassword(UserPart userPart, string password) {
             // Note - the password format stored with the record is used
             // otherwise changing the password format on the site would invalidate
             // all logins
-            switch (partRecord.PasswordFormat) {
+            switch (userPart.PasswordFormat) {
                 case MembershipPasswordFormat.Clear:
-                    return ValidatePasswordClear(partRecord, password);
+                    return ValidatePasswordClear(userPart, password);
                 case MembershipPasswordFormat.Hashed:
-                    return ValidatePasswordHashed(partRecord, password);
+                    return ValidatePasswordHashed(userPart, password);
                 case MembershipPasswordFormat.Encrypted:
-                    return ValidatePasswordEncrypted(partRecord, password);
+                    return ValidatePasswordEncrypted(userPart, password);
                 default:
                     throw new ApplicationException("Unexpected password format value");
             }
         }
 
-        private static void SetPasswordClear(UserPartRecord partRecord, string password) {
-            partRecord.PasswordFormat = MembershipPasswordFormat.Clear;
-            partRecord.Password = password;
-            partRecord.PasswordSalt = null;
+        private static void SetPasswordClear(UserPart userPart, string password) {
+            userPart.PasswordFormat = MembershipPasswordFormat.Clear;
+            userPart.Password = password;
+            userPart.PasswordSalt = null;
         }
 
-        private static bool ValidatePasswordClear(UserPartRecord partRecord, string password) {
-            return partRecord.Password == password;
+        private static bool ValidatePasswordClear(UserPart userPart, string password) {
+            return userPart.Password == password;
         }
 
-        private static void SetPasswordHashed(UserPartRecord partRecord, string password) {
+        private static void SetPasswordHashed(UserPart userPart, string password) {
 
             var saltBytes = new byte[0x10];
             using (var random = new RNGCryptoServiceProvider()) {
@@ -188,39 +209,39 @@ namespace Orchard.Users.Services {
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
             byte[] hashBytes;
-            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+            using (var hashAlgorithm = HashAlgorithm.Create(userPart.HashAlgorithm)) {
                 hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
             }
 
-            partRecord.PasswordFormat = MembershipPasswordFormat.Hashed;
-            partRecord.Password = Convert.ToBase64String(hashBytes);
-            partRecord.PasswordSalt = Convert.ToBase64String(saltBytes);
+            userPart.PasswordFormat = MembershipPasswordFormat.Hashed;
+            userPart.Password = Convert.ToBase64String(hashBytes);
+            userPart.PasswordSalt = Convert.ToBase64String(saltBytes);
         }
 
-        private static bool ValidatePasswordHashed(UserPartRecord partRecord, string password) {
+        private static bool ValidatePasswordHashed(UserPart userPart, string password) {
 
-            var saltBytes = Convert.FromBase64String(partRecord.PasswordSalt);
+            var saltBytes = Convert.FromBase64String(userPart.PasswordSalt);
 
             var passwordBytes = Encoding.Unicode.GetBytes(password);
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
             byte[] hashBytes;
-            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+            using (var hashAlgorithm = HashAlgorithm.Create(userPart.HashAlgorithm)) {
                 hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
             }
-            
-            return partRecord.Password == Convert.ToBase64String(hashBytes);
+
+            return userPart.Password == Convert.ToBase64String(hashBytes);
         }
 
-        private void SetPasswordEncrypted(UserPartRecord partRecord, string password) {
-            partRecord.Password = Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(password))); 
-            partRecord.PasswordSalt = null;
-            partRecord.PasswordFormat = MembershipPasswordFormat.Encrypted;
+        private void SetPasswordEncrypted(UserPart userPart, string password) {
+            userPart.Password = Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(password)));
+            userPart.PasswordSalt = null;
+            userPart.PasswordFormat = MembershipPasswordFormat.Encrypted;
         }
 
-        private bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {
-            return String.Equals(password, Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(partRecord.Password))), StringComparison.Ordinal);
+        private bool ValidatePasswordEncrypted(UserPart userPart, string password) {
+            return String.Equals(password, Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(userPart.Password))), StringComparison.Ordinal);
         }
     }
 }

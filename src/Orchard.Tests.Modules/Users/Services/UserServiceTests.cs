@@ -7,6 +7,7 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
@@ -32,6 +33,7 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Services;
 using Orchard.Tests.Messaging;
+using Orchard.Tests.Modules.Stubs;
 
 namespace Orchard.Tests.Modules.Users.Services {
     [TestFixture]
@@ -78,6 +80,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            _channel = new MessagingChannelStub();
 
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();
@@ -94,14 +97,13 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterAutoMocking(MockBehavior.Loose);
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterInstance(new Mock<IMessageEventHandler>().Object);
-            builder.RegisterType<DefaultMessageManager>().As<IMessageManager>();
-            builder.RegisterInstance(_channel = new MessagingChannelStub()).As<IMessagingChannel>();
+            builder.RegisterInstance(new MessageChannelSelectorStub(_channel)).As<IMessageChannelSelector>(); 
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
+            builder.RegisterInstance(new Mock<IPageClassBuilder>().Object);
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+            builder.RegisterType<InfosetHandler>().As<IContentHandler>();
 
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());

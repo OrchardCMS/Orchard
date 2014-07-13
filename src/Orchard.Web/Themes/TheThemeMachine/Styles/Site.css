@@ -639,3 +639,30 @@ button:focus, .button:focus {
     background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
     background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
 }
+
+/* Tag Cloud
+***************************************************************/
+.tag-cloud li {
+    list-style: none;
+    display: inline;
+}
+
+.tag-cloud-tag-1 {
+    font-size: 1em;
+}
+
+.tag-cloud-tag-2 {
+    font-size: 1.1em;
+}
+
+.tag-cloud-tag-3 {
+    font-size: 1.2em;
+}
+
+.tag-cloud-tag-4 {
+    font-size: 1.4em;
+}
+
+.tag-cloud-tag-5 {
+    font-size: 1.5em;
+}

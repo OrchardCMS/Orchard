@@ -6,6 +6,7 @@ using Orchard.Messaging.Models;
 using Orchard.Security;
 
 namespace Orchard.Email.Services {
+    [Obsolete]
     public class EmailMessageEventHandler : IMessageEventHandler {
         private readonly IContentManager _contentManager;
 

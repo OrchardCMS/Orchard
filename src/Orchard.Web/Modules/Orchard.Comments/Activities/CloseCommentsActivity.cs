@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.Comments.Activities {
+    [OrchardFeature("Orchard.Comments.Workflows")]
     public class CloseCommentsActivity : Task {
 
         public CloseCommentsActivity() {

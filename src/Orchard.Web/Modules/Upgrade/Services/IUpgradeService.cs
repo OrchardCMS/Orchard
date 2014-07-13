@@ -7,5 +7,6 @@ namespace Upgrade.Services {
         void CopyTable(string fromTableName, string toTableName, string[] ignoreColumns);
         void ExecuteReader(string sqlStatement, Action<IDataReader, IDbConnection> action);
         string GetPrefixedTableName(string tableName);
+        bool TableExists(string tableName);
     }
 }

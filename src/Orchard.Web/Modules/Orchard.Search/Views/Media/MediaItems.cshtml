@@ -1,0 +1,24 @@
+﻿@using Orchard.Utility.Extensions
+@model Orchard.MediaLibrary.ViewModels.MediaManagerMediaItemsViewModel
+@{
+    Response.ContentType = "text/json";
+    @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+    new {
+        mediaItemsCount = Model.MediaItemsCount,
+        mediaItems = Model.MediaItems.Select(x => new {
+            id = x.MediaPart.Id, 
+            contentType = x.MediaPart.ContentItem.ContentType, 
+            contentTypeClass = x.MediaPart.ContentItem.ContentType.HtmlClassify(), 
+            title = x.MediaPart.Title, 
+            alternateText = x.MediaPart.AlternateText, 
+            caption = x.MediaPart.Caption, 
+            resource = x.MediaPart.MediaUrl, 
+            mimeType = x.MediaPart.MimeType, 
+            mimeTypeClass = x.MediaPart.MimeType.HtmlClassify(), 
+            thumbnail = Display(x.Shape).ToString(),
+            editLink = Url.ItemEditUrl(x.MediaPart)
+        }).ToArray()
+    }))
+}
+
+ 

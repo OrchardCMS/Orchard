@@ -52,10 +52,30 @@
     (function ($) {
 
         var assignPositions = function () {
-            var position = 1;
-            $('.position').each(function() {
-                $(this).val(position++);
+            var position = 0;
+            $('.type').each(function () {
+                var input = $(this);
+                reAssignIdName(input, position);  // type
+
+                input = input.next();
+                reAssignIdName(input, position);  // differentiator
+
+                input = input.next();
+                reAssignIdName(input, position);  // zone
+
+                input = input.next();
+                reAssignIdName(input, position);  // position
+
+                input.val(++position);
             });
+        };
+
+        var reAssignIdName = function (input, pos) {
+            var name = input.attr('name');
+            input.attr('name', name.replace(new RegExp("\\[.*\\]", 'gi'), '[' + pos + ']'));
+
+            var id = input.attr('id');
+            input.attr('id', id.replace(new RegExp('_.*__', 'i'), '_' + pos + '__'));
         };
 
         assignPositions();

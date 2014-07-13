@@ -11,6 +11,7 @@ namespace Orchard.Comments.Services {
         CommentPart GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
         ContentItem GetCommentedContent(int id);
+        void ProcessCommentsCount(int commentsPartId);
         void ApproveComment(int commentId);
         void UnapproveComment(int commentId);
         void DeleteComment(int commentId);
@@ -19,5 +20,9 @@ namespace Orchard.Comments.Services {
         void EnableCommentsForCommentedContent(int id);
         bool DecryptNonce(string nonce, out int id);
         string CreateNonce(CommentPart comment, TimeSpan delay);
+        bool CanStillCommentOn(CommentsPart commentsPart);
+        bool CanCreateComment(CommentPart commentPart);
+        void SendNotificationEmail(CommentPart commentPart);
+        string CreateProtectedUrl(string action, CommentPart part);
     }
 }

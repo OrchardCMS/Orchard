@@ -1,0 +1,15 @@
+﻿@using Orchard.ContentManagement;
+
+@* TODO: Perhaps only a thumbnail image and some metadata should be rendered in summary view? *@
+@Display.CloudVideoPlayer(
+    ContentPart: Model.ContentPart,
+    ContentItem: Model.ContentPart.ContentItem,
+    AlternateText: Model.ContentPart.As<Orchard.MediaLibrary.Models.MediaPart>().AlternateText,
+    AssetId: null,
+    IgnoreIncludeInPlayer: false,
+    AllowPrivateUrls: false,
+    PlayerWidth: 600,
+    PlayerHeight: 400,
+    ApplyMediaQueries: true,
+    AutoPlay: false
+)

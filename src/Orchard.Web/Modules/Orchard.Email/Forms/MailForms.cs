@@ -82,23 +82,25 @@ namespace Orchard.Email.Forms {
         }
 
         public void Validating(ValidatingContext context) {
-            if (context.FormName == "ActionEmail") {
-                if (context.ValueProvider.GetValue("Recipient").AttemptedValue == String.Empty) {
-                    context.ModelState.AddModelError("Recipient", T("You must select at least one recipient").Text);
-                }
+            if (context.FormName != "ActivityActionEmail") return;
 
-                if (context.ValueProvider.GetValue("Subject").AttemptedValue == String.Empty) {
-                    context.ModelState.AddModelError("Subject", T("You must provide a Subject").Text);
-                }
+            var recipientFormValue = context.ValueProvider.GetValue("Recipient");
+            var recipient = recipientFormValue != null ? recipientFormValue.AttemptedValue : String.Empty;
 
-                if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
-                    context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
-                }
+            if (recipient == String.Empty) {
+                context.ModelState.AddModelError("Recipient", T("You must select at least one recipient").Text);
+            }
 
-                if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == String.Empty &&
-                    context.ValueProvider.GetValue("Recipient").AttemptedValue == "other") {
-                    context.ModelState.AddModelError("Recipient", T("You must provide an e-mail address").Text);
-                }
+            if (context.ValueProvider.GetValue("Subject").AttemptedValue == String.Empty) {
+                context.ModelState.AddModelError("Subject", T("You must provide a Subject").Text);
+            }
+
+            if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
+                context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
+            }
+
+            if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == String.Empty && recipient == "other") {
+                context.ModelState.AddModelError("RecipientOther", T("You must provide an e-mail address").Text);
             }
         }
 

@@ -2,9 +2,16 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.7.1
-OrchardVersion: 1.4
+Version: 1.8.1
+OrchardVersion: 1.8
 Description: The localization module enables the localization of content items.
-FeatureDescription: Localize content items.
-Dependencies: Settings
-Category: Content
+Features:
+	Orchard.Localization:
+		Description: Enables localization of content items.
+		Category: Content
+		Dependencies: Settings
+		Name: Content Localization
+	Orchard.Localization.DateTimeFormat:
+		Description: Enables localization of date/time formats and names of days and months.
+		Category: Content
+		Name: Date/Time Format Localization

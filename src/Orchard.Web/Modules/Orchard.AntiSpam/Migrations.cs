@@ -18,13 +18,6 @@ namespace Orchard.AntiSpam {
                 .WithDescription("Ensures content items are submitted by humans only.")
                 );
 
-            SchemaBuilder.CreateTable("ReCaptchaSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<string>("PublicKey")
-                    .Column<string>("PrivateKey")
-                    .Column<bool>("TrustAuthenticatedUsers")
-                );
-
             ContentDefinitionManager.AlterPartDefinition("SpamFilterPart", cfg => cfg
                 .Attachable()
                 .WithDescription("Allows to filter submitted content items based on spam filters.")
@@ -83,13 +76,6 @@ namespace Orchard.AntiSpam {
     public class AkismetMigrations : DataMigrationImpl {
 
         public int Create() {
-
-            SchemaBuilder.CreateTable("AkismetSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<bool>("TrustAuthenticatedUsers")
-                    .Column<string>("ApiKey")
-                );
-
             return 1;
         }
     }
@@ -99,13 +85,6 @@ namespace Orchard.AntiSpam {
     public class TypePadMigrations : DataMigrationImpl {
 
         public int Create() {
-
-            SchemaBuilder.CreateTable("TypePadSettingsPartRecord",
-                table => table.ContentPartVersionRecord()
-                    .Column<bool>("TrustAuthenticatedUsers")
-                    .Column<string>("ApiKey")
-                );
-
             return 1;
         }
     }

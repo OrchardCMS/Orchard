@@ -25,6 +25,10 @@ namespace Orchard.UI.Navigation {
         public Pager(ISite site, int? page, int? pageSize) {
             Page = (int) (page != null ? (page > 0 ? page : PageDefault) : PageDefault);
             PageSize = pageSize ?? site.PageSize;
+
+            if (site.MaxPageSize > 0 && PageSize > site.MaxPageSize) {
+                PageSize = site.MaxPageSize;
+            }
         }
 
         /// <summary>

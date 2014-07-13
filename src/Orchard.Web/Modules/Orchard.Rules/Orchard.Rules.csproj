@@ -85,7 +85,6 @@
     <Content Include="Views\Action\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Styles\admin-rules.css" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Handlers\ContentHandler.cs" />

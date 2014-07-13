@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.Settings;
 using Orchard.ContentManagement.FieldStorage;
 
@@ -16,10 +17,15 @@ namespace Orchard.Core.Settings.Tokens {
     public class SettingsTokens : ITokenProvider {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IMembershipService _membershipService;
 
-        public SettingsTokens(IOrchardServices orchardServices, IContentDefinitionManager contentDefinitionManager) {
+        public SettingsTokens(
+            IOrchardServices orchardServices, 
+            IContentDefinitionManager contentDefinitionManager,
+            IMembershipService membershipService) {
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
+            _membershipService = membershipService;
         }
 
         public Localizer T { get; set; }
@@ -28,7 +34,7 @@ namespace Orchard.Core.Settings.Tokens {
 
             context.For("Site", T("Site Settings"), T("Tokens for Site Settings"))
                 .Token("SiteName", T("Site Name"), T("The name of the site."), "Text")
-                .Token("SuperUser", T("Super User"), T("The name of the super user."), "Text")
+                .Token("SuperUser", T("Super User"), T("The super user of the site."), "Text")
                 .Token("Culture", T("Site Culture"), T("The current culture of the site."), "Text")
                 .Token("BaseUrl", T("Base Url"), T("The base url the site."), "Text")
                 .Token("TimeZone", T("Time Zone"), T("The current time zone of the site."), "Text")
@@ -56,7 +62,7 @@ namespace Orchard.Core.Settings.Tokens {
                 .Token("SiteName", (Func<ISite, object>)(content => content.SiteName))
                 .Chain("SiteName", "Text", (Func<ISite, object>)(content => content.SiteName))
                 .Token("SuperUser", (Func<ISite, object>)(content => content.SuperUser))
-                .Chain("SuperUser", "Text", (Func<ISite, object>)(content => content.SuperUser))
+                .Chain("SuperUser", "User", (Func<ISite, object>)(content => _membershipService.GetUser(content.SuperUser)))
                 .Token("Culture", (Func<ISite, object>)(content => content.SiteCulture))
                 .Chain("Culture", "Text", (Func<ISite, object>)(content => content.SiteCulture))
                 .Token("BaseUrl", (Func<ISite, object>)(content => content.BaseUrl))

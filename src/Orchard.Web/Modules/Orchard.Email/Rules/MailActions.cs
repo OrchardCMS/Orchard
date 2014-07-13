@@ -16,6 +16,7 @@ namespace Orchard.Email.Rules {
         void Describe(dynamic describe);
     }
 
+    [Obsolete]
     public class MailActions : IActionProvider {
         private readonly IMessageManager _messageManager;
         private readonly IOrchardServices _orchardServices;
@@ -85,6 +86,7 @@ namespace Orchard.Email.Rules {
         }
     }
 
+    [Obsolete]
     public class MailActionsHandler : IMessageEventHandler {
         public MailActionsHandler() {
             T = NullLocalizer.Instance;

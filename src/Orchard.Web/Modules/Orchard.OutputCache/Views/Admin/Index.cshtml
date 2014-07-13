@@ -23,8 +23,14 @@
         <label>@T("Max Age")</label>
         @Html.TextBoxFor(m => m.DefaultMaxAge, new { @class = "text small" })
         <span class="hint">@T("When defined, a cache-control header with a max-age property will be added. Use this in order to enable kernel cache on IIS.")</span>
-    </fieldset>    
-    
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Headers")</label>
+        @Html.CheckBoxFor(m => m.IgnoreNoCache) <label for="@Html.FieldIdFor(m => m.IgnoreNoCache)" class="forcheckbox">@T("Ignore no-cache headers")</label>
+        <span class="hint">@T("When checked, any request containing a 'Content-Cache: no-cache' header will still return cached values if available.")</span>
+    </fieldset>
+
     <fieldset>
         <label>@T("Vary Query String Parameters")</label>
         @Html.TextBoxFor(m => m.VaryQueryStringParameters, new { @class = "text medium" })

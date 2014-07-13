@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
@@ -21,10 +22,12 @@ namespace Orchard.Email.Services {
             var workContext = _orchardServices.WorkContext;
             var smtpSettings = workContext.CurrentSite.As<SmtpSettingsPart>();
 
+            var smtpClient = new SmtpClient();
+
             if (smtpSettings == null || !smtpSettings.IsValid()) {
                 var urlHelper = new UrlHelper(workContext.HttpContext.Request.RequestContext);
                 var url = urlHelper.Action("Email", "Admin", new {Area = "Settings"});
-                yield return new NotifyEntry {Message = T("The <a href=\"{0}\">SMTP settings</a> needs to be configured.", url), Type = NotifyType.Warning};
+                yield return new NotifyEntry {Message = T("The <a href=\"{0}\">SMTP settings</a> need to be configured.", url), Type = NotifyType.Warning};
             }
         }
     }

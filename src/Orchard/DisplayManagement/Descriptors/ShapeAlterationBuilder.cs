@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions.Models;
 
@@ -110,6 +111,7 @@ namespace Orchard.DisplayManagement.Descriptors {
     }
 
     public class ShapePlacementContext {
+        public IContent Content { get; set; }
         public string ContentType { get; set; }
         public string Stereotype { get; set; }
         public string DisplayType { get; set; }

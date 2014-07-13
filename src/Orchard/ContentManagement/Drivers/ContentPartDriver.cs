@@ -63,7 +63,8 @@ namespace Orchard.ContentManagement.Drivers {
                 ShapeDescriptor descriptor;
                 if(context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
-                        ContentType = part.ContentItem.ContentType, 
+                        Content = part.ContentItem,
+                        ContentType = part.ContentItem.ContentType,
                         Differentiator = editor.GetDifferentiator(),
                         DisplayType = null,
                         Path = String.Empty

@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     @{
-        Script.Require("jQuery");
-        Script.Require("jQueryUI");
+        Script.Require("jQuery").AtFoot();
+        Script.Require("jQueryUI").AtFoot();
 
         Style.Include("orchard-medialibrary-admin.css");
         Style.Include("orchard-mediaproviders-admin.css");
@@ -74,6 +74,7 @@
 using (Html.BeginFormAntiForgeryPost(Url.Action("MediaPost"))) {
                 @Html.Hidden("url", Model.Url)
                 @Html.Hidden("folderPath", Model.FolderPath)
+                @Html.Hidden("type", Model.Type)
                 @Html.Hidden("document", Model.Content.ToString())
 
                 <button type="submit">@("Import")</button>

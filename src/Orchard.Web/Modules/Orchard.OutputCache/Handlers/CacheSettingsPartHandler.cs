@@ -3,7 +3,6 @@ using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.OutputCache.Handlers {
@@ -11,11 +10,9 @@ namespace Orchard.OutputCache.Handlers {
         private readonly ICacheService _cacheService;
 
         public CacheSettingsPartHandler(
-            IRepository<CacheSettingsPartRecord> repository,
             ICacheService cacheService) {
             _cacheService = cacheService;
             Filters.Add(new ActivatingFilter<CacheSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
 
             // initializing default cache settings values
             OnInitializing<CacheSettingsPart>((context, part) => { part.DefaultCacheDuration = 300; });

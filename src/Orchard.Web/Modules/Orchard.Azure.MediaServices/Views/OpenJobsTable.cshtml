@@ -1,0 +1,75 @@
+﻿@using Orchard.Azure.MediaServices.Models.Jobs
+@using Orchard.Localization.Services
+@{
+    Style.Include("cloudmedia-progress.css", "cloudmedia-progress.min.css");
+    Script.Require("ShapesBase");
+
+    Layout.Title = "Manage Microsoft Azure Media Jobs";
+    
+    var jobs = (IEnumerable<Job>)Model.Jobs;
+    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
+}
+@helper ShortDateTime(DateTime? value, IDateTimeFormatProvider dateTimeFormatProvider) {
+    if (value != null) {
+        @Display.DateTime(DateTimeUtc: value, CustomFormat: T(dateTimeFormatProvider.ShortDateTimeFormat))
+    }
+}
+<table class="items" style="width: auto">
+    <thead>
+        <tr>
+            <th>@T("Name")</th>
+            <th>@T("Description")</th>
+            <th>@T("Cloud Video Item")</th>
+            <th>@T("Created")</th>
+            <th>@T("Status")</th>
+            <th>@T("Started")</th>
+            <th>@T("Finished")</th>
+            <th>@T("Error")</th>
+            <th>@T("Actions")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!jobs.Any()) {
+            <tr>
+                <td colspan="9">
+                    <p>@T("There are no open jobs to display.")</p>
+                </td>
+            </tr>
+        }
+        else {
+            foreach (var job in jobs) {
+                <tr>
+                    <td>@job.Name</td>
+                    <td>@job.Description</td>
+                    <td>@Html.ItemEditLinkWithReturnUrl(Html.ItemDisplayText(job.CloudVideoPart).ToString(), job.CloudVideoPart)</td>
+                    <td>@ShortDateTime(job.CreatedUtc, dateTimeFormatProvider)</td>
+                    <td>
+                        @if (job.Status == JobStatus.Processing) {
+                            var percentComplete = Convert.ToInt32(job.PercentComplete);
+                            <span class="progress-text">
+                                @String.Format("Processing ({0}%)...", percentComplete)
+                            </span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: @percentComplete%"></div>
+                            </div>
+                        }
+                        else {
+                            @T(job.Status.ToString())
+                        }
+                    </td>
+                    <td>@ShortDateTime(job.StartedUtc, dateTimeFormatProvider)</td>
+                    <td>@ShortDateTime(job.FinishedUtc, dateTimeFormatProvider)</td>
+                    <td>@job.ErrorMessage</td>
+                    <td>
+                        @if (job.CanArchive) {
+                            @Html.ActionLink(T("Archive").ToString(), "Archive", "Job", new { job.Record.Id, Area = "Orchard.Azure.MediaServices", ReturnUrl = Url.Action("Index") }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                        }
+                        @if (job.CanCancel) {
+                            @Html.ActionLink(T("Cancel").ToString(), "Cancel", "Job", new { job.Record.Id, Area = "Orchard.Azure.MediaServices", ReturnUrl = Url.Action("Index") }, new { itemprop = "UnsafeUrl RemoveUrl" })
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

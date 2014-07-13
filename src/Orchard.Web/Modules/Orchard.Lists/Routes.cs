@@ -16,6 +16,22 @@ namespace Orchard.Lists {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
+                        "Admin/Lists/TreeViewSource",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"},
+                            {"controller", "AdminTreeView"},
+                            {"action", "Nodes"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"}
+                        },
+                        new MvcRouteHandler())
+                },
+
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
                         "Admin/Lists/{containerId}/{filterByContentType}",
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"},

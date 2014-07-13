@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.Caching;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
@@ -25,7 +27,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         private readonly IEnumerable<IShapeTemplateHarvester> _harvesters;
         private readonly IEnumerable<IShapeTemplateViewEngine> _shapeTemplateViewEngines;
         private readonly IParallelCacheContext _parallelCacheContext;
-
+        private readonly Work<ILayoutAwareViewEngine> _viewEngine;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public ShapeTemplateBindingStrategy(
             IEnumerable<IShapeTemplateHarvester> harvesters,
@@ -35,7 +38,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             IVirtualPathMonitor virtualPathMonitor,
             IVirtualPathProvider virtualPathProvider,
             IEnumerable<IShapeTemplateViewEngine> shapeTemplateViewEngines,
-            IParallelCacheContext parallelCacheContext) {
+            IParallelCacheContext parallelCacheContext, 
+            Work<ILayoutAwareViewEngine> viewEngine,
+            IWorkContextAccessor workContextAccessor) {
 
             _harvesters = harvesters;
             _shellDescriptor = shellDescriptor;
@@ -45,6 +50,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             _virtualPathProvider = virtualPathProvider;
             _shapeTemplateViewEngines = shapeTemplateViewEngines;
             _parallelCacheContext = parallelCacheContext;
+            _viewEngine = viewEngine;
+            _workContextAccessor = workContextAccessor;
             Logger = NullLogger.Instance;
         }
 
@@ -137,13 +144,50 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
         private IHtmlString Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {
             Logger.Information("Rendering template file '{0}'", harvestShapeInfo.TemplateVirtualPath);
+            IHtmlString result;
 
-            var htmlHelper = new HtmlHelper(displayContext.ViewContext, displayContext.ViewDataContainer);
-            var result = htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
+            if (displayContext.ViewContext.View != null) {
+                var htmlHelper = new HtmlHelper(displayContext.ViewContext, displayContext.ViewDataContainer);
+                result = htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
+            }
+            else {
+                // If the View is null, it means that the shape is being executed from a non-view origin / where no ViewContext was established by the view engine, but manually.
+                // Manually creating a ViewContext works when working with Shape methods, but not when the shape is implemented as a Razor view template.
+                // Horrible, but it will have to do for now.
+                result = RenderRazorViewToString(harvestShapeInfo.TemplateVirtualPath, displayContext);
+            }
 
             Logger.Information("Done rendering template file '{0}'", harvestShapeInfo.TemplateVirtualPath);
             return result;
         }
 
+        private IHtmlString RenderRazorViewToString(string path, DisplayContext context) {
+            using (var sw = new StringWriter()) {
+                var controllerContext = CreateControllerContext();
+                var viewResult = _viewEngine.Value.FindPartialView(controllerContext, path, false);
+
+                context.ViewContext.ViewData = new ViewDataDictionary(context.Value);
+                context.ViewContext.TempData = new TempDataDictionary();
+                viewResult.View.Render(context.ViewContext, sw);
+                viewResult.ViewEngine.ReleaseView(controllerContext, viewResult.View);
+                return new HtmlString(sw.GetStringBuilder().ToString());
+            }
+        }
+
+        private ControllerContext CreateControllerContext() {
+            var controller = new StubController();
+            var httpContext = _workContextAccessor.GetContext().Resolve<HttpContextBase>();
+            var requestContext = _workContextAccessor.GetContext().Resolve<RequestContext>();
+            var routeData = requestContext.RouteData;
+
+            if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
+                routeData.Values.Add("controller", controller.GetType().Name.ToLower().Replace("controller", ""));
+
+            controller.ControllerContext = new ControllerContext(httpContext, routeData, controller);
+            controller.ControllerContext.RequestContext = requestContext;
+            return controller.ControllerContext;
+        }
+
+        private class StubController : Controller { }
     }
 }

@@ -11,6 +11,7 @@ using Orchard.Core.Feeds;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Settings;
+using Orchard.Taxonomies.Settings;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Taxonomies.Drivers {
@@ -57,16 +58,27 @@ namespace Orchard.Taxonomies.Drivers {
                     var taxonomy = _taxonomyService.GetTaxonomy(part.TaxonomyId);
                     var totalItemCount = _taxonomyService.GetContentItemsCount(part);
 
+                    var partSettings = part.Settings.GetModel<TermPartSettings>();
+                    if (partSettings != null && partSettings.OverrideDefaultPagination) {
+                        pager.PageSize = partSettings.PageSize;
+                    }
+
+                    var childDisplayType = partSettings != null &&
+                                           !String.IsNullOrWhiteSpace(partSettings.ChildDisplayType)
+                        ? partSettings.ChildDisplayType
+                        : "Summary";
                     // asign Taxonomy and Term to the content item shape (Content) in order to provide 
                     // alternates when those content items are displayed when they are listed on a term
                     var termContentItems = _taxonomyService.GetContentItems(part, pager.GetStartIndex(), pager.PageSize)
-                        .Select(c => _contentManager.BuildDisplay(c, "Summary").Taxonomy(taxonomy).Term(part));
+                        .Select(c => _contentManager.BuildDisplay(c, childDisplayType).Taxonomy(taxonomy).Term(part));
 
                     var list = shapeHelper.List();
 
                     list.AddRange(termContentItems);
 
-                    var pagerShape = shapeHelper.Pager(pager)
+                    var pagerShape = pager.PageSize == 0
+                        ? null
+                        : shapeHelper.Pager(pager)
                             .TotalItemCount(totalItemCount)
                             .Taxonomy(taxonomy)
                             .Term(part);
@@ -92,16 +104,16 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Exporting(TermPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Record.Count);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Selectable", part.Record.Selectable);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Record.Weight);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Selectable", part.Selectable);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Weight", part.Weight);
 
-            var taxonomy = _contentManager.Get(part.Record.TaxonomyId);
+            var taxonomy = _contentManager.Get(part.TaxonomyId);
             var identity = _contentManager.GetItemMetadata(taxonomy).Identity.ToString();
             context.Element(part.PartDefinition.Name).SetAttributeValue("TaxonomyId", identity);
 
             var identityPaths = new List<string>();
-            foreach(var pathPart in part.Record.Path.Split('/')) {
+            foreach(var pathPart in part.Path.Split('/')) {
                 if(String.IsNullOrEmpty(pathPart)) {
                     continue;
                 }
@@ -114,9 +126,9 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override void Importing(TermPart part, ImportContentContext context) {
-            part.Record.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
-            part.Record.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
-            part.Record.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
+            part.Count = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Count"));
+            part.Selectable = Boolean.Parse(context.Attribute(part.PartDefinition.Name, "Selectable"));
+            part.Weight = Int32.Parse(context.Attribute(part.PartDefinition.Name, "Weight"));
 
             var identity = context.Attribute(part.PartDefinition.Name, "TaxonomyId");
             var contentItem = context.GetItemFromSession(identity);
@@ -125,12 +137,12 @@ namespace Orchard.Taxonomies.Drivers {
                 throw new OrchardException(T("Unknown taxonomy: {0}", identity));
             } 
             
-            part.Record.TaxonomyId = contentItem.Id;
-            part.Record.Path = "/";
+            part.TaxonomyId = contentItem.Id;
+            part.Path = "/";
 
             foreach(var identityPath in context.Attribute(part.PartDefinition.Name, "Path").Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)) {
                 var pathContentItem = context.GetItemFromSession(identityPath);
-                part.Record.Path += pathContentItem.Id + "/";
+                part.Path += pathContentItem.Id + "/";
             }
         }
     }

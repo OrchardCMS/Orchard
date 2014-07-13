@@ -65,8 +65,10 @@
 #media-library-main-navigation {
     vertical-align: top;
     min-width: 220px; /*Width of left column*/
+    max-width: 220px;
     height: 85vh;
     overflow-y: scroll;
+    overflow-x: auto;
     border-right: 1px solid #e0e0e0;
 }
     #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
@@ -105,6 +107,10 @@
         background-color: #e0e0e0;
     }
 
+    .in-progress .media-library-folder-title:hover, .in-progress .media-library-folder-title.selected, .in-progress a  {
+        cursor: progress;
+    }
+
     .media-library-navigation-folder-link {
         padding: 0;
     }
@@ -124,6 +130,7 @@
 
     .media-library-folder-title {
         display: inline-block;
+        white-space: nowrap;
     }
 
 #media-library-main-list-wrapper {
@@ -335,6 +342,10 @@
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
         text-wrap: none;
+    }
+
+    .media-library-main-list-overlay .publication-status {
+        font-style: italic;
     }
 
     .ui-draggable-dragging .media-library-main-list-overlay{

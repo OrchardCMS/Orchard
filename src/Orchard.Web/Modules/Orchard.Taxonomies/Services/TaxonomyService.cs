@@ -46,11 +46,11 @@ namespace Orchard.Taxonomies.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TaxonomyPart> GetTaxonomies() {
-            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().WithQueryHints(new QueryHints().ExpandParts<AutoroutePart, TitlePart>()).List();
+            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>().List();
         }
 
         public TaxonomyPart GetTaxonomy(int id) {
-            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart, AutoroutePart, TitlePart>()).As<TaxonomyPart>();
+            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart>()).As<TaxonomyPart>();
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
@@ -62,7 +62,6 @@ namespace Orchard.Taxonomies.Services {
                 .Query<TaxonomyPart>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, CommonPartRecord>())
                 .List()
                 .FirstOrDefault();
         }
@@ -132,7 +131,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             var result = _contentManager.Query<TermPart, TermPartRecord>()
                 .Where(x => x.TaxonomyId == taxonomyId)
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List();
 
             return TermPart.Sort(result);
@@ -141,7 +139,6 @@ namespace Orchard.Taxonomies.Services {
         public TermPart GetTermByPath(string path) {
             return _contentManager.Query<TermPart, TermPartRecord>()
                 .Join<AutoroutePartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<TitlePartRecord, CommonPartRecord>())
                 .Where(rr => rr.DisplayAlias == path)
                 .List()
                 .FirstOrDefault();
@@ -150,7 +147,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetAllTerms() {
             var result = _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List();
             return TermPart.Sort(result);
         }
@@ -158,20 +154,20 @@ namespace Orchard.Taxonomies.Services {
         public TermPart GetTerm(int id) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
 
-        public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null) {
-            return String.IsNullOrEmpty(field) 
-                ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => GetTerm(t.TermRecord.Id))
-                : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => GetTerm(t.TermRecord.Id));
+        public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null, VersionOptions versionOptions = null) {
+            var termIds = String.IsNullOrEmpty(field)
+                ? _termContentItemRepository.Fetch(x => x.TermsPartRecord.ContentItemRecord.Id == contentItemId).Select(t => t.TermRecord.Id).ToArray()
+                : _termContentItemRepository.Fetch(x => x.TermsPartRecord.Id == contentItemId && x.Field == field).Select(t => t.TermRecord.Id).ToArray();
+
+            return _contentManager.GetMany<TermPart>(termIds, versionOptions ?? VersionOptions.Published, QueryHints.Empty);
         }
 
         public TermPart GetTermByName(int taxonomyId, string name) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(t => t.TaxonomyId == taxonomyId)
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
@@ -212,9 +208,9 @@ namespace Orchard.Taxonomies.Services {
             var termsPart = contentItem.As<TermsPart>();
 
             // removing current terms for specific field
-            var fieldIndexes = termsPart.Terms
-                .Where(t => t.Field == field)
-                .Select((t, i) => i)
+            var fieldIndexes = termsPart.Terms.Select((t, i) => new {Term = t, Index = i})
+                .Where(x => x.Term.Field == field)
+                .Select(x => x.Index)
                 .OrderByDescending(i => i)
                 .ToList();
             
@@ -236,8 +232,7 @@ namespace Orchard.Taxonomies.Services {
             var rootPath = term.FullPath + "/";
 
             var query = _contentManager
-                .Query<TermsPart, TermsPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>());
+                .Query<TermsPart, TermsPartRecord>();
 
             if (String.IsNullOrWhiteSpace(fieldName)) {
                 query = query.Where(
@@ -273,7 +268,6 @@ namespace Orchard.Taxonomies.Services {
             var rootPath = term.FullPath + "/";
 
             var result = _contentManager.Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .Where(x => x.Path.StartsWith(rootPath))
                 .List();
 
@@ -291,7 +285,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<string> GetSlugs() {
             return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List()
                 .Select(t => t.Slug);
         }
@@ -299,7 +292,6 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<string> GetTermPaths() {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .WithQueryHints(new QueryHints().ExpandRecords<AutoroutePartRecord, TitlePartRecord, CommonPartRecord>())
                 .List()
                 .Select(t => t.Slug);
         }

@@ -73,7 +73,6 @@
   <ItemGroup>
     <Content Include="Content\Admin\Images\spam.gif" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Drivers\JavaScriptAntiSpamPartDriver.cs" />
@@ -106,16 +105,13 @@
     <Compile Include="Handlers\TypePadSettingsPartHandler.cs" />
     <Compile Include="Handlers\SpamFilterPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\AkismetSettingsPartRecord.cs" />
     <Compile Include="Models\AkismetSettingsPart.cs" />
     <Compile Include="Models\CommentCheckContext.cs" />
     <Compile Include="Models\ReCaptchaSettingsPart.cs" />
-    <Compile Include="Models\ReCaptchaSettingsPartRecord.cs" />
     <Compile Include="Models\TypePadSettingsPart.cs" />
-    <Compile Include="Models\TypePadSettingsPartRecord.cs" />
-    <Compile Include="Models\SpamFilterPart.cs" />
-    <Compile Include="Models\ReCaptchaPart.cs" />
     <Compile Include="Models\SpamFilterPartRecord.cs" />
+    <Compile Include="Models\ReCaptchaPart.cs" />
+    <Compile Include="Models\SpamFilterPart.cs" />
     <Compile Include="Models\SpamStatus.cs" />
     <Compile Include="Models\SubmissionLimitPart.cs" />
     <Compile Include="Permissions.cs" />

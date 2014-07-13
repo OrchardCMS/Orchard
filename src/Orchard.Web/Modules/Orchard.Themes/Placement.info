@@ -1,0 +1,9 @@
+﻿<Placement>
+  <Place Parts_DisableTheme="Content"/>
+
+  <!-- Opinionated, don't display the Title when disabling the theme -->
+  <Match ContentPart="DisableThemePart">
+    <Place Parts_Title="-"/>
+  </Match>
+  
+</Placement>

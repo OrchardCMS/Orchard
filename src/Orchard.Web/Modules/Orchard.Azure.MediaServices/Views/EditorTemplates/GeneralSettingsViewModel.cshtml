@@ -1,0 +1,54 @@
+﻿@model Orchard.Azure.MediaServices.ViewModels.Settings.GeneralSettingsViewModel
+
+<fieldset>
+    <legend>@T("Account credentials")</legend>
+    <p class="hint">@T("The account name and access key for your Microsoft Azure Media Services account can be obtained from the Windows Azure management portal at <a href='https://manage.windowsazure.com'>https://manage.windowsazure.com</a>.")</p>
+    <p class="hint">@T("If you do not yet have a Microsoft Azure subscription, visit <a href='http://www.windowsazure.com/pricing/free-trial'>http://www.windowsazure.com/pricing/free-trial</a> to sign up for a free trial or buy a subscription.")</p>
+    <div>
+        <label>@T("Account name")</label>
+        @Html.TextBoxFor(m => m.WamsAccountName, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.WamsAccountName)
+    </div>
+    <div>
+        <label>@T("Account access key")</label>
+        @Html.TextBoxFor(m => m.WamsAccountKey, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.WamsAccountKey)
+    </div>
+    <div>
+        <label>@T("Storage account access key")</label>
+        @Html.TextBoxFor(m => m.StorageAccountKey, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.StorageAccountKey)
+        <p class="hint">@T("Specify the account key for the underlying Microsoft Azure Storage account used by your Windows Azure Media Services instance if you want to automatically enable CORS support with the appropriate origin URLs for this web site. Enabling CORS support in your Windows Azure Storage account is required for uploading media files directly to Windows Azure Media Services. If you leave this field blank you will have to manually enable the appropriate CORS support for your Windows Azure Storage account using PowerShell.")</p>
+    </div>
+    <button id="test-button" type="submit" formaction="@Url.Action("TestCredentials")" class="button grey">@T("Test")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Dynamic packaging")</legend>
+    <div>
+        @Html.CheckBoxFor(m => m.EnableDynamicPackaging) <label for="@Html.FieldIdFor(m => m.EnableDynamicPackaging)" class="forcheckbox">@T("Enable dynamic packaging")</label>
+        @Html.ValidationMessageFor(m => m.EnableDynamicPackaging)
+    </div>
+    <p class="hint">@T("When checked, dynamic packaging assets will be created when encoding using one of the supported encoding presets for dynamic packaging.")</p>
+    <p class="hint">@T("NOTE: When enabling dynamic packaging you must ensure you have at least one unit of reserved capacity configured on your streaming origin.")</p>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Access policy")</legend>
+    <div>
+        <label>@T("Access policy duration")</label>
+        @Html.TextBoxFor(m => m.AccessPolicyDuration, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.AccessPolicyDuration)
+        <p class="hint">@T("The duration for all access policies created for asset locators, in standard TimeSpan format (dd.hh:mm:ss).")</p>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Filename extensions")</legend>
+    <p class="hint">@T("Configure the allowed filename extensions when uploading asset files. Specify extensions as a semicolon-separated list without any * or period, e.g. \"mp4;wma;mpeg\".")</p>
+    <div>
+        <label>@T("Video files")</label>
+        @Html.TextBoxFor(m => m.AllowedVideoFilenameExtensions, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.AllowedVideoFilenameExtensions)
+    </div>
+</fieldset>

@@ -107,7 +107,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             if (DefaultExtensionTypes.IsTheme(extensionType)) {
                 // alterations from themes must be from the given theme or a base theme
                 var featureName = alteration.Feature.Descriptor.Id;
-                return featureName == themeName || IsBaseTheme(featureName, themeName);
+                return String.IsNullOrEmpty(featureName) || featureName == themeName || IsBaseTheme(featureName, themeName);
             }
 
             return false;

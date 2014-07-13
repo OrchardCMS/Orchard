@@ -1,0 +1,128 @@
+﻿@{
+    Script.Require("jQuery");
+    Layout.Title = T("Migrate Infosets").ToString();
+}
+
+<div class="message message-Warning" id="message-progress" style="display: none"></div>
+
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Infoset"))) {
+    <fieldset>
+        <legend>@T("Migrating Site Settings:")</legend>
+        <span class="hint">@T("This migration step will migrate your Site Settings to Infosets and delete the deprecated records.")</span>
+    </fieldset>
+    <fieldset>
+        <button type="submit">@T("Migrate")</button>
+    </fieldset>
+}
+
+<fieldset>
+    <legend>@T("Migrating Body Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Body Parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateBody", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Media Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Media Parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMedia", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Content Item Permissions Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Content Item Permissions parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentPermissionsPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Content Item Menu Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Content Item Menu parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateContentMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Tags Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Tags parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateTagsPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Widget Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Widget parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateWidgetPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Layer Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Layer parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateLayerPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Menu Widget Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Menu Widget parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMenuWidgetPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Shape Menu Item Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Shape Menu Item parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateShapeMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+<fieldset>
+    <legend>@T("Migrating Menu Item Parts:")</legend>
+    <span class="hint">@T("This migration step will copy all Menu Item parts to Infosets.")</span>
+    <button type="button" class="button button-migrate" data-url="@Url.Action("MigrateMenuItemPart", "Infoset")">@T("Migrate")</button>
+</fieldset>
+
+@if (Request.RawUrl.EndsWith("1.x")) {
+    <fieldset>
+        <legend>@T("FIXING 1.x VERSIONS:")</legend>
+        <span class="hint">@T("This migration step will merge version infosets.")</span>
+        <button type="button" class="button button-migrate" data-url="@Url.Action("FixContentItemVersionPart", "Infoset")">@T("Migrate")</button>
+    </fieldset>
+}
+ 
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(function() {
+            var antiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
+            var endMessage = '@HttpUtility.JavaScriptStringEncode(T("All items have been processed").Text)';
+            
+            $('.button-migrate').click(function () {
+                var importUrl = $(this).data('url');
+
+                var startId = 0;
+                $('#message-progress').show();
+
+                var iId = setInterval(function () {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: importUrl,
+                        async: false,
+                        data: {
+                            __RequestVerificationToken: antiForgeryToken,
+                            id: startId // start at index 0
+                        },
+                        success: function (data) {
+                            if (Number(data) == startId) {
+                                clearInterval(iId);
+                                $('#message-progress').text(endMessage);
+                            }
+                            else {
+                                startId = Number(data);
+                                $('#message-progress').text('Processing content item ' + startId);
+                            }
+                        },
+                        fail: function(result) {
+                            console.log("An error occured: " + result);
+                        }
+                    });
+
+                }, 100);
+                
+            });
+        });
+    </script>
+}

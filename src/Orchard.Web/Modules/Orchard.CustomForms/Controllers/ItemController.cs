@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -118,13 +117,13 @@ namespace Orchard.CustomForms.Controllers {
             }
 
             var customForm = form.As<CustomFormPart>();
-
             var contentItem = _contentManager.New(customForm.ContentType);
 
             if (!Services.Authorizer.Authorize(Permissions.CreateSubmitPermission(customForm.ContentType), contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
+            if(customForm.SaveContentItem)
+                _contentManager.Create(contentItem, VersionOptions.Draft);
 
             var model = _contentManager.UpdateEditor(contentItem, this);
             
@@ -156,18 +155,15 @@ namespace Orchard.CustomForms.Controllers {
                     () => new Dictionary<string, object> { { "Content", contentItem } });
 
             // trigger any workflow
-            _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, customForm.ContentItem,
-                    () => new Dictionary<string, object> { { "Content", contentItem } });
+            _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, contentItem,
+                    () => new Dictionary<string, object> { { "Content", contentItem} , { "CustomForm", customForm.ContentItem } });
 
             if (customForm.Redirect) {
                 returnUrl = _tokenizer.Replace(customForm.RedirectUrl, new Dictionary<string, object> { { "Content", contentItem } });
             }
 
             // save the submitted form
-            if (!customForm.SaveContentItem) {
-                Services.ContentManager.Remove(contentItem);
-            }
-            else {
+            if (customForm.SaveContentItem) {
                 conditionallyPublish(contentItem);
             }
 

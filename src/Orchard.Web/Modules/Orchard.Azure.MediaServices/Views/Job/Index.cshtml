@@ -1,0 +1,9 @@
+﻿@{
+    Script.Require("jQuery");
+    Script.Include("cloudmedia-autorefresh.js");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div data-refresh-url="@Url.Action("OpenJobsTable")">
+        @Display(Model)
+    </div>
+}

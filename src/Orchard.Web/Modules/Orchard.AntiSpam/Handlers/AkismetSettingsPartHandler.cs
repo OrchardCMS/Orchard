@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Orchard.AntiSpam.Models;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -10,11 +9,10 @@ namespace Orchard.AntiSpam.Handlers {
     [UsedImplicitly]
     [OrchardFeature("Akismet.Filter")]
     public class AkismetSettingsPartHandler : ContentHandler {
-        public AkismetSettingsPartHandler(IRepository<AkismetSettingsPartRecord> repository) {
+        public AkismetSettingsPartHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<AkismetSettingsPart>("Site"));
-            Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<AkismetSettingsPartRecord>("AkismetSettings", "Parts/AntiSpam.AkismetSettings", "spam"));
+            Filters.Add(new TemplateFilterForPart<AkismetSettingsPart>("AkismetSettings", "Parts/AntiSpam.AkismetSettings", "spam"));
         }
 
         public Localizer T { get; set; }

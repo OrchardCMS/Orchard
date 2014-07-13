@@ -33,7 +33,9 @@ namespace Orchard.Security.Providers {
 
         public void SignIn(IUser user, bool createPersistentCookie) {
             var now = _clock.UtcNow.ToLocalTime();
-            var userData = Convert.ToString(user.Id);
+            
+            // the cookie user data is {userId};{tenant}
+            var userData = String.Concat(Convert.ToString(user.Id), ";", _settings.Name); 
 
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
@@ -55,13 +57,7 @@ namespace Orchard.Security.Providers {
             var httpContext = _httpContextAccessor.Current();
 
             if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
-                var cookiePath = httpContext.Request.ApplicationPath;
-                if (cookiePath != null && cookiePath.Length > 1) {
-                    cookiePath += '/';
-                }
-
-                cookiePath += _settings.RequestUrlPrefix;
-                cookie.Path = cookiePath;
+                cookie.Path = GetCookiePath(httpContext);
             }
 
             if (FormsAuthentication.CookieDomain != null) {
@@ -82,6 +78,18 @@ namespace Orchard.Security.Providers {
             _signedInUser = null;
             _isAuthenticated = false;
             FormsAuthentication.SignOut();
+
+            // overwritting the authentication cookie for the given tenant
+            var httpContext = _httpContextAccessor.Current();
+            var rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "") {
+                Expires = DateTime.Now.AddYears(-1),
+            };
+
+            if (!String.IsNullOrEmpty(_settings.RequestUrlPrefix)) {
+                rFormsCookie.Path = GetCookiePath(httpContext);
+            }
+
+            httpContext.Response.Cookies.Add(rFormsCookie);
         }
 
         public void SetAuthenticatedUserForRequest(IUser user) {
@@ -99,15 +107,41 @@ namespace Orchard.Security.Providers {
             }
 
             var formsIdentity = (FormsIdentity)httpContext.User.Identity;
-            var userData = formsIdentity.Ticket.UserData;
+            var userData = formsIdentity.Ticket.UserData ?? "";
+
+            // the cookie user data is {userId};{tenant}
+            var userDataSegments = userData.Split(';');
+            
+            if (userDataSegments.Length < 2) {
+                return null;
+            }
+
+            var userDataId = userDataSegments[0];
+            var userDataTenant = userDataSegments[1];
+
+            if (!String.Equals(userDataTenant, _settings.Name, StringComparison.Ordinal)) {
+                return null;
+            }
+
             int userId;
-            if (!int.TryParse(userData, out userId)) {
+            if (!int.TryParse(userDataId, out userId)) {
                 Logger.Fatal("User id not a parsable integer");
                 return null;
             }
 
             _isAuthenticated = true;
             return _signedInUser = _contentManager.Get(userId).As<IUser>();
+        }
+
+        private string GetCookiePath(HttpContextBase httpContext) {
+            var cookiePath = httpContext.Request.ApplicationPath;
+            if (cookiePath != null && cookiePath.Length > 1) {
+                cookiePath += '/';
+            }
+
+            cookiePath += _settings.RequestUrlPrefix;
+
+            return cookiePath;
         }
     }
 }

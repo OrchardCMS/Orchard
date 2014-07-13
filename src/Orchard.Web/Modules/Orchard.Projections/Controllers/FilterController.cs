@@ -43,7 +43,7 @@ namespace Orchard.Projections.Controllers {
         public dynamic Shape { get; set; }
 
         public ActionResult Add(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new FilterAddViewModel { Id = id, Filters = _projectionManager.DescribeFilters() };
@@ -51,7 +51,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult AddGroup(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var query = _queryService.GetQuery(id).Record;
@@ -67,7 +67,7 @@ namespace Orchard.Projections.Controllers {
 
         [HttpPost]
         public ActionResult DeleteGroup(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var group = _groupRepository.Get(id);
@@ -85,7 +85,7 @@ namespace Orchard.Projections.Controllers {
 
 
         public ActionResult Delete(int id, int filterId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var filter = _repository.Get(filterId);
@@ -102,7 +102,7 @@ namespace Orchard.Projections.Controllers {
         }
 
         public ActionResult Edit(int id, string category, string type, int filterId = -1) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage queries")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageQueries, T("Not authorized to manage queries")))
                 return new HttpUnauthorizedResult();
 
             var filter = _projectionManager.DescribeFilters().SelectMany(x => x.Descriptors).FirstOrDefault(x => x.Category == category && x.Type == type);

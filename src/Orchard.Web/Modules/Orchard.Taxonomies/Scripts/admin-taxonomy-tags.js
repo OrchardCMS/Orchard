@@ -88,8 +88,10 @@
         var $tagIt = $("ul.tagit", $wrapper);
         var singleChoice = $(".terms-editor", $wrapper).data("singlechoice");
         var $terms = $("ul.terms", $wrapper);
-        var $termCheckbox = $("input[data-term-identity='" + tag.label.toLowerCase() + "']", $terms);
-
+        var $termCheckbox = $("input[data-term-identity='" + tag.label.toLowerCase() + "']", $terms).filter(function () {
+            return $(this).siblings("input[value='" + tag.value + "']").length;
+        });
+        
         if ($termCheckbox.is(":disabled")) {
             removeTag($tagIt, tagLabelOrValue);
             return;
@@ -99,7 +101,7 @@
             createTermCheckbox($wrapper, tag.label, this);
         }
 
-        $termCheckbox.attr("checked", action == "added");
+        $termCheckbox.prop("checked", action == "added");
 
         if (singleChoice && action == "added") {
             $tagIt.tagit("fill", [tag.label]);

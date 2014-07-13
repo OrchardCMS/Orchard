@@ -1,0 +1,13 @@
+﻿Name: Microsoft Azure Media Services
+AntiForgery: enabled
+Author: Microsoft Open Technologies, Inc
+Website: http://msopentech.com
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: Provides integration of Microsoft Azure Media Services functionality into Orchard.
+Features:
+    Orchard.Azure.MediaServices:
+        Name: Microsoft Azure Media Services
+        Description: Provides integration of Microsoft Azure Media Services functionality into Orchard.
+        Category: Hosting
+        Dependencies: Orchard.MediaLibrary, Orchard.PublishLater, Orchard.TaskLease

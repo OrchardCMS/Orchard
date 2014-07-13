@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Drivers {
                 }
 
                 var blogPosts = _contentManager.Query(VersionOptions.Published, "BlogPost")
-                    .Join<CommonPartRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
+                    .Join<CommonPartRecord>().Where(cr => cr.Container.Id == blog.Id)
                     .OrderByDescending(cr => cr.CreatedUtc)
                     .Slice(0, part.Count)
                     .Select(ci => ci.As<BlogPostPart>());
@@ -47,7 +47,7 @@ namespace Orchard.Blogs.Drivers {
             var viewModel = new RecentBlogPostsViewModel {
                 Count = part.Count,
                 BlogId = part.BlogId,
-                Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
+                Blogs = _blogService.Get().ToList().OrderBy(b => _contentManager.GetItemMetadata(b).DisplayText)
             };
 
             return ContentShape("Parts_Blogs_RecentBlogPosts_Edit",

@@ -1,0 +1,5 @@
+﻿@model Orchard.Templates.ViewModels.ShapePartSettingsViewModel
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Processor)">@T("Template Processor")</label>
+    @Html.EditorFor(m => m.Processor, new { AvailableProcessors = Model.AvailableProcessors })
+</fieldset>

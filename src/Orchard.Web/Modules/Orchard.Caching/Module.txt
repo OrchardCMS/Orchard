@@ -1,0 +1,11 @@
+﻿Name: Orchard.Caching
+AntiForgery: enabled
+Author: Sébastien Ros
+Website: http://orchardproject.net
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: Provides an API to cache business data.
+Features:
+    Orchard.Caching:
+        Description: Provides an API to cache business data.
+		Category: Performance

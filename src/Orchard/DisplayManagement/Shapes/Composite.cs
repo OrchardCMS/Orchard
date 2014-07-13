@@ -7,7 +7,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Castle.Core.Interceptor;
 using Castle.DynamicProxy;
 using Microsoft.CSharp.RuntimeBinder;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
@@ -202,7 +201,9 @@ namespace Orchard.DisplayManagement.Shapes {
                         mp => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.NamedArgument, mp.Name))).ToArray();
 
                 var targetAndArguments = Pack<Expression>(
-                    Expression.Property(invocationParameter, invocationParameter.Type, "InvocationTarget"),
+                    Expression.Coalesce(
+                        Expression.Property(invocationParameter, invocationParameter.Type, "InvocationTarget"), 
+                        Expression.Property(invocationParameter, invocationParameter.Type, "Proxy")),
                     methodParameters.Select(
                         (mp, index) =>
                         Expression.Convert(

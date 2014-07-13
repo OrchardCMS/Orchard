@@ -39,15 +39,16 @@ namespace Orchard.Projections.Drivers {
 
                                 var descriptor = _projectionManager.GetFilter(filter.Category, filter.Type);
 
+                                var state = filter.State;
                                 if (descriptor != null) {
-                                    filter.State = _formManager.Export(descriptor.Form, filter.State, context);
+                                    state = _formManager.Export(descriptor.Form, filter.State, context);
                                 }
 
                                 return new XElement("Filter",
                                              new XAttribute("Category", filter.Category ?? ""),
                                              new XAttribute("Description", filter.Description ?? ""),
                                              new XAttribute("Position", filter.Position),
-                                             new XAttribute("State", filter.State ?? ""),
+                                             new XAttribute("State", state ?? ""),
                                              new XAttribute("Type", filter.Type ?? "")
                                     );
                             })
@@ -58,15 +59,16 @@ namespace Orchard.Projections.Drivers {
                     part.SortCriteria.Select(sortCriterion => {
                         var descriptor = _projectionManager.GetFilter(sortCriterion.Category, sortCriterion.Type);
 
+                        var state = sortCriterion.State;
                         if (descriptor != null) {
-                            sortCriterion.State = _formManager.Export(descriptor.Form, sortCriterion.State, context);
+                            state = _formManager.Export(descriptor.Form, sortCriterion.State, context);
                         }
 
                         return new XElement("SortCriterion",
                                             new XAttribute("Category", sortCriterion.Category ?? ""),
                                             new XAttribute("Description", sortCriterion.Description ?? ""),
                                             new XAttribute("Position", sortCriterion.Position),
-                                            new XAttribute("State", sortCriterion.State ?? ""),
+                                            new XAttribute("State", state ?? ""),
                                             new XAttribute("Type", sortCriterion.Type ?? "")
                             );
                     })
@@ -75,15 +77,16 @@ namespace Orchard.Projections.Drivers {
                     part.Layouts.Select(layout => {
                         var descriptor = _projectionManager.GetFilter(layout.Category, layout.Type);
 
+                        var state = layout.State;
                         if (descriptor != null) {
-                            layout.State = _formManager.Export(descriptor.Form, layout.State, context);
+                            state = _formManager.Export(descriptor.Form, layout.State, context);
                         }
 
                         return new XElement("Layout",
                                             // Attributes
                                             new XAttribute("Category", layout.Category ?? ""),
                                             new XAttribute("Description", layout.Description ?? ""),
-                                            new XAttribute("State", layout.State),
+                                            new XAttribute("State", state ?? ""),
                                             new XAttribute("Display", layout.Display),
                                             new XAttribute("DisplayType", layout.DisplayType ?? ""),
                                             new XAttribute("Type", layout.Type ?? ""),

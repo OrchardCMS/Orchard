@@ -366,7 +366,6 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 ul.menuItems {margin:6px 0 0 0;}
 
-
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
 
@@ -529,6 +528,11 @@ span.message {
 .info { 
     background: url(images/info.gif) no-repeat 5px 5px #fff;
     border:1px solid #e4e8ee;  /* blue */
+    padding-left:26px;
+}
+.error { 
+    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    border:1px solid #e5cece;  /* red */
     padding-left:26px;
 }
 .message-Information, .notifications {
@@ -1012,7 +1016,7 @@ table.items tr:nth-child(even) {
 
 #main .contentItems > ul > li:hover,
 ul.contentItems > li:hover,
-table.items tr:hover {
+table.items tbody tr:hover {
     background-color: #EDF9F5;
 }
 
@@ -1202,4 +1206,20 @@ fieldset.delete-button {
     float:right;
     top:36px;
     right:16px;
+}
+
+/* Print
+***************************************************************/
+@media print {
+    #menu, #branding, #login, .save-button, #footer {
+        display: none;
+    }
+    #main, #page-title {
+        margin-left: 20px;
+        padding-left: 20px;
+    }
+    html, body, #layout-content {
+        background: white;
+        height: auto;
+    }
 }

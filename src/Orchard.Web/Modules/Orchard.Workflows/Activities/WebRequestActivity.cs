@@ -70,8 +70,8 @@ namespace Orchard.Workflows.Activities {
 
                 if (response.IsSuccessStatusCode)
                     yield return T("Success");
-
-                yield return T("Error");
+                else
+                    yield return T("Error");
             }
         }
 

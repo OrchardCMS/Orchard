@@ -11,9 +11,9 @@
     Style.Include("ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
     Style.Include("ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
     Style.Include("ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
-    Script.Require("jQuery");
-    Script.Require("ShapesBase");
-    Script.Include("admin.js");
+    Script.Require("jQuery").AtFoot();
+    Script.Require("ShapesBase").AtFoot();
+    Script.Include("admin.js").AtFoot();
 
     /* Some useful shortcuts or settings
     ***************************************************************/

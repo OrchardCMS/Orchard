@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Orchard.Azure.Services.Logging {
 
     /// <summary>
-    /// Provides a Log4net appender implementation that sends log messages to Windows Azure Diagnostics.
+    /// Provides a Log4net appender implementation that sends log messages to Microsoft Azure Diagnostics.
     /// </summary>
     public class AzureDiagnosticsAppender : AppenderSkeleton {
 

@@ -109,13 +109,7 @@ namespace Orchard.Environment.ShellBuilders {
                             .Keyed<IController>(serviceKeyType)
                             .WithMetadata("ControllerType", item.Type)
                             .InstancePerDependency()
-                            .OnActivating(e => {
-                                // necessary to inject custom filters dynamically
-                                // see FilterResolvingActionInvoker
-                                var controller = e.Instance as Controller;
-                                if (controller != null)
-                                    controller.ActionInvoker = (IActionInvoker)e.Context.ResolveService(new TypedService(typeof(IActionInvoker)));
-                            });
+                            ;
                     }
 
                     foreach (var item in blueprint.HttpControllers) {
@@ -132,13 +126,15 @@ namespace Orchard.Environment.ShellBuilders {
                     // Register code-only registrations specific to a shell
                     _shellContainerRegistrations.Registrations(builder);
 
-                    var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
-                    if (File.Exists(optionalShellConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellConfig));
-
                     var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
-                    if (File.Exists(optionalShellByNameConfig))
+                    if (File.Exists(optionalShellByNameConfig)) {
                         builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellByNameConfig));
+                    }
+                    else {
+                        var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
+                        if (File.Exists(optionalShellConfig))
+                            builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReaderConstants.DefaultSectionName, optionalShellConfig));
+                    }
                 });
         }
 

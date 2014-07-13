@@ -60,6 +60,7 @@
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,8 @@
     <Compile Include="Controllers\ContentPickerController.cs" />
     <Compile Include="ContentAdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Drivers\MediaLibraryExplorerPartDriver.cs" />
     <Compile Include="Drivers\SearchFormPartDriver.cs" />
     <Compile Include="Models\SearchFormPart.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -75,7 +78,6 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\SearchSettingsPartDriver.cs" />
     <Compile Include="Models\SearchSettingsPart.cs" />
-    <Compile Include="Models\SearchSettingsPartRecord.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Handlers\SearchSettingsPartHandler.cs" />
     <Compile Include="Services\ISearchService.cs" />
@@ -92,6 +94,10 @@
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -100,7 +106,6 @@
     </Content>
     <Content Include="Styles\orchard-search-admin.css" />
     <Content Include="Styles\orchard-search-search.css" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
@@ -131,6 +136,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ContentPicker\NoIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Search.MediaLibrary.Actions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Search.MediaLibrary.Navigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media\MediaItems.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,44 @@
+﻿fieldset.close-button {
+    float: right;
+    clear: none;
+    display: none;
+}
+
+.media-library-modal-window fieldset.close-button {
+    display: block;
+}
+
+ul.breadcrumbs li {
+    float: left;
+}
+
+ul.breadcrumbs:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.list-navigation {
+    margin-top: 1em;
+}
+
+.list-navigation:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.list-navigation .pull-right {
+    float: right;
+}
+
+.media-library-modal-window .list-navigation{
+    display: none;
+}
+
+#cboxTopLeft, #cboxMiddleLeft, #cboxTopRight, #cboxMiddleRight, #cboxBottomLeft, #cboxBottomRight { width: 1px;}
+#cboxTopLeft, #cboxTopCenter, #cboxTopRight, #cboxBottomLeft, #cboxBottomCenter, #cboxBottomRight { height: 1px; }

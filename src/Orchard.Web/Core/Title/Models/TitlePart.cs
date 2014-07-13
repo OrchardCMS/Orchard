@@ -6,8 +6,8 @@ namespace Orchard.Core.Title.Models {
     public class TitlePart : ContentPart<TitlePartRecord>, ITitleAspect {
         [Required]
         public string Title {
-            get { return Record.Title; }
-            set { Record.Title = value; }
+            get { return Retrieve(x => x.Title); }
+            set { Store(x => x.Title, value); }
         }
     }
 }

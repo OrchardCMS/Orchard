@@ -67,11 +67,7 @@
     </Reference>
     <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\lib\castle-windsor\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -92,7 +88,8 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\..\lib\owin\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -120,7 +117,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http">
-      <HintPath>..\..\lib\aspnetwebapi\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -133,7 +130,8 @@
     <Reference Include="System.Web.Http">
       <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.WebHost">
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -143,9 +141,6 @@
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Routing">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -167,6 +162,8 @@
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\InfosetHelper.cs" />
+    <Compile Include="ContentManagement\XmlHelper.cs" />
     <Compile Include="ContentManagement\Handlers\TemplateFilterForPart.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateContentContext.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
@@ -223,6 +220,8 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\IShapeDisplay.cs" />
+    <Compile Include="DisplayManagement\ShapeDisplay.cs" />
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
@@ -247,8 +246,10 @@
     <Compile Include="Environment\IAssemblyLoader.cs" />
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
     <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
+    <Compile Include="Environment\IFeatureEventHandler.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\IWorkContextEvents.cs" />
+    <Compile Include="Environment\State\ContextState.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
     <Compile Include="Environment\WorkContextImplementation.cs" />
@@ -269,13 +270,28 @@
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
+    <Compile Include="Localization\Services\CurrentCalendarWorkContext.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
+    <Compile Include="Localization\Services\DefaultCalendarManager.cs" />
+    <Compile Include="Localization\Services\CultureDateTimeFormatProvider.cs" />
+    <Compile Include="Localization\Services\DefaultDateServices.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\ICalendarSelector.cs" />
+    <Compile Include="Localization\Services\ICalendarManager.cs" />
+    <Compile Include="Localization\Services\IDateServices.cs" />
+    <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\SiteCalendarSelector.cs" />
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageService.cs" />
+    <Compile Include="Messaging\Services\IMessageChannel.cs" />
+    <Compile Include="Messaging\Services\IMessageChannelProvider.cs" />
+    <Compile Include="Messaging\Services\IMessageChannelSelector.cs" />
+    <Compile Include="Messaging\Services\IMessageService.cs" />
+    <Compile Include="Messaging\Services\NullMessageChannelSelector.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRegularExpressionAttribute.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedStringMaxLengthAttribute.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRangeAttribute.cs" />
@@ -286,6 +302,7 @@
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
+    <Compile Include="Mvc\Routes\HubRoute.cs" />
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
@@ -589,6 +606,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
+    <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
     <Compile Include="Wcf\OrchardInstanceContext.cs" />
@@ -599,6 +617,11 @@
     <Compile Include="WebApi\DefaultOrchardWebApiHttpControllerSelector.cs" />
     <Compile Include="WebApi\DefaultOrchardWebApiHttpHttpControllerActivator.cs" />
     <Compile Include="WebApi\Extensions\RouteExtension.cs" />
+    <Compile Include="WebApi\Filters\OrchardApiAuthorizationFilterDispatcher.cs" />
+    <Compile Include="WebApi\Filters\UnhandledApiExceptionFilter.cs" />
+    <Compile Include="WebApi\Filters\IFilterProvider.cs" />
+    <Compile Include="WebApi\Filters\OrchardApiExceptionFilterDispatcher.cs" />
+    <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
     <Compile Include="WorkContextExtensions.cs" />
@@ -884,7 +907,7 @@
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
-    <Compile Include="Mvc\Filters\FilterResolvingActionInvoker.cs" />
+    <Compile Include="Mvc\Filters\OrchardFilterProvider.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />

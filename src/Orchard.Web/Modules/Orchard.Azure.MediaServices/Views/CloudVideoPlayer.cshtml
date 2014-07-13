@@ -1,0 +1,43 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@using Orchard.Azure.MediaServices.Models;
+@using Newtonsoft.Json;
+
+@{
+    Style.Include("cloudmedia-videoplayer.css", "cloudmedia-videoplayer.min.css");
+    
+    Script.Require("JQuery").AtFoot();    
+    Script.Include("Lib/swfobject.js").AtFoot();
+    Script.Include("Lib/dash.all.js").AtFoot();
+    Script.Include("Lib/uri.js").AtFoot();
+    Script.Include("Lib/underscore.js", "Lib/underscore.min.js").AtFoot();
+    Script.Include("Lib/moment.js", "Lib/moment.min.js").AtFoot();
+    Script.Include("Lib/console-shim.js", "Lib/console-shim.min.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-data.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-smp.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-dash.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-html5.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-injectors-alt.js").AtFoot();
+    Script.Include("cloudmedia-videoplayer-main.js").AtFoot();
+
+    var altText = Model.AlternateText;
+    var assetData = Model.AssetData;
+    var assetDataJson = JsonConvert.SerializeObject(assetData, Formatting.None);
+    var renderId = Guid.NewGuid().ToString().Replace("-", "");
+    var playerWidth = Model.PlayerWidth; // Width (in pixels) of the rendered player.
+    var playerHeight = Model.PlayerHeight; // Height (in pixels) of the rendered player.
+    var applyMediaQueries = Model.ApplyMediaQueries; // True to apply media query filtering to the set of assets, otherwise false.
+    var autoPlay = Model.AutoPlay; // True to start playing the video automatically, otherwise false.
+}
+<div id="cloudmedia-videoplayer-@Html.Raw(renderId)" class="cloudmedia-videoplayer-container"
+    data-cloudvideo-player-content-baseurl="@Url.Content("~/Modules/Orchard.Azure.MediaServices/Content/")"
+    data-cloudvideo-player-assetdata="@assetDataJson"
+    data-cloudvideo-player-width="@playerWidth"
+    data-cloudvideo-player-height="@playerHeight"
+    data-cloudvideo-player-applymediaqueries="@applyMediaQueries.ToString().ToLower()"
+    data-cloudvideo-player-autoplay="@autoPlay.ToString().ToLower()"
+    data-cloudvideo-player-errortext="@T("This video item could not be played back on your computer.")"
+    data-cloudvideo-player-alttext="@(!String.IsNullOrEmpty(altText) ? T("Description of video item: {0}", altText).Text : "")"
+    data-cloudvideo-player-retrytext="@T("Retry")">
+</div>

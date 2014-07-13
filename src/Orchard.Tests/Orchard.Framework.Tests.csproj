@@ -65,13 +65,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\castle-windsor\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -135,7 +130,10 @@
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -158,6 +156,7 @@
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
+    <Compile Include="ContentManagement\ContentHelpers.cs" />
     <Compile Include="ContentManagement\ContentIdentityTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -177,6 +176,7 @@
     <Compile Include="ContentManagement\Handlers\GammaPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
     <Compile Include="ContentManagement\ImportContentSessionTests.cs" />
+    <Compile Include="ContentManagement\InfosetHelperTests.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReaderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriterTests.cs" />
@@ -207,6 +207,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\XmlHelperTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
     <Compile Include="DisplayManagement\CompositeTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\LocationParserTests.cs" />
     <Compile Include="DisplayManagement\NilTests.cs" />
     <Compile Include="DisplayManagement\ZoneHoldingTests.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
@@ -230,7 +232,6 @@
     <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
-    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
     <Compile Include="DisplayManagement\SubsystemTests.cs" />
     <Compile Include="DisplayManagement\ShapeHelperTests.cs" />
@@ -367,6 +368,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample7\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

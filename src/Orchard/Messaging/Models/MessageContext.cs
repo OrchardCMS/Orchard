@@ -5,6 +5,7 @@ using System.Net.Mail;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Messaging.Models {
+    [Obsolete]
     public class MessageContext {
         public MailMessage MailMessage { get; private set; }
         public string Type { get; set; }

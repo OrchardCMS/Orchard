@@ -1,6 +1,6 @@
 ﻿namespace Orchard.Core.Containers.Models {
-    public enum OrderByDirection { 
+    public enum OrderByDirection {
         Ascending,
-        Descending,
+        Descending
     }
 }

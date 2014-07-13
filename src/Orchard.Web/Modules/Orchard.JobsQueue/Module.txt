@@ -1,0 +1,18 @@
+﻿Name: Jobs Queue
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: This module provides a jobs queue to process jobs asynchronously.
+Features:
+	Orchard.JobsQueue:
+		Description: Provides a jobs queue to process jobs asynchronously.
+		Category: Developer
+		Dependencies: Settings, Orchard.TaskLease
+		Name: Jobs Queue
+	Orchard.JobsQueue.UI:
+		Description: Provides a UI to manage queued jobs.
+		Category: Developer
+		Dependencies: Orchard.JobsQueue
+		Name: Jobs Queue UI

@@ -3,6 +3,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
+using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Localization;
@@ -11,6 +12,7 @@ using Orchard.Security;
 
 namespace Orchard.MediaLibrary.Services {
     public class XmlRpcHandler : IXmlRpcHandler {
+        private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMediaLibraryService _mediaLibraryService;
@@ -20,11 +22,13 @@ namespace Orchard.MediaLibrary.Services {
             IMembershipService membershipService,
             IAuthorizationService authorizationService,
             IMediaLibraryService mediaLibraryService,
-            RouteCollection routeCollection) {
+            RouteCollection routeCollection,
+            IContentManager contentManager) {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
             _mediaLibraryService = mediaLibraryService;
             _routeCollection = routeCollection;
+            _contentManager = contentManager;
 
             T = NullLocalizer.Instance;
         }
@@ -78,7 +82,13 @@ namespace Orchard.MediaLibrary.Services {
             }
 
             string publicUrl = _mediaLibraryService.UploadMediaFile(directoryName, Path.GetFileName(name), bits);
-            _mediaLibraryService.ImportMedia(directoryName, Path.GetFileName(name));
+            var mediaPart = _mediaLibraryService.ImportMedia(directoryName, Path.GetFileName(name));
+            try {
+                _contentManager.Create(mediaPart);
+            }
+            catch {
+            }
+
             return new XRpcStruct() // Some clients require all optional attributes to be declared Wordpress responds in this way as well.
                 .Set("file", publicUrl)
                 .Set("url", url.MakeAbsolute(publicUrl))

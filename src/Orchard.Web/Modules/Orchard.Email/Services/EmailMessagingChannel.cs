@@ -10,6 +10,7 @@ using Orchard.Messaging.Services;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Email.Services {
+    [Obsolete("Use ISmtpChannel instead")]
     public class EmailMessagingChannel : IMessagingChannel {
         private readonly IOrchardServices _orchardServices;
 
@@ -53,7 +54,7 @@ namespace Orchard.Email.Services {
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
                 context.MailMessage.From = new MailAddress(smtpSettings.Address);
-                context.MailMessage.IsBodyHtml = context.MailMessage.Body != null && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
+                context.MailMessage.IsBodyHtml = !String.IsNullOrWhiteSpace(context.MailMessage.Body) && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
 
                 try {
                     smtpClient.Send(context.MailMessage);

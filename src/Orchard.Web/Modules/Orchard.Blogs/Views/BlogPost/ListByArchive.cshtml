@@ -2,8 +2,10 @@
 @using Orchard.Blogs.Models;
 
 @{
-    var dateTimeLocalization = WorkContext.Resolve<Orchard.Core.Shapes.Localization.IDateTimeLocalization>();
-    var monthNames = dateTimeLocalization.MonthNames.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+    var dateTimeLocalization = WorkContext.Resolve<Orchard.Localization.Services.IDateTimeFormatProvider>();
+    var monthNames = dateTimeLocalization.MonthNames.ToArray();
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("archives-list");
 }
 
 <h1 class="page-title">@Html.TitleForPage(T("Archives").Text, (string)Model.ArchiveData.Year.ToString(), (string)(Model.ArchiveData.Month > 0 ? monthNames[Model.ArchiveData.Month - 1] : null), (string)(Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null))</h1>

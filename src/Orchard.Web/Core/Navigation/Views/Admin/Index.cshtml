@@ -6,9 +6,9 @@
     Layout.Title = T("Navigation").ToString();
     Style.Include("navigation-admin.css");
 
-    Script.Require("jQueryUI_Sortable");
-    Script.Include("jquery.mjs.nestedSortable.js");
-    Script.Include("navigation-admin.js");
+    Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Include("jquery.mjs.nestedSortable.js").AtFoot();
+    Script.Include("navigation-admin.js").AtFoot();
 }
 
 <div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>

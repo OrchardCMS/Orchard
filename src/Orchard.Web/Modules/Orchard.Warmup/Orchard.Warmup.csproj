@@ -75,7 +75,6 @@
     <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Styles\orchard-warmup-admin.css" />
     <Content Include="web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ReportEntry.cs" />
     <Compile Include="Models\WarmupSettingsPart.cs" />
-    <Compile Include="Models\WarmupSettingsPartRecord.cs" />
     <Compile Include="Services\WarmupReportManager.cs" />
     <Compile Include="Services\IWarmupReportManager.cs" />
     <Compile Include="Services\IWarmupScheduler.cs" />

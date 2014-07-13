@@ -10,6 +10,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Packaging.Services;
+using Orchard.Services;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using IPackageBuilder = Orchard.Packaging.Services.IPackageBuilder;
@@ -39,6 +40,7 @@ namespace Orchard.Tests.Modules.Packaging.Services {
             builder.RegisterType<DefaultOrchardFrameworkAssemblies>().As<IOrchardFrameworkAssemblies>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();
+            builder.RegisterType<StubClock>().As<IClock>();
         }
 
         [SetUp]
@@ -97,7 +99,11 @@ namespace Orchard.Tests.Modules.Packaging.Services {
             PackageInfo packageInfo = packageInstaller.Install(zipPackage, _basePath, _basePath);
             Assert.That(packageInfo, Is.Not.Null);
             Assert.That(Directory.Exists(Path.Combine(_basePath, "Modules/Hello.World")));
-            Assert.That(File.Exists(Path.Combine(_basePath, "Modules/Hello.World/Hello.World.csproj")));
+            var fileOnePath = Path.Combine(_basePath, "Modules/Hello.World/Hello.World.csproj");
+            var fileTwoPath = Path.Combine(_basePath, "Modules/Hello.World/Service References/SomeReference.cs");
+            Assert.That(File.Exists(fileOnePath));
+            Assert.That(File.Exists(fileTwoPath));
+            Assert.That(File.GetLastWriteTime(fileOnePath), Is.EqualTo(File.GetLastWriteTime(fileTwoPath)), "Installed files should have the same last write time.");
         }
 
         [Test]

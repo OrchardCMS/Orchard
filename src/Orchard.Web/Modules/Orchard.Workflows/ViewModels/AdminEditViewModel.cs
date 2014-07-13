@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
@@ -12,9 +12,9 @@ namespace Orchard.Workflows.ViewModels {
         public WorkflowRecord Workflow { get; set; } 
     }
 
+    [Serializable]
     public class UpdatedActivityModel {
         public string ClientId { get; set; }
-        public FormCollection Data { get; set; }
-
+        public string Data { get; set; }
     }
 }

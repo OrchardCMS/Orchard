@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -28,10 +29,12 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.DataAnnotations;
+using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 using Orchard.WebApi;
+using Orchard.WebApi.Filters;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -64,6 +67,7 @@ namespace Orchard.Environment {
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
             builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
+            //builder.RegisterType<RazorTemplateCache>().As<IRazorTemplateProvider>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -76,7 +80,10 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
             
 
-            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name).SingleInstance();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>()
+                .Named<IEventHandler>(typeof(IShellSettingsManagerEventHandler).Name)
+                .Named<IEventHandler>(typeof(IShellDescriptorManagerEventHandler).Name)
+                .SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 
@@ -115,9 +122,9 @@ namespace Orchard.Environment {
 
             builder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>().InstancePerMatchingLifetimeScope("shell");
 
             registrations(builder);
-
 
             var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReaderConstants.DefaultSectionName);
             if (autofacSection != null)
@@ -131,7 +138,6 @@ namespace Orchard.Environment {
             if (File.Exists(optionalComponentsConfig))
                 builder.RegisterModule(new HostComponentsConfigModule(optionalComponentsConfig));
 
-
             var container = builder.Build();
 
             //
@@ -144,10 +150,15 @@ namespace Orchard.Environment {
             }
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+            FilterProviders.Providers.Add(new OrchardFilterProvider());
 
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerSelector), new DefaultOrchardWebApiHttpControllerSelector(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerActivator), new DefaultOrchardWebApiHttpHttpControllerActivator(GlobalConfiguration.Configuration));
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiActionFilterDispatcher());
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiExceptionFilterDispatcher());
+            GlobalConfiguration.Configuration.Filters.Add(new OrchardApiAuthorizationFilterDispatcher());
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Lucene.Models;
+using Lucene.Net.Analysis;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -33,6 +34,7 @@ namespace Lucene.Services {
         private bool _exactMatch;
         private float _boost;
         private Query _query;
+        private readonly Analyzer _analyzer = LuceneIndexProvider.CreateAnalyzer();
 
         public ILogger Logger { get; set; }
 
@@ -68,10 +70,9 @@ namespace Lucene.Services {
                 query = QueryParser.Escape(query);
             }
 
-            var analyzer = LuceneIndexProvider.CreateAnalyzer();
             foreach (var defaultField in defaultFields) {
                 CreatePendingClause();
-                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query);
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzer).Parse(query);
             }
 
             return this;
@@ -83,9 +84,9 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, int min, int max) {
+        public ISearchBuilder WithinRange(string field, int? min, int? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewIntRange(field, min, max, true, true);
+            _query = NumericRangeQuery.NewIntRange(field, min, max, includeMin, includeMax);
             return this;
         }
 
@@ -95,9 +96,9 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, double min, double max) {
+        public ISearchBuilder WithinRange(string field, double? min, double? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewDoubleRange(field, min, max, true, true);
+            _query = NumericRangeQuery.NewDoubleRange(field, min, max, includeMin, includeMax);
             return this;
         }
 
@@ -111,15 +112,15 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, DateTime min, DateTime max) {
+        public ISearchBuilder WithinRange(string field, DateTime? min, DateTime? max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, DateTools.DateToString(min, DateTools.Resolution.MILLISECOND), DateTools.DateToString(max, DateTools.Resolution.MILLISECOND), true, true);
+            _query = new TermRangeQuery(field, min.HasValue ? DateTools.DateToString(min.Value, DateTools.Resolution.MILLISECOND) : null, max.HasValue ? DateTools.DateToString(max.Value, DateTools.Resolution.MILLISECOND) : null, includeMin, includeMax);
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, string min, string max) {
+        public ISearchBuilder WithinRange(string field, string min, string max, bool includeMin = true, bool includeMax = true) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(max.ToLower()), true, true);
+            _query = new TermRangeQuery(field, min != null ? QueryParser.Escape(min.ToLower()) : null, max != null ? QueryParser.Escape(max.ToLower()) : null, includeMin, includeMax);
             return this;
         }
 
@@ -159,8 +160,6 @@ namespace Lucene.Services {
             _query = null;
             _boost = 0;
             _asFilter = false;
-            _sort = String.Empty;
-            _comparer = 0;
         }
 
         private void CreatePendingClause() {
@@ -189,7 +188,7 @@ namespace Lucene.Services {
                 _clauses.Add(new BooleanClause(_query, _occur));
             }
 
-            _query = null;
+            InitPendingClause();
         }
 
         public ISearchBuilder SortBy(string name) {

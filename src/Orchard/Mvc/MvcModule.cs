@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Web;
+using System.Web.Caching;
+using System.Web.Instrumentation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Orchard.ContentManagement;
-using Orchard.Data;
-using Orchard.Environment.Configuration;
-using Orchard.Mvc.Filters;
 using Orchard.Mvc.Routes;
 using Orchard.Settings;
 
@@ -18,12 +16,11 @@ namespace Orchard.Mvc {
     public class MvcModule : Module {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
             moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
 
-            moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
-            moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();
-            moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().InstancePerDependency();
+            moduleBuilder.Register(HttpContextBaseFactory).As<HttpContextBase>().InstancePerDependency();
+            moduleBuilder.Register(RequestContextFactory).As<RequestContext>().InstancePerDependency();
+            moduleBuilder.Register(UrlHelperFactory).As<UrlHelper>().InstancePerDependency();
         }
 
         private static bool IsRequestValid() {
@@ -46,21 +43,16 @@ namespace Orchard.Mvc {
                 return new HttpContextWrapper(HttpContext.Current);
             }
 
-            // this doesn't work in a background service, throws an exception in ContentManager.Handlers
-            //var siteService = context.Resolve<ISiteService>();
-            //var baseUrl = siteService.GetSiteSettings().BaseUrl;
+            var siteService = context.Resolve<ISiteService>();
 
-            var session = context.Resolve<ISessionLocator>().For(typeof(ContentItem));
-            var shellSettings = context.Resolve<ShellSettings>();
-
-            var tableName = "Settings_SiteSettings2PartRecord";
-            if (!string.IsNullOrEmpty(shellSettings.DataTablePrefix)) {
-                tableName = shellSettings.DataTablePrefix + "_" + tableName;
-            }
-            var query = session.CreateSQLQuery("SELECT BaseUrl FROM " + tableName);
-            var baseUrl = query.UniqueResult<string>();
-
-            return new HttpContextPlaceholder(baseUrl);
+            // Wrapping the code accessing the SiteSettings in a function that will be executed later (in HttpContextPlaceholder),
+            // so that the RequestContext will have been established when the time comes to actually load the site settings,
+            // which requires activating the Site content item, which in turn requires a UrlHelper, which in turn requires a RequestContext,
+            // thus preventing a StackOverflowException.
+            var baseUrl = new Func<string>(() => siteService.GetSiteSettings().BaseUrl);
+            var httpContextBase = new HttpContextPlaceholder(baseUrl);
+            context.Resolve<IWorkContextAccessor>().CreateWorkContextScope(httpContextBase);
+            return httpContextBase;
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
@@ -94,20 +86,37 @@ namespace Orchard.Mvc {
         /// standin context for background tasks.
         /// </summary>
         class HttpContextPlaceholder : HttpContextBase {
-            private readonly string _baseUrl;
+            private readonly Lazy<string> _baseUrl;
+            private readonly IDictionary _items = new Dictionary<object, object>();
 
-            public HttpContextPlaceholder(string baseUrl) {
-                _baseUrl = baseUrl;
+            public HttpContextPlaceholder(Func<string> baseUrl) {
+                _baseUrl = new Lazy<string>(baseUrl);
             }
 
             public override HttpRequestBase Request {
-                get { return new HttpRequestPlaceholder(new Uri(_baseUrl)); }
+                get { return new HttpRequestPlaceholder(new Uri(_baseUrl.Value)); }
             }
 
             public override IHttpHandler Handler { get; set; }
 
             public override HttpResponseBase Response {
                 get { return new HttpResponsePlaceholder(); }
+            }
+
+            public override IDictionary Items {
+                get { return _items; }
+            }
+
+            public override PageInstrumentationService PageInstrumentation {
+                get { return new PageInstrumentationService(); }
+            }
+
+            public override Cache Cache {
+                get { return HttpRuntime.Cache; }
+            }
+
+            public override object GetService(Type serviceType) {
+                return null;
             }
         }
 
@@ -173,6 +182,10 @@ namespace Orchard.Mvc {
                         
                     };
                 }
+            }
+
+            public override bool IsLocal {
+                get { return true; }
             }
 
         }

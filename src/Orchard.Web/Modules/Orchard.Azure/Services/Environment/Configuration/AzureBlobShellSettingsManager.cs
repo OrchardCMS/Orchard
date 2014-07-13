@@ -11,11 +11,11 @@ using Orchard.Logging;
 namespace Orchard.Azure.Services.Environment.Configuration {
 
     /// <summary>
-    /// Provides an IShellSettingsManager implementation that uses Windows Azure Blob Storage as the
+    /// Provides an IShellSettingsManager implementation that uses Microsoft Azure Blob Storage as the
     /// underlying storage system.
     /// </summary>
     /// <remarks>
-    /// Additionally, this class handles role configuration change events when running in a Windows Azure Cloud
+    /// Additionally, this class handles role configuration change events when running in a Microsoft Azure Cloud
     /// Service to ensure all Orchard tenents are notified whenever a role configuration setting is changed
     /// through the management portal or API.
     /// </remarks>

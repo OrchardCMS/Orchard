@@ -1,7 +1,12 @@
 ﻿@model Orchard.MultiTenancy.ViewModels.TenantEditViewModel
 @using Orchard.Environment.Configuration;
 
-@{ Layout.Title = T("Edit Tenant").ToString(); }
+@{
+    Layout.Title = T("Edit Tenant").ToString();
+
+    Script.Require("jQuery").AtFoot();
+    Script.Include("multi-tenancy.admin.js").AtFoot();
+}
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
@@ -53,20 +58,57 @@
     <fieldset>
         <div>
             <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
-            
-            @for (var i = 0; i < Model.Themes.Count; i++) {
-                var theme = Model.Themes[i];
-                @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
-                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
-                @Html.HiddenFor(m => m.Themes[i].ThemeId)
-                @Html.HiddenFor(m => m.Themes[i].ThemeName)
-            }
-
             <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
+            
+            <ol>
+                <li>
+                    <input type="checkbox" class="select-all" id="select-all-themes" />
+                    <label class="forcheckbox" for="select-all-themes">@("Select all")</label>
+                </li>
+
+                @for (var i = 0; i < Model.Themes.Count; i++) {
+                    <li>
+                        @{
+                            var theme = Model.Themes[i];
+                            @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
+                            <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
+                            @Html.HiddenFor(m => m.Themes[i].ThemeId)
+                            @Html.HiddenFor(m => m.Themes[i].ThemeName)
+                        }
+                    </li>
+                }
+            </ol>
+
         </div>  
-    </fieldset>  
+    </fieldset>
+    
+   <fieldset>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
+            <span class="hint">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
+
+            <ol>
+                <li>
+                    <input type="checkbox" class="select-all" id="select-all-modules" />
+                    <label class="forcheckbox" for="select-all-modules">@("Select all")</label>
+                </li>
+
+                @for (var i = 0; i < Model.Modules.Count; i++) {
+                <li>
+                    @{
+                        var theme = Model.Modules[i];
+                        @Html.CheckBox(Html.FieldNameFor(m => m.Modules[i].Checked), Model.Modules[i].Checked, new { id = Html.FieldIdFor(x => x.Modules[i]) })
+                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Modules[i])">@Model.Modules[i].ModuleName</label>
+                        @Html.HiddenFor(m => m.Modules[i].ModuleId)
+                        @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                    }
+                </li>
+                }
+            </ol>
+        </div>  
+    </fieldset>   
     
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>
-} 
+}

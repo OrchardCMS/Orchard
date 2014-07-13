@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.StandardBuilders;
+using Orchard.Mvc.Extensions;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
@@ -43,8 +44,11 @@ namespace Orchard.Core.Feeds.StandardQueries {
 
             var limitValue = context.ValueProvider.GetValue("limit");
             var limit = 20;
-            if (limitValue != null)
-                limit = (int)limitValue.ConvertTo(typeof(int));
+            if (limitValue != null) {
+                Int32.TryParse(Convert.ToString(limitValue), out limit);
+            }
+            
+            limit = Math.Min(limit, 100);
 
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);
@@ -62,7 +66,7 @@ namespace Orchard.Core.Feeds.StandardQueries {
 
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                    var uriBuilder = new UriBuilder(urlHelper.MakeAbsolute("/")) { Path = urlHelper.RouteUrl(inspector.Link) };
                     link.Add(uriBuilder.Uri.OriginalString);
                 });
             }
@@ -71,7 +75,7 @@ namespace Orchard.Core.Feeds.StandardQueries {
                 context.Builder.AddProperty(context, null, "description", inspector.Description);
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    context.Builder.AddProperty(context, null, "link", urlHelper.RouteUrl(inspector.Link));
+                    context.Builder.AddProperty(context, null, "link",urlHelper.MakeAbsolute(urlHelper.RouteUrl(inspector.Link)));
                 });
             }
 

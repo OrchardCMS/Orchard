@@ -18,13 +18,13 @@ namespace Orchard.ContentManagement {
         private readonly IEnumerable<ISqlStatementProvider> _sqlStatementProviders;
         private readonly ShellSettings _shellSettings;
         private VersionOptions _versionOptions;
+        private string[] _includedPartRecords = new string[0];
+        private bool _cacheable;
 
         protected IJoin _from;
         protected readonly List<Tuple<IAlias, Join>> _joins = new List<Tuple<IAlias, Join>>();
         protected readonly List<Tuple<IAlias, Action<IHqlExpressionFactory>>> _wheres = new List<Tuple<IAlias, Action<IHqlExpressionFactory>>>();
         protected readonly List<Tuple<IAlias, Action<IHqlSortFactory>>> _sortings = new List<Tuple<IAlias, Action<IHqlSortFactory>>>();
-
-        private bool cacheable;
 
         public IContentManager ContentManager { get; private set; }
 
@@ -52,17 +52,17 @@ namespace Orchard.ContentManagement {
             return tuple == null ? null : tuple.Item2;
         }
 
-        internal IAlias BindCriteriaByPath(IAlias alias, string path) {
-            return BindCriteriaByAlias(alias, path, PathToAlias(path));
+        internal IAlias BindCriteriaByPath(IAlias alias, string path, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
+            return BindCriteriaByAlias(alias, path, PathToAlias(path), type, withPredicate);
         }
 
-        internal IAlias BindCriteriaByAlias(IAlias alias, string path, string aliasName) {
+        internal IAlias BindCriteriaByAlias(IAlias alias, string path, string aliasName, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             // is this Join already existing (based on aliasName)
 
             Join join = BindNamedAlias(aliasName);
 
             if (join == null) {
-                join = new Join(path, aliasName);
+                join = new Join(path, aliasName, type, withPredicate);
                 _joins.Add(new Tuple<IAlias, Join>(alias, join));
             }
 
@@ -74,28 +74,33 @@ namespace Orchard.ContentManagement {
             return BindCriteriaByAlias(BindItemCriteria(), "ContentType", "ct");
         }
 
-        internal IAlias BindItemCriteria() {
+        internal IAlias BindItemCriteria(string type = "") {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
-            return BindCriteriaByAlias(BindItemVersionCriteria(), typeof(ContentItemRecord).Name, "ci");
+            return BindCriteriaByAlias(BindItemVersionCriteria(type), typeof(ContentItemRecord).Name, "ci");
         }
 
-        internal IAlias BindItemVersionCriteria() {
-            return _from ?? (_from = new Join(typeof(ContentItemVersionRecord).FullName, "civ", ""));
+        internal IAlias BindItemVersionCriteria(string type = "") {
+            _from = _from ?? new Join(typeof(ContentItemVersionRecord).FullName, "civ", type);
+            if (_from.Type.Length < type.Length) {
+                _from.Type = type;
+            }
+
+            return _from;
         }
 
-        internal IAlias BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
-            return BindPartCriteria(typeof(TRecord));
+        internal IAlias BindPartCriteria<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord {
+            return BindPartCriteria(typeof(TRecord), type, withPredicate);
         }
 
-        internal IAlias BindPartCriteria(Type contentPartRecordType) {
+        internal IAlias BindPartCriteria(Type contentPartRecordType, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             if (!contentPartRecordType.IsSubclassOf(typeof(ContentPartRecord))) {
                 throw new ArgumentException("The type must inherit from ContentPartRecord", "contentPartRecordType");
             }
 
             if (contentPartRecordType.IsSubclassOf(typeof(ContentPartVersionRecord))) {
-                return BindCriteriaByPath(BindItemVersionCriteria(), contentPartRecordType.Name);
+                return BindCriteriaByPath(BindItemVersionCriteria(), contentPartRecordType.Name, type, withPredicate);
             }
-            return BindCriteriaByPath(BindItemCriteria(), contentPartRecordType.Name);
+            return BindCriteriaByPath(BindItemCriteria(), contentPartRecordType.Name, type, withPredicate);
         }
 
         internal void Where(IAlias alias, Action<IHqlExpressionFactory> predicate) {
@@ -152,6 +157,12 @@ namespace Orchard.ContentManagement {
             if (contentTypeNames != null && contentTypeNames.Length != 0) {
                 Where(BindTypeCriteria(), x => x.InG("Name", contentTypeNames));
             }
+            
+            return this;
+        }
+
+        public IHqlQuery Include(params string[] contentPartRecords) {
+            _includedPartRecords = _includedPartRecords.Union(contentPartRecords).ToArray();
             return this;
         }
 
@@ -170,13 +181,13 @@ namespace Orchard.ContentManagement {
 
         public IEnumerable<ContentItem> Slice(int skip, int count) {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            cacheable = true;
+            _cacheable = true;
             
             var hql = ToHql(false);
 
             var query = _session
                 .CreateQuery(hql)
-                .SetCacheable(cacheable)
+                .SetCacheable(_cacheable)
                 ;
 
             if (skip != 0) {
@@ -191,7 +202,7 @@ namespace Orchard.ContentManagement {
                 .List<IDictionary>()
                 .Select(x => (int)x["Id"]);
 
-            return ContentManager.GetManyByVersionId(ids, QueryHints.Empty);
+            return ContentManager.GetManyByVersionId(ids, new QueryHints().ExpandRecords(_includedPartRecords));
         }
 
         public int Count() {
@@ -224,7 +235,7 @@ namespace Orchard.ContentManagement {
                     }
                     else {
                         // select distinct can't be used with newid()
-                        cacheable = false;
+                        _cacheable = false;
                         sb.Replace("select distinct", "select ");
                     }
                 }
@@ -235,7 +246,16 @@ namespace Orchard.ContentManagement {
             sb.Append("from ").Append(_from.TableName).Append(" as ").Append(_from.Name).AppendLine();
 
             foreach (var join in _joins) {
-                sb.Append(join.Item2.Type).Append(" ").Append(join.Item1.Name + "." + join.Item2.TableName).Append(" as ").Append(join.Item2.Name).AppendLine();
+                sb.Append(join.Item2.Type + " " +
+                    join.Item1.Name + "." + join.Item2.TableName +
+                    " as " + join.Item2.Name);
+                if (join.Item2.WithPredicate != null) {
+                    var predicate = join.Item2.WithPredicate;
+                    var expressionFactory = new DefaultHqlExpressionFactory();
+                    predicate(expressionFactory);
+                    sb.Append(" with " + expressionFactory.Criterion.ToHql(join.Item2));
+                }
+                sb.AppendLine();
             }
 
             // generating where clause
@@ -367,6 +387,7 @@ namespace Orchard.ContentManagement {
     public interface IJoin : IAlias {
         string TableName { get; set; }
         string Type { get; set; }
+        Action<IHqlExpressionFactory> WithPredicate { get; set; }
     }
 
     public class Sort {
@@ -385,20 +406,26 @@ namespace Orchard.ContentManagement {
     public class Join : Alias, IJoin {
 
         public Join(string tableName, string alias)
-            : this(tableName, alias, "join") {}
+            : this(tableName, alias, "join", null) {}
 
         public Join(string tableName, string alias, string type)
+            : this(tableName, alias, type, null) {
+        }
+
+        public Join(string tableName, string alias, string type, Action<IHqlExpressionFactory> withPredicate)
             : base(alias) {
             if (String.IsNullOrEmpty(tableName)) {
                 throw new ArgumentException("Table Name can't be empty");
             }
 
             TableName = tableName;
-            Type = type;
+            Type = type ?? "join";
+            WithPredicate = withPredicate;
         }
 
         public string TableName { get; set; }
         public string Type { get; set; }
+        public Action<IHqlExpressionFactory> WithPredicate { get; set; }
     }
 
     public class DefaultHqlSortFactory : IHqlSortFactory
@@ -431,17 +458,17 @@ namespace Orchard.ContentManagement {
             Current = _query.BindItemCriteria();
         }
 
-        public IAliasFactory ContentPartRecord<TRecord>() where TRecord : ContentPartRecord {
-            Current = _query.BindPartCriteria<TRecord>();
+        public IAliasFactory ContentPartRecord<TRecord>(string type = null, Action<IHqlExpressionFactory> withPredicate = null) where TRecord : ContentPartRecord {
+            Current = _query.BindPartCriteria<TRecord>(type, withPredicate);
             return this;
         }
 
-        public IAliasFactory ContentPartRecord(Type contentPartRecord) {
+        public IAliasFactory ContentPartRecord(Type contentPartRecord, string type = null, Action<IHqlExpressionFactory> withPredicate = null) {
             if(!contentPartRecord.IsSubclassOf(typeof(ContentPartRecord))) {
                 throw new ArgumentException("Type must inherit from ContentPartRecord", "contentPartRecord");
             }
 
-            Current = _query.BindPartCriteria(contentPartRecord);
+            Current = _query.BindPartCriteria(contentPartRecord, type, withPredicate);
             return this;
         }
 

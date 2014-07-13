@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using Orchard.FileSystems.AppData;
 using Orchard.Services;
@@ -26,7 +27,7 @@ namespace Orchard.FileSystems.LockFile {
                     return false;
                 }
 
-                lockFile = new LockFile(_appDataFolder, path, _clock.UtcNow.ToString(), _rwLock);
+                lockFile = new LockFile(_appDataFolder, path, _clock.UtcNow.ToString(CultureInfo.InvariantCulture), _rwLock);
                 return true;
             }
             catch {
@@ -58,7 +59,7 @@ namespace Orchard.FileSystems.LockFile {
                 var content = _appDataFolder.ReadFile(path);
 
                 DateTime creationUtc;
-                if (DateTime.TryParse(content, out creationUtc)) {
+                if (DateTime.TryParse(content, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out creationUtc)) {
                     // if expired the file is not removed
                     // it should be automatically as there is a finalizer in LockFile
                     // or the next taker can do it, unless it also fails, again

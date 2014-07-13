@@ -22,21 +22,23 @@ namespace Orchard.Comments.Drivers {
         }
 
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
-            if (part.CommentsShown == false)
-                return null;
-
-            var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
-            var pendingCount = new Lazy<int>(() => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count());
-            var approvedCount = new Lazy<int>(() => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).Count());
 
             return Combined(
                 ContentShape("Parts_ListOfComments",
                     () => {
+                        if (part.CommentsShown == false)
+                            return null;
+
                         // create a hierarchy of shapes
                         var firstLevelShapes = new List<dynamic>();
                         var allShapes = new Dictionary<int, dynamic>();
-                        var comments = commentsForCommentedContent.Where(x => x.Status == CommentStatus.Approved).OrderBy(x => x.Position).List().ToList();
-                        
+                        var comments = _commentService
+                            .GetCommentsForCommentedContent(part.ContentItem.Id)
+                            .Where(x => x.Status == CommentStatus.Approved)
+                            .OrderBy(x => x.Position)
+                            .List()
+                            .ToList();
+
                         foreach (var item in comments) {
                             var shape = shapeHelper.Parts_Comment(ContentPart: item, ContentItem: item.ContentItem);
                             allShapes.Add(item.Id, shape);
@@ -54,21 +56,42 @@ namespace Orchard.Comments.Drivers {
 
                         var list = shapeHelper.List(Items: firstLevelShapes);
 
-                        return shapeHelper.Parts_ListOfComments(List: list, CommentCount: approvedCount.Value);
+                        return shapeHelper.Parts_ListOfComments(
+                            List: list,
+                            CommentCount: part.CommentsCount);
                     }),
                 ContentShape("Parts_CommentForm",
                     () => {
+                        if (part.CommentsShown == false)
+                            return null;
 
                         var newComment = _contentManager.New("Comment");
                         if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
                         var editorShape = _contentManager.BuildEditor(newComment);
 
-                        return shapeHelper.Parts_CommentForm(EditorShape: editorShape);
+                        return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(CommentCount: approvedCount.Value, PendingCount: pendingCount.Value)),
+                    () => {
+                        if (part.CommentsShown == false)
+                            return null;
+
+                        return shapeHelper.Parts_Comments_Count(
+                            CommentCount: part.CommentsCount);
+                    }),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: approvedCount.Value, PendingCount: pendingCount.Value))
+                    () => {
+
+                        var comments = _commentService
+                            .GetCommentsForCommentedContent(part.ContentItem.Id);
+                        var pendingCount = comments
+                            .Where(x => x.Status == CommentStatus.Pending)
+                            .Count();
+
+                        return shapeHelper.Parts_Comments_Count_SummaryAdmin(
+                            CommentCount: part.CommentsCount,
+                            PendingCount: pendingCount);
+                    })
             );
         }
 

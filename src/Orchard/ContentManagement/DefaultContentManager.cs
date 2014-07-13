@@ -117,6 +117,7 @@ namespace Orchard.ContentManagement {
             };
 
             Handlers.Invoke(handler => handler.Initializing(context3), Logger);
+            Handlers.Invoke(handler => handler.Initialized(context3), Logger);
 
             // composite result is returned
             return context3.ContentItem;
@@ -176,7 +177,7 @@ namespace Orchard.ContentManagement {
 
                         contentItemVersionCriteria.SetFetchMode("ContentItemRecord", FetchMode.Eager);
                         contentItemVersionCriteria.SetFetchMode("ContentItemRecord.ContentType", FetchMode.Eager);
-                        contentItemVersionCriteria.SetMaxResults(1);
+                        //contentItemVersionCriteria.SetMaxResults(1);
                     });
 
 

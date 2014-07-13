@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Web.Mvc;
@@ -12,6 +13,7 @@ namespace Orchard.Core.Feeds.Services {
         class Link {
             public string Title { get; set; }
             public RouteValueDictionary RouteValues { get; set; }
+            public string Url { get; set; }
         }
 
         public void Register(string title, string format, RouteValueDictionary values) {
@@ -28,14 +30,16 @@ namespace Orchard.Core.Feeds.Services {
             _links.Add(new Link { Title = title, RouteValues = link });
         }
 
-
-
+        public void Register(string title, string format, string url) {
+            _links.Add(new Link { Title = title, Url = url });
+        }
+        
         public MvcHtmlString GetRegisteredLinks(HtmlHelper html) {
             var urlHelper = new UrlHelper(html.ViewContext.RequestContext, html.RouteCollection);
 
             var sb = new StringBuilder();
             foreach (var link in _links) {
-                var linkUrl = urlHelper.RouteUrl(link.RouteValues);
+                var linkUrl = String.IsNullOrWhiteSpace(link.Url) ? urlHelper.RouteUrl(link.RouteValues) : link.Url;
                 sb.Append("\r\n");
                 sb.Append(@"<link rel=""alternate"" type=""application/rss+xml""");
                 if (!string.IsNullOrEmpty(link.Title)) {

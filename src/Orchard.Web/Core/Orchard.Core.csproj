@@ -92,6 +92,7 @@
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
     <Compile Include="Common\Settings\TextFieldSettings.cs" />
+    <Compile Include="Common\ViewModels\DateTimeEditor.cs" />
     <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
     <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
@@ -102,22 +103,30 @@
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
+    <Compile Include="Containers\Extensions\ContentDefinitionManagerExtensions.cs" />
     <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
     <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
+    <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
+    <Compile Include="Containers\Models\OrderByDirection.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
     <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
-    <Compile Include="Containers\Models\OrderByDirection.cs" />
+    <Compile Include="Containers\Services\ContainerService.cs" />
+    <Compile Include="Containers\Services\ListViewProvider.cs" />
+    <Compile Include="Containers\Services\ListViewService.cs" />
+    <Compile Include="Containers\Services\Randomizer.cs" />
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
+    <Compile Include="Containers\Settings\ContainableSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
-    <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerTypePartSettingsViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
@@ -143,14 +152,12 @@
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuHandler.cs" />
+    <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuWidgetPartHandler.cs" />
-    <Compile Include="Navigation\Handlers\ShapeMenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\AdminMenuPart.cs" />
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
-    <Compile Include="Navigation\Models\MenuWidgetPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
-    <Compile Include="Navigation\Models\ShapeMenuItemPartRecord.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
@@ -202,12 +209,10 @@
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
-    <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
     <Compile Include="Navigation\Models\MenuPart.cs" />
     <Compile Include="Navigation\Drivers\MenuPartDriver.cs" />
     <Compile Include="Navigation\Handlers\MenuPartHandler.cs" />
     <Compile Include="Navigation\Permissions.cs" />
-    <Compile Include="Navigation\Models\MenuItemPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuPartRecord.cs" />
     <Compile Include="Navigation\Services\IMenuService.cs" />
     <Compile Include="Navigation\Services\MainMenuService.cs" />
@@ -221,8 +226,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
-    <Compile Include="Settings\Models\SiteSettings2Part.cs" />
-    <Compile Include="Settings\Models\SiteSettings2PartRecord.cs" />
+    <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
     <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
@@ -235,7 +239,6 @@
     <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
-    <Compile Include="Settings\Models\SiteSettingsPartRecord.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
     <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
     <Compile Include="Settings\State\ShellStateManager.cs" />
@@ -249,7 +252,6 @@
     <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
-    <Compile Include="Shapes\Localization\DateTimeLocalization.cs" />
     <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="Shapes\DateTimeShapes.cs" />
@@ -276,7 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
-    <Content Include="Common\Styles\orchard-common-datetime.css" />
+    <Content Include="Common\Styles\datetime-editor.css" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
@@ -348,12 +350,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Settings\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Common\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\Parts.Common.Owner.Edit.cshtml" />
@@ -366,19 +362,15 @@
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
-    <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
-    <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Containers\Services\" />
+    <Folder Include="Views\Gamma\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Contents\Views\Web.config" />
-    <Content Include="Reports\Views\Web.config" />
     <Content Include="Contents\Views\Content.cshtml" />
     <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />
@@ -387,7 +379,6 @@
     <Content Include="Shapes\Views\Layout.cshtml" />
     <Content Include="Shapes\Views\Menu.cshtml" />
     <Content Include="Shapes\Views\MenuItem.cshtml" />
-    <Content Include="Shapes\Views\Web.config" />
     <Content Include="Common\Placement.info" />
     <Content Include="Common\Views\Parts.Common.Metadata.Summary.cshtml" />
     <Content Include="Contents\Placement.info">
@@ -408,12 +399,10 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Containers\Placement.info" />
-    <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
-    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettingsViewModel.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
-    <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -457,11 +446,6 @@
     <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Styles\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Common\Views\DefinitionTemplates\DateEditorSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -481,9 +465,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Title\Views\Parts.Title_SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Title\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ErrorPage.cshtml" />
@@ -561,6 +542,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Item\Preview.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\EditorTemplates\ListViewPicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\DefinitionTemplates\ContainableTypePartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\EditorTemplates\DateTimeEditor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Styles\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
+    <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

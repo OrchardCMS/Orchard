@@ -43,8 +43,9 @@ namespace Orchard.MultiTenancy.Controllers {
 
             var model = new TenantAddViewModel();
 
-            // fetches all available themes
+            // fetches all available themes and modules
             model.Themes = _tenantService.GetInstalledThemes().Select(x => new ThemeEntry { ThemeId = x.Id, ThemeName = x.Name }).ToList();
+            model.Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry { ModuleId = x.Id, ModuleName = x.Name }).ToList();
 
             return View(model);
         }
@@ -76,7 +77,8 @@ namespace Orchard.MultiTenancy.Controllers {
                         DataConnectionString = viewModel.DatabaseConnectionString,
                         DataTablePrefix = viewModel.DatabaseTablePrefix,
                         State = TenantState.Uninitialized,
-                        Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray()
+                        Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray(),
+                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
                 return RedirectToAction("Index");
@@ -111,6 +113,11 @@ namespace Orchard.MultiTenancy.Controllers {
                                                         ThemeId = x.Id, 
                                                         ThemeName = x.Name,
                                                         Checked = tenant.Themes.Contains(x.Id)
+                                                    }).ToList(),
+                                                    Modules = _tenantService.GetInstalledModules().Select(x => new ModuleEntry {
+                                                        ModuleId = x.Id,
+                                                        ModuleName = x.Name,
+                                                        Checked = tenant.Modules.Contains(x.Id)
                                                     }).ToList()
                                                 });
         }
@@ -133,7 +140,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
             try {
                 _tenantService.UpdateTenant(
-                    new ShellSettings {
+                    new ShellSettings(tenant) {
                         Name = tenant.Name,
                         RequestUrlHost = viewModel.RequestUrlHost,
                         RequestUrlPrefix = viewModel.RequestUrlPrefix,
@@ -145,7 +152,8 @@ namespace Orchard.MultiTenancy.Controllers {
                         EncryptionKey = tenant.EncryptionKey,
                         HashAlgorithm = tenant.HashAlgorithm,
                         HashKey = tenant.HashKey,
-                        Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray()
+                        Themes = viewModel.Themes.Where(x => x.Checked).Select(x => x.ThemeId).ToArray(),
+                        Modules = viewModel.Modules.Where(x => x.Checked).Select(x => x.ModuleId).ToArray()
                     });
 
                 return RedirectToAction("Index");

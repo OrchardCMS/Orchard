@@ -157,7 +157,9 @@ namespace Upgrade.Controllers {
             
             try {
                 //_orchardServices.Notifier.Information(T("Importing {0}.", mediaFile.MediaPath));
-                return _mediaLibraryService.ImportMedia(folderName, fileName);
+                var media = _mediaLibraryService.ImportMedia(folderName, fileName);
+                _orchardServices.ContentManager.Create(media);
+                return media;
             }
             catch(Exception e) {
                 _orchardServices.Notifier.Error(T("Error while importing {0}. Please check the logs", folderName + "/" + fileName));
@@ -182,7 +184,18 @@ namespace Upgrade.Controllers {
                         if (contentField != null && contentField.Url != null) {
                             string url = Convert.ToString(contentField.Url);
                             var filename = Path.GetFileName(url);
-                            var media = _orchardServices.ContentManager.Query().ForPart<MediaPart>().Where<MediaPartRecord>(x => filename == x.FileName).Slice(0, 1).FirstOrDefault();
+                            string folder = Path.GetDirectoryName(url);
+                            var mediaItems = _orchardServices.ContentManager.Query<MediaPart, MediaPartRecord>().Where(x => filename == x.FileName).List().ToList();
+                            MediaPart media = null;
+
+                            // in case multiple media have the same filename find based on the folder
+                            if (mediaItems.Count() > 1) {
+                                media = mediaItems.FirstOrDefault(x => folder.EndsWith(x.FolderPath));
+                            }
+                            else {
+                                media = mediaItems.FirstOrDefault();
+                            }
+
                             if (media != null) {
                                 contentField.Url = "{" + media.Id + "}";
                             }
@@ -199,21 +212,28 @@ namespace Upgrade.Controllers {
                 }
             }
 
+            var processedParts = new List<string>();
             foreach (var match in matches) {
-                
+
+                // process each part only once as they could be used by multiple content types
+                if (processedParts.Contains(match.Part.PartDefinition.Name)) {
+                    continue;
+                }
+
+                processedParts.Add(match.Part.PartDefinition.Name);
+
                 string hint, required;
                 match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Hint", out hint);
                 match.Field.Settings.TryGetValue("MediaPickerFieldSettings.Required", out required);
 
-                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name,
-                                                              cfg => cfg.RemoveField(match.Field.Name));
+                _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name, cfg => cfg.RemoveField(match.Field.Name));
                 
                 _contentDefinitionManager.AlterPartDefinition(match.Part.PartDefinition.Name, cfg => cfg
                     .WithField(match.Field.Name, builder => builder
                         .OfType("MediaLibraryPickerField")
                         .WithDisplayName(match.Field.DisplayName)
-                        .WithSetting("MediaLibraryPickerFieldSettings.Hint", hint)
-                        .WithSetting("MediaLibraryPickerFieldSettings.Required", required)
+                        .WithSetting("MediaLibraryPickerFieldSettings.Hint", hint ?? "")
+                        .WithSetting("MediaLibraryPickerFieldSettings.Required", required ?? "")
                         .WithSetting("MediaLibraryPickerFieldSettings.Multiple", false.ToString(CultureInfo.InvariantCulture))
                         .WithSetting("MediaLibraryPickerFieldSettings.DisplayedContentTypes", String.Empty)
                 ));

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
@@ -29,8 +29,9 @@ namespace Orchard.Taxonomies.Handlers {
             OnRemoved<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
 
             // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
-            OnLoaded<TermsPart>((context, part) => InitializerTermsLoader(part));
-            OnCreated<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnInitialized<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnLoading<TermsPart>((context, part) => InitializerTermsLoader(part));
+            OnUpdating<TermsPart>((context, part) => InitializerTermsLoader(part));
 
             OnIndexing<TermsPart>(
                 (context, part) => {
@@ -48,16 +49,37 @@ namespace Orchard.Taxonomies.Handlers {
         }
 
         private void InitializerTermsLoader(TermsPart part) {
-                foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
-                    var tempField = field.Name;
-                    var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
-                    field.TermsField.Loader(value => fieldTermRecordIds.Select(id => _contentManager.Get<TermPart>(id)).ToList());
-                }
+            if (part._termParts != null) {
+                return;
+            }
 
-                part._termParts.Loader(value => 
+            var queryHint = new QueryHints()
+                .ExpandRecords("ContentTypeRecord", "CommonPartRecord", "TermsPartRecord");
+
+
+            foreach (var field in part.ContentItem.Parts.SelectMany(p => p.Fields).OfType<TaxonomyField>()) {
+                var tempField = field.Name;
+                field.TermsField.Loader(value => {
+                    var fieldTermRecordIds = part.Record.Terms.Where(t => t.Field == tempField).Select(tci => tci.TermRecord.Id);
+                    var terms = _contentManager.GetMany<TermPart>(fieldTermRecordIds, VersionOptions.Published, queryHint);
+                    return terms.ToList();
+                });
+            }
+
+            part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
+            part._termParts.Loader(value => {
+                var ids = part.Terms.Select(t => t.TermRecord.Id);
+                var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
+                    .ToDictionary(t => t.Id, t => t);
+                return
                     part.Terms.Select(
-                        x => new TermContentItemPart { Field = x.Field, TermPart = _contentManager.Get<TermPart>(x.TermRecord.Id) }
-                        ));
+                        x =>
+                            new TermContentItemPart {
+                                Field = x.Field,
+                                TermPart = terms[x.TermRecord.Id]
+                            }
+                        );
+            });
         }
 
         // Retrieve the number of associated content items, for the whole hierarchy

@@ -1,13 +1,13 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.Core.Navigation.Models {
-    public class ShapeMenuItemPart : ContentPart<ShapeMenuItemPartRecord> {
+    public class ShapeMenuItemPart : ContentPart {
         /// <summary>
         /// Maximum number of items to retrieve from db
         /// </summary>
-        public virtual string ShapeType {
-            get { return Record.ShapeType; }
-            set { Record.ShapeType = value; }
+        public string ShapeType {
+            get { return this.Retrieve(x => x.ShapeType); }
+            set { this.Store(x => x.ShapeType, value); }
         }
     }
 }

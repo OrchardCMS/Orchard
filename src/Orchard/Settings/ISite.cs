@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 
 namespace Orchard.Settings {
     /// <summary>
@@ -12,8 +11,11 @@ namespace Orchard.Settings {
         string SuperUser { get; }
         string HomePage { get; set; }
         string SiteCulture { get; set; }
+        string SiteCalendar { get; set; }
         ResourceDebugMode ResourceDebugMode { get; set; }
         int PageSize { get; set; }
+        int MaxPageSize { get; set; }
+        int MaxPagedCount { get; set; }
         string BaseUrl { get; }
         string SiteTimeZone { get; }
     }

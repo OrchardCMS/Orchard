@@ -176,13 +176,28 @@ namespace Orchard.Setup {
                 set { throw new NotImplementedException(); }
             }
 
+            public string SiteCalendar {
+                get { return ""; }
+                set { throw new NotImplementedException(); }
+            }
+
             public ResourceDebugMode ResourceDebugMode {
                 get { return ResourceDebugMode.FromAppSetting; }
                 set { throw new NotImplementedException(); }
             }
 
             public int PageSize {
-                get { return SiteSettingsPartRecord.DefaultPageSize; }
+                get { return SiteSettingsPart.DefaultPageSize; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public int MaxPageSize {
+                get { return SiteSettingsPart.DefaultPageSize; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public int MaxPagedCount {
+                get { return 0; }
                 set { throw new NotImplementedException(); }
             }
 

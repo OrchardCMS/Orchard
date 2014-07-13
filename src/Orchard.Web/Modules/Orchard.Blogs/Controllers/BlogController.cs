@@ -69,8 +69,9 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
+            pager.PageSize = blogPart.PostsPerPage;
 
-            _feedManager.Register(blogPart);
+            _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
                 .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
             dynamic blog = _services.ContentManager.BuildDisplay(blogPart);

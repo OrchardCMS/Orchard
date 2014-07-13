@@ -63,6 +63,9 @@ namespace Orchard.Environment.Configuration {
                         case "Themes":
                             shellSettings.Themes = value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                             break;
+                        case "Modules":
+                            shellSettings.Modules = value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            break;
                         default:
                             shellSettings[key] = value;
                             break;

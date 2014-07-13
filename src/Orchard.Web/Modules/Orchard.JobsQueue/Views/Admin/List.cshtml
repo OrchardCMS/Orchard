@@ -1,0 +1,65 @@
+﻿@using Orchard.Localization
+@using Orchard.JobsQueue.Models
+@using Orchard.Utility.Extensions
+@{
+    IEnumerable<QueuedJobRecord> jobs = Model.Jobs;
+    JobsQueueStatus status = Model.JobsQueueStatus;
+
+    Layout.Title = T("Jobs Queue");
+    Style.Include("admin-jobsqueue.css");
+}
+@using (Html.BeginFormAntiForgeryPost()) {
+<div class="manage">
+    <span class="queue-status @String.Format("{0}", status.ToString().HtmlClassify())">@T("Status: {0}", status)</span>
+    @if (status == JobsQueueStatus.Paused) {
+        <button type="submit" name="submit.Resume" value="resume" class="button">@T("Resume")</button>
+    }
+    else {
+        <button type="submit" name="submit.Pause" value="pause" class="button grey">@T("Pause")</button>
+        <button type="submit" name="submit.Process" value="process">@T("Process Now")</button>
+    }
+</div>
+if (!jobs.Any()) {
+    <div class="job info">@T("The queue is empty.")</div>
+}
+else {
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Priority")</th>
+                <th>@T("Type")</th>
+                <th>@T("Created")</th>
+                <th>@T("Actions")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in jobs) {
+                LocalizedString priorityName;
+                switch (job.Priority) {
+                    case -50:
+                        priorityName = T("Low");
+                        break;
+                    case 0:
+                        priorityName = T("Normal");
+                        break;
+                    case 50:
+                        priorityName = T("High");
+                        break;
+                    default:
+                        priorityName = T("None");
+                        break;
+                }
+                <tr>
+                    <td>@priorityName</td>
+                    <td>@job.Message</td>
+                    <td>@Display.DateTimeRelative(DateTimeUtc: job.CreatedUtc)</td>
+                    <td>
+                        <a href="@Url.Action("Details", "Admin", new { job.Id, returnUrl = Request.Url.PathAndQuery })">@T("Details")</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    @Display(Model.Pager)
+}

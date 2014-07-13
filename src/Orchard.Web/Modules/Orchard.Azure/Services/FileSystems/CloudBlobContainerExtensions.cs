@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Orchard.Azure.Services.FileSystems {
@@ -10,15 +9,7 @@ namespace Orchard.Azure.Services.FileSystems {
         public static bool BlobExists(this CloudBlobContainer container, string path) {
             if (String.IsNullOrEmpty(path) || path.Trim() == String.Empty)
                 throw new ArgumentException("Path can't be empty");
-
-            try {
-                var blob = container.GetBlockBlobReference(path);
-                blob.FetchAttributes();
-                return true;
-            }
-            catch (StorageException) {
-                return false;
-            }
+            return container.GetBlockBlobReference(path).Exists();
         }
 
         public static void EnsureBlobExists(this CloudBlobContainer container, string path) {

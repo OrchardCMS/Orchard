@@ -1,11 +1,10 @@
 ﻿using Orchard.ContentManagement;
 
 namespace Orchard.Core.Navigation.Models {
-    public class MenuItemPart : ContentPart<MenuItemPartRecord> {
-        
+    public class MenuItemPart : ContentPart {
         public string Url {
-            get { return Record.Url; }
-            set { Record.Url = value; }
+            get { return this.Retrieve(x => x.Url); }
+            set { this.Store(x => x.Url, value); }
         }
     }
 }

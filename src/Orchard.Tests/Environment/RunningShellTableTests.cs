@@ -182,6 +182,19 @@ namespace Orchard.Tests.Environment {
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "example.com" };
             table.Add(settings);
             table.Add(settingsA);
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.EqualTo(settings).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.EqualTo(settings).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.EqualTo(settings).Using(new ShellComparer()));
+        }
+
+        [Test]
+        public void HostNameMatchesRightmostIfStar() {
+            var table = (IRunningShellTable)new RunningShellTable();
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "*.example.com" };
+            table.Add(settings);
+            table.Add(settingsA);
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
@@ -193,7 +206,7 @@ namespace Orchard.Tests.Environment {
             var table = (IRunningShellTable) new RunningShellTable();
             var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "www.example.com" };
-            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "example.com" };
+            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "*.example.com" };
             var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
             table.Add(settings);
             table.Add(settingsA);
