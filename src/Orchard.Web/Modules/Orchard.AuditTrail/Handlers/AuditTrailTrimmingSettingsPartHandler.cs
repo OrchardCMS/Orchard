@@ -13,6 +13,7 @@ namespace Orchard.AuditTrail.Handlers {
         private int _oldRetentionPeriod;
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
+        private int _oldMinimumRunInterval;
 
         public AuditTrailTrimmingSettingsPartHandler(IAuditTrailManager auditTrailManager, IWorkContextAccessor wca) {
             _auditTrailManager = auditTrailManager;
@@ -32,12 +33,14 @@ namespace Orchard.AuditTrail.Handlers {
 
         private void BeginUpdateEvent(UpdateContentContext context, AuditTrailTrimmingSettingsPart part) {
             _oldRetentionPeriod = part.RetentionPeriod;
+            _oldMinimumRunInterval = part.MinimumRunInterval;
         }
 
         private void EndUpdateEvent(UpdateContentContext context, AuditTrailTrimmingSettingsPart part) {
             var newRetentionPeriod = part.RetentionPeriod;
+            var newMinimumRunInterval = part.MinimumRunInterval;
 
-            if (newRetentionPeriod == _oldRetentionPeriod)
+            if (newRetentionPeriod == _oldRetentionPeriod && newMinimumRunInterval == _oldMinimumRunInterval)
                 return;
 
             _auditTrailManager.CreateRecord<TrimmingSettingsAuditTrailEventProvider>(
@@ -45,7 +48,9 @@ namespace Orchard.AuditTrail.Handlers {
                 user: _wca.GetContext().CurrentUser,
                 eventData: new Dictionary<string, object> {
                     {"OldRetentionPeriod", _oldRetentionPeriod},
-                    {"NewRetentionPeriod", newRetentionPeriod}
+                    {"NewRetentionPeriod", newRetentionPeriod},
+                    {"OldMinimumRunInterval", _oldMinimumRunInterval},
+                    {"NewMinimumRunInterval", newMinimumRunInterval}
                 });
         }
     }

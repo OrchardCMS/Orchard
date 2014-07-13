@@ -3,8 +3,11 @@
     var eventData = (IDictionary<string, object>)Model.EventData;
     var oldRetentionPeriod = eventData.Get<int>("OldRetentionPeriod");
     var newRetentionPeriod = eventData.Get<int>("NewRetentionPeriod");
+    var oldMinimumRunInterval = eventData.Get<int>("OldMinimumRunInterval");
+    var newMinimumRunInterval = eventData.Get<int>("NewMinimumRunInterval");
 }
 
 <section class="audittrail-settings-summary">
-    @T("Trimming retention period changed from <strong>{0}</strong> to <strong>{1}</strong>", oldRetentionPeriod, newRetentionPeriod)
+    <div>@T("Trimming retention period changed from <strong>{0}</strong> to <strong>{1}</strong>", oldRetentionPeriod, newRetentionPeriod)</div>
+    <div>@T("Minimum run interval changed from <strong>{0}</strong> to <strong>{1}</strong>", oldMinimumRunInterval, newMinimumRunInterval)</div>
 </section>
