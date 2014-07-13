@@ -127,7 +127,7 @@
     </Content>
     <Content Include="Views\AuditTrailFilter.cshtml" />
     <Content Include="Views\AuditTrailFilter-Common-Date-To.cshtml" />
-    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.SummaryAdminx.cshtml" />
+    <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.cshtml" />
   </ItemGroup>
   <ItemGroup>
