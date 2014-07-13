@@ -15,31 +15,31 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             _wca = wca;
         }
 
-        public void ContentTypeCreated(dynamic context) {
+        public void ContentTypeCreated(ContentTypeCreatedContext context) {
             RecordContentTypeAuditTrailEvent(ContentTypeAuditTrailEventProvider.Created, context.ContentTypeDefinition);
         }
 
-        public void ContentTypeRemoved(dynamic context) {
+        public void ContentTypeRemoved(ContentTypeRemovedContext context) {
             RecordContentTypeAuditTrailEvent(ContentTypeAuditTrailEventProvider.Removed, context.ContentTypeDefinition);
         }
 
-        public void ContentPartCreated(dynamic context) {
+        public void ContentPartCreated(ContentPartCreatedContext context) {
             RecordContentPartAuditTrailEvent(ContentPartAuditTrailEventProvider.Created, context.ContentPartDefinition);
         }
 
-        public void ContentPartRemoved(dynamic context) {
+        public void ContentPartRemoved(ContentPartRemovedContext context) {
             RecordContentPartAuditTrailEvent(ContentPartAuditTrailEventProvider.Removed, context.ContentPartDefinition);
         }
 
-        public void ContentPartAttached(dynamic context) {
+        public void ContentPartAttached(ContentPartAttachedContext context) {
             RecordContentTypePartAuditTrailEvent(ContentTypeAuditTrailEventProvider.PartAdded, context.ContentTypeName, context.ContentPartName);
         }
 
-        public void ContentPartDetached(dynamic context) {
+        public void ContentPartDetached(ContentPartDetachedContext context) {
             RecordContentTypePartAuditTrailEvent(ContentTypeAuditTrailEventProvider.PartRemoved, context.ContentTypeName, context.ContentPartName);
         }
 
-        public void ContentFieldAttached(dynamic context) {
+        public void ContentFieldAttached(ContentFieldAttachedContext context) {
             var eventData = new Dictionary<string, object> {
                 {"ContentPartName", context.ContentPartName},
                 {"ContentFieldName", context.ContentFieldName},
@@ -49,7 +49,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             _auditTrailManager.CreateRecord<ContentPartAuditTrailEventProvider>(ContentPartAuditTrailEventProvider.FieldAdded, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contentpart", eventFilterData: context.ContentPartName);
         }
 
-        public void ContentFieldDetached(dynamic context) {
+        public void ContentFieldDetached(ContentFieldDetachedContext context) {
             var eventData = new Dictionary<string, object> {
                 {"ContentPartName", context.ContentPartName},
                 {"ContentFieldName", context.ContentFieldName}
@@ -79,14 +79,5 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             };
             _auditTrailManager.CreateRecord<ContentTypeAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contenttype", eventFilterData: contentTypeName);
         }
-
-        public void ContentTypeCreated(ContentTypeCreatedContext context) {}
-        public void ContentTypeRemoved(ContentTypeRemovedContext context) {}
-        public void ContentPartCreated(ContentPartCreatedContext context) {}
-        public void ContentPartRemoved(ContentPartRemovedContext context) {}
-        public void ContentPartAttached(ContentPartAttachedContext context) {}
-        public void ContentPartDetached(ContentPartDetachedContext context) {}
-        public void ContentFieldAttached(ContentFieldAttachedContext context) {}
-        public void ContentFieldDetached(ContentFieldDetachedContext context) {}
     }
 }
