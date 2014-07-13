@@ -554,11 +554,6 @@
     <Content Include="Scripts\lib\MPEG Dash Notice.docx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\cloudmedia-edit-cloudvideopart.css.map">
-      <DependentUpon>cloudmedia-edit-cloudvideopart.css</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\cloudmedia-admin-common.js.map" />
     <Content Include="Scripts\cloudmedia-admin-job.js.map" />
     <Content Include="Scripts\cloudmedia-admin-settings.js.map" />

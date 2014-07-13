@@ -366,6 +366,25 @@ ul.disc {list-style:disc inside; margin:12px 0;}
 }
 ul.menuItems {margin:6px 0 0 0;}
 
+.admin-menu-filter {
+    background: #2b2b2b url('./images/menu-filter.png') no-repeat 8px 6px;
+    border: 1px solid #404040;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    -ms-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    padding: 3px 0 3px 26px;
+    width: 180px;
+}
+
+.admin-menu-filter input#adminfilter {
+    border: none;
+    color: #8a8a8a;
+    width: 95%;
+    background: #2b2b2b;
+}
+
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
 
