@@ -41,6 +41,7 @@ namespace Orchard.AuditTrail.Drivers {
                 if (updater != null) {
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                         part.RetentionPeriod = viewModel.RetentionPeriod;
+                        part.MinimumRunInterval = viewModel.MinimumRunInterval;
                     }
                 }
 
