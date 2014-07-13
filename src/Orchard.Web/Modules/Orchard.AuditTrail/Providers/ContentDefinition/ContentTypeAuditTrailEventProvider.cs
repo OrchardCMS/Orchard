@@ -29,7 +29,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
                 .Event(this, PartAdded, T("Part added"), T("A content part was added to a content type."), enableByDefault: true)
                 .Event(this, PartRemoved, T("Part removed"), T("A content part was removed from a content type."), enableByDefault: true)
                 .Event(this, TypeSettingsUpdated, T("Type settings updated"), T("The settings of a content type were updated."), enableByDefault: true)
-                .Event(this, PartSettingsUpdated, T("Part settings updated"), T("The settings of a content part were updated."), enableByDefault: true);
+                .Event(this, PartSettingsUpdated, T("Part settings updated"), T("The settings of a content part on a content type were updated."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);
