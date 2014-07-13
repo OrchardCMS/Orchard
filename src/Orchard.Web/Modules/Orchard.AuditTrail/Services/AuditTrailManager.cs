@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services.Models;
@@ -9,6 +10,7 @@ using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Settings;
@@ -214,6 +216,35 @@ namespace Orchard.AuditTrail.Services {
             }
 
             return records;
+        }
+
+        public string SerializeProviderConfiguration(IEnumerable<AuditTrailEventSetting> settings) {
+            var doc = new XDocument(
+                new XElement("Events",
+                    settings.Select(x =>
+                        new XElement("Event",
+                            new XAttribute("Name", x.EventName),
+                            new XAttribute("IsEnabled", x.IsEnabled)))));
+
+            return doc.ToString(SaveOptions.DisableFormatting);
+        }
+
+        public IEnumerable<AuditTrailEventSetting> DeserializeProviderConfiguration(string data) {
+            if (String.IsNullOrWhiteSpace(data))
+                return Enumerable.Empty<AuditTrailEventSetting>();
+
+            try {
+                var doc = XDocument.Parse(data);
+                return doc.Element("Events").Elements("Event").Select(x => new AuditTrailEventSetting {
+                    EventName = x.Attr<string>("Name"),
+                    IsEnabled = x.Attr<bool>("IsEnabled")
+                }).ToArray();
+
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error occurred during deserialization of audit trail settings.");
+            }
+            return Enumerable.Empty<AuditTrailEventSetting>();
         }
     }
 }

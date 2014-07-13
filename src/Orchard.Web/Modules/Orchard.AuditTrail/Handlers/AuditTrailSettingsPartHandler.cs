@@ -37,9 +37,9 @@ namespace Orchard.AuditTrail.Handlers {
         }
 
         private void SetupLazyFields(ActivatedContentContext context, AuditTrailSettingsPart part) {
-            part._eventProviderSettingsField.Loader(() => DeserializeProviderConfiguration(part.Retrieve<string>("Events")));
+            part._eventProviderSettingsField.Loader(() => _auditTrailManager.DeserializeProviderConfiguration(part.Retrieve<string>("Events")));
             part._eventProviderSettingsField.Setter(value => {
-                part.Store("Events", SerializeProviderConfiguration(value));
+                part.Store("Events", _auditTrailManager.SerializeProviderConfiguration(value));
                 _signals.Trigger("AuditTrail.EventSettings");
                 return value;
             });
@@ -57,37 +57,11 @@ namespace Orchard.AuditTrail.Handlers {
 
             _auditTrailManager.CreateRecord<SettingsAuditTrailEventProvider>(
                 eventName: SettingsAuditTrailEventProvider.EventsChanged,
+                eventData: new Dictionary<string, object> {
+                    {"OldSettings", _oldEventSettings},
+                    {"NewSettings", newEventSettings}
+                },
                 user: _wca.GetContext().CurrentUser);
-        }
-
-
-        private IEnumerable<AuditTrailEventSetting> DeserializeProviderConfiguration(string data) {
-            if (String.IsNullOrWhiteSpace(data))
-                return Enumerable.Empty<AuditTrailEventSetting>();
-
-            try {
-                var doc = XDocument.Parse(data);
-                return doc.Element("Events").Elements("Event").Select(x => new AuditTrailEventSetting {
-                    EventName = x.Attr<string>("Name"),
-                    IsEnabled = x.Attr<bool>("IsEnabled")
-                }).ToArray();
-
-            }
-            catch (Exception ex) {
-                Logger.Error(ex, "Error occurred during deserialization of audit trail settings.");
-            }
-            return Enumerable.Empty<AuditTrailEventSetting>();
-        }
-
-        private string SerializeProviderConfiguration(IEnumerable<AuditTrailEventSetting> settings) {
-            var doc = new XDocument(
-                new XElement("Events",
-                    settings.Select(x => 
-                        new XElement("Event", 
-                            new XAttribute("Name", x.EventName), 
-                            new XAttribute("IsEnabled", x.IsEnabled)))));
-
-            return doc.ToString(SaveOptions.DisableFormatting);
         }
     }
 }

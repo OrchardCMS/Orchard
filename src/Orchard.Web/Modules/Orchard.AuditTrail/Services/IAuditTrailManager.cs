@@ -76,5 +76,14 @@ namespace Orchard.AuditTrail.Services {
         /// <returns>A list of deleted records.</returns>
         IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod);
 
+        /// <summary>
+        /// Serializes the specified list of settings into a string.
+        /// </summary>
+        string SerializeProviderConfiguration(IEnumerable<AuditTrailEventSetting> settings);
+
+        /// <summary>
+        /// Deserializes the specified string into a list of settings.
+        /// </summary>
+        IEnumerable<AuditTrailEventSetting> DeserializeProviderConfiguration(string data);
     }
 }

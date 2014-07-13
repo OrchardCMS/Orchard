@@ -1,4 +1,3 @@
-using System.Collections;
 using Orchard.Localization;
 
 namespace Orchard.AuditTrail.ViewModels {

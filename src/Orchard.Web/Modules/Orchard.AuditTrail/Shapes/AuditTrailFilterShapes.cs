@@ -2,7 +2,7 @@
 using Orchard.DisplayManagement;
 
 namespace Orchard.AuditTrail.Shapes {
-    public class AuditTrailShapes : IDependency {
+    public class AuditTrailFilterShapes : IDependency {
         [Shape]
         public void AuditTrailFilterDisplay(dynamic Shape, dynamic Display, TextWriter Output) {
             DispayChildren(Shape, Display, Output);
