@@ -116,10 +116,13 @@
             }
 
             if (e.keyCode == 13) {
-                var firstVisibleItem = adminMenu.find("li a").filter(":visible");
+                var visibleItems = adminMenu.find("li a").filter(":visible");
 
-                if (firstVisibleItem.length > 0) {
-                    location.href = firstVisibleItem.attr("href");
+                if (visibleItems.length > 0) {
+                    var hit = visibleItems.filter(function(b, c) {
+                        return $(c).text().toLowerCase().indexOf(a) !== -1;
+                    });
+                    location.href = hit.attr("href");
                 }
             }
         });
