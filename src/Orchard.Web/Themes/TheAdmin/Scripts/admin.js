@@ -92,8 +92,8 @@
         var allListItems = $("ul.menu-admin li ul li").not("#NavFilter");
         var itemHeading = $("ul.menu-admin li h3");
 
-        $("#adminfilter").keyup(function () {
-            var a = $(this).val();
+        $("#adminfilter").keyup(function (e) {
+            var a = $(this).val().toLowerCase();
 
             var filteredItemHeading = itemHeading.filter(function (b, c) {
                 return $(c).text().toLowerCase().indexOf(a) !== -1;
@@ -113,6 +113,14 @@
                 childListItem.show();
             } else {
                 allListItems.show();
+            }
+
+            if (e.keyCode == 13) {
+                var firstVisibleItem = adminMenu.find("li a").filter(":visible");
+
+                if (firstVisibleItem.length > 0) {
+                    location.href = firstVisibleItem.attr("href");
+                }
             }
         });
     };
