@@ -76,7 +76,7 @@ namespace Orchard.ContentManagement.Drivers {
                         return editor;
                     }
 
-                    if (editor.GetGroup() != context.GroupId) {
+                    if ((editor.GetGroup() ?? string.Empty) != (context.GroupId ?? string.Empty)) {
                         return editor;
                     }
                 }
