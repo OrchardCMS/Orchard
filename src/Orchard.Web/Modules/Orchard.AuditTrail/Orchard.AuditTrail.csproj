@@ -84,6 +84,7 @@
     <Content Include="Styles\audittrail-display.css" />
     <Content Include="Styles\audittrail-disabledcontent.css" />
     <Content Include="Styles\audittrail-part.css" />
+    <Content Include="Styles\audittrail-contenttype-event.css" />
     <Content Include="Styles\audittrail-settings-event.css" />
     <Content Include="Styles\audittrail-settings.css" />
     <Content Include="Styles\menu.audit-trail-admin.css" />
@@ -108,7 +109,7 @@
     <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartRemoved.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-Removed.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-RoleCreated.cshtml" />
@@ -129,6 +130,8 @@
     <Content Include="Views\AuditTrailFilter-Common-Date-To.cshtml" />
     <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeDisplayNameUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -169,6 +172,7 @@
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="ImportExport\AuditTrailExportStep.cs" />
     <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
@@ -191,7 +195,11 @@
     <Compile Include="Providers\Content\IDiffGramAnalyzer.cs" />
     <Compile Include="Services\AuditTrailTrimmingBackgroundTask.cs" />
     <Compile Include="Shapes\AuditTrailFilterShapes.cs" />
+    <Compile Include="Shapes\AuditTrailEventShapeAlteration.cs" />
+    <Compile Include="Shapes\ContentTypeSettingsUpdatedEventShape.cs" />
     <Compile Include="Shapes\AuditTrailSettingsEventShape.cs" />
+    <Compile Include="Services\Models\Diff.cs" />
+    <Compile Include="Services\Models\DiffDictionary.cs" />
     <Compile Include="ViewModels\AuditTrailCategorySettingsViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventDescriptorSettingViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailEventSettingsViewModel.cs" />

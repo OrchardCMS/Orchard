@@ -1,0 +1,11 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var oldDisplayName = eventData.Get<string>("OldDisplayName");
+    var newDisplayName = eventData.Get<string>("NewDisplayName");
+}
+
+<section>
+    @T("The display name for the <strong>{0}</strong> content type was changed from <strong>{1}</strong> to <strong>{2}</strong>.", contentTypeName, oldDisplayName, newDisplayName)
+</section>

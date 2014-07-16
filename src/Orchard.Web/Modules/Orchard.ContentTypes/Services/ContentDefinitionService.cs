@@ -99,33 +99,39 @@ namespace Orchard.ContentTypes.Services {
                 typeBuilder.DisplayedAs(typeViewModel.DisplayName);
 
                 // allow extensions to alter type configuration
+                _contentDefinitionEditorEvents.TypeEditorUpdating(typeBuilder);
                 typeViewModel.Templates = _contentDefinitionEditorEvents.TypeEditorUpdate(typeBuilder, updater);
+                _contentDefinitionEditorEvents.TypeEditorUpdated(typeBuilder);
 
                 foreach (var part in typeViewModel.Parts) {
                     var partViewModel = part;
 
                     // enable updater to be aware of changing part prefix
-                    updater._prefix = secondHalf => string.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
+                    updater._prefix = secondHalf => String.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
 
                     // allow extensions to alter typePart configuration
                     typeBuilder.WithPart(partViewModel.PartDefinition.Name, typePartBuilder => {
+                        _contentDefinitionEditorEvents.TypePartEditorUpdating(typePartBuilder);
                         partViewModel.Templates = _contentDefinitionEditorEvents.TypePartEditorUpdate(typePartBuilder, updater);
+                        _contentDefinitionEditorEvents.TypePartEditorUpdated(typePartBuilder);
                     });
 
                     if (!partViewModel.PartDefinition.Fields.Any())
                         continue;
 
                     _contentDefinitionManager.AlterPartDefinition(partViewModel.PartDefinition.Name, partBuilder => {
-                        var fieldFirstHalf = string.Format("{0}.{1}", partViewModel.Prefix, partViewModel.PartDefinition.Prefix);
+                        var fieldFirstHalf = String.Format("{0}.{1}", partViewModel.Prefix, partViewModel.PartDefinition.Prefix);
                         foreach (var field in partViewModel.PartDefinition.Fields) {
                             var fieldViewModel = field;
 
                             // enable updater to be aware of changing field prefix
                             updater._prefix = secondHalf =>
-                                string.Format("{0}.{1}.{2}", fieldFirstHalf, fieldViewModel.Prefix, secondHalf);
+                                String.Format("{0}.{1}.{2}", fieldFirstHalf, fieldViewModel.Prefix, secondHalf);
                             // allow extensions to alter partField configuration
                             partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                _contentDefinitionEditorEvents.PartFieldEditorUpdating(partFieldBuilder);
                                 fieldViewModel.Templates = _contentDefinitionEditorEvents.PartFieldEditorUpdate(partFieldBuilder, updater);
+                                _contentDefinitionEditorEvents.PartFieldEditorUpdated(partFieldBuilder);
                             });
                         }
                     });
@@ -142,7 +148,9 @@ namespace Orchard.ContentTypes.Services {
 
                             // allow extensions to alter partField configuration
                             partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                _contentDefinitionEditorEvents.PartFieldEditorUpdating(partFieldBuilder);
                                 fieldViewModel.Templates = _contentDefinitionEditorEvents.PartFieldEditorUpdate(partFieldBuilder, updater);
+                                _contentDefinitionEditorEvents.PartFieldEditorUpdated(partFieldBuilder);
                             });
                         }
                     });

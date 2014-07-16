@@ -1,0 +1,17 @@
+﻿section.audittrail-contenttype-event h2 strong {
+    font-weight: normal;
+}
+
+section.audittrail-contenttype-event table.items {
+    width: auto;
+    -moz-min-width: 600px;
+    -ms-min-width: 600px;
+    -o-min-width: 600px;
+    -webkit-min-width: 600px;
+    min-width: 600px;
+    margin: 0;
+}
+
+section.audittrail-contenttype-event table.items thead th {
+    font-weight: bold;
+}

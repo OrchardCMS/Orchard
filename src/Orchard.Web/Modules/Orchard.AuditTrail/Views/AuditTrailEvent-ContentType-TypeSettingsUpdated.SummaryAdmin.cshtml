@@ -1,0 +1,18 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@functions {
+    string ToFriendlyEmpty(string value) {
+        return String.IsNullOrWhiteSpace(value) ? Html.Encode("<empty>") : value;
+    }
+}
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var diff = (DiffDictionary<string, string>) Model.Diff;
+    var descriptions = String.Join("<br/>", diff.Select(x => T("<strong>{0}</strong> was changed from <strong>{1}</strong> to <strong>{2}</strong>.", x.Key, ToFriendlyEmpty(x.Value.OldValue), ToFriendlyEmpty(x.Value.NewValue)).Text));
+}
+
+<section>
+    @T("The following <strong>{0}</strong> settings were changed:", contentTypeName)<br/>
+    @Html.Raw(descriptions)
+</section>
