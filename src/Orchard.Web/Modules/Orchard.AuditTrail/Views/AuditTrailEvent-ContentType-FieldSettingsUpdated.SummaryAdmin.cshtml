@@ -11,11 +11,14 @@
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var contentTypeName = eventData.Get<string>("ContentTypeName");
-    var diff = (DiffDictionary<string, string>) Model.Diff;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var contentFieldName = eventData.Get<string>("ContentFieldName");
+    var diff = (DiffDictionary<string, string>)Model.Diff;
+    var isImplicitPart = contentTypeName == contentPartName;
+    var captionTemplate = isImplicitPart ? "Settings for <strong>{0}</strong> attached the <strong>{1}</strong> content type were updated:" : "Settings for <strong>{0}</strong> attached to <strong>{1}</strong> of the <strong>{2}</strong> content type were updated:";
 }
-
 <section class="audittrail-contenttype-event">
-    @T("The following <strong>{0}</strong> settings were changed:", contentTypeName)<br />
+    <div>@T(captionTemplate, contentFieldName, contentPartName, contentTypeName)</div>
     <ul>
         @foreach (var setting in diff) {
             <li>

@@ -11,11 +11,11 @@
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var contentTypeName = eventData.Get<string>("ContentTypeName");
-    var diff = (DiffDictionary<string, string>) Model.Diff;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var diff = (DiffDictionary<string, string>)Model.Diff;
 }
-
 <section class="audittrail-contenttype-event">
-    @T("The following <strong>{0}</strong> settings were changed:", contentTypeName)<br />
+    <div>@T("Settings for <strong>{0}</strong> attached to the <strong>{1}</strong> content type were updated:", contentPartName, contentTypeName)</div>
     <ul>
         @foreach (var setting in diff) {
             <li>

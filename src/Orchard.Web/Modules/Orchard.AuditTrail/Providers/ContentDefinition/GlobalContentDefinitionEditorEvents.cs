@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.AuditTrail.Services;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.ContentTypes.Services;
+using Orchard.ContentTypes.ViewModels;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
@@ -17,9 +17,13 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
         private readonly IContentDefinitionService _contentDefinitionService;
-        private string _oldContentTypeDisplayName;
-        private SettingsDictionary _oldContentTypeSettings;
         private readonly ISettingsFormatter _settingsFormatter;
+        private string _oldContentTypeDisplayName;
+        private EditTypeViewModel _currentContentType;
+        private SettingsDictionary _oldContentTypeSettings;
+        private SettingsDictionary _oldContentTypePartSettings;
+        private SettingsDictionary _oldContentPartFieldSettings;
+        private SettingsDictionary _oldPartSettings;
 
         public GlobalContentDefinitionEditorEvents(
             IAuditTrailManager auditTrailManager, 
@@ -35,6 +39,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public override void TypeEditorUpdating(ContentTypeDefinitionBuilder definition) {
             var contentType = _contentDefinitionService.GetType(definition.Name);
+            _currentContentType = contentType;
             _oldContentTypeDisplayName = contentType.DisplayName;
             _oldContentTypeSettings = new SettingsDictionary(contentType.Settings);
         }
@@ -64,33 +69,66 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         }
 
         public override void TypePartEditorUpdating(ContentTypePartDefinitionBuilder builder) {
-            // TODO: record current values
+            var contentTypeDefinition = _contentDefinitionService.GetType(builder.TypeName);
+            var contentPart = contentTypeDefinition.Parts.Single(x => x.PartDefinition.Name == builder.Name);
+            _oldContentTypePartSettings = contentPart.Settings;
         }
 
         public override void TypePartEditorUpdated(ContentTypePartDefinitionBuilder builder) {
-            // TODO: compare old values with new values.
-            var eventData = new Dictionary<string, object> {
-                {"ContentPartName", builder.Name},
-                {"ContentTypeName", builder.TypeName}
-            };
-            RecordContentTypeAuditTrail(ContentTypeAuditTrailEventProvider.PartSettingsUpdated, eventData, builder.TypeName);
+            var contentTypePartDefinition = builder.Build();
+            var newSettings = contentTypePartDefinition.Settings;
+
+            if (!AreEqual(newSettings, _oldContentTypePartSettings)) {
+                var eventData = new Dictionary<string, object> {
+                    {"ContentPartName", builder.Name},
+                    {"ContentTypeName", builder.TypeName},
+                    {"OldSettings", ToXml(_oldContentTypePartSettings)},
+                    {"NewSettings", ToXml(newSettings)}
+                };
+                RecordContentTypeAuditTrail(ContentTypeAuditTrailEventProvider.PartSettingsUpdated, eventData, builder.TypeName);
+            }
         }
 
-        //public override void PartEditorUpdated(ContentPartDefinitionBuilder builder) {
-        //    var eventData = new Dictionary<string, object> {
-        //        {"ContentPartName", builder.Name}
-        //    };
-        //    RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.PartSettingsUpdated, eventData, builder.Name);
-        //}
+        public override void PartFieldEditorUpdating(ContentPartFieldDefinitionBuilder builder) {
+            var contentPart = _contentDefinitionService.GetPart(builder.PartName);
+            var contentField = contentPart.Fields.Single(x => x.Name == builder.Name);
+            _oldContentPartFieldSettings = contentField.Settings;
+        }
 
-        //public override void PartFieldEditorUpdated(ContentPartFieldDefinitionBuilder builder) {
-        //    var eventData = new Dictionary<string, object> {
-        //        {"ContentFieldName", builder.Name},
-        //        {"ContentFieldType", builder.FieldType},
-        //        {"ContentPartName", builder.PartName}
-        //    };
-        //    RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.FieldSettingsUpdated, eventData, builder.PartName);
-        //}
+        public override void PartFieldEditorUpdated(ContentPartFieldDefinitionBuilder builder) {
+            var contentPartFieldDefinition = builder.Build();
+            var newSettings = contentPartFieldDefinition.Settings;
+
+            if (!AreEqual(newSettings, _oldContentPartFieldSettings)) {
+                var eventData = new Dictionary<string, object> {
+                    {"ContentFieldName", builder.Name},
+                    {"ContentPartName", builder.PartName},
+                    {"ContentTypeName", _currentContentType.Name},
+                    {"OldSettings", ToXml(_oldContentPartFieldSettings)},
+                    {"NewSettings", ToXml(newSettings)}
+                };
+                RecordContentTypeAuditTrail(ContentTypeAuditTrailEventProvider.FieldSettingsUpdated, eventData, _currentContentType.Name);
+            }
+        }
+
+        public override void PartEditorUpdating(ContentPartDefinitionBuilder builder) {
+            var contentPart = _contentDefinitionService.GetPart(builder.Name);
+            _oldPartSettings = contentPart.Settings;
+        }
+
+        public override void PartEditorUpdated(ContentPartDefinitionBuilder builder) {
+            var contentPartDefinition = builder.Build();
+            var newSettings = contentPartDefinition.Settings;
+
+            if (!AreEqual(newSettings, _oldPartSettings)) {
+                var eventData = new Dictionary<string, object> {
+                    {"ContentPartName", builder.Name},
+                    {"OldSettings", ToXml(_oldPartSettings)},
+                    {"NewSettings", ToXml(newSettings)}
+                };
+                RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.PartSettingsUpdated, eventData, builder.Name);
+            }
+        }
 
         private void RecordContentTypeAuditTrail(string eventName, IDictionary<string, object> eventData, string contentTypeName) {
             _auditTrailManager.CreateRecord<ContentTypeAuditTrailEventProvider>(eventName, _wca.GetContext().CurrentUser, properties: null, eventData: eventData, eventFilterKey: "contenttype", eventFilterData: contentTypeName);

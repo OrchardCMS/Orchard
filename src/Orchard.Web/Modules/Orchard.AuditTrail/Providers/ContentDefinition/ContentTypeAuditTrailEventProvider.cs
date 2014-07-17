@@ -22,6 +22,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         public const string TypeDisplayNameUpdated = "TypeDisplayNameUpdated";
         public const string TypeSettingsUpdated = "TypeSettingsUpdated";
         public const string PartSettingsUpdated = "PartSettingsUpdated";
+        public const string FieldSettingsUpdated = "FieldSettingsUpdated";
 
         public override void Describe(DescribeContext context) {
             context.For("ContentType", T("Content Type"))
@@ -31,7 +32,8 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
                 .Event(this, PartRemoved, T("Part removed"), T("A content part was removed from a content type."), enableByDefault: true)
                 .Event(this, TypeDisplayNameUpdated, T("Type display name updated"), T("The display name of a content type was updated."), enableByDefault: true)
                 .Event(this, TypeSettingsUpdated, T("Type settings updated"), T("The settings of a content type were updated."), enableByDefault: true)
-                .Event(this, PartSettingsUpdated, T("Part settings updated"), T("The settings of a content part on a content type were updated."), enableByDefault: true);
+                .Event(this, PartSettingsUpdated, T("Part settings updated"), T("The settings of a content part on a content type were updated."), enableByDefault: true)
+                .Event(this, FieldSettingsUpdated, T("Field settings updated"), T("The settings of a content field on a content part on a content type were updated."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);

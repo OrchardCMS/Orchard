@@ -103,7 +103,7 @@
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldRemoved.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.cshtml" />
-    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-Removed.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-Created.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-PartAdded.cshtml" />
@@ -132,6 +132,10 @@
     <Content Include="Views\AuditTrailEvent-AuditTrailSettings-EventsChanged.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-TypeDisplayNameUpdated.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-PartSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -172,6 +176,7 @@
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\SettingsDictionaryExtensions.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="ImportExport\AuditTrailExportStep.cs" />
@@ -196,6 +201,9 @@
     <Compile Include="Services\AuditTrailTrimmingBackgroundTask.cs" />
     <Compile Include="Shapes\AuditTrailFilterShapes.cs" />
     <Compile Include="Shapes\AuditTrailEventShapeAlteration.cs" />
+    <Compile Include="Shapes\ContentTypeFieldSettingsUpdatedEventShape.cs" />
+    <Compile Include="Shapes\ContentPartSettingsUpdatedEventShape.cs" />
+    <Compile Include="Shapes\ContentTypePartSettingsUpdatedEventShape.cs" />
     <Compile Include="Shapes\ContentTypeSettingsUpdatedEventShape.cs" />
     <Compile Include="Shapes\AuditTrailSettingsEventShape.cs" />
     <Compile Include="Services\Models\Diff.cs" />

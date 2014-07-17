@@ -11,7 +11,7 @@
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var contentTypeName = eventData.Get<string>("ContentTypeName");
-    var differences = (DiffDictionary<string, string>) Model.Diff;
+    var diff = (DiffDictionary<string, string>) Model.Diff;
 }
 <section class="audittrail-contenttype-event">
     <h2>@T("The following <strong>{0}</strong> settings were changed", contentTypeName)</h2>
@@ -24,11 +24,11 @@
             </tr>
         </thead>
         <tbody class="audittrail-category">
-            @foreach (var diff in differences) {
+            @foreach (var setting in diff) {
                 <tr>
-                    <td>@diff.Key</td>
-                    <td>@ToFriendlyEmpty(diff.Value.OldValue)</td>
-                    <td>@ToFriendlyEmpty(diff.Value.NewValue)</td>
+                    <td>@setting.Key</td>
+                    <td>@ToFriendlyEmpty(setting.Value.OldValue)</td>
+                    <td>@ToFriendlyEmpty(setting.Value.NewValue)</td>
                 </tr>
             }
         </tbody>

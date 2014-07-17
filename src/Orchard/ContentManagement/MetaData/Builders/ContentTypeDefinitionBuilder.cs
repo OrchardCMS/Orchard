@@ -86,7 +86,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 _partDefinition = part.PartDefinition;
             }
 
-            public ContentTypePartDefinition Build() {
+            public override ContentTypePartDefinition Build() {
                 return new ContentTypePartDefinition(_partDefinition, _settings);
             }
         }

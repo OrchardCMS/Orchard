@@ -15,3 +15,12 @@ section.audittrail-contenttype-event table.items {
 section.audittrail-contenttype-event table.items thead th {
     font-weight: bold;
 }
+
+section.audittrail-contenttype-event ul {
+    list-style-type: square;
+    margin-left: 1.5em;
+}
+
+section.audittrail-contenttype-event ul li {
+    padding-left: 0.5em;
+}

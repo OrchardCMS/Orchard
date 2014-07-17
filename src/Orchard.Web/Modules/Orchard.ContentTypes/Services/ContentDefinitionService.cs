@@ -245,7 +245,9 @@ namespace Orchard.ContentTypes.Services {
         public void AlterPart(EditPartViewModel partViewModel, IUpdateModel updateModel) {
             var updater = new Updater(updateModel);
             _contentDefinitionManager.AlterPartDefinition(partViewModel.Name, partBuilder => {
+                _contentDefinitionEditorEvents.PartEditorUpdating(partBuilder);
                 partViewModel.Templates = _contentDefinitionEditorEvents.PartEditorUpdate(partBuilder, updater);
+                _contentDefinitionEditorEvents.PartEditorUpdated(partBuilder);
             });
         }
 

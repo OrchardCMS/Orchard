@@ -5,14 +5,14 @@ using Orchard.ContentManagement.MetaData.Services;
 using Orchard.DisplayManagement.Implementation;
 
 namespace Orchard.AuditTrail.Shapes {
-    public class ContentTypeSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentTypeAuditTrailEventProvider> {
+    public class ContentTypeFieldSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentTypeAuditTrailEventProvider> {
         private readonly ISettingsFormatter _settingsFormatter;
-        public ContentTypeSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
+        public ContentTypeFieldSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
             _settingsFormatter = settingsFormatter;
         }
 
         protected override string EventName {
-            get { return ContentTypeAuditTrailEventProvider.TypeSettingsUpdated; }
+            get { return ContentTypeAuditTrailEventProvider.FieldSettingsUpdated; }
         }
 
         protected override void OnAlterShape(ShapeDisplayingContext context) {

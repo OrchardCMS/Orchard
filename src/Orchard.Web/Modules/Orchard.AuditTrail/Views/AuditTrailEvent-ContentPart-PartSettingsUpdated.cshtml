@@ -1,9 +1,36 @@
 ﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
 @{
-    var eventData = (IDictionary<string, object>) Model.EventData;
-    var contentPartName = eventData.Get<string>("ContentPartName");
+    Style.Include("audittrail-contenttype-event.css");
 }
-
-<section class="audittrail-contentpart-summary">
-    @T("Settings for the <strong>{0}</strong> content part were updated.", contentPartName)
+@functions {
+    string ToFriendlyEmpty(string value) {
+        return String.IsNullOrWhiteSpace(value) ? Html.Encode(T("<empty>").Text) : value;
+    }
+}
+@{
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var diff = (DiffDictionary<string, string>)Model.Diff;
+}
+<section class="audittrail-contenttype-event">
+    <h2>@T("Settings for <strong>{0}</strong> were updated:", contentPartName)</h2>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Setting")</th>
+                <th>@T("From")</th>
+                <th>@T("To")</th>
+            </tr>
+        </thead>
+        <tbody class="audittrail-category">
+            @foreach (var setting in diff) {
+                <tr>
+                    <td>@setting.Key</td>
+                    <td>@ToFriendlyEmpty(setting.Value.OldValue)</td>
+                    <td>@ToFriendlyEmpty(setting.Value.NewValue)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </section>

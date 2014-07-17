@@ -18,5 +18,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             _settings[name] = value;
             return this;
         }
+
+        public abstract ContentTypePartDefinition Build();
     }
 }
