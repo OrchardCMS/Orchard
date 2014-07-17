@@ -168,6 +168,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
                 context.ViewContext.ViewData = new ViewDataDictionary(context.Value);
                 context.ViewContext.TempData = new TempDataDictionary();
+                context.ViewContext.View = viewResult.View;
                 viewResult.View.Render(context.ViewContext, sw);
                 viewResult.ViewEngine.ReleaseView(controllerContext, viewResult.View);
                 return new HtmlString(sw.GetStringBuilder().ToString());
