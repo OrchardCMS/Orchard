@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Helpers;
-using Orchard.AuditTrail.Providers.ContentDefinition;
+using Orchard.AuditTrail.Shapes;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.DisplayManagement.Implementation;
 
-namespace Orchard.AuditTrail.Shapes {
-    public class ContentTypeSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentTypeAuditTrailEventProvider> {
+namespace Orchard.AuditTrail.Providers.ContentDefinition.Shapes {
+    public class ContentTypeFieldSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentPartAuditTrailEventProvider> {
         private readonly ISettingsFormatter _settingsFormatter;
-        public ContentTypeSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
+        public ContentTypeFieldSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
             _settingsFormatter = settingsFormatter;
         }
 
         protected override string EventName {
-            get { return ContentTypeAuditTrailEventProvider.TypeSettingsUpdated; }
+            get { return ContentPartAuditTrailEventProvider.FieldSettingsUpdated; }
         }
 
         protected override void OnAlterShape(ShapeDisplayingContext context) {
@@ -22,7 +23,9 @@ namespace Orchard.AuditTrail.Shapes {
             var diff = oldSettings.GetDiff(newSettings);
 
             context.Shape.OldSettings = oldSettings;
+            context.Shape.OldDisplayName = oldSettings.Get(ContentPartFieldDefinition.DisplayNameKey);
             context.Shape.NewSettings = newSettings;
+            context.Shape.NewDisplayName = newSettings.Get(ContentPartFieldDefinition.DisplayNameKey);
             context.Shape.Diff = diff;
         }
     }

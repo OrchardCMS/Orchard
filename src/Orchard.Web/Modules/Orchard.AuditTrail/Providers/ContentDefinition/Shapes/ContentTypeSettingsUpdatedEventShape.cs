@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Helpers;
-using Orchard.AuditTrail.Providers.ContentDefinition;
+using Orchard.AuditTrail.Shapes;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.DisplayManagement.Implementation;
 
-namespace Orchard.AuditTrail.Shapes {
-    public class ContentPartSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentPartAuditTrailEventProvider> {
+namespace Orchard.AuditTrail.Providers.ContentDefinition.Shapes {
+    public class ContentTypeSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentTypeAuditTrailEventProvider> {
         private readonly ISettingsFormatter _settingsFormatter;
-        public ContentPartSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
+        public ContentTypeSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
             _settingsFormatter = settingsFormatter;
         }
 
         protected override string EventName {
-            get { return ContentPartAuditTrailEventProvider.PartSettingsUpdated; }
+            get { return ContentTypeAuditTrailEventProvider.TypeSettingsUpdated; }
         }
 
         protected override void OnAlterShape(ShapeDisplayingContext context) {

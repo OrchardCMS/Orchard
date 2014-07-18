@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -103,11 +104,10 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
                 var eventData = new Dictionary<string, object> {
                     {"ContentFieldName", builder.Name},
                     {"ContentPartName", builder.PartName},
-                    {"ContentTypeName", _currentContentType.Name},
                     {"OldSettings", ToXml(_oldContentPartFieldSettings)},
                     {"NewSettings", ToXml(newSettings)}
                 };
-                RecordContentTypeAuditTrail(ContentTypeAuditTrailEventProvider.FieldSettingsUpdated, eventData, _currentContentType.Name);
+                RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.FieldSettingsUpdated, eventData, builder.PartName);
             }
         }
 

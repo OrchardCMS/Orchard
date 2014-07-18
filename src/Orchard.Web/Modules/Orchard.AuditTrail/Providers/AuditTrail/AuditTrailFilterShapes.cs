@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Orchard.DisplayManagement;
 
-namespace Orchard.AuditTrail.Shapes {
+namespace Orchard.AuditTrail.Providers.AuditTrail {
     public class AuditTrailFilterShapes : IDependency {
         [Shape]
         public void AuditTrailFilterDisplay(dynamic Shape, dynamic Display, TextWriter Output) {

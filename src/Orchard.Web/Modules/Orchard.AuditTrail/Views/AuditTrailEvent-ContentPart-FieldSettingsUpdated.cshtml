@@ -3,8 +3,10 @@
     var eventData = (IDictionary<string, object>) Model.EventData;
     var contentPartName = eventData.Get<string>("ContentPartName");
     var contentFieldName = eventData.Get<string>("ContentFieldName");
+    var oldDisplayName = (string)Model.OldDisplayName;
+    var newDisplayName = (string)Model.NewDisplayName;
 }
 
 <section class="audittrail-contentpart-summary">
-    @T("Settings for the <strong>{0}</strong> content field of the <strong>{1}</strong> content part were updated.", contentFieldName, contentPartName)
+    @T("The <strong>{0}</strong> content field of the <strong>{1}</strong> content part was renamed from <strong>{2}</strong> to <strong>{3}</strong>.", contentFieldName, contentPartName, oldDisplayName, newDisplayName)
 </section>

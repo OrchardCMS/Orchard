@@ -621,14 +621,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
             }
 
-            _contentDefinitionManager.AlterPartDefinition(partViewModel.Name, partBuilder => {
-                partBuilder.WithField(viewModel.Name, fieldBuilder => {
-                    fieldBuilder.WithDisplayName(viewModel.DisplayName);
-                });
-            });
-            
-            //field.DisplayName = viewModel.DisplayName;
-            //_contentDefinitionManager.StorePartDefinition(partViewModel._Definition);
+            _contentDefinitionService.AlterField(partViewModel, viewModel);
 
             Services.Notifier.Information(T("Display name changed to {0}.", viewModel.DisplayName));
 

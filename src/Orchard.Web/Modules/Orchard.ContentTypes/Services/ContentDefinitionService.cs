@@ -294,6 +294,16 @@ namespace Orchard.ContentTypes.Services {
             });
         }
 
+        public void AlterField(EditPartViewModel partViewModel, EditFieldNameViewModel fieldViewModel) {
+            _contentDefinitionManager.AlterPartDefinition(partViewModel.Name, partBuilder => {
+                partBuilder.WithField(fieldViewModel.Name, fieldBuilder => {
+                    _contentDefinitionEditorEvents.PartFieldEditorUpdating(fieldBuilder);
+                    fieldBuilder.WithDisplayName(fieldViewModel.DisplayName);
+                    _contentDefinitionEditorEvents.PartFieldEditorUpdated(fieldBuilder);
+                });
+            });
+        }
+
         public string GenerateContentTypeNameFromDisplayName(string displayName) {
             displayName = displayName.ToSafeName();
 

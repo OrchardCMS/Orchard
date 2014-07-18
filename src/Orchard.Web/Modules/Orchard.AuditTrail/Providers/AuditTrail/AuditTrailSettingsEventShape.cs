@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.AuditTrail.Models;
-using Orchard.AuditTrail.Providers.AuditTrail;
 using Orchard.AuditTrail.Services;
+using Orchard.AuditTrail.Shapes;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 
-namespace Orchard.AuditTrail.Shapes {
+namespace Orchard.AuditTrail.Providers.AuditTrail {
     public class AuditTrailSettingsEventShape : AuditTrailEventShapeAlteration<SettingsAuditTrailEventProvider> {
         private readonly Work<IAuditTrailManager> _auditTrailManager;
         public AuditTrailSettingsEventShape(Work<IAuditTrailManager> auditTrailManager) {

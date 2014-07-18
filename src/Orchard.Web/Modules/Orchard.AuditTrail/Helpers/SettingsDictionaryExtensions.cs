@@ -3,6 +3,11 @@ using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.AuditTrail.Helpers {
     public static class SettingsDictionaryExtensions {
+
+        public static string Get(this SettingsDictionary settings, string key) {
+            return settings.ContainsKey(key) ? settings[key] : null;
+        }
+
         public static DiffDictionary<string, string> GetDiff(this SettingsDictionary oldSettings, SettingsDictionary newSettings) {
             var dictionary = new DiffDictionary<string, string>();
 

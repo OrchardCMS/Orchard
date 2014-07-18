@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Helpers;
-using Orchard.AuditTrail.Providers.ContentDefinition;
+using Orchard.AuditTrail.Shapes;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.DisplayManagement.Implementation;
 
-namespace Orchard.AuditTrail.Shapes {
+namespace Orchard.AuditTrail.Providers.ContentDefinition.Shapes {
     public class ContentTypePartSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentTypeAuditTrailEventProvider> {
         private readonly ISettingsFormatter _settingsFormatter;
         public ContentTypePartSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
