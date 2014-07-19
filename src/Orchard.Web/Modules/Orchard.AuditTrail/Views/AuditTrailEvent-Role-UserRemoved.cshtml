@@ -1,0 +1,10 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var roleName = eventData.Get<string>("RoleName");
+    var userName = eventData.Get<string>("UserName");
+}
+
+<section class="audittrail-role-summary">
+    @T("Removed the user <strong>{0}</strong> from the role <strong>{1}</strong>.", userName, roleName)
+</section>

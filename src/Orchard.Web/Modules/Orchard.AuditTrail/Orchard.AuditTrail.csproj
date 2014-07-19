@@ -112,8 +112,8 @@
     <Content Include="Views\AuditTrailEvent-ContentType-TypeSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-PermissionRemoved.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-RoleCreated.cshtml" />
-    <Content Include="Views\AuditTrailEvent-Role-RoleRenamed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Created.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Renamed.cshtml" />
     <Content Include="Views\AuditTrailEvent-User.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.AuditTrailSettings.cshtml" />
     <Content Include="Views\AuditTrailEvent-User-LoginFailed..cshtml" />
@@ -136,6 +136,9 @@
     <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentType-FieldSettingsUpdated.SummaryAdmin.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-PartSettingsUpdated.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-Removed.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-UserAdded.cshtml" />
+    <Content Include="Views\AuditTrailEvent-Role-UserRemoved.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

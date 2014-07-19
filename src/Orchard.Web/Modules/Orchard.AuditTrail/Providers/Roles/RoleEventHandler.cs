@@ -57,7 +57,6 @@ namespace Orchard.AuditTrail.Providers.Roles {
             RecordAuditTrailEvent(eventName, roleName, properties: null, eventData: eventData);
         }
 
-
         private void RecordAuditTrailEvent(string eventName, string roleName, IUser user) {
 
             var properties = new Dictionary<string, object> {

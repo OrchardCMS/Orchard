@@ -2,9 +2,8 @@
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var roleName = eventData.Get<string>("RoleName");
-    var permissionName = eventData.Get<string>("PermissionName");
 }
 
 <section class="audittrail-role-summary">
-    @T("Added the permission <strong>{0}</strong> to the role <strong>{1}</strong>.", permissionName, roleName)
+    @T("Created the role <strong>{0}</strong>.", roleName)
 </section>
