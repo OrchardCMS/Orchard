@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
@@ -26,13 +28,12 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var eventData = (IDictionary<string, object>)context.Shape.EventData;
                 var contentItemId = eventData.Get<int>("ContentId");
                 var previousContentItemVersionId = eventData.Get<int>("PreviousVersionId");
+                var previousVersionXml = GetXml(eventData, "PreviousVersionXml");
+                var diffGram = GetXml(eventData, "DiffGram");
                 var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.Latest);
                 var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
 
-                if (previousVersion != null) {
-                    var previousVersionXml = _contentManager.Value.Export(previousVersion);
-                    var currentVersionXml = _contentManager.Value.Export(contentItem);
-                    var diffGram = _analyzer.GenerateDiffGram(previousVersionXml, currentVersionXml);
+                if (diffGram != null) {
                     var diffNodes = _analyzer.Analyze(previousVersionXml, diffGram).ToArray();
                     context.Shape.DiffNodes = diffNodes;
                 }
@@ -40,6 +41,20 @@ namespace Orchard.AuditTrail.Providers.Content {
                 context.Shape.ContentItem = contentItem;
                 context.Shape.PreviousVersion = previousVersion;
             });
+        }
+
+        private static XElement GetXml(IDictionary<string, object> eventData, string key) {
+            var data = eventData.Get<string>(key);
+
+            if (String.IsNullOrWhiteSpace(data))
+                return null;
+
+            try {
+                return XElement.Parse(data);
+            }
+            catch (Exception) {
+                return null;
+            }
         }
     }
 }
