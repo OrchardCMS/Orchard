@@ -61,6 +61,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                                                 };
                                         }
                                         else {
+                                            var elementName = currentElement.Name.ToString();
                                             var originalContent = currentElement.Value;
                                             var currentContent = reader.ReadElementContentAsString();
 
@@ -69,16 +70,26 @@ namespace Orchard.AuditTrail.Providers.Content {
                                             yield return
                                                 new DiffNode {
                                                     Type = DiffType.Change,
-                                                    Context = currentElement.Name.ToString(),
+                                                    Context = BuildContextName(stack, elementName),
                                                     Previous = originalContent,
                                                     Current = currentContent
                                                 };
                                         }
                                         break;
                                     case "add":
+                                        string nodeName = reader.GetAttribute("name");
+                                        string addedContent = null;
                                         reader.Read();
-                                        var addedElementContent = reader.ReadElementContentAsString();
-                                        yield return new DiffNode { Type = DiffType.Addition, Context = reader.Name, Current = addedElementContent };
+                                        if (reader.NodeType != XmlNodeType.EndElement) {
+                                            nodeName = reader.Name;
+                                            addedContent = reader.ReadElementContentAsString();
+                                        }
+                                        yield return 
+                                            new DiffNode { 
+                                                Type = DiffType.Addition, 
+                                                Context = BuildContextName(stack, nodeName), 
+                                                Current = addedContent 
+                                            };
                                         break;
                                 }
                             }
@@ -93,8 +104,8 @@ namespace Orchard.AuditTrail.Providers.Content {
             }
         }
 
-        private string BuildContextName(IEnumerable<XElement> stack, string attributeName) {
-            return String.Join("/", stack.Reverse().Skip(1).Select(x => x.Name)) + "/" + attributeName;
+        private string BuildContextName(IEnumerable<XElement> stack, string nodeName) {
+            return String.Format("{0}/{1}", String.Join("/", stack.Reverse().Skip(1).Select(x => x.Name)), nodeName);
         }
     }
 }
