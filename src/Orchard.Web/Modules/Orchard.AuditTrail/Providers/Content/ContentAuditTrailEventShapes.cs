@@ -26,7 +26,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var eventData = (IDictionary<string, object>)context.Shape.EventData;
                 var contentItemId = eventData.Get<int>("ContentId");
                 var previousContentItemVersionId = eventData.Get<int>("PreviousVersionId");
-                var contentItem = _contentManager.Value.Get(contentItemId);
+                var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.Latest);
                 var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
 
                 if (previousVersion != null) {
