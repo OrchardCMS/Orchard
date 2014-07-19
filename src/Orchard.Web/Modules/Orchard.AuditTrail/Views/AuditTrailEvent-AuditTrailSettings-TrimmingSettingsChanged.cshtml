@@ -8,6 +8,10 @@
 }
 
 <section class="audittrail-settings-summary">
-    <div>@T("Trimming retention period changed from <strong>{0}</strong> to <strong>{1}</strong>", T.Plural("1 day", "{0} days", oldRetentionPeriod), T.Plural("1 day", "{0} days", newRetentionPeriod))</div>
-    <div>@T("Minimum run interval changed from <strong>{0}</strong> to <strong>{1}</strong>", T.Plural("1 hour", "{0} hours", oldMinimumRunInterval), T.Plural("1 hour", "{0} hours", newMinimumRunInterval))</div>
+    @if (newRetentionPeriod != oldRetentionPeriod) {
+        <div>@T("The trimming retention period was changed from <strong>{0}</strong> to <strong>{1}</strong>.", T.Plural("1 day", "{0} days", oldRetentionPeriod), T.Plural("1 day", "{0} days", newRetentionPeriod))</div>
+    }
+    @if (newMinimumRunInterval != oldMinimumRunInterval) {
+        <div>@T("The minimum trimming run interval was changed from <strong>{0}</strong> to <strong>{1}</strong>.", T.Plural("1 hour", "{0} hours", oldMinimumRunInterval), T.Plural("1 hour", "{0} hours", newMinimumRunInterval))</div>
+    }
 </section>

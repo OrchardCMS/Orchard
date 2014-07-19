@@ -43,8 +43,8 @@ namespace Orchard.AuditTrail.Handlers {
             if (newRetentionPeriod == _oldRetentionPeriod && newMinimumRunInterval == _oldMinimumRunInterval)
                 return;
 
-            _auditTrailManager.CreateRecord<TrimmingSettingsAuditTrailEventProvider>(
-                eventName: TrimmingSettingsAuditTrailEventProvider.TrimmingSettingsChanged,
+            _auditTrailManager.CreateRecord<AuditTrailTrimmingSettingsEventProvider>(
+                eventName: AuditTrailTrimmingSettingsEventProvider.TrimmingSettingsChanged,
                 user: _wca.GetContext().CurrentUser,
                 eventData: new Dictionary<string, object> {
                     {"OldRetentionPeriod", _oldRetentionPeriod},

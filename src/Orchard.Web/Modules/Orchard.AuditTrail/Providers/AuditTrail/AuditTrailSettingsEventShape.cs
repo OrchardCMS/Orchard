@@ -8,14 +8,15 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 
 namespace Orchard.AuditTrail.Providers.AuditTrail {
-    public class AuditTrailSettingsEventShape : AuditTrailEventShapeAlteration<SettingsAuditTrailEventProvider> {
+    public class AuditTrailSettingsEventShape : AuditTrailEventShapeAlteration<AuditTrailSettingsEventProvider> {
         private readonly Work<IAuditTrailManager> _auditTrailManager;
+
         public AuditTrailSettingsEventShape(Work<IAuditTrailManager> auditTrailManager) {
             _auditTrailManager = auditTrailManager;
         }
 
         protected override string EventName {
-            get { return SettingsAuditTrailEventProvider.EventsChanged; }
+            get { return AuditTrailSettingsEventProvider.EventsChanged; }
         }
 
         protected override void OnAlterShape(ShapeDisplayingContext context) {
@@ -31,14 +32,15 @@ namespace Orchard.AuditTrail.Providers.AuditTrail {
 
         private IEnumerable<AuditTrailEventDescriptorSettingViewModel> GetDiffQuery(IEnumerable<AuditTrailEventSetting> oldSettings, IEnumerable<AuditTrailEventSetting> newSettings) {
             var oldDictionary = oldSettings.ToDictionary(x => x.EventName);
-            
-            return from newSetting in newSettings
-                   let oldSetting = oldDictionary.ContainsKey(newSetting.EventName) ? oldDictionary[newSetting.EventName] : default(AuditTrailEventSetting) 
-                   where oldSetting == null || oldSetting.IsEnabled != newSetting.IsEnabled
-                   select new AuditTrailEventDescriptorSettingViewModel {
-                       Setting = newSetting,
-                       Descriptor = _auditTrailManager.Value.DescribeEvent(newSetting.EventName)
-                   };
+
+            return
+                from newSetting in newSettings
+                let oldSetting = oldDictionary.ContainsKey(newSetting.EventName) ? oldDictionary[newSetting.EventName] : default(AuditTrailEventSetting)
+                where oldSetting == null || oldSetting.IsEnabled != newSetting.IsEnabled
+                select new AuditTrailEventDescriptorSettingViewModel {
+                    Setting = newSetting,
+                    Descriptor = _auditTrailManager.Value.DescribeEvent(newSetting.EventName)
+                };
         }
     }
 }

@@ -55,8 +55,8 @@ namespace Orchard.AuditTrail.Handlers {
             if (newEventSettings == _oldEventSettings)
                 return;
 
-            _auditTrailManager.CreateRecord<SettingsAuditTrailEventProvider>(
-                eventName: SettingsAuditTrailEventProvider.EventsChanged,
+            _auditTrailManager.CreateRecord<AuditTrailSettingsEventProvider>(
+                eventName: AuditTrailSettingsEventProvider.EventsChanged,
                 eventData: new Dictionary<string, object> {
                     {"OldSettings", _oldEventSettings},
                     {"NewSettings", newEventSettings}

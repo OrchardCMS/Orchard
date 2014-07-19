@@ -184,8 +184,8 @@
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
-    <Compile Include="Providers\AuditTrail\TrimmingSettingsAuditTrailEventProvider.cs" />
-    <Compile Include="Providers\AuditTrail\SettingsAuditTrailEventProvider.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
     <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
