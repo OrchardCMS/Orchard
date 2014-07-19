@@ -15,8 +15,8 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public override void Describe(DescribeContext context) {
             context.For("ContentPart", T("Content Parts"))
-                .Event(this, Created, T("Created"), T("A content type was created."), enableByDefault: true)
-                .Event(this, Removed, T("Removed"), T("A content type was removed."), enableByDefault: true)
+                .Event(this, Created, T("Created"), T("A content part was created."), enableByDefault: true)
+                .Event(this, Removed, T("Removed"), T("A content part was removed."), enableByDefault: true)
                 .Event(this, DescriptionChanged, T("Description changed"), T("A content part description was changed."), enableByDefault: true)
                 .Event(this, FieldAdded, T("Field added"), T("A field was added to a content part."), enableByDefault: true)
                 .Event(this, FieldRemoved, T("Field removed"), T("A field was removed from a content part."), enableByDefault: true)
