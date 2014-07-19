@@ -34,11 +34,11 @@ namespace Orchard.AuditTrail.Providers.Roles {
         }
 
         public void PermissionAdded(PermissionAddedContext context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionAdded, context.Role.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionAdded, context.Role.Name, context.Permission.Name);
         }
 
         public void PermissionRemoved(PermissionRemovedContext context) {
-            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionRemoved, context.Role.Name);
+            RecordAuditTrailEvent(RoleAuditTrailEventProvider.PermissionRemoved, context.Role.Name, context.Permission.Name);
         }
 
         public void UserAdded(UserAddedContext context) {
@@ -52,6 +52,15 @@ namespace Orchard.AuditTrail.Providers.Roles {
         private void RecordAuditTrailEvent(string eventName, string roleName) {
             var eventData = new Dictionary<string, object> {
                 {"RoleName", roleName}
+            };
+
+            RecordAuditTrailEvent(eventName, roleName, properties: null, eventData: eventData);
+        }
+
+        private void RecordAuditTrailEvent(string eventName, string roleName, string permissionName) {
+            var eventData = new Dictionary<string, object> {
+                {"RoleName", roleName},
+                {"PermissionName", permissionName}
             };
 
             RecordAuditTrailEvent(eventName, roleName, properties: null, eventData: eventData);

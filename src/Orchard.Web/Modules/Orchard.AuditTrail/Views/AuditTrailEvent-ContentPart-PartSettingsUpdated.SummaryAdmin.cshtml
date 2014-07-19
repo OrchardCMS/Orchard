@@ -14,7 +14,7 @@
     var diff = (DiffDictionary<string, string>)Model.Diff;
 }
 <section class="audittrail-contenttype-event">
-    <div>@T("Settings for <strong>{0}</strong> were updated:", contentPartName)</div>
+    @T("Settings for the content part <strong>{0}</strong> were changed:", contentPartName)
     <ul>
         @foreach (var setting in diff) {
             <li>
