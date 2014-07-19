@@ -4,10 +4,13 @@
 @{
     var record = (AuditTrailEventRecord)Model.Record;
     var contentItem = (ContentItem)Model.ContentItem;
-    var previousVersion = (ContentItem)Model.PreviousVersion;
-    var diffNodes = (IEnumerable<DiffNode>)Model.DiffNodes;
+    var diffNodes = (IList<DiffNode>)Model.DiffNodes;
 }
-
+@functions {
+    string FriendlyEmptyString(string value) {
+        return String.IsNullOrWhiteSpace(value) ? T("<empty>").Text : value;
+    }
+}
 <section class="audittrail-event-metadata-section">
     @T("ID:") <strong>@contentItem.Id</strong><br />
     @contentItem.ContentType: <strong>@Html.ItemDisplayText(contentItem)</strong><br />
@@ -20,7 +23,7 @@
 </section>
 
 <section class="audittrail-event-changes-section">
-    @if (previousVersion != null) {
+    @if (diffNodes != null) {
         <table class="items">
             <thead>
                 <tr>
@@ -41,8 +44,8 @@
                         <tr>
                             <td>@T(node.Type.ToString())</td>
                             <td>@node.Context</td>
-                            <td>@node.Previous</td>
-                            <td>@node.Current</td>
+                            <td>@FriendlyEmptyString(node.Previous)</td>
+                            <td>@FriendlyEmptyString(node.Current)</td>
                         </tr>
                     }
                 }

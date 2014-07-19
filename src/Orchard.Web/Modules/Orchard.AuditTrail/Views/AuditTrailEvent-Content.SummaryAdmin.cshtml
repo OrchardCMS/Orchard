@@ -1,13 +1,13 @@
 ﻿@using Orchard.AuditTrail.Helpers
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
-    var title = eventData.Get<string>("Title");
     var contentItemId = eventData.Get<int>("ContentId");
     var contentItemVersionNumber = eventData.Get<int>("VersionNumber");
+    var isPublished = eventData.Get<bool>("Published");
 }
 
 <section class="audittrail-content-summary">
     @T("Version {0}", contentItemVersionNumber)
     @T(" - ")
-    <a href="@Url.Action("Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber })">@T("View")</a>
+    <a href="@Url.Action("Detail", "Content", new {area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber})">@T("View")</a>
 </section>
