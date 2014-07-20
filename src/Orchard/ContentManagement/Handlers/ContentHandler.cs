@@ -347,23 +347,6 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.GetContentItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentHandler.BuildDisplay(BuildDisplayContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            ((IContentHandler)this).BuildDisplayAsync(context).Wait();
-        }
-
-        void IContentHandler.BuildEditor(BuildEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            ((IContentHandler)this).BuildEditorAsync(context).Wait();
-        }
-
-        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            ((IContentHandler)this).BuildEditorAsync(context).Wait();
-        }
 
         Task IContentHandler.BuildDisplayAsync(BuildDisplayContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())

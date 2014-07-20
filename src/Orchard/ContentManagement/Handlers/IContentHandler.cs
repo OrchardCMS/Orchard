@@ -28,9 +28,6 @@ namespace Orchard.ContentManagement.Handlers {
         void Exported(ExportContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
-        void BuildDisplay(BuildDisplayContext context);
-        void BuildEditor(BuildEditorContext context);
-        void UpdateEditor(UpdateEditorContext context);
 
         Task BuildDisplayAsync(BuildDisplayContext context);
         Task BuildEditorAsync(BuildEditorContext context);

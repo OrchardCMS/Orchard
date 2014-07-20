@@ -32,14 +32,14 @@ namespace Orchard.AntiSpam.Drivers {
                 updater.AddModelError("Spam", T("Spam detected."));
             }
 
-            return Editor(part, shapeHelper);
+            return EditorAsync(part, shapeHelper);
         }
 
-        protected override DriverResult Display(SpamFilterPart part, string displayType, dynamic shapeHelper) {
-            return Combined(
+        protected override Task<DriverResult> DisplayAsync(SpamFilterPart part, string displayType, dynamic shapeHelper)
+        {
+            return Task.FromResult<DriverResult>(Combined(
                 ContentShape("Parts_SpamFilter_Metadata_SummaryAdmin", () => shapeHelper.Parts_SpamFilter_Metadata_SummaryAdmin()),
-                ContentShape("Parts_SpamFilter_Metadata_Actions", () => shapeHelper.Parts_SpamFilter_Metadata_Actions())
-                );
+                ContentShape("Parts_SpamFilter_Metadata_Actions", () => shapeHelper.Parts_SpamFilter_Metadata_Actions())));
         }
 
         protected override void Importing(SpamFilterPart part, ImportContentContext context) {

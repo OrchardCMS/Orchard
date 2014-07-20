@@ -30,12 +30,6 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
         }
 
         [Test]
-        public void DriverHandlerShouldNotThrowException() {
-            var contentHandler = _container.Resolve<IContentHandler>();
-            contentHandler.BuildDisplay(null);
-        }
-
-        [Test]
         public async Task  DriverHandlerAsyncShouldNotThrowException() {
             var contentHandler = _container.Resolve<IContentHandler>();
             await contentHandler.BuildDisplayAsync(null);
@@ -124,7 +118,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
         }
 
         [Test, Ignore("no implementation for IZoneCollection")]
-        public void TestDriverCanAddDisplay() {
+        public async Task TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
             var builder = new ContainerBuilder();
             builder.RegisterInstance(driver).As<IContentPartDriver>();
@@ -138,7 +132,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var ctx = new BuildDisplayContext(null, null, "", "", null);
             var context = shapeFactory.Context(ctx);
             Assert.That(context.TopMeta, Is.Null);
-            contentHandler.BuildDisplay(ctx);
+            await contentHandler.BuildDisplayAsync(ctx);
             Assert.That(context.TopMeta, Is.Not.Null);
             Assert.That(context.TopMeta.Count == 1);
         }

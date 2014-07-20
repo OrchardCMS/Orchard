@@ -25,13 +25,13 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Creates (persists) a new content item
         /// </summary>
-        /// <param name="content">The content instance filled with all necessary data</param>
+        /// <param name="contentItem">The content instance filled with all necessary data</param>
         void Create(ContentItem contentItem);
 
         /// <summary>
         /// Creates (persists) a new content item with the specified version
         /// </summary>
-        /// <param name="content">The content instance filled with all necessary data</param>
+        /// <param name="contentItem">The content instance filled with all necessary data</param>
         /// <param name="options">The version to create the item with</param>
         void Create(ContentItem contentItem, VersionOptions options);
 
@@ -156,13 +156,6 @@ namespace Orchard.ContentManagement {
     }
 
     public interface IContentDisplay : IDependency {
-        [Obsolete("Use BuildDisplayAsync")]
-        dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
-        [Obsolete("Use BuildEditorAsync")]
-        dynamic BuildEditor(IContent content, string groupId = "");
-        [Obsolete("Use UpdateEditorAsync")]
-        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
-
         Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "");
         Task<dynamic> BuildEditorAsync(IContent content, string groupId = "");
         Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupId = "");

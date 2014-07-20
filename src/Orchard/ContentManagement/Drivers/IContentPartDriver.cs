@@ -6,14 +6,6 @@ using Orchard.ContentManagement.MetaData;
 
 namespace Orchard.ContentManagement.Drivers {
     public interface IContentPartDriver : IDependency {
-
-        [Obsolete("Use BuildDisplayAsync")]
-        DriverResult BuildDisplay(BuildDisplayContext context);
-        [Obsolete("Use BuildEditorAsync")]
-        DriverResult BuildEditor(BuildEditorContext context);
-        [Obsolete("Use UpdateEditorAsync")]
-        DriverResult UpdateEditor(UpdateEditorContext context);
-
         Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context);
         Task<DriverResult> BuildEditorAsync(BuildEditorContext context);
         Task<DriverResult> UpdateEditorAsync(UpdateEditorContext context);

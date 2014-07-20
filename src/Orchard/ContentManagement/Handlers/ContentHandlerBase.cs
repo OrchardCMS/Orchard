@@ -29,24 +29,6 @@ namespace Orchard.ContentManagement.Handlers {
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) { }
 
-        public virtual void BuildDisplay(BuildDisplayContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            BuildDisplayAsync(context).Wait();
-        }
-
-        public virtual void BuildEditor(BuildEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            BuildEditorAsync(context).Wait();
-        }
-
-        public virtual void UpdateEditor(UpdateEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            UpdateEditorAsync(context).Wait();
-        }
-
         public virtual Task BuildDisplayAsync(BuildDisplayContext context) {
             // default async implementation. basically returns synchronously
             return Task.Delay(0);

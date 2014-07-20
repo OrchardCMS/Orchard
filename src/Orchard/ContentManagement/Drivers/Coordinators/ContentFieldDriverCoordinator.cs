@@ -52,24 +52,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
         }
 
-        public override void BuildDisplay(BuildDisplayContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            BuildDisplayAsync(context).Wait();
-        }
-
-        public override void BuildEditor(BuildEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            BuildEditorAsync(context).Wait();
-        }
-
-        public override void UpdateEditor(UpdateEditorContext context) {
-            // provided for backwards compatibility, invokes the async method.
-            // TODO: verify this won't dead lock or remove it.
-            UpdateEditorAsync(context).Wait();
-        }
-
         public override Task BuildDisplayAsync(BuildDisplayContext context) {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
