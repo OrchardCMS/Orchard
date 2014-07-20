@@ -3,11 +3,6 @@
 @{
     Style.Include("audittrail-contenttype-event.css");
 }
-@functions {
-    string ToFriendlyEmpty(string value) {
-        return String.IsNullOrWhiteSpace(value) ? Html.Encode(T("<empty>").Text) : value;
-    }
-}
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
     var contentTypeName = eventData.Get<string>("ContentTypeName");
@@ -22,7 +17,7 @@
     <ul>
         @foreach (var setting in diff) {
             <li>
-                @T("<strong>{0}</strong> was changed from <strong>{1}</strong> to <strong>{2}</strong>.", setting.Key, ToFriendlyEmpty(setting.Value.OldValue), ToFriendlyEmpty(setting.Value.NewValue))
+                @T("<strong>{0}</strong> was changed from <strong>{1}</strong> to <strong>{2}</strong>.", setting.Key, setting.Value.OldValue.OrIfEmpty(T("[Empty]")), setting.Value.NewValue.OrIfEmpty(T("[Empty]")))
             </li>
         }
     </ul>

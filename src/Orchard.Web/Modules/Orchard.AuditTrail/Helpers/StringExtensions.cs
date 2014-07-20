@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Localization;
 
 namespace Orchard.AuditTrail.Helpers {
     public static class StringExtensions {
@@ -11,6 +12,10 @@ namespace Orchard.AuditTrail.Helpers {
                 return null;
 
             return i;
+        }
+
+        public static string OrIfEmpty(this string value, LocalizedString emptyString) {
+            return String.IsNullOrWhiteSpace(value) ? emptyString.Text : value;
         }
     }
 }
