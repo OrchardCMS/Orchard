@@ -11,7 +11,7 @@
         return String.IsNullOrWhiteSpace(value) ? T("<empty>").Text : value;
     }
 }
-<section class="audittrail-event-metadata-section">
+<section class="audittrail-content-eventmetadata">
     @T("ID:") <strong>@contentItem.Id</strong><br />
     @contentItem.ContentType: <strong>@Html.ItemDisplayText(contentItem)</strong><br />
     @T("Version:") <strong>@contentItem.Version</strong>
@@ -21,8 +21,7 @@
         @record.Comment
     }
 </section>
-
-<section class="audittrail-event-changes-section">
+<section class="audittrail-content-eventsummary">
     @if (diffNodes != null) {
         <table class="items">
             <thead>

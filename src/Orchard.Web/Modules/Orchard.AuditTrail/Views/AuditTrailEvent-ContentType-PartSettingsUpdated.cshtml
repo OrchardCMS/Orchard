@@ -1,7 +1,7 @@
 ﻿@using Orchard.AuditTrail.Helpers
 @using Orchard.AuditTrail.Services.Models
 @{
-    Style.Include("audittrail-contenttype-event.css");
+    Style.Include("audittrail-contentdefinition-event.css");
 }
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
@@ -9,7 +9,7 @@
     var contentPartName = eventData.Get<string>("ContentPartName");
     var diff = (DiffDictionary<string, string>)Model.Diff;
 }
-<section class="audittrail-contenttype-event">
+<section class="audittrail-contenttype-eventsummary">
     @T("Settings for the content part <strong>{0}</strong> attached to the content type <strong>{1}</strong> were changed:", contentPartName, contentTypeName)
     <table class="items">
         <thead>

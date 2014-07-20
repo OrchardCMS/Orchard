@@ -6,8 +6,7 @@
     var oldMinimumRunInterval = eventData.Get<int>("OldMinimumRunInterval");
     var newMinimumRunInterval = eventData.Get<int>("NewMinimumRunInterval");
 }
-
-<section class="audittrail-settings-summary">
+<section class="audittrail-settings-eventsummary">
     @if (newRetentionPeriod != oldRetentionPeriod) {
         <div>@T("The trimming retention period was changed from <strong>{0}</strong> to <strong>{1}</strong>.", T.Plural("1 day", "{0} days", oldRetentionPeriod), T.Plural("1 day", "{0} days", newRetentionPeriod))</div>
     }

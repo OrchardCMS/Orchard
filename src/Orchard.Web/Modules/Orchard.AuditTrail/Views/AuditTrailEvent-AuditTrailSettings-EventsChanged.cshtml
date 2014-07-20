@@ -6,7 +6,7 @@
     var diff = (IList<AuditTrailEventDescriptorSettingViewModel>)Model.Diff;
     var groups = diff.GroupBy(x => x.Descriptor.CategoryDescriptor.Name).OrderBy(x => x.Key.Text);
 }
-<section class="audittrail-settings-event">
+<section class="audittrail-settings-eventsummary">
     <table class="audittrail-events items">
         <thead>
             <tr>

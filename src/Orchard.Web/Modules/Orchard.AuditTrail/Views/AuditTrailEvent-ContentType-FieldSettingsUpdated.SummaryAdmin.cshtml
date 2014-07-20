@@ -1,7 +1,7 @@
 ﻿@using Orchard.AuditTrail.Helpers
 @using Orchard.AuditTrail.Services.Models
 @{
-    Style.Include("audittrail-contenttype-event.css");
+    Style.Include("audittrail-contentdefinition-event.css");
 }
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
@@ -10,9 +10,9 @@
     var contentFieldName = eventData.Get<string>("ContentFieldName");
     var diff = (DiffDictionary<string, string>)Model.Diff;
     var isImplicitPart = contentTypeName == contentPartName;
-    var captionTemplate = isImplicitPart ? "Settings for the field <strong>{0}</strong> attached to the <strong>{1}</strong> content type were updated:" : "Settings for the field <strong>{0}</strong> attached to content part <strong>{1}</strong> of the content type <strong>{2}</strong> were updated:";
+    var captionTemplate = isImplicitPart ? "Settings for the field <strong>{0}</strong> attached to the content type <strong>{1}</strong> were updated:" : "Settings for the field <strong>{0}</strong> attached to content part <strong>{1}</strong> of the content type <strong>{2}</strong> were updated:";
 }
-<section class="audittrail-contenttype-event">
+<section class="audittrail-contenttype-eventsummary">
     @T(captionTemplate, contentFieldName, contentPartName, contentTypeName)
     <ul>
         @foreach (var setting in diff) {

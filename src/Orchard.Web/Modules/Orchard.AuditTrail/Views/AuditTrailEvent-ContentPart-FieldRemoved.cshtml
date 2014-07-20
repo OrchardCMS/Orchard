@@ -4,7 +4,6 @@
     var contentPartName = eventData.Get<string>("ContentPartName");
     var contentFieldName = eventData.Get<string>("ContentFieldName");
 }
-
-<section class="audittrail-contentpart-summary">
+<section class="audittrail-contentpart-eventsummary">
     @T("The content field <strong>{0}</strong> was removed from the content part <strong>{1}</strong>.", contentFieldName, contentPartName)
 </section>

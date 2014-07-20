@@ -5,8 +5,7 @@
     var contentItemVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublished = eventData.Get<bool>("Published");
 }
-
-<section class="audittrail-content-summary">
+<section class="audittrail-content-eventsummary">
     @T("Version {0}", contentItemVersionNumber)
     @T(" - ")
     <a href="@Url.Action("Detail", "Content", new {area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber})">@T("View")</a>

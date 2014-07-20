@@ -4,13 +4,15 @@
     Style.Include("audittrail-contentdefinition-event.css");
 }
 @{
-    var eventData = (IDictionary<string, object>) Model.EventData;
-    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var eventData = (IDictionary<string, object>)Model.EventData;
     var contentPartName = eventData.Get<string>("ContentPartName");
+    var contentFieldName = eventData.Get<string>("ContentFieldName");
+    var oldDisplayName = (string)Model.OldDisplayName;
+    var newDisplayName = (string)Model.NewDisplayName;
     var diff = (DiffDictionary<string, string>)Model.Diff;
 }
-<section class="audittrail-contenttype-eventsummary">
-    @T("Settings for the content part <strong>{0}</strong> attached to the content type <strong>{1}</strong> were changed:", contentPartName, contentTypeName)
+<section class="audittrail-contentpart-eventsummary">
+    @T("Settings for the field <strong>{0}</strong> attached to the <strong>{1}</strong> content type were updated:", contentFieldName, contentPartName)
     <ul>
         @foreach (var setting in diff) {
             <li>
