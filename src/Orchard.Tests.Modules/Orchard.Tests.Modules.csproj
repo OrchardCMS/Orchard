@@ -184,6 +184,7 @@
     <Compile Include="Warmup\WarmupUpdaterTests.cs" />
     <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
+    <Compile Include="Widgets\WidgetFilterTests.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
     <Compile Include="Workflows\Activities\WebRequestActivityTests.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterControllerTests.cs" />

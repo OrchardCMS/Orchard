@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -22,8 +22,8 @@ namespace Orchard.Widgets.Filters {
         private readonly IOrchardServices _orchardServices;
 
         public WidgetFilter(
-            IWorkContextAccessor workContextAccessor, 
-            IRuleManager ruleManager, 
+            IWorkContextAccessor workContextAccessor,
+            IRuleManager ruleManager,
             IWidgetsService widgetsService,
             IOrchardServices orchardServices) {
             _workContextAccessor = workContextAccessor;
@@ -35,13 +35,15 @@ namespace Orchard.Widgets.Filters {
         }
 
         public ILogger Logger { get; set; }
+
         public Localizer T { get; private set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             // layers and widgets should only run on a full view rendering result
             var viewResult = filterContext.Result as ViewResult;
-            if (viewResult == null)
+            if (viewResult == null) {
                 return;
+            }
 
             var workContext = _workContextAccessor.GetContext(filterContext);
 
@@ -65,7 +67,7 @@ namespace Orchard.Widgets.Filters {
                         activeLayerIds.Add(activeLayer.ContentItem.Id);
                     }
                 }
-                catch(Exception e) {
+                catch (Exception e) {
                     Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
@@ -76,7 +78,6 @@ namespace Orchard.Widgets.Filters {
             var zones = workContext.Layout.Zones;
             var defaultCulture = workContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
             var currentCulture = workContext.CurrentCulture;
-
 
             var tasks = widgetParts.Select(async widgetPart => {
                 var tuple = new PartAndShape(widgetPart);
@@ -111,13 +112,36 @@ namespace Orchard.Widgets.Filters {
                 return tuple;
             }).ToArray();
 
-            foreach (var task in tasks.InCompletionOrder().Where(t => t.Result.Shape != null)) {
-                zones[task.Result.Part.Zone].Add(task.Result.Shape, task.Result.Part.Position);
+            // an async filter would be handy here
+            var mre = new ManualResetEvent(false);
+            var length = tasks.Length;
+            var count = 0;
+
+            foreach (var task in tasks.InCompletionOrder()) {
+                task.ContinueWith(t => {
+                    if (t.Exception != null) {
+                        t.Exception.Handle(ex => {
+                            Logger.Error(ex, "Error while rendering widget");
+                            return true;
+                        });
+                    }
+                    else {
+                        var partAndShape = t.Result;
+                        if (partAndShape.Shape != null) {
+                            zones[partAndShape.Part.Zone].Add(partAndShape.Shape, partAndShape.Part.Position);
+                        }
+                    }
+
+                    if (length == Interlocked.Increment(ref count)) {
+                        mre.Set();
+                    }
+                });
             }
+
+            mre.WaitOne();
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-        }
+        public void OnResultExecuted(ResultExecutedContext filterContext) {}
 
         private class PartAndShape {
             public PartAndShape(WidgetPart part) {
@@ -125,6 +149,7 @@ namespace Orchard.Widgets.Filters {
             }
 
             public WidgetPart Part { get; private set; }
+
             public dynamic Shape { get; set; }
         }
     }
