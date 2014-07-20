@@ -106,7 +106,14 @@ namespace Orchard.Widgets.Filters {
                     return;
                 }
 
-                var shape = await _orchardServices.ContentManager.BuildDisplayAsync(widgetPart);
+                dynamic shape = null;
+                try {
+                    shape = await _orchardServices.ContentManager.BuildDisplayAsync(widgetPart);
+                }
+                catch (Exception ex) {
+                    Logger.Warning(ex, "Error rendering shape for widget {0}, Id: {1}.", widgetPart.ContentItem.ContentType, widgetPart.Id);
+                }
+                
 
                 if (shape != null)
                     zones[widgetPart.Zone].Add(shape, widgetPart.Position);

@@ -167,7 +167,7 @@ namespace Orchard.Tests.Modules.Widgets
         }
 
         [Test]
-        public void WidgetFilter_WhenRenderThrows_ExpectExceptionNotDeadlock()
+        public void WidgetFilter_WhenRenderThrows_ExpectNoExceptionNoDeadlock()
         {
             var context = CreateContext();
             AddWidgetPartAndShapeResult("1", async () =>
@@ -186,7 +186,7 @@ namespace Orchard.Tests.Modules.Widgets
                 return new Shape();
             });
 
-            Assert.Throws<AggregateException>(() => _filter.OnResultExecuting(context));
+            _filter.OnResultExecuting(context);
 
             Assert.AreEqual(2, _renderedShapes.Count, "Expected 3 shapes rendered");
             Assert.Contains("2", _renderedShapes, "Expected rendered shaped contain one with position '2'");
