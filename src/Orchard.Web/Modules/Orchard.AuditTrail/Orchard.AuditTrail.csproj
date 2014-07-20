@@ -139,6 +139,7 @@
     <Content Include="Views\AuditTrailEvent-Role-Removed.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-UserAdded.cshtml" />
     <Content Include="Views\AuditTrailEvent-Role-UserRemoved.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-DescriptionChanged.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

@@ -15,6 +15,7 @@ using Orchard.Environment.Extensions;
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
     [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
     public class GlobalContentDefinitionEditorEvents : ContentDefinitionEditorEventsBase {
+        private const string _contentPartSettingsDescriptionName = "ContentPartSettings.Description";
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
         private readonly IContentDefinitionService _contentDefinitionService;
@@ -118,13 +119,30 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public override void PartEditorUpdated(ContentPartDefinitionBuilder builder) {
             var contentPartDefinition = builder.Build();
-            var newSettings = contentPartDefinition.Settings;
+            var newPartSettings = contentPartDefinition.Settings;
 
-            if (!AreEqual(newSettings, _oldPartSettings)) {
+            if (newPartSettings.ContainsKey(_contentPartSettingsDescriptionName)) {
+                var oldDescription = _oldPartSettings.Get(_contentPartSettingsDescriptionName);
+                var newDescription = newPartSettings.Get(_contentPartSettingsDescriptionName);
+                if (oldDescription != newDescription) {
+                    var eventData = new Dictionary<string, object> {
+                        {"ContentPartName", builder.Name},
+                        {"OldDescription", oldDescription},
+                        {"NewDescription", newDescription}
+                    };
+                    RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.DescriptionChanged, eventData, builder.Name);
+                }
+            }
+
+            // Description change should not be re-recorded as general settings change.
+            var remainingOldPartSettings = new SettingsDictionary(_oldPartSettings.Where(item => item.Key != _contentPartSettingsDescriptionName).ToDictionary(item => item.Key, item => item.Value));
+            var remainingNewPartSettings = new SettingsDictionary(newPartSettings.Where(item => item.Key != _contentPartSettingsDescriptionName).ToDictionary(item => item.Key, item => item.Value));
+
+            if (!AreEqual(remainingNewPartSettings, remainingOldPartSettings)) {
                 var eventData = new Dictionary<string, object> {
                     {"ContentPartName", builder.Name},
-                    {"OldSettings", ToXml(_oldPartSettings)},
-                    {"NewSettings", ToXml(newSettings)}
+                    {"OldSettings", ToXml(remainingOldPartSettings)},
+                    {"NewSettings", ToXml(remainingNewPartSettings)}
                 };
                 RecordContentPartAuditTrail(ContentPartAuditTrailEventProvider.PartSettingsUpdated, eventData, builder.Name);
             }
