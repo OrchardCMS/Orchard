@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -80,11 +80,10 @@ namespace Orchard.Widgets.Filters {
             var currentCulture = workContext.CurrentCulture;
 
             var tasks = widgetParts.Select(async widgetPart => {
-                var tuple = new PartAndShape(widgetPart);
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
                     Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
-                    return tuple;
+                    return;
                 }
 
                 // ignore widget for different cultures
@@ -93,64 +92,32 @@ namespace Orchard.Widgets.Filters {
                     // if localized culture is null then show if current culture is the default
                     // this allows a user to show a content item for the default culture only
                     if (localizablePart.Culture == null && defaultCulture != currentCulture) {
-                        return tuple;
+                        return;
                     }
 
                     // if culture is set, show only if current culture is the same
                     if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
-                        return tuple;
+                        return;
                     }
                 }
 
                 // check permissions
                 if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
-                    return tuple;
+                    return;
                 }
 
-                tuple.Shape = await _orchardServices.ContentManager.BuildDisplayAsync(widgetPart);
+                var shape = await _orchardServices.ContentManager.BuildDisplayAsync(widgetPart);
 
-                return tuple;
+                if (shape != null)
+                    zones[widgetPart.Zone].Add(shape, widgetPart.Position);
+
             }).ToArray();
-
-            // an async filter would be handy here
-            var mre = new ManualResetEvent(false);
-            var length = tasks.Length;
-            var count = 0;
-
-            foreach (var task in tasks.InCompletionOrder()) {
-                task.ContinueWith(t => {
-                    if (t.Exception != null) {
-                        t.Exception.Handle(ex => {
-                            Logger.Error(ex, "Error while rendering widget");
-                            return true;
-                        });
-                    }
-                    else {
-                        var partAndShape = t.Result;
-                        if (partAndShape.Shape != null) {
-                            zones[partAndShape.Part.Zone].Add(partAndShape.Shape, partAndShape.Part.Position);
-                        }
-                    }
-
-                    if (length == Interlocked.Increment(ref count)) {
-                        mre.Set();
-                    }
-                });
-            }
-
-            mre.WaitOne();
+            
+            // the time out is arbitrary, should be configurable.
+            // TODO: pull timeout from httpruntime execution timeout (or somewhere)
+            Task.WaitAll(tasks, TimeSpan.FromSeconds(60));
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
-
-        private class PartAndShape {
-            public PartAndShape(WidgetPart part) {
-                Part = part;
-            }
-
-            public WidgetPart Part { get; private set; }
-
-            public dynamic Shape { get; set; }
-        }
     }
 }

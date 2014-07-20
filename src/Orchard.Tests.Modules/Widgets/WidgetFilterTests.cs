@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Concurrent;
+using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -32,13 +33,13 @@ namespace Orchard.Tests.Modules.Widgets
         private IContainer _container;
         private IResultFilter _filter;
         private IDictionary<WidgetPart, Func<Task<dynamic>>> _parts;
-        private static List<string> _renderedShapes;
+        private static ConcurrentBag<string> _renderedShapes;
 
         [SetUp]
         public void Init()
         {
             _parts = new Dictionary<WidgetPart, Func<Task<dynamic>>>(new WidgetCamparer());
-            _renderedShapes = new List<string>();
+            _renderedShapes = new ConcurrentBag<string>();
 
             var builder = new ContainerBuilder();
 
@@ -82,31 +83,60 @@ namespace Orchard.Tests.Modules.Widgets
         #endregion
 
         [Test]
-        public void WidgetFilter_WhenExecuted_RendersAllWidgets()
+        [TestCase(3)]
+        [TestCase(10)]
+        [TestCase(100)]
+        public void WidgetFilter_WhenAsyncShapes_RendersAllWidgets(int count)
         {
             var context = CreateContext();
-            AddWidgetPartAndShapeResult("1", async () =>
-            {
-                await Task.Delay(2);
-                return new Shape();
-            });
-            AddWidgetPartAndShapeResult("2", async () =>
-            {
-                await Task.Delay(2);
-                return new Shape();
-            });
-            AddWidgetPartAndShapeResult("3", async () =>
-            {
-                await Task.Delay(2);
-                return new Shape();
-            });
+            var random = new Random(count);
+
+            for (var i = 1; i <= count; i++) {
+                var delay = random.Next(1, 5);
+                AddWidgetPartAndShapeResult(i.ToString(), async () =>
+                {
+                    await Task.Delay(delay);
+                    return new Shape();
+                });
+            }
 
             _filter.OnResultExecuting(context);
 
-            Assert.AreEqual(3, _renderedShapes.Count, "Expected 3 shapes rendered");
-            Assert.Contains("1", _renderedShapes, "Expected rendered shaped contain one with position '1'");
-            Assert.Contains("2", _renderedShapes, "Expected rendered shaped contain one with position '2'");
-            Assert.Contains("3", _renderedShapes, "Expected rendered shaped contain one with position '3'");
+            Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
+            for (var i = 1; i <= count; i++) 
+                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'", i);
+        }
+
+        [Test]
+        [TestCase(3)]
+        [TestCase(10)]
+        [TestCase(50)]
+        [TestCase(100)]
+        public void WidgetFilter_WhenAsyncAndAsync_RendersAllWidgets(int count)
+        {
+            var context = CreateContext();
+            var random = new Random(count);
+
+            for (var i = 1; i <= count; i++)
+            {
+                if (i%2 == 0) {
+                    var delay = random.Next(1, 5);
+                    AddWidgetPartAndShapeResult(i.ToString(), async () => {
+                        await Task.Delay(delay);
+                        return new Shape();
+                    });
+                }
+                else {
+                    AddWidgetPartAndShapeResult(i.ToString(), () => Task.FromResult<dynamic>(new Shape()));
+                }
+                
+            }
+
+            _filter.OnResultExecuting(context);
+
+            Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
+            for (var i = 1; i <= count; i++)
+                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'. Async shape: {1}?", i, i % 2 == 0);
         }
 
         [Test]
@@ -137,7 +167,7 @@ namespace Orchard.Tests.Modules.Widgets
         }
 
         [Test]
-        public void WidgetFilter_WhenRenderThrows_ExpectMethodCompletesAndWidgetsRendered()
+        public void WidgetFilter_WhenRenderThrows_ExpectExceptionNotDeadlock()
         {
             var context = CreateContext();
             AddWidgetPartAndShapeResult("1", async () =>
@@ -156,7 +186,7 @@ namespace Orchard.Tests.Modules.Widgets
                 return new Shape();
             });
 
-            _filter.OnResultExecuting(context);
+            Assert.Throws<AggregateException>(() => _filter.OnResultExecuting(context));
 
             Assert.AreEqual(2, _renderedShapes.Count, "Expected 3 shapes rendered");
             Assert.Contains("2", _renderedShapes, "Expected rendered shaped contain one with position '2'");
@@ -164,24 +194,25 @@ namespace Orchard.Tests.Modules.Widgets
         }
 
         [Test]
-        public void WidgetFilter_WithSyncShape_RendersAllWidgets()
+        [TestCase(3)]
+        [TestCase(10)]
+        [TestCase(100)]
+        public void WidgetFilter_WithSyncShape_RendersAllWidgets(int count)
         {
             var context = CreateContext();
-            AddWidgetPartAndShapeResult("1", () => Task.FromResult<dynamic>(new Shape()));
-            AddWidgetPartAndShapeResult("2", () => Task.FromResult<dynamic>(new Shape()));
-            AddWidgetPartAndShapeResult("3", () => Task.FromResult<dynamic>(new Shape()));
-            AddWidgetPartAndShapeResult("4", () => Task.FromResult<dynamic>(new Shape()));
-            AddWidgetPartAndShapeResult("5", () => Task.FromResult<dynamic>(new Shape()));
+
+            for (var i = 1; i <= count; i++)
+            {
+                AddWidgetPartAndShapeResult(i.ToString(), () => Task.FromResult<dynamic>(new Shape()));
+            }
 
             _filter.OnResultExecuting(context);
 
-            Assert.AreEqual(5, _renderedShapes.Count, "Expected 3 shapes rendered");
-            Assert.Contains("1", _renderedShapes, "Expected rendered shaped contain one with position '1'");
-            Assert.Contains("2", _renderedShapes, "Expected rendered shaped contain one with position '2'");
-            Assert.Contains("3", _renderedShapes, "Expected rendered shaped contain one with position '3'");
-            Assert.Contains("4", _renderedShapes, "Expected rendered shaped contain one with position '4'");
-            Assert.Contains("5", _renderedShapes, "Expected rendered shaped contain one with position '5'");
+            Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
+            for (var i = 1; i <= count; i++)
+                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{}'", i);
         }
+
 
         #region Private Methods
 
