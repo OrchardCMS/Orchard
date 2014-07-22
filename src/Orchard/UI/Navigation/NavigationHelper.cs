@@ -91,19 +91,18 @@ namespace Orchard.UI.Navigation {
                     return selectedPath;
                 }
 
-                bool match = false;
-                // if the menu item doesn't have route values, compare urls
-                if (currentRequest != null && menuItem.RouteValues == null) {
+                // compare route values (if any) first
+                bool match = menuItem.RouteValues != null && RouteMatches(menuItem.RouteValues, currentRouteData);
 
-                    string requestUrl = currentRequest.Path.Replace(currentRequest.ApplicationPath ?? "/", string.Empty);
-                    string modelUrl = menuItem.Href.Replace("~/", currentRequest.ApplicationPath);
-                    modelUrl = modelUrl.Replace(currentRequest.ApplicationPath ?? "/", string.Empty);
+                // if route match failed, try comparing URL strings
+                if (currentRequest != null && !match) {
+                    string appPath = currentRequest.ApplicationPath ?? "/";
+                    string requestUrl = currentRequest.Path.StartsWith(appPath) ? currentRequest.Path.Substring(appPath.Length) : currentRequest.Path;
+
+                    string modelUrl = menuItem.Href.Replace("~/", appPath);
+                    modelUrl = modelUrl.StartsWith(appPath) ? modelUrl.Substring(appPath.Length) : modelUrl;
+
                     if (requestUrl.Equals(modelUrl, StringComparison.OrdinalIgnoreCase) || (!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl + "/", StringComparison.OrdinalIgnoreCase))) {
-                        match = true;
-                    }
-                }
-                else {
-                    if (RouteMatches(menuItem.RouteValues, currentRouteData)) {
                         match = true;
                     }
                 }
