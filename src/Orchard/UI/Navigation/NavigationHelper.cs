@@ -182,7 +182,8 @@ namespace Orchard.UI.Navigation {
                 .Item(menuItem)
                 .Menu(menu)
                 .Parent(parentShape)
-                .Content(menuItem.Content);
+                .Content(menuItem.Content)
+                .Level(menuItem.Level);
 
             foreach (var className in menuItem.Classes)
                 menuItemShape.Classes.Add(className);
