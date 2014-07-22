@@ -24,7 +24,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         Task<DriverResult> IContentFieldDriver.BuildDisplayShapeAsync(BuildDisplayContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
-                DriverResult result = await DisplayAsync(part, field, context.DisplayType, context.New);
+                var result = await DisplayAsync(part, field, context.DisplayType, context.New);
 
                 if (result != null) {
                     result.ContentPart = part;
@@ -37,7 +37,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         Task<DriverResult> IContentFieldDriver.BuildEditorShapeAsync(BuildEditorContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
-                DriverResult result = await EditorAsync(part, field, context.New);
+                var result = await EditorAsync(part, field, context.New);
 
                 if (result != null) {
                     result.ContentPart = part;
@@ -50,7 +50,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         Task<DriverResult> IContentFieldDriver.UpdateEditorShapeAsync(UpdateEditorContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
-                DriverResult result = await EditorAsync(part, field, context.Updater, context.New);
+                var result = await EditorAsync(part, field, context.Updater, context.New);
 
                 if (result != null) {
                     result.ContentPart = part;
@@ -89,7 +89,7 @@ namespace Orchard.ContentManagement.Drivers {
         private async Task<DriverResult> ProcessResultAsync(ContentItem item, Func<ContentPart, TField, Task<DriverResult>> effort, ILogger logger) {
             var results = item.Parts
                 .SelectMany(part => part.Fields.OfType<TField>().Select(field => new {part, field}))
-                .InvokeAsync(pf => effort(pf.part, pf.field), logger).ToArray();
+                .InvokeAsync(pf => effort(pf.part, pf.field), logger).ToList();
 
             await Task.WhenAll(results);
 

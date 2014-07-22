@@ -39,7 +39,7 @@ namespace Orchard.Core.Containers.Drivers {
 
                     var list = shapeHelper.List();
 
-                    var tasks = pageOfItems.Select(async item => await _contentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+                    var tasks = pageOfItems.Select( item => _contentManager.BuildDisplayAsync(item, "Summary")).ToList();
 
                     await Task.WhenAll(tasks);
 

@@ -56,7 +56,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.BuildDisplayShapeAsync(context);
-
                 if (result != null)
                     await result.ApplyAsync(context);
             }, Logger);
@@ -66,7 +65,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.BuildEditorShapeAsync(context);
-
                 if (result != null)
                     await result.ApplyAsync(context);
             }, Logger);
@@ -76,7 +74,6 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             return _drivers.InvokeAsync(async driver => {
                 context.Logger = Logger;
                 var result = await driver.UpdateEditorShapeAsync(context);
-
                 if (result != null)
                     await result.ApplyAsync(context);
             }, Logger);

@@ -28,7 +28,7 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            DriverResult result = await DisplayAsync(part, context.DisplayType, context.New);
+            var result = await DisplayAsync(part, context.DisplayType, context.New);
 
             if (result != null) {
                 result.ContentPart = part;
@@ -44,7 +44,7 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            DriverResult result = await EditorAsync(part, context.New);
+            var result = await EditorAsync(part, context.New);
 
             if (result != null) {
                 result.ContentPart = part;
@@ -82,7 +82,7 @@ namespace Orchard.ContentManagement.Drivers {
                 }
             }
 
-            DriverResult result = await EditorAsync(part, context.Updater, context.New);
+            var result = await EditorAsync(part, context.Updater, context.New);
 
             if (result != null) {
                 result.ContentPart = part;

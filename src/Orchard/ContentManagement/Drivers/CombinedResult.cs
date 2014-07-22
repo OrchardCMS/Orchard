@@ -11,28 +11,29 @@ namespace Orchard.ContentManagement.Drivers {
             _results = results.Where(x => x != null);
         }
 
-        public override async Task ApplyAsync(BuildDisplayContext context) {
-            foreach (var result in _results) {
-
+        public override Task ApplyAsync(BuildDisplayContext context) {
+            return Task.WhenAll(_results.Select(result =>
+            {
                 // copy the ContentPart which was used to render this result to its children
                 // so they can assign it to the concrete shapes
-                if (result.ContentPart == null && ContentPart != null) {
+                if (result.ContentPart == null && ContentPart != null)
+                {
                     result.ContentPart = ContentPart;
                 }
 
                 // copy the ContentField which was used to render this result to its children
                 // so they can assign it to the concrete shapes
-                if (result.ContentField == null && ContentField != null) {
+                if (result.ContentField == null && ContentField != null)
+                {
                     result.ContentField = ContentField;
                 }
 
-                await result.ApplyAsync(context);
-            }
+                return result.ApplyAsync(context);
+            }).ToList());
         }
 
-        public override async Task ApplyAsync(BuildEditorContext context) {
-            foreach (var result in _results) {
-
+        public override Task ApplyAsync(BuildEditorContext context) {
+            return Task.WhenAll(_results.Select(result => {
                 // copy the ContentPart which was used to render this result to its children
                 // so they can assign it to the concrete shapes
                 if (result.ContentPart == null && ContentPart != null) {
@@ -45,8 +46,8 @@ namespace Orchard.ContentManagement.Drivers {
                     result.ContentField = ContentField;
                 }
 
-                await result.ApplyAsync(context);
-            }
+                return result.ApplyAsync(context);
+            }).ToList());
         }
 
         public IEnumerable<DriverResult> GetResults() {

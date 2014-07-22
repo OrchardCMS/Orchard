@@ -76,7 +76,7 @@ namespace Orchard {
                         throw;
                     }
                 }
-            }));
+            }).ToList());
         }
 
         public static IEnumerable<Task<TResult>> InvokeAsync<TEvents, TResult>(this IEnumerable<TEvents> events, Func<TEvents, Task<TResult>> dispatch, ILogger logger) {

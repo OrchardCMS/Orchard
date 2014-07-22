@@ -80,7 +80,7 @@ namespace Orchard.Templates.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
             var list = Shape.List();
 
-            var shapeTasks = pageOfContentItems.Select(ci => _contentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToArray();
+            var shapeTasks = pageOfContentItems.Select(ci => _contentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToList();
 
             await Task.WhenAll(shapeTasks);
 

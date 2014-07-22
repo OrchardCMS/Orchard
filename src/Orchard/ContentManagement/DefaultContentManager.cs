@@ -629,18 +629,6 @@ namespace Orchard.ContentManagement {
             return GetDisplayGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
         }
 
-        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
-            return BuildDisplayAsync(content, displayType, groupId).Result;
-        }
-
-        public dynamic BuildEditor(IContent content, string groupId = "") {
-            return BuildEditorAsync(content, groupId).Result;
-        }
-
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
-            return UpdateEditorAsync(content, updater, groupId).Result;
-        }
-
         public Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "") {
             return _contentDisplay.Value.BuildDisplayAsync(content, displayType, groupId);
         }

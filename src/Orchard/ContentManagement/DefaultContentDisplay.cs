@@ -39,18 +39,6 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
-            return BuildDisplayAsync(content, displayType, groupId).Result;
-        }
-
-        public dynamic BuildEditor(IContent content, string groupId) {
-            return BuildEditorAsync(content, groupId).Result;
-        }
-
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
-            return UpdateEditorAsync(content, updater, groupInfoId).Result;
-        }
-
         public async Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "") {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
@@ -70,10 +58,7 @@ namespace Orchard.ContentManagement {
 
             BindPlacement(context, actualDisplayType, stereotype);
 
-            // call the async version, the implementation may be synchronous for backwards compatibility
-            await _handlers.Value.InvokeAsync(async handler => {
-                await handler.BuildDisplayAsync(context);
-            }, Logger);
+            await _handlers.Value.InvokeAsync(handler => handler.BuildDisplayAsync(context), Logger);
 
             return context.Shape;
         }
@@ -95,10 +80,7 @@ namespace Orchard.ContentManagement {
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
-            // call the async version, the implementation may be synchronous for backwards compatibility
-            await _handlers.Value.InvokeAsync(async handler => {
-                await handler.BuildEditorAsync(context);
-            }, Logger);
+            await _handlers.Value.InvokeAsync(handler => handler.BuildEditorAsync(context), Logger);
 
             return context.Shape;
         }
@@ -126,9 +108,7 @@ namespace Orchard.ContentManagement {
             BindPlacement(context, null, stereotype);
 
             // call the async version, the implementation may be synchronous for backwards compatibility
-            await _handlers.Value.InvokeAsync(async handler => {
-                await handler.UpdateEditorAsync(context);
-            }, Logger);
+            await _handlers.Value.InvokeAsync(handler => handler.UpdateEditorAsync(context), Logger);
 
             return context.Shape;
         }
