@@ -71,8 +71,8 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
                 await Task.Delay(1);
                 return result2.Object;
             });
-            result1.Setup(r => r.Apply(It.IsAny<BuildDisplayContext>())).Callback(() => executed1 = DateTime.Now.Ticks);
-            result2.Setup(r => r.Apply(It.IsAny<BuildDisplayContext>())).Callback(() => executed2 = DateTime.Now.Ticks);
+            result1.Setup(r => r.ApplyAsync(It.IsAny<BuildDisplayContext>())).Returns(Task.Delay(0)).Callback(() => executed1 = DateTime.Now.Ticks);
+            result2.Setup(r => r.ApplyAsync(It.IsAny<BuildDisplayContext>())).Returns(Task.Delay(0)).Callback(() => executed2 = DateTime.Now.Ticks);
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(driver1.Object);

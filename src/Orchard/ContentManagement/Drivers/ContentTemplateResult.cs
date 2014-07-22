@@ -15,12 +15,12 @@ namespace Orchard.ContentManagement.Drivers {
             Prefix = prefix;
         }
 
-        public override void Apply(BuildDisplayContext context) {
+        protected override void Apply(BuildDisplayContext context) {
             var templateShape = context.New.DisplayTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
             context.Shape.Zones[Zone].Add(templateShape, Position);
         }
 
-        public override void Apply(BuildEditorContext context) {
+        protected override void Apply(BuildEditorContext context) {
             var templateShape = context.New.EditorTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
             context.Shape.Zones[Zone].Add(templateShape, Position);
         }

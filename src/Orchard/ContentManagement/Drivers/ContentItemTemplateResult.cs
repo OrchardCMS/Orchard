@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
@@ -9,12 +8,6 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public string TemplateName { get; set; }
-
-        public override void Apply(BuildDisplayContext context) {
-        }
-
-        public override void Apply(BuildEditorContext context) {
-        }
 
         class ViewDataContainer : IViewDataContainer {
             public ViewDataDictionary ViewData { get; set; }
