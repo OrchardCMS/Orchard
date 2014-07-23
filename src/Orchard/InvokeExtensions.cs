@@ -149,97 +149,207 @@ namespace Orchard {
         private static bool IsLogged(Exception ex) {
             return ex is OrchardSecurityException || !ex.IsFatal();
         }
-
-        public static void ResultSynchronously<T>(this Task<T> task, Action<T> callback)
-        {
-            using (var helper = new AsyncHelper())
-                helper.Run(task, callback);
-        }
-
-        public static void RunAllSynchronously(this Task task, Action<Task> callback = null)
-        {
-            using (var helper = new AsyncHelper())
-                helper.Run(task, callback);
-        }
     }
 
-    internal class AsyncHelper : IDisposable
+
+    /// <summary>
+    /// A Helper class to run Asynchronous functions from synchronous ones. Source: https://github.com/OmerMor/AsyncBridge
+    /// </summary>
+    internal static class AsyncHelper
     {
-        private readonly ExclusiveSynchronizationContext _currentContext;
-        private readonly SynchronizationContext _oldContext;
-        private int _taskCount;
-
-        internal AsyncHelper()
+        /// <summary>
+        /// A class to bridge synchronous asynchronous methods
+        /// </summary>
+        public class AsyncBridge : IDisposable
         {
-            _oldContext = SynchronizationContext.Current;
-            _currentContext = new ExclusiveSynchronizationContext(_oldContext);
-            SynchronizationContext.SetSynchronizationContext(_currentContext);
-        }
+            private ExclusiveSynchronizationContext CurrentContext;
+            private SynchronizationContext OldContext;
+            private int TaskCount;
 
-        public void Run<T>(Task<T> task, Action<T> callback)
-        {
-            Run(task , t => callback(((Task<T>)t).Result));
-        }
+            /// <summary>
+            /// Constructs the AsyncBridge by capturing the current
+            /// SynchronizationContext and replacing it with a new
+            /// ExclusiveSynchronizationContext.
+            /// </summary>
+            internal AsyncBridge()
+            {
+                OldContext = SynchronizationContext.Current;
+                CurrentContext = new ExclusiveSynchronizationContext(OldContext);
+                SynchronizationContext.SetSynchronizationContext(CurrentContext);
+            }
 
-        public void Run(Task task, Action<Task> callback)
-        {
-            _currentContext.Post(async _ =>
+            /// <summary>
+            /// Executes an async task with a void return type
+            /// from a synchronous context
+            /// </summary>
+            /// <param name="taskFactory">Task Factory to execute</param>
+            /// <param name="callback">Optional callback</param>
+            public void Run(Func<Task> taskFactory, Action<Task> callback = null)
+            {
+                CurrentContext.Post(async _ =>
+                {
+                    try
+                    {
+                        Increment();
+
+                        var task = taskFactory();
+                        await task;
+
+                        if (null != callback)
+                        {
+                            callback(task);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        CurrentContext.InnerException = e;
+                    }
+                    finally
+                    {
+                        Decrement();
+                    }
+                }, null);
+            }
+
+            /// <summary>
+            /// Executes an async task with a void return type
+            /// from a synchronous context
+            /// </summary>
+            /// <param name="task">Task to execute</param>
+            /// <param name="callback">Optional callback</param>
+            public void Run(Task task, Action<Task> callback = null)
+            {
+                Run(() => task, callback);
+            }
+
+            /// <summary>
+            /// Executes an async task with a T return type
+            /// from a synchronous context
+            /// </summary>
+            /// <typeparam name="T">The type of the task</typeparam>
+            /// <param name="taskFactory">Task Factory to execute</param>
+            /// <param name="callback">Optional callback</param>
+            public void Result<T>(Func<Task<T>> taskFactory, Action<Task<T>> callback = null)
+            {
+                if (callback == null)
+                    Run(taskFactory);
+                else
+                    Run(taskFactory, finishedTask => callback((Task<T>)finishedTask));
+            }
+
+            /// <summary>
+            /// Executes an async task with a T return type
+            /// from a synchronous context
+            /// </summary>
+            /// <typeparam name="T">The type of the task</typeparam>
+            /// <param name="taskFactory">Task Factory to execute</param>
+            /// <param name="callback">
+            /// The callback function that uses the result of the task
+            /// </param>
+            public void Result<T>(Func<Task<T>> taskFactory, Action<T> callback)
+            {
+                Result(taskFactory, t => callback(t.Result));
+            }
+
+            /// <summary>
+            /// Executes an async task with a T return type
+            /// from a synchronous context
+            /// </summary>
+            /// <typeparam name="T">The type of the task</typeparam>
+            /// <param name="task">Task to execute</param>
+            /// <param name="callback">
+            /// The callback function that uses the result of the task
+            /// </param>
+            public void Result<T>(Task<T> task, Action<T> callback)
+            {
+                Result(() => task, callback);
+            }
+
+            /// <summary>
+            /// Executes an async task with a T return type
+            /// from a synchronous context
+            /// </summary>
+            /// <typeparam name="T">The type of the task</typeparam>
+            /// <param name="task">Task to execute</param>
+            /// <param name="callback">Optional callback</param>
+            public void Result<T>(Task<T> task, Action<Task<T>> callback = null)
+            {
+                Result(() => task, callback);
+            }
+
+            private void Increment()
+            {
+                Interlocked.Increment(ref TaskCount);
+            }
+
+            private void Decrement()
+            {
+                Interlocked.Decrement(ref TaskCount);
+                if (TaskCount == 0)
+                {
+                    CurrentContext.EndMessageLoop();
+                }
+            }
+
+            /// <summary>
+            /// Disposes the object
+            /// </summary>
+            public void Dispose()
             {
                 try
                 {
-                    Increment();
-
-                    await task;
-
-                    if (null != callback)
-                    {
-                        callback(task);
-                    }
-                }
-                catch (Exception e)
-                {
-                    _currentContext.InnerException = e;
+                    CurrentContext.BeginMessageLoop();
                 }
                 finally
                 {
-                    Decrement();
+                    SynchronizationContext.SetSynchronizationContext(OldContext);
                 }
-            }, null);
-        }
-
-        private void Increment()
-        {
-            Interlocked.Increment(ref _taskCount);
-        }
-
-        private void Decrement()
-        {
-            Interlocked.Decrement(ref _taskCount);
-            if (_taskCount == 0)
-            {
-                _currentContext.EndMessageLoop();
             }
         }
 
         /// <summary>
-        /// Disposes the object
+        /// Creates a new AsyncBridge. This should always be used in
+        /// conjunction with the using statement, to ensure it is disposed
         /// </summary>
-        public void Dispose()
+        public static AsyncBridge Wait
         {
-            try
-            {
-                _currentContext.BeginMessageLoop();
-            }
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(_oldContext);
-            }
+            get { return new AsyncBridge(); }
         }
 
+        /// <summary>
+        /// Runs a task with the "Fire and Forget" pattern using Task.Run,
+        /// and unwraps and handles exceptions
+        /// </summary>
+        /// <param name="task">A function that returns the task to run</param>
+        /// <param name="handle">Error handling action, null by default</param>
+        public static void FireAndForget(
+            Func<Task> task,
+            Action<Exception> handle = null)
+        {
+            Task.Run(
+            () =>
+            {
+                ((Func<Task>)(async () =>
+                {
+                    try
+                    {
+                        await task();
+                    }
+                    catch (Exception e)
+                    {
+                        if (null != handle)
+                        {
+                            handle(e);
+                        }
+                    }
+                }))();
+            });
+        }
 
         private class ExclusiveSynchronizationContext : SynchronizationContext
         {
-            private readonly AutoResetEvent _workItemsWaiting = new AutoResetEvent(false);
+            private readonly AutoResetEvent _workItemsWaiting =
+                new AutoResetEvent(false);
 
             private bool _done;
             private ConcurrentQueue<Tuple<SendOrPostCallback, object>> _items;
@@ -255,7 +365,8 @@ namespace Orchard {
 
             public override void Send(SendOrPostCallback d, object state)
             {
-                throw new NotSupportedException("We cannot send to our same thread");
+                throw new NotSupportedException(
+                    "We cannot send to our same thread");
             }
 
             public override void Post(SendOrPostCallback d, object state)
@@ -276,17 +387,22 @@ namespace Orchard {
                     Tuple<SendOrPostCallback, object> task;
 
                     if (!_items.TryDequeue(out task))
+                    {
                         task = null;
+                    }
 
                     if (task != null)
                     {
                         task.Item1(task.Item2);
-
                         if (InnerException != null) // method threw an exception
+                        {
                             throw new AggregateException("AsyncBridge.Run method threw an exception.", InnerException);
+                        }
                     }
                     else
+                    {
                         _workItemsWaiting.WaitOne();
+                    }
                 }
             }
 
@@ -294,7 +410,6 @@ namespace Orchard {
             {
                 return this;
             }
-
         }
     }
 }

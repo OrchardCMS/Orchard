@@ -723,21 +723,24 @@ namespace Orchard.ContentManagement
 
         public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
             dynamic result = null;
-            BuildDisplayAsync(content, displayType, groupId).ResultSynchronously(r => result = r);
+            using (var helper = AsyncHelper.Wait)
+                helper.Result(BuildDisplayAsync(content, displayType, groupId), (dynamic s) => result = s);
             return result;
         }
 
         public dynamic BuildEditor(IContent content, string groupId = "")
         {
             dynamic result = null;
-            BuildEditorAsync(content, groupId).ResultSynchronously(r => result = r);
+            using (var helper = AsyncHelper.Wait)
+                helper.Result(BuildEditorAsync(content, groupId), (dynamic s) => result = s);
             return result;
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "")
         {
             dynamic result = null;
-            UpdateEditorAsync(content, updater, groupId).ResultSynchronously(r => result = r);
+            using (var helper = AsyncHelper.Wait)
+                helper.Result(UpdateEditorAsync(content, updater, groupId), (dynamic s) => result = s);
             return result;
         }
 

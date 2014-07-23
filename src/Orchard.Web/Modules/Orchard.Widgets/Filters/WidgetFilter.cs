@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -79,11 +77,12 @@ namespace Orchard.Widgets.Filters {
             var defaultCulture = workContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
             var currentCulture = workContext.CurrentCulture;
 
-            var tasks = widgetParts.Select(async widgetPart => {
+            foreach (var p in widgetParts) {
+                var widgetPart = p;
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
                     Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
-                    return;
+                    continue;
                 }
 
                 // ignore widget for different cultures
@@ -92,35 +91,26 @@ namespace Orchard.Widgets.Filters {
                     // if localized culture is null then show if current culture is the default
                     // this allows a user to show a content item for the default culture only
                     if (localizablePart.Culture == null && defaultCulture != currentCulture) {
-                        return;
+                        continue;
                     }
 
                     // if culture is set, show only if current culture is the same
                     if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
-                        return;
+                        continue;
                     }
                 }
 
                 // check permissions
                 if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
-                    return;
+                    continue;
                 }
 
-                dynamic shape = null;
-                try {
-                    shape = await _orchardServices.ContentManager.BuildDisplayAsync(widgetPart);
+                var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
+
+                if (widgetShape != null) {
+                    zones[widgetPart.Zone].Add(widgetShape, widgetPart.Position);
                 }
-                catch (Exception ex) {
-                    Logger.Warning(ex, "Error rendering shape for widget {0}, Id: {1}.", widgetPart.ContentItem.ContentType, widgetPart.Id);
-                }
-                
-
-                if (shape != null)
-                    zones[widgetPart.Zone].Add(shape, widgetPart.Position);
-
-            }).ToArray();
-
-            Task.WhenAll(tasks).RunAllSynchronously();
+            }
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
