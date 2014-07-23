@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -147,6 +148,153 @@ namespace Orchard {
 
         private static bool IsLogged(Exception ex) {
             return ex is OrchardSecurityException || !ex.IsFatal();
+        }
+
+        public static void ResultSynchronously<T>(this Task<T> task, Action<T> callback)
+        {
+            using (var helper = new AsyncHelper())
+                helper.Run(task, callback);
+        }
+
+        public static void RunAllSynchronously(this Task task, Action<Task> callback = null)
+        {
+            using (var helper = new AsyncHelper())
+                helper.Run(task, callback);
+        }
+    }
+
+    internal class AsyncHelper : IDisposable
+    {
+        private readonly ExclusiveSynchronizationContext _currentContext;
+        private readonly SynchronizationContext _oldContext;
+        private int _taskCount;
+
+        internal AsyncHelper()
+        {
+            _oldContext = SynchronizationContext.Current;
+            _currentContext = new ExclusiveSynchronizationContext(_oldContext);
+            SynchronizationContext.SetSynchronizationContext(_currentContext);
+        }
+
+        public void Run<T>(Task<T> task, Action<T> callback)
+        {
+            Run(task , t => callback(((Task<T>)t).Result));
+        }
+
+        public void Run(Task task, Action<Task> callback)
+        {
+            _currentContext.Post(async _ =>
+            {
+                try
+                {
+                    Increment();
+
+                    await task;
+
+                    if (null != callback)
+                    {
+                        callback(task);
+                    }
+                }
+                catch (Exception e)
+                {
+                    _currentContext.InnerException = e;
+                }
+                finally
+                {
+                    Decrement();
+                }
+            }, null);
+        }
+
+        private void Increment()
+        {
+            Interlocked.Increment(ref _taskCount);
+        }
+
+        private void Decrement()
+        {
+            Interlocked.Decrement(ref _taskCount);
+            if (_taskCount == 0)
+            {
+                _currentContext.EndMessageLoop();
+            }
+        }
+
+        /// <summary>
+        /// Disposes the object
+        /// </summary>
+        public void Dispose()
+        {
+            try
+            {
+                _currentContext.BeginMessageLoop();
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(_oldContext);
+            }
+        }
+
+
+        private class ExclusiveSynchronizationContext : SynchronizationContext
+        {
+            private readonly AutoResetEvent _workItemsWaiting = new AutoResetEvent(false);
+
+            private bool _done;
+            private ConcurrentQueue<Tuple<SendOrPostCallback, object>> _items;
+
+            public Exception InnerException { get; set; }
+
+            public ExclusiveSynchronizationContext(SynchronizationContext old)
+            {
+                var oldEx = old as ExclusiveSynchronizationContext;
+
+                _items = null != oldEx ? oldEx._items : new ConcurrentQueue<Tuple<SendOrPostCallback, object>>();
+            }
+
+            public override void Send(SendOrPostCallback d, object state)
+            {
+                throw new NotSupportedException("We cannot send to our same thread");
+            }
+
+            public override void Post(SendOrPostCallback d, object state)
+            {
+                _items.Enqueue(Tuple.Create(d, state));
+                _workItemsWaiting.Set();
+            }
+
+            public void EndMessageLoop()
+            {
+                Post(_ => _done = true, null);
+            }
+
+            public void BeginMessageLoop()
+            {
+                while (!_done)
+                {
+                    Tuple<SendOrPostCallback, object> task;
+
+                    if (!_items.TryDequeue(out task))
+                        task = null;
+
+                    if (task != null)
+                    {
+                        task.Item1(task.Item2);
+
+                        if (InnerException != null) // method threw an exception
+                            throw new AggregateException("AsyncBridge.Run method threw an exception.", InnerException);
+                    }
+                    else
+                        _workItemsWaiting.WaitOne();
+                }
+            }
+
+            public override SynchronizationContext CreateCopy()
+            {
+                return this;
+            }
+
         }
     }
 }

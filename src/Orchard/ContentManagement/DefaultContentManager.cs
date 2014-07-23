@@ -723,21 +723,21 @@ namespace Orchard.ContentManagement
 
         public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
             dynamic result = null;
-            AsyncHelper.Result(BuildDisplayAsync(content, displayType, groupId), r => result = r);
+            BuildDisplayAsync(content, displayType, groupId).ResultSynchronously(r => result = r);
             return result;
         }
 
         public dynamic BuildEditor(IContent content, string groupId = "")
         {
             dynamic result = null;
-            AsyncHelper.Result(BuildEditorAsync(content, groupId), r => result = r);
+            BuildEditorAsync(content, groupId).ResultSynchronously(r => result = r);
             return result;
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "")
         {
             dynamic result = null;
-            AsyncHelper.Result(UpdateEditorAsync(content, updater, groupId), r => result = r);
+            UpdateEditorAsync(content, updater, groupId).ResultSynchronously(r => result = r);
             return result;
         }
 
@@ -958,142 +958,6 @@ namespace Orchard.ContentManagement
         {
             var callSite = GetOrAdd(key, _valueFactory);
             return callSite.Target(callSite, callee);
-        }
-    }
-
-    internal class AsyncHelper : IDisposable
-    {
-        private readonly ExclusiveSynchronizationContext _currentContext;
-        private readonly SynchronizationContext _oldContext;
-        private int _taskCount;
-
-        private AsyncHelper()
-        {
-            _oldContext = SynchronizationContext.Current;
-            _currentContext = new ExclusiveSynchronizationContext(_oldContext);
-            SynchronizationContext.SetSynchronizationContext(_currentContext);
-        }
-
-        public static void Result<T>(Task<T> task, Action<T> callback)
-        {
-            using (var helper = new AsyncHelper())
-                helper.Run(task, callback);
-        }
-
-        private void Run<T>(Task<T> task, Action<T> callback)
-        {
-            _currentContext.Post(async _ =>
-            {
-                try
-                {
-                    Increment();
-
-                    await task;
-
-                    if (null != callback)
-                    {
-                        callback(task.Result);
-                    }
-                }
-                catch (Exception e)
-                {
-                    _currentContext.InnerException = e;
-                }
-                finally
-                {
-                    Decrement();
-                }
-            }, null);
-        }
-
-        private void Increment()
-        {
-            Interlocked.Increment(ref _taskCount);
-        }
-
-        private void Decrement()
-        {
-            Interlocked.Decrement(ref _taskCount);
-            if (_taskCount == 0)
-            {
-                _currentContext.EndMessageLoop();
-            }
-        }
-
-        /// <summary>
-        /// Disposes the object
-        /// </summary>
-        public void Dispose()
-        {
-            try
-            {
-                _currentContext.BeginMessageLoop();
-            }
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(_oldContext);
-            }
-        }
-
-
-        private class ExclusiveSynchronizationContext : SynchronizationContext
-        {
-            private readonly AutoResetEvent _workItemsWaiting = new AutoResetEvent(false);
-
-            private bool _done;
-            private ConcurrentQueue<Tuple<SendOrPostCallback, object>> _items;
-
-            public Exception InnerException { get; set; }
-
-            public ExclusiveSynchronizationContext(SynchronizationContext old)
-            {
-                var oldEx = old as ExclusiveSynchronizationContext;
-
-                _items = null != oldEx ? oldEx._items : new ConcurrentQueue<Tuple<SendOrPostCallback, object>>();
-            }
-
-            public override void Send(SendOrPostCallback d, object state)
-            {
-                throw new NotSupportedException("We cannot send to our same thread");
-            }
-
-            public override void Post(SendOrPostCallback d, object state)
-            {
-                _items.Enqueue(Tuple.Create(d, state));
-                _workItemsWaiting.Set();
-            }
-
-            public void EndMessageLoop()
-            {
-                Post(_ => _done = true, null);
-            }
-
-            public void BeginMessageLoop()
-            {
-                while (!_done)
-                {
-                    Tuple<SendOrPostCallback, object> task;
-
-                    if (!_items.TryDequeue(out task))
-                        task = null;
-
-                    if (task != null)
-                    {
-                        task.Item1(task.Item2);
-
-                        if (InnerException != null) // method threw an exception
-                            throw new AggregateException("AsyncBridge.Run method threw an exception.", InnerException);
-                    }
-                    else
-                        _workItemsWaiting.WaitOne();
-                }
-            }
-
-            public override SynchronizationContext CreateCopy()
-            {
-                return this;
-            }
-
         }
     }
 }

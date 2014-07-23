@@ -119,10 +119,8 @@ namespace Orchard.Widgets.Filters {
                     zones[widgetPart.Zone].Add(shape, widgetPart.Position);
 
             }).ToArray();
-            
-            // the time out is arbitrary, should be configurable.
-            // TODO: pull timeout from httpruntime execution timeout (or somewhere)
-            Task.WaitAll(tasks, TimeSpan.FromSeconds(60));
+
+            Task.WhenAll(tasks).RunAllSynchronously();
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
