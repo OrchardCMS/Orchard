@@ -3,6 +3,12 @@ using Orchard.ContentManagement.MetaData.Builders;
 
 namespace Orchard.AuditTrail.Settings {
     public class AuditTrailPartSettings {
+        public AuditTrailPartSettings() {
+            ShowAuditTrail = true;
+            ShowAuditTrailCommentInput = true;
+            ShowAuditTrailLink = true;
+        }
+
         public bool ShowAuditTrailLink { get; set; }
         public bool ShowAuditTrail { get; set; }
         public bool ShowAuditTrailCommentInput { get; set; }
