@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Providers.Content;
 using Orchard.AuditTrail.Services;
@@ -45,12 +46,14 @@ namespace Orchard.AuditTrail.Drivers {
                 if (settings.ShowAuditTrail) {
                     results.Add(ContentShape("Parts_AuditTrail", () => {
                         var pager = new Pager(_services.WorkContext.CurrentSite, null, null);
-                        var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, ContentAuditTrailEventProvider.CreateFilters(part.Id));
+                        var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, ContentAuditTrailEventProvider.CreateFilters(part.Id, updater));
                         var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-                        var eventDescriptors = from c in _auditTrailManager.DescribeCategories()
+                        var eventDescriptors =
+                            from c in _auditTrailManager.DescribeCategories()
                             from e in c.Events
                             select e;
-                        var recordViewModels = from record in pageOfData
+                        var recordViewModels =
+                            from record in pageOfData
                             let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.FullEventName)
                             where descriptor != null
                             select new AuditTrailEventSummaryViewModel {
@@ -59,6 +62,7 @@ namespace Orchard.AuditTrail.Drivers {
                                 CategoryDescriptor = descriptor.CategoryDescriptor,
                                 SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
                             };
+
                         return shapeHelper.Parts_AuditTrail(Records: recordViewModels, Pager: pagerShape);
                     }));
                 }

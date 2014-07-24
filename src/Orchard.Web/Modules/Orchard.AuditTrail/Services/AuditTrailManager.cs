@@ -57,7 +57,6 @@ namespace Orchard.AuditTrail.Services {
 
             var query = _auditTrailRepository.Table;
 
-
             if (filters != null) {
                 var filterContext = new QueryFilterContext(query, filters);
 

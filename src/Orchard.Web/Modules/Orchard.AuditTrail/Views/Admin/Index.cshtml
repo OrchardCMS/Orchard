@@ -12,6 +12,7 @@
 
     Layout.Title = T("Audit Trail");
 }
+@Html.ValidationSummary()
 @using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
     <section class="audittrail-filter-section">
         @Display(Model.FilterDisplay)

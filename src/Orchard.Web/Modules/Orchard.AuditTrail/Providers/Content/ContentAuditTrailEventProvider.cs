@@ -18,8 +18,8 @@ namespace Orchard.AuditTrail.Providers.Content {
         public const string Unpublished = "Unpublished";
         public const string Removed = "Removed";
 
-        public static Filters CreateFilters(int contentId) {
-            return new Filters {
+        public static Filters CreateFilters(int contentId, IUpdateModel updateModel) {
+            return new Filters(updateModel) {
                 {"content", contentId.ToString(CultureInfo.InvariantCulture)}
             };
         }

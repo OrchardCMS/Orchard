@@ -1,14 +1,18 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.ViewModels;
+using Orchard.Collections;
+using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.AuditTrail.Controllers {
-    public class AdminController : Controller {
+    public class AdminController : Controller, IUpdateModel {
         private readonly IAuthorizer _authorizer;
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IOrchardServices _services;
@@ -31,8 +35,14 @@ namespace Orchard.AuditTrail.Controllers {
                 return new HttpUnauthorizedResult();
 
             var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
-            var filters = Filters.From(Request.QueryString);
+            var filters = Filters.From(Request.QueryString, this);
             var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, filters, orderBy ?? AuditTrailOrderBy.DateDescending);
+
+            // If there's a filter validation error, clear the results.
+            if (!ModelState.IsValid) {
+                pageOfData = new PageOfItems<AuditTrailEventRecord>(Enumerable.Empty<AuditTrailEventRecord>());
+            }
+
             var pagerShape = New.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
             var filterDisplay = _auditTrailManager.BuildFilterDisplay(filters);
             var eventDescriptorsQuery =
@@ -74,6 +84,14 @@ namespace Orchard.AuditTrail.Controllers {
                 DetailsShape = detailsShape
             };
             return View(viewModel);
+        }
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.Text);
         }
     }
 }
