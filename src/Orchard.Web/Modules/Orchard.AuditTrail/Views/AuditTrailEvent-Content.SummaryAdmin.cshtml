@@ -4,9 +4,16 @@
     var contentItemId = eventData.Get<int>("ContentId");
     var contentItemVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublished = eventData.Get<bool>("Published");
+    var isLatest = eventData.Get<bool>("Latest");
 }
 <section class="audittrail-content-eventsummary">
     @T("Version {0}", contentItemVersionNumber)
-    @T(" - ")
-    <a href="@Url.Action("Detail", "Content", new {area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber})">@T("View")</a>
+    @if (isPublished) {
+        @T(" - ")
+        <a href="@Url.Action("Detail", "Content", new {area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber})">@T("View")</a>
+    }
+    else if (isLatest) {
+        @T(" - ")
+        <a href="@Url.Action("Edit", "Admin", new {area = "Contents", id = contentItemId})">@T("Edit")</a>
+    }
 </section>

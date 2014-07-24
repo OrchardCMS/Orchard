@@ -70,6 +70,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                 {"VersionId", content.ContentItem.VersionRecord.Id},
                 {"VersionNumber", content.ContentItem.VersionRecord.Number},
                 {"Published", content.ContentItem.VersionRecord.Published},
+                {"Latest", content.ContentItem.VersionRecord.Latest},
                 {"Title", title}
             };
 
