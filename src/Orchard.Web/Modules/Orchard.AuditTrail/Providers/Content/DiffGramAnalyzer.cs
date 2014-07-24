@@ -77,19 +77,29 @@ namespace Orchard.AuditTrail.Providers.Content {
                                         }
                                         break;
                                     case "add":
-                                        string nodeName = reader.GetAttribute("name");
-                                        string addedContent = null;
-                                        reader.Read();
-                                        if (reader.NodeType != XmlNodeType.EndElement) {
-                                            nodeName = reader.Name;
-                                            addedContent = reader.ReadElementContentAsString();
-                                        }
-                                        yield return 
-                                            new DiffNode { 
-                                                Type = DiffType.Addition, 
-                                                Context = BuildContextName(stack, nodeName), 
-                                                Current = addedContent 
+                                        if (isAttributeChange) {
+                                            var attributeName = match.Substring(1);
+                                            var value = reader.ReadElementContentAsString();
+
+                                            readNext = false;
+                                            yield return new DiffNode {
+                                                Type = DiffType.Addition,
+                                                Context = BuildContextName(stack, attributeName),
+                                                Current = value
                                             };
+                                        }
+                                        else {
+                                            var elementName = currentElement.Name.ToString();
+                                            var content = reader.ReadElementContentAsString();
+
+                                            readNext = false;
+                                            yield return
+                                                new DiffNode {
+                                                    Type = DiffType.Addition,
+                                                    Context = BuildContextName(stack, elementName),
+                                                    Current = content
+                                                };
+                                        }
                                         break;
                                 }
                             }
