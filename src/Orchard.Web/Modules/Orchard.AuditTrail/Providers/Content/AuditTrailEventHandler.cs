@@ -13,7 +13,6 @@ namespace Orchard.AuditTrail.Providers.Content {
                 return;
 
             context.Comment = auditTrailPart.Comment;
-            auditTrailPart.Comment = null; // Reset the comment.
         }
     }
 }

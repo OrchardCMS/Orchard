@@ -3,8 +3,10 @@
 namespace Orchard.AuditTrail.Models {
     public class AuditTrailPart : ContentPart {
         public string Comment {
-            get { return this.Retrieve(x => x.Comment); }
-            set { this.Store(x => x.Comment, value); }
+            get { return RetrieveVersioned<string>("Comment"); }
+            set { StoreVersioned("Comment", value); }
         }
+
+        public bool ShowComment { get; set; }
     }
 }

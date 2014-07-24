@@ -32,10 +32,18 @@ namespace Orchard.AuditTrail.Drivers {
 
             if (settings.ShowAuditTrailCommentInput) {
                 results.Add(ContentShape("Parts_AuditTrail_Comment", () => {
-                    if (updater != null) {
-                        updater.TryUpdateModel(part, Prefix, null, null);
+                    var viewModel = new AuditTrailCommentViewModel();
+
+                    if (part.ShowComment) {
+                        viewModel.Comment = part.Comment;
                     }
-                    return shapeHelper.EditorTemplate(Model: part, TemplateName: "Parts.AuditTrail.Comment", Prefix: Prefix);
+
+                    if (updater != null) {
+                        if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                            part.Comment = viewModel.Comment;
+                        }
+                    }
+                    return shapeHelper.EditorTemplate(Model: viewModel, TemplateName: "Parts.AuditTrail.Comment", Prefix: Prefix);
                 }));
             }
             if (_services.Authorizer.Authorize(Permissions.ViewAuditTrail)) {

@@ -58,8 +58,6 @@ namespace Orchard.AuditTrail.Providers.Content {
             if (blackList.Contains(content.ContentItem.ContentType))
                 return;
 
-            var title = _contentManager.GetItemMetadata(content).DisplayText;
-
             var properties = new Dictionary<string, object> {
                 {"Content", content}
             };

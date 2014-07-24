@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -18,6 +19,12 @@ namespace Orchard.AuditTrail.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.Number(version));
             if (!_authorizer.Authorize(Core.Contents.Permissions.ViewContent, contentItem))
                 return new HttpUnauthorizedResult();
+
+            var auditTrailPart = contentItem.As<AuditTrailPart>();
+
+            if (auditTrailPart != null) {
+                auditTrailPart.ShowComment = true;
+            }
 
             var editor = _contentManager.BuildEditor(contentItem);
             return View(editor);

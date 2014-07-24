@@ -255,6 +255,7 @@
     <Compile Include="Providers\Content\ContentAuditTrailEventProvider.cs" />
     <Compile Include="Services\IAuditTrailEventHandler.cs" />
     <Compile Include="Services\IAuditTrailEventProvider.cs" />
+    <Compile Include="ViewModels\AuditTrailCommentViewModel.cs" />
     <Compile Include="ViewModels\CommonAuditTrailFilterViewModel.cs" />
     <Compile Include="Services\Models\AuditTrailOrderBy.cs" />
     <Compile Include="ViewModels\AuditTrailViewModel.cs" />
