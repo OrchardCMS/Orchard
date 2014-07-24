@@ -67,11 +67,9 @@ namespace Orchard.AuditTrail.Providers.Content {
             var eventData = new Dictionary<string, object> {
                 {"ContentId", content.Id},
                 {"ContentIdentity", _contentManager.GetItemMetadata(content).Identity.ToString()},
+                {"ContentType", content.ContentItem.ContentType},
                 {"VersionId", content.ContentItem.VersionRecord.Id},
                 {"VersionNumber", content.ContentItem.VersionRecord.Number},
-                {"Published", content.ContentItem.VersionRecord.Published},
-                {"Latest", content.ContentItem.VersionRecord.Latest},
-                {"Title", title}
             };
 
             if (previousContentItemVersion != null) {

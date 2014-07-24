@@ -1,13 +1,16 @@
-﻿@using Orchard.AuditTrail.Helpers
+﻿@using Orchard.ContentManagement
 @{
     var eventData = (IDictionary<string, object>) Model.EventData;
-    var contentItemId = eventData.Get<int>("ContentId");
-    var contentItemVersionNumber = eventData.Get<int>("VersionNumber");
-    var isPublished = eventData.Get<bool>("Published");
-    var isLatest = eventData.Get<bool>("Latest");
+    var contentItem = (ContentItem) Model.ContentItem;
+    var contentItemId = contentItem.Id;
+    var contentItemVersionNumber = contentItem.Version;
+    var contentType = contentItem.ContentType;
+    var title = Html.ItemDisplayText(contentItem);
+    var isPublished = contentItem.VersionRecord.Published;
+    var isLatest = contentItem.VersionRecord.Latest;
 }
 <section class="audittrail-content-eventsummary">
-    @T("Version {0}", contentItemVersionNumber)
+    @T("{0} - {1} (version {2})", contentType, title, contentItemVersionNumber)
     @if (isPublished) {
         @T(" - ")
         <a href="@Url.Action("Detail", "Content", new {area = "Orchard.AuditTrail", id = contentItemId, version = contentItemVersionNumber})">@T("View")</a>

@@ -22,7 +22,7 @@ namespace Orchard.AuditTrail.Providers.Content {
             builder.Describe("AuditTrailEvent").OnDisplaying(context => {
                 var record = (AuditTrailEventRecord)context.Shape.Record;
 
-                if (record.Category != "Content" || context.ShapeMetadata.DisplayType != "Detail")
+                if (record.Category != "Content")
                     return;
 
                 var eventData = (IDictionary<string, object>)context.Shape.EventData;
