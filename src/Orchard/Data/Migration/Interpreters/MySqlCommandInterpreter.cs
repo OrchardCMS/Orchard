@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Text;
 using NHibernate.Dialect;
 using Orchard.Data.Migration.Schema;
@@ -7,7 +8,7 @@ using Orchard.Localization;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class MySqlCommandInterpreter : ICommandInterpreter<AlterColumnCommand> {
-        private readonly Dialect _dialect;
+        private readonly Lazy<Dialect> _dialectLazy;
         private readonly ShellSettings _shellSettings;
 
         public MySqlCommandInterpreter() {
@@ -24,20 +25,19 @@ namespace Orchard.Data.Migration.Interpreters {
             ShellSettings shellSettings,
             ISessionFactoryHolder sessionFactoryHolder) {
                 _shellSettings = shellSettings;
-                var configuration = sessionFactoryHolder.GetConfiguration();
-                _dialect = Dialect.GetDialect(configuration.Properties);
+                _dialectLazy = new Lazy<Dialect>(() => Dialect.GetDialect(sessionFactoryHolder.GetConfiguration().Properties));
         }
 
         public string[] CreateStatements(AlterColumnCommand command) {
             var builder = new StringBuilder();
             
             builder.AppendFormat("alter table {0} modify column {1} ",
-                            _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                            _dialect.QuoteForColumnName(command.ColumnName));
+                            _dialectLazy.Value.QuoteForTableName(PrefixTableName(command.TableName)),
+                            _dialectLazy.Value.QuoteForColumnName(command.ColumnName));
 
             // type
             if (command.DbType != DbType.Object) {
-                builder.Append(DefaultDataMigrationInterpreter.GetTypeName(_dialect, command.DbType, command.Length, command.Precision, command.Scale));
+                builder.Append(DefaultDataMigrationInterpreter.GetTypeName(_dialectLazy.Value, command.DbType, command.Length, command.Precision, command.Scale));
             }
             else {
                 if (command.Length > 0 || command.Precision > 0 || command.Scale > 0) {

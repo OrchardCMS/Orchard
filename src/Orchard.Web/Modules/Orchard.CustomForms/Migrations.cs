@@ -53,6 +53,12 @@ namespace Orchard.CustomForms {
             return 3;
         }
 
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("SubmitButtonText"));
+
+            return 4;
+        }
+
         public void Uninstall() {
             ContentDefinitionManager.DeleteTypeDefinition("CustomForm");
         }
