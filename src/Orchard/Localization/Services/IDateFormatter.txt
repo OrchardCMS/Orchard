@@ -1,0 +1,41 @@
+DateTime? ConvertToSiteTimeZone(DateTime? date)
+DateTime? ConvertFromSiteTimeZone(DateTime? date)
+	- Also provides overloads with non-nullable DateTime parameters for compatibility with existing callers.
+	- Does only time zone conversion. No calendar conversion.
+	
+DateTimeParts? ConvertToSiteCalendar(DateTime? date)
+DateTime? ConvertFromSiteCalendar(Parts? dateParts)
+	- Does only calendar conversion. No time zone conversion.
+	- Instantiates the site calendar and does "manual" conversion.
+	- Uses a custom storage structure DateTimeParts for non-gregorian representation.
+
+string ConvertToLocalizedDateString(DateTime? date, DateLocalizationOptions options = DateLocalizationOptions.Default)
+string ConvertToLocalizedTimeString(DateTime? date, DateLocalizationOptions options = DateLocalizationOptions.Default)
+string ConvertToLocalizedString(DateTime? date, DateLocalizationOptions options)
+string ConvertToLocalizedString(DateTime? date, string format, DateLocalizationOptions options)
+	- Also provides overloads with non-nullable DateTime parameters for compatibility with existing callers.
+	- By default performs the full conversion (time zone, calendar and formatting). Can be overridden by DateLocalizationOptions.
+	- If NOT ConvertCalendar, uses DateTime.ToString() with an cloned CultureInfo using GregorianCalendar of type Localized.
+	- If ConvertCalendar and UNSUPPORTED non-default calendar, uses ConvertToSiteCalendar() and Mahsa's custom formatting.
+	- If ConvertCalendar and SUPPORTED non-default calendar, uses DateTime.ToString() with cloned CultureInfo using an optional calendar instance, which does both calendar conversion and formatting.
+	- Otherwise uses DateTime.ToString() with configured CultureInfo which does both calendar conversion and formatting.
+
+DateTime? ConvertFromLocalizedDateString(string dateString, DateLocalizationOptions options = DateLocalizationOptions.Default)
+DateTime? ConvertFromLocalizedTimeString(string timeString, DateLocalizationOptions options = DateLocalizationOptions.Default)
+DateTime? ConvertFromLocalizedString(string dateTimeString, DateLocalizationOptions options = DateLocalizationOptions.Default)
+DateTime? ConvertFromLocalizedString(string dateString, string timeString, DateLocalizationOptions options = DateLocalizationOptions.Default)
+	- By default performs the full conversion (parsing, calendar and time zone). Can be overridden by DateLocalizationOptions.
+	- ConvertFromLocalizedDateString() returns a DateTime? with the time component set to 00:00:00. ConvertTimeZone is ignored.
+	- ConvertFromLocalizedTimeString() returns a DateTime? with the date component set to DateTime.MinValue. ConvertCalendar is ignored.
+	- If NOT ConvertCalendar, uses DateTime.Parse() with an cloned CultureInfo using GregorianCalendar of type Localized.
+	- If ConvertCalendar and UNSUPPORTED non-default calendar, uses Mahsa's custom parsing and ConvertToSiteCalendar().
+	- If ConvertCalendar and SUPPORTED non-default calendar, uses DateTime.Parse() with cloned CultureInfo using an optional calendar instance, which does both parsing and calendar conversion.
+	- Otherwise uses DateTime.Parse() with configured CultureInfo which does both parsing and calendar conversion.
+	- ConvertFromLocalizedString() with dateString or timeString set to null is the same as ConvertFromLocalizedTimeString() and ConvertFromLocalizedDateString() respectively.
+	- Checks if the parsed string matches NullText, and if so returns null.
+	
+struct DateLocalizationOptions {
+	bool ConvertTimeZone;
+	bool ConvertCalendar;
+	string NullText;
+}
