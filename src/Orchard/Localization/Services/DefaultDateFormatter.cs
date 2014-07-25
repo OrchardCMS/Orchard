@@ -81,7 +81,8 @@ namespace Orchard.Framework.Localization.Services {
         }
 
         string IDateFormatter.FormatDate(DateParts parts, CultureInfo culture) {
-            // TODO: Mahsa should implement!
+            //var dateFormatString = 
+            //return string.Format(dateFormatString,parts.Year,parts.Month,parts.Day);
             throw new NotImplementedException();
         }
 
@@ -92,8 +93,8 @@ namespace Orchard.Framework.Localization.Services {
 
         private Dictionary<string, string> GetDateParseReplacements(CultureInfo culture) {
             return new Dictionary<string, string>() {       
-                {"dddd", "(?<day>[0-9]{4})"},
-                {"ddd", "(?<day>[0-9]{3})"},
+                {"dddd", String.Format("(?<day>{0})", String.Join("|", culture.DateTimeFormat.DayNames))},
+                {"ddd", String.Format("(?<day>{0})", String.Join("|", culture.DateTimeFormat.AbbreviatedDayNames))},
                 {"dd", "(?<day>[0-9]{2})"},
                 {"d", "(?<day>[0-9]{1,2})"},
                 {"MMMM", String.Format("(?<month>{0})", String.Join("|", culture.DateTimeFormat.MonthNames))},
@@ -109,6 +110,49 @@ namespace Orchard.Framework.Localization.Services {
         }
 
         private Dictionary<string, string> GetTimeParseReplacements(CultureInfo culture) {
+            return new Dictionary<string, string>() {       
+                {"HH", "(?<hour>[0-9]{2})"},
+                {"H", "(?<hour>[0-9]{1,2})"},
+                {"hh", "(?<hour>[0-9]{2})"},
+                {"h", "(?<hour>[0-9]{1,2})"},
+                {"MM", "(?<minute>[0-9]{2})"},
+                {"M", "(?<minute>[0-9]{1,2})"},
+                {"mm", "(?<minute>[0-9]{2})"},
+                {"m", "(?<minute>[0-9]{1,2})"},
+                {"ss", "(?<second>[0-9]{2})"},      
+                {"s", "(?<second>[0-9]{1,2})"},
+                {"f", "(?<millisecond>[0-9]{1})"},
+                {"ff", "(?<millisecond>[0-9]{2})"},
+                {"fff", "(?<millisecond>[0-9]{3})"},
+                {"ffff", "(?<millisecond>[0-9]{4})"},
+                {"fffff", "(?<millisecond>[0-9]{5})"},
+                {"ffffff", "(?<millisecond>[0-9]{6})"},
+                {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
+                {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
+                {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
+                {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)}
+            };
+        }
+
+        private Dictionary<string, string> GetDateFormatReplacements(CultureInfo culture) {
+            return new Dictionary<string, string>() {       
+                {"dddd", "{5:dddd}"},
+                {"ddd", "{6:ddd}"},
+                {"dd", "{2:00}"},
+                {"d", "{2:##}"},
+                {"MMMM", "{3:MMMM}"},
+                {"MMM", "{4:MMM}"},
+                {"MM", "{1:00}"},
+                {"M", "{1:##}"},
+                {"yyyyy", "{1:00000}"},
+                {"yyyy", "{1:0000}"},
+                {"yyy", "{1:000}"},
+                {"yy", "{1:00}"}, 
+                {"y", "{1:0}"}
+            };
+        }
+
+        private Dictionary<string, string> GetTimeFormatReplacements(CultureInfo culture) {
             return new Dictionary<string, string>() {       
                 {"HH", "(?<hour>[0-9]{2})"},
                 {"H", "(?<hour>[0-9]{1,2})"},
