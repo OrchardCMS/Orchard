@@ -77,7 +77,6 @@ namespace Orchard.jQuery {
             manifest.DefineStyle("jQueryTimeEntry").SetUrl("jquery.timeentry.css").SetVersion("1.5.2");
 
             // jQuery Date/Time Editor Enhancements
-            manifest.DefineScript("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.js").SetDependencies("jQuery");
             manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
 
             // jQuery File Upload
