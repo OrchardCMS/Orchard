@@ -52,6 +52,10 @@ namespace Orchard.Framework.Tests.Localization {
             IDateFormatter target = new DefaultDateFormatter();
             var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             foreach (CultureInfo cultureInfo in cultures) {
+                // Due to a bug in .NET 4.5 in combination with updated Upper Sorbian culture in Windows 8.
+                if (System.Environment.OSVersion.Version.ToString().CompareTo("6.2.0.0") >= 0 && cultureInfo.Name.StartsWith("hsb")) {
+                    continue;
+                }
                 DateTime dateTime = new DateTime(2014, 12, 31, 10, 20, 40, 567);
                 cultureInfo.DateTimeFormat.Calendar = new GregorianCalendar();
                 var dateString = dateTime.ToString("G", cultureInfo);
