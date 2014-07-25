@@ -5,13 +5,13 @@ using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
 
-	public class DefaultDateServices : IDateServices {
+	public class DefaultDateLocalizationServices : IDateLocalizationServices {
 
         private readonly IWorkContextAccessor _workContextAccessor;
 		private readonly IDateTimeFormatProvider _dateTimeLocalization;
 		private readonly ICalendarManager _calendarManager;
 
-        public DefaultDateServices(
+        public DefaultDateLocalizationServices(
             IWorkContextAccessor workContextAccessor,
             IDateTimeFormatProvider dateTimeLocalization,
             ICalendarManager calendarManager) {

@@ -7,7 +7,7 @@ namespace Orchard.Localization.Services {
     /// time zone, culture and calendar (as opposed to the system configured time zone and
     /// culture).
     /// </summary>
-    public interface IDateServices : IDependency {
+    public interface IDateLocalizationServices : IDependency {
 
         /// <summary>
         /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone.

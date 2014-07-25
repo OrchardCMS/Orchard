@@ -265,11 +265,11 @@
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultCalendarManager.cs" />
     <Compile Include="Localization\Services\CultureDateTimeFormatProvider.cs" />
-    <Compile Include="Localization\Services\DefaultDateServices.cs" />
+    <Compile Include="Localization\Services\DefaultDateLocalizationServices.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ICalendarSelector.cs" />
     <Compile Include="Localization\Services\ICalendarManager.cs" />
-    <Compile Include="Localization\Services\IDateServices.cs" />
+    <Compile Include="Localization\Services\IDateLocalizationServices.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Localization\Services\SiteCalendarSelector.cs" />

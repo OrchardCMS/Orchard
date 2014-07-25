@@ -18,14 +18,14 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
             IClock clock,
-            IDateServices dateServices) {
+            IDateLocalizationServices dateServices) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;

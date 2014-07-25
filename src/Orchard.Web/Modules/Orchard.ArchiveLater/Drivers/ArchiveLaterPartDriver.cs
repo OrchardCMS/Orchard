@@ -14,12 +14,12 @@ namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
         private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
             IArchiveLaterService archiveLaterService,
-            IDateServices dateServices) {
+            IDateLocalizationServices dateServices) {
             _archiveLaterService = archiveLaterService;
             _dateServices = dateServices;
             T = NullLocalizer.Instance;

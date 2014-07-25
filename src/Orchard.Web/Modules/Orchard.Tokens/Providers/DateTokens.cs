@@ -11,13 +11,13 @@ namespace Orchard.Tokens.Providers {
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
 
         public DateTokens(
             IClock clock, 
             IDateTimeFormatProvider dateTimeLocalization, 
             IWorkContextAccessor workContextAccessor,
-            IDateServices dateServices) {
+            IDateLocalizationServices dateServices) {
             _clock = clock;
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;

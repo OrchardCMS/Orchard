@@ -17,14 +17,14 @@ namespace Orchard.Fields.Drivers {
     public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
 
-        public DateTimeFieldDriver(IOrchardServices services, IDateServices dateServices) {
+        public DateTimeFieldDriver(IOrchardServices services, IDateLocalizationServices dateServices) {
             Services = services;
             DateServices = dateServices;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
-        public IDateServices DateServices { get; set; }
+        public IDateLocalizationServices DateServices { get; set; }
         public Localizer T { get; set; }
 
         private static string GetPrefix(ContentField field, ContentPart part) {

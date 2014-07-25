@@ -11,12 +11,12 @@ using Orchard.Services;
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
 
         public DateTimeShapes(
             IClock clock,
-            IDateServices dateServices,
+            IDateLocalizationServices dateServices,
             IDateTimeFormatProvider dateTimeLocalization
             ) {
             _clock = clock;

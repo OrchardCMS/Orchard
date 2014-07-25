@@ -8,11 +8,11 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateServices;
 
         public DateEditorDriver(
             IOrchardServices services,
-            IDateServices dateServices) {
+            IDateLocalizationServices dateServices) {
                 _dateServices = dateServices;
                 T = NullLocalizer.Instance;
                 Services = services;
