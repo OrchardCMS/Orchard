@@ -155,7 +155,7 @@ namespace Orchard {
     /// <summary>
     /// A Helper class to run Asynchronous functions from synchronous ones. Source: https://github.com/OmerMor/AsyncBridge
     /// </summary>
-    internal static class AsyncHelper
+    public static class AsyncHelper
     {
         /// <summary>
         /// A class to bridge synchronous asynchronous methods
