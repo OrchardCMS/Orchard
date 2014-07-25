@@ -261,8 +261,12 @@
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
+    <Compile Include="Localization\Models\DateParts.cs" />
+    <Compile Include="Localization\Models\DateTimeParts.cs" />
+    <Compile Include="Localization\Models\TimeParts.cs" />
     <Compile Include="Localization\Services\CurrentCalendarWorkContext.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
+    <Compile Include="Localization\Services\DefaultDateFormatter.cs" />
     <Compile Include="Localization\Services\DefaultCalendarManager.cs" />
     <Compile Include="Localization\Services\CultureDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\DefaultDateLocalizationServices.cs" />
@@ -270,6 +274,7 @@
     <Compile Include="Localization\Services\ICalendarSelector.cs" />
     <Compile Include="Localization\Services\ICalendarManager.cs" />
     <Compile Include="Localization\Services\IDateLocalizationServices.cs" />
+    <Compile Include="Localization\Services\IDateFormatter.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Localization\Services\SiteCalendarSelector.cs" />
