@@ -45,8 +45,8 @@ namespace Orchard.Tokens.Providers {
                 .Token("Since", DateTimeRelative)
                 .Chain("Since", "Date", DateTimeRelative)
                 // {Date.Local}
-                .Token("Local", d => _dateServices.ConvertToLocal(d))
-                .Chain("Local", "Date", d => _dateServices.ConvertToLocal(d))
+                .Token("Local", d => _dateServices.ConvertToSiteTimeZone(d))
+                .Chain("Local", "Date", d => _dateServices.ConvertToSiteTimeZone(d))
                 // {Date.ShortDate}
                 .Token("ShortDate", d => d.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value))
                 // {Date.ShortTime}
