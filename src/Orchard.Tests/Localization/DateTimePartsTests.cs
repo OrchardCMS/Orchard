@@ -5,7 +5,7 @@ using Orchard.Framework.Localization.Models;
 namespace Orchard.Framework.Tests.Localization {
 
     [TestFixture]
-    public class DateParseResultTests {
+    public class DateTimePartsTests {
 
         [Test]
         [Description("Equal instances return equality.")]

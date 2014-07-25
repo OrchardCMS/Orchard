@@ -259,7 +259,7 @@
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
-    <Compile Include="Localization\DateParseResultTests.cs" />
+    <Compile Include="Localization\DateTimePartsTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />
     <Compile Include="Messaging\MessagingChannelStub.cs" />

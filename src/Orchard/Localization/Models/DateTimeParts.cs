@@ -28,15 +28,5 @@ namespace Orchard.Framework.Localization.Models {
                 return _time;
             }
         }
-
-        //public override bool Equals(object obj) {
-        //    var other = (DateTimeParts)obj;
-
-        //    if (!(Date.Equals(other.Date)) ||
-        //        !(Time.Equals(other.Time)))
-        //        return false;
-
-        //    return true;
-        //}
     }
 }

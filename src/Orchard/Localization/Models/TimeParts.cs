@@ -40,17 +40,5 @@ namespace Orchard.Framework.Localization.Models {
                 return _millisecond;
             }
         }
-
-        //public override bool Equals(object obj) {
-        //    var other = (TimeParts)obj;
-
-        //    if (Hour != other.Hour ||
-        //        Minute != other.Minute ||
-        //        Second != other.Second ||
-        //        Millisecond != other.Millisecond)
-        //        return false;
-
-        //    return Hour == other.Hour;
-        //}
     }
 }

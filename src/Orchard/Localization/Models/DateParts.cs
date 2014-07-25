@@ -30,16 +30,5 @@ namespace Orchard.Framework.Localization.Models {
                 return _day;
             }
         }
-
-        //public override bool Equals(object obj) {
-        //    var other = (DateParts)obj;
-
-        //    if (Year != other.Year ||
-        //        Month != other.Month ||
-        //        Day != other.Day)
-        //        return false;
-
-        //    return true;
-        //}
     }
 }
