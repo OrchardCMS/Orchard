@@ -11,12 +11,15 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         private readonly IList<ContentPartFieldDefinition> _fields;
         private readonly SettingsDictionary _settings;
 
+        public ContentPartDefinition Current { get; private set; }
+
         public ContentPartDefinitionBuilder()
             : this(new ContentPartDefinition(null)) {
         }
 
         public ContentPartDefinitionBuilder(ContentPartDefinition existing) {
             _part = existing;
+
             if (existing == null) {
                 _fields = new List<ContentPartFieldDefinition>();
                 _settings = new SettingsDictionary();

@@ -10,11 +10,15 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         private readonly IList<ContentTypePartDefinition> _parts;
         private readonly SettingsDictionary _settings;
 
+        public ContentTypeDefinition Current { get; private set; }
+
         public ContentTypeDefinitionBuilder()
             : this(new ContentTypeDefinition(null, null)) {
         }
 
         public ContentTypeDefinitionBuilder(ContentTypeDefinition existing) {
+            Current = existing;
+
             if (existing == null) {
                 _parts = new List<ContentTypePartDefinition>();
                 _settings = new SettingsDictionary();
@@ -81,8 +85,11 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         class PartConfigurerImpl : ContentTypePartDefinitionBuilder {
             private readonly ContentPartDefinition _partDefinition;
 
+            public ContentTypePartDefinition Current { get; private set; }
+
             public PartConfigurerImpl(ContentTypePartDefinition part)
                 : base(part) {
+                Current = part;
                 _partDefinition = part.PartDefinition;
             }
 

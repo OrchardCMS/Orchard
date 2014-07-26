@@ -5,7 +5,11 @@ namespace Orchard.ContentManagement.MetaData.Builders {
     public abstract class ContentPartFieldDefinitionBuilder {
         protected readonly SettingsDictionary _settings;
 
+        public ContentPartFieldDefinition Current { get; private set; }
+
         protected ContentPartFieldDefinitionBuilder(ContentPartFieldDefinition field) {
+            Current = field;
+
             _settings = new SettingsDictionary(field.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
         }
 
