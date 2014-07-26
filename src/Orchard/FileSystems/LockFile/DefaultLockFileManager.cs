@@ -27,7 +27,7 @@ namespace Orchard.FileSystems.LockFile {
                     return false;
                 }
 
-                lockFile = new LockFile(_appDataFolder, path, _clock.UtcNow.ToString(CultureInfo.InvariantCulture), _rwLock);
+                lockFile = new LockFile(_appDataFolder, path, _clock.UtcNow.ToString("u"), _rwLock);
                 return true;
             }
             catch {
@@ -63,7 +63,7 @@ namespace Orchard.FileSystems.LockFile {
                     // if expired the file is not removed
                     // it should be automatically as there is a finalizer in LockFile
                     // or the next taker can do it, unless it also fails, again
-                    return creationUtc.Add(Expiration) > _clock.UtcNow;
+                    return creationUtc.ToUniversalTime().Add(Expiration) > _clock.UtcNow;
                 }
             }
 
