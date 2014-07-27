@@ -28,11 +28,21 @@ namespace Orchard.Framework.Localization.Services {
             var replacements = GetDateParseReplacements().Concat(GetTimeParseReplacements()).ToDictionary(item => item.Key, item => item.Value);
 
             foreach (var dateTimeFormat in _dateTimeFormatProvider.AllDateTimeFormats) {
-                var dateTimePattern = ConvertFormatStringToRegexPattern(dateTimeFormat, replacements);
-                Match m = Regex.Match(dateTimeString.Trim(), dateTimePattern, RegexOptions.IgnoreCase);
-                if (m.Success) {
-                    return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
+                var result = TryParseDateTime(dateTimeString, dateTimeFormat, replacements);
+                if (result.HasValue) {
+                    return result.Value;
                 }
+            }
+
+            throw new FormatException("The string was not recognized as a valid date and time.");
+        }
+
+        public virtual DateTimeParts ParseDateTime(string dateTimeString, string format) {
+            var replacements = GetDateParseReplacements().Concat(GetTimeParseReplacements()).ToDictionary(item => item.Key, item => item.Value);
+
+            var result = TryParseDateTime(dateTimeString, format, replacements);
+            if (result.HasValue) {
+                return result.Value;
             }
 
             throw new FormatException("The string was not recognized as a valid date and time.");
@@ -42,11 +52,21 @@ namespace Orchard.Framework.Localization.Services {
             var replacements = GetDateParseReplacements();
 
             foreach (var dateFormat in _dateTimeFormatProvider.AllDateFormats) {
-                var datePattern = ConvertFormatStringToRegexPattern(dateFormat, replacements);
-                Match m = Regex.Match(dateString.Trim(), datePattern, RegexOptions.IgnoreCase);
-                if (m.Success) {
-                    return ExtractDateParts(m);
+                var result = TryParseDate(dateString, dateFormat, replacements);
+                if (result.HasValue) {
+                    return result.Value;
                 }
+            }
+
+            throw new FormatException("The string was not recognized as a valid date.");
+        }
+
+        public virtual DateParts ParseDate(string dateString, string format) {
+            var replacements = GetDateParseReplacements();
+
+            var result = TryParseDate(dateString, format, replacements);
+            if (result.HasValue) {
+                return result.Value;
             }
 
             throw new FormatException("The string was not recognized as a valid date.");
@@ -56,11 +76,21 @@ namespace Orchard.Framework.Localization.Services {
             var replacements = GetTimeParseReplacements();
 
             foreach (var timeFormat in _dateTimeFormatProvider.AllTimeFormats) {
-                var timePattern = ConvertFormatStringToRegexPattern(timeFormat, replacements);
-                Match m = Regex.Match(timeString.Trim(), timePattern, RegexOptions.IgnoreCase);
-                if (m.Success) {
-                    return ExtractTimeParts(m);
+                var result = TryParseTime(timeString, timeFormat, replacements);
+                if (result.HasValue) {
+                    return result.Value;
                 }
+            }
+
+            throw new FormatException("The string was not recognized as a valid time.");
+        }
+
+        public virtual TimeParts ParseTime(string timeString, string format) {
+            var replacements = GetTimeParseReplacements();
+
+            var result = TryParseTime(timeString, format, replacements);
+            if (result.HasValue) {
+                return result.Value;
             }
 
             throw new FormatException("The string was not recognized as a valid time.");
@@ -96,12 +126,41 @@ namespace Orchard.Framework.Localization.Services {
             throw new NotImplementedException();
         }
 
+        protected virtual DateTimeParts? TryParseDateTime(string dateTimeString, string format, IDictionary<string, string> replacements) {
+            var dateTimePattern = ConvertFormatStringToRegexPattern(format, replacements);
+            Match m = Regex.Match(dateTimeString.Trim(), dateTimePattern, RegexOptions.IgnoreCase);
+            if (m.Success) {
+                return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
+            }
+            return null;
+        }
+
+        protected virtual DateParts? TryParseDate(string dateString, string format, IDictionary<string, string> replacements) {
+            var datePattern = ConvertFormatStringToRegexPattern(format, replacements);
+            Match m = Regex.Match(dateString.Trim(), datePattern, RegexOptions.IgnoreCase);
+            if (m.Success) {
+                return ExtractDateParts(m);
+            }
+            return null;
+        }
+
+        protected virtual TimeParts? TryParseTime(string timeString, string format, IDictionary<string, string> replacements) {
+            var timePattern = ConvertFormatStringToRegexPattern(format, replacements);
+            Match m = Regex.Match(timeString.Trim(), timePattern, RegexOptions.IgnoreCase);
+            if (m.Success) {
+                return ExtractTimeParts(m);
+            }
+            return null;
+        }
+
         protected virtual DateParts ExtractDateParts(Match m) {
             int year = 0,
                 month = 0,
                 day = 0;
 
-            year = CurrentCalendar.ToFourDigitYear(Int32.Parse(m.Groups["year"].Value));
+            if (m.Groups["year"].Success) {
+                year = CurrentCalendar.ToFourDigitYear(Int32.Parse(m.Groups["year"].Value));
+            }
 
             // For the month we can either use the month number, the abbreviated month name or the full month name.
             if (m.Groups["month"].Success) {
@@ -114,7 +173,9 @@ namespace Orchard.Framework.Localization.Services {
                 month = _dateTimeFormatProvider.MonthNames.Select(x => x.ToLowerInvariant()).ToList().IndexOf(m.Groups["monthName"].Value.ToLowerInvariant()) + 1;
             }
 
-            day = Int32.Parse(m.Groups["day"].Value);
+            if (m.Groups["day"].Success) {
+                day = Int32.Parse(m.Groups["day"].Value);
+            }
 
             return new DateParts(year, month, day);
         }

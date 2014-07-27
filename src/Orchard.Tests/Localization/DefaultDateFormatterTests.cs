@@ -41,7 +41,7 @@ namespace Orchard.Framework.Tests.Localization {
                                 var cultureGregorian = (CultureInfo)culture.Clone();
                                 cultureGregorian.DateTimeFormat.Calendar = cultureGregorian.OptionalCalendars.OfType<GregorianCalendar>().First();
                                 var dateTimeString = dateTime.ToString(dateTimeFormat, cultureGregorian);
-                                var result = target.ParseDateTime(dateTimeString);
+                                var result = target.ParseDateTime(dateTimeString, dateTimeFormat);
                                 var reference = DateTime.ParseExact(dateTimeString, dateTimeFormat, culture);
                                 var expected = new DateTimeParts(reference.Year, reference.Month, reference.Day, reference.Hour, reference.Minute, reference.Second, reference.Millisecond);
                                 Assert.AreEqual(expected, result);
@@ -74,7 +74,7 @@ namespace Orchard.Framework.Tests.Localization {
                 foreach (var dateFormat in formats.AllDateFormats) { // All date formats supported by the culture.
                     var caseKey = String.Format("{0}:{1}", culture.Name, dateFormat);
                     allCases.Add(caseKey);
-                    Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+                    //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
                     try {
                         for (var month = 1; month <= 12; month++) { // All months in the year.
                             DateTime date = new DateTime(1998, month, 1);
@@ -82,7 +82,7 @@ namespace Orchard.Framework.Tests.Localization {
                             var cultureGregorian = (CultureInfo)culture.Clone();
                             cultureGregorian.DateTimeFormat.Calendar = cultureGregorian.OptionalCalendars.OfType<GregorianCalendar>().First();
                             var dateString = date.ToString(dateFormat, cultureGregorian);
-                            var result = target.ParseDate(dateString);
+                            var result = target.ParseDate(dateString, dateFormat);
                             var expected = new DateParts(date.Year, date.Month, date.Day);
                             Assert.AreEqual(expected, result);
                         }
@@ -113,12 +113,12 @@ namespace Orchard.Framework.Tests.Localization {
                 foreach (var timeFormat in formats.AllTimeFormats) { // All time formats supported by the culture.
                     var caseKey = String.Format("{0}:{1}", culture.Name, timeFormat);
                     allCases.Add(caseKey);
-                    Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+                    //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
                     try {
                         for (var hour = 0; hour <= 23; hour++) { // All hours in the day.
                             DateTime time = new DateTime(1998, 1, 1, hour, 30, 30);
                             var timeString = time.ToString(timeFormat, culture);
-                            var result = target.ParseTime(timeString);
+                            var result = target.ParseTime(timeString, timeFormat);
                             var reference = DateTime.ParseExact(timeString, timeFormat, culture);
                             var expected = new TimeParts(reference.Hour, reference.Minute, reference.Second, reference.Millisecond);
                             Assert.AreEqual(expected, result);

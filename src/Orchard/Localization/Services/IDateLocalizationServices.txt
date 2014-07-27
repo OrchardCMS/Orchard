@@ -41,6 +41,9 @@ struct DateLocalizationOptions {
 }
 
 TODO:
+	* Add ability to analyze format string to determine which parts we might reasonably expect back from parsing
+		- 4-digit year or only 2-digit so we must infer century?
+		- Which components are present?
 	* Rewrite DefaultDateLocalizationServices
 	* Write unit tests for DefaultDateLocalizationServices
 	* Add warning message when saving unsupported combination in settings
