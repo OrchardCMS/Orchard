@@ -47,3 +47,5 @@ TODO:
 	* Fix TODOs in DefaultDateFormatter
 	* Rewrite DefaultDateLocalizationServices
 	* Write unit tests for DefaultDateLocalizationServices
+	* Add warning message when saving unsupported combination in settings
+	* Add support for the different Gregorian calendar types
