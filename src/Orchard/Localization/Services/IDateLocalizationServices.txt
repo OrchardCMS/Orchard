@@ -41,6 +41,7 @@ struct DateLocalizationOptions {
 }
 
 TODO:
+	* Literal parts in format strings should be transformed to corresponding literal in Regex, not just into a wildcard, otherwise the resulting wildcard in some cases will match subsequent non-literal parts of the date/time string.
 	* Add ability to analyze format string to determine which parts we might reasonably expect back from parsing
 		- 4-digit year or only 2-digit so we must infer century?
 		- Which components are present?
