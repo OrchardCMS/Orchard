@@ -16,50 +16,54 @@ namespace Orchard.Localization.Services {
         // TODO: This implementation should probably also depend on the current calendar, because DateTimeFormatInfo returns different strings depending on the calendar.
 
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ICalendarManager _calendarManager;
 
-        public CultureDateTimeFormatProvider(IWorkContextAccessor workContextAccessor) {
+        public CultureDateTimeFormatProvider(
+            IWorkContextAccessor workContextAccessor,
+            ICalendarManager calendarManager) {
             _workContextAccessor = workContextAccessor;
+            _calendarManager = calendarManager;
         }
 
         public virtual IEnumerable<string> MonthNames {
             get {
-                return CurrentCulture.DateTimeFormat.MonthNames;
+                return DateTimeFormat.MonthNames;
             }
         }
 
         public virtual IEnumerable<string> MonthNamesShort {
             get {
-                return CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+                return DateTimeFormat.AbbreviatedMonthNames;
             }
         }
 
         public virtual IEnumerable<string> DayNames {
             get {
-                return CurrentCulture.DateTimeFormat.DayNames;
+                return DateTimeFormat.DayNames;
             }
         }
 
         public virtual IEnumerable<string> DayNamesShort {
             get {
-                return CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
+                return DateTimeFormat.AbbreviatedDayNames;
             }
         }
 
         public virtual IEnumerable<string> DayNamesMin {
             get {
-                return CurrentCulture.DateTimeFormat.ShortestDayNames;
+                return DateTimeFormat.ShortestDayNames;
             }
         }
 
         public virtual string ShortDateFormat {
             get {
-                return CurrentCulture.DateTimeFormat.ShortDatePattern;
+                return DateTimeFormat.ShortDatePattern;
             }
         }
 
         public virtual string ShortTimeFormat {
             get {
-                return CurrentCulture.DateTimeFormat.ShortTimePattern;
+                return DateTimeFormat.ShortTimePattern;
             }
         }
 
@@ -68,33 +72,33 @@ namespace Orchard.Localization.Services {
                 // From empirical testing I am fairly certain this invariably evaluates to
                 // the pattern actually used when printing using the 'g' (i.e. general date/time
                 // pattern with short time) standard format string. /DS
-                return CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('g').First();
+                return DateTimeFormat.GetAllDateTimePatterns('g').First();
             }
         }
 
         public virtual string LongDateFormat {
             get {
-                return CurrentCulture.DateTimeFormat.LongDatePattern;
+                return DateTimeFormat.LongDatePattern;
             }
         }
 
         public virtual string LongTimeFormat {
             get {
-                return CurrentCulture.DateTimeFormat.LongTimePattern;
+                return DateTimeFormat.LongTimePattern;
             }
         }
 
         public virtual string LongDateTimeFormat {
             get {
-                return CurrentCulture.DateTimeFormat.FullDateTimePattern;
+                return DateTimeFormat.FullDateTimePattern;
             }
         }
 
         public virtual IEnumerable<string> AllDateFormats {
             get {
                 var patterns = new List<string>();
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('d'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('D'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('d'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('D'));
                 // The standard format strings 'M' (month/day pattern) and 'Y' (year/month
                 // pattern) are excluded because they can not be round-tripped with full
                 // date fidelity.
@@ -105,8 +109,8 @@ namespace Orchard.Localization.Services {
         public virtual IEnumerable<string> AllTimeFormats {
             get {
                 var patterns = new List<string>();
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('t'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('T'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('t'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('T'));
                 return patterns.Distinct();
             }
         }
@@ -114,22 +118,22 @@ namespace Orchard.Localization.Services {
         public virtual IEnumerable<string> AllDateTimeFormats {
             get {
                 var patterns = new List<string>();
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('f'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('F'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('g'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('G'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('o'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('r'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('s'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('u'));
-                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('U'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('f'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('F'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('g'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('G'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('o'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('r'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('s'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('u'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('U'));
                 return patterns.Distinct();
             }
         }
 
         public virtual int FirstDay {
             get {
-                return Convert.ToInt32(CurrentCulture.DateTimeFormat.FirstDayOfWeek);
+                return Convert.ToInt32(DateTimeFormat.FirstDayOfWeek);
             }
         }
 
@@ -143,13 +147,13 @@ namespace Orchard.Localization.Services {
 
         public virtual string DateSeparator {
             get {
-                return CurrentCulture.DateTimeFormat.DateSeparator;
+                return DateTimeFormat.DateSeparator;
             }
         }
 
         public virtual string TimeSeparator {
             get {
-                return CurrentCulture.DateTimeFormat.TimeSeparator;
+                return DateTimeFormat.TimeSeparator;
             }
         }
 
@@ -161,7 +165,31 @@ namespace Orchard.Localization.Services {
 
         public virtual IEnumerable<string> AmPmDesignators {
             get {
-                return new string[] { CurrentCulture.DateTimeFormat.AMDesignator, CurrentCulture.DateTimeFormat.PMDesignator };
+                return new string[] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
+            }
+        }
+
+        protected virtual DateTimeFormatInfo DateTimeFormat {
+            get {
+                var culture = CurrentCulture;
+                var calendar = CurrentCalendar;
+
+                // The configured Calendar affects the format strings provided by the DateTimeFormatInfo
+                // class. Therefore, if the site is configured to use a calendar that is supported as an
+                // optional calendar of the configured culture, use a customized DateTimeFormatInfo instance
+                // configured with that calendar to get the correct formats.
+                var usingCultureCalendar = culture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(calendar);
+                if (!usingCultureCalendar) {
+                    foreach (var optionalCalendar in culture.OptionalCalendars) {
+                        if (optionalCalendar.GetType().IsInstanceOfType(calendar)) {
+                            var calendarSpecificDateTimeFormat = (DateTimeFormatInfo)culture.DateTimeFormat.Clone();
+                            calendarSpecificDateTimeFormat.Calendar = optionalCalendar;
+                            return calendarSpecificDateTimeFormat;
+                        }
+                    }
+                }
+
+                return culture.DateTimeFormat;
             }
         }
 
@@ -169,6 +197,15 @@ namespace Orchard.Localization.Services {
             get {
                 var workContext = _workContextAccessor.GetContext();
                 return CultureInfo.GetCultureInfo(workContext.CurrentCulture);
+            }
+        }
+
+        protected virtual Calendar CurrentCalendar {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                if (!String.IsNullOrEmpty(workContext.CurrentCalendar))
+                    return _calendarManager.GetCalendarByName(workContext.CurrentCalendar);
+                return CurrentCulture.Calendar;
             }
         }
     }

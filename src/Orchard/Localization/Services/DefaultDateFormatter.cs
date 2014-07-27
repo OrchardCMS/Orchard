@@ -25,39 +25,45 @@ namespace Orchard.Framework.Localization.Services {
         }
 
         public virtual DateTimeParts ParseDateTime(string dateTimeString) {
-            var replacements = GetDateParseReplacements().Union(GetTimeParseReplacements()).ToDictionary(item => item.Key, item => item.Value);
-            var dateTimePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.ShortDateTimeFormat, replacements);
+            var replacements = GetDateParseReplacements().Concat(GetTimeParseReplacements()).ToDictionary(item => item.Key, item => item.Value);
 
-            Match m = Regex.Match(dateTimeString, dateTimePattern, RegexOptions.IgnoreCase);
-            if (!m.Success) {
-                throw new FormatException("The string was not recognized as a valid date and time.");
+            foreach (var dateTimeFormat in _dateTimeFormatProvider.AllDateTimeFormats) {
+                var dateTimePattern = ConvertFormatStringToRegexPattern(dateTimeFormat, replacements);
+                Match m = Regex.Match(dateTimeString.Trim(), dateTimePattern, RegexOptions.IgnoreCase);
+                if (m.Success) {
+                    return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
+                }
             }
 
-            return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
+            throw new FormatException("The string was not recognized as a valid date and time.");
         }
 
         public virtual DateParts ParseDate(string dateString) {
             var replacements = GetDateParseReplacements();
-            var datePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.ShortDateFormat, replacements);
 
-            Match m = Regex.Match(dateString, datePattern, RegexOptions.IgnoreCase);
-            if (!m.Success) {
-                throw new FormatException("The string was not recognized as a valid date.");
+            foreach (var dateFormat in _dateTimeFormatProvider.AllDateFormats) {
+                var datePattern = ConvertFormatStringToRegexPattern(dateFormat, replacements);
+                Match m = Regex.Match(dateString.Trim(), datePattern, RegexOptions.IgnoreCase);
+                if (m.Success) {
+                    return ExtractDateParts(m);
+                }
             }
 
-            return ExtractDateParts(m);
+            throw new FormatException("The string was not recognized as a valid date.");
         }
 
         public virtual TimeParts ParseTime(string timeString) {
             var replacements = GetTimeParseReplacements();
-            var timePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.LongTimeFormat, replacements);
 
-            Match m = Regex.Match(timeString, timePattern, RegexOptions.IgnoreCase);
-            if (!m.Success) {
-                throw new FormatException("The string was not recognized as a valid time.");
+            foreach (var timeFormat in _dateTimeFormatProvider.AllTimeFormats) {
+                var timePattern = ConvertFormatStringToRegexPattern(timeFormat, replacements);
+                Match m = Regex.Match(timeString.Trim(), timePattern, RegexOptions.IgnoreCase);
+                if (m.Success) {
+                    return ExtractTimeParts(m);
+                }
             }
 
-            return ExtractTimeParts(m);
+            throw new FormatException("The string was not recognized as a valid time.");
         }
 
         public virtual string FormatDateTime(DateTimeParts parts) {
@@ -96,10 +102,19 @@ namespace Orchard.Framework.Localization.Services {
                 day = 0;
 
             year = CurrentCalendar.ToFourDigitYear(Int32.Parse(m.Groups["year"].Value));
-            month = Int32.Parse(m.Groups["month"].Value);
-            day = Int32.Parse(m.Groups["day"].Value);
 
-            // TODO: Also extract month names, not just numbers.
+            // For the month we can either use the month number, the abbreviated month name or the full month name.
+            if (m.Groups["month"].Success) {
+                month = Int32.Parse(m.Groups["month"].Value);
+            }
+            else if (m.Groups["monthNameShort"].Success) {
+                month = _dateTimeFormatProvider.MonthNamesShort.Select(x => x.ToLowerInvariant()).ToList().IndexOf(m.Groups["monthNameShort"].Value.ToLowerInvariant()) + 1;
+            }
+            else if (m.Groups["monthName"].Success) {
+                month = _dateTimeFormatProvider.MonthNames.Select(x => x.ToLowerInvariant()).ToList().IndexOf(m.Groups["monthName"].Value.ToLowerInvariant()) + 1;
+            }
+
+            day = Int32.Parse(m.Groups["day"].Value);
 
             return new DateParts(year, month, day);
         }
@@ -110,28 +125,41 @@ namespace Orchard.Framework.Localization.Services {
                 second = 0,
                 millisecond = 0;
 
-            hour = Int32.Parse(m.Groups["hour"].Value);
-            minute = Int32.Parse(m.Groups["minute"].Value);
+            // For the hour we can either use 24-hour notation or 12-hour notation in combination with AM/PM designator.
+            if (m.Groups["hour24"].Success) {
+                hour = Int32.Parse(m.Groups["hour24"].Value);
+            }
+            else if (m.Groups["hour12"].Success) {
+                if (!m.Groups["amPm"].Success) {
+                    throw new FormatException("The string was not recognized as a valid time. The hour is in 12-hour notation but no AM/PM designator was found.");
+                }
+                var isPm = m.Groups["amPm"].Value.Equals(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1], StringComparison.InvariantCultureIgnoreCase);
+                hour = ConvertHour12ToHour24(Int32.Parse(m.Groups["hour12"].Value), isPm);
+            }
+
+            if (m.Groups["minute"].Success) {
+                minute = Int32.Parse(m.Groups["minute"].Value);
+            }
+
             if (m.Groups["second"].Success) {
                 second = Int32.Parse(m.Groups["second"].Value);
             }
+            
             if (m.Groups["millisecond"].Success) {
                 second = Int32.Parse(m.Groups["millisecond"].Value);
             }
-
-            // TODO: We must also handle 12-hour time with AM/PM designator.
 
             return new TimeParts(hour, minute, second, millisecond);
         }
 
         protected virtual Dictionary<string, string> GetDateParseReplacements() {
             return new Dictionary<string, string>() {       
-                {"dddd", String.Format("(?<day>{0})", String.Join("|", _dateTimeFormatProvider.DayNames))},
-                {"ddd", String.Format("(?<day>{0})", String.Join("|", _dateTimeFormatProvider.DayNamesShort))},
+                {"dddd", String.Format("(?<dayName>{0})", String.Join("|", _dateTimeFormatProvider.DayNames))},
+                {"ddd", String.Format("(?<dayNameShort>{0})", String.Join("|", _dateTimeFormatProvider.DayNamesShort))},
                 {"dd", "(?<day>[0-9]{2})"},
                 {"d", "(?<day>[0-9]{1,2})"},
-                {"MMMM", String.Format("(?<month>{0})", String.Join("|", _dateTimeFormatProvider.MonthNames.Where(x => !String.IsNullOrEmpty(x))))},
-                {"MMM", String.Format("(?<month>{0})", String.Join("|", _dateTimeFormatProvider.MonthNamesShort.Where(x => !String.IsNullOrEmpty(x))))},
+                {"MMMM", String.Format("(?<monthName>{0})", String.Join("|", _dateTimeFormatProvider.MonthNames.Where(x => !String.IsNullOrEmpty(x))))},
+                {"MMM", String.Format("(?<monthNameShort>{0})", String.Join("|", _dateTimeFormatProvider.MonthNamesShort.Where(x => !String.IsNullOrEmpty(x))))},
                 {"MM", "(?<month>[0-9]{2})"},
                 {"M", "(?<month>[0-9]{1,2})"},
                 {"yyyyy", "(?<year>[0-9]{5})"},
@@ -144,10 +172,10 @@ namespace Orchard.Framework.Localization.Services {
 
         protected virtual Dictionary<string, string> GetTimeParseReplacements() {
             return new Dictionary<string, string>() {       
-                {"HH", "(?<hour>[0-9]{2})"},
-                {"H", "(?<hour>[0-9]{1,2})"},
-                {"hh", "(?<hour>[0-9]{2})"},
-                {"h", "(?<hour>[0-9]{1,2})"},
+                {"HH", "(?<hour24>[0-9]{2})"},
+                {"H", "(?<hour24>[0-9]{1,2})"},
+                {"hh", "(?<hour12>[0-9]{2})"},
+                {"h", "(?<hour12>[0-9]{1,2})"},
                 {"mm", "(?<minute>[0-9]{2})"},
                 {"m", "(?<minute>[0-9]{1,2})"},
                 {"ss", "(?<second>[0-9]{2})"},      
@@ -158,10 +186,10 @@ namespace Orchard.Framework.Localization.Services {
                 {"ffff", "(?<millisecond>[0-9]{4})"},
                 {"fffff", "(?<millisecond>[0-9]{5})"},
                 {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
+                {"tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {"t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {" tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {" t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
             };
         }
 
@@ -206,12 +234,20 @@ namespace Orchard.Framework.Localization.Services {
         //    };
         //}
 
-        protected virtual string ConvertFormatStringToRegExPattern(string format, IDictionary<string, string> replacements) {
+        protected virtual string ConvertFormatStringToRegexPattern(string format, IDictionary<string, string> replacements) {
             string result = null;
             result = Regex.Replace(format, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
             result = Regex.Replace(result, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
             result = result.ReplaceAll(replacements);
+            result = String.Format(@"^{0}$", result); // Make sure string is anchored to beginning and end.
             return result;
+        }
+
+        protected virtual int ConvertHour12ToHour24(int hour12, bool isPm) {
+            if (isPm) {
+                return hour12 == 12 ? 12 : hour12 + 12;
+            }
+            return hour12 == 12 ? 0 : hour12;
         }
 
         protected virtual CultureInfo CurrentCulture {

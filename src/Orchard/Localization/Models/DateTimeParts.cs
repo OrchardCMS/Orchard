@@ -23,10 +23,15 @@ namespace Orchard.Framework.Localization.Models {
                 return _date;
             }
         }
+
         public TimeParts Time {
             get {
                 return _time;
             }
+        }
+
+        public override string ToString() {
+            return String.Format("{0} {1}", _date, _time);
         }
     }
 }

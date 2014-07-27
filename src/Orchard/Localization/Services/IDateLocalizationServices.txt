@@ -41,11 +41,8 @@ struct DateLocalizationOptions {
 }
 
 TODO:
-	* Consider current calendar in CultureDateTimeFormatProvider
-	* Handle multiple allowed formats when parsing in DefaultDateFormatter
-	* Handle month names as well as numbers in DefaultDateFormatter
-	* Fix TODOs in DefaultDateFormatter
 	* Rewrite DefaultDateLocalizationServices
 	* Write unit tests for DefaultDateLocalizationServices
 	* Add warning message when saving unsupported combination in settings
 	* Add support for the different Gregorian calendar types
+	* User ICultureManager and ICultureRepository to get the current CultureInfo in other classes

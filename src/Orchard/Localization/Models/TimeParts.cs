@@ -40,5 +40,9 @@ namespace Orchard.Framework.Localization.Models {
                 return _millisecond;
             }
         }
+
+        public override string ToString() {
+            return String.Format("{0}:{1}:{2}.{3}", _hour, _minute, _second, _millisecond);
+        }
     }
 }

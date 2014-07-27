@@ -30,5 +30,9 @@ namespace Orchard.Framework.Localization.Models {
                 return _day;
             }
         }
+
+        public override string ToString() {
+            return String.Format("{0}-{1}-{2}", _year, _month, _day);
+        }
     }
 }
