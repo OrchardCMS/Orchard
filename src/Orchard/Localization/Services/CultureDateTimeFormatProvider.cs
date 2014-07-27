@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Orchard.Localization.Services {
 
@@ -62,7 +63,10 @@ namespace Orchard.Localization.Services {
 
         public string ShortDateTimeFormat {
             get {
-                return String.Format("{0} {1}", ShortDateFormat, ShortTimeFormat);
+                // From empirical testing I am fairly certain this invariably evaluates to
+                // the pattern actually used when printing using the 'g' (i.e. general date/time
+                // pattern with short time) standard format string. /DS
+                return CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('g').First();
             }
         }
 
@@ -80,7 +84,44 @@ namespace Orchard.Localization.Services {
 
         public string LongDateTimeFormat {
             get {
-                return String.Format("{0} {1}", LongDateFormat, LongTimeFormat);
+                return CurrentCulture.DateTimeFormat.FullDateTimePattern;
+            }
+        }
+
+        public IEnumerable<string> AllDateFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('d'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('D'));
+                // The standard format strings 'M' (month/day pattern) and 'Y' (year/month
+                // pattern) are excluded because they can not be round-tripped with full
+                // date fidelity.
+                return patterns.Distinct();
+            }
+        }
+
+        public IEnumerable<string> AllTimeFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('t'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('T'));
+                return patterns.Distinct();
+            }
+        }
+
+        public IEnumerable<string> AllDateTimeFormats {
+            get {
+                var patterns = new List<string>();
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('f'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('F'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('g'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('G'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('o'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('r'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('s'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('u'));
+                patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('U'));
+                return patterns.Distinct();
             }
         }
 
@@ -95,6 +136,12 @@ namespace Orchard.Localization.Services {
                 if (ShortTimeFormat.Contains("H")) // Capital H is the format specifier for the hour using a 24-hour clock.
                     return true;
                 return false;
+            }
+        }
+
+        public string DateSeparator {
+            get {
+                return CurrentCulture.DateTimeFormat.DateSeparator;
             }
         }
 

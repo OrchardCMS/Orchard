@@ -64,8 +64,7 @@ namespace Orchard.Localization.Services {
             if (!parts.HasValue) {
                 return null;
             }
-            var calendar = CurrentCalendar;
-            return new DateTime(parts.Value.Date.Year, parts.Value.Date.Month, parts.Value.Date.Day, parts.Value.Time.Hour, parts.Value.Time.Minute, parts.Value.Time.Second, parts.Value.Time.Millisecond, calendar);
+            return new DateTime(parts.Value.Date.Year, parts.Value.Date.Month, parts.Value.Date.Day, parts.Value.Time.Hour, parts.Value.Time.Minute, parts.Value.Time.Second, parts.Value.Time.Millisecond, CurrentCalendar);
         }
 
 

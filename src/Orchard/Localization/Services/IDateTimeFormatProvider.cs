@@ -72,7 +72,6 @@ namespace Orchard.Localization.Services {
             get;
         }
 
-
         /// <summary>
         /// Gets a custom DateTime format string used to format dates for long time display.
         /// </summary>
@@ -84,6 +83,27 @@ namespace Orchard.Localization.Services {
         /// Gets a custom DateTime format string used to format dates for full date and time display.
         /// </summary>
         string LongDateTimeFormat {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for date display.
+        /// </summary>
+        IEnumerable<string> AllDateFormats {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for time display.
+        /// </summary>
+        IEnumerable<string> AllTimeFormats {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the full list of custom DateTime format strings supported to format dates for date and time display.
+        /// </summary>
+        IEnumerable<string> AllDateTimeFormats {
             get;
         }
 
@@ -102,7 +122,14 @@ namespace Orchard.Localization.Services {
         }
 
         /// <summary>
-        /// Gets the string that separates the components of time, that is, the hour, minutes, and seconds.
+        /// Gets the string that separates the components of date, that is, the year, month and day.
+        /// </summary>
+        string DateSeparator {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the string that separates the components of time, that is, the hour, minute, and second.
         /// </summary>
         string TimeSeparator {
             get;

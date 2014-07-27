@@ -64,7 +64,7 @@ namespace Orchard.Localization.Services {
 
         public string ShortDateTimeFormat {
             get {
-                return String.Format("{0} {1}", ShortDateFormat, ShortTimeFormat);
+                return T("M/d/yyyy h:mm tt").Text;
             }
         }
 
@@ -82,7 +82,25 @@ namespace Orchard.Localization.Services {
 
         public string LongDateTimeFormat {
             get {
-                return String.Format("{0} {1}", LongDateFormat, LongTimeFormat);
+                return T("dddd, MMMM d, yyyy h:mm:ss tt").Text;
+            }
+        }
+
+        public IEnumerable<string> AllDateFormats {
+            get {
+                return new[] { ShortDateFormat, LongDateFormat };
+            }
+        }
+
+        public IEnumerable<string> AllTimeFormats {
+            get {
+                return new[] { ShortTimeFormat, LongTimeFormat };
+            }
+        }
+
+        public IEnumerable<string> AllDateTimeFormats {
+            get {
+                return new[] { ShortDateTimeFormat, LongDateTimeFormat };
             }
         }
 
@@ -109,6 +127,12 @@ namespace Orchard.Localization.Services {
                 }
 
                 return use24HourTime;
+            }
+        }
+
+        public string DateSeparator {
+            get {
+                return "/"; // Since we can't do it with TimeSeparator why do it with this one...
             }
         }
 
