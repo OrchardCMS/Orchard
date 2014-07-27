@@ -9,15 +9,15 @@ namespace Orchard.Localization.Services {
     public class DefaultDateLocalizationServices : IDateLocalizationServices {
 
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IDateTimeFormatProvider _dateTimeLocalization;
+        private readonly IDateTimeFormatProvider _dateTimeFormatProvider;
         private readonly ICalendarManager _calendarManager;
 
         public DefaultDateLocalizationServices(
             IWorkContextAccessor workContextAccessor,
-            IDateTimeFormatProvider dateTimeLocalization,
+            IDateTimeFormatProvider dateTimeFormatProvider,
             ICalendarManager calendarManager) {
             _workContextAccessor = workContextAccessor;
-            _dateTimeLocalization = dateTimeLocalization;
+            _dateTimeFormatProvider = dateTimeFormatProvider;
             _calendarManager = calendarManager;
         }
 
@@ -70,7 +70,7 @@ namespace Orchard.Localization.Services {
 
 
         public virtual string ConvertToLocalString(DateTime date, string nullText = null) {
-            return ConvertToLocalString(ToNullable(date), _dateTimeLocalization.LongDateTimeFormat, nullText);
+            return ConvertToLocalString(ToNullable(date), _dateTimeFormatProvider.LongDateTimeFormat, nullText);
         }
 
         public virtual string ConvertToLocalString(DateTime date, string format, string nullText = null) {
@@ -106,7 +106,7 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string ConvertToLocalDateString(DateTime? date, string nullText = null) {
-            return ConvertToLocalString(date, _dateTimeLocalization.ShortDateFormat, nullText);
+            return ConvertToLocalString(date, _dateTimeFormatProvider.ShortDateFormat, nullText);
         }
 
         public virtual string ConvertToLocalTimeString(DateTime date, string nullText = null) {
@@ -114,7 +114,7 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string ConvertToLocalTimeString(DateTime? date, string nullText = null) {
-            return ConvertToLocalString(date, _dateTimeLocalization.ShortTimeFormat, nullText);
+            return ConvertToLocalString(date, _dateTimeFormatProvider.ShortTimeFormat, nullText);
         }
 
         public virtual DateTime? ConvertFromLocalString(string dateString) {

@@ -6,11 +6,14 @@ using Orchard.Framework.Localization.Models;
 
 namespace Orchard.Framework.Localization.Services {
     public interface IDateFormatter : IDependency {
-        DateTimeParts ParseDateTime(string dateTimeString, CultureInfo culture);
-        DateParts ParseDate(string dateString, CultureInfo culture);
-        TimeParts ParseTime(string timeString, CultureInfo culture);
-        string FormatDateTime(DateTimeParts parts, CultureInfo culture);
-        string FormatDate(DateParts parts, CultureInfo culture);
-        string FormatTime(TimeParts parts, CultureInfo culture);
+        DateTimeParts ParseDateTime(string dateTimeString);
+        DateParts ParseDate(string dateString);
+        TimeParts ParseTime(string timeString);
+        string FormatDateTime(DateTimeParts parts);
+        string FormatDateTime(DateTimeParts parts, string format);
+        string FormatDate(DateParts parts);
+        string FormatDate(DateParts parts, string format);
+        string FormatTime(TimeParts parts);
+        string FormatTime(TimeParts parts, string format);
     }
 }

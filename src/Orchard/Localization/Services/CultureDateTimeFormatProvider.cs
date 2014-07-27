@@ -13,55 +13,57 @@ namespace Orchard.Localization.Services {
     /// </summary>
     public class CultureDateTimeFormatProvider : IDateTimeFormatProvider {
 
-        private readonly IOrchardServices _orchardServices;
+        // TODO: This implementation should probably also depend on the current calendar, because DateTimeFormatInfo returns different strings depending on the calendar.
 
-        public CultureDateTimeFormatProvider(IOrchardServices orchardServices) {
-            _orchardServices = orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public CultureDateTimeFormatProvider(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
         }
 
-        public IEnumerable<string> MonthNames {
+        public virtual IEnumerable<string> MonthNames {
             get {
                 return CurrentCulture.DateTimeFormat.MonthNames;
             }
         }
 
-        public IEnumerable<string> MonthNamesShort {
+        public virtual IEnumerable<string> MonthNamesShort {
             get {
                 return CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
             }
         }
 
-        public IEnumerable<string> DayNames {
+        public virtual IEnumerable<string> DayNames {
             get {
                 return CurrentCulture.DateTimeFormat.DayNames;
             }
         }
 
-        public IEnumerable<string> DayNamesShort {
+        public virtual IEnumerable<string> DayNamesShort {
             get {
                 return CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
             }
         }
 
-        public IEnumerable<string> DayNamesMin {
+        public virtual IEnumerable<string> DayNamesMin {
             get {
                 return CurrentCulture.DateTimeFormat.ShortestDayNames;
             }
         }
 
-        public string ShortDateFormat {
+        public virtual string ShortDateFormat {
             get {
                 return CurrentCulture.DateTimeFormat.ShortDatePattern;
             }
         }
 
-        public string ShortTimeFormat {
+        public virtual string ShortTimeFormat {
             get {
                 return CurrentCulture.DateTimeFormat.ShortTimePattern;
             }
         }
 
-        public string ShortDateTimeFormat {
+        public virtual string ShortDateTimeFormat {
             get {
                 // From empirical testing I am fairly certain this invariably evaluates to
                 // the pattern actually used when printing using the 'g' (i.e. general date/time
@@ -70,25 +72,25 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public string LongDateFormat {
+        public virtual string LongDateFormat {
             get {
                 return CurrentCulture.DateTimeFormat.LongDatePattern;
             }
         }
 
-        public string LongTimeFormat {
+        public virtual string LongTimeFormat {
             get {
                 return CurrentCulture.DateTimeFormat.LongTimePattern;
             }
         }
 
-        public string LongDateTimeFormat {
+        public virtual string LongDateTimeFormat {
             get {
                 return CurrentCulture.DateTimeFormat.FullDateTimePattern;
             }
         }
 
-        public IEnumerable<string> AllDateFormats {
+        public virtual IEnumerable<string> AllDateFormats {
             get {
                 var patterns = new List<string>();
                 patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('d'));
@@ -100,7 +102,7 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public IEnumerable<string> AllTimeFormats {
+        public virtual IEnumerable<string> AllTimeFormats {
             get {
                 var patterns = new List<string>();
                 patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('t'));
@@ -109,7 +111,7 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public IEnumerable<string> AllDateTimeFormats {
+        public virtual IEnumerable<string> AllDateTimeFormats {
             get {
                 var patterns = new List<string>();
                 patterns.AddRange(CurrentCulture.DateTimeFormat.GetAllDateTimePatterns('f'));
@@ -125,13 +127,13 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public int FirstDay {
+        public virtual int FirstDay {
             get {
                 return Convert.ToInt32(CurrentCulture.DateTimeFormat.FirstDayOfWeek);
             }
         }
 
-        public bool Use24HourTime {
+        public virtual bool Use24HourTime {
             get {
                 if (ShortTimeFormat.Contains("H")) // Capital H is the format specifier for the hour using a 24-hour clock.
                     return true;
@@ -139,33 +141,34 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public string DateSeparator {
+        public virtual string DateSeparator {
             get {
                 return CurrentCulture.DateTimeFormat.DateSeparator;
             }
         }
 
-        public string TimeSeparator {
+        public virtual string TimeSeparator {
             get {
                 return CurrentCulture.DateTimeFormat.TimeSeparator;
             }
         }
 
-        public string AmPmPrefix {
+        public virtual string AmPmPrefix {
             get {
                 return " "; // No way to get this from CultureInfo unfortunately, so assume a single space.
             }
         }
 
-        public IEnumerable<string> AmPmDesignators {
+        public virtual IEnumerable<string> AmPmDesignators {
             get {
                 return new string[] { CurrentCulture.DateTimeFormat.AMDesignator, CurrentCulture.DateTimeFormat.PMDesignator };
             }
         }
 
-        private CultureInfo CurrentCulture {
+        protected virtual CultureInfo CurrentCulture {
             get {
-                return CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+                var workContext = _workContextAccessor.GetContext();
+                return CultureInfo.GetCultureInfo(workContext.CurrentCulture);
             }
         }
     }

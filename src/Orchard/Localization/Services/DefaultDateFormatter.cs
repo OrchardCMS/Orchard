@@ -4,101 +4,134 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Framework.Localization.Services {
+
     public class DefaultDateFormatter : IDateFormatter {
 
-        DateTimeParts IDateFormatter.ParseDateTime(string dateTimeString, CultureInfo culture) {
-            DateParts date = ((IDateFormatter)this).ParseDate(dateTimeString, culture);
-            TimeParts time = ((IDateFormatter)this).ParseTime(dateTimeString, culture);
-            return new DateTimeParts(date, time);
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IDateTimeFormatProvider _dateTimeFormatProvider;
+        private readonly ICalendarManager _calendarManager;
+
+        public DefaultDateFormatter(
+            IWorkContextAccessor workContextAccessor,
+            IDateTimeFormatProvider dateTimeFormatProvider,
+            ICalendarManager calendarManager) {
+            _workContextAccessor = workContextAccessor;
+            _dateTimeFormatProvider = dateTimeFormatProvider;
+            _calendarManager = calendarManager;
         }
 
-        DateParts IDateFormatter.ParseDate(string dateString, CultureInfo culture) {
-            var dateFormatString = Regex.Replace(culture.DateTimeFormat.ShortDatePattern, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
-            dateFormatString = Regex.Replace(dateFormatString, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
+        public virtual DateTimeParts ParseDateTime(string dateTimeString) {
+            var replacements = GetDateParseReplacements().Union(GetTimeParseReplacements()).ToDictionary(item => item.Key, item => item.Value);
+            var dateTimePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.ShortDateTimeFormat, replacements);
 
-            var dateFormat = ReplaceAll(dateFormatString, GetDateParseReplacements(culture));
+            Match m = Regex.Match(dateTimeString, dateTimePattern, RegexOptions.IgnoreCase);
+            if (!m.Success) {
+                throw new FormatException("The string was not recognized as a valid date and time.");
+            }
 
-            if (!Regex.IsMatch(dateString, dateFormat, RegexOptions.IgnoreCase))
-                throw new FormatException("Invalid date format.");
+            return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
+        }
 
-            Match dateMatch = Regex.Match(dateString, dateFormat, RegexOptions.IgnoreCase);
+        public virtual DateParts ParseDate(string dateString) {
+            var replacements = GetDateParseReplacements();
+            var datePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.ShortDateFormat, replacements);
 
+            Match m = Regex.Match(dateString, datePattern, RegexOptions.IgnoreCase);
+            if (!m.Success) {
+                throw new FormatException("The string was not recognized as a valid date.");
+            }
+
+            return ExtractDateParts(m);
+        }
+
+        public virtual TimeParts ParseTime(string timeString) {
+            var replacements = GetTimeParseReplacements();
+            var timePattern = ConvertFormatStringToRegExPattern(_dateTimeFormatProvider.LongTimeFormat, replacements);
+
+            Match m = Regex.Match(timeString, timePattern, RegexOptions.IgnoreCase);
+            if (!m.Success) {
+                throw new FormatException("The string was not recognized as a valid time.");
+            }
+
+            return ExtractTimeParts(m);
+        }
+
+        public virtual string FormatDateTime(DateTimeParts parts) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        public virtual string FormatDateTime(DateTimeParts parts, string format) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        public virtual string FormatDate(DateParts parts) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        public virtual string FormatDate(DateParts parts, string format) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        public virtual string FormatTime(TimeParts parts) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        public virtual string FormatTime(TimeParts parts, string format) {
+            // TODO: Mahsa should implement!
+            throw new NotImplementedException();
+        }
+
+        protected virtual DateParts ExtractDateParts(Match m) {
             int year = 0,
                 month = 0,
                 day = 0;
 
-            if (dateMatch.Groups["year"].Success) {
-                int.TryParse(dateMatch.Groups["year"].Value, out year);
-                year = culture.DateTimeFormat.Calendar.ToFourDigitYear(year);
-            }
-            if (dateMatch.Groups["month"].Success) {
-                int.TryParse(dateMatch.Groups["month"].Value, out month);
-            }
-            if (dateMatch.Groups["day"].Success) {
-                int.TryParse(dateMatch.Groups["day"].Value, out day);
-            }
+            year = CurrentCalendar.ToFourDigitYear(Int32.Parse(m.Groups["year"].Value));
+            month = Int32.Parse(m.Groups["month"].Value);
+            day = Int32.Parse(m.Groups["day"].Value);
+
+            // TODO: Also extract month names, not just numbers.
 
             return new DateParts(year, month, day);
         }
 
-        TimeParts IDateFormatter.ParseTime(string timeString, CultureInfo culture) {
-            var timeFormatString = Regex.Replace(culture.DateTimeFormat.LongTimePattern, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
-            timeFormatString = Regex.Replace(timeFormatString, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
-
-            var timeFormat = ReplaceAll(timeFormatString, GetTimeParseReplacements(culture));
-
-            if (!Regex.IsMatch(timeString, timeFormat, RegexOptions.IgnoreCase))
-                throw new FormatException("Invalid time format.");
-
-            Match timeMatch = Regex.Match(timeString, timeFormat, RegexOptions.IgnoreCase);
-
+        protected virtual TimeParts ExtractTimeParts(Match m) {
             int hour = 0,
                 minute = 0,
                 second = 0,
                 millisecond = 0;
 
-            if (timeMatch.Groups["hour"].Success) {
-                int.TryParse(timeMatch.Groups["hour"].Value, out hour);
+            hour = Int32.Parse(m.Groups["hour"].Value);
+            minute = Int32.Parse(m.Groups["minute"].Value);
+            if (m.Groups["second"].Success) {
+                second = Int32.Parse(m.Groups["second"].Value);
             }
-            if (timeMatch.Groups["minute"].Success) {
-                int.TryParse(timeMatch.Groups["minute"].Value, out minute);
+            if (m.Groups["millisecond"].Success) {
+                second = Int32.Parse(m.Groups["millisecond"].Value);
             }
-            if (timeMatch.Groups["second"].Success) {
-                int.TryParse(timeMatch.Groups["second"].Value, out second);
-            }
-            if (timeMatch.Groups["millisecond"].Success) {
-                int.TryParse(timeMatch.Groups["millisecond"].Value, out millisecond);
-            }
+
+            // TODO: We must also handle 12-hour time with AM/PM designator.
 
             return new TimeParts(hour, minute, second, millisecond);
         }
 
-        string IDateFormatter.FormatDateTime(DateTimeParts parts, CultureInfo culture) {
-            // TODO: Mahsa should implement!
-            throw new NotImplementedException();
-        }
-
-        string IDateFormatter.FormatDate(DateParts parts, CultureInfo culture) {
-            //var dateFormatString = 
-            //return string.Format(dateFormatString,parts.Year,parts.Month,parts.Day);
-            throw new NotImplementedException();
-        }
-
-        string IDateFormatter.FormatTime(TimeParts parts, CultureInfo culture) {
-            // TODO: Mahsa should implement!
-            throw new NotImplementedException();
-        }
-
-        private Dictionary<string, string> GetDateParseReplacements(CultureInfo culture) {
+        protected virtual Dictionary<string, string> GetDateParseReplacements() {
             return new Dictionary<string, string>() {       
-                {"dddd", String.Format("(?<day>{0})", String.Join("|", culture.DateTimeFormat.DayNames))},
-                {"ddd", String.Format("(?<day>{0})", String.Join("|", culture.DateTimeFormat.AbbreviatedDayNames))},
+                {"dddd", String.Format("(?<day>{0})", String.Join("|", _dateTimeFormatProvider.DayNames))},
+                {"ddd", String.Format("(?<day>{0})", String.Join("|", _dateTimeFormatProvider.DayNamesShort))},
                 {"dd", "(?<day>[0-9]{2})"},
                 {"d", "(?<day>[0-9]{1,2})"},
-                {"MMMM", String.Format("(?<month>{0})", String.Join("|", culture.DateTimeFormat.MonthNames.Where(x => !String.IsNullOrEmpty(x))))},
-                {"MMM", String.Format("(?<month>{0})", String.Join("|", culture.DateTimeFormat.AbbreviatedMonthNames.Where(x => !String.IsNullOrEmpty(x))))},
+                {"MMMM", String.Format("(?<month>{0})", String.Join("|", _dateTimeFormatProvider.MonthNames.Where(x => !String.IsNullOrEmpty(x))))},
+                {"MMM", String.Format("(?<month>{0})", String.Join("|", _dateTimeFormatProvider.MonthNamesShort.Where(x => !String.IsNullOrEmpty(x))))},
                 {"MM", "(?<month>[0-9]{2})"},
                 {"M", "(?<month>[0-9]{1,2})"},
                 {"yyyyy", "(?<year>[0-9]{5})"},
@@ -109,14 +142,12 @@ namespace Orchard.Framework.Localization.Services {
             };
         }
 
-        private Dictionary<string, string> GetTimeParseReplacements(CultureInfo culture) {
+        protected virtual Dictionary<string, string> GetTimeParseReplacements() {
             return new Dictionary<string, string>() {       
                 {"HH", "(?<hour>[0-9]{2})"},
                 {"H", "(?<hour>[0-9]{1,2})"},
                 {"hh", "(?<hour>[0-9]{2})"},
                 {"h", "(?<hour>[0-9]{1,2})"},
-                {"MM", "(?<minute>[0-9]{2})"},
-                {"M", "(?<minute>[0-9]{1,2})"},
                 {"mm", "(?<minute>[0-9]{2})"},
                 {"m", "(?<minute>[0-9]{1,2})"},
                 {"ss", "(?<second>[0-9]{2})"},      
@@ -127,59 +158,76 @@ namespace Orchard.Framework.Localization.Services {
                 {"ffff", "(?<millisecond>[0-9]{4})"},
                 {"fffff", "(?<millisecond>[0-9]{5})"},
                 {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)}
+                {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+                {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
             };
         }
 
-        private Dictionary<string, string> GetDateFormatReplacements(CultureInfo culture) {
-            return new Dictionary<string, string>() {       
-                {"dddd", "{5:dddd}"},
-                {"ddd", "{6:ddd}"},
-                {"dd", "{2:00}"},
-                {"d", "{2:##}"},
-                {"MMMM", "{3:MMMM}"},
-                {"MMM", "{4:MMM}"},
-                {"MM", "{1:00}"},
-                {"M", "{1:##}"},
-                {"yyyyy", "{1:00000}"},
-                {"yyyy", "{1:0000}"},
-                {"yyy", "{1:000}"},
-                {"yy", "{1:00}"}, 
-                {"y", "{1:0}"}
-            };
+        //protected virtual Dictionary<string, string> GetDateFormatReplacements() {
+        //    return new Dictionary<string, string>() {       
+        //        {"dddd", "{5:dddd}"},
+        //        {"ddd", "{6:ddd}"},
+        //        {"dd", "{2:00}"},
+        //        {"d", "{2:##}"},
+        //        {"MMMM", "{3:MMMM}"},
+        //        {"MMM", "{4:MMM}"},
+        //        {"MM", "{1:00}"},
+        //        {"M", "{1:##}"},
+        //        {"yyyyy", "{1:00000}"},
+        //        {"yyyy", "{1:0000}"},
+        //        {"yyy", "{1:000}"},
+        //        {"yy", "{1:00}"}, 
+        //        {"y", "{1:0}"}
+        //    };
+        //}
+
+        //protected virtual Dictionary<string, string> GetTimeFormatReplacements() {
+        //    return new Dictionary<string, string>() {       
+        //        {"HH", "(?<hour>[0-9]{2})"},
+        //        {"H", "(?<hour>[0-9]{1,2})"},
+        //        {"hh", "(?<hour>[0-9]{2})"},
+        //        {"h", "(?<hour>[0-9]{1,2})"},
+        //        {"mm", "(?<minute>[0-9]{2})"},
+        //        {"m", "(?<minute>[0-9]{1,2})"},
+        //        {"ss", "(?<second>[0-9]{2})"},      
+        //        {"s", "(?<second>[0-9]{1,2})"},
+        //        {"f", "(?<millisecond>[0-9]{1})"},
+        //        {"ff", "(?<millisecond>[0-9]{2})"},
+        //        {"fff", "(?<millisecond>[0-9]{3})"},
+        //        {"ffff", "(?<millisecond>[0-9]{4})"},
+        //        {"fffff", "(?<millisecond>[0-9]{5})"},
+        //        {"ffffff", "(?<millisecond>[0-9]{6})"},
+        //        {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+        //        {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+        //        {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
+        //        {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
+        //    };
+        //}
+
+        protected virtual string ConvertFormatStringToRegExPattern(string format, IDictionary<string, string> replacements) {
+            string result = null;
+            result = Regex.Replace(format, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
+            result = Regex.Replace(result, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
+            result = result.ReplaceAll(replacements);
+            return result;
         }
 
-        private Dictionary<string, string> GetTimeFormatReplacements(CultureInfo culture) {
-            return new Dictionary<string, string>() {       
-                {"HH", "(?<hour>[0-9]{2})"},
-                {"H", "(?<hour>[0-9]{1,2})"},
-                {"hh", "(?<hour>[0-9]{2})"},
-                {"h", "(?<hour>[0-9]{1,2})"},
-                {"MM", "(?<minute>[0-9]{2})"},
-                {"M", "(?<minute>[0-9]{1,2})"},
-                {"mm", "(?<minute>[0-9]{2})"},
-                {"m", "(?<minute>[0-9]{1,2})"},
-                {"ss", "(?<second>[0-9]{2})"},      
-                {"s", "(?<second>[0-9]{1,2})"},
-                {"f", "(?<millisecond>[0-9]{1})"},
-                {"ff", "(?<millisecond>[0-9]{2})"},
-                {"fff", "(?<millisecond>[0-9]{3})"},
-                {"ffff", "(?<millisecond>[0-9]{4})"},
-                {"fffff", "(?<millisecond>[0-9]{5})"},
-                {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)},
-                {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", culture.DateTimeFormat.AMDesignator, culture.DateTimeFormat.PMDesignator)}
-            };
+        protected virtual CultureInfo CurrentCulture {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                return CultureInfo.GetCultureInfo(workContext.CurrentCulture);
+            }
         }
 
-        private string ReplaceAll(string original, IDictionary<string, string> replacements) {
-            var pattern = String.Format("{0}", String.Join("|", replacements.Keys.ToArray()));
-            return Regex.Replace(original, pattern, (match) => replacements[match.Value]);
+        protected virtual Calendar CurrentCalendar {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                if (!String.IsNullOrEmpty(workContext.CurrentCalendar))
+                    return _calendarManager.GetCalendarByName(workContext.CurrentCalendar);
+                return CurrentCulture.Calendar;
+            }
         }
     }
 }
