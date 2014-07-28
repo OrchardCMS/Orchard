@@ -221,9 +221,9 @@ namespace Orchard.Framework.Localization.Services {
             if (m.Groups["second"].Success) {
                 second = Int32.Parse(m.Groups["second"].Value);
             }
-            
+
             if (m.Groups["millisecond"].Success) {
-                second = Int32.Parse(m.Groups["millisecond"].Value);
+                millisecond = Int32.Parse(m.Groups["millisecond"].Value);
             }
 
             return new TimeParts(hour, minute, second, millisecond);
@@ -257,16 +257,18 @@ namespace Orchard.Framework.Localization.Services {
                 {"m", "(?<minute>[0-9]{1,2})"},
                 {"ss", "(?<second>[0-9]{2})"},      
                 {"s", "(?<second>[0-9]{1,2})"},
-                {"f", "(?<millisecond>[0-9]{1})"},
-                {"ff", "(?<millisecond>[0-9]{2})"},
-                {"fff", "(?<millisecond>[0-9]{3})"},
-                {"ffff", "(?<millisecond>[0-9]{4})"},
-                {"fffff", "(?<millisecond>[0-9]{5})"},
+                {"fffffff", "(?<millisecond>[0-9]{7})"},
                 {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
-                {"t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
-                {" tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
-                {" t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))}
+                {"fffff", "(?<millisecond>[0-9]{5})"},
+                {"ffff", "(?<millisecond>[0-9]{4})"},
+                {"fff", "(?<millisecond>[0-9]{3})"},
+                {"ff", "(?<millisecond>[0-9]{2})"},
+                {"f", "(?<millisecond>[0-9]{1})"},
+                {"tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {"t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {" tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {" t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {"K", @"(?<timezone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"},
             };
         }
 
@@ -316,13 +318,13 @@ namespace Orchard.Framework.Localization.Services {
 
             // Transform the / and : characters into culture-specific date and time separators.
             result = Regex.Replace(result, @"\/|:", m => m.Value == "/" ? _dateTimeFormatProvider.DateSeparator : _dateTimeFormatProvider.TimeSeparator);
-            
+
             // Escape all characters that are intrinsic Regex syntax.
             result = EscapeForRegex(result);
-            
+
             // Transform all literals to corresponding wildcard matches.
             result = Regex.Replace(result, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
-            
+
             // Transform all DateTime format specifiers into corresponding Regex captures.
             result = result.ReplaceAll(replacements);
 
