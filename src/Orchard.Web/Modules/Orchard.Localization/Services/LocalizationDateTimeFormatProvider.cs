@@ -26,9 +26,21 @@ namespace Orchard.Localization.Services {
             }
         }
 
+        public virtual IEnumerable<string> MonthNamesGenitive {
+            get {
+                return MonthNames;
+            }
+        }
+
         public IEnumerable<string> MonthNamesShort {
             get {
                 return T("Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            }
+        }
+
+        public virtual IEnumerable<string> MonthNamesShortGenitive {
+            get {
+                return MonthNamesShort;
             }
         }
 

@@ -167,10 +167,26 @@ namespace Orchard.Framework.Localization.Services {
                 month = Int32.Parse(m.Groups["month"].Value);
             }
             else if (m.Groups["monthNameShort"].Success) {
-                month = _dateTimeFormatProvider.MonthNamesShort.Select(x => x.ToLowerInvariant()).ToList().IndexOf(m.Groups["monthNameShort"].Value.ToLowerInvariant()) + 1;
+                var shortName = m.Groups["monthNameShort"].Value.ToLowerInvariant();
+                var allShortNamesGenitive = _dateTimeFormatProvider.MonthNamesShortGenitive.Select(x => x.ToLowerInvariant()).ToList();
+                var allShortNames = _dateTimeFormatProvider.MonthNamesShort.Select(x => x.ToLowerInvariant()).ToList();
+                if (allShortNamesGenitive.Contains(shortName)) {
+                    month = allShortNamesGenitive.IndexOf(shortName) + 1;
+                }
+                else if (allShortNames.Contains(shortName)) {
+                    month = allShortNames.IndexOf(shortName) + 1;
+                }
             }
             else if (m.Groups["monthName"].Success) {
-                month = _dateTimeFormatProvider.MonthNames.Select(x => x.ToLowerInvariant()).ToList().IndexOf(m.Groups["monthName"].Value.ToLowerInvariant()) + 1;
+                var name = m.Groups["monthName"].Value.ToLowerInvariant();
+                var allNamesGenitive = _dateTimeFormatProvider.MonthNamesGenitive.Select(x => x.ToLowerInvariant()).ToList();
+                var allNames = _dateTimeFormatProvider.MonthNames.Select(x => x.ToLowerInvariant()).ToList();
+                if (allNamesGenitive.Contains(name)) {
+                    month = allNamesGenitive.IndexOf(name) + 1;
+                }
+                else if (allNames.Contains(name)) {
+                    month = allNames.IndexOf(name) + 1;
+                }
             }
 
             if (m.Groups["day"].Success) {
@@ -215,12 +231,12 @@ namespace Orchard.Framework.Localization.Services {
 
         protected virtual Dictionary<string, string> GetDateParseReplacements() {
             return new Dictionary<string, string>() {       
-                {"dddd", String.Format("(?<dayName>{0})", String.Join("|", _dateTimeFormatProvider.DayNames))},
-                {"ddd", String.Format("(?<dayNameShort>{0})", String.Join("|", _dateTimeFormatProvider.DayNamesShort))},
+                {"dddd", String.Format("(?<dayName>{0})", String.Join("|", _dateTimeFormatProvider.DayNames.Select(x => EscapeForRegex(x))))},
+                {"ddd", String.Format("(?<dayNameShort>{0})", String.Join("|", _dateTimeFormatProvider.DayNamesShort.Select(x => EscapeForRegex(x))))},
                 {"dd", "(?<day>[0-9]{2})"},
                 {"d", "(?<day>[0-9]{1,2})"},
-                {"MMMM", String.Format("(?<monthName>{0})", String.Join("|", _dateTimeFormatProvider.MonthNames.Where(x => !String.IsNullOrEmpty(x))))},
-                {"MMM", String.Format("(?<monthNameShort>{0})", String.Join("|", _dateTimeFormatProvider.MonthNamesShort.Where(x => !String.IsNullOrEmpty(x))))},
+                {"MMMM", String.Format("(?<monthName>{0})", String.Join("|", _dateTimeFormatProvider.MonthNames.Union(_dateTimeFormatProvider.MonthNamesGenitive).Where(x => !String.IsNullOrEmpty(x)).Distinct().Select(x => EscapeForRegex(x))))},
+                {"MMM", String.Format("(?<monthNameShort>{0})", String.Join("|", _dateTimeFormatProvider.MonthNamesShort.Union(_dateTimeFormatProvider.MonthNamesShortGenitive).Where(x => !String.IsNullOrEmpty(x)).Distinct().Select(x => EscapeForRegex(x))))},
                 {"MM", "(?<month>[0-9]{2})"},
                 {"M", "(?<month>[0-9]{1,2})"},
                 {"yyyyy", "(?<year>[0-9]{5})"},
@@ -247,10 +263,10 @@ namespace Orchard.Framework.Localization.Services {
                 {"ffff", "(?<millisecond>[0-9]{4})"},
                 {"fffff", "(?<millisecond>[0-9]{5})"},
                 {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {"t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {" tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-                {" t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
+                {"tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {"t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {" tt", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))},
+                {" t", String.Format("\\s*(?<amPm>{0}|{1})\\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators.ToArray()[1]))}
             };
         }
 
@@ -296,11 +312,23 @@ namespace Orchard.Framework.Localization.Services {
         //}
 
         protected virtual string ConvertFormatStringToRegexPattern(string format, IDictionary<string, string> replacements) {
-            string result = null;
-            result = Regex.Replace(format, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
+            string result = format;
+
+            // Transform the / and : characters into culture-specific date and time separators.
+            result = Regex.Replace(result, @"\/|:", m => m.Value == "/" ? _dateTimeFormatProvider.DateSeparator : _dateTimeFormatProvider.TimeSeparator);
+            
+            // Escape all characters that are intrinsic Regex syntax.
+            result = EscapeForRegex(result);
+            
+            // Transform all literals to corresponding wildcard matches.
             result = Regex.Replace(result, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
+            
+            // Transform all DateTime format specifiers into corresponding Regex captures.
             result = result.ReplaceAll(replacements);
-            result = String.Format(@"^{0}$", result); // Make sure string is anchored to beginning and end.
+
+            // Make sure string is anchored to beginning and end.
+            result = String.Format(@"^{0}$", result);
+
             return result;
         }
 
@@ -309,6 +337,10 @@ namespace Orchard.Framework.Localization.Services {
                 return hour12 == 12 ? 12 : hour12 + 12;
             }
             return hour12 == 12 ? 0 : hour12;
+        }
+
+        protected virtual string EscapeForRegex(string input) {
+            return Regex.Replace(input, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
         }
 
         protected virtual CultureInfo CurrentCulture {

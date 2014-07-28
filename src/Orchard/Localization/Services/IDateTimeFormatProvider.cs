@@ -17,9 +17,23 @@ namespace Orchard.Localization.Services {
         }
 
         /// <summary>
+        /// Gets a list of genitive month names (used in contexts when a day is involved).
+        /// </summary>
+        IEnumerable<string> MonthNamesGenitive {
+            get;
+        }
+
+        /// <summary>
         /// Gets a list of abbreviated month names.
         /// </summary>
         IEnumerable<string> MonthNamesShort {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a list of abbreviated genivite month names (used in contexts when a day is involved).
+        /// </summary>
+        IEnumerable<string> MonthNamesShortGenitive {
             get;
         }
 

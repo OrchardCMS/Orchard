@@ -13,8 +13,6 @@ namespace Orchard.Localization.Services {
     /// </summary>
     public class CultureDateTimeFormatProvider : IDateTimeFormatProvider {
 
-        // TODO: This implementation should probably also depend on the current calendar, because DateTimeFormatInfo returns different strings depending on the calendar.
-
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICalendarManager _calendarManager;
 
@@ -31,9 +29,21 @@ namespace Orchard.Localization.Services {
             }
         }
 
+        public virtual IEnumerable<string> MonthNamesGenitive {
+            get {
+                return DateTimeFormat.MonthGenitiveNames;
+            }
+        }
+
         public virtual IEnumerable<string> MonthNamesShort {
             get {
                 return DateTimeFormat.AbbreviatedMonthNames;
+            }
+        }
+
+        public virtual IEnumerable<string> MonthNamesShortGenitive {
+            get {
+                return DateTimeFormat.AbbreviatedMonthGenitiveNames;
             }
         }
 
@@ -69,7 +79,7 @@ namespace Orchard.Localization.Services {
 
         public virtual string ShortDateTimeFormat {
             get {
-                // From empirical testing I am fairly certain this invariably evaluates to
+                // From empirical testing I am fairly certain First() invariably evaluates to
                 // the pattern actually used when printing using the 'g' (i.e. general date/time
                 // pattern with short time) standard format string. /DS
                 return DateTimeFormat.GetAllDateTimePatterns('g').First();
