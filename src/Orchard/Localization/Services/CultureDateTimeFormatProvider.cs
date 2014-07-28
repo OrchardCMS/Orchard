@@ -109,6 +109,8 @@ namespace Orchard.Localization.Services {
                 var patterns = new List<string>();
                 patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('d'));
                 patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('D'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('m'));
+                patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('y'));
                 // The standard format strings 'M' (month/day pattern) and 'Y' (year/month
                 // pattern) are excluded because they can not be round-tripped with full
                 // date fidelity.

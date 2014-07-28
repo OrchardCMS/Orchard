@@ -128,7 +128,7 @@ namespace Orchard.Localization.Services {
 
         protected virtual DateTimeParts? TryParseDateTime(string dateTimeString, string format, IDictionary<string, string> replacements) {
             var dateTimePattern = ConvertFormatStringToRegexPattern(format, replacements);
-            Match m = Regex.Match(dateTimeString.Trim(), dateTimePattern, RegexOptions.IgnoreCase);
+            Match m = Regex.Match(dateTimeString, dateTimePattern, RegexOptions.IgnoreCase);
             if (m.Success) {
                 return new DateTimeParts(ExtractDateParts(m), ExtractTimeParts(m));
             }
@@ -137,7 +137,7 @@ namespace Orchard.Localization.Services {
 
         protected virtual DateParts? TryParseDate(string dateString, string format, IDictionary<string, string> replacements) {
             var datePattern = ConvertFormatStringToRegexPattern(format, replacements);
-            Match m = Regex.Match(dateString.Trim(), datePattern, RegexOptions.IgnoreCase);
+            Match m = Regex.Match(dateString, datePattern, RegexOptions.IgnoreCase);
             if (m.Success) {
                 return ExtractDateParts(m);
             }
@@ -146,7 +146,7 @@ namespace Orchard.Localization.Services {
 
         protected virtual TimeParts? TryParseTime(string timeString, string format, IDictionary<string, string> replacements) {
             var timePattern = ConvertFormatStringToRegexPattern(format, replacements);
-            Match m = Regex.Match(timeString.Trim(), timePattern, RegexOptions.IgnoreCase);
+            Match m = Regex.Match(timeString, timePattern, RegexOptions.IgnoreCase);
             if (m.Success) {
                 return ExtractTimeParts(m);
             }
