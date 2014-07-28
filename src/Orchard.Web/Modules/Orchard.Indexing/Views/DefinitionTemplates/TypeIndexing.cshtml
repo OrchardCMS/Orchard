@@ -7,16 +7,16 @@
 }
 
 @if (indexProvider != null) {
-    <fieldset>
-        <legend>@T("Index this content type in:")</legend>
-        @{ var i = 0;}
-        <select size="0" name="@Html.FieldNameFor(m => m.List)">
-            @foreach (var index in indexProvider.List()) {
-                <option value="" selected="@(!Model.List.Contains(index + ":latest") && !Model.List.Contains(index))">@index - Not indexed</option>
-                <option value="@index" selected="@(Model.List.Contains(index))">@index - Index published version</option>
-                <option value="@(index):latest" selected="@(Model.List.Contains(index + ":latest"))">@index - Index any version</option>
-                i++;
-            }
-        </select>
-    </fieldset>
+    var i = 0;
+    foreach (var index in indexProvider.List()) {
+        <fieldset>
+            <legend>@T("{0} index", @index)</legend>
+            <select size="0" name="@Html.FieldNameFor(m => m.List)">
+                <option value="" selected="@(!Model.List.Contains(index + ":latest") && !Model.List.Contains(index))">@T("Not indexed")</option>
+                <option value="@index" selected="@(Model.List.Contains(index))">@T("Published version")</option>
+                <option value="@(index):latest" selected="@(Model.List.Contains(index + ":latest"))">@T("Any versions")</option>
+            </select>
+        </fieldset>
+        i++;
+    }
 }
