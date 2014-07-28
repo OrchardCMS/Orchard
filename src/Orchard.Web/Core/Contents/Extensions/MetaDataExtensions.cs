@@ -7,6 +7,10 @@ namespace Orchard.Core.Contents.Extensions {
             return builder.WithSetting("ContentTypeSettings.Creatable", creatable.ToString());
         }
 
+        public static ContentTypeDefinitionBuilder Listable(this ContentTypeDefinitionBuilder builder, bool listable = true) {
+            return builder.WithSetting("ContentTypeSettings.Listable", listable.ToString());
+        }
+
         public static ContentTypeDefinitionBuilder Draftable(this ContentTypeDefinitionBuilder builder, bool draftable = true) {
             return builder.WithSetting("ContentTypeSettings.Draftable", draftable.ToString());
         }
