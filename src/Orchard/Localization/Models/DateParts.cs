@@ -31,6 +31,14 @@ namespace Orchard.Localization.Models {
             }
         }
 
+        public DateTime ToDateTime() {
+            return new DateTime(
+                _year > 0 ? _year : DateTime.MinValue.Year,
+                _month > 0 ? _month : DateTime.MinValue.Month,
+                _day > 0 ? _day : DateTime.MinValue.Day
+            );
+        }
+
         public override string ToString() {
             return String.Format("{0}-{1}-{2}", _year, _month, _day);
         }

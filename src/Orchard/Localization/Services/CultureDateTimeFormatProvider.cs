@@ -23,43 +23,43 @@ namespace Orchard.Localization.Services {
             _calendarManager = calendarManager;
         }
 
-        public virtual IEnumerable<string> MonthNames {
+        public virtual string[] MonthNames {
             get {
                 return DateTimeFormat.MonthNames;
             }
         }
 
-        public virtual IEnumerable<string> MonthNamesGenitive {
+        public virtual string[] MonthNamesGenitive {
             get {
                 return DateTimeFormat.MonthGenitiveNames;
             }
         }
 
-        public virtual IEnumerable<string> MonthNamesShort {
+        public virtual string[] MonthNamesShort {
             get {
                 return DateTimeFormat.AbbreviatedMonthNames;
             }
         }
 
-        public virtual IEnumerable<string> MonthNamesShortGenitive {
+        public virtual string[] MonthNamesShortGenitive {
             get {
                 return DateTimeFormat.AbbreviatedMonthGenitiveNames;
             }
         }
 
-        public virtual IEnumerable<string> DayNames {
+        public virtual string[] DayNames {
             get {
                 return DateTimeFormat.DayNames;
             }
         }
 
-        public virtual IEnumerable<string> DayNamesShort {
+        public virtual string[] DayNamesShort {
             get {
                 return DateTimeFormat.AbbreviatedDayNames;
             }
         }
 
-        public virtual IEnumerable<string> DayNamesMin {
+        public virtual string[] DayNamesMin {
             get {
                 return DateTimeFormat.ShortestDayNames;
             }
@@ -111,9 +111,6 @@ namespace Orchard.Localization.Services {
                 patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('D'));
                 patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('m'));
                 patterns.AddRange(DateTimeFormat.GetAllDateTimePatterns('y'));
-                // The standard format strings 'M' (month/day pattern) and 'Y' (year/month
-                // pattern) are excluded because they can not be round-tripped with full
-                // date fidelity.
                 return patterns.Distinct();
             }
         }
@@ -175,9 +172,9 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public virtual IEnumerable<string> AmPmDesignators {
+        public virtual string[] AmPmDesignators {
             get {
-                return new string[] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
+                return new [] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
             }
         }
 

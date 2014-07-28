@@ -20,43 +20,43 @@ namespace Orchard.Localization.Services {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<string> MonthNames {
+        public string[] MonthNames {
             get {
                 return T("January, February, March, April, May, June, July, August, September, October, November, December").Text.Split(new string[] {", "}, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public virtual IEnumerable<string> MonthNamesGenitive {
+        public virtual string[] MonthNamesGenitive {
             get {
                 return MonthNames;
             }
         }
 
-        public IEnumerable<string> MonthNamesShort {
+        public string[] MonthNamesShort {
             get {
                 return T("Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public virtual IEnumerable<string> MonthNamesShortGenitive {
+        public virtual string[] MonthNamesShortGenitive {
             get {
                 return MonthNamesShort;
             }
         }
 
-        public IEnumerable<string> DayNames {
+        public string[] DayNames {
             get {
                 return T("Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> DayNamesShort {
+        public string[] DayNamesShort {
             get {
                 return T("Sun, Mon, Tue, Wed, Thu, Fri, Sat").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> DayNamesMin {
+        public string[] DayNamesMin {
             get {
                 return T("Su, Mo, Tu, We, Th, Fr, Sa").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
@@ -160,7 +160,7 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public IEnumerable<string> AmPmDesignators {
+        public string[] AmPmDesignators {
             get {
                 var t = T("AM;PM").Text;
                 var parts = t.Split(';');

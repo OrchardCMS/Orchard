@@ -12,49 +12,49 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Gets a list of month names.
         /// </summary>
-        IEnumerable<string> MonthNames {
+        string[] MonthNames {
             get;
         }
 
         /// <summary>
         /// Gets a list of genitive month names (used in contexts when a day is involved).
         /// </summary>
-        IEnumerable<string> MonthNamesGenitive {
+        string[] MonthNamesGenitive {
             get;
         }
 
         /// <summary>
         /// Gets a list of abbreviated month names.
         /// </summary>
-        IEnumerable<string> MonthNamesShort {
+        string[] MonthNamesShort {
             get;
         }
 
         /// <summary>
         /// Gets a list of abbreviated genivite month names (used in contexts when a day is involved).
         /// </summary>
-        IEnumerable<string> MonthNamesShortGenitive {
+        string[] MonthNamesShortGenitive {
             get;
         }
 
         /// <summary>
         /// Gets a list of weekday names.
         /// </summary>
-        IEnumerable<string> DayNames {
+        string[] DayNames {
             get;
         }
 
         /// <summary>
         /// Gets a list of abbreviated weekday names.
         /// </summary>
-        IEnumerable<string> DayNamesShort {
+        string[] DayNamesShort {
             get;
         }
 
         /// <summary>
         /// Gets a list of maximally abbreviated weekday names.
         /// </summary>
-        IEnumerable<string> DayNamesMin {
+        string[] DayNamesMin {
             get;
         }
 
@@ -159,7 +159,7 @@ namespace Orchard.Localization.Services {
         /// <summary>
         /// Gets a list of strings used as display text for the AM and PM designators.
         /// </summary>
-        IEnumerable<string> AmPmDesignators {
+        string[] AmPmDesignators {
             get;
         }
     }

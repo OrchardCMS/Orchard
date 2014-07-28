@@ -228,6 +228,55 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         [Test]
+        [Description("Date formatting works correctly for all combinations of months, format strings and cultures.")]
+        public void FormatDateTest01() {
+            var allCases = new ConcurrentBag<string>();
+            var failedCases = new ConcurrentDictionary<string, Exception>();
+            var maxFailedCases = 0;
+
+            var options = new ParallelOptions();
+            if (Debugger.IsAttached) {
+                options.MaxDegreeOfParallelism = 1;
+            }
+
+            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
+                var container = InitializeContainer(culture.Name, "GregorianCalendar");
+                var formats = container.Resolve<IDateTimeFormatProvider>();
+                var target = container.Resolve<IDateFormatter>();
+
+                foreach (var dateFormat in formats.AllDateFormats) { // All date formats supported by the culture.
+                    for (var month = 1; month <= 12; month++) { // All months in the year.
+
+                        DateTime date = new DateTime(1998, month, 1);
+                        DateParts dateParts = new DateParts(1998, month, 1);
+
+                        // Print reference string using Gregorian calendar to avoid calendar conversion.
+                        var cultureGregorian = (CultureInfo)culture.Clone();
+                        cultureGregorian.DateTimeFormat.Calendar = cultureGregorian.OptionalCalendars.OfType<GregorianCalendar>().First();
+
+                        var caseKey = String.Format("{0}___{1}___{2}", culture.Name, dateFormat, dateParts);
+                        allCases.Add(caseKey);
+                        //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+
+                        try {
+                            var result = target.FormatDate(dateParts, dateFormat);
+                            var expected = date.ToString(dateFormat, cultureGregorian);
+                            Assert.AreEqual(expected, result);
+                        }
+                        catch (Exception ex) {
+                            failedCases.TryAdd(caseKey, ex);
+                        }
+                    }
+                }
+            });
+
+            if (failedCases.Count > maxFailedCases) {
+                throw new AggregateException(String.Format("Format tests failed for {0} of {1} cases. Expected {2} failed cases or less.", failedCases.Count, allCases.Count, maxFailedCases), failedCases.Values);
+            }
+        }
+
+        [Test]
         [Description("Time parsing throws a FormatException for unparsable time strings.")]
         [ExpectedException(typeof(FormatException))]
         public void ParseTimeTest02() {
