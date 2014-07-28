@@ -218,7 +218,7 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         private DateParts GetExpectedDateParts(DateTime date, string format) {
-            var formatWithoutLiterals = Regex.Replace(format, @"((?<!\\)'(.*?)((?<!\\)')|(?<!\\)""(.*?)((?<!\\)""))", "");
+            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
             return new DateParts(
                 formatWithoutLiterals.Contains('y') ? date.Year : 0,
                 formatWithoutLiterals.Contains('M') ? date.Month : 0,
@@ -227,7 +227,7 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         private TimeParts GetExpectedTimeParts(DateTime time, string format) {
-            var formatWithoutLiterals = Regex.Replace(format, @"((?<!\\)'(.*?)((?<!\\)')|(?<!\\)""(.*?)((?<!\\)""))", "");
+            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
             return new TimeParts(
                 formatWithoutLiterals.Contains('H') || format.Contains('h') ? time.Hour : 0,
                 formatWithoutLiterals.Contains('m') ? time.Minute : 0,

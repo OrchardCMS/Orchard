@@ -323,7 +323,8 @@ namespace Orchard.Framework.Localization.Services {
             result = EscapeForRegex(result);
 
             // Transform all literals to corresponding wildcard matches.
-            result = Regex.Replace(result, @"(?<!\\)'(.*?)((?<!\\)')", m => String.Format("(.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
+            //result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => EscapeForRegex(m.Value.Trim('\'', '"')));
+            result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => String.Format("(?:.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
 
             // Transform all DateTime format specifiers into corresponding Regex captures.
             result = result.ReplaceAll(replacements);
