@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Moq;
 using NUnit.Framework;
-using Orchard.Framework.Localization.Models;
-using Orchard.Framework.Localization.Services;
+using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
 namespace Orchard.Framework.Tests.Localization {
@@ -117,6 +116,15 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         [Test]
+        [Description("Date/time parsing throws a FormatException for unparsable date/time strings.")]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseDateTimeTest03() {
+            var container = InitializeContainer("en-US", null);
+            var target = container.Resolve<IDateFormatter>();
+            target.ParseDateTime("BlaBlaBla");
+        }
+
+        [Test]
         [Description("Date parsing works correctly for all combinations of months, format strings and cultures.")]
         public void ParseDateTest01() {
             var allCases = new ConcurrentBag<string>();
@@ -166,6 +174,15 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         [Test]
+        [Description("Date parsing throws a FormatException for unparsable date strings.")]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseDateTest02() {
+            var container = InitializeContainer("en-US", null);
+            var target = container.Resolve<IDateFormatter>();
+            target.ParseDate("BlaBlaBla");
+        }
+
+        [Test]
         [Description("Time parsing works correctly for all combinations of hours, format strings and cultures.")]
         public void ParseTimeTest01() {
             var allCases = new ConcurrentBag<string>();
@@ -208,6 +225,15 @@ namespace Orchard.Framework.Tests.Localization {
             if (failedCases.Count > maxFailedCases) {
                 throw new AggregateException(String.Format("Parse tests failed for {0} of {1} cases. Expected {2} failed cases or less.", failedCases.Count, allCases.Count, maxFailedCases), failedCases.Values);
             }
+        }
+
+        [Test]
+        [Description("Time parsing throws a FormatException for unparsable time strings.")]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseTimeTest02() {
+            var container = InitializeContainer("en-US", null);
+            var target = container.Resolve<IDateFormatter>();
+            target.ParseTime("BlaBlaBla");
         }
 
         private DateTimeParts GetExpectedDateTimeParts(DateTime dateTime, string format) {

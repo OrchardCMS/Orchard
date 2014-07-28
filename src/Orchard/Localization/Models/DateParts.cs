@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Framework.Localization.Models {
+namespace Orchard.Localization.Models {
     public struct DateParts {
 
         public DateParts(int year, int month, int day) {

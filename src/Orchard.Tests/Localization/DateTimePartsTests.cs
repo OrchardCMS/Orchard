@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Models;
 
 namespace Orchard.Framework.Tests.Localization {
 

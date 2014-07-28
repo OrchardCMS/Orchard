@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Framework.Localization.Services {
+namespace Orchard.Localization.Services {
 
     public class DefaultDateFormatter : IDateFormatter {
 

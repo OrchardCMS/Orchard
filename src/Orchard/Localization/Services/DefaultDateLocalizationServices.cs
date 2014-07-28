@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Orchard.ContentManagement;
-using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Models;
 using Orchard.Settings;
 
 namespace Orchard.Localization.Services {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Models;
 
-namespace Orchard.Framework.Localization.Services {
+namespace Orchard.Localization.Services {
     public interface IDateFormatter : IDependency {
         DateTimeParts ParseDateTime(string dateTimeString);
         DateTimeParts ParseDateTime(string dateTimeString, string format);

@@ -1,5 +1,5 @@
 ﻿using System;
-using Orchard.Framework.Localization.Models;
+using Orchard.Localization.Models;
 
 namespace Orchard.Localization.Services {
 
