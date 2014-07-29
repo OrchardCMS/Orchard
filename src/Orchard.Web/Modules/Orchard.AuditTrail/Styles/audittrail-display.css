@@ -33,3 +33,10 @@
     .audittrail-event-metadata-section strong {
         /*font-weight: bold;*/
     }
+
+.audittrail-list-section table .category-column,
+.audittrail-list-section table .event-column,
+.audittrail-list-section table .user-column,
+.audittrail-list-section table .timestamp-column {
+    white-space: nowrap;
+}

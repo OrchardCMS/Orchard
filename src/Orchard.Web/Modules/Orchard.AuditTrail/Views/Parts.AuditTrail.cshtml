@@ -1,6 +1,7 @@
 ﻿@using Orchard.AuditTrail.Models
 @using Orchard.AuditTrail.ViewModels
 @{
+    Style.Include("audittrail-display.css");
     Style.Include("audittrail-part.css");
     Script.Require("ShapesBase");
     Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
@@ -21,25 +22,25 @@
                 <table class="audittrail-list items">
                     <thead>
                         <tr>
-                            <th>@T("Category")</th>
-                            <th>@T("Event")</th>
-                            <th>@T("User")</th>
-                            <th>@T("Timestamp")</th>
-                            <th>@T("Summary")</th>
-                            <th>@T("Comment")</th>
-                            <th></th>
+                            <th class="category-column">@T("Category")</th>
+                            <th class="event-column">@T("Event")</th>
+                            <th class="user-column">@T("User")</th>
+                            <th class="timestamp-column">@T("Timestamp")</th>
+                            <th class="summary-column">@T("Summary")</th>
+                            <th class="comment-column">@T("Comment")</th>
+                            <th class="actions-column"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var record in records) {
+                        @foreach (var record in Model.Records) {
                             <tr>
-                                <td>@record.CategoryDescriptor.Name</td>
-                                <td>@record.EventDescriptor.Name</td>
-                                <td>@record.Record.UserName</td>
-                                <td>@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
-                                <td>@Display(record.SummaryShape)</td>
-                                <td>@record.Record.Comment</td>
-                                <td>@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
+                                <td class="category-column">@record.CategoryDescriptor.Name</td>
+                                <td class="event-column">@record.EventDescriptor.Name</td>
+                                <td class="user-column">@record.Record.UserName</td>
+                                <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
+                                <td class="summary-column">@Display(record.SummaryShape)</td>
+                                <td class="comment-column">@record.Record.Comment</td>
+                                <td class="actions-column">@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
                             </tr>
                         }
                     </tbody>
