@@ -32,12 +32,14 @@
             }
         };
 
-        if (promptOnNavigate) {
-            window.mediaLibraryDirty = false;
-            var showSaveMsg = function() {
-                element.find('.media-library-picker-message').show();
-                window.mediaLibraryDirty = true;
-            };
+        var showSaveMsg = function () {
+            element.find('.media-library-picker-message').show();
+            window.mediaLibraryDirty = true;
+        };
+
+        window.mediaLibraryDirty = false;
+
+        if (promptOnNavigate) {    
             if (!window.mediaLibraryNavigateAway) {
                 $(window).on("beforeunload", window.mediaLibraryNavigateAway = function() {
                     if (window.mediaLibraryDirty) {
