@@ -11,6 +11,7 @@
         var returnUrl = element.data("return-url");
         var addUrl = element.data("add-url");
         var promptOnNavigate = element.data("prompt-on-navigate");
+        var showSaveWarning = element.data("show-save-warning");
         var addButton = element.find(".button.add");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
@@ -33,6 +34,9 @@
         };
 
         var showSaveMsg = function () {
+            if (!showSaveWarning)
+                return;
+
             element.find('.media-library-picker-message').show();
             window.mediaLibraryDirty = true;
         };
