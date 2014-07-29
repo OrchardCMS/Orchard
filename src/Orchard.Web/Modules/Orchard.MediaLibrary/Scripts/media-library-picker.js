@@ -10,6 +10,7 @@
         var pipe = element.data("pipe");
         var returnUrl = element.data("return-url");
         var addUrl = element.data("add-url");
+        var promptOnNavigate = element.data("prompt-on-navigate");
         var addButton = element.find(".button.add");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
@@ -30,21 +31,23 @@
                 addButton.show();
             }
         };
-        
-        window.mediaLibraryDirty = false;
-        var showSaveMsg = function() {
-            element.find('.media-library-picker-message').show();
-            window.mediaLibraryDirty = true;
-        };
-        if (!window.mediaLibraryNavigateAway) {
-            $(window).on("beforeunload", window.mediaLibraryNavigateAway = function() {
-                if (window.mediaLibraryDirty) {
-                    return dirtyText;
-                }
-            });
-            element.closest("form").on("submit", function() {
-                window.mediaLibraryDirty = false;
-            });
+
+        if (promptOnNavigate) {
+            window.mediaLibraryDirty = false;
+            var showSaveMsg = function() {
+                element.find('.media-library-picker-message').show();
+                window.mediaLibraryDirty = true;
+            };
+            if (!window.mediaLibraryNavigateAway) {
+                $(window).on("beforeunload", window.mediaLibraryNavigateAway = function() {
+                    if (window.mediaLibraryDirty) {
+                        return dirtyText;
+                    }
+                });
+                element.closest("form").on("submit", function() {
+                    window.mediaLibraryDirty = false;
+                });
+            }
         }
 
         refreshIds();
