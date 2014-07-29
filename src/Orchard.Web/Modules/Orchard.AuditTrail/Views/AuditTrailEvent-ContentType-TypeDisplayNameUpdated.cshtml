@@ -6,5 +6,5 @@
     var newDisplayName = eventData.Get<string>("NewDisplayName");
 }
 <section class="audittrail-contenttype-eventsummary">
-    @T("The display name for the content type <strong>{0}</strong> was changed from <strong>{1}</strong> to <strong>{2}</strong>.", contentTypeName, oldDisplayName.OrIfEmpty(T("[Empty]")), newDisplayName.OrIfEmpty(T("[Empty]")))
+    @T("The display name for the content type {0} was changed from <strong>{1}</strong> to <strong>{2}</strong>.", Html.ContentTypeEditLink(contentTypeName), oldDisplayName.OrIfEmpty(T("[Empty]")), newDisplayName.OrIfEmpty(T("[Empty]")))
 </section>

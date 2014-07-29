@@ -13,7 +13,7 @@
 }
 <section class="audittrail-content-eventmetadata">
     @T("ID:") <strong>@contentItem.Id</strong><br />
-    @contentItem.ContentType: <strong>@Html.ItemDisplayText(contentItem)</strong><br />
+    @contentItem.ContentType: <strong>@Html.ItemEditLink(contentItem)</strong><br />
     @T("Version:") <strong>@contentItem.Version</strong>
     @if (!String.IsNullOrWhiteSpace(record.Comment)) {
         <br />

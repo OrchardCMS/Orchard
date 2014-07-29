@@ -12,7 +12,7 @@
     var diff = (DiffDictionary<string, string>)Model.Diff;
 }
 <section class="audittrail-contentpart-eventsummary">
-    @T("Settings for the field <strong>{0}</strong> attached to the <strong>{1}</strong> content type were updated:", contentFieldName, contentPartName)
+    @T("Settings for the field <strong>{0}</strong> attached to the {1} content part were updated:", contentFieldName, Html.ContentPartEditLink(contentPartName))
     <table class="items">
         <thead>
             <tr>

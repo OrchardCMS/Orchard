@@ -9,7 +9,7 @@
     var diff = (DiffDictionary<string, string>) Model.Diff;
 }
 <section class="audittrail-contenttype-eventsummary">
-    @T("Settings for the content type <strong>{0}</strong> were changed:", contentTypeName)
+    @T("Settings for the content type {0} were changed:", Html.ContentTypeEditLink(contentTypeName))
     <ul>
         @foreach (var setting in diff) {
             <li>

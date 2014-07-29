@@ -7,17 +7,11 @@
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var eventIsPublished = eventData.Get<bool>("Published");
     var contentType = contentItem.ContentType;
-    var title = Html.ItemDisplayText(contentItem);
-    var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
 }
 <section class="audittrail-content-eventsummary">
-    @T("{0} - {1} (version {2})", contentType, title, eventVersionNumber)
+    @T("{0} - {1} (version {2})", contentType, Html.ItemEditLink(contentItem), eventVersionNumber)
     @if (eventIsPublished) {
         @T(" - ")
         <a href="@Url.Action("Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber })">@T("View")</a>
-    }
-    else if (isLatest) {
-        @T(" - ")
-        <a href="@Url.Action("Edit", "Admin", new {area = "Contents", id = contentItemId})">@T("Edit")</a>
     }
 </section>

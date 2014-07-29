@@ -4,5 +4,5 @@
     var contentPartName = eventData.Get<string>("ContentPartName");
 }
 <section class="audittrail-contentpart-eventsummary">
-    @T("The content part <strong>{0}</strong> was created.", contentPartName)
+    @T("The content part {0} was created.", Html.ContentPartEditLink(contentPartName))
 </section>

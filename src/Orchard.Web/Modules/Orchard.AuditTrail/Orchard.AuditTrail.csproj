@@ -182,6 +182,7 @@
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
     <Compile Include="Helpers\SettingsDictionaryExtensions.cs" />
+    <Compile Include="Helpers\HtmlExtensions.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="ImportExport\AuditTrailExportStep.cs" />
