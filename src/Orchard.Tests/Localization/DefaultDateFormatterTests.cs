@@ -233,6 +233,15 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         [Test]
+        [Description("Time parsing throws a FormatException for unparsable time strings.")]
+        [ExpectedException(typeof(FormatException))]
+        public void ParseTimeTest02() {
+            var container = InitializeContainer("en-US", null);
+            var target = container.Resolve<IDateFormatter>();
+            target.ParseTime("BlaBlaBla");
+        }
+
+        [Test]
         [Description("Date formatting works correctly for all combinations of months, format strings and cultures.")]
         public void FormatDateTest01() {
             var allCases = new ConcurrentBag<string>();
@@ -296,12 +305,48 @@ namespace Orchard.Framework.Tests.Localization {
         }
 
         [Test]
-        [Description("Time parsing throws a FormatException for unparsable time strings.")]
-        [ExpectedException(typeof(FormatException))]
-        public void ParseTimeTest02() {
-            var container = InitializeContainer("en-US", null);
-            var target = container.Resolve<IDateFormatter>();
-            target.ParseTime("BlaBlaBla");
+        [Description("Time formatting works correctly for all combinations of hours, format strings and cultures.")]
+        public void FormatTimeTest01() {
+            var allCases = new ConcurrentBag<string>();
+            var failedCases = new ConcurrentDictionary<string, Exception>();
+            var maxFailedCases = 0;
+
+            var options = new ParallelOptions();
+            if (Debugger.IsAttached) {
+                options.MaxDegreeOfParallelism = 1;
+            }
+
+            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
+                var container = InitializeContainer(culture.Name, null);
+                var formats = container.Resolve<IDateTimeFormatProvider>();
+                var target = container.Resolve<IDateFormatter>();
+
+                foreach (var timeFormat in formats.AllTimeFormats) { // All time formats supported by the culture.
+                    for (var hour = 0; hour <= 23; hour++) { // All hours in the day.
+
+                        DateTime date = new DateTime(1998, 1, 1, hour, 30, 30);
+                        TimeParts timeParts = new TimeParts(hour, 30, 30, 0);
+
+                        var caseKey = String.Format("{0}___{1}___{2}", culture.Name, timeFormat, timeParts);
+                        allCases.Add(caseKey);
+                        //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+
+                        try {
+                            var result = target.FormatTime(timeParts, timeFormat);
+                            var expected = date.ToString(timeFormat, culture);
+                            Assert.AreEqual(expected, result);
+                        }
+                        catch (Exception ex) {
+                            failedCases.TryAdd(caseKey, ex);
+                        }
+                    }
+                }
+            });
+
+            if (failedCases.Count > maxFailedCases) {
+                throw new AggregateException(String.Format("Format tests failed for {0} of {1} cases. Expected {2} failed cases or less.", failedCases.Count, allCases.Count, maxFailedCases), failedCases.Values);
+            }
         }
 
         private DateTimeParts GetExpectedDateTimeParts(DateTime dateTime, string format) {

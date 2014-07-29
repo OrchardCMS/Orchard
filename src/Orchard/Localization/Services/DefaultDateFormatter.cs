@@ -108,8 +108,7 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string FormatDate(DateParts parts) {
-            // TODO: Mahsa should implement!
-            throw new NotImplementedException();
+            return FormatDate(parts, _dateTimeFormatProvider.ShortDateFormat);
         }
 
         public virtual string FormatDate(DateParts parts, string format) {
@@ -134,13 +133,21 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string FormatTime(TimeParts parts) {
-            // TODO: Mahsa should implement!
-            throw new NotImplementedException();
+            return FormatTime(parts, _dateTimeFormatProvider.LongTimeFormat);
         }
 
         public virtual string FormatTime(TimeParts parts, string format) {
-            // TODO: Mahsa should implement!
-            throw new NotImplementedException();
+            var replacements = GetTimeFormatReplacements();
+            var formatString = ConvertToFormatString(format, replacements);
+
+            var dateTime = parts.ToDateTime();
+
+            bool isPm;
+            var hour12 = ConvertToHour12(parts.Hour, out isPm);
+            var amPm = _dateTimeFormatProvider.AmPmDesignators[isPm ? 1 : 0];
+            var amPmShort = String.IsNullOrEmpty(amPm) ? "" : amPm[0].ToString();
+
+            return String.Format(formatString, parts.Hour, hour12, parts.Minute, parts.Second, parts.Millisecond, amPm, amPmShort);
         }
 
         protected virtual DateTimeParts? TryParseDateTime(string dateTimeString, string format, IDictionary<string, string> replacements) {
@@ -289,10 +296,8 @@ namespace Orchard.Localization.Services {
                 {"ff", "(?<millisecond>[0-9]{2})"},
                 {"f", "(?<millisecond>[0-9]{1})"},
                 {"tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[1]))},
-                {"t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[1]))},
-                {" tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[1]))},
-                {" t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[0]), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[1]))},
-                {"K", @"(?<timezone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"},
+                {"t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[0][0].ToString()), EscapeForRegex(_dateTimeFormatProvider.AmPmDesignators[1][0].ToString()))},
+                {"K", @"(?<timezone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"}
             };
         }
 
@@ -316,28 +321,34 @@ namespace Orchard.Localization.Services {
             };
         }
 
-        //protected virtual Dictionary<string, string> GetTimeFormatReplacements() {
-        //    return new Dictionary<string, string>() {       
-        //        {"HH", "(?<hour>[0-9]{2})"},
-        //        {"H", "(?<hour>[0-9]{1,2})"},
-        //        {"hh", "(?<hour>[0-9]{2})"},
-        //        {"h", "(?<hour>[0-9]{1,2})"},
-        //        {"mm", "(?<minute>[0-9]{2})"},
-        //        {"m", "(?<minute>[0-9]{1,2})"},
-        //        {"ss", "(?<second>[0-9]{2})"},      
-        //        {"s", "(?<second>[0-9]{1,2})"},
-        //        {"f", "(?<millisecond>[0-9]{1})"},
-        //        {"ff", "(?<millisecond>[0-9]{2})"},
-        //        {"fff", "(?<millisecond>[0-9]{3})"},
-        //        {"ffff", "(?<millisecond>[0-9]{4})"},
-        //        {"fffff", "(?<millisecond>[0-9]{5})"},
-        //        {"ffffff", "(?<millisecond>[0-9]{6})"},
-        //        {"tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-        //        {"t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-        //        {" tt", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])},
-        //        {" t", String.Format("\\s*(?<AMPM>{0}|{1})\\s*", _dateTimeFormatProvider.AmPmDesignators.ToArray()[0], _dateTimeFormatProvider.AmPmDesignators.ToArray()[1])}
-        //    };
-        //}
+        protected virtual Dictionary<string, string> GetTimeFormatReplacements() {
+            return new Dictionary<string, string>() {       
+                {"HH", "{0:00}"},
+                {"H", "{0:#0}"},
+                {"hh", "{1:00}"},
+                {"h", "{1:#0}"},
+                {"mm", "{2:00}"},
+                {"m", "{2:#0}"},
+                {"ss", "{3:00}"},      
+                {"s", "{3:#0}"},
+                {"fffffff", "{4:0000000}"},
+                {"ffffff", "{4:000000}"},
+                {"fffff", "{4:00000}"},
+                {"ffff", "{4:0000}"},
+                {"fff", "{4:000}"},
+                {"ff", "{4:00}"},
+                {"f", "{4:0}"},
+                {"FFFFFFF", "{4:#######}"},
+                {"FFFFFF", "{4:######}"},
+                {"FFFFF", "{4:#####}"},
+                {"FFFF", "{4:####}"},
+                {"FFF", "{4:###}"},
+                {"FF", "{4:##}"},
+                {"F", "{4:#}"},
+                {"tt", "{5}"},
+                {"t", "{6}"}
+            };
+        }
 
         protected virtual string ConvertToRegexPattern(string format, IDictionary<string, string> replacements) {
             string result = format;
@@ -394,6 +405,15 @@ namespace Orchard.Localization.Services {
                 return hour12 == 12 ? 12 : hour12 + 12;
             }
             return hour12 == 12 ? 0 : hour12;
+        }
+
+        protected virtual int ConvertToHour12(int hour24, out bool isPm) {
+            if (hour24 >= 12) {
+                isPm = true;
+                return hour24 == 12 ? 12 : hour24 - 12;
+            }
+            isPm = false;
+            return hour24 == 0 ? 12 : hour24;
         }
 
         protected virtual string EscapeForRegex(string input) {
