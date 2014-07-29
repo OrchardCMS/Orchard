@@ -241,6 +241,14 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
+                //if (culture.Name.StartsWith("ca")
+                //    || culture.Name.StartsWith("es")
+                //    || culture.Name.StartsWith("mn")
+                //    || culture.Name.StartsWith("oc")
+                //    || culture.Name.StartsWith("wo")
+                //    )
+                //    return;
+
                 var container = InitializeContainer(culture.Name, "GregorianCalendar");
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();

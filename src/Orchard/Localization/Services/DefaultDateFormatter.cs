@@ -113,7 +113,10 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string FormatDate(DateParts parts, string format) {
-            var replacements = GetDateFormatReplacements();
+            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
+            var useMonthNameGenitive = formatWithoutLiterals.Contains('d'); // Use genitive month names if format contains a day component.
+
+            var replacements = GetDateFormatReplacements(useMonthNameGenitive);
             var formatString = ConvertToFormatString(format, replacements);
             var calendar = CurrentCalendar;
 
@@ -121,12 +124,14 @@ namespace Orchard.Localization.Services {
 
             var yearString = parts.Year.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
             var twoDigitYear = Int32.Parse(yearString.Substring(yearString.Length - 2));
-            var monthName = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesGenitive[parts.Month - 1] : null;
-            var monthNameShort = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesShortGenitive[parts.Month - 1] : null;
+            var monthName = parts.Month > 0 ? _dateTimeFormatProvider.MonthNames[parts.Month - 1] : null;
+            var monthNameShort = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesShort[parts.Month - 1] : null;
+            var monthNameGenitive = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesGenitive[parts.Month - 1] : null;
+            var monthNameShortGenitive = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesShortGenitive[parts.Month - 1] : null;
             var dayName = parts.Day > 0 ? _dateTimeFormatProvider.DayNames[(int)calendar.GetDayOfWeek(dateTime)] : null;
             var dayNameShort = parts.Day > 0 ? _dateTimeFormatProvider.DayNamesShort[(int)calendar.GetDayOfWeek(parts.ToDateTime())] : null;
 
-            return String.Format(formatString, parts.Year, twoDigitYear, parts.Month, monthName, monthNameShort, parts.Day, dayName, dayNameShort);
+            return String.Format(formatString, parts.Year, twoDigitYear, parts.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Day, dayName, dayNameShort);
         }
 
         public virtual string FormatTime(TimeParts parts) {
@@ -285,14 +290,14 @@ namespace Orchard.Localization.Services {
             };
         }
 
-        protected virtual Dictionary<string, string> GetDateFormatReplacements() {
+        protected virtual Dictionary<string, string> GetDateFormatReplacements(bool useMonthNameGenitive) {
             return new Dictionary<string, string>() {       
-                {"dddd", "{6:dddd}"},
-                {"ddd", "{7:ddd}"},
-                {"dd", "{5:00}"},
-                {"d", "{5:##}"},
-                {"MMMM", "{3:MMMM}"},
-                {"MMM", "{4:MMM}"},
+                {"dddd", "{8:dddd}"},
+                {"ddd", "{9:ddd}"},
+                {"dd", "{7:00}"},
+                {"d", "{7:##}"},
+                {"MMMM", useMonthNameGenitive ? "{5:MMMM}" : "{3:MMMM}"},
+                {"MMM", useMonthNameGenitive ? "{6:MMM}" : "{4:MMM}"},
                 {"MM", "{2:00}"},
                 {"M", "{2:##}"},
                 {"yyyyy", "{0:00000}"},
@@ -350,21 +355,28 @@ namespace Orchard.Localization.Services {
         protected virtual string ConvertToFormatString(string format, IDictionary<string, string> replacements) {
             string result = format;
 
-            // Transform the / and : characters into culture-specific date and time separators.
-            result = Regex.Replace(result, @"\/|:", m => m.Value == "/" ? _dateTimeFormatProvider.DateSeparator : _dateTimeFormatProvider.TimeSeparator);
-
-            //// Transform all literals to corresponding text.
-            //var literals = new List<string>();
-            //result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => {
-            //    literals.Add(m.Value.Trim('\'', '"'));
-            //    return String.Format("{{{0}}}", literals.Count - 1);
-            //});
-
-            // Transform all literals to corresponding text.
-            result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => m.Value.Trim('\'', '"'));
-
-            // Transform all DateTime format specifiers into corresponding format string placeholders.
-            result = result.ReplaceAll(replacements);
+            // * Transform all literals to corresponding text.
+            // * Transform the / and : characters into culture-specific date and time separators.
+            // * Transform all DateTime format specifiers into corresponding format string placeholders.
+            // These three transformations must happen in one single pass, otherwise each will
+            // re-transform the results of the previous one.
+            var literalPattern = @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""";
+            var separatorPattern = @"\/|:";
+            var replacePattern = String.Format("{0}", String.Join("|", new[] { literalPattern, separatorPattern }.Concat(replacements.Keys)));
+            result = Regex.Replace(result, replacePattern, m => {
+                if (replacements.ContainsKey(m.Value)) { // Is it one of the format specifiers?
+                    return replacements[m.Value];
+                }
+                if (m.Value == "/") { // Is it the date separator specifier?
+                    return _dateTimeFormatProvider.DateSeparator;
+                }
+                if (m.Value == ":") { // Is it the time separator specifier?
+                    return _dateTimeFormatProvider.TimeSeparator;
+                }
+                // Then it must be a literal.
+                var literal = m.Value.Replace(@"\'", "'");
+                return literal.Substring(1, literal.Length - 2);
+            });
 
             return result;
         }
