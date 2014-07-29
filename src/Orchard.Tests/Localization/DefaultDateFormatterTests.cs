@@ -17,6 +17,11 @@ namespace Orchard.Framework.Tests.Localization {
     [TestFixture]
     public class DefaultDateFormatterTests {
 
+        [SetUp]
+        public void Init() {
+            Regex.CacheSize = 1024;
+        }
+
         [Test]
         [Description("Date/time parsing works correctly for all combinations of months, format strings and cultures.")]
         public void ParseDateTimeTest01() {

@@ -248,9 +248,9 @@ namespace Orchard.Localization.Services {
 
         protected virtual bool GetUseGenitiveMonthName(string format) {
             // Use genitive month name if the format (excluding literals) contains a numerical day component (d or dd).
-            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
+            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "", RegexOptions.Compiled);
             var numericalDayPattern = @"(\b|[^d])d{1,2}(\b|[^d])";
-            return Regex.IsMatch(formatWithoutLiterals, numericalDayPattern);
+            return Regex.IsMatch(formatWithoutLiterals, numericalDayPattern, RegexOptions.Compiled);
         }
 
         protected virtual Dictionary<string, string> GetDateParseReplacements() {
@@ -343,13 +343,13 @@ namespace Orchard.Localization.Services {
             string result = format;
 
             // Transform the / and : characters into culture-specific date and time separators.
-            result = Regex.Replace(result, @"\/|:", m => m.Value == "/" ? _dateTimeFormatProvider.DateSeparator : _dateTimeFormatProvider.TimeSeparator);
+            result = Regex.Replace(result, @"\/|:", m => m.Value == "/" ? _dateTimeFormatProvider.DateSeparator : _dateTimeFormatProvider.TimeSeparator, RegexOptions.Compiled);
 
             // Escape all characters that are intrinsic Regex syntax.
             result = EscapeForRegex(result);
 
             // Transform all literals to corresponding wildcard matches.
-            result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => String.Format("(?:.{{{0}}})", m.Value.Replace("\\", "").Length - 2));
+            result = Regex.Replace(result, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", m => String.Format("(?:.{{{0}}})", m.Value.Replace("\\", "").Length - 2), RegexOptions.Compiled);
 
             // Transform all DateTime format specifiers into corresponding Regex captures.
             result = result.ReplaceAll(replacements);
@@ -397,7 +397,7 @@ namespace Orchard.Localization.Services {
         }
 
         protected virtual string EscapeForRegex(string input) {
-            return Regex.Replace(input, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value));
+            return Regex.Replace(input, @"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\", m => String.Format(@"\{0}", m.Value), RegexOptions.Compiled);
         }
 
         protected virtual CultureInfo CurrentCulture {
