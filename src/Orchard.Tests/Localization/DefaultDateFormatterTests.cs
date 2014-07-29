@@ -241,14 +241,6 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                //if (culture.Name.StartsWith("ca")
-                //    || culture.Name.StartsWith("es")
-                //    || culture.Name.StartsWith("mn")
-                //    || culture.Name.StartsWith("oc")
-                //    || culture.Name.StartsWith("wo")
-                //    )
-                //    return;
-
                 var container = InitializeContainer(culture.Name, "GregorianCalendar");
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
@@ -270,6 +262,20 @@ namespace Orchard.Framework.Tests.Localization {
                         try {
                             var result = target.FormatDate(dateParts, dateFormat);
                             var expected = date.ToString(dateFormat, cultureGregorian);
+                            if (result != expected) {
+                                // The .NET date formatting logic contains a bug that causes it to recognize 'd' and 'dd'
+                                // as numerical day specifiers even when they are embedded in literals. Our implementation
+                                // does not contain this bug. If we encounter an unexpected result and the .NET reference
+                                // result contains the genitive month name, replace it with the non-genitive month name
+                                // before asserting.
+                                var numericalDayPattern = @"(\b|[^d])d{1,2}(\b|[^d])";
+                                var containsNumericalDay = Regex.IsMatch(dateFormat, numericalDayPattern);
+                                if (containsNumericalDay) {
+                                    var monthName = formats.MonthNames[month - 1];
+                                    var monthNameGenitive = formats.MonthNamesGenitive[month - 1];
+                                    expected = expected.Replace(monthNameGenitive, monthName);
+                                }
+                            }
                             Assert.AreEqual(expected, result);
                         }
                         catch (Exception ex) {

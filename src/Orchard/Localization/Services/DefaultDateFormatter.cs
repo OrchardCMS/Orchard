@@ -113,8 +113,7 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual string FormatDate(DateParts parts, string format) {
-            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
-            var useMonthNameGenitive = formatWithoutLiterals.Contains('d'); // Use genitive month names if format contains a day component.
+            var useMonthNameGenitive = GetUseGenitiveMonthName(format);
 
             var replacements = GetDateFormatReplacements(useMonthNameGenitive);
             var formatString = ConvertToFormatString(format, replacements);
@@ -247,6 +246,13 @@ namespace Orchard.Localization.Services {
             return new TimeParts(hour, minute, second, millisecond);
         }
 
+        protected virtual bool GetUseGenitiveMonthName(string format) {
+            // Use genitive month name if the format (excluding literals) contains a numerical day component (d or dd).
+            var formatWithoutLiterals = Regex.Replace(format, @"(?<!\\)'(.*?)(?<!\\)'|(?<!\\)""(.*?)(?<!\\)""", "");
+            var numericalDayPattern = @"(\b|[^d])d{1,2}(\b|[^d])";
+            return Regex.IsMatch(formatWithoutLiterals, numericalDayPattern);
+        }
+
         protected virtual Dictionary<string, string> GetDateParseReplacements() {
             return new Dictionary<string, string>() {       
                 {"dddd", String.Format("(?<dayName>{0})", String.Join("|", _dateTimeFormatProvider.DayNames.Select(x => EscapeForRegex(x))))},
@@ -297,7 +303,9 @@ namespace Orchard.Localization.Services {
                 {"dd", "{7:00}"},
                 {"d", "{7:##}"},
                 {"MMMM", useMonthNameGenitive ? "{5:MMMM}" : "{3:MMMM}"},
-                {"MMM", useMonthNameGenitive ? "{6:MMM}" : "{4:MMM}"},
+                // The .NET formatting logic never uses the abbreviated genitive month name; doing the same for compatibility.
+                //{"MMM", useMonthNameGenitive ? "{6:MMM}" : "{4:MMM}"},
+                {"MMM", "{4:MMM}"},
                 {"MM", "{2:00}"},
                 {"M", "{2:##}"},
                 {"yyyyy", "{0:00000}"},
