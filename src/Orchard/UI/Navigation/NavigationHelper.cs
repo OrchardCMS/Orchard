@@ -80,11 +80,24 @@ namespace Orchard.UI.Navigation {
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         public static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData) {
-            if (menuItems == null)
-                return null;
+            // doing route data comparison first and if that fails, fallback to string-based URL lookup
+            var path = SetSelectedPath(menuItems, currentRequest, currentRouteData, false) 
+                    ?? SetSelectedPath(menuItems, currentRequest, currentRouteData, true);
 
+            return path;
+        }
+
+        /// <summary>
+        /// Identifies the currently selected path, starting from the selected node.
+        /// </summary>
+        /// <param name="menuItems">All the menuitems in the navigation menu.</param>
+        /// <param name="currentRequest">The currently executed request if any</param>
+        /// <param name="currentRouteData">The current route data.</param>
+        /// <param name="compareUrls">Should compare raw string URLs instead of route data.</param>
+        /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
+        private static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, HttpRequestBase currentRequest, RouteValueDictionary currentRouteData, bool compareUrls) {
             foreach (MenuItem menuItem in menuItems) {
-                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData);
+                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRequest, currentRouteData, compareUrls);
                 if (selectedPath != null) {
                     menuItem.Selected = true;
                     selectedPath.Push(menuItem);
@@ -92,10 +105,11 @@ namespace Orchard.UI.Navigation {
                 }
 
                 // compare route values (if any) first
-                bool match = menuItem.RouteValues != null && RouteMatches(menuItem.RouteValues, currentRouteData);
+                // if URL string comparison is used it means all previous route matches failed, thus no need to do them twice
+                bool match = !compareUrls && menuItem.RouteValues != null && RouteMatches(menuItem.RouteValues, currentRouteData);
 
-                // if route match failed, try comparing URL strings
-                if (currentRequest != null && !match) {
+                // if route match failed, try comparing URL strings, if
+                if (currentRequest != null && !match && compareUrls) {
                     string appPath = currentRequest.ApplicationPath ?? "/";
                     string requestUrl = currentRequest.Path.StartsWith(appPath) ? currentRequest.Path.Substring(appPath.Length) : currentRequest.Path;
 
