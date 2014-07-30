@@ -240,10 +240,7 @@ namespace Orchard.Lists.Controllers {
                 .ContainerDisplayName(model.ContainerDisplayName)
                 .ContainerContentType(container.ContentType)
                 .ItemContentTypes(container.As<ContainerPart>().ItemContentTypes.ToList())
-                .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
-                    .Select(part => part.ContentItem)
-                    .Where(item => item != container)
-                    .OrderBy(item => item.As<CommonPart>().VersionPublishedUtc));
+                ;
 
             if (containerPart.Is<ContainablePart>()) {
                 viewModel.ListNavigation(_services.New.ListNavigation(ContainablePart: containerPart.As<ContainablePart>()));

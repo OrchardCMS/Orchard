@@ -32,7 +32,7 @@
         ContainerId: containerId,
         ItemContentTypes: itemContentTypes)
     @using (Html.BeginFormAntiForgeryPost()) {
-        @Display.Parts_Container_BulkActions(Options: Model.Options, OtherLists: Model.OtherLists, Container: container)
+        @Display.Parts_Container_BulkActions(Options: Model.Options, Container: container)
         @Display.ListViewButtons(Providers: Model.ListViewProviders, ActiveProvider: Model.ListViewProvider)
         @Display(Model.ListView)
     }

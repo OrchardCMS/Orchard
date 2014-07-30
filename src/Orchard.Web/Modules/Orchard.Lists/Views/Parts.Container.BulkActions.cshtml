@@ -6,12 +6,6 @@
 @{
     var container = (ContainerPart) Model.Container;
     var options = (ContentOptions)Model.Options;
-    var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
-        contentItem => new SelectListItem {
-            Text = contentItem.ContentType + ": " + contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
-            Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)
-        }).ToList();
-    lists.Insert(0, new SelectListItem { Text = T("Move to...").ToString(), Value = "" });
 }
 <fieldset class="bulk-actions">
     <label for="publishActions">@T("Actions:")</label>
@@ -21,9 +15,7 @@
         @Html.SelectOption(options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
         @Html.SelectOption(options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
         @Html.SelectOption(options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
-        @Html.SelectOption(options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
     </select>
-    @Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
     <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
 </fieldset>
 @if (container.EnablePositioning) {
