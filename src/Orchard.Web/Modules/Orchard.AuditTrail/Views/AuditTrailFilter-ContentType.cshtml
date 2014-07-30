@@ -4,5 +4,8 @@
     var currentContentType = (string)Model.ContentType;
     var listItems = contentTypes.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.Name, Selected = x.Name == currentContentType});
 }
-@Html.Label("contenttype", T("Content type:").Text)
+<label for="contenttype">
+    @T("Content type:")
+    <a href="#" title="@T("Applies to content type events only, not to content item events.")">@T("?")</a>
+</label>
 @Html.DropDownList("contenttype", listItems, "")
