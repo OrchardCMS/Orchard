@@ -57,9 +57,9 @@ namespace Orchard.Azure.Services.Caching {
 
         public override int GetHashCode() {
             int hash = 37;
-            hash = hash * 23 + HostIdentifier.GetHashCode();
-            hash = hash * 23 + CacheName.GetHashCode();
-            hash = hash * 23 + AuthorizationToken.GetHashCode();
+            hash = hash * 23 + HostIdentifier != null ? HostIdentifier.GetHashCode() : 0;
+            hash = hash * 23 + CacheName != null ? CacheName.GetHashCode() : 0;
+            hash = hash * 23 + AuthorizationToken != null ? AuthorizationToken.GetHashCode() : 0;
             hash = hash * 23 + CompressionIsEnabled.GetHashCode();
             return hash;
         }
