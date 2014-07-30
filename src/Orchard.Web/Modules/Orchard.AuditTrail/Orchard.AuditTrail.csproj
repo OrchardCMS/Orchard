@@ -81,6 +81,7 @@
     <Content Include="Scripts\audittrail-expando.js" />
     <Content Include="Scripts\audittrail-checkall.js" />
     <Content Include="Scripts\audittrail-disabledcontent.js" />
+    <Content Include="Styles\audittrail-content-event.css" />
     <Content Include="Styles\audittrail-display.css" />
     <Content Include="Styles\audittrail-disabledcontent.css" />
     <Content Include="Styles\audittrail-part.css" />
