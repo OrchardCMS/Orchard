@@ -7,14 +7,18 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         protected ContentTypePartDefinitionBuilder(ContentTypePartDefinition part) {
             Name = part.PartDefinition.Name;
+            TypeName = part.ContentTypeDefinition != null ? part.ContentTypeDefinition.Name : default(string);
             _settings = new SettingsDictionary(part.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
         }
 
         public string Name { get; private set; }
+        public string TypeName { get; private set; }
 
         public ContentTypePartDefinitionBuilder WithSetting(string name, string value) {
             _settings[name] = value;
             return this;
         }
+
+        public abstract ContentTypePartDefinition Build();
     }
 }

@@ -12,10 +12,19 @@ namespace Orchard.ContentManagement.MetaData {
         IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition);
         IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition);
 
+        
+        void TypeEditorUpdating(ContentTypeDefinitionBuilder builder);
         IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel);
+        void TypeEditorUpdated(ContentTypeDefinitionBuilder builder);
+        void TypePartEditorUpdating(ContentTypePartDefinitionBuilder builder);
         IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel);
+        void TypePartEditorUpdated(ContentTypePartDefinitionBuilder builder);
+        void PartEditorUpdating(ContentPartDefinitionBuilder builder);
         IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel);
+        void PartEditorUpdated(ContentPartDefinitionBuilder builder);
+        void PartFieldEditorUpdating(ContentPartFieldDefinitionBuilder builder);
         IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel);
+        void PartFieldEditorUpdated(ContentPartFieldDefinitionBuilder builder);
     }
 
     public abstract class ContentDefinitionEditorEventsBase : IContentDefinitionEditorEvents {
@@ -35,21 +44,37 @@ namespace Orchard.ContentManagement.MetaData {
             return Enumerable.Empty<TemplateViewModel>();
         }
 
+        public virtual void TypeEditorUpdating(ContentTypeDefinitionBuilder builder) {}
+
         public virtual IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel) {
             return Enumerable.Empty<TemplateViewModel>();
         }
+
+        public virtual void TypeEditorUpdated(ContentTypeDefinitionBuilder builder) { }
+
+        public virtual void TypePartEditorUpdating(ContentTypePartDefinitionBuilder builder) {}
 
         public virtual IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
             return Enumerable.Empty<TemplateViewModel>();
         }
 
+        public virtual void TypePartEditorUpdated(ContentTypePartDefinitionBuilder builder) { }
+
+        public virtual void PartEditorUpdating(ContentPartDefinitionBuilder builder) {}
+
         public virtual IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
             return Enumerable.Empty<TemplateViewModel>();
         }
 
+        public virtual void PartEditorUpdated(ContentPartDefinitionBuilder builder) { }
+
+        public virtual void PartFieldEditorUpdating(ContentPartFieldDefinitionBuilder builder) {}
+
         public virtual IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
             return Enumerable.Empty<TemplateViewModel>();
         }
+
+        public virtual void PartFieldEditorUpdated(ContentPartFieldDefinitionBuilder builder) {}
 
         protected static TemplateViewModel DefinitionTemplate<TModel>(TModel model) {
             return DefinitionTemplate(model, typeof(TModel).Name, typeof(TModel).Name);

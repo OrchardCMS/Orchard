@@ -8,13 +8,13 @@ namespace Orchard.Pages {
             ContentDefinitionManager.AlterTypeDefinition("Page", 
                 cfg => cfg
                 .WithPart("CommonPart", p => p
-                    .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
+                    .WithSetting("DateEditorSettings.ShowDateEditor", "True"))
                 .WithPart("PublishLaterPart")
                 .WithPart("TitlePart")
                 .WithPart("AutoroutePart", builder => builder
-                    .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
-                    .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-page'}]")
+                    .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
+                    .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-page\"}]")
                     .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                 .WithPart("BodyPart")
                 .Creatable());
@@ -23,7 +23,7 @@ namespace Orchard.Pages {
         }
 
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "True")));
             return 2;
         }
     }

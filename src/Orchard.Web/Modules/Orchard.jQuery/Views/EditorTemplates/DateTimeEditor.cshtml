@@ -9,17 +9,16 @@
     Script.Require("jQueryCalendars_All").AtFoot();
     Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
     Script.Require("jQueryTimeEntry").AtFoot();
-    Script.Require("jQueryDateTimeEditor").AtFoot();
 }
 
 @if (Model.ShowDate) {
     <label class="forpicker" for="@Html.FieldIdFor(m => Model.Date)">@T("Date")</label>
-    <span class="date">@Html.EditorFor(m => m.Date)</span>
+    <span class="date">@Html.TextBoxFor(m => m.Date, new { placeholder = T("Date").Text, @class = "text" })</span>
 }
 
 @if (Model.ShowTime) {
     <label class="forpicker" for="@Html.FieldIdFor(m => Model.Time)">@T("Time")</label>
-    <span class="time">@Html.EditorFor(m => m.Time)</span>
+    <span class="time">@Html.TextBoxFor(m => m.Time, new { placeholder = T("Time").Text, @class = "text" })</span>
 }
 
 @if (Model.ShowDate) { <text>@Html.ValidationMessageFor(m => m.Date)</text> }

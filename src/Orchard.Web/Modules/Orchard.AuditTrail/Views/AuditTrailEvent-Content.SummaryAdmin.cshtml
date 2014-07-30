@@ -1,0 +1,22 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@using Orchard.ContentManagement
+@{
+    var descriptor = (AuditTrailEventDescriptor)Model.Descriptor;
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentItem = (ContentItem) Model.ContentItem;
+    var contentItemId = contentItem.Id;
+    var eventVersionNumber = eventData.Get<int>("VersionNumber");
+    var eventIsPublished = eventData.Get<bool>("Published");
+    var contentType = contentItem.ContentType;
+    var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
+}
+<section class="audittrail-content-eventsummary">
+    @if (eventIsPublished || isLatest) {
+        @T("{2} of the {0} {1} was {3}.", contentType.ToLower(), Html.ItemEditLink(contentItem), Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), descriptor.Name.Text.ToLower())
+    }
+    else {
+        @T("{0} - {1}", contentType, Html.ItemEditLink(contentItem))
+        
+    }
+</section>

@@ -6,6 +6,7 @@ using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentPartDefinitionBuilder {
+        private readonly ContentPartDefinition _part;
         private string _name;
         private readonly IList<ContentPartFieldDefinition> _fields;
         private readonly SettingsDictionary _settings;
@@ -15,6 +16,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public ContentPartDefinitionBuilder(ContentPartDefinition existing) {
+            _part = existing;
             if (existing == null) {
                 _fields = new List<ContentPartFieldDefinition>();
                 _settings = new SettingsDictionary();
@@ -66,7 +68,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             else {
                 existingField = new ContentPartFieldDefinition(fieldName);
             }
-            var configurer = new FieldConfigurerImpl(existingField);
+            var configurer = new FieldConfigurerImpl(existingField, _part);
             configuration(configurer);
             _fields.Add(configurer.Build());
             return this;
@@ -74,15 +76,17 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         class FieldConfigurerImpl : ContentPartFieldDefinitionBuilder {
             private ContentFieldDefinition _fieldDefinition;
+            private readonly ContentPartDefinition _partDefinition;
             private readonly string _fieldName;
 
-            public FieldConfigurerImpl(ContentPartFieldDefinition field)
+            public FieldConfigurerImpl(ContentPartFieldDefinition field, ContentPartDefinition part)
                 : base(field) {
                 _fieldDefinition = field.FieldDefinition;
                 _fieldName = field.Name;
+                _partDefinition = part;
             }
 
-            public ContentPartFieldDefinition Build() {
+            public override ContentPartFieldDefinition Build() {
                 return new ContentPartFieldDefinition(_fieldDefinition, _fieldName, _settings);
             }
 
@@ -92,6 +96,10 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
             public override string FieldType {
                 get { return _fieldDefinition.Name; }
+            }
+
+            public override string PartName {
+                get { return _partDefinition.Name; }
             }
 
             public override ContentPartFieldDefinitionBuilder OfType(ContentFieldDefinition fieldDefinition) {

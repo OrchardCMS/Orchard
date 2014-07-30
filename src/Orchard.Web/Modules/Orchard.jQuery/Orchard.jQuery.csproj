@@ -256,7 +256,6 @@
     <Content Include="Scripts\calendars\jquery.calendars.validation.min.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
-    <Content Include="Scripts\jquery-datetime-editor.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />

@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\media-library-picker.js" />
     <Content Include="Scripts\media-library.js" />
     <Content Include="Scripts\modal-window.js" />
     <Content Include="Scripts\history.js" />
@@ -345,6 +346,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\ChildFolders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MediaLibraryPicker.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

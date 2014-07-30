@@ -143,7 +143,7 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-strong {font-weight:600;}
+strong {font-weight:bold;}
 .smallText {font-size:1em; line-height:1.4em;}
 
 hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
@@ -545,14 +545,14 @@ span.message {
     color:#fff;
 }
 .info { 
-    background: url(images/info.gif) no-repeat 5px 5px #fff;
+    background: url(images/info.gif) no-repeat 6px 6px #fff;
     border:1px solid #e4e8ee;  /* blue */
-    padding-left:26px;
+    padding:4px 4px 4px 26px;
 }
 .error { 
-    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    background: url(images/error.gif) no-repeat 6px 6px #fff;
     border:1px solid #e5cece;  /* red */
-    padding-left:26px;
+    padding-left:4px 4px 4px 26px;
 }
 .message-Information, .notifications {
     background:#e6f1c9; /* green */

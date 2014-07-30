@@ -347,6 +347,7 @@ namespace Orchard.Users.Controllers {
 
             var user = _membershipService.ValidateUser(userNameOrEmail, password);
             if (user == null) {
+                _userEventHandler.LogInFailed(userNameOrEmail, password);
                 ModelState.AddModelError("_FORM", T("The username or e-mail or password provided is incorrect."));
             }
 

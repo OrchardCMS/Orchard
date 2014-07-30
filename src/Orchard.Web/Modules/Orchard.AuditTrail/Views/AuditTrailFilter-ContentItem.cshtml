@@ -1,0 +1,7 @@
+﻿@using Orchard.ContentManagement
+@{
+    var contentItem = (ContentItem)Model.ContentItem;
+}
+@Html.Label("contentitem", T("Content Item:").Text)
+@Html.TextBox("contentitemname", Html.ItemDisplayText(contentItem), new { @class = "text", disabled = "disabled"})
+@Html.Hidden("content", contentItem.Id)

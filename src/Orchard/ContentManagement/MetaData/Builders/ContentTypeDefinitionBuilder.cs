@@ -27,6 +27,8 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
         }
 
+        public string Name { get { return _name; } }
+
         public ContentTypeDefinition Build() {
             return new ContentTypeDefinition(_name, _displayName, _parts, _settings);
         }
@@ -84,7 +86,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 _partDefinition = part.PartDefinition;
             }
 
-            public ContentTypePartDefinition Build() {
+            public override ContentTypePartDefinition Build() {
                 return new ContentTypePartDefinition(_partDefinition, _settings);
             }
         }
