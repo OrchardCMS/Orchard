@@ -41,8 +41,8 @@ struct DateLocalizationOptions {
 }
 
 TODO:
-	* Implement formatting in addition to parsing
 	* Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
+	* Add formatting and parsing of time zone information (add timezone properties to TimeParts structure)
 	* Rewrite DefaultDateLocalizationServices
 	* Write unit tests for DefaultDateLocalizationServices
 	* Add warning message when saving unsupported combination in settings

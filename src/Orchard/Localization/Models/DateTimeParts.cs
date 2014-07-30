@@ -30,6 +30,18 @@ namespace Orchard.Localization.Models {
             }
         }
 
+        public DateTime ToDateTime() {
+            return new DateTime(
+                Date.Year > 0 ? Date.Year : DateTime.MinValue.Year,
+                Date.Month > 0 ? Date.Month : DateTime.MinValue.Month,
+                Date.Day > 0 ? Date.Day : DateTime.MinValue.Day,
+                Time.Hour > 0 ? Time.Hour : DateTime.MinValue.Hour,
+                Time.Minute > 0 ? Time.Minute : DateTime.MinValue.Minute,
+                Time.Second > 0 ? Time.Second : DateTime.MinValue.Second,
+                Time.Millisecond > 0 ? Time.Millisecond : DateTime.MinValue.Millisecond
+            );
+        }
+
         public override string ToString() {
             return String.Format("{0} {1}", _date, _time);
         }
