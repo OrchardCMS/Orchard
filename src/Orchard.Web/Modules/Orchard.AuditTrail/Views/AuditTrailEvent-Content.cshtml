@@ -1,4 +1,5 @@
-﻿@using Orchard.AuditTrail.Models
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Models
 @using Orchard.AuditTrail.Providers.Content
 @using Orchard.ContentManagement
 @{
@@ -6,24 +7,31 @@
 }
 @{
     var record = (AuditTrailEventRecord)Model.Record;
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var contentItemId = (int)Model.ContentItemId;
     var contentItem = (ContentItem)Model.ContentItem;
+    var eventVersionNumber = eventData.Get<int>("VersionNumber");
+    var isPublishedEvent = eventData.Get<bool>("Published");
     var diffNodes = (IList<DiffNode>)Model.DiffNodes;
 }
-@functions {
-    string FriendlyEmptyString(string value) {
-        return String.IsNullOrWhiteSpace(value) ? T("<empty>").Text : value;
-    }
-}
 <section class="audittrail-content-eventmetadata">
-    @T("ID:") <strong>@contentItem.Id</strong><br />
-    @contentItem.ContentType: @Html.ItemEditLink(contentItem)<br />
-    @Html.ActionLink(T("Version {0}", contentItem.Version).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItem.Id, version = contentItem.Version }, null)
+    @T("ID:") <strong>@contentItemId</strong><br />
+    @if (contentItem != null) {
+        var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
+        @(contentItem.ContentType)<text>: </text>@Html.ItemEditLink(contentItem)<br />
+        if (isPublishedEvent || isLatest) {
+            @Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItem.Id, version = contentItem.Version }, null)<br />
+        }
+    }
+    else {
+        @T("Version {0}", eventVersionNumber)<br />
+    }
     @if (!String.IsNullOrWhiteSpace(record.Comment)) {
-        <br />
         @T("Comment:")<br />
         @record.Comment
     }
 </section>
+
 <section class="audittrail-content-eventsummary">
     @if (diffNodes != null) {
         <table class="items">
@@ -46,8 +54,8 @@
                         <tr>
                             <td>@T(node.Type.ToString())</td>
                             <td>@node.Context</td>
-                            <td>@FriendlyEmptyString(node.Previous)</td>
-                            <td>@FriendlyEmptyString(node.Current)</td>
+                            <td>@node.Previous.OrIfEmpty(T("[Empty]"))</td>
+                            <td>@node.Current.OrIfEmpty(T("[Empty]"))</td>
                         </tr>
                     }
                 }
