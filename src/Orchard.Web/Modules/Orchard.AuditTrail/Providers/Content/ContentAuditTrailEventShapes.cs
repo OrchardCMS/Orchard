@@ -38,6 +38,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                     context.Shape.DiffNodes = diffNodes;
                 }
 
+                context.Shape.ContentItemId = contentItemId;
                 context.Shape.ContentItem = contentItem;
                 context.Shape.PreviousVersion = previousVersion;
             });
