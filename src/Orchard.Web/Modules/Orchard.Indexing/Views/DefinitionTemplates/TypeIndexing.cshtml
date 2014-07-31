@@ -14,7 +14,7 @@
             <select size="0" name="@Html.FieldNameFor(m => m.List)">
                 <option value="" selected="@(!Model.List.Contains(index + ":latest") && !Model.List.Contains(index))">@T("Not indexed")</option>
                 <option value="@index" selected="@(Model.List.Contains(index))">@T("Published version")</option>
-                <option value="@(index):latest" selected="@(Model.List.Contains(index + ":latest"))">@T("Any versions")</option>
+                <option value="@(index):latest" selected="@(Model.List.Contains(index + ":latest"))">@T("Latest version")</option>
             </select>
         </fieldset>
         i++;
