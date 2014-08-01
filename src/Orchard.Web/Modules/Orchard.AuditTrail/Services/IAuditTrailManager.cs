@@ -58,6 +58,13 @@ namespace Orchard.AuditTrail.Services {
         /// <summary>
         /// Describes a single audit trail event.
         /// </summary>
+        /// <param name="record">The audit trail event record for which to find its descriptor.</param>
+        /// <returns>A single audit trail event descriptor.</returns>
+        AuditTrailEventDescriptor DescribeEvent(AuditTrailEventRecord record);
+
+        /// <summary>
+        /// Describes a single audit trail event.
+        /// </summary>
         /// <typeparam name="T">The scope of the specified event name.</typeparam>
         /// <param name="eventName">The shorthand name of the event.</param>
         /// <returns>A single audit trail event descriptor.</returns>

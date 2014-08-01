@@ -4,8 +4,10 @@ using Orchard.AuditTrail.Shapes;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition.Shapes {
+    [OrchardFeature("Orchard.AuditTrail.ContentDefinition")]
     public class ContentTypeFieldSettingsUpdatedEventShape : AuditTrailEventShapeAlteration<ContentPartAuditTrailEventProvider> {
         private readonly ISettingsFormatter _settingsFormatter;
         public ContentTypeFieldSettingsUpdatedEventShape(ISettingsFormatter settingsFormatter) {
