@@ -80,8 +80,8 @@ namespace Orchard.jQuery {
             manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
 
             // jQuery File Upload
-            manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.6.1").SetDependencies("jQuery");
-            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("1.6.1").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
+            manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.8.2").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("5.41.0").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
 
             // jquer Color Box
             manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.4.10").SetDependencies("jQuery");
