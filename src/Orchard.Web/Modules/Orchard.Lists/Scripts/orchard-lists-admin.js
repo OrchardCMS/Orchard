@@ -71,16 +71,6 @@
     };
 
     var bindActions = function () {
-        $("#layout-content").on("change", "#publishActions", function () {
-            var value = $(this).val();
-            var target = $("#TargetContainerId");
-            if (value === "MoveToList") {
-                target.css("display", "inline");
-            } else {
-                target.css("display", "none");
-            }
-        });
-        
         $("#layout-content").on("change", "#listOperations", function () {
             var value = $(this).val();
             var sortBy = $("#SortBy");

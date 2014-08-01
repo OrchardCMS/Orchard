@@ -173,6 +173,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return Authorizer.Authorize(permission);
         }
 
+        public bool AuthorizedFor(Permission permission, IContent content) {
+            return Authorizer.Authorize(permission, content);
+        }
+
         public bool HasText(object thing) {
             return !string.IsNullOrWhiteSpace(Convert.ToString(thing));
         }

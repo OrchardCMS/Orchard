@@ -225,6 +225,12 @@ namespace Orchard.Forms.Shapes {
         }
 
         [Shape]
+        public IHtmlString Password(dynamic Display, dynamic Shape) {
+            Shape.Classes.Add("password");
+            return DisplayShapeAsInput(Display, Shape, "password");
+        }
+
+        [Shape]
         public void Textarea(
             TextWriter Output,
             dynamic Display,
