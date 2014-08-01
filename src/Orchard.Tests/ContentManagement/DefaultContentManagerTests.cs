@@ -655,6 +655,29 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         [Test]
+        public void GetWithAllVersionsOptionsReturnsLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            var gamma4 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma4);
+            FlushAndClear();
+
+            // Assert that the latest version is returned when using AllVersions
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.AllVersions);
+            Assert.That(gamma.Version, Is.EqualTo(4));
+        }
+
+        [Test]
         public void EmptyTypeDefinitionShouldBeCreatedIfNotAlreadyDefined() {
             var contentItem = _manager.New("no-such-type");
             Assert.That(contentItem.ContentType, Is.EqualTo("no-such-type"));
