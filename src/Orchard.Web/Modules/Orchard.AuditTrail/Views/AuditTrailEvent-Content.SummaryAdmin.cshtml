@@ -8,16 +8,17 @@
     var contentItem = (ContentItem) Model.ContentItem;
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublishedEvent = eventData.Get<bool>("Published");
+    var title = eventData.Get<string>("Title") ?? "[untitled]";
 }
 <section class="audittrail-content-eventsummary">
     @if (contentItem != null) {
         var contentType = contentItem.ContentType;
         var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;        
         if (isPublishedEvent || isLatest) {
-            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), Html.ItemEditLink(contentItem), descriptor.Name.Text.ToLower())
+            @T("{0} of the {1} {2} was {3}.", Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItemId, version = eventVersionNumber }, null), contentType.ToLower(), Html.ItemEditLink(title, contentItemId), descriptor.Name.Text.ToLower())
         }
         else {
-            @T("The {0} {1} was {2}.", contentType.ToLower(), Html.ItemEditLink(contentItem), descriptor.Name.Text.ToLower())
+            @T("The {0} {1} was {2}.", contentType.ToLower(), Html.ItemEditLink(title, contentItemId), descriptor.Name.Text.ToLower())
 
         }
     }

@@ -13,12 +13,13 @@
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublishedEvent = eventData.Get<bool>("Published");
     var diffNodes = (IList<DiffNode>)Model.DiffNodes;
+    var title = eventData.Get<string>("Title") ?? "[untitled]";
 }
 <section class="audittrail-content-eventmetadata">
     @T("ID:") <strong>@contentItemId</strong><br />
     @if (contentItem != null) {
         var isLatest = contentItem.VersionRecord.Number == eventVersionNumber;
-        @(contentItem.ContentType)<text>: </text>@Html.ItemEditLink(contentItem)<br />
+        @(contentItem.ContentType)<text>: </text>@Html.ItemEditLink(title, contentItemId)<br />
         if (isPublishedEvent || isLatest) {
             @Html.ActionLink(T("Version {0}", eventVersionNumber).Text, "Detail", "Content", new { area = "Orchard.AuditTrail", id = contentItem.Id, version = contentItem.Version }, null)<br />
         }

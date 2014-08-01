@@ -11,5 +11,9 @@ namespace Orchard.AuditTrail.Helpers {
         public static IHtmlString ContentTypeEditLink(this HtmlHelper html, string contentTypeName) {
             return html.ActionLink(contentTypeName, "Edit", "Admin", new { id = contentTypeName, area = "Orchard.ContentTypes" }, null);
         }
+
+        public static IHtmlString ItemEditLink(this HtmlHelper html, string linkText, int contentItemId) {
+            return html.ActionLink(linkText, "Edit", "Admin", new { id = contentItemId, area = "Contents" }, null);
+        }
     }
 }
