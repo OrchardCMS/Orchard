@@ -18,8 +18,8 @@ namespace Orchard.AuditTrail.Services {
         public override void Filter(QueryFilterContext context) {
             var userName = context.Filters.Get("username");
             var category = context.Filters.Get("category");
-            var from = GetDateFromFilter(context.Filters, "From", "from").Earliest();
-            var to = GetDateFromFilter(context.Filters, "To", "to").Latest();
+            var from = GetDateFromFilter(context.Filters, "From", "from").StartOfDay();
+            var to = GetDateFromFilter(context.Filters, "To", "to").EndOfDay();
             var query = context.Query;
 
             if (!String.IsNullOrWhiteSpace(userName)) {
@@ -57,13 +57,12 @@ namespace Orchard.AuditTrail.Services {
         }
 
         private DateTime? GetDateFromFilter(Filters filters, string fieldName, string prefix) {
+            var dateString = filters.Get(prefix + ".Date");
             try {
-                var dateString = filters.Get(prefix + ".Date");
-                var timeString = filters.Get(prefix + ".Time");
-                return _dateLocalizationServices.ConvertFromLocalizedString(dateString, timeString);
+                return _dateLocalizationServices.ConvertFromLocalizedDateString(dateString);
             }
             catch (FormatException ex) {
-                filters.UpdateModel.AddModelError(prefix, T(@"Error parsing ""{0}"" date: {1}", fieldName, ex.Message));
+                filters.UpdateModel.AddModelError(prefix, T(@"Error parsing '{0}' date string '{1}': {2}", fieldName, dateString, ex.Message));
                 return null;
             }
         }

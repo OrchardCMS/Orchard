@@ -37,7 +37,7 @@ namespace Orchard.Tokens.Tests {
                     _initMethod(this);
                 }
 
-                _contextDictonary["CurrentTimeZone"] = TimeZoneInfo.Local;
+                _contextDictonary["CurrentTimeZone"] = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
                 _contextDictonary["CurrentCulture"] = "en-US";
                 _contextDictonary["CurrentCalendar"] = null;
             }

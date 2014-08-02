@@ -206,7 +206,7 @@ namespace Orchard.AuditTrail.Services {
         }
 
         public IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod) {
-            var dateThreshold = (_clock.UtcNow.Latest() - retentionPeriod);
+            var dateThreshold = (_clock.UtcNow.EndOfDay() - retentionPeriod);
             var query = _auditTrailRepository.Table.Where(x => x.CreatedUtc <= dateThreshold);
             var records = query.ToArray();
 
