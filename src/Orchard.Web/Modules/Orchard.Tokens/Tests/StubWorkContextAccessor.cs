@@ -39,6 +39,7 @@ namespace Orchard.Tokens.Tests {
 
                 _contextDictonary["CurrentTimeZone"] = TimeZoneInfo.Local;
                 _contextDictonary["CurrentCulture"] = "en-US";
+                _contextDictonary["CurrentCalendar"] = null;
             }
 
             public class StubSite : ContentPart, ISite {

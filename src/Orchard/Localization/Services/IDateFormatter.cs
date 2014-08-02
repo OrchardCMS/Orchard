@@ -18,7 +18,7 @@ namespace Orchard.Localization.Services {
         /// Parses a date/time string into a <c>DateTimeParts</c> instance using the specified format.
         /// </summary>
         /// <param name="dateTimeString">The date/time string to parse.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to parse the string.</param>
+        /// <param name="format">A custom DateTime format string with which to parse the string.</param>
         /// <returns></returns>
         DateTimeParts ParseDateTime(string dateTimeString, string format);
 
@@ -33,7 +33,7 @@ namespace Orchard.Localization.Services {
         /// Parses a date string into a <c>DateParts</c> instance using the specified format.
         /// </summary>
         /// <param name="dateString">The date string to parse.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to parse the string.</param>
+        /// <param name="format">A custom DateTime format string with which to parse the string.</param>
         /// <returns></returns>
         DateParts ParseDate(string dateString, string format);
 
@@ -48,7 +48,7 @@ namespace Orchard.Localization.Services {
         /// Parses a time string into a <c>TimeParts</c> instance using the specified format.
         /// </summary>
         /// <param name="timeString">The date string to parse.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to parse the string.</param>
+        /// <param name="format">A custom DateTime format string with which to parse the string.</param>
         /// <returns></returns>
         TimeParts ParseTime(string timeString, string format);
 
@@ -63,7 +63,7 @@ namespace Orchard.Localization.Services {
         /// Formats a <c>DateTimeParts</c> instance into a string.
         /// </summary>
         /// <param name="parts">The <c>DateTimeParts</c> instance to format.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to format the string.</param>
+        /// <param name="format">A custom DateTime format string with which to format the string.</param>
         /// <returns></returns>
         string FormatDateTime(DateTimeParts parts, string format);
 
@@ -78,7 +78,7 @@ namespace Orchard.Localization.Services {
         /// Formats a <c>DateParts</c> instance into a string.
         /// </summary>
         /// <param name="parts">The <c>DateParts</c> instance to format.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to format the string.</param>
+        /// <param name="format">A custom DateTime format string with which to format the string.</param>
         /// <returns></returns>
         string FormatDate(DateParts parts, string format);
 
@@ -93,7 +93,7 @@ namespace Orchard.Localization.Services {
         /// Formats a <c>TimeParts</c> instance into a string.
         /// </summary>
         /// <param name="parts">The <c>TimeParts</c> instance to format.</param>
-        /// <param name="format">A standard or custom DateTime format string with which to format the string.</param>
+        /// <param name="format">A custom DateTime format string with which to format the string.</param>
         /// <returns></returns>
         string FormatTime(TimeParts parts, string format);
     }
