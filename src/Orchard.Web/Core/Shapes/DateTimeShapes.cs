@@ -65,7 +65,7 @@ namespace Orchard.Core.Shapes {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
-                return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat));
+                return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, _dateTimeLocalization.ShortDateTimeFormat));
             }
 
             return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, CustomFormat.Text));

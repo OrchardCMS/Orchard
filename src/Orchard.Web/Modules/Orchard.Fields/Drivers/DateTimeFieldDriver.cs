@@ -11,6 +11,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Core.Common.ViewModels;
+using Orchard.Localization.Models;
 
 namespace Orchard.Fields.Drivers {
     [UsedImplicitly]
@@ -41,16 +42,25 @@ namespace Orchard.Fields.Drivers {
                 () => {
                     var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
                     var value = field.DateTime;
+                    var options = new DateLocalizationOptions();
+
+                    // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+                    if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                        options.EnableTimeZoneConversion = false;
+                    }
+
+                    var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+                    var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
 
                     var viewModel = new DateTimeFieldViewModel {
                         Name = field.DisplayName,
                         Hint = settings.Hint,
                         IsRequired = settings.Required,
                         Editor = new DateTimeEditor() {
-                            Date = DateLocalizationServices.ConvertToLocalizedDateString(value),
-                            Time = DateLocalizationServices.ConvertToLocalizedTimeString(value),
-                            ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
-                            ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
+                            Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
+                            Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
+                            ShowDate = showDate,
+                            ShowTime = showTime,
                         }
                     };
 
@@ -63,16 +73,25 @@ namespace Orchard.Fields.Drivers {
         protected override DriverResult Editor(ContentPart part, DateTimeField field, dynamic shapeHelper) {
             var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
             var value = field.DateTime;
+            var options = new DateLocalizationOptions();
+
+            // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+            if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                options.EnableTimeZoneConversion = false;
+            }
+
+            var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+            var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
 
             var viewModel = new DateTimeFieldViewModel {
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
                 Editor = new DateTimeEditor() {
-                    Date = DateLocalizationServices.ConvertToLocalizedDateString(value),
-                    Time = DateLocalizationServices.ConvertToLocalizedTimeString(value),
-                    ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
-                    ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
+                    Date = showDate ? DateLocalizationServices.ConvertToLocalizedDateString(value, options) : null,
+                    Time = showTime ? DateLocalizationServices.ConvertToLocalizedTimeString(value, options) : null,
+                    ShowDate = showDate,
+                    ShowTime = showTime,
                 }
             };
 
@@ -86,13 +105,34 @@ namespace Orchard.Fields.Drivers {
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<DateTimeFieldSettings>();
-                if (settings.Required && (((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly) && String.IsNullOrWhiteSpace(viewModel.Editor.Date)) || ((settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly) && String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
+
+                var options = new DateLocalizationOptions();
+
+                // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
+                if (settings.Display == DateTimeFieldDisplays.DateOnly) {
+                    options.EnableTimeZoneConversion = false;
+                }
+
+                var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
+                var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
+
+                if (settings.Required && ((showDate && String.IsNullOrWhiteSpace(viewModel.Editor.Date)) || (showTime && String.IsNullOrWhiteSpace(viewModel.Editor.Time)))) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
-                } else {
+                }
+                else {
                     try {
-                        var utcDateTime = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time);
+                        var utcDateTime = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time, options);
+                        
                         if (utcDateTime.HasValue) {
-                            field.DateTime = utcDateTime.Value;
+                            // Hackish workaround to make sure a time-only field with an entered time equivalent to
+                            // 00:00 UTC doesn't get stored as a full DateTime.MinValue in the database, resulting
+                            // in it being interpreted as an empty value when subsequently retrieved.
+                            if (settings.Display == DateTimeFieldDisplays.TimeOnly && utcDateTime.Value == DateTime.MinValue) {
+                                field.DateTime = utcDateTime.Value.AddDays(1);
+                            }
+                            else {
+                                field.DateTime = utcDateTime.Value;
+                            }
                         } else {
                             field.DateTime = DateTime.MinValue;
                         }

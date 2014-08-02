@@ -2,22 +2,26 @@
 using System.Globalization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Models;
+using Orchard.Services;
 using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
 
     public class DefaultDateLocalizationServices : IDateLocalizationServices {
 
+        private readonly IClock _clock;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IDateTimeFormatProvider _dateTimeFormatProvider;
         private readonly IDateFormatter _dateFormatter;
         private readonly ICalendarManager _calendarManager;
 
         public DefaultDateLocalizationServices(
+            IClock clock,
             IWorkContextAccessor workContextAccessor,
             IDateTimeFormatProvider dateTimeFormatProvider,
             IDateFormatter dateFormatter,
             ICalendarManager calendarManager) {
+            _clock = clock;
             _workContextAccessor = workContextAccessor;
             _dateTimeFormatProvider = dateTimeFormatProvider;
             _dateFormatter = dateFormatter;
@@ -63,7 +67,32 @@ namespace Orchard.Localization.Services {
         }
 
         public string ConvertToLocalizedTimeString(DateTime? date, DateLocalizationOptions options = null) {
-            return ConvertToLocalizedString(date, _dateTimeFormatProvider.LongTimeFormat, options);
+            options = options ?? new DateLocalizationOptions();
+
+            if (!date.HasValue) {
+                return options.NullText;
+            }
+
+            var dateValue = date.Value;
+
+            if (options.EnableTimeZoneConversion) {
+                // Since no date component is expected (technically the date component is that of DateTime.MinValue) then
+                // we must employ some trickery, for two reasons:
+                // * DST can be active or not dependeng on the time of the year. We want the conversion to always act as if the time represents today, but we don't want that date stored.
+                // * Time zone conversion cannot wrap DateTime.MinValue around to the previous day, resulting in undefined result.
+                // Therefore we convert the date to today's date before the conversion, and back to DateTime.MinValue after.
+                var now = _clock.UtcNow;
+                dateValue = new DateTime(now.Year, now.Month, now.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                dateValue = ConvertToSiteTimeZone(dateValue);
+                dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+            }
+
+            var parts = DateTimeParts.FromDateTime(dateValue);
+            if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
+                parts = ConvertToSiteCalendar(dateValue);
+            }
+
+            return _dateFormatter.FormatDateTime(parts, _dateTimeFormatProvider.LongTimeFormat);
         }
 
         public string ConvertToLocalizedString(DateTime date, DateLocalizationOptions options = null) {
@@ -127,7 +156,19 @@ namespace Orchard.Localization.Services {
             }
 
             if (hasTime && options.EnableTimeZoneConversion) {
+                // If there is no date component (technically the date component is that of DateTime.MinValue) then
+                // we must employ some trickery, for two reasons:
+                // * DST can be active or not dependeng on the time of the year. We want the conversion to always act as if the time represents today, but we don't want that date stored.
+                // * Time zone conversion cannot wrap DateTime.MinValue around to the previous day, resulting in undefined result.
+                // Therefore we convert the date to today's date before the conversion, and back to DateTime.MinValue after.
+                if (!hasDate) {
+                    var now = _clock.UtcNow;
+                    dateValue = new DateTime(now.Year, now.Month, now.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                }
                 dateValue = ConvertFromSiteTimeZone(dateValue);
+                if (!hasDate) {
+                    dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+                }
             }
 
             return dateValue;

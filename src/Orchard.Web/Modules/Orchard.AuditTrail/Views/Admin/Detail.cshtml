@@ -10,7 +10,7 @@
 <section class="audittrail-event-metadata-section">
     @T("Event:") <strong>@descriptor.Name</strong><br />
     @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
-    @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc, CustomFormat: T("g"))</strong><br />
+    @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc)</strong><br />
     @T("Username:") <strong>@record.UserName</strong>
 </section>
 <section class="audittrail-event-details-section">

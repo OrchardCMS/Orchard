@@ -49,7 +49,7 @@
                         <td class="category-column">@record.CategoryDescriptor.Name</td>
                         <td class="event-column">@record.EventDescriptor.Name</td>
                         <td class="user-column">@record.Record.UserName</td>
-                        <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc, CustomFormat: T("g"))</td>
+                        <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
                         <td class="summary-column">@Display(record.SummaryShape)</td>
                         <td class="comment-column">@record.Record.Comment</td>
                         <td class="actions-column">@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
