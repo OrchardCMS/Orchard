@@ -9,7 +9,7 @@
     var contentFieldName = eventData.Get<string>("ContentFieldName");
     var oldDisplayName = (string)Model.OldDisplayName;
     var newDisplayName = (string)Model.NewDisplayName;
-    var diff = (DiffDictionary<string, string>)Model.Diff;
+    var diff = (DiffDictionary<string, string>)Model.Diff ?? new DiffDictionary<string, string>();
 }
 <section class="audittrail-contentpart-eventsummary">
     @T("Settings for the field <strong>{0}</strong> attached to the {1} content part were updated:", contentFieldName, Html.ContentPartEditLink(contentPartName))

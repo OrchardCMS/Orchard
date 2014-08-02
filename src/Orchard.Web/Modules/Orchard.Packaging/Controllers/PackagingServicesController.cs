@@ -161,7 +161,7 @@ namespace Orchard.Packaging.Controllers {
                 }
             }
             catch (OrchardException e) {
-                Services.Notifier.Error(T("Package uploading and installation failed: ", e.Message));
+                Services.Notifier.Error(T("Package uploading and installation failed: {0}", e.Message));
                 return View("InstallPackageFailed");
             }
             catch (Exception) {

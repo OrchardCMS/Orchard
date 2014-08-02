@@ -8,6 +8,13 @@
 </fieldset>
 
 <fieldset>
+    @Html.EditorFor(m => m.Listable)
+    <label for="@Html.FieldIdFor(m => m.Listable)" class="forcheckbox">@T("Listable")</label>
+    @Html.ValidationMessageFor(m => m.Listable)
+    <span class="hint">@T("Determines if an instance of this content type can be listed through the UI.")</span>
+</fieldset>
+
+<fieldset>
     @Html.EditorFor(m => m.Draftable)
     <label for="@Html.FieldIdFor(m => m.Draftable)" class="forcheckbox">@T("Draftable")</label>
     @Html.ValidationMessageFor(m => m.Draftable)

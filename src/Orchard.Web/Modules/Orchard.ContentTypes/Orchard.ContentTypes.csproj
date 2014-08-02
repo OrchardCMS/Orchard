@@ -79,6 +79,7 @@
     <Compile Include="Events\ContentTypeRemovedContext.cs" />
     <Compile Include="Events\IContentDefinitionEventHandler.cs" />
     <Compile Include="Extensions\MetadataExtensions.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Services\ContentTypePlacementStrategy.cs" />

@@ -50,8 +50,7 @@ namespace Orchard.AuditTrail.Controllers {
             var eventDescriptors = eventDescriptorsQuery.ToDictionary(x => x.Event);
             var recordViewModelsQuery =
                 from record in pageOfData
-                let descriptor = eventDescriptors.ContainsKey(record.FullEventName) ? eventDescriptors[record.FullEventName] : default(AuditTrailEventDescriptor)
-                where descriptor != null
+                let descriptor = eventDescriptors.ContainsKey(record.FullEventName) ? eventDescriptors[record.FullEventName] : AuditTrailEventDescriptor.Basic(record)
                 select new AuditTrailEventSummaryViewModel {
                     Record = record,
                     EventDescriptor = descriptor,
@@ -74,7 +73,7 @@ namespace Orchard.AuditTrail.Controllers {
                 return new HttpUnauthorizedResult();
 
             var record = _auditTrailManager.GetRecord(id);
-            var descriptor = _auditTrailManager.DescribeEvent(record.FullEventName);
+            var descriptor = _auditTrailManager.DescribeEvent(record);
             var detailsShape = _displayBuilder.BuildDisplay(record, "Detail");
             var viewModel = new AuditTrailDetailsViewModel {
                 Record = record,

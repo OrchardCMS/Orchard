@@ -184,6 +184,10 @@ namespace Orchard.AuditTrail.Services {
             return context;
         }
 
+        public AuditTrailEventDescriptor DescribeEvent(AuditTrailEventRecord record) {
+            return DescribeEvent(record.FullEventName) ?? AuditTrailEventDescriptor.Basic(record);
+        }
+
         public AuditTrailEventDescriptor DescribeEvent<T>(string eventName) where T : IAuditTrailEventProvider {
             var fullyQualifiedEventName = EventNameExtensions.GetFullyQualifiedEventName<T>(eventName);
             return DescribeEvent(fullyQualifiedEventName);
@@ -198,11 +202,7 @@ namespace Orchard.AuditTrail.Services {
                 select e;
             var eventDescriptors = eventDescriptorQuery.ToArray();
 
-            if (!eventDescriptors.Any()) {
-                throw new ArgumentException(String.Format("No event named '{0}' exists.", fullyQualifiedEventName), "fullyQualifiedEventName");
-            }
-
-            return eventDescriptors.First();
+            return eventDescriptors.FirstOrDefault();
         }
 
         public IEnumerable<AuditTrailEventRecord> Trim(TimeSpan retentionPeriod) {

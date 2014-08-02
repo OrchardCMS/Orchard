@@ -188,7 +188,7 @@ namespace Orchard.ContentManagement {
                                x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
                 }
                 else {
-                    versionRecord = contentItemVersionRecords.FirstOrDefault();
+                    versionRecord = contentItemVersionRecords.LastOrDefault();
                 }
             }
 

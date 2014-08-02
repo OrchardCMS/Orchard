@@ -30,7 +30,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var previousContentItemVersionId = eventData.Get<int>("PreviousVersionId");
                 var previousVersionXml = GetXml(eventData, "PreviousVersionXml");
                 var diffGram = GetXml(eventData, "DiffGram");
-                var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.Latest);
+                var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.AllVersions);
                 var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
 
                 if (diffGram != null) {
@@ -38,6 +38,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                     context.Shape.DiffNodes = diffNodes;
                 }
 
+                context.Shape.ContentItemId = contentItemId;
                 context.Shape.ContentItem = contentItem;
                 context.Shape.PreviousVersion = previousVersion;
             });

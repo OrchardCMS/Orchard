@@ -24,6 +24,26 @@
             The greatest value of the combined elements is used
             </summary>
         </member>
+        <member name="T:StackExchange.Redis.ClientType">
+            <summary>
+            The class of the connection
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.ClientType.Normal">
+            <summary>
+            Regular connections, including MONITOR connections
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.ClientType.Slave">
+            <summary>
+            Replication connections
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.ClientType.PubSub">
+            <summary>
+            Subscription connections
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.ExtensionMethods">
             <summary>
             Utility methods
@@ -152,6 +172,26 @@
         <member name="P:StackExchange.Redis.InternalErrorEventArgs.Origin">
             <summary>
             The underlying origin of the error
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.MigrateOptions">
+            <summary>
+            Additional options for the MIGRATE command
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.MigrateOptions.None">
+            <summary>
+            No options specified
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.MigrateOptions.Copy">
+            <summary>
+            Do not remove the key from the local instance.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.MigrateOptions.Replace">
+            <summary>
+            Replace existing key on the remote instance.
             </summary>
         </member>
         <member name="T:StackExchange.Redis.RedisChannel">
@@ -434,6 +474,16 @@
         <member name="P:StackExchange.Redis.ClientInfo.TransactionCommandLength">
             <summary>
             number of commands in a MULTI/EXEC context
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ClientInfo.Id">
+            <summary>
+            an unique 64-bit client ID (introduced in Redis 2.8.12).
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ClientInfo.ClientType">
+            <summary>
+            The class of the connection
             </summary>
         </member>
         <member name="M:StackExchange.Redis.Message.SetInternalCall">
@@ -723,11 +773,15 @@
             <summary>
             Parse the configuration from a comma-delimited configuration string
             </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="configuration"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="configuration"/> is empty.</exception>
         </member>
         <member name="M:StackExchange.Redis.ConfigurationOptions.Parse(System.String,System.Boolean)">
             <summary>
             Parse the configuration from a comma-delimited configuration string
             </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="configuration"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="configuration"/> is empty.</exception>
         </member>
         <member name="M:StackExchange.Redis.ConfigurationOptions.Clone">
             <summary>
@@ -784,6 +838,11 @@
         <member name="P:StackExchange.Redis.ConfigurationOptions.ClientName">
             <summary>
             The client name to user for all connections
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.ConfigurationOptions.ConnectRetry">
+            <summary>
+            The number of times to repeat the initial connect cycle if no servers respond promptly
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.CommandMap">
@@ -1651,6 +1710,12 @@
             <remarks>http://redis.io/commands/pexpireat</remarks>
             <remarks>http://redis.io/commands/persist</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.KeyMigrateAsync(StackExchange.Redis.RedisKey,System.Net.EndPoint,System.Int32,System.Int32,StackExchange.Redis.MigrateOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance by default, and is guaranteed to exist in the target instance.
+            </summary>
+            <remarks>http://redis.io/commands/MIGRATE</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabaseAsync.KeyMoveAsync(StackExchange.Redis.RedisKey,System.Int32,StackExchange.Redis.CommandFlags)">
             <summary>
             Move key from the currently selected database (see SELECT) to the specified destination database. When key already exists in the destination database, or it does not exist in the source database, it does nothing. It is possible to use MOVE as a locking primitive because of this.
@@ -2343,6 +2408,12 @@
             Allows creation of a group of operations that will be sent to the server as a single unit,
             but which may or may not be processed on the server contiguously.
             </summary>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.KeyMigrate(StackExchange.Redis.RedisKey,System.Net.EndPoint,System.Int32,System.Int32,StackExchange.Redis.MigrateOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Atomically transfer a key from a source Redis instance to a destination Redis instance. On success the key is deleted from the original instance by default, and is guaranteed to exist in the target instance.
+            </summary>
+            <remarks>http://redis.io/commands/MIGRATE</remarks>
         </member>
         <member name="M:StackExchange.Redis.IDatabase.CreateTransaction(System.Object)">
             <summary>
@@ -3327,6 +3398,20 @@
             </summary>
             <remarks>http://redis.io/commands/client-kill</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IServer.ClientKill(System.Nullable{System.Int64},System.Nullable{StackExchange.Redis.ClientType},System.Net.EndPoint,System.Boolean,StackExchange.Redis.CommandFlags)">
+            <summary>
+            The CLIENT KILL command closes multiple connections that match the specified filters
+            </summary>
+            <returns>the number of clients killed.</returns>
+            <remarks>http://redis.io/commands/client-kill</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.ClientKillAsync(System.Nullable{System.Int64},System.Nullable{StackExchange.Redis.ClientType},System.Net.EndPoint,System.Boolean,StackExchange.Redis.CommandFlags)">
+            <summary>
+            The CLIENT KILL command closes multiple connections that match the specified filters
+            </summary>
+            <returns>the number of clients killed.</returns>
+            <remarks>http://redis.io/commands/client-kill</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IServer.ClientList(StackExchange.Redis.CommandFlags)">
             <summary>
             The CLIENT LIST command returns information and statistics about the client connections server in a mostly human readable format.
@@ -3651,6 +3736,97 @@
             <returns>The server's current time.</returns>
             <remarks>http://redis.io/commands/time</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelGetMasterAddressByName(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Returns the ip and port number of the master with that name. 
+            If a failover is in progress or terminated successfully for this master it returns the address and port of the promoted slave.
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>the master ip and port</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelGetMasterAddressByNameAsync(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Returns the ip and port number of the master with that name. 
+            If a failover is in progress or terminated successfully for this master it returns the address and port of the promoted slave.
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>the master ip and port</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelMaster(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Show the state and info of the specified master.
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>the master state as KeyValuePairs</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelMasterAsync(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Force a failover as if the master was not reachable, and without asking for agreement to other Sentinels 
+            (however a new version of the configuration will be published so that the other Sentinels will update their configurations).
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>the master state as KeyValuePairs</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelMasters(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Show a list of monitored masters and their state.
+            </summary>
+            <param name="flags"></param>
+            <returns>an array of master state KeyValuePair arrays</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelMastersAsync(StackExchange.Redis.CommandFlags)">
+            <summary>
+            Show a list of monitored masters and their state.
+            </summary>
+            <param name="flags"></param>
+            <returns>an array of master state KeyValuePair arrays</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelSlaves(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Show a list of slaves for this master, and their state.
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>an array of slave state KeyValuePair arrays</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelSlavesAsync(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Show a list of slaves for this master, and their state.
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <returns>an array of slave state KeyValuePair arrays</returns>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelFailover(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Force a failover as if the master was not reachable, and without asking for agreement to other Sentinels 
+            (however a new version of the configuration will be published so that the other Sentinels will update their configurations).
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.SentinelFailoverAsync(System.String,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Force a failover as if the master was not reachable, and without asking for agreement to other Sentinels 
+            (however a new version of the configuration will be published so that the other Sentinels will update their configurations).
+            </summary>
+            <param name="serviceName">the sentinel service name</param>
+            <param name="flags"></param>
+            <remarks>http://redis.io/topics/sentinel</remarks>
+        </member>
         <member name="P:StackExchange.Redis.IServer.ClusterConfiguration">
             <summary>
             Gets the cluster configuration associated with this server, if known
@@ -3859,6 +4035,12 @@
             The commands available to <a href="ssdb">http://www.ideawu.com/ssdb/</a>
             </summary>
             <remarks>http://www.ideawu.com/ssdb/docs/redis-to-ssdb.html</remarks>
+        </member>
+        <member name="P:StackExchange.Redis.CommandMap.Sentinel">
+            <summary>
+            The commands available to <a href="Sentinel">http://redis.io/topics/sentinel</a>
+            </summary>
+            <remarks>http://redis.io/topics/sentinel</remarks>
         </member>
         <member name="M:StackExchange.Redis.PhysicalBridge.WriteMessageDirect(StackExchange.Redis.PhysicalConnection,StackExchange.Redis.Message)">
             <summary>
@@ -4142,6 +4324,11 @@
         <member name="P:StackExchange.Redis.RedisFeatures.Time">
             <summary>
             Does TIME exist?
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.RedisFeatures.ScriptingDatabaseSafe">
+            <summary>
+            Are Lua changes to the calling database transparent to the calling client?
             </summary>
         </member>
         <member name="P:StackExchange.Redis.RedisFeatures.Version">
@@ -4455,6 +4642,11 @@
         <member name="P:StackExchange.Redis.RedisValue.IsNullOrEmpty">
             <summary>
             Indicates whether the value is either null or a zero-length value
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.RedisValue.HasValue">
+            <summary>
+            Indicates whether the value is greater than zero-length
             </summary>
         </member>
         <member name="T:StackExchange.Redis.ReplicationChangeOptions">
