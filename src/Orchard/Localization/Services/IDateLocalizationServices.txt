@@ -43,10 +43,12 @@ struct DateLocalizationOptions {
 TODO:
 	* Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
 	* Add formatting and parsing of time zone information (add timezone properties to TimeParts structure)
-	* Rewrite DefaultDateLocalizationServices
+	* Add support for both standard and custom format strings
 	* Write unit tests for DefaultDateLocalizationServices
 	* Add warning message when saving unsupported combination in settings
 	* Add support for the different Gregorian calendar types
+	* Go over date conversion logic in audit trail filtering to make sure it's correct
+	* Go over date conversion logic in DateTokens to make sure it's correct
 	* Improve DateTimeField:
 		- Surface the field mode (date, time or both)
 		- Do not perform time-zone conversion in date-only mode

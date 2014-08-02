@@ -5,6 +5,12 @@ using System.Linq;
 namespace Orchard.Localization.Models {
     public struct DateParts {
 
+        public static DateParts MinValue {
+            get {
+                return new DateParts(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day);
+            }
+        }
+
         public DateParts(int year, int month, int day) {
             _year = year;
             _month = month;

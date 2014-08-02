@@ -17,13 +17,11 @@ namespace Orchard.AuditTrail.Controllers {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IOrchardServices _services;
         private readonly IAuditTrailEventDisplayBuilder _displayBuilder;
-        private readonly IDateServices _dateServices;
 
-        public AdminController(IAuditTrailManager auditTrailManager, IOrchardServices services, IAuditTrailEventDisplayBuilder displayBuilder, IDateServices dateServices) {
+        public AdminController(IAuditTrailManager auditTrailManager, IOrchardServices services, IAuditTrailEventDisplayBuilder displayBuilder) {
             _auditTrailManager = auditTrailManager;
             _services = services;
             _displayBuilder = displayBuilder;
-            _dateServices = dateServices;
             _authorizer = services.Authorizer;
             New = _services.New;
         }

@@ -14,14 +14,14 @@ namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
         private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
-        private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
             IArchiveLaterService archiveLaterService,
-            IDateLocalizationServices dateServices) {
+            IDateLocalizationServices dateLocalizationServices) {
             _archiveLaterService = archiveLaterService;
-            _dateServices = dateServices;
+            _dateLocalizationServices = dateLocalizationServices;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -56,8 +56,8 @@ namespace Orchard.ArchiveLater.Drivers {
                 Editor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = true,
-                    Date = _dateServices.ConvertToLocalDateString(part.ScheduledArchiveUtc.Value, ""),
-                    Time = _dateServices.ConvertToLocalTimeString(part.ScheduledArchiveUtc.Value, ""),
+                    Date = _dateLocalizationServices.ConvertToLocalizedDateString(part.ScheduledArchiveUtc.Value),
+                    Time = _dateLocalizationServices.ConvertToLocalizedTimeString(part.ScheduledArchiveUtc.Value),
                 }
             };
 
@@ -71,7 +71,7 @@ namespace Orchard.ArchiveLater.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (model.ArchiveLater) {
                     try {
-                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                         _archiveLaterService.ArchiveLater(model.ContentItem, utcDateTime.HasValue ? utcDateTime.Value : DateTime.MaxValue);
                     }
                     catch (FormatException) {

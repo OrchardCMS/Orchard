@@ -5,6 +5,12 @@ using System.Linq;
 namespace Orchard.Localization.Models {
     public struct TimeParts {
 
+        public static TimeParts MinValue {
+            get {
+                return new TimeParts(DateTime.MinValue.Hour, DateTime.MinValue.Minute, DateTime.MinValue.Second, DateTime.MinValue.Millisecond);
+            }
+        }
+
         public TimeParts(int hour, int minute, int second, int millisecond) {
             _hour = hour;
             _minute = minute;

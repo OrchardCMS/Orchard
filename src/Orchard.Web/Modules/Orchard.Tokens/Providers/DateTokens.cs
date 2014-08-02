@@ -11,7 +11,7 @@ namespace Orchard.Tokens.Providers {
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Lazy<CultureInfo> _cultureInfo;
-        private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public DateTokens(
             IClock clock, 
@@ -22,7 +22,7 @@ namespace Orchard.Tokens.Providers {
             _dateTimeLocalization = dateTimeLocalization;
             _workContextAccessor = workContextAccessor;
             _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(_workContextAccessor.GetContext().CurrentCulture));
-            _dateServices = dateServices;
+            _dateLocalizationServices = dateServices;
 
             T = NullLocalizer.Instance;
         }
@@ -45,8 +45,8 @@ namespace Orchard.Tokens.Providers {
                 .Token("Since", DateTimeRelative)
                 .Chain("Since", "Date", DateTimeRelative)
                 // {Date.Local}
-                .Token("Local", d => _dateServices.ConvertToSiteTimeZone(d))
-                .Chain("Local", "Date", d => _dateServices.ConvertToSiteTimeZone(d))
+                .Token("Local", d => _dateLocalizationServices.ConvertToSiteTimeZone(d))
+                .Chain("Local", "Date", d => _dateLocalizationServices.ConvertToSiteTimeZone(d))
                 // {Date.ShortDate}
                 .Token("ShortDate", d => d.ToString(_dateTimeLocalization.ShortDateFormat, _cultureInfo.Value))
                 // {Date.ShortTime}

@@ -10,169 +10,148 @@ namespace Orchard.Localization.Services {
 
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IDateTimeFormatProvider _dateTimeFormatProvider;
+        private readonly IDateFormatter _dateFormatter;
         private readonly ICalendarManager _calendarManager;
 
         public DefaultDateLocalizationServices(
             IWorkContextAccessor workContextAccessor,
             IDateTimeFormatProvider dateTimeFormatProvider,
+            IDateFormatter dateFormatter,
             ICalendarManager calendarManager) {
             _workContextAccessor = workContextAccessor;
             _dateTimeFormatProvider = dateTimeFormatProvider;
+            _dateFormatter = dateFormatter;
             _calendarManager = calendarManager;
         }
 
-        public virtual DateTime? ConvertToSiteTimeZone(DateTime date) {
-            return ConvertToSiteTimeZone(ToNullable(date));
-        }
-
-        public virtual DateTime? ConvertToSiteTimeZone(DateTime? date) {
-            if (!date.HasValue) {
-                return null;
-            }
+        public virtual DateTime ConvertToSiteTimeZone(DateTime date) {
             var workContext = _workContextAccessor.GetContext();
-            return TimeZoneInfo.ConvertTimeFromUtc(date.Value, workContext.CurrentTimeZone);
+            return TimeZoneInfo.ConvertTimeFromUtc(date, workContext.CurrentTimeZone);
         }
 
-        public virtual DateTime? ConvertFromSiteTimeZone(DateTime date) {
-            return ConvertFromSiteTimeZone(ToNullable(date));
-        }
-
-        public virtual DateTime? ConvertFromSiteTimeZone(DateTime? date) {
-            if (!date.HasValue) {
-                return null;
-            }
+        public virtual DateTime ConvertFromSiteTimeZone(DateTime date) {
             var workContext = _workContextAccessor.GetContext();
-            return TimeZoneInfo.ConvertTimeToUtc(date.Value, workContext.CurrentTimeZone);
+            return TimeZoneInfo.ConvertTimeToUtc(date, workContext.CurrentTimeZone);
         }
 
-        public virtual DateTimeParts? ConvertToSiteCalendar(DateTime? date) {
-            if (!date.HasValue){
-                return null;
-            }
+        public virtual DateTimeParts ConvertToSiteCalendar(DateTime date) {
             var calendar = CurrentCalendar;
             return new DateTimeParts(
-                calendar.GetYear(date.Value),
-                calendar.GetMonth(date.Value),
-                calendar.GetDayOfMonth(date.Value),
-                calendar.GetHour(date.Value),
-                calendar.GetMinute(date.Value),
-                calendar.GetSecond(date.Value),
-                Convert.ToInt32(calendar.GetMilliseconds(date.Value)));
+                calendar.GetYear(date),
+                calendar.GetMonth(date),
+                calendar.GetDayOfMonth(date),
+                calendar.GetHour(date),
+                calendar.GetMinute(date),
+                calendar.GetSecond(date),
+                Convert.ToInt32(calendar.GetMilliseconds(date)));
         }
 
-        public virtual DateTime? ConvertFromSiteCalendar(DateTimeParts? parts) {
-            if (!parts.HasValue) {
-                return null;
-            }
-            return new DateTime(parts.Value.Date.Year, parts.Value.Date.Month, parts.Value.Date.Day, parts.Value.Time.Hour, parts.Value.Time.Minute, parts.Value.Time.Second, parts.Value.Time.Millisecond, CurrentCalendar);
+        public virtual DateTime ConvertFromSiteCalendar(DateTimeParts parts) {
+            return CurrentCalendar.ToDateTime(parts.Date.Year, parts.Date.Month, parts.Date.Day, parts.Time.Hour, parts.Time.Minute, parts.Time.Second, parts.Time.Millisecond);
         }
 
-
-
-        public virtual string ConvertToLocalString(DateTime date, string nullText = null) {
-            return ConvertToLocalString(ToNullable(date), _dateTimeFormatProvider.LongDateTimeFormat, nullText);
+        public string ConvertToLocalizedDateString(DateTime date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedDateString(ToNullable(date), options);
         }
 
-        public virtual string ConvertToLocalString(DateTime date, string format, string nullText = null) {
-            return ConvertToLocalString(ToNullable(date), format, nullText);
+        public string ConvertToLocalizedDateString(DateTime? date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedString(date, _dateTimeFormatProvider.ShortDateFormat, options);
         }
 
-        public virtual string ConvertToLocalString(DateTime? date, string format, string nullText = null) {
-            var localDate = ConvertToSiteTimeZone(date);
-            if (!localDate.HasValue) {
-                return nullText;
-            }
-
-            // If the configured current calendar is different from the default calendar
-            // of the configured current culture we must override the conversion process. 
-            // We do this by using a custom CultureInfo modified to use GregorianCalendar
-            // (means no calendar conversion will be performed as part of the string
-            // formatting) and instead perform the calendar conversion ourselves.
-
-            var cultureInfo = CurrentCulture;
-            var usingCultureCalendar = CurrentCulture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(CurrentCalendar);
-            if (!usingCultureCalendar) {
-                cultureInfo = (CultureInfo)CurrentCulture.Clone();
-                cultureInfo.DateTimeFormat.Calendar = new GregorianCalendar();
-                var calendar = CurrentCalendar;
-                localDate = new DateTime(calendar.GetYear(localDate.Value), calendar.GetMonth(localDate.Value), calendar.GetDayOfMonth(localDate.Value), calendar.GetHour(localDate.Value), calendar.GetMinute(localDate.Value), calendar.GetSecond(localDate.Value));
-            }
-
-            return localDate.Value.ToString(format, cultureInfo);
+        public string ConvertToLocalizedTimeString(DateTime date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedTimeString(ToNullable(date), options);
         }
 
-        public virtual string ConvertToLocalDateString(DateTime date, string nullText = null) {
-            return ConvertToLocalDateString(ToNullable(date), nullText);
+        public string ConvertToLocalizedTimeString(DateTime? date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedString(date, _dateTimeFormatProvider.LongTimeFormat, options);
         }
 
-        public virtual string ConvertToLocalDateString(DateTime? date, string nullText = null) {
-            return ConvertToLocalString(date, _dateTimeFormatProvider.ShortDateFormat, nullText);
+        public string ConvertToLocalizedString(DateTime date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedString(ToNullable(date), options);
         }
 
-        public virtual string ConvertToLocalTimeString(DateTime date, string nullText = null) {
-            return ConvertToLocalTimeString(ToNullable(date), nullText);
+        public string ConvertToLocalizedString(DateTime? date, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedString(date, _dateTimeFormatProvider.ShortDateTimeFormat, options);
         }
 
-        public virtual string ConvertToLocalTimeString(DateTime? date, string nullText = null) {
-            return ConvertToLocalString(date, _dateTimeFormatProvider.ShortTimeFormat, nullText);
+        public string ConvertToLocalizedString(DateTime date, string format, DateLocalizationOptions options = null) {
+            return ConvertToLocalizedString(ToNullable(date), format, options);
         }
 
-        public virtual DateTime? ConvertFromLocalString(string dateString) {
-            if (String.IsNullOrWhiteSpace(dateString)) {
-                return null;
+        public string ConvertToLocalizedString(DateTime? date, string format, DateLocalizationOptions options = null) {
+            options = options ?? new DateLocalizationOptions();
+
+            if (!date.HasValue) {
+                return options.NullText;
             }
 
-            // If the configured current calendar is different from the default calendar
-            // of the configured current culture we must override the conversion process. 
-            // We do this by using a custom CultureInfo modified to use GregorianCalendar
-            // (means no calendar conversion will be performed as part of the string
-            // parsing) and instead perform the calendar conversion ourselves.
+            var dateValue = date.Value;
 
-            var cultureInfo = CurrentCulture;
-            var usingCultureCalendar = CurrentCulture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(CurrentCalendar);
-            if (!usingCultureCalendar) {
-                cultureInfo = (CultureInfo)CurrentCulture.Clone();
-                cultureInfo.DateTimeFormat.Calendar = new GregorianCalendar();
+            if (options.EnableTimeZoneConversion) {
+                dateValue = ConvertToSiteTimeZone(dateValue);
             }
 
-            var localDate = DateTime.Parse(dateString, CurrentCulture);
-
-            if (!usingCultureCalendar) {
-                var calendar = CurrentCalendar;
-                localDate = calendar.ToDateTime(localDate.Year, localDate.Month, localDate.Day, localDate.Hour, localDate.Minute, localDate.Second, localDate.Millisecond);
+            var parts = DateTimeParts.FromDateTime(dateValue);
+            if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
+                parts = ConvertToSiteCalendar(dateValue);
             }
 
-            return ConvertFromSiteTimeZone(localDate);
+            return _dateFormatter.FormatDateTime(parts, format);
         }
 
-        public virtual DateTime? ConvertFromLocalString(string dateString, string timeString) {
-            if (String.IsNullOrWhiteSpace(dateString) && String.IsNullOrWhiteSpace(timeString)) {
+        public DateTime? ConvertFromLocalizedDateString(string dateString, DateLocalizationOptions options = null) {
+            return ConvertFromLocalizedString(dateString, null, options);
+        }
+
+        public DateTime? ConvertFromLocalizedTimeString(string timeString, DateLocalizationOptions options = null) {
+            return ConvertFromLocalizedString(null, timeString, options);
+        }
+
+        public DateTime? ConvertFromLocalizedString(string dateString, string timeString, DateLocalizationOptions options = null) {
+            options = options ?? new DateLocalizationOptions();
+
+            var hasDate = dateString != null && dateString != options.NullText;
+            var hasTime = timeString != null && timeString != options.NullText;
+            if (!hasDate && !hasTime) {
                 return null;
             }
 
-            // If the configured current calendar is different from the default calendar
-            // of the configured current culture we must override the conversion process. 
-            // We do this by using a custom CultureInfo modified to use GregorianCalendar
-            // (means no calendar conversion will be performed as part of the string
-            // parsing) and instead perform the calendar conversion ourselves.
+            var parts = new DateTimeParts(
+                hasDate ? _dateFormatter.ParseDate(dateString) : DateParts.MinValue,
+                hasTime ? _dateFormatter.ParseTime(timeString) : TimeParts.MinValue
+            );
 
-            var cultureInfo = CurrentCulture;
-            var usingCultureCalendar = CurrentCulture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(CurrentCalendar);
-            if (!usingCultureCalendar) {
-                cultureInfo = (CultureInfo)CurrentCulture.Clone();
-                cultureInfo.DateTimeFormat.Calendar = new GregorianCalendar();
+            var dateValue = parts.ToDateTime();
+            if (hasDate && options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
+                dateValue = ConvertFromSiteCalendar(parts);
             }
 
-            var localDate = !String.IsNullOrWhiteSpace(dateString) ? DateTime.Parse(dateString, cultureInfo) : new DateTime(1980, 1, 1);
-            var localTime = !String.IsNullOrWhiteSpace(timeString) ? DateTime.Parse(timeString, cultureInfo) : new DateTime(1980, 1, 1, 12, 0, 0);
-            var localDateTime = new DateTime(localDate.Year, localDate.Month, localDate.Day, localTime.Hour, localTime.Minute, localTime.Second);
-
-            if (!usingCultureCalendar) {
-                var calendar = CurrentCalendar;
-                localDateTime = calendar.ToDateTime(localDateTime.Year, localDateTime.Month, localDateTime.Day, localDateTime.Hour, localDateTime.Minute, localDateTime.Second, localDateTime.Millisecond);
+            if (hasTime && options.EnableTimeZoneConversion) {
+                dateValue = ConvertFromSiteTimeZone(dateValue);
             }
 
-            return ConvertFromSiteTimeZone(localDateTime);
+            return dateValue;
+        }
+
+        public DateTime? ConvertFromLocalizedString(string dateTimeString, DateLocalizationOptions options = null) {
+            options = options ?? new DateLocalizationOptions();
+
+            if (dateTimeString == null || dateTimeString == options.NullText) {
+                return null;
+            }
+
+            var parts = _dateFormatter.ParseDateTime(dateTimeString);
+
+            var dateValue = parts.ToDateTime();
+            if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
+                dateValue = ConvertFromSiteCalendar(parts);
+            }
+
+            if (options.EnableTimeZoneConversion) {
+                dateValue = ConvertFromSiteTimeZone(dateValue);
+            }
+
+            return dateValue;
         }
 
         protected virtual CultureInfo CurrentCulture {

@@ -11,16 +11,16 @@ using Orchard.Services;
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
-        private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
         private readonly IDateTimeFormatProvider _dateTimeLocalization;
 
         public DateTimeShapes(
             IClock clock,
-            IDateLocalizationServices dateServices,
+            IDateLocalizationServices dateLocalizationServices,
             IDateTimeFormatProvider dateTimeLocalization
             ) {
             _clock = clock;
-            _dateServices = dateServices;
+            _dateLocalizationServices = dateLocalizationServices;
             _dateTimeLocalization = dateTimeLocalization;
             T = NullLocalizer.Instance;
         }
@@ -65,10 +65,10 @@ namespace Orchard.Core.Shapes {
             //using a LocalizedString forces the caller to use a localizable format
 
             if (CustomFormat == null || String.IsNullOrWhiteSpace(CustomFormat.Text)) {
-                return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat, null));
+                return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, _dateTimeLocalization.LongDateTimeFormat));
             }
 
-            return new MvcHtmlString(_dateServices.ConvertToLocalString(DateTimeUtc, CustomFormat.Text, null));
+            return new MvcHtmlString(_dateLocalizationServices.ConvertToLocalizedString(DateTimeUtc, CustomFormat.Text));
         }
     }
 }

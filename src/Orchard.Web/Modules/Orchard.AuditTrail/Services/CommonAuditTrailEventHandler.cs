@@ -8,11 +8,11 @@ using Orchard.Localization.Services;
 namespace Orchard.AuditTrail.Services {
     public class CommonAuditTrailEventHandler : AuditTrailEventHandlerBase {
         private readonly Lazy<IAuditTrailManager> _auditTrailManager;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
-        public CommonAuditTrailEventHandler(Lazy<IAuditTrailManager> auditTrailManager, IDateServices dateServices) {
+        public CommonAuditTrailEventHandler(Lazy<IAuditTrailManager> auditTrailManager, IDateLocalizationServices dateLocalizationServices) {
             _auditTrailManager = auditTrailManager;
-            _dateServices = dateServices;
+            _dateLocalizationServices = dateLocalizationServices;
         }
 
         public override void Filter(QueryFilterContext context) {
@@ -60,7 +60,7 @@ namespace Orchard.AuditTrail.Services {
             try {
                 var dateString = filters.Get(prefix + ".Date");
                 var timeString = filters.Get(prefix + ".Time");
-                return _dateServices.ConvertFromLocalString(dateString, timeString);
+                return _dateLocalizationServices.ConvertFromLocalizedString(dateString, timeString);
             }
             catch (FormatException ex) {
                 filters.UpdateModel.AddModelError(prefix, T(@"Error parsing ""{0}"" date: {1}", fieldName, ex.Message));

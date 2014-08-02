@@ -261,6 +261,7 @@
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
+    <Compile Include="Localization\Models\DateLocalizationOptions.cs" />
     <Compile Include="Localization\Models\DateParts.cs" />
     <Compile Include="Localization\Models\DateTimeParts.cs" />
     <Compile Include="Localization\Models\TimeParts.cs" />

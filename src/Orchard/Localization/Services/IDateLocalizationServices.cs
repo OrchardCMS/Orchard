@@ -11,120 +11,172 @@ namespace Orchard.Localization.Services {
     public interface IDateLocalizationServices : IDependency {
 
         /// <summary>
-        /// Converts a non-nullable date from UTC to the Orchard configured time zone.
+        /// Converts a date from UTC to the Orchard configured time zone.
         /// </summary>
-        /// <param name="dateUtc">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
+        /// <param name="dateUtc">The UTC date to convert.</param>
         /// <returns></returns>
-        DateTime? ConvertToSiteTimeZone(DateTime dateUtc);
+        DateTime ConvertToSiteTimeZone(DateTime dateUtc);
+
+        ///// <summary>
+        ///// Converts a nullable date from UTC to the Orchard configured time zone.
+        ///// </summary>
+        ///// <param name="dateUtc">The nullable UTC date to convert.</param>
+        ///// <returns></returns>
+        //DateTime? ConvertToSiteTimeZone(DateTime? dateUtc);
 
         /// <summary>
-        /// Converts a nullable date from UTC to the Orchard configured time zone.
+        /// Converts a date from the Orchard configured time zone to UTC.
         /// </summary>
-        /// <param name="dateUtc">The nullable UTC date to convert.</param>
+        /// <param name="dateLocal">The local date to convert.</param>
         /// <returns></returns>
-        DateTime? ConvertToSiteTimeZone(DateTime? dateUtc);
+        DateTime ConvertFromSiteTimeZone(DateTime dateLocal);
 
-        /// <summary>
-        /// Converts a non-nullable date from the Orchard configured time zone to UTC.
-        /// </summary>
-        /// <param name="dateLocal">The non-nullable local date to convert. DateTime.MinValue is translated to null.</param>
-        /// <returns></returns>
-        DateTime? ConvertFromSiteTimeZone(DateTime dateLocal);
-
-        /// <summary>
-        /// Converts a nullable date from the Orchard configured time zone to UTC.
-        /// </summary>
-        /// <param name="dateLocal">The nullable local date to convert.</param>
-        /// <returns></returns>
-        DateTime? ConvertFromSiteTimeZone(DateTime? dateLocal);
+        ///// <summary>
+        ///// Converts a nullable date from the Orchard configured time zone to UTC.
+        ///// </summary>
+        ///// <param name="dateLocal">The nullable local date to convert.</param>
+        ///// <returns></returns>
+        //DateTime? ConvertFromSiteTimeZone(DateTime? dateLocal);
 
         /// <summary>
         /// Converts a date from Gregorian calendar to the Orchard configured calendar.
         /// </summary>
         /// <param name="date">The Gregorian calendar date to convert.</param>
-        /// <returns>Null if the supplied date parameter was null. Otherwise a <c>DateTimeParts</c> instance representing the converted date.</returns>
-        DateTimeParts? ConvertToSiteCalendar(DateTime? date);
+        /// <returns>A <c>DateTimeParts</c> instance representing the converted date.</returns>
+        DateTimeParts ConvertToSiteCalendar(DateTime date);
+
+        ///// <summary>
+        ///// Converts a nullable date from Gregorian calendar to the Orchard configured calendar.
+        ///// </summary>
+        ///// <param name="date">The nullable Gregorian calendar date to convert.</param>
+        ///// <returns>Null if the supplied date parameter was null. Otherwise a <c>DateTimeParts</c> instance representing the converted date.</returns>
+        //DateTimeParts? ConvertToSiteCalendar(DateTime? date);
 
         /// <summary>
         /// Converts a date from the Orchard configured calendar to Gregorian calendar.
         /// </summary>
         /// <param name="parts">A <c>DateTimeParts</c> instance representing the Orchard configured calendar date to convert.</param>
-        /// <returns>Null if the supplied parts parameter was null. Otherwise the converted Gregorian calendar date.</returns>
-        DateTime? ConvertFromSiteCalendar(DateTimeParts? parts);
+        /// <returns>A <c>DateTime</c> instance representing the converted date.</returns>
+        DateTime ConvertFromSiteCalendar(DateTimeParts parts);
 
-
+        ///// <summary>
+        ///// Converts a nullable date from the Orchard configured calendar to Gregorian calendar.
+        ///// </summary>
+        ///// <param name="parts">A <c>DateTimeParts</c> instance representing the Orchard configured calendar date to convert.</param>
+        ///// <returns>Null if the supplied parts parameter was null. Otherwise a <c>DateTime</c> instance representing the converted date.</returns>
+        //DateTime? ConvertFromSiteCalendar(DateTimeParts? parts);
 
         /// <summary>
-        /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it using the default long date and time format string.
+        /// Converts a non-nullable UTC date in Gregorian calendar to a localized short date string.
         /// </summary>
         /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date is equal to DateTime.MinValue.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalString(DateTime date, string nullText = null);
+        string ConvertToLocalizedDateString(DateTime date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it using the specified format string using the Orchard configured culture.
-        /// </summary>
-        /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
-        /// <param name="format">A standard DateTime format string to use for formating the converted date.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date is equal to DateTime.MinValue.</param>
-        /// <returns></returns>
-        string ConvertToLocalString(DateTime date, string format, string nullText = null);
-
-        /// <summary>
-        /// Converts a nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it using the specified format string using the Orchard configured culture.
+        /// Converts a nullable UTC date in Gregorian calendar to a localized short date string.
         /// </summary>
         /// <param name="date">The nullable UTC date to convert.</param>
-        /// <param name="format">A standard DateTime format string to use for formating the converted date.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date has no value.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalString(DateTime? date, string format, string nullText = null);
+        string ConvertToLocalizedDateString(DateTime? date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it as a date-only string using the Orchard configured culture.
+        /// Converts a non-nullable UTC date in Gregorian calendar to a localized long time string.
         /// </summary>
         /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date is equal to DateTime.MinValue.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalDateString(DateTime date, string nullText = null);
+        string ConvertToLocalizedTimeString(DateTime date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Converts a nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it as a date-only string using the Orchard configured culture.
+        /// Converts a nullable UTC date in Gregorian calendar to a localized long time string.
         /// </summary>
         /// <param name="date">The nullable UTC date to convert.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date has no value.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalDateString(DateTime? date, string nullText = null);
+        string ConvertToLocalizedTimeString(DateTime? date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Converts a non-nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it as a time-only string using the Orchard configured culture.
+        /// Converts a non-nullable UTC date in Gregorian calendar to a localized short date/time string.
         /// </summary>
         /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date is equal to DateTime.MinValue.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalTimeString(DateTime date, string nullText = null);
+        string ConvertToLocalizedString(DateTime date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Converts a nullable date from Gregorian calendar UTC to the Orchard configured calendar and time zone and formats it as a time-only string using the Orchard configured culture.
+        /// Converts a nullable UTC date in Gregorian calendar to a localized short date/time string.
         /// </summary>
         /// <param name="date">The nullable UTC date to convert.</param>
-        /// <param name="nullText">A text to be returned if the supplied UTC date has no value.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        string ConvertToLocalTimeString(DateTime? date, string nullText = null);
+        string ConvertToLocalizedString(DateTime? date, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Parses a date and time string using the Orchard configured culture and converts it to Gregorian calendar UTC from the Orchard configured calendar and time zone.
+        /// Converts a non-nullable UTC date in Gregorian calendar to a localized string with the specified format.
         /// </summary>
-        /// <param name="dateString">The local date and time string to parse and convert.</param>
+        /// <param name="date">The non-nullable UTC date to convert. DateTime.MinValue is translated to null.</param>
+        /// <param name="format">A standard or custom DateTime format string to use when formatting the date.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        DateTime? ConvertFromLocalString(string dateString);
+        string ConvertToLocalizedString(DateTime date, string format, DateLocalizationOptions options = null);
 
         /// <summary>
-        /// Parses separate date and time strings using the Orchard configured culture and converts the resulting combined DateTime to Gregorian calendar UTC from the Orchard configured calendar and time zone.
+        /// Converts a nullable UTC date in Gregorian calendar to a localized string with the specified format.
         /// </summary>
-        /// <param name="dateString">The local date string to parse and convert, or null or an empty string to only convert the time component.</param>
-        /// <param name="timeString">The local time string to parse and convert, or null or an empty string to only convert the date component.</param>
+        /// <param name="date">The nullable UTC date to convert.</param>
+        /// <param name="format">A standard or custom DateTime format string to use when formatting the date.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
         /// <returns></returns>
-        DateTime? ConvertFromLocalString(string dateString, string timeString);
+        string ConvertToLocalizedString(DateTime? date, string format, DateLocalizationOptions options = null);
+
+        /// <summary>
+        /// Converts a localized date string to a UTC date in Gregorian calendar.
+        /// </summary>
+        /// <param name="dateString">The localized date string to convert.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
+        /// <returns>A <c>DateTime</c> instance where the time component equals that of DateTime.MinValue.</returns>
+        /// <remarks>
+        /// If the dateString parameter is null or equal to DateLocalizationOptions.NullText property, this method returns null.
+        /// </remarks>
+        DateTime? ConvertFromLocalizedDateString(string dateString, DateLocalizationOptions options = null);
+
+        /// <summary>
+        /// Converts a localized time string to a UTC date in Gregorian calendar.
+        /// </summary>
+        /// <param name="timeString">The localized time string to convert.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
+        /// <returns>A <c>DateTime</c> instance where the date component equals that of DateTime.MinValue.</returns>
+        /// <remarks>
+        /// If the timeString parameter is null or equal to DateLocalizationOptions.NullText property, this method returns null.
+        /// </remarks>
+        DateTime? ConvertFromLocalizedTimeString(string timeString, DateLocalizationOptions options = null);
+
+        /// <summary>
+        /// Converts separate localized date and time strings to a single UTC date in Gregorian calendar.
+        /// </summary>
+        /// <param name="dateString">The localized date/time string to convert.</param>
+        /// <param name="timeString">The localized time string to convert.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// If the dateString parameter is null or equal to DateLocalizationOptions.NullText property, the returned <c>DateTime</c> instance will have a date component that equals that of DateTime.MinValue.
+        /// If the timeString parameter is null or equal to DateLocalizationOptions.NullText property, the returned <c>DateTime</c> instance will have a time component that equals that of DateTime.MinValue.
+        /// If both dateString and timeString parameters are null or equal to DateLocalizationOptions.NullText property, this method returns null.
+        /// </remarks>
+        DateTime? ConvertFromLocalizedString(string dateString, string timeString, DateLocalizationOptions options = null);
+
+        /// <summary>
+        /// Converts a localized date/time string to a UTC date in Gregorian calendar.
+        /// </summary>
+        /// <param name="dateTimeString">The localized date/time string to convert.</param>
+        /// <param name="options">An optional <c>DateLocalizationOptions</c> instance used to control various aspects of the conversion process.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// If the dateTimeString parameter is null or equal to DateLocalizationOptions.NullText property, this method returns null.
+        /// </remarks>
+        DateTime? ConvertFromLocalizedString(string dateTimeString, DateLocalizationOptions options = null);
     }
 }

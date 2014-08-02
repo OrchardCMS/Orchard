@@ -17,14 +17,14 @@ namespace Orchard.Fields.Drivers {
     public class DateTimeFieldDriver : ContentFieldDriver<DateTimeField> {
         private const string TemplateName = "Fields/DateTime.Edit"; // EditorTemplates/Fields/DateTime.Edit.cshtml
 
-        public DateTimeFieldDriver(IOrchardServices services, IDateLocalizationServices dateServices) {
+        public DateTimeFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices) {
             Services = services;
-            DateServices = dateServices;
+            DateLocalizationServices = dateLocalizationServices;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
-        public IDateLocalizationServices DateServices { get; set; }
+        public IDateLocalizationServices DateLocalizationServices { get; set; }
         public Localizer T { get; set; }
 
         private static string GetPrefix(ContentField field, ContentPart part) {
@@ -47,8 +47,8 @@ namespace Orchard.Fields.Drivers {
                         Hint = settings.Hint,
                         IsRequired = settings.Required,
                         Editor = new DateTimeEditor() {
-                            Date = DateServices.ConvertToLocalDateString(value, String.Empty),
-                            Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
+                            Date = DateLocalizationServices.ConvertToLocalizedDateString(value),
+                            Time = DateLocalizationServices.ConvertToLocalizedTimeString(value),
                             ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
                             ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
                         }
@@ -69,8 +69,8 @@ namespace Orchard.Fields.Drivers {
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
                 Editor = new DateTimeEditor() {
-                    Date = DateServices.ConvertToLocalDateString(value, String.Empty),
-                    Time = DateServices.ConvertToLocalTimeString(value, String.Empty),
+                    Date = DateLocalizationServices.ConvertToLocalizedDateString(value),
+                    Time = DateLocalizationServices.ConvertToLocalizedTimeString(value),
                     ShowDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly,
                     ShowTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly,
                 }
@@ -90,7 +90,7 @@ namespace Orchard.Fields.Drivers {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 } else {
                     try {
-                        var utcDateTime = DateServices.ConvertFromLocalString(viewModel.Editor.Date, viewModel.Editor.Time);
+                        var utcDateTime = DateLocalizationServices.ConvertFromLocalizedString(viewModel.Editor.Date, viewModel.Editor.Time);
                         if (utcDateTime.HasValue) {
                             field.DateTime = utcDateTime.Value;
                         } else {

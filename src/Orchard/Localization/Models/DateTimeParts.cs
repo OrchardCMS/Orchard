@@ -5,6 +5,17 @@ using System.Linq;
 namespace Orchard.Localization.Models {
     public struct DateTimeParts {
 
+        //public static DateTimeParts? FromDateTime(DateTime? dateTime) {
+        //    if (!dateTime.HasValue) {
+        //        return null;
+        //    }
+        //    return FromDateTime(dateTime.Value);
+        //}
+
+        public static DateTimeParts FromDateTime(DateTime dateTime) {
+            return new DateTimeParts(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
+        }
+
         public DateTimeParts(int year, int month, int day, int hour, int minute, int second, int millisecond) {
             _date = new DateParts(year, month, day);
             _time = new TimeParts(hour, minute, second, millisecond);

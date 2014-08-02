@@ -8,12 +8,12 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
-        private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public DateEditorDriver(
             IOrchardServices services,
-            IDateLocalizationServices dateServices) {
-                _dateServices = dateServices;
+            IDateLocalizationServices dateLocalizationServices) {
+                _dateLocalizationServices = dateLocalizationServices;
                 T = NullLocalizer.Instance;
                 Services = services;
         }
@@ -59,8 +59,8 @@ namespace Orchard.Core.Common.DateEditor {
                             theDatesHaveNotBeenModified;
 
                         if (!theEditorShouldBeBlank) {
-                            model.Editor.Date = _dateServices.ConvertToLocalDateString(part.CreatedUtc, "");
-                            model.Editor.Time = _dateServices.ConvertToLocalTimeString(part.CreatedUtc, "");
+                            model.Editor.Date = _dateLocalizationServices.ConvertToLocalizedDateString(part.CreatedUtc);
+                            model.Editor.Time = _dateLocalizationServices.ConvertToLocalizedTimeString(part.CreatedUtc);
                         }
                     }
 
@@ -69,7 +69,7 @@ namespace Orchard.Core.Common.DateEditor {
 
                         if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                             try {
-                                var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                                var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                                 part.CreatedUtc = utcDateTime;
                                 part.VersionCreatedUtc = utcDateTime;
                             }
