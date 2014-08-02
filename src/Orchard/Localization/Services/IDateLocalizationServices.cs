@@ -17,26 +17,12 @@ namespace Orchard.Localization.Services {
         /// <returns></returns>
         DateTime ConvertToSiteTimeZone(DateTime dateUtc);
 
-        ///// <summary>
-        ///// Converts a nullable date from UTC to the Orchard configured time zone.
-        ///// </summary>
-        ///// <param name="dateUtc">The nullable UTC date to convert.</param>
-        ///// <returns></returns>
-        //DateTime? ConvertToSiteTimeZone(DateTime? dateUtc);
-
         /// <summary>
         /// Converts a date from the Orchard configured time zone to UTC.
         /// </summary>
         /// <param name="dateLocal">The local date to convert.</param>
         /// <returns></returns>
         DateTime ConvertFromSiteTimeZone(DateTime dateLocal);
-
-        ///// <summary>
-        ///// Converts a nullable date from the Orchard configured time zone to UTC.
-        ///// </summary>
-        ///// <param name="dateLocal">The nullable local date to convert.</param>
-        ///// <returns></returns>
-        //DateTime? ConvertFromSiteTimeZone(DateTime? dateLocal);
 
         /// <summary>
         /// Converts a date from Gregorian calendar to the Orchard configured calendar.
@@ -45,26 +31,12 @@ namespace Orchard.Localization.Services {
         /// <returns>A <c>DateTimeParts</c> instance representing the converted date.</returns>
         DateTimeParts ConvertToSiteCalendar(DateTime date);
 
-        ///// <summary>
-        ///// Converts a nullable date from Gregorian calendar to the Orchard configured calendar.
-        ///// </summary>
-        ///// <param name="date">The nullable Gregorian calendar date to convert.</param>
-        ///// <returns>Null if the supplied date parameter was null. Otherwise a <c>DateTimeParts</c> instance representing the converted date.</returns>
-        //DateTimeParts? ConvertToSiteCalendar(DateTime? date);
-
         /// <summary>
         /// Converts a date from the Orchard configured calendar to Gregorian calendar.
         /// </summary>
         /// <param name="parts">A <c>DateTimeParts</c> instance representing the Orchard configured calendar date to convert.</param>
         /// <returns>A <c>DateTime</c> instance representing the converted date.</returns>
         DateTime ConvertFromSiteCalendar(DateTimeParts parts);
-
-        ///// <summary>
-        ///// Converts a nullable date from the Orchard configured calendar to Gregorian calendar.
-        ///// </summary>
-        ///// <param name="parts">A <c>DateTimeParts</c> instance representing the Orchard configured calendar date to convert.</param>
-        ///// <returns>Null if the supplied parts parameter was null. Otherwise a <c>DateTime</c> instance representing the converted date.</returns>
-        //DateTime? ConvertFromSiteCalendar(DateTimeParts? parts);
 
         /// <summary>
         /// Converts a non-nullable UTC date in Gregorian calendar to a localized short date string.

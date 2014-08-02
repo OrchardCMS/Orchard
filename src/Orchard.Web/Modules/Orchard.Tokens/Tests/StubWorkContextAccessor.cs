@@ -71,7 +71,7 @@ namespace Orchard.Tokens.Tests {
                     set { throw new NotImplementedException(); }
                 }
 
-				public string SiteCalendar {
+                public string SiteCalendar {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
