@@ -2,11 +2,9 @@ TODO:
     * Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
     * Add formatting and parsing of time zone information (add timezone properties to TimeParts structure)
     * Write unit tests for DefaultDateLocalizationServices
-    * Add warning message when saving unsupported combination in settings
     * Add support for the different Gregorian calendar types
     * Make sure DateTimeField, ArchiveLaterPart and PublishLaterPart handle Persian dates correctly.
     * Improve CultureDateTimeFormatProvider to return correct information for fa-IR culture when PersianCalendar is in use.
-    * Check for all uses of Display.DateTime that use a standard format string - no can do!
 
 BREAKING:
     * DateTokens "Date.Format:<formatString>" and "Date.Local.Format:<formatString>" only supports custom date/time format strings.
