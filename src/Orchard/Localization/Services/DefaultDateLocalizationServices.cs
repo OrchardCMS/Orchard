@@ -88,9 +88,10 @@ namespace Orchard.Localization.Services {
             }
 
             var parts = DateTimeParts.FromDateTime(dateValue);
-            if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
-                parts = ConvertToSiteCalendar(dateValue);
-            }
+            // No calendar conversion in this method - we expect the date component to be DateTime.MinValue and irrelevant anyway.
+            //if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
+            //    parts = ConvertToSiteCalendar(dateValue);
+            //}
 
             return _dateFormatter.FormatDateTime(parts, _dateTimeFormatProvider.LongTimeFormat);
         }
@@ -150,9 +151,12 @@ namespace Orchard.Localization.Services {
                 hasTime ? _dateFormatter.ParseTime(timeString) : TimeParts.MinValue
             );
 
-            var dateValue = parts.ToDateTime();
+            DateTime dateValue;
             if (hasDate && options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
                 dateValue = ConvertFromSiteCalendar(parts);
+            }
+            else {
+                dateValue = parts.ToDateTime(new GregorianCalendar());
             }
 
             if (hasTime && options.EnableTimeZoneConversion) {
@@ -183,9 +187,12 @@ namespace Orchard.Localization.Services {
 
             var parts = _dateFormatter.ParseDateTime(dateTimeString);
 
-            var dateValue = parts.ToDateTime();
+            DateTime dateValue;
             if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
                 dateValue = ConvertFromSiteCalendar(parts);
+            }
+            else {
+                dateValue = parts.ToDateTime(new GregorianCalendar());
             }
 
             if (options.EnableTimeZoneConversion) {

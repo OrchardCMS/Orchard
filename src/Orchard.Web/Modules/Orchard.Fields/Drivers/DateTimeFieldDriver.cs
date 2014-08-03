@@ -49,6 +49,11 @@ namespace Orchard.Fields.Drivers {
                         options.EnableTimeZoneConversion = false;
                     }
 
+                    // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                    if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                        options.EnableCalendarConversion = false;
+                    }
+
                     var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
                     var showTime = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.TimeOnly;
 
@@ -78,6 +83,11 @@ namespace Orchard.Fields.Drivers {
             // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
             if (settings.Display == DateTimeFieldDisplays.DateOnly) {
                 options.EnableTimeZoneConversion = false;
+            }
+
+            // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+            if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                options.EnableCalendarConversion = false;
             }
 
             var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
@@ -111,6 +121,11 @@ namespace Orchard.Fields.Drivers {
                 // Don't do any time zone conversion if field is semantically a date-only field, because that might mutate the date component.
                 if (settings.Display == DateTimeFieldDisplays.DateOnly) {
                     options.EnableTimeZoneConversion = false;
+                }
+
+                // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
+                if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
+                    options.EnableCalendarConversion = false;
                 }
 
                 var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;

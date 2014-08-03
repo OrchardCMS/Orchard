@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Orchard.Localization.Models {
@@ -37,11 +38,15 @@ namespace Orchard.Localization.Models {
             }
         }
 
-        public DateTime ToDateTime() {
-            return new DateTime(
+        public DateTime ToDateTime(Calendar calendar) {
+            return calendar.ToDateTime(
                 _year > 0 ? _year : DateTime.MinValue.Year,
                 _month > 0 ? _month : DateTime.MinValue.Month,
-                _day > 0 ? _day : DateTime.MinValue.Day
+                _day > 0 ? _day : DateTime.MinValue.Day,
+                DateTime.MinValue.Hour,
+                DateTime.MinValue.Minute,
+                DateTime.MinValue.Second,
+                DateTime.MinValue.Millisecond
             );
         }
 

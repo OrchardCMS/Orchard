@@ -108,12 +108,10 @@ namespace Orchard.Localization.Services {
             var formatString = ConvertToFormatString(format, replacements);
             var calendar = CurrentCalendar;
 
-            var dateTime = parts.ToDateTime();
-
             int twoDigitYear, hour12;
             bool isPm;
             string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort, amPm, amPmShort, timeZone;
-            GetDateFormatValues(parts.Date, calendar, dateTime, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
+            GetDateFormatValues(parts.Date, calendar, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
             GetTimeFormatValues(parts.Time, out isPm, out hour12, out amPm, out amPmShort, out timeZone);
 
             return String.Format(formatString, parts.Date.Year, twoDigitYear, parts.Date.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Date.Day, dayName, dayNameShort, parts.Time.Hour, hour12, parts.Time.Minute, parts.Time.Second, parts.Time.Millisecond, amPm, amPmShort, timeZone);
@@ -130,11 +128,9 @@ namespace Orchard.Localization.Services {
             var formatString = ConvertToFormatString(format, replacements);
             var calendar = CurrentCalendar;
 
-            var dateTime = parts.ToDateTime();
-
             int twoDigitYear;
             string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort;
-            GetDateFormatValues(parts, calendar, dateTime, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
+            GetDateFormatValues(parts, calendar, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
             
             return String.Format(formatString, parts.Year, twoDigitYear, parts.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Day, dayName, dayNameShort);
         }
@@ -146,8 +142,6 @@ namespace Orchard.Localization.Services {
         public virtual string FormatTime(TimeParts parts, string format) {
             var replacements = GetTimeFormatReplacements();
             var formatString = ConvertToFormatString(format, replacements);
-
-            var dateTime = parts.ToDateTime();
 
             bool isPm;
             int hour12;
@@ -260,15 +254,15 @@ namespace Orchard.Localization.Services {
             return new TimeParts(hour, minute, second, millisecond);
         }
 
-        protected virtual void GetDateFormatValues(DateParts parts, Calendar calendar, DateTime dateTime, out int twoDigitYear, out string monthName, out string monthNameShort, out string monthNameGenitive, out string monthNameShortGenitive, out string dayName, out string dayNameShort) {
+        protected virtual void GetDateFormatValues(DateParts parts, Calendar calendar, out int twoDigitYear, out string monthName, out string monthNameShort, out string monthNameGenitive, out string monthNameShortGenitive, out string dayName, out string dayNameShort) {
             var yearString = parts.Year.ToString("00", System.Globalization.CultureInfo.InvariantCulture);
             twoDigitYear = Int32.Parse(yearString.Substring(yearString.Length - 2));
             monthName = parts.Month > 0 ? _dateTimeFormatProvider.MonthNames[parts.Month - 1] : null;
             monthNameShort = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesShort[parts.Month - 1] : null;
             monthNameGenitive = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesGenitive[parts.Month - 1] : null;
             monthNameShortGenitive = parts.Month > 0 ? _dateTimeFormatProvider.MonthNamesShortGenitive[parts.Month - 1] : null;
-            dayName = parts.Day > 0 ? _dateTimeFormatProvider.DayNames[(int)calendar.GetDayOfWeek(dateTime)] : null;
-            dayNameShort = parts.Day > 0 ? _dateTimeFormatProvider.DayNamesShort[(int)calendar.GetDayOfWeek(parts.ToDateTime())] : null;
+            dayName = parts.Day > 0 ? _dateTimeFormatProvider.DayNames[(int)calendar.GetDayOfWeek(parts.ToDateTime(calendar))] : null;
+            dayNameShort = parts.Day > 0 ? _dateTimeFormatProvider.DayNamesShort[(int)calendar.GetDayOfWeek(parts.ToDateTime(calendar))] : null;
         }
 
         protected virtual void GetTimeFormatValues(TimeParts parts, out bool isPm, out int hour12, out string amPm, out string amPmShort, out string timeZone) {
