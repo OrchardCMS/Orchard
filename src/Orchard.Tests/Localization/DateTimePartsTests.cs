@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Orchard.Localization.Models;
 
-namespace Orchard.Framework.Tests.Localization {
+namespace Orchard.Tests.Localization {
 
     [TestFixture]
     public class DateTimePartsTests {

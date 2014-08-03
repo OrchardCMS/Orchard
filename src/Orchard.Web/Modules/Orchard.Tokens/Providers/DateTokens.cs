@@ -81,7 +81,7 @@ namespace Orchard.Tokens.Providers {
             var time = _clock.UtcNow - dateTimeUtc.ToUniversalTime();
 
             if (time.TotalDays > 7)
-                return _dateFormatter.FormatDateTime(DateTimeParts.FromDateTime(dateTimeUtc), T("'on' MMM d yyyy 'at' h:mm tt").ToString());
+                return _dateLocalizationServices.ConvertToLocalizedString(dateTimeUtc, T("'on' MMM d yyyy 'at' h:mm tt").Text);
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days).ToString();
             if (time.TotalMinutes > 60)

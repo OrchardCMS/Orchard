@@ -7,12 +7,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Autofac;
-using Moq;
 using NUnit.Framework;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
-namespace Orchard.Framework.Tests.Localization {
+namespace Orchard.Tests.Localization {
 
     [TestFixture]
     public class DefaultDateFormatterTests {
@@ -36,7 +35,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -85,7 +84,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -135,7 +134,7 @@ namespace Orchard.Framework.Tests.Localization {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
                 foreach (var timeZone in new[] { TimeZoneInfo.Utc, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"), TimeZoneInfo.FindSystemTimeZoneById("Iran Standard Time") }) { // Enough time zones to get good coverage: UTC, local, one negative offset and one positive offset.
-                    var container = InitializeContainer(culture.Name, "GregorianCalendar", timeZone);
+                    var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", timeZone);
                     var formats = container.Resolve<IDateTimeFormatProvider>();
                     var target = container.Resolve<IDateFormatter>();
 
@@ -192,7 +191,7 @@ namespace Orchard.Framework.Tests.Localization {
         [Description("Date/time parsing throws a FormatException for unparsable date/time strings.")]
         [ExpectedException(typeof(FormatException))]
         public void ParseDateTimeTest04() {
-            var container = InitializeContainer("en-US", null, TimeZoneInfo.Utc);
+            var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
             var target = container.Resolve<IDateFormatter>();
             target.ParseDateTime("BlaBlaBla");
         }
@@ -211,7 +210,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -250,7 +249,7 @@ namespace Orchard.Framework.Tests.Localization {
         [Description("Date parsing throws a FormatException for unparsable date strings.")]
         [ExpectedException(typeof(FormatException))]
         public void ParseDateTest02() {
-            var container = InitializeContainer("en-US", null, TimeZoneInfo.Utc);
+            var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
             var target = container.Resolve<IDateFormatter>();
             target.ParseDate("BlaBlaBla");
         }
@@ -269,7 +268,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, null, TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, null, TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -304,7 +303,7 @@ namespace Orchard.Framework.Tests.Localization {
         [Description("Time parsing throws a FormatException for unparsable time strings.")]
         [ExpectedException(typeof(FormatException))]
         public void ParseTimeTest02() {
-            var container = InitializeContainer("en-US", null, TimeZoneInfo.Utc);
+            var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
             var target = container.Resolve<IDateFormatter>();
             target.ParseTime("BlaBlaBla");
         }
@@ -323,7 +322,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -386,7 +385,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -450,7 +449,7 @@ namespace Orchard.Framework.Tests.Localization {
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
                 foreach (var timeZone in new[] { TimeZoneInfo.Utc, TimeZoneInfo.Local, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"), TimeZoneInfo.FindSystemTimeZoneById("Iran Standard Time") }) { // Enough time zones to get good coverage: UTC, local, one negative offset and one positive offset.
-                    var container = InitializeContainer(culture.Name, "GregorianCalendar", timeZone);
+                    var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", timeZone);
                     var formats = container.Resolve<IDateTimeFormatProvider>();
                     var target = container.Resolve<IDateFormatter>();
 
@@ -540,7 +539,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -603,7 +602,7 @@ namespace Orchard.Framework.Tests.Localization {
 
             var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
-                var container = InitializeContainer(culture.Name, null, TimeZoneInfo.Utc);
+                var container = TestHelpers.InitializeContainer(culture.Name, null, TimeZoneInfo.Utc);
                 var formats = container.Resolve<IDateTimeFormatProvider>();
                 var target = container.Resolve<IDateFormatter>();
 
@@ -681,74 +680,6 @@ namespace Orchard.Framework.Tests.Localization {
                 expectedKind,
                 expectedOffset
             );
-        }
-
-        private IContainer InitializeContainer(string cultureName, string calendarName, TimeZoneInfo timeZone) {
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance<WorkContext>(new StubWorkContext(cultureName, calendarName, timeZone));
-            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
-            builder.RegisterType<CultureDateTimeFormatProvider>().As<IDateTimeFormatProvider>();
-            builder.RegisterType<DefaultDateFormatter>().As<IDateFormatter>();
-            builder.RegisterInstance(new Mock<ICalendarSelector>().Object);
-            builder.RegisterType<DefaultCalendarManager>().As<ICalendarManager>();
-            return builder.Build();
-        }
-
-        private class StubWorkContext : WorkContext {
-
-            private string _cultureName;
-            private string _calendarName;
-            private TimeZoneInfo _timeZone;
-
-            public StubWorkContext(string cultureName, string calendarName, TimeZoneInfo timeZone) {
-                _cultureName = cultureName;
-                _calendarName = calendarName;
-                _timeZone = timeZone;
-            }
-
-            public override T Resolve<T>() {
-                throw new NotImplementedException();
-            }
-
-            public override bool TryResolve<T>(out T service) {
-                throw new NotImplementedException();
-            }
-
-            public override T GetState<T>(string name) {
-                if (name == "CurrentCulture") return (T)((object)_cultureName);
-                if (name == "CurrentCalendar") return (T)((object)_calendarName);
-                if (name == "CurrentTimeZone") return (T)((object)_timeZone);
-                throw new NotImplementedException(String.Format("Property '{0}' is not implemented.", name));
-            }
-
-            public override void SetState<T>(string name, T value) {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class StubWorkContextAccessor : IWorkContextAccessor {
-
-            private WorkContext _workContext;
-
-            public StubWorkContextAccessor(WorkContext workContext) {
-                _workContext = workContext;
-            }
-
-            public WorkContext GetContext(System.Web.HttpContextBase httpContext) {
-                throw new NotImplementedException();
-            }
-
-            public IWorkContextScope CreateWorkContextScope(System.Web.HttpContextBase httpContext) {
-                throw new NotImplementedException();
-            }
-
-            public WorkContext GetContext() {
-                return _workContext;
-            }
-
-            public IWorkContextScope CreateWorkContextScope() {
-                throw new NotImplementedException();
-            }
         }
     }
 }

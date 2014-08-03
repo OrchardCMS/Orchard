@@ -260,7 +260,9 @@
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Localization\DateTimePartsTests.cs" />
+    <Compile Include="Localization\DefaultDateLocalizationServicesTests.cs" />
     <Compile Include="Localization\DefaultDateFormatterTests.cs" />
+    <Compile Include="Localization\TestHelpers.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />
     <Compile Include="Messaging\MessagingChannelStub.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
