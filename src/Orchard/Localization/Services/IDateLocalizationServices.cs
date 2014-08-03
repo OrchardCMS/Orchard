@@ -28,8 +28,9 @@ namespace Orchard.Localization.Services {
         /// Converts a date from Gregorian calendar to the Orchard configured calendar.
         /// </summary>
         /// <param name="date">The Gregorian calendar date to convert.</param>
+        /// <param name="offset">A TimeSpan representing the offset from UTC of the supplied date parameter.</param>
         /// <returns>A <c>DateTimeParts</c> instance representing the converted date.</returns>
-        DateTimeParts ConvertToSiteCalendar(DateTime date);
+        DateTimeParts ConvertToSiteCalendar(DateTime date, TimeSpan offset);
 
         /// <summary>
         /// Converts a date from the Orchard configured calendar to Gregorian calendar.

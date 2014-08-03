@@ -39,14 +39,15 @@ namespace Orchard.Localization.Models {
         }
 
         public DateTime ToDateTime(Calendar calendar) {
-            return calendar.ToDateTime(
+            return new DateTime(
                 _year > 0 ? _year : DateTime.MinValue.Year,
                 _month > 0 ? _month : DateTime.MinValue.Month,
                 _day > 0 ? _day : DateTime.MinValue.Day,
                 DateTime.MinValue.Hour,
                 DateTime.MinValue.Minute,
                 DateTime.MinValue.Second,
-                DateTime.MinValue.Millisecond
+                DateTime.MinValue.Millisecond,
+                calendar
             );
         }
 

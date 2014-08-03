@@ -1,6 +1,5 @@
 TODO:
     * Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
-    * Add formatting and parsing of time zone information (add timezone properties to TimeParts structure)
     * Write unit tests for DefaultDateLocalizationServices
     * Add support for the different Gregorian calendar types
     * Improve CultureDateTimeFormatProvider to return correct information for fa-IR culture when PersianCalendar is in use.

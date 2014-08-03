@@ -108,13 +108,13 @@ namespace Orchard.Localization.Services {
             var formatString = ConvertToFormatString(format, replacements);
             var calendar = CurrentCalendar;
 
-            int twoDigitYear, hour12;
+            int twoDigitYear, hour12, offsetHours, offsetMinutes;
             bool isPm;
-            string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort, amPm, amPmShort, timeZone;
+            string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort, amPm, amPmShort, timeZone, offsetSign;
             GetDateFormatValues(parts.Date, calendar, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
-            GetTimeFormatValues(parts.Time, out isPm, out hour12, out amPm, out amPmShort, out timeZone);
+            GetTimeFormatValues(parts.Time, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes);
 
-            return String.Format(formatString, parts.Date.Year, twoDigitYear, parts.Date.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Date.Day, dayName, dayNameShort, parts.Time.Hour, hour12, parts.Time.Minute, parts.Time.Second, parts.Time.Millisecond, amPm, amPmShort, timeZone);
+            return String.Format(formatString, parts.Date.Year, twoDigitYear, parts.Date.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Date.Day, dayName, dayNameShort, parts.Time.Hour, hour12, parts.Time.Minute, parts.Time.Second, parts.Time.Millisecond, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
         }
 
         public virtual string FormatDate(DateParts parts) {
@@ -144,11 +144,11 @@ namespace Orchard.Localization.Services {
             var formatString = ConvertToFormatString(format, replacements);
 
             bool isPm;
-            int hour12;
-            string amPm, amPmShort, timeZone;
-            GetTimeFormatValues(parts, out isPm, out hour12, out amPm, out amPmShort, out timeZone);
+            int hour12, offsetHours, offsetMinutes;
+            string amPm, amPmShort, timeZone, offsetSign;
+            GetTimeFormatValues(parts, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes);
 
-            return String.Format(formatString, null, null, null, null, null, null, null, null, null, null, parts.Hour, hour12, parts.Minute, parts.Second, parts.Millisecond, amPm, amPmShort, timeZone);
+            return String.Format(formatString, null, null, null, null, null, null, null, null, null, null, parts.Hour, hour12, parts.Minute, parts.Second, parts.Millisecond, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
         }
 
         protected virtual DateTimeParts? TryParseDateTime(string dateTimeString, string format, IDictionary<string, string> replacements) {
@@ -227,6 +227,9 @@ namespace Orchard.Localization.Services {
                 second = 0,
                 millisecond = 0;
 
+            var kind = DateTimeKind.Unspecified;
+            var offset = TimeSpan.Zero;
+
             // For the hour we can either use 24-hour notation or 12-hour notation in combination with AM/PM designator.
             if (m.Groups["hour24"].Success) {
                 hour = Int32.Parse(m.Groups["hour24"].Value);
@@ -251,7 +254,40 @@ namespace Orchard.Localization.Services {
                 millisecond = Int32.Parse(m.Groups["millisecond"].Value);
             }
 
-            return new TimeParts(hour, minute, second, millisecond);
+            if (m.Groups["timeZone"].Success) {
+                var timeZoneString = m.Groups["timeZone"].Value;
+                if (timeZoneString.ToUpperInvariant() == "Z") {
+                    kind = DateTimeKind.Utc;
+                }
+                else {
+                    offset = TimeSpan.Parse(timeZoneString.TrimStart('+'));
+                    if (offset == CurrentTimeZone.BaseUtcOffset) {
+                        kind = DateTimeKind.Local;
+                    }
+                    else if (offset == TimeSpan.Zero) {
+                        kind = DateTimeKind.Utc;
+                    }
+                }
+            }
+            else if (m.Groups["offsetSign"].Success && m.Groups["offsetHours"].Success) {
+                var offsetHours = Int32.Parse(m.Groups["offsetHours"].Value);
+                var offsetMinutes = 0;
+                if (m.Groups["offsetMinutes"].Success) {
+                    offsetMinutes = Int32.Parse(m.Groups["offsetMinutes"].Value);
+                }
+                offset = new TimeSpan(offsetHours, offsetMinutes, 0);
+                if (m.Groups["offsetSign"].Value == "-") {
+                    offset = offset.Negate();
+                }
+                if (offset == CurrentTimeZone.BaseUtcOffset) {
+                    kind = DateTimeKind.Local;
+                }
+                else if (offset == TimeSpan.Zero) {
+                    kind = DateTimeKind.Utc;
+                }
+            }
+
+            return new TimeParts(hour, minute, second, millisecond, kind, offset);
         }
 
         protected virtual void GetDateFormatValues(DateParts parts, Calendar calendar, out int twoDigitYear, out string monthName, out string monthNameShort, out string monthNameGenitive, out string monthNameShortGenitive, out string dayName, out string dayNameShort) {
@@ -265,11 +301,22 @@ namespace Orchard.Localization.Services {
             dayNameShort = parts.Day > 0 ? _dateTimeFormatProvider.DayNamesShort[(int)calendar.GetDayOfWeek(parts.ToDateTime(calendar))] : null;
         }
 
-        protected virtual void GetTimeFormatValues(TimeParts parts, out bool isPm, out int hour12, out string amPm, out string amPmShort, out string timeZone) {
+        protected virtual void GetTimeFormatValues(TimeParts parts, out bool isPm, out int hour12, out string amPm, out string amPmShort, out string timeZone, out string offsetSign, out int offsetHours, out int offsetMinutes) {
             hour12 = ConvertToHour12(parts.Hour, out isPm);
             amPm = _dateTimeFormatProvider.AmPmDesignators[isPm ? 1 : 0];
             amPmShort = String.IsNullOrEmpty(amPm) ? "" : amPm[0].ToString();
-            timeZone = ""; // TODO: Add time zone information to TimeParts and print this out correctly.
+            offsetSign = parts.Offset.GetValueOrDefault() < TimeSpan.Zero ? "-" : "+";
+            offsetHours = Math.Abs(parts.Offset.GetValueOrDefault().Hours);
+            offsetMinutes = Math.Abs(parts.Offset.GetValueOrDefault().Minutes);
+            timeZone = "";
+            switch (parts.Kind) {
+                case DateTimeKind.Utc:
+                    timeZone = "Z";
+                    break;
+                case DateTimeKind.Local:
+                    timeZone = String.Format("{0}{1:00}:{2:00}", offsetSign, offsetHours, offsetMinutes);
+                    break;
+            }
         }
 
         protected virtual bool GetUseGenitiveMonthName(string format) {
@@ -318,7 +365,10 @@ namespace Orchard.Localization.Services {
                 {"f", "(?<millisecond>[0-9]{1})"},
                 {"tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(amDesignator), EscapeForRegex(pmDesignator))},
                 {"t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", String.IsNullOrEmpty(amDesignator) ? "" : EscapeForRegex(amDesignator[0].ToString()), String.IsNullOrEmpty(pmDesignator) ? "" : EscapeForRegex(pmDesignator[0].ToString()))},
-                {"K", @"(?<timezone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"}
+                {"K", @"(?<timeZone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"},
+                {"zzz", @"(?<offsetSign>\+|-)(?<offsetHours>[0-9]{2}):(?<offsetMinutes>[0-9]{2})"},
+                {"zz", @"(?<offsetSign>\+|-)(?<offsetHours>[0-9]{2})"},
+                {"z", @"(?<offsetSign>\+|-)(?<offsetHours>[0-9]{1,2})"}
             };
         }
 
@@ -368,7 +418,10 @@ namespace Orchard.Localization.Services {
                 {"F", "{14:#}"},
                 {"tt", "{15}"},
                 {"t", "{16}"},
-                {"K", "{17}"}
+                {"K", "{17}"},
+                {"zzz", "{18}{19:00}:{20:00}"},
+                {"zz", "{18}{19:00}"},
+                {"z", "{18}{19:#0}"}
             };
         }
 
@@ -455,6 +508,13 @@ namespace Orchard.Localization.Services {
                 if (!String.IsNullOrEmpty(workContext.CurrentCalendar))
                     return _calendarManager.GetCalendarByName(workContext.CurrentCalendar);
                 return CurrentCulture.Calendar;
+            }
+        }
+
+        protected virtual TimeZoneInfo CurrentTimeZone {
+            get {
+                var workContext = _workContextAccessor.GetContext();
+                return workContext.CurrentTimeZone;
             }
         }
     }

@@ -38,7 +38,7 @@ namespace Orchard.Localization.Services {
             return TimeZoneInfo.ConvertTimeToUtc(date, workContext.CurrentTimeZone);
         }
 
-        public virtual DateTimeParts ConvertToSiteCalendar(DateTime date) {
+        public virtual DateTimeParts ConvertToSiteCalendar(DateTime date, TimeSpan offset) {
             var calendar = CurrentCalendar;
             return new DateTimeParts(
                 calendar.GetYear(date),
@@ -47,7 +47,9 @@ namespace Orchard.Localization.Services {
                 calendar.GetHour(date),
                 calendar.GetMinute(date),
                 calendar.GetSecond(date),
-                Convert.ToInt32(calendar.GetMilliseconds(date)));
+                Convert.ToInt32(calendar.GetMilliseconds(date)),
+                DateTimeKind.Utc,
+                offset);
         }
 
         public virtual DateTime ConvertFromSiteCalendar(DateTimeParts parts) {
@@ -74,6 +76,7 @@ namespace Orchard.Localization.Services {
             }
 
             var dateValue = date.Value;
+            var offset = TimeSpan.Zero;
 
             if (options.EnableTimeZoneConversion) {
                 // Since no date component is expected (technically the date component is that of DateTime.MinValue) then
@@ -82,16 +85,18 @@ namespace Orchard.Localization.Services {
                 // * Time zone conversion cannot wrap DateTime.MinValue around to the previous day, resulting in undefined result.
                 // Therefore we convert the date to today's date before the conversion, and back to DateTime.MinValue after.
                 var now = _clock.UtcNow;
+
                 dateValue = new DateTime(now.Year, now.Month, now.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
                 dateValue = ConvertToSiteTimeZone(dateValue);
                 dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
+
+                var workContext = _workContextAccessor.GetContext();
+                offset = workContext.CurrentTimeZone.BaseUtcOffset;
             }
 
-            var parts = DateTimeParts.FromDateTime(dateValue);
-            // No calendar conversion in this method - we expect the date component to be DateTime.MinValue and irrelevant anyway.
-            //if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
-            //    parts = ConvertToSiteCalendar(dateValue);
-            //}
+            var parts = DateTimeParts.FromDateTime(dateValue, offset);
+            
+            // INFO: No calendar conversion in this method - we expect the date component to be DateTime.MinValue and irrelevant anyway.
 
             return _dateFormatter.FormatDateTime(parts, _dateTimeFormatProvider.LongTimeFormat);
         }
@@ -116,14 +121,17 @@ namespace Orchard.Localization.Services {
             }
 
             var dateValue = date.Value;
+            var offset = TimeSpan.Zero;
 
             if (options.EnableTimeZoneConversion) {
                 dateValue = ConvertToSiteTimeZone(dateValue);
+                var workContext = _workContextAccessor.GetContext();
+                offset = workContext.CurrentTimeZone.BaseUtcOffset;
             }
 
-            var parts = DateTimeParts.FromDateTime(dateValue);
+            var parts = DateTimeParts.FromDateTime(dateValue, offset);
             if (options.EnableCalendarConversion && !(CurrentCalendar is GregorianCalendar)) {
-                parts = ConvertToSiteCalendar(dateValue);
+                parts = ConvertToSiteCalendar(dateValue, offset);
             }
 
             return _dateFormatter.FormatDateTime(parts, format);
