@@ -14,7 +14,10 @@ namespace Orchard.WebApi.Filters {
             var workContext = actionContext.ControllerContext.GetWorkContext();
 
             foreach (var actionFilter in workContext.Resolve<IEnumerable<IApiFilterProvider>>().OfType<IAuthorizationFilter>()) {
-                continuation = () => actionFilter.ExecuteAuthorizationFilterAsync(actionContext, cancellationToken, continuation);
+                var tempContinuation = continuation;
+                continuation = () => {
+                    return actionFilter.ExecuteAuthorizationFilterAsync(actionContext, cancellationToken, tempContinuation);
+                };
             }
 
             return await continuation();
