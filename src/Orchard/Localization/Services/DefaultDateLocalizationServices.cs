@@ -29,6 +29,11 @@ namespace Orchard.Localization.Services {
         }
 
         public virtual DateTime ConvertToSiteTimeZone(DateTime dateUtc) {
+            // Some trickery is necessary for correct handling of DateTimeKind values
+            // of both input and output dates, because the TimeZoneInfo class' internal
+            // handling of this is tightly coupled to the configured time zone of
+            // the local computer, which can differ from the configured time zone of
+            // the Orchard site.
             if (dateUtc.Kind == DateTimeKind.Local) {
                 return dateUtc;
             }
@@ -38,15 +43,21 @@ namespace Orchard.Localization.Services {
                 }
                 return dateUtc;
             }
-            var dateLocal = dateUtc + CurrentTimeZone.BaseUtcOffset;
+            var dateLocal = TimeZoneInfo.ConvertTimeFromUtc(dateUtc, CurrentTimeZone);
             return new DateTime(dateLocal.Ticks, DateTimeKind.Local);
         }
 
         public virtual DateTime ConvertFromSiteTimeZone(DateTime dateLocal) {
+            // Some trickery is necessary for correct handling of DateTimeKind values
+            // of both input and output dates, because the TimeZoneInfo class' internal
+            // handling of this is tightly coupled to the configured time zone of
+            // the local computer, which can differ from the configured time zone of
+            // the Orchard site.
             if (dateLocal.Kind == DateTimeKind.Utc) {
                 return dateLocal;
-            } 
-            var dateUtc = dateLocal - CurrentTimeZone.BaseUtcOffset;
+            }
+            var dateUnspecified = new DateTime(dateLocal.Ticks, DateTimeKind.Unspecified);
+            var dateUtc = TimeZoneInfo.ConvertTimeToUtc(dateUnspecified, CurrentTimeZone);
             return new DateTime(dateUtc.Ticks, DateTimeKind.Utc);
         }
 
