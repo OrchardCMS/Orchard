@@ -105,34 +105,62 @@ namespace Orchard.Mvc.Html {
         }
 
         private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || !items.Any()) return new HtmlString(string.Empty);
+            if(items == null) {
+                return new HtmlString(string.Empty);
+            }
+
+            // prevent multiple evaluations of the enumeration
+            items = items.ToArray();
+
+            if (!items.Any()) {
+                return new HtmlString(string.Empty);
+            }
 
             var sb = new StringBuilder(250);
             int counter = 0, count = items.Count() - 1;
 
-            sb.AppendFormat(
-                !string.IsNullOrEmpty(cssClass) ? "<ul class=\"{0}\">" : "<ul>",
-                cssClass
-                );
+            if(string.IsNullOrEmpty(cssClass)) {
+                sb.Append("<ul>");
+            }
+            else {
+                sb.Append("<ul class=\"")
+                  .Append(cssClass)
+                  .Append("\">");
+            }
 
             foreach (var item in items) {
                 var sbClass = new StringBuilder(50);
 
-                if (counter == 0)
+                if (counter == 0) {
                     sbClass.Append("first ");
-                if (counter == count)
-                    sbClass.Append("last ");
-                if (generateItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateItemCssClass(item));
-                if (counter % 2 != 0 && generateAlternatingItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateAlternatingItemCssClass(item));
+                }
 
-                sb.AppendFormat(
-                    sbClass.Length > 0
-                        ? string.Format("<li class=\"{0}\">{{0}}</li>", sbClass.ToString().TrimEnd())
-                        : "<li>{0}</li>",
-                    generateContent(item, counter)
-                    );
+                if (counter == count) {
+                    sbClass.Append("last ");
+                }
+
+                if (generateItemCssClass != null) {
+                    sbClass.Append(generateItemCssClass(item)).Append(" ");
+                }
+
+                if (counter % 2 != 0 && generateAlternatingItemCssClass != null) {
+                    sbClass.AppendFormat(generateAlternatingItemCssClass(item)).Append(" ");
+                }
+
+                var clss = sbClass.ToString().TrimEnd();
+
+                if(String.IsNullOrWhiteSpace(clss)) {
+                    sb.Append("<li>")
+                      .Append(generateContent(item, counter))
+                      .Append("</li>");
+                }
+                else {
+                    sb.Append("<li class=\"")
+                      .Append(clss)
+                      .Append("\">")
+                      .Append(generateContent(item, counter))
+                      .Append("</li>");
+                }
 
                 counter++;
             }
