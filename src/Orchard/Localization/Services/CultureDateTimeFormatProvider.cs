@@ -183,18 +183,55 @@ namespace Orchard.Localization.Services {
                 var culture = CurrentCulture;
                 var calendar = CurrentCalendar;
 
-                // The configured Calendar affects the format strings provided by the DateTimeFormatInfo
-                // class. Therefore, if the site is configured to use a calendar that is supported as an
-                // optional calendar of the configured culture, use a customized DateTimeFormatInfo instance
-                // configured with that calendar to get the correct formats.
                 var usingCultureCalendar = culture.DateTimeFormat.Calendar.GetType().IsInstanceOfType(calendar);
                 if (!usingCultureCalendar) {
+
+                    // The configured calendar affects the format strings provided by the DateTimeFormatInfo
+                    // class. Therefore, if the site is configured to use a calendar that is supported as an
+                    // optional calendar of the configured culture, use a customized DateTimeFormatInfo instance
+                    // configured with that calendar to get the correct formats.
                     foreach (var optionalCalendar in culture.OptionalCalendars) {
                         if (optionalCalendar.GetType().IsInstanceOfType(calendar)) {
                             var calendarSpecificDateTimeFormat = (DateTimeFormatInfo)culture.DateTimeFormat.Clone();
                             calendarSpecificDateTimeFormat.Calendar = optionalCalendar;
                             return calendarSpecificDateTimeFormat;
                         }
+                    }
+
+                    // If we are using a non-default calendar but it could not be found as one of the optional
+                    // ones for the culture, we will explicitly check for the combination of fa-IR culture and
+                    // the Persian calendar. The .NET Framework does not contain these localizations because for
+                    // some strange (probably political) reason, the PersianCalendar is not one of the optional
+                    // calendars for the fa-IR culture, or any other for that matter. Therefore in this case we
+                    // will return an overridden DateTimeFormatInfo instance with the correct localized month
+                    // names for the Persian calendar. Given that the Persian calendar is the only calendar to be
+                    // "orphaned" (i.e. not supported for any culture!) in the .NET Framework, something generally
+                    // considered a serious bug, I think it's justified to add this particular override
+                    if (culture.Name == "fa-IR" && calendar is PersianCalendar) {
+                        var persianFormats = (DateTimeFormatInfo)culture.DateTimeFormat.Clone();
+                        var persianCalendarMonthNames = new[] {
+                            "فررودين",
+                            "ارديبهشت",
+                            "خرداد",
+                            "تير",
+                            "مرداد",
+                            "شهريور",
+                            "مهر",
+                            "آبان",
+                            "آذر",
+                            "دي",
+                            "بهمن",
+                            "اسفند",
+                            "" // 13 months names always necessary...
+                        };
+
+                        persianFormats.MonthNames = 
+                            persianFormats.AbbreviatedMonthNames = 
+                            persianFormats.MonthGenitiveNames = 
+                            persianFormats.AbbreviatedMonthGenitiveNames = 
+                            persianCalendarMonthNames;
+
+                        return persianFormats;
                     }
                 }
 
