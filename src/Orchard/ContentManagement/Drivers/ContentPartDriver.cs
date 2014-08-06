@@ -61,7 +61,7 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             // checking if the editor needs to be updated (e.g. if it was not hidden)
-            var editor = Editor(part, context.New) as ContentShapeResult;
+            var editor = await EditorAsync(part, context.New) as ContentShapeResult;
 
             if (editor != null) {
                 ShapeDescriptor descriptor;
