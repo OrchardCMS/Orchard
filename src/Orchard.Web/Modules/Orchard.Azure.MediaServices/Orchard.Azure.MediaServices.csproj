@@ -290,9 +290,9 @@
     <None Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
     <None Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
     <None Include="Scripts\cloudmedia-videoplayer-main.ts" />
-    <TypeScriptCompile Include="Scripts\typings\moment.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\underscore.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\uri.d.ts" />
+    <None Include="Scripts\typings\moment.d.ts" />
+    <None Include="Scripts\typings\underscore.d.ts" />
+    <None Include="Scripts\typings\uri.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -446,9 +446,9 @@
     <Content Include="Views\Parts\CloudVideo.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\typings\jquery.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\jqueryui.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
+    <None Include="Scripts\typings\jquery.d.ts" />
+    <None Include="Scripts\typings\jqueryui.d.ts" />
+    <None Include="Scripts\typings\knockout.d.ts" />
     <None Include="Scripts\cloudmedia-admin-settings.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -551,7 +551,7 @@
     <Content Include="Content\Strobe Media Playback Notice.docx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\lib\MPEG Dash Notice.docx" />
+    <None Include="Scripts\lib\MPEG Dash Notice.docx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
