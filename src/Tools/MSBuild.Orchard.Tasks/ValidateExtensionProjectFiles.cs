@@ -108,7 +108,7 @@ namespace MSBuild.Orchard.Tasks {
             }
 
             private static bool IsValidExcludeFile(string filePath) {
-                var validExtensions = new[] { ".sass", ".scss", ".less", ".coffee", ".ls", ".ts", ".md", };
+                var validExtensions = new[] { ".sass", ".scss", ".less", ".coffee", ".ls", ".ts", ".md", ".docx" };
                 if (string.IsNullOrEmpty(filePath)) return true;
 
                 var fileExtension = Path.GetExtension(filePath);
