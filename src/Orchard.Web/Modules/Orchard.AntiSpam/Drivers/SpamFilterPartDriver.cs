@@ -8,7 +8,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Orchard.AntiSpam.Drivers {
-    public class SpamFilterPartDriver : ContentPartDriver<SpamFilterPart> {
+    public class SpamFilterPartDriver : AsyncContentPartDriver<SpamFilterPart> {
         private readonly ISpamService _spamService;
         private const string TemplateName = "Parts/SpamFilter";
 

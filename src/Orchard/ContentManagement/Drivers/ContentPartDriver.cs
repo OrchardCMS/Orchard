@@ -9,19 +9,94 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
-        protected virtual string Prefix {
-            get { return typeof (TContent).Name; }
-        }
-
-        void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+    public abstract class ContentPartDriver<TContent> : ContentPartDriverBase<TContent>
+        where TContent : ContentPart, new() {
+        public override Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
-            if (part != null) {
-                GetContentItemMetadata(part, context.Metadata);
+
+            if (part == null) {
+                return null;
             }
+
+            var result = Display(part, context.DisplayType, context.New);
+
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
+            return Task.FromResult<DriverResult>(result);
         }
 
-        async Task<DriverResult> IContentPartDriver.BuildDisplayAsync(BuildDisplayContext context) {
+        public override Task<DriverResult> BuildEditorAsync(BuildEditorContext context) {
+            var part = context.ContentItem.As<TContent>();
+
+            if (part == null) {
+                return null;
+            }
+
+            var result = Editor(part, context.New);
+
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
+            return Task.FromResult<DriverResult>(result);
+        }
+
+        public override Task<DriverResult> UpdateEditorAsync(UpdateEditorContext context) {
+            var part = context.ContentItem.As<TContent>();
+
+            if (part == null) {
+                return null;
+            }
+
+            // checking if the editor needs to be updated (e.g. if it was not hidden)
+            var editor = Editor(part, context.New) as ContentShapeResult;
+
+            if (editor != null) {
+                ShapeDescriptor descriptor;
+                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                    var placementContext = new ShapePlacementContext {
+                        Content = part.ContentItem,
+                        ContentType = part.ContentItem.ContentType,
+                        Differentiator = editor.GetDifferentiator(),
+                        DisplayType = null,
+                        Path = String.Empty
+                    };
+
+                    var location = descriptor.Placement(placementContext).Location;
+
+                    if (String.IsNullOrEmpty(location) || location == "-") {
+                        return Task.FromResult<DriverResult>(editor);
+                    }
+                }
+            }
+
+            var result = Editor(part, context.Updater, context.New);
+
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
+            return Task.FromResult<DriverResult>(result);
+        }
+
+        protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) {
+            return null;
+        }
+
+        protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) {
+            return null;
+        }
+
+        protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) {
+            return null;
+        }
+    }
+
+    public abstract class AsyncContentPartDriver<TContent> : ContentPartDriverBase<TContent>
+        where TContent : ContentPart, new() {
+        public override async Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
@@ -37,7 +112,7 @@ namespace Orchard.ContentManagement.Drivers {
             return result;
         }
 
-        async Task<DriverResult> IContentPartDriver.BuildEditorAsync(BuildEditorContext context) {
+        public override async Task<DriverResult> BuildEditorAsync(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
@@ -53,7 +128,7 @@ namespace Orchard.ContentManagement.Drivers {
             return result;
         }
 
-        async Task<DriverResult> IContentPartDriver.UpdateEditorAsync(UpdateEditorContext context) {
+        public override async Task<DriverResult> UpdateEditorAsync(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
@@ -91,6 +166,38 @@ namespace Orchard.ContentManagement.Drivers {
             return result;
         }
 
+        protected virtual Task<DriverResult> DisplayAsync(TContent part, string displayType, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+
+        protected virtual Task<DriverResult> EditorAsync(TContent part, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+
+        protected virtual Task<DriverResult> EditorAsync(TContent part, IUpdateModel updater, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+    }
+
+
+    public abstract class ContentPartDriverBase<TContent> : IContentPartDriver where TContent : ContentPart, new() {
+        protected virtual string Prefix {
+            get { return typeof (TContent).Name; }
+        }
+
+        void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null) {
+                GetContentItemMetadata(part, context.Metadata);
+            }
+        }
+
+        public abstract Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context);
+
+        public abstract Task<DriverResult> BuildEditorAsync(BuildEditorContext context);
+
+        public abstract Task<DriverResult> UpdateEditorAsync(UpdateEditorContext context);
+
         void IContentPartDriver.Importing(ImportContentContext context) {
             var part = context.ContentItem.As<TContent>();
             if (part != null) {
@@ -120,30 +227,6 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) {}
-
-        protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual Task<DriverResult> DisplayAsync(TContent part, string displayType, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Display(part, displayType, shapeHelper));
-        }
-
-        protected virtual Task<DriverResult> EditorAsync(TContent part, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Editor(part, shapeHelper));
-        }
-
-        protected virtual Task<DriverResult> EditorAsync(TContent part, IUpdateModel updater, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Editor(part, updater, shapeHelper));
-        }
 
         protected virtual void Importing(TContent part, ImportContentContext context) {}
         protected virtual void Imported(TContent part, ImportContentContext context) {}

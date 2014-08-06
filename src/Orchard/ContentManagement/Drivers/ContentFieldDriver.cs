@@ -9,20 +9,61 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
-        protected virtual string Prefix {
-            get { return ""; }
+    public abstract class ContentFieldDriver<TField> : ContentFieldDriverBase<TField> where TField : ContentField, new() {
+        public override Task<DriverResult> BuildDisplayShapeAsync(BuildDisplayContext context) {
+            return Task.FromResult<DriverResult>(Process(context.ContentItem, (part, field) => {
+                var result = Display(part, field, context.DisplayType, context.New);
+
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+
+                return result;
+            }, context.Logger));
         }
 
-        protected virtual string Zone {
-            get { return "Content"; }
+        public override Task<DriverResult> BuildEditorShapeAsync(BuildEditorContext context) {
+            return Task.FromResult<DriverResult>(Process(context.ContentItem, (part, field) => {
+                var result = Editor(part, field, context.New);
+
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+
+                return result;
+            }, context.Logger));
         }
 
-        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
-            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata), context.Logger);
+        public override Task<DriverResult> UpdateEditorShapeAsync(UpdateEditorContext context) {
+            return Task.FromResult<DriverResult>(Process(context.ContentItem, (part, field) => {
+                var result = Editor(part, field, context.Updater, context.New);
+
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+
+                return result;
+            }, context.Logger));
         }
 
-        Task<DriverResult> IContentFieldDriver.BuildDisplayShapeAsync(BuildDisplayContext context) {
+        protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) {
+            return null;
+        }
+
+        protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) {
+            return null;
+        }
+
+        protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) {
+            return null;
+        }
+    }
+
+    public abstract class AsyncContentFieldDriver<TField> : ContentFieldDriverBase<TField> where TField : ContentField, new() {
+        public override Task<DriverResult> BuildDisplayShapeAsync(BuildDisplayContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
                 var result = await DisplayAsync(part, field, context.DisplayType, context.New);
 
@@ -35,7 +76,7 @@ namespace Orchard.ContentManagement.Drivers {
             }, context.Logger);
         }
 
-        Task<DriverResult> IContentFieldDriver.BuildEditorShapeAsync(BuildEditorContext context) {
+        public override Task<DriverResult> BuildEditorShapeAsync(BuildEditorContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
                 var result = await EditorAsync(part, field, context.New);
 
@@ -48,7 +89,7 @@ namespace Orchard.ContentManagement.Drivers {
             }, context.Logger);
         }
 
-        Task<DriverResult> IContentFieldDriver.UpdateEditorShapeAsync(UpdateEditorContext context) {
+        public override Task<DriverResult> UpdateEditorShapeAsync(UpdateEditorContext context) {
             return ProcessResultAsync(context.ContentItem, async (part, field) => {
                 var result = await EditorAsync(part, field, context.Updater, context.New);
 
@@ -60,6 +101,39 @@ namespace Orchard.ContentManagement.Drivers {
                 return result;
             }, context.Logger);
         }
+
+        protected virtual Task<DriverResult> DisplayAsync(ContentPart part, TField field, string displayType, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+
+        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+
+        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) {
+            return Task.FromResult<DriverResult>(null);
+        }
+    }
+
+
+    public abstract class ContentFieldDriverBase<TField> : IContentFieldDriver where TField : ContentField, new() {
+        protected virtual string Prefix {
+            get { return ""; }
+        }
+
+        protected virtual string Zone {
+            get { return "Content"; }
+        }
+
+        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata), context.Logger);
+        }
+
+        public abstract Task<DriverResult> BuildDisplayShapeAsync(BuildDisplayContext context);
+
+        public abstract Task<DriverResult> BuildEditorShapeAsync(BuildEditorContext context);
+
+        public abstract Task<DriverResult> UpdateEditorShapeAsync(UpdateEditorContext context);
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
             Process(context.ContentItem, (part, field) => Importing(part, field, context), context.Logger);
@@ -81,12 +155,20 @@ namespace Orchard.ContentManagement.Drivers {
             Describe(context);
         }
 
-        private void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
+        protected void Process(ContentItem item, Action<ContentPart, TField> effort, ILogger logger) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new {part, field}));
             occurences.Invoke(pf => effort(pf.part, pf.field), logger);
         }
 
-        private async Task<DriverResult> ProcessResultAsync(ContentItem item, Func<ContentPart, TField, Task<DriverResult>> effort, ILogger logger) {
+        protected DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort, ILogger logger) {
+            var results = item.Parts
+                .SelectMany(part => part.Fields.OfType<TField>().Select(field => new {part, field}))
+                .Invoke(pf => effort(pf.part, pf.field), logger);
+
+            return Combined(results.ToArray());
+        }
+
+        protected async Task<DriverResult> ProcessResultAsync(ContentItem item, Func<ContentPart, TField, Task<DriverResult>> effort, ILogger logger) {
             var results = item.Parts
                 .SelectMany(part => part.Fields.OfType<TField>().Select(field => new {part, field}))
                 .InvokeAsync(pf => effort(pf.part, pf.field), logger).ToList();
@@ -111,30 +193,6 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) {}
-
-        protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) {
-            return null;
-        }
-
-        protected virtual Task<DriverResult> DisplayAsync(ContentPart part, TField field, string displayType, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Display(part, field, displayType, shapeHelper));
-        }
-
-        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Editor(part, field, shapeHelper));
-        }
-
-        protected virtual Task<DriverResult> EditorAsync(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) {
-            return Task.FromResult<DriverResult>(Editor(part, field, updater, shapeHelper));
-        }
 
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) {}
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) {}
