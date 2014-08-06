@@ -1,7 +1,6 @@
 TODO:
     * Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
-    * Write unit tests for DefaultDateLocalizationServices
-    * Add support for the different Gregorian calendar types
+    * Write remaining unit tests for DefaultDateLocalizationServices
 
 BREAKING:
     * DateTokens "Date.Format:<formatString>" and "Date.Local.Format:<formatString>" only supports custom date/time format strings.

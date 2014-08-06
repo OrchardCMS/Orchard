@@ -121,7 +121,7 @@ namespace Orchard.Localization.Services {
                 dateValue = ConvertToSiteTimeZone(dateValue);
                 dateValue = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, dateValue.Hour, dateValue.Minute, dateValue.Second, dateValue.Millisecond, dateValue.Kind);
 
-                offset = CurrentTimeZone.BaseUtcOffset;
+                offset = CurrentTimeZone.GetUtcOffset(date.Value);
             }
 
             var parts = DateTimeParts.FromDateTime(dateValue, offset);
@@ -155,7 +155,7 @@ namespace Orchard.Localization.Services {
 
             if (options.EnableTimeZoneConversion) {
                 dateValue = ConvertToSiteTimeZone(dateValue);
-                offset = CurrentTimeZone.BaseUtcOffset;
+                offset = CurrentTimeZone.GetUtcOffset(date.Value);
             }
 
             var parts = DateTimeParts.FromDateTime(dateValue, offset);

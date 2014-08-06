@@ -220,25 +220,83 @@ namespace Orchard.Tests.Localization {
         [Test]
         [Description("Converting to Gregorian calendar yields a DateTimeParts instance equivalent to the original DateTime.")]
         public void ConvertToSiteCalendarTest01() {
-            Assert.Inconclusive();
+            var container = TestHelpers.InitializeContainer(null, "GregorianCalendar", TimeZoneInfo.Utc);
+            var dateTimeGregorian = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
+            var target = container.Resolve<IDateLocalizationServices>();
+            var result = target.ConvertToSiteCalendar(dateTimeGregorian, TimeSpan.Zero);
+            var expected = new DateTimeParts(1998, 1, 15, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         [Description("Converting to non-Gregorian calendar yields a DateTimeParts instance with correct values.")]
         public void ConvertToSiteCalendarTest02() {
-            Assert.Inconclusive();
+            var container = TestHelpers.InitializeContainer(null, "PersianCalendar", TimeZoneInfo.Utc);
+            var dateTimeGregorian = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
+            var target = container.Resolve<IDateLocalizationServices>();
+            var result = target.ConvertToSiteCalendar(dateTimeGregorian, TimeSpan.Zero);
+            var expected = new DateTimeParts(1376, 10, 25, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         [Description("Converting from Gregorian calendar yields a DateTime equivalent to the original DateTimeParts instance.")]
         public void ConvertFromSiteCalendarTest01() {
-            Assert.Inconclusive();
+            var container = TestHelpers.InitializeContainer(null, "GregorianCalendar", TimeZoneInfo.Utc);
+            var dateTimePartsGregorian = new DateTimeParts(1998, 1, 15, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
+            var target = container.Resolve<IDateLocalizationServices>();
+            var result = target.ConvertFromSiteCalendar(dateTimePartsGregorian);
+            var expected = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         [Description("Converting from non-Gregorian calendar yields a DateTime with correct values.")]
         public void ConvertFromSiteCalendarTest02() {
-            Assert.Inconclusive();
+            var container = TestHelpers.InitializeContainer(null, "PersianCalendar", TimeZoneInfo.Utc);
+            var dateTimePartsPersian = new DateTimeParts(1376, 10, 25, 21, 0, 0, 0, DateTimeKind.Utc, TimeSpan.Zero);
+            var target = container.Resolve<IDateLocalizationServices>();
+            var result = target.ConvertFromSiteCalendar(dateTimePartsPersian);
+            var expected = new DateTime(1998, 1, 15, 21, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(expected, result);
         }
+
+        /*
+            ConvertToLocalizedTimeStringTest
+	            Time zone conversion works properly (even though there is no date component).
+
+            ConvertToLocalizedStringTest
+	            Non-nullable DateTime.MinValue is converted to NullText.
+	            Nullable DateTime.MinValue is converted to date/time string.
+	            Nullable null is converted to NullText.
+	            Time zone conversion is performed when EnableTimeZoneConversion is true.
+	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
+	            Calendar conversion is performed when EnableCalendarConversion is true.
+	            Calendar conversion is not performed when EnableCalendarConversion is false.
+	            Full conversion is performed with default options.
+	
+            ConvertFromLocalizedStringCombinedTest
+	            Null date/time string is converted to null.
+	            Empty date/time string is converted to null.
+	            Custom NullText date/time string is converted to null.
+	            Time zone conversion is performed when EnableTimeZoneConversion is true.
+	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
+	            Calendar conversion is performed when EnableCalendarConversion is true.
+	            Calendar conversion is not performed when EnableCalendarConversion is false.
+	            Full conversion is performed with default options.
+	
+            ConvertFromLocalizedStringSeparateTest	
+	            Null date string and time string is converted to null.
+	            Empty date string and time string is converted to null.
+	            Custom NullText date string and time string is converted to null.
+	            Time zone conversion works properly when date component is omitted.
+	            Time zone conversion is never performed when time component is omitted.
+	            Time zone conversion is performed when EnableTimeZoneConversion is true.
+	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
+	            Calendar conversion is never performed when date component is omitted.
+	            Calendar conversion is performed when EnableCalendarConversion is true.
+	            Calendar conversion is not performed when EnableCalendarConversion is false.
+	            Full conversion is performed with default options.
+	    */
     }
 }
