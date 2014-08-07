@@ -13,7 +13,6 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
     public class ContentDefinitionEventHandler : IContentDefinitionEventHandler {
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
-        private readonly IImportExportService _importExportService;
         private readonly IContentDefinitionWriter _contentDefinitionWriter;
         private XElement _previousContentTypeXml;
         private XElement _previousContentPartXml;
