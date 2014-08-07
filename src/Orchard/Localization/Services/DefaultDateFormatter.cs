@@ -320,8 +320,8 @@ namespace Orchard.Localization.Services {
             fraction1Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.0", CultureInfo.InvariantCulture).Substring(2);
             fraction2Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.00", CultureInfo.InvariantCulture).Substring(2);
             fraction3Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.000", CultureInfo.InvariantCulture).Substring(2);
-            fraction1Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.#", CultureInfo.InvariantCulture).Substring(2) : "";
-            fraction2Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.##", CultureInfo.InvariantCulture).Substring(2) : "";
+            fraction1Digit = parts.Millisecond >= 50 ? (((decimal)parts.Millisecond) / 1000).ToString("0.#", CultureInfo.InvariantCulture).Substring(2) : "";
+            fraction2Digit = parts.Millisecond >= 5 ? (((decimal)parts.Millisecond) / 1000).ToString("0.##", CultureInfo.InvariantCulture).Substring(2) : "";
             fraction3Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.###", CultureInfo.InvariantCulture).Substring(2) : "";
         }
 
