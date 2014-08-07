@@ -19,6 +19,8 @@ namespace Lucene.Services {
         private const int MaxResults = Int16.MaxValue;
 
         private readonly Directory _directory;
+        private ILuceneAnalyzerProvider _analyzerProvider;
+        private string _indexName;
 
         private readonly List<BooleanClause> _clauses;
         private readonly List<BooleanClause> _filters;
@@ -34,12 +36,17 @@ namespace Lucene.Services {
         private bool _exactMatch;
         private float _boost;
         private Query _query;
-        private readonly Analyzer _analyzer = LuceneIndexProvider.CreateAnalyzer();
 
         public ILogger Logger { get; set; }
 
-        public LuceneSearchBuilder(Directory directory) {
+        public LuceneSearchBuilder(
+            Directory directory, 
+            ILuceneAnalyzerProvider analyzerProvider,
+            string indexName) {
             _directory = directory;
+            _indexName = indexName;
+            _analyzerProvider = analyzerProvider;
+
             Logger = NullLogger.Instance;
 
             _count = MaxResults;
@@ -72,7 +79,7 @@ namespace Lucene.Services {
 
             foreach (var defaultField in defaultFields) {
                 CreatePendingClause();
-                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzer).Parse(query);
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzerProvider.GetAnalyzer(_indexName)).Parse(query);
             }
 
             return this;

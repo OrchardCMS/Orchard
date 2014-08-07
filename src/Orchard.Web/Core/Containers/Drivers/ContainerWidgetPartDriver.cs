@@ -25,7 +25,10 @@ namespace Orchard.Core.Containers.Drivers {
             return ContentShape(
                 "Parts_ContainerWidget",
                 () => {
-                    var container = _contentManager.Get(part.Record.ContainerId);
+                    var container = part.Record.ContainerId != 0 ? _contentManager.Get(part.Record.ContainerId) : default(ContentItem);
+
+                    if (container == null)
+                        return null;
 
                     IContentQuery<ContentItem> query = _contentManager
                         .Query(VersionOptions.Published)
@@ -52,12 +55,17 @@ namespace Orchard.Core.Containers.Drivers {
                 "Parts_ContainerWidget_Edit",
                 () => {
                     var model = new ContainerWidgetViewModel {Part = part};
+                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List().ToArray();
 
                     if (updater != null) {
                         updater.TryUpdateModel(model, "ContainerWidget", null, null);
+
+                        if (model.Part.Record.ContainerId == 0)
+                            updater.AddModelError("Part.Record.ContainerId", containers.Any()
+                                ? T("Please select a container to show items from.")
+                                : T("Please create a container so you can select it to show items from."));
                     }
 
-                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();
                     var listItems = !containers.Any()
                         ? new[] {new SelectListItem {Text = T("(None - create container enabled items first)").Text, Value = "0"}}
                         : containers.Select(x => new SelectListItem {
