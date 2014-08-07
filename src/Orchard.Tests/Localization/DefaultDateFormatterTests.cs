@@ -42,7 +42,7 @@ namespace Orchard.Tests.Localization {
                 foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date and time formats supported by the culture.
                     for (var month = 1; month <= 12; month++) { // All months in the year.
 
-                        DateTime dateTime = new DateTime(1998, month, 1, 10, 30, 30, DateTimeKind.Utc);
+                        DateTime dateTime = new DateTime(1998, month, 1, 10, 30, 30, 678, DateTimeKind.Utc);
 
                         // Print string using Gregorian calendar to avoid calendar conversion.
                         var cultureGregorian = (CultureInfo)culture.Clone();
@@ -329,8 +329,8 @@ namespace Orchard.Tests.Localization {
                 foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date/time formats supported by the culture.
                     for (var month = 1; month <= 12; month++) { // All months in the year.
 
-                        DateTime dateTime = new DateTime(1998, month, 1, 10, 30, 30);
-                        DateTimeParts dateTimeParts = new DateTimeParts(1998, month, 1, 10, 30, 30, 0, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
+                        DateTime dateTime = new DateTime(1998, month, 1, 10, 30, 30, 678);
+                        DateTimeParts dateTimeParts = new DateTimeParts(1998, month, 1, 10, 30, 30, 678, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
 
                         // Print reference string using Gregorian calendar to avoid calendar conversion.
                         var cultureGregorian = (CultureInfo)culture.Clone();
@@ -392,8 +392,8 @@ namespace Orchard.Tests.Localization {
                 foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date/time formats supported by the culture.
                     foreach (var hour in new[] { 0, 6, 12, 18 }) { // Enough hours to cover all code paths (AM/PM, 12<->00, 1/2 digits, etc).
 
-                        DateTime dateTime = new DateTime(1998, 1, 1, hour, 30, 30);
-                        DateTimeParts dateTimeParts = new DateTimeParts(1998, 1, 1, hour, 30, 30, 0, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
+                        DateTime dateTime = new DateTime(1998, 1, 1, hour, 30, 30, 678);
+                        DateTimeParts dateTimeParts = new DateTimeParts(1998, 1, 1, hour, 30, 30, 678, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
 
                         // Print reference string using Gregorian calendar to avoid calendar conversion.
                         var cultureGregorian = (CultureInfo)culture.Clone();
@@ -471,7 +471,7 @@ namespace Orchard.Tests.Localization {
                             kind = DateTimeKind.Local;
                         }
 
-                        var dateTime = new DateTime(1998, 1, 1, 10, 30, 30, kind);
+                        var dateTime = new DateTime(1998, 1, 1, 10, 30, 30, 678, kind);
                         var dateTimeOffset = new DateTimeOffset(dateTime, timeZone.BaseUtcOffset);
                         var dateTimeParts = DateTimeParts.FromDateTime(dateTime, offset);
 
@@ -609,8 +609,8 @@ namespace Orchard.Tests.Localization {
                 foreach (var timeFormat in formats.AllTimeFormats) { // All time formats supported by the culture.
                     for (var hour = 0; hour <= 23; hour++) { // All hours in the day.
 
-                        DateTime date = new DateTime(1998, 1, 1, hour, 30, 30);
-                        TimeParts timeParts = new TimeParts(hour, 30, 30, 0, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
+                        DateTime date = new DateTime(1998, 1, 1, hour, 30, 30, 678);
+                        TimeParts timeParts = new TimeParts(hour, 30, 30, 678, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
 
                         var caseKey = String.Format("{0}___{1}___{2}", culture.Name, timeFormat, timeParts);
                         allCases.Add(caseKey);

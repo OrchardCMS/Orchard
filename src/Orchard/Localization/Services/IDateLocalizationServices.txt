@@ -1,6 +1,0 @@
-TODO:
-    * Test for proper handling of fraction (f) format specifier - suspect it does not work properly in current state
-    * Write remaining unit tests for DefaultDateLocalizationServices
-
-BREAKING:
-    * DateTokens "Date.Format:<formatString>" and "Date.Local.Format:<formatString>" only supports custom date/time format strings.

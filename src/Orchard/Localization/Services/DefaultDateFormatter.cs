@@ -110,11 +110,11 @@ namespace Orchard.Localization.Services {
 
             int twoDigitYear, hour12, offsetHours, offsetMinutes;
             bool isPm;
-            string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort, amPm, amPmShort, timeZone, offsetSign;
+            string monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, dayName, dayNameShort, amPm, amPmShort, timeZone, offsetSign, fraction1Zero, fraction2Zero, fraction3Zero, fraction1Digit, fraction2Digit, fraction3Digit;
             GetDateFormatValues(parts.Date, calendar, out twoDigitYear, out monthName, out monthNameShort, out monthNameGenitive, out monthNameShortGenitive, out dayName, out dayNameShort);
-            GetTimeFormatValues(parts.Time, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes);
+            GetTimeFormatValues(parts.Time, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes, out fraction1Zero, out fraction2Zero, out fraction3Zero, out fraction1Digit, out fraction2Digit, out fraction3Digit);
 
-            return String.Format(formatString, parts.Date.Year, twoDigitYear, parts.Date.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Date.Day, dayName, dayNameShort, parts.Time.Hour, hour12, parts.Time.Minute, parts.Time.Second, parts.Time.Millisecond, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
+            return String.Format(formatString, parts.Date.Year, twoDigitYear, parts.Date.Month, monthName, monthNameShort, monthNameGenitive, monthNameShortGenitive, parts.Date.Day, dayName, dayNameShort, parts.Time.Hour, hour12, parts.Time.Minute, parts.Time.Second, fraction1Zero, fraction2Zero, fraction3Zero, fraction1Digit, fraction2Digit, fraction3Digit, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
         }
 
         public virtual string FormatDate(DateParts parts) {
@@ -145,10 +145,10 @@ namespace Orchard.Localization.Services {
 
             bool isPm;
             int hour12, offsetHours, offsetMinutes;
-            string amPm, amPmShort, timeZone, offsetSign;
-            GetTimeFormatValues(parts, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes);
+            string amPm, amPmShort, timeZone, offsetSign, fraction1Zero, fraction2Zero, fraction3Zero, fraction1Digit, fraction2Digit, fraction3Digit;
+            GetTimeFormatValues(parts, out isPm, out hour12, out amPm, out amPmShort, out timeZone, out offsetSign, out offsetHours, out offsetMinutes, out fraction1Zero, out fraction2Zero, out fraction3Zero, out fraction1Digit, out fraction2Digit, out fraction3Digit);
 
-            return String.Format(formatString, null, null, null, null, null, null, null, null, null, null, parts.Hour, hour12, parts.Minute, parts.Second, parts.Millisecond, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
+            return String.Format(formatString, null, null, null, null, null, null, null, null, null, null, parts.Hour, hour12, parts.Minute, parts.Second, fraction1Zero, fraction2Zero, fraction3Zero, fraction1Digit, fraction2Digit, fraction3Digit, amPm, amPmShort, timeZone, offsetSign, offsetHours, offsetMinutes);
         }
 
         protected virtual DateTimeParts? TryParseDateTime(string dateTimeString, string format, IDictionary<string, string> replacements) {
@@ -250,8 +250,8 @@ namespace Orchard.Localization.Services {
                 second = Int32.Parse(m.Groups["second"].Value);
             }
 
-            if (m.Groups["millisecond"].Success) {
-                millisecond = Int32.Parse(m.Groups["millisecond"].Value);
+            if (m.Groups["fraction"].Success) {
+                millisecond = Convert.ToInt32(Decimal.Parse(String.Format(CultureInfo.InvariantCulture, "0.{0}", m.Groups["fraction"].Value), CultureInfo.InvariantCulture) * 1000);
             }
 
             if (m.Groups["timeZone"].Success) {
@@ -301,7 +301,7 @@ namespace Orchard.Localization.Services {
             dayNameShort = parts.Day > 0 ? _dateTimeFormatProvider.DayNamesShort[(int)calendar.GetDayOfWeek(parts.ToDateTime(calendar))] : null;
         }
 
-        protected virtual void GetTimeFormatValues(TimeParts parts, out bool isPm, out int hour12, out string amPm, out string amPmShort, out string timeZone, out string offsetSign, out int offsetHours, out int offsetMinutes) {
+        protected virtual void GetTimeFormatValues(TimeParts parts, out bool isPm, out int hour12, out string amPm, out string amPmShort, out string timeZone, out string offsetSign, out int offsetHours, out int offsetMinutes, out string fraction1Zero, out string fraction2Zero, out string fraction3Zero, out string fraction1Digit, out string fraction2Digit, out string fraction3Digit) {
             hour12 = ConvertToHour12(parts.Hour, out isPm);
             amPm = _dateTimeFormatProvider.AmPmDesignators[isPm ? 1 : 0];
             amPmShort = String.IsNullOrEmpty(amPm) ? "" : amPm[0].ToString();
@@ -317,6 +317,12 @@ namespace Orchard.Localization.Services {
                     timeZone = String.Format("{0}{1:00}:{2:00}", offsetSign, offsetHours, offsetMinutes);
                     break;
             }
+            fraction1Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.0", CultureInfo.InvariantCulture).Substring(2);
+            fraction2Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.00", CultureInfo.InvariantCulture).Substring(2);
+            fraction3Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.000", CultureInfo.InvariantCulture).Substring(2);
+            fraction1Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.#", CultureInfo.InvariantCulture).Substring(2) : "";
+            fraction2Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.##", CultureInfo.InvariantCulture).Substring(2) : "";
+            fraction3Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.###", CultureInfo.InvariantCulture).Substring(2) : "";
         }
 
         protected virtual bool GetUseGenitiveMonthName(string format) {
@@ -356,13 +362,20 @@ namespace Orchard.Localization.Services {
                 {"m", "(?<minute>[0-9]{1,2})"},
                 {"ss", "(?<second>[0-9]{2})"},      
                 {"s", "(?<second>[0-9]{1,2})"},
-                {"fffffff", "(?<millisecond>[0-9]{7})"},
-                {"ffffff", "(?<millisecond>[0-9]{6})"},
-                {"fffff", "(?<millisecond>[0-9]{5})"},
-                {"ffff", "(?<millisecond>[0-9]{4})"},
-                {"fff", "(?<millisecond>[0-9]{3})"},
-                {"ff", "(?<millisecond>[0-9]{2})"},
-                {"f", "(?<millisecond>[0-9]{1})"},
+                {"fffffff", "(?<fraction>[0-9]{7})"},
+                {"ffffff", "(?<fraction>[0-9]{6})"},
+                {"fffff", "(?<fraction>[0-9]{5})"},
+                {"ffff", "(?<fraction>[0-9]{4})"},
+                {"fff", "(?<fraction>[0-9]{3})"},
+                {"ff", "(?<fraction>[0-9]{2})"},
+                {"f", "(?<fraction>[0-9]{1})"},
+                {"FFFFFFF", "(?<fraction>[0-9]{7})"},
+                {"FFFFFF", "(?<fraction>[0-9]{6})"},
+                {"FFFFF", "(?<fraction>[0-9]{5})"},
+                {"FFFF", "(?<fraction>[0-9]{4})"},
+                {"FFF", "(?<fraction>[0-9]{3})"},
+                {"FF", "(?<fraction>[0-9]{2})"},
+                {"F", "(?<fraction>[0-9]{1})"},
                 {"tt", String.Format(@"\s*(?<amPm>{0}|{1})\s*", EscapeForRegex(amDesignator), EscapeForRegex(pmDesignator))},
                 {"t", String.Format(@"\s*(?<amPm>{0}|{1})\s*", String.IsNullOrEmpty(amDesignator) ? "" : EscapeForRegex(amDesignator[0].ToString()), String.IsNullOrEmpty(pmDesignator) ? "" : EscapeForRegex(pmDesignator[0].ToString()))},
                 {"K", @"(?<timeZone>Z|(\+|-)[0-9]{2}:[0-9]{2})*"},
@@ -402,26 +415,26 @@ namespace Orchard.Localization.Services {
                 {"m", "{12:#0}"},
                 {"ss", "{13:00}"},      
                 {"s", "{13:#0}"},
-                {"fffffff", "{14:0000000}"},
-                {"ffffff", "{14:000000}"},
-                {"fffff", "{14:00000}"},
-                {"ffff", "{14:0000}"},
-                {"fff", "{14:000}"},
-                {"ff", "{14:00}"},
-                {"f", "{14:0}"},
-                {"FFFFFFF", "{14:#######}"},
-                {"FFFFFF", "{14:######}"},
-                {"FFFFF", "{14:#####}"},
-                {"FFFF", "{14:####}"},
-                {"FFF", "{14:###}"},
-                {"FF", "{14:##}"},
-                {"F", "{14:#}"},
-                {"tt", "{15}"},
-                {"t", "{16}"},
-                {"K", "{17}"},
-                {"zzz", "{18}{19:00}:{20:00}"},
-                {"zz", "{18}{19:00}"},
-                {"z", "{18}{19:#0}"}
+                {"fffffff", "{16}0000"},
+                {"ffffff", "{16}000"},
+                {"fffff", "{16}00"},
+                {"ffff", "{16}0"},
+                {"fff", "{16}"},
+                {"ff", "{15}"},
+                {"f", "{14}"},
+                {"FFFFFFF", "{19}"},
+                {"FFFFFF", "{19}"},
+                {"FFFFF", "{19}"},
+                {"FFFF", "{19}"},
+                {"FFF", "{19}"},
+                {"FF", "{18}"},
+                {"F", "{17}"},
+                {"tt", "{20}"},
+                {"t", "{21}"},
+                {"K", "{22}"},
+                {"zzz", "{23}{24:00}:{25:00}"},
+                {"zz", "{23}{24:00}"},
+                {"z", "{23}{24:#0}"}
             };
         }
 
