@@ -144,7 +144,7 @@ namespace Orchard.Mvc.Html {
                 }
 
                 if (counter % 2 != 0 && generateAlternatingItemCssClass != null) {
-                    sbClass.AppendFormat(generateAlternatingItemCssClass(item)).Append(" ");
+                    sbClass.Append(generateAlternatingItemCssClass(item)).Append(" ");
                 }
 
                 var clss = sbClass.ToString().TrimEnd();
