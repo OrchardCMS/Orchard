@@ -152,7 +152,7 @@ namespace Orchard.Fields.Drivers {
                             field.DateTime = DateTime.MinValue;
                         }
                     }
-                    catch (FormatException) {
+                    catch {
                         updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date and time.", field.DisplayName));
                     }
                 }
