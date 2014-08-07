@@ -483,17 +483,24 @@ $(function () {
             return false;
         });
 
-        $("#media-library-main-selection-select > .button-select").on('click', function() {
-            if (parent.$.colorbox) {
-                var selectedData = [];
-                for (var i = 0; i < viewModel.selection().length; i++) {
-                    var selection = viewModel.selection()[i];
-                    selectedData.push(selection.data);
-                }
-                parent.$.colorbox.selectedData = selectedData;
-                parent.$.colorbox.close();
-            }
-            ;
+        var pickAndClose = function () {
+        	if (parent.$.colorbox) {
+        		var selectedData = [];
+        		for (var i = 0; i < viewModel.selection().length; i++) {
+        			var selection = viewModel.selection()[i];
+        			selectedData.push(selection.data);
+        		}
+        		parent.$.colorbox.selectedData = selectedData;
+        		parent.$.colorbox.close();
+        	};
+        }
+
+        $("#media-library-main-selection-select > .button-select").on('click', function () {
+        	pickAndClose();
+        });
+
+        $("#media-library-main-list").on('dblclick', function () {
+        	pickAndClose();
         });
 
         $("#media-library-main-selection-select > .button-cancel").on('click', function() {
