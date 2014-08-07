@@ -1,4 +1,4 @@
-namespace Orchard.AuditTrail.Providers.Content {
+namespace Orchard.AuditTrail.Services.Models {
     public class DiffNode {
         public DiffType Type { get; set; }
         public string Context { get; set; }

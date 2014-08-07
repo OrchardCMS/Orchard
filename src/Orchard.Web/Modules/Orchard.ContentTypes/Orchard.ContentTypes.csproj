@@ -72,9 +72,13 @@
     <Compile Include="Events\ContentPartCreatedContext.cs" />
     <Compile Include="Events\ContentPartDetachedContext.cs" />
     <Compile Include="Events\ContentPartFieldContext.cs" />
+    <Compile Include="Events\ContentPartImportedContext.cs" />
+    <Compile Include="Events\ContentPartImportingContext.cs" />
     <Compile Include="Events\ContentPartRemovedContext.cs" />
     <Compile Include="Events\ContentTypeContext.cs" />
     <Compile Include="Events\ContentTypeCreatedContext.cs" />
+    <Compile Include="Events\ContentTypeImportedContext.cs" />
+    <Compile Include="Events\ContentTypeImportingContext.cs" />
     <Compile Include="Events\ContentTypePartContext.cs" />
     <Compile Include="Events\ContentTypeRemovedContext.cs" />
     <Compile Include="Events\IContentDefinitionEventHandler.cs" />

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
+using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment;
@@ -28,8 +27,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var eventData = (IDictionary<string, object>)context.Shape.EventData;
                 var contentItemId = eventData.Get<int>("ContentId");
                 var previousContentItemVersionId = eventData.Get<int>("PreviousVersionId");
-                var previousVersionXml = GetXml(eventData, "PreviousVersionXml");
-                var diffGram = GetXml(eventData, "DiffGram");
+                var previousVersionXml = eventData.GetXml("PreviousVersionXml");
+                var diffGram = eventData.GetXml("DiffGram");
                 var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.AllVersions);
                 var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
 
@@ -42,20 +41,6 @@ namespace Orchard.AuditTrail.Providers.Content {
                 context.Shape.ContentItem = contentItem;
                 context.Shape.PreviousVersion = previousVersion;
             });
-        }
-
-        private static XElement GetXml(IDictionary<string, object> eventData, string key) {
-            var data = eventData.Get<string>(key);
-
-            if (String.IsNullOrWhiteSpace(data))
-                return null;
-
-            try {
-                return XElement.Parse(data);
-            }
-            catch (Exception) {
-                return null;
-            }
         }
     }
 }

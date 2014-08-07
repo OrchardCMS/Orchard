@@ -1,4 +1,4 @@
-﻿namespace Orchard.AuditTrail.Providers.Content {
+﻿namespace Orchard.AuditTrail.Services.Models {
     public enum DiffType {
         Change,
         Addition

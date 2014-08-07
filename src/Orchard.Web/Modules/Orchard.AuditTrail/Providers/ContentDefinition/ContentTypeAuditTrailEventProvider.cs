@@ -17,6 +17,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public const string Created = "Created";
         public const string Removed = "Removed";
+        public const string Imported = "Imported";
         public const string PartAdded = "PartAdded";
         public const string PartRemoved = "PartRemoved";
         public const string TypeDisplayNameUpdated = "TypeDisplayNameUpdated";
@@ -28,6 +29,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             context.For("ContentType", T("Content Type"))
                 .Event(this, Created, T("Created"), T("A content type was created."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content type was removed."), enableByDefault: true)
+                .Event(this, Imported, T("Imported"), T("A content type was imported."), enableByDefault: true)
                 .Event(this, PartAdded, T("Part added"), T("A content part was added to a content type."), enableByDefault: true)
                 .Event(this, PartRemoved, T("Part removed"), T("A content part was removed from a content type."), enableByDefault: true)
                 .Event(this, TypeDisplayNameUpdated, T("Type display name updated"), T("The display name of a content type was updated."), enableByDefault: true)

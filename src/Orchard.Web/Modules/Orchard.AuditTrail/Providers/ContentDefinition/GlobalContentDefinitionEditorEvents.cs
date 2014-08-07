@@ -9,7 +9,6 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.ContentTypes.Services;
-using Orchard.ContentTypes.ViewModels;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Providers.ContentDefinition {
@@ -21,7 +20,6 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         private readonly IContentDefinitionService _contentDefinitionService;
         private readonly ISettingsFormatter _settingsFormatter;
         private string _oldContentTypeDisplayName;
-        private EditTypeViewModel _currentContentType;
         private SettingsDictionary _oldContentTypeSettings;
         private SettingsDictionary _oldContentTypePartSettings;
         private SettingsDictionary _oldContentPartFieldSettings;
@@ -41,7 +39,6 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
         public override void TypeEditorUpdating(ContentTypeDefinitionBuilder definition) {
             var contentType = _contentDefinitionService.GetType(definition.Name);
-            _currentContentType = contentType;
             _oldContentTypeDisplayName = contentType.DisplayName;
             _oldContentTypeSettings = new SettingsDictionary(contentType.Settings);
         }
@@ -157,14 +154,11 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         }
 
         private string ToXml(SettingsDictionary settings) {
-            return _settingsFormatter.Map(settings).ToString(SaveOptions.DisableFormatting);
+            return settings.ToXml(_settingsFormatter);
         }
 
         private bool AreEqual(SettingsDictionary a, SettingsDictionary b) {
-            var xml1 = ToXml(a);
-            var xml2 = ToXml(b);
-
-            return String.Equals(xml1, xml2, StringComparison.OrdinalIgnoreCase);
+            return a.IsEqualTo(b, _settingsFormatter);
         }
     }
 }

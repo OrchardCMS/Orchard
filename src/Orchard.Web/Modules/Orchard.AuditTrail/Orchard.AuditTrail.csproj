@@ -142,6 +142,10 @@
     <Content Include="Views\AuditTrailEvent-Role-UserRemoved.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-DescriptionChanged.cshtml" />
     <Content Include="Views\AuditTrailEvent-ContentPart-FieldSettingsUpdated.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Imported.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Imported.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentPart-Imported.SummaryAdmin.cshtml" />
+    <Content Include="Views\AuditTrailEvent-ContentType-Imported.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -193,6 +197,8 @@
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentPartImportedEventShape.cs" />
+    <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeImportedEventShape.cs" />
     <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
@@ -200,11 +206,11 @@
     <Compile Include="Services\Models\DisplayFilterContext.cs" />
     <Compile Include="Services\Models\QueryFilterContext.cs" />
     <Compile Include="Providers\Content\ContentAuditTrailEventShapes.cs" />
-    <Compile Include="Providers\Content\DiffGramAnalyzer.cs" />
-    <Compile Include="Providers\Content\DiffNode.cs" />
-    <Compile Include="Providers\Content\DiffType.cs" />
+    <Compile Include="Services\DiffGramAnalyzer.cs" />
+    <Compile Include="Services\Models\DiffNode.cs" />
+    <Compile Include="Services\Models\DiffType.cs" />
     <Compile Include="Services\Models\Filters.cs" />
-    <Compile Include="Providers\Content\IDiffGramAnalyzer.cs" />
+    <Compile Include="Services\IDiffGramAnalyzer.cs" />
     <Compile Include="Services\AuditTrailTrimmingBackgroundTask.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailFilterShapes.cs" />
     <Compile Include="Shapes\AuditTrailEventShapeAlteration.cs" />

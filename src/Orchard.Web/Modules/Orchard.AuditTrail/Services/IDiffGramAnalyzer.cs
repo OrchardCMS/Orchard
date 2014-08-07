@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using Orchard.AuditTrail.Services.Models;
 
-namespace Orchard.AuditTrail.Providers.Content {
+namespace Orchard.AuditTrail.Services {
     public interface IDiffGramAnalyzer : IDependency {
         /// <summary>
         /// Compares the specified XML elements and returns a DiffGram XML element.

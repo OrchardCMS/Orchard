@@ -4,8 +4,9 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.XmlDiffPatch;
+using Orchard.AuditTrail.Services.Models;
 
-namespace Orchard.AuditTrail.Providers.Content {
+namespace Orchard.AuditTrail.Services {
     public class DiffGramAnalyzer : IDiffGramAnalyzer {
         public XElement GenerateDiffGram(XElement element1, XElement element2) {
             using (var node1Reader = element1.CreateReader())
@@ -95,7 +96,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                             }
                             break;
                         case XmlNodeType.EndElement:
-                            stack.Pop();
+                            if(stack.Any())
+                                stack.Pop();
                             break;
                     }
                     if (readNext)

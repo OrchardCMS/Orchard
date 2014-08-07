@@ -7,6 +7,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
     public class ContentPartAuditTrailEventProvider : AuditTrailEventProviderBase {
         public const string Created = "Created";
         public const string Removed = "Removed";
+        public const string Imported = "Imported";
         public const string DescriptionChanged = "DescriptionChanged";
         public const string FieldAdded = "FieldAdded";
         public const string FieldRemoved = "FieldRemoved";
@@ -17,6 +18,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
             context.For("ContentPart", T("Content Parts"))
                 .Event(this, Created, T("Created"), T("A content part was created."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content part was removed."), enableByDefault: true)
+                .Event(this, Imported, T("Imported"), T("A content part was imported."), enableByDefault: true)
                 .Event(this, DescriptionChanged, T("Description changed"), T("A content part description was changed."), enableByDefault: true)
                 .Event(this, FieldAdded, T("Field added"), T("A field was added to a content part."), enableByDefault: true)
                 .Event(this, FieldRemoved, T("Field removed"), T("A field was removed from a content part."), enableByDefault: true)

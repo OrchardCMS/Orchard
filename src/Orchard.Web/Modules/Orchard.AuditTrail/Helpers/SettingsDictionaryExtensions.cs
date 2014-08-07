@@ -1,5 +1,8 @@
-﻿using Orchard.AuditTrail.Services.Models;
+﻿using System;
+using System.Xml.Linq;
+using Orchard.AuditTrail.Services.Models;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Services;
 
 namespace Orchard.AuditTrail.Helpers {
     public static class SettingsDictionaryExtensions {
@@ -15,6 +18,17 @@ namespace Orchard.AuditTrail.Helpers {
             BuildDiff(dictionary, oldSettings, newSettings);
 
             return dictionary;
+        }
+
+        public static bool IsEqualTo(this SettingsDictionary a, SettingsDictionary b, ISettingsFormatter settingsFormatter) {
+            var xml1 = ToXml(a, settingsFormatter);
+            var xml2 = ToXml(b, settingsFormatter);
+
+            return String.Equals(xml1, xml2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string ToXml(this SettingsDictionary settings, ISettingsFormatter settingsFormatter) {
+            return settingsFormatter.Map(settings).ToString(SaveOptions.DisableFormatting);
         }
 
         private static void BuildDiff(DiffDictionary<string, string> dictionary, SettingsDictionary settingsA, SettingsDictionary settingsB) {

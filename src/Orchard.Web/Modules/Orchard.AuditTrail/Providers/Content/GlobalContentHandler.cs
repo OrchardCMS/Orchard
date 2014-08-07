@@ -15,6 +15,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         private XElement _previousVersionXml;
         private readonly IDiffGramAnalyzer _analyzer;
         private bool _contentItemCreated = false;
+        private ContentItem _ignoreExportHandlerFor;
 
         public GlobalContentHandler(IAuditTrailManager auditTrailManager, IWorkContextAccessor wca, IContentManager contentManager, IDiffGramAnalyzer analyzer) {
             _auditTrailManager = auditTrailManager;
@@ -44,7 +45,10 @@ namespace Orchard.AuditTrail.Providers.Content {
                 RecordAuditTrailEvent(ContentAuditTrailEventProvider.Created, context.ContentItem);
             }
             else {
+                _ignoreExportHandlerFor = contentItem;
                 var newVersionXml = _contentManager.Export(contentItem);
+                _ignoreExportHandlerFor = null;
+
                 var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
                 RecordAuditTrailEvent(ContentAuditTrailEventProvider.Saved, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);    
             }
@@ -61,6 +65,17 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Removed(RemoveContentContext context) {
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Removed, context.ContentItem);
+        }
+
+        protected override void Imported(ImportContentContext context) {
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Imported, context.ContentItem);
+        }
+
+        protected override void Exported(ExportContentContext context) {
+            if (context.ContentItem == _ignoreExportHandlerFor)
+                return;
+
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Exported, context.ContentItem);
         }
 
         private void RecordAuditTrailEvent(string eventName, IContent content, ContentItemVersionRecord previousContentItemVersion = null, XElement diffGram = null, XElement previousVersionXml = null) {
