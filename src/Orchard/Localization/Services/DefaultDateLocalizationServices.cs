@@ -39,12 +39,12 @@ namespace Orchard.Localization.Services {
             }
             if (CurrentTimeZone == TimeZoneInfo.Utc) {
                 if (dateUtc.Kind == DateTimeKind.Unspecified) {
-                    return new DateTime(dateUtc.Ticks, DateTimeKind.Utc);
+                    return DateTime.SpecifyKind(dateUtc, DateTimeKind.Utc);
                 }
                 return dateUtc;
             }
             var dateLocal = TimeZoneInfo.ConvertTimeFromUtc(dateUtc, CurrentTimeZone);
-            return new DateTime(dateLocal.Ticks, DateTimeKind.Local);
+            return DateTime.SpecifyKind(dateLocal, DateTimeKind.Local);
         }
 
         public virtual DateTime ConvertFromSiteTimeZone(DateTime dateLocal) {
@@ -58,7 +58,7 @@ namespace Orchard.Localization.Services {
             }
             var dateUnspecified = new DateTime(dateLocal.Ticks, DateTimeKind.Unspecified);
             var dateUtc = TimeZoneInfo.ConvertTimeToUtc(dateUnspecified, CurrentTimeZone);
-            return new DateTime(dateUtc.Ticks, DateTimeKind.Utc);
+            return DateTime.SpecifyKind(dateUtc, DateTimeKind.Utc);
         }
 
         public virtual DateTimeParts ConvertToSiteCalendar(DateTime date, TimeSpan offset) {

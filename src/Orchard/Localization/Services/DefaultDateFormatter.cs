@@ -320,9 +320,12 @@ namespace Orchard.Localization.Services {
             fraction1Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.0", CultureInfo.InvariantCulture).Substring(2);
             fraction2Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.00", CultureInfo.InvariantCulture).Substring(2);
             fraction3Zero = (((decimal)parts.Millisecond) / 1000).ToString("0.000", CultureInfo.InvariantCulture).Substring(2);
-            fraction1Digit = parts.Millisecond >= 50 ? (((decimal)parts.Millisecond) / 1000).ToString("0.#", CultureInfo.InvariantCulture).Substring(2) : "";
-            fraction2Digit = parts.Millisecond >= 5 ? (((decimal)parts.Millisecond) / 1000).ToString("0.##", CultureInfo.InvariantCulture).Substring(2) : "";
-            fraction3Digit = parts.Millisecond > 0 ? (((decimal)parts.Millisecond) / 1000).ToString("0.###", CultureInfo.InvariantCulture).Substring(2) : "";
+            var fraction1 = (((decimal)parts.Millisecond) / 1000).ToString("0.#", CultureInfo.InvariantCulture);
+            var fraction2 = (((decimal)parts.Millisecond) / 1000).ToString("0.##", CultureInfo.InvariantCulture);
+            var fraction3 = (((decimal)parts.Millisecond) / 1000).ToString("0.###", CultureInfo.InvariantCulture);
+            fraction1Digit = fraction1.Length >= 2 ? fraction1.Substring(2) : "";
+            fraction2Digit = fraction2.Length >= 2 ? fraction2.Substring(2) : "";
+            fraction3Digit = fraction3.Length >= 2 ? fraction3.Substring(2) : "";
         }
 
         protected virtual bool GetUseGenitiveMonthName(string format) {

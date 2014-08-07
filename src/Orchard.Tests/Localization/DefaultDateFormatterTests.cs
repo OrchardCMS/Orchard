@@ -188,9 +188,58 @@ namespace Orchard.Tests.Localization {
         }
 
         [Test]
+        [Description("Date/time parsing works correctly for all combinations of milliseconds, format strings and cultures..")]
+        public void ParseDateTimeTest04() {
+            var allCases = new ConcurrentBag<string>();
+            var failedCases = new ConcurrentDictionary<string, Exception>();
+            var maxFailedCases = 0;
+
+            var options = new ParallelOptions();
+            if (Debugger.IsAttached) {
+                options.MaxDegreeOfParallelism = 1;
+            }
+
+            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
+                foreach (var millisecond in new[] { 0, 10, 500, 990, 999 }) { // Enough values to cover all fraction rounding cases.
+                    var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                    var formats = container.Resolve<IDateTimeFormatProvider>();
+                    var target = container.Resolve<IDateFormatter>();
+
+                    foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date and time formats supported by the culture.
+
+                        DateTime dateTime = new DateTime(1998, 1, 1, 10, 30, 30, millisecond, DateTimeKind.Utc);
+
+                        // Print string using Gregorian calendar to avoid calendar conversion.
+                        var cultureGregorian = (CultureInfo)culture.Clone();
+                        cultureGregorian.DateTimeFormat.Calendar = cultureGregorian.OptionalCalendars.OfType<GregorianCalendar>().First();
+                        var dateTimeString = dateTime.ToString(dateTimeFormat, cultureGregorian);
+
+                        var caseKey = String.Format("{0}___{1}___{2}", culture.Name, dateTimeFormat, dateTimeString);
+                        allCases.Add(caseKey);
+                        //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+
+                        try {
+                            var result = target.ParseDateTime(dateTimeString, dateTimeFormat);
+                            var expected = GetExpectedDateTimeParts(dateTime, dateTimeFormat, TimeZoneInfo.Utc);
+                            Assert.AreEqual(expected, result);
+                        }
+                        catch (Exception ex) {
+                            failedCases.TryAdd(caseKey, ex);
+                        }
+                    }
+                }
+            });
+
+            if (failedCases.Count > maxFailedCases) {
+                throw new AggregateException(String.Format("Parse tests failed for {0} of {1} cases. Expected {2} failed cases or less.", failedCases.Count, allCases.Count, maxFailedCases), failedCases.Values);
+            }
+        }
+
+        [Test]
         [Description("Date/time parsing throws a FormatException for unparsable date/time strings.")]
         [ExpectedException(typeof(FormatException))]
-        public void ParseDateTimeTest04() {
+        public void ParseDateTimeTest05() {
             var container = TestHelpers.InitializeContainer("en-US", null, TimeZoneInfo.Utc);
             var target = container.Resolve<IDateFormatter>();
             target.ParseDateTime("BlaBlaBla");
@@ -511,6 +560,69 @@ namespace Orchard.Tests.Localization {
                                 }
                             }
 
+                            Assert.AreEqual(expected, result);
+                        }
+                        catch (Exception ex) {
+                            failedCases.TryAdd(caseKey, ex);
+                        }
+                    }
+                }
+            });
+
+            if (failedCases.Count > maxFailedCases) {
+                throw new AggregateException(String.Format("Format tests failed for {0} of {1} cases. Expected {2} failed cases or less.", failedCases.Count, allCases.Count, maxFailedCases), failedCases.Values);
+            }
+        }
+
+        [Test]
+        [Description("Date/time formatting works correctly for all combinations of milliseconds, format strings and cultures.")]
+        public void FormatDateTimeTest04() {
+            var allCases = new ConcurrentBag<string>();
+            var failedCases = new ConcurrentDictionary<string, Exception>();
+            var maxFailedCases = 0;
+
+            var options = new ParallelOptions();
+            if (Debugger.IsAttached) {
+                options.MaxDegreeOfParallelism = 1;
+            }
+
+            var allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            Parallel.ForEach(allCultures, options, culture => { // All cultures on the machine.
+                var container = TestHelpers.InitializeContainer(culture.Name, "GregorianCalendar", TimeZoneInfo.Utc);
+                var formats = container.Resolve<IDateTimeFormatProvider>();
+                var target = container.Resolve<IDateFormatter>();
+
+                foreach (var dateTimeFormat in formats.AllDateTimeFormats) { // All date/time formats supported by the culture.
+                    foreach (var millisecond in new[] { 0, 10, 500, 990, 999 }) { // Enough values to cover all fraction rounding cases.
+
+                        DateTime dateTime = new DateTime(1998, 1, 1, 10, 30, 30, millisecond);
+                        DateTimeParts dateTimeParts = new DateTimeParts(1998, 1, 1, 10, 30, 30, millisecond, DateTimeKind.Unspecified, offset: TimeSpan.Zero);
+
+                        // Print reference string using Gregorian calendar to avoid calendar conversion.
+                        var cultureGregorian = (CultureInfo)culture.Clone();
+                        cultureGregorian.DateTimeFormat.Calendar = cultureGregorian.OptionalCalendars.OfType<GregorianCalendar>().First();
+
+                        var caseKey = String.Format("{0}___{1}___{2}", culture.Name, dateTimeFormat, dateTimeParts);
+                        allCases.Add(caseKey);
+                        //Debug.WriteLine(String.Format("{0} cases tested so far. Testing case {1}...", allCases.Count, caseKey));
+
+                        try {
+                            var result = target.FormatDateTime(dateTimeParts, dateTimeFormat);
+                            var expected = dateTime.ToString(dateTimeFormat, cultureGregorian);
+                            if (result != expected) {
+                                // The .NET date formatting logic contains a bug that causes it to recognize 'd' and 'dd'
+                                // as numerical day specifiers even when they are embedded in literals. Our implementation
+                                // does not contain this bug. If we encounter an unexpected result and the .NET reference
+                                // result contains the genitive month name, replace it with the non-genitive month name
+                                // before asserting.
+                                var numericalDayPattern = @"(\b|[^d])d{1,2}(\b|[^d])";
+                                var containsNumericalDay = Regex.IsMatch(dateTimeFormat, numericalDayPattern);
+                                if (containsNumericalDay) {
+                                    var monthName = formats.MonthNames[0];
+                                    var monthNameGenitive = formats.MonthNamesGenitive[0];
+                                    expected = expected.Replace(monthNameGenitive, monthName);
+                                }
+                            }
                             Assert.AreEqual(expected, result);
                         }
                         catch (Exception ex) {
