@@ -52,6 +52,7 @@ namespace Orchard.Fields.Drivers {
                     // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
                     if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
                         options.EnableCalendarConversion = false;
+                        options.IgnoreDate = true;
                     }
 
                     var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
@@ -88,6 +89,7 @@ namespace Orchard.Fields.Drivers {
             // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
             if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
                 options.EnableCalendarConversion = false;
+                options.IgnoreDate = true;
             }
 
             var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;
@@ -126,6 +128,7 @@ namespace Orchard.Fields.Drivers {
                 // Don't do any calendar conversion if field is semantically a time-only field, because the date component might we out of allowed boundaries for the current calendar.
                 if (settings.Display == DateTimeFieldDisplays.TimeOnly) {
                     options.EnableCalendarConversion = false;
+                    options.IgnoreDate = true;
                 }
 
                 var showDate = settings.Display == DateTimeFieldDisplays.DateAndTime || settings.Display == DateTimeFieldDisplays.DateOnly;

@@ -261,42 +261,99 @@ namespace Orchard.Tests.Localization {
             Assert.AreEqual(expected, result);
         }
 
+        [Test]
+        [Description("Non-DST date and time are properly round-tripped.")]
+        public void ConvertToLocalizedTimeStringTest01() {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
+            var target = container.Resolve<IDateLocalizationServices>();
+
+            var dateString = "3/11/2012";
+            var timeString = "12:00:00 PM";
+
+            var dateTimeUtc = target.ConvertFromLocalizedString(dateString, timeString);
+
+            var dateString2 = target.ConvertToLocalizedDateString(dateTimeUtc);
+            var timeString2 = target.ConvertToLocalizedTimeString(dateTimeUtc);
+
+            Assert.AreEqual(dateString, dateString2);
+            Assert.AreEqual(timeString, timeString2);
+        }
+
+        [Test]
+        [Description("DST date and time are properly round-tripped.")]
+        public void ConvertToLocalizedTimeStringTest02() {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
+            var target = container.Resolve<IDateLocalizationServices>();
+
+            var dateString = "3/10/2012";
+            var timeString = "12:00:00 PM";
+
+            var dateTimeUtc = target.ConvertFromLocalizedString(dateString, timeString);
+
+            var dateString2 = target.ConvertToLocalizedDateString(dateTimeUtc);
+            var timeString2 = target.ConvertToLocalizedTimeString(dateTimeUtc);
+
+            Assert.AreEqual(dateString, dateString2);
+            Assert.AreEqual(timeString, timeString2);
+        }
+
+        [Test]
+        [Description("DST date and time are not properly round-tripped when date is ignored.")]
+        public void ConvertToLocalizedTimeStringTest03() {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var container = TestHelpers.InitializeContainer("en-US", null, timeZone);
+            var target = container.Resolve<IDateLocalizationServices>();
+
+            var dateString = "3/10/2012";
+            var timeString = "12:00:00 PM";
+
+            var dateTimeUtc = target.ConvertFromLocalizedString(dateString, timeString);
+
+            var dateString2 = target.ConvertToLocalizedDateString(dateTimeUtc);
+            var timeString2 = target.ConvertToLocalizedTimeString(dateTimeUtc, new DateLocalizationOptions() { IgnoreDate = true });
+
+            Assert.AreEqual(dateString, dateString2);
+            Assert.AreNotEqual(timeString, timeString2);
+        }
+
         /*
             ConvertToLocalizedTimeStringTest
-	            Time zone conversion works properly (even though there is no date component).
+                Time zone conversion works properly (even though there is no date component).
 
             ConvertToLocalizedStringTest
-	            Non-nullable DateTime.MinValue is converted to NullText.
-	            Nullable DateTime.MinValue is converted to date/time string.
-	            Nullable null is converted to NullText.
-	            Time zone conversion is performed when EnableTimeZoneConversion is true.
-	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
-	            Calendar conversion is performed when EnableCalendarConversion is true.
-	            Calendar conversion is not performed when EnableCalendarConversion is false.
-	            Full conversion is performed with default options.
-	
+                Non-nullable DateTime.MinValue is converted to NullText.
+                Nullable DateTime.MinValue is converted to date/time string.
+                Nullable null is converted to NullText.
+                Time zone conversion is performed when EnableTimeZoneConversion is true.
+                Time zone conversion is not performed when EnableTimeZoneConversion is false.
+                Calendar conversion is performed when EnableCalendarConversion is true.
+                Calendar conversion is not performed when EnableCalendarConversion is false.
+                Full conversion is performed with default options.
+    
             ConvertFromLocalizedStringCombinedTest
-	            Null date/time string is converted to null.
-	            Empty date/time string is converted to null.
-	            Custom NullText date/time string is converted to null.
-	            Time zone conversion is performed when EnableTimeZoneConversion is true.
-	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
-	            Calendar conversion is performed when EnableCalendarConversion is true.
-	            Calendar conversion is not performed when EnableCalendarConversion is false.
-	            Full conversion is performed with default options.
-	
+                Null date/time string is converted to null.
+                Empty date/time string is converted to null.
+                Custom NullText date/time string is converted to null.
+                Time zone conversion is performed when EnableTimeZoneConversion is true.
+                Time zone conversion is not performed when EnableTimeZoneConversion is false.
+                Calendar conversion is performed when EnableCalendarConversion is true.
+                Calendar conversion is not performed when EnableCalendarConversion is false.
+                Full conversion is performed with default options.
+    
             ConvertFromLocalizedStringSeparateTest	
-	            Null date string and time string is converted to null.
-	            Empty date string and time string is converted to null.
-	            Custom NullText date string and time string is converted to null.
-	            Time zone conversion works properly when date component is omitted.
-	            Time zone conversion is never performed when time component is omitted.
-	            Time zone conversion is performed when EnableTimeZoneConversion is true.
-	            Time zone conversion is not performed when EnableTimeZoneConversion is false.
-	            Calendar conversion is never performed when date component is omitted.
-	            Calendar conversion is performed when EnableCalendarConversion is true.
-	            Calendar conversion is not performed when EnableCalendarConversion is false.
-	            Full conversion is performed with default options.
-	    */
+                Null date string and time string is converted to null.
+                Empty date string and time string is converted to null.
+                Custom NullText date string and time string is converted to null.
+                Time zone conversion works properly when date component is omitted.
+                Time zone conversion is never performed when time component is omitted.
+                Time zone conversion is performed when EnableTimeZoneConversion is true.
+                Time zone conversion is not performed when EnableTimeZoneConversion is false.
+                Calendar conversion is never performed when date component is omitted.
+                Calendar conversion is performed when EnableCalendarConversion is true.
+                Calendar conversion is not performed when EnableCalendarConversion is false.
+                Full conversion is performed with default options.
+        */
     }
 }
