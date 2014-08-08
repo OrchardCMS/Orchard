@@ -2,7 +2,7 @@
    Hindi INDIA localisation for Gregorian/Julian calendars for jQuery.
    Written by Pawan Kumar Singh. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hi-IN'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hi-IN'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['जनवरी',' फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून','जुलाई', 'अगस्त', 'सितम्बर', 'अक्टूबर', 'नवम्बर', 'दिसम्बर'],
@@ -15,7 +15,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hi-IN'] =
-			$.calendars.calendars.gregorian.prototype.regional['hi-IN'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hi-IN'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hi-IN'];
 	}
 })(jQuery);

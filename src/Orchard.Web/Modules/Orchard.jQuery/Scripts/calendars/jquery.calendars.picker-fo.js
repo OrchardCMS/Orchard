@@ -2,8 +2,8 @@
    Faroese localisation for calendars datepicker for jQuery.
    Written by Sverri Mohr Olsen, sverrimo@gmail.com */
 (function($) {
-	$.calendars.picker.regional['fo'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['fo'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Sísta', prevStatus: 'Vís sísta mánaðan',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Vís sísta árið',
 		nextText: 'Næsta&#x3e;', nextStatus: 'Vís næsta mánaðan',
@@ -17,5 +17,5 @@
 		dayStatus: 'Vel DD, M d, yyyy', defaultStatus: 'Vel ein dato',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['fo']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['fo']);
 })(jQuery);

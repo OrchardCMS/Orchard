@@ -2,8 +2,8 @@
    Russian localisation for calendars datepicker for jQuery.
    Written by Andrew Stromnov (stromnov@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['ru'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ru'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Пред',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'След&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ru']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ru']);
 })(jQuery);

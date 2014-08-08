@@ -2,8 +2,8 @@
    Indonesian localisation for calendars datepicker for jQuery.
    Written by Deden Fathurahman (dedenf@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['id'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['id'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;mundur', prevStatus: 'Tampilkan bulan sebelumnya',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'maju&#x3e;', nextStatus: 'Tampilkan bulan berikutnya',
@@ -17,5 +17,5 @@
 		dayStatus: 'pilih le DD, MM d', defaultStatus: 'Pilih Tanggal',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['id']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['id']);
 })(jQuery);

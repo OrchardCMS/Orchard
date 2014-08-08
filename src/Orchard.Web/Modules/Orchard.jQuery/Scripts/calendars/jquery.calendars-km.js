@@ -2,7 +2,7 @@
    Khmer initialisation for Gregorian/Julian calendars for jQuery.
    Written by Sovichet Tep (sovichet.tep@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['km'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['km'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['ខែ​មករា','ខែ​កុម្ភៈ','ខែ​មិនា','ខែ​មេសា','ខែ​ឧសភា','ខែ​មិថុនា',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['km'] =
-			$.calendars.calendars.gregorian.prototype.regional['km'];
+		$.calendars.calendars.julian.prototype.regionalOptions['km'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['km'];
 	}
 })(jQuery);

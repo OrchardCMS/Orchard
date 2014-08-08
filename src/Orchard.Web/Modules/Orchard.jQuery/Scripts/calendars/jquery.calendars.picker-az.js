@@ -2,8 +2,8 @@
    Azerbaijani localisation for calendars datepicker for jQuery.
    Written by Jamil Najafov (necefov33@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['az'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['az'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Geri',  prevStatus: 'Əvvəlki ay',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Əvvəlki il',
 		nextText: 'İrəli&#x3e;', nextStatus: 'Sonrakı ay',
@@ -17,5 +17,5 @@
 		dayStatus: 'D, M d seçin', defaultStatus: 'Bir tarix seçin',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['az']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['az']);
 })(jQuery);

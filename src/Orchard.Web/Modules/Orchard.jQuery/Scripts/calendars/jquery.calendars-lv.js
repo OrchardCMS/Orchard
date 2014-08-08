@@ -2,7 +2,7 @@
    Latvian localisation for Gregorian/Julian calendars for jQuery.
    Arturas Paleicikas <arturas.paleicikas@metasite.net>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['lv'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['lv'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janvāris','Februāris','Marts','Aprīlis','Maijs','Jūnijs',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['lv'] =
-			$.calendars.calendars.gregorian.prototype.regional['lv'];
+		$.calendars.calendars.julian.prototype.regionalOptions['lv'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['lv'];
 	}
 })(jQuery);

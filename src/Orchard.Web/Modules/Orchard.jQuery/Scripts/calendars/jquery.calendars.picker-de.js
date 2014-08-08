@@ -2,8 +2,8 @@
    German localisation for calendars datepicker for jQuery.
    Written by Milian Wolff (mail@milianw.de). */
 (function($) {
-	$.calendars.picker.regional['de'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['de'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;zurück', prevStatus: 'letzten Monat zeigen',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Vor&#x3e;', nextStatus: 'nächsten Monat zeigen',
@@ -17,5 +17,5 @@
 		dayStatus: 'Wähle D, M d', defaultStatus: 'Wähle ein Datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['de']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['de']);
 })(jQuery);

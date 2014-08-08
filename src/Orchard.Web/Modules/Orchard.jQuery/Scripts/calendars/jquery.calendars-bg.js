@@ -2,7 +2,7 @@
    Bulgarian localisation for Gregorian/Julian calendars for jQuery.
    Written by Stoyan Kyosev (http://svest.org). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['bg'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['bg'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
         monthNames: ['Януари','Февруари','Март','Април','Май','Юни',
@@ -17,7 +17,7 @@
         isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['bg'] =
-			$.calendars.calendars.gregorian.prototype.regional['bg'];
+		$.calendars.calendars.julian.prototype.regionalOptions['bg'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['bg'];
 	}
 })(jQuery);

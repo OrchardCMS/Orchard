@@ -2,8 +2,8 @@
    Hebrew localisation for calendars datepicker for jQuery.
    Written by Amir Hardon (ahardon at gmail dot com). */
 (function($) {
-	$.calendars.picker.regional['he'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['he'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;הקודם', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'הבא&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['he']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['he']);
 })(jQuery);

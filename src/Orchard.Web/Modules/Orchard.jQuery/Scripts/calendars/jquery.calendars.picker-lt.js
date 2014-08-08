@@ -2,8 +2,8 @@
    Lithuanian localisation for calendars datepicker for jQuery.
    Arturas Paleicikas <arturas@avalon.lt>. */
 (function($) {
-	$.calendars.picker.regional['lt'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['lt'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Atgal',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Pirmyn&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['lt']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['lt']);
 })(jQuery);

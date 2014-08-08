@@ -2,8 +2,8 @@
    Esperanto localisation for calendars datepicker for jQuery.
    Written by Olivier M. (olivierweb@ifrance.com). */
 (function($) {
-	$.calendars.picker.regional['eo'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['eo'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&lt;Anta', prevStatus: 'Vidi la antaŭan monaton',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Sekv&gt;', nextStatus: 'Vidi la sekvan monaton',
@@ -17,5 +17,5 @@
 		dayStatus: 'Elekti DD, MM d', defaultStatus: 'Elekti la daton',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['eo']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['eo']);
 })(jQuery);

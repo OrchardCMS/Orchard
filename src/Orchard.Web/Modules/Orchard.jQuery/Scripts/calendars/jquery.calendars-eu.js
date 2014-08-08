@@ -2,7 +2,7 @@
    Basque localisation for Gregorian/Julian calendars for jQuery.
    Karrikas-ek itzulia (karrikas@karrikas.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['eu'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['eu'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Urtarrila','Otsaila','Martxoa','Apirila','Maiatza','Ekaina',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['eu'] =
-			$.calendars.calendars.gregorian.prototype.regional['eu'];
+		$.calendars.calendars.julian.prototype.regionalOptions['eu'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['eu'];
 	}
 })(jQuery);

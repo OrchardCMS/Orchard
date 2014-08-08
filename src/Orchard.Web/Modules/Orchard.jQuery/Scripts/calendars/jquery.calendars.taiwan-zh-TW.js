@@ -1,8 +1,8 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Traditional Chinese localisation for Taiwanese calendars for jQuery.
+   Traditional Chinese localisation for Taiwanese calendars for jQuery v2.0.0.
    Written by Ressol (ressol@gmail.com). */
 (function($) {
-	$.calendars.calendars.taiwan.prototype.regional['zh-TW'] = {
+	$.calendars.calendars.taiwan.prototype.regionalOptions['zh-TW'] = {
 		name: 'Taiwan',
 		epochs: ['BROC', 'ROC'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',

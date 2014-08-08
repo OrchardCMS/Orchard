@@ -2,8 +2,8 @@
    Czech localisation for calendars datepicker for jQuery.
    Written by Tomas Muller (tomas@tomas-muller.net). */
 (function($) {
-	$.calendars.picker.regional['cs'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['cs'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Dříve', prevStatus: 'Přejít na předchozí měsí',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Později&#x3e;', nextStatus: 'Přejít na další měsíc',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Vyber\' DD, M d', defaultStatus: 'Vyberte datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['cs']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['cs']);
 })(jQuery);

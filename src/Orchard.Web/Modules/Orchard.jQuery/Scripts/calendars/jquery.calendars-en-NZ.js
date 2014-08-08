@@ -2,7 +2,7 @@
    English/New Zealand localisation for Gregorian/Julian calendars for jQuery.
    Based on en-GB. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-NZ'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-NZ'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-NZ'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-NZ'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-NZ'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-NZ'];
 	}
 })(jQuery);
