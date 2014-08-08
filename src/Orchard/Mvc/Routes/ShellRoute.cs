@@ -140,7 +140,7 @@ namespace Orchard.Mvc.Routes {
             }
         }
 
-        class HttpAsyncHandler : HttpTaskAsyncHandler {
+        class HttpAsyncHandler : HttpTaskAsyncHandler, IRequiresSessionState {
             private readonly IWorkContextAccessor _workContextAccessor;
             private readonly IHttpAsyncHandler _httpAsyncHandler;
             private readonly Func<IDictionary<string, object>, Task> _pipeline;
