@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Orchard.Localization;
 
 namespace Orchard.AuditTrail.Helpers {
@@ -16,6 +17,10 @@ namespace Orchard.AuditTrail.Helpers {
 
         public static string OrIfEmpty(this string value, LocalizedString emptyString) {
             return String.IsNullOrWhiteSpace(value) ? emptyString.Text : value;
+        }
+
+        public static string NewlinesToHtml(this string value) {
+            return String.IsNullOrWhiteSpace(value) ? value : Regex.Replace(value, @"\n", "<br/>");
         }
     }
 }

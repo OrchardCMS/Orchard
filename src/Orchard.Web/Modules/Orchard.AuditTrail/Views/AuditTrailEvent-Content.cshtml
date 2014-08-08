@@ -31,7 +31,7 @@
     }
     @if (!String.IsNullOrWhiteSpace(record.Comment)) {
         @T("Comment:")<br />
-        @record.Comment
+        @Html.Raw(record.Comment.NewlinesToHtml())
     }
 </section>
 

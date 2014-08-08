@@ -1,4 +1,5 @@
-﻿@using Orchard.AuditTrail.Services.Models
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
 @model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
     Style.Include("audittrail-display.css");
@@ -51,7 +52,7 @@
                         <td class="user-column">@record.Record.UserName</td>
                         <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
                         <td class="summary-column">@Display(record.SummaryShape)</td>
-                        <td class="comment-column">@record.Record.Comment</td>
+                        <td class="comment-column">@Html.Raw(record.Record.Comment.NewlinesToHtml())</td>
                         <td class="actions-column">@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
                     </tr>
                 }
