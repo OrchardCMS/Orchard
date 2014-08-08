@@ -61,28 +61,28 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryUI_Menu").SetUrl("jquery.ui.menu.min.js", "jquery.ui.menu.js").SetVersion("1.9.2").SetDependencies("jQueryUI_Core", "jQueryUI_Widget", "jQueryUI_Position");
 
             manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.js").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryPlugin").SetUrl("jquery.plugin.min.js", "jquery.plugin.js").SetDependencies("jQuery");
 
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.9.2.custom.css").SetVersion("1.9.2");
             manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
             manifest.DefineStyle("jQueryUI_TimePicker").SetUrl("jquery-ui-timepicker-addon.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.0.5");
 
             // jQuery Calendars
-            manifest.DefineScript("jQueryCalendars_All").SetUrl("calendars/jquery.calendars.all.min.js", "calendars/jquery.calendars.all.js").SetDependencies("jQuery").SetVersion("1.2.1");
-            manifest.DefineScript("jQueryCalendars_Picker_Ext").SetUrl("calendars/jquery.calendars.picker.ext.min.js", "calendars/jquery.calendars.picker.ext.js").SetDependencies("jQueryCalendars_Picker").SetVersion("1.2.1");
-            manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("jquery.calendars.picker.css").SetVersion("1.2.1");
-            manifest.DefineStyle("jQueryUI_Calendars_Picker").SetUrl("ui.calendars.picker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.2.1");
+            manifest.DefineScript("jQueryCalendars_All").SetUrl("calendars/jquery.calendars.all.min.js", "calendars/jquery.calendars.all.js").SetDependencies("jQueryPlugin").SetVersion("2.0.0");
+            manifest.DefineScript("jQueryCalendars_Picker_Ext").SetUrl("calendars/jquery.calendars.picker.ext.min.js", "calendars/jquery.calendars.picker.ext.js").SetDependencies("jQueryCalendars_Picker").SetVersion("2.0.0");
+            manifest.DefineStyle("jQueryCalendars_Picker").SetUrl("jquery.calendars.picker.css").SetVersion("2.0.0");
+            manifest.DefineStyle("jQueryUI_Calendars_Picker").SetUrl("ui.calendars.picker.css").SetDependencies("jQueryUI_Orchard").SetVersion("2.0.0");
 
             // jQuery Time Entry
-            manifest.DefineScript("jQueryTimeEntry").SetUrl("timeentry/jquery.timeentry.min.js", "timeentry/jquery.timeentry.js").SetDependencies("jQuery").SetVersion("1.5.2");
-            manifest.DefineStyle("jQueryTimeEntry").SetUrl("jquery.timeentry.css").SetVersion("1.5.2");
+            manifest.DefineScript("jQueryTimeEntry").SetUrl("timeentry/jquery.timeentry.min.js", "timeentry/jquery.timeentry.js").SetDependencies("jQueryPlugin").SetVersion("2.0.1");
+            manifest.DefineStyle("jQueryTimeEntry").SetUrl("jquery.timeentry.css").SetVersion("2.0.1");
 
             // jQuery Date/Time Editor Enhancements
-            manifest.DefineScript("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.js").SetDependencies("jQuery");
             manifest.DefineStyle("jQueryDateTimeEditor").SetUrl("jquery-datetime-editor.css").SetDependencies("DateTimeEditor");
 
             // jQuery File Upload
-            manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.6.1").SetDependencies("jQuery");
-            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("1.6.1").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
+            manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.8.2").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("5.41.0").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
 
             // jquer Color Box
             manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.4.10").SetDependencies("jQuery");

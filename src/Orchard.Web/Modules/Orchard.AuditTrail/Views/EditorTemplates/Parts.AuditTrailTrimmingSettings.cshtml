@@ -1,0 +1,19 @@
+﻿@model Orchard.AuditTrail.ViewModels.AuditTrailTrimmingSettingsViewModel
+<section class="audittrail-trimming-settings-section">
+    <h2>@T("Trimming settings")</h2>
+    <fieldset>
+        @Html.LabelFor(m => m.RetentionPeriod, T("Retention period"))
+        @Html.TextBoxFor(m => m.RetentionPeriod, new { @class = "text small" })
+        <span class="hint">@T("The number of days of audit log data to retain.")</span>
+    </fieldset>
+    <fieldset>
+        @Html.LabelFor(m => m.MinimumRunInterval, T("Minimum run interval"))
+        @Html.TextBoxFor(m => m.MinimumRunInterval, new { @class = "text small" })
+        <span class="hint">@T("The minimum number of hours to wait between trimming process runs. Enter 0 for continuous trimming.")</span>
+    </fieldset>
+    <fieldset>
+        @Html.LabelFor(m => m.LastRunDateString, T("Last run"))
+        @Html.TextBoxFor(m => m.LastRunDateString, new { @class = "text", disabled = "disabled" })
+        <span class="hint">@T("Indicates the last time the audit trail trimming process was run.")</span>
+    </fieldset>
+</section>

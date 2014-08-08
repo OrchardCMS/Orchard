@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement.MetaData.Models
+@{
+    var contentTypes = (IList<ContentTypeDefinition>) Model.ContentTypes;
+    var currentContentType = (string)Model.ContentType;
+    var listItems = contentTypes.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.Name, Selected = x.Name == currentContentType});
+}
+<label for="contenttype">
+    @T("Content type:")
+    <a href="#" title="@T("Applies to content type events only, not to content item events.")">@T("?")</a>
+</label>
+@Html.DropDownList("contenttype", listItems, "")

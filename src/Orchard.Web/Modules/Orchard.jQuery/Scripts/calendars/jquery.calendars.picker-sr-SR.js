@@ -2,8 +2,8 @@
    Serbian localisation for calendars datepicker for jQuery.
    Written by Dejan Dimić. */
 (function($) {
-	$.calendars.picker.regional['sr-SR'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['sr-SR'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;', prevStatus: 'Prikaži predhodni mesec',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Prikaži predhodnu godinu',
 		nextText: '&#x3e;', nextStatus: 'Prikaži sledeći mesec',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Datum\' DD, M d', defaultStatus: 'Odaberi datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['sr-SR']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['sr-SR']);
 })(jQuery);

@@ -2,8 +2,8 @@
    Arabic localisation for calendars datepicker for jQuery.
    Khaled Al Horani -- خالد الحوراني -- koko.dw@gmail.com */
 (function($) {
-	$.calendars.picker.regional['ar'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ar'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;السابق', prevStatus: 'عرض الشهر السابق',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'التالي&#x3e;', nextStatus: 'عرض الشهر القادم',
@@ -17,5 +17,5 @@
 		dayStatus: 'اختر D, M d', defaultStatus: 'اختر يوم',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ar']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ar']);
 })(jQuery);

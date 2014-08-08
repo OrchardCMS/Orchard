@@ -135,7 +135,6 @@
     <Content Include="Styles\menu.templates-admin.css" />
     <Content Include="Styles\menu.templates.png" />
     <Content Include="Web.config" />
-    <Content Include="Views\Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
@@ -166,8 +165,8 @@
     <Compile Include="Handlers\ShapePartHandler.cs" />
     <Compile Include="Drivers\ShapePartDriver.cs" />
     <Compile Include="Models\ShapePart.cs" />
-    <Compile Include="Migrations.cs" />
-    <Compile Include="RazorMigrations.cs" />
+    <Compile Include="Migrations\Migrations.cs" />
+    <Compile Include="Migrations\RazorMigrations.cs" />
     <Compile Include="Services\ITemplateProcessor.cs" />
     <Compile Include="Services\ITemplateService.cs" />
     <Compile Include="Services\NoTemplateProcessorBanner.cs" />
@@ -198,9 +197,7 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\TemplateProcessorPicker.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tokens\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\Parts.Shape.cshtml" />
   </ItemGroup>

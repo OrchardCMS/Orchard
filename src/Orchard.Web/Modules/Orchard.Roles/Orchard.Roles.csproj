@@ -72,6 +72,17 @@
     <Compile Include="Commands\RoleCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserTaskDriver.cs" />
+    <Compile Include="Events\IRoleEventHandler.cs" />
+    <Compile Include="Events\PermissionAddedContext.cs" />
+    <Compile Include="Events\PermissionRemovedContext.cs" />
+    <Compile Include="Events\PermissionRoleContext.cs" />
+    <Compile Include="Events\RoleContext.cs" />
+    <Compile Include="Events\RoleCreatedContext.cs" />
+    <Compile Include="Events\RoleRemovedContext.cs" />
+    <Compile Include="Events\RoleRenamedContext.cs" />
+    <Compile Include="Events\UserAddedContext.cs" />
+    <Compile Include="Events\UserRemovedContext.cs" />
+    <Compile Include="Events\UserRoleContext.cs" />
     <Compile Include="Forms\SelectRolesForms.cs" />
     <Compile Include="Forms\UserTaskForms.cs" />
     <Compile Include="ImportExport\RolesCustomExportStep.cs" />

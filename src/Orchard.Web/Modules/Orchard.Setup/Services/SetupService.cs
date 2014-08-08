@@ -114,33 +114,40 @@ namespace Orchard.Setup.Services {
 
                     // check if the database is already created (in case an exception occured in the second phase)
                     var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+                    var installationPresent = true;
                     try {
                         var tablePrefix = String.IsNullOrEmpty(shellSettings.DataTablePrefix) ? "" : shellSettings.DataTablePrefix + "_";
                         schemaBuilder.ExecuteSql("SELECT * FROM " + tablePrefix + "Settings_ShellDescriptorRecord");
                     }
                     catch {
-                        var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
-
-                        reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
-
-                        schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
-                                                  table => table
-                                                               .Column<int>("Id", column => column.PrimaryKey().Identity())
-                                                               .Column<string>("DataMigrationClass")
-                                                               .Column<int>("Version"));
-
-                        var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
-                        dataMigrationManager.Update("Settings");
-
-                        foreach (var feature in context.EnabledFeatures) {
-                            dataMigrationManager.Update(feature);
-                        }
-
-                        environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
-                            0,
-                            shellDescriptor.Features,
-                            shellDescriptor.Parameters);
+                        installationPresent = false;
                     }
+
+                    if (installationPresent) {
+                        throw new OrchardException(T("A previous Orchard installation was detected in this database with this table prefix."));
+                    }
+
+                    var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
+
+                    reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
+
+                    schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
+                                              table => table
+                                                           .Column<int>("Id", column => column.PrimaryKey().Identity())
+                                                           .Column<string>("DataMigrationClass")
+                                                           .Column<int>("Version"));
+
+                    var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                    dataMigrationManager.Update("Settings");
+
+                    foreach (var feature in context.EnabledFeatures) {
+                        dataMigrationManager.Update(feature);
+                    }
+
+                    environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
+                        0,
+                        shellDescriptor.Features,
+                        shellDescriptor.Parameters);
                 }
             }
 

@@ -1,0 +1,33 @@
+﻿@using Orchard.AuditTrail.ViewModels
+@{
+    Style.Include("audittrail-settings-event.css");
+}
+@{
+    var diff = (IList<AuditTrailEventDescriptorSettingViewModel>)Model.Diff;
+    var groups = diff.GroupBy(x => x.Descriptor.CategoryDescriptor.Name).OrderBy(x => x.Key.Text);
+}
+<section class="audittrail-settings-eventsummary">
+    <table class="audittrail-events items">
+        <thead>
+            <tr>
+                <th>@T("Event")</th>
+                <th>@T("Description")</th>
+                <th>@T("New Status")</th>
+            </tr>
+        </thead>
+        @foreach (var group in groups) {
+            <tbody class="audittrail-category">
+                <tr>
+                    <th colspan="3">@group.Key</th>
+                </tr>
+                @foreach (var eventSetting in group.OrderBy(x => x.Descriptor.Name.Text)) {
+                    <tr>
+                        <td>@eventSetting.Descriptor.Name</td>
+                        <td>@eventSetting.Descriptor.Description</td>
+                        <td>@T(eventSetting.Setting.IsEnabled ? "Enabled" : "Disabled")</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</section>

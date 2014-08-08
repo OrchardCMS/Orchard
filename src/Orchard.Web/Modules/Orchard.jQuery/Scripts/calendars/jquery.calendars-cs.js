@@ -2,7 +2,7 @@
    Czech localisation for Gregorian/Julian calendars for jQuery.
    Written by Tomas Muller (tomas@tomas-muller.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['cs'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['cs'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['leden','únor','březen','duben','květen','červen',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['cs'] =
-			$.calendars.calendars.gregorian.prototype.regional['cs'];
+		$.calendars.calendars.julian.prototype.regionalOptions['cs'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['cs'];
 	}
 })(jQuery);

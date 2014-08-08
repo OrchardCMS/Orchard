@@ -2,8 +2,8 @@
    Swedish localisation for calendars datepicker for jQuery.
    Written by Anders Ekdahl ( anders@nomadiz.se). */
 (function($) {
-	$.calendars.picker.regional['sv'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['sv'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
         prevText: '&laquo;Förra',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Nästa&raquo;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['sv']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['sv']);
 })(jQuery);

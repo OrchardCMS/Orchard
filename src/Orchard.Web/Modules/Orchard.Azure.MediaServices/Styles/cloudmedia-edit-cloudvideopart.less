@@ -15,12 +15,17 @@ body {
 .upload-direct, .upload-proxied {
     display: none;
 
-    .sync-upload-input, .async-upload-input {
+    .sync-upload-input, .async-upload-file-input {
         display: block;
+        margin-bottom: 4px;
     }
 
-    .progress-bar, .progress-text, .validation-text, .cancel-upload {
+    .selected-file-wrapper, .progress-bar, .progress-text, .validation-text, .cancel-upload {
         display: none;
+    }
+
+    .selected-file-wrapper .filename-text {
+        color: @orchard-green;
     }
 
     .progress-bar {

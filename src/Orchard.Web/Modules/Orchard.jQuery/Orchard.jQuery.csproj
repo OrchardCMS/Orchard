@@ -128,6 +128,7 @@
     <Content Include="Scripts\calendars\jquery.calendars-ta.js" />
     <Content Include="Scripts\calendars\jquery.calendars-th.js" />
     <Content Include="Scripts\calendars\jquery.calendars-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-tt.js" />
     <Content Include="Scripts\calendars\jquery.calendars-uk.js" />
     <Content Include="Scripts\calendars\jquery.calendars-ur.js" />
     <Content Include="Scripts\calendars\jquery.calendars-vi.js" />
@@ -229,6 +230,7 @@
     <Content Include="Scripts\calendars\jquery.calendars.picker-ta.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-th.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-tt.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-uk.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-ur.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-vi.js" />
@@ -256,9 +258,10 @@
     <Content Include="Scripts\calendars\jquery.calendars.validation.min.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
-    <Content Include="Scripts\jquery-datetime-editor.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
+    <Content Include="Scripts\jquery.plugin.js" />
+    <Content Include="Scripts\jquery.plugin.min.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ca.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-cs.js" />

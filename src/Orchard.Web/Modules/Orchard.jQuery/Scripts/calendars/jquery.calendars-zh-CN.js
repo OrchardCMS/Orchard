@@ -2,7 +2,7 @@
    Simplified Chinese localisation for Gregorian/Julian calendars for jQuery.
    Written by Cloudream (cloudream@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['zh-CN'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['zh-CN'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['zh-CN'] =
-			$.calendars.calendars.gregorian.prototype.regional['zh-CN'];
+		$.calendars.calendars.julian.prototype.regionalOptions['zh-CN'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['zh-CN'];
 	}
 })(jQuery);

@@ -86,7 +86,9 @@
     <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Routes.cs" />
+    <Compile Include="Common\Services\FlavorService.cs" />
     <Compile Include="Common\Services\IdentifierResolverSelector.cs" />
+    <Compile Include="Common\Services\IFlavorService.cs" />
     <Compile Include="Common\Services\TextFieldFilter.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
@@ -558,6 +560,9 @@
   <ItemGroup>
     <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\EditorTemplates\Flavor.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

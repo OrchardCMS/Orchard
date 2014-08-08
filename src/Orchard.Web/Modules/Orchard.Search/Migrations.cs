@@ -57,4 +57,23 @@ namespace Orchard.Search {
             return 1;
         }
     }
+
+
+    [OrchardFeature("Orchard.Search.Content")]
+    public class AdminSearchMigration : DataMigrationImpl {
+        private readonly IIndexManager _indexManager;
+
+        public AdminSearchMigration(IIndexManager indexManager) {
+            _indexManager = indexManager;
+        }
+
+        public int Create() {
+
+            _indexManager.GetSearchIndexProvider().CreateIndex("Admin");
+
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithSetting("TypeIndexing.Indexes", "Page:latest"));
+
+            return 1;
+        }
+    }
 }

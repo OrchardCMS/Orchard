@@ -66,6 +66,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Drivers\ContainerPartDriver.cs" />
     <Compile Include="Drivers\ContainablePartDriver.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Projections\ListSortCriteria.cs" />
     <Compile Include="Services\IFormProvider.cs" />
     <Compile Include="Forms\ListFilterForm.cs" />

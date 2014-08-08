@@ -35,6 +35,8 @@ namespace Orchard.Tests.Modules.Indexing {
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
+            builder.RegisterType<DefaultLuceneAnalyzerProvider>().As<ILuceneAnalyzerProvider>();
+            builder.RegisterType<DefaultLuceneAnalyzerSelector>().As<ILuceneAnalyzerSelector>();
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
 

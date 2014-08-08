@@ -71,6 +71,11 @@
     <Compile Include="Models\LuceneDocumentIndex.cs" />
     <Compile Include="Models\LuceneSearchHit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DefaultLuceneAnalyzerSelector.cs" />
+    <Compile Include="Services\DefaultLuceneAnalyzerProvider.cs" />
+    <Compile Include="Services\ILuceneAnalyzerProvider.cs" />
+    <Compile Include="Services\ILuceneAnalyzerSelector.cs" />
+    <Compile Include="Services\LuceneAnalyzerSelectorResult.cs" />
     <Compile Include="Services\LuceneIndexProvider.cs" />
     <Compile Include="Services\LuceneSearchBuilder.cs" />
     <Compile Include="Services\SearchBits.cs" />

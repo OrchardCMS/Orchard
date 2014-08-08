@@ -36,6 +36,12 @@ namespace Orchard.Users.Handlers {
                                          () => new Dictionary<string, object> {{"User", user}});
         }
 
+        public void LogInFailed(string userNameOrEmail, string password) {
+            _workflowManager.TriggerEvent("UserLogInFailed",
+                                         null,
+                                         () => new Dictionary<string, object> { { "UserNameOrEmail", userNameOrEmail }, { "Password", password } });
+        }
+
         public void LoggedOut(Security.IUser user) {
             _workflowManager.TriggerEvent("UserLoggedOut",
                                          user,

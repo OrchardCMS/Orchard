@@ -2,8 +2,8 @@
    Basque localisation for calendars datepicker for jQuery.
    Karrikas-ek itzulia (karrikas@karrikas.com). */
 (function($) {
-	$.calendars.picker.regional['eu'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['eu'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Aur', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Hur&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD d MM', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['eu']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['eu']);
 })(jQuery);

@@ -29,7 +29,7 @@
 //<![CDATA[
     $(function() {
 
-        $.timepicker.regional[''] = {
+        $.timepicker.regionalOptions[''] = {
             timeOnlyTitle: '@HttpUtility.JavaScriptStringEncode(T("Choose time").Text)',
             timeText: '@HttpUtility.JavaScriptStringEncode(T("Time").Text)',
             hourText: '@HttpUtility.JavaScriptStringEncode(T("Hour").Text)',
@@ -43,7 +43,7 @@
             isRTL: @(cultureInfo.TextInfo.IsRightToLeft ? "true" : "false")
         };
 
-        $.timepicker.setDefaults($.timepicker.regional['']);
+        $.timepicker.setDefaults($.timepicker.regionalOptions['']);
     })
 //]]>
 </script>

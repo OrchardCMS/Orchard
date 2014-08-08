@@ -129,7 +129,7 @@
             var firstDay = Convert.ToInt32(dateTimeFormatProvider.FirstDay);
             <text>
             localizationName = '@HttpUtility.JavaScriptStringEncode(currentCulture.Name)';
-            $.calendars.calendars.@(calendarName).prototype.regional[localizationName] = {
+            $.calendars.calendars.@(calendarName).prototype.regionalOptions[localizationName] = {
                 monthNames: [@Html.Raw(monthNames)], // Names of months for drop-down and formatting
                 monthNamesShort: [@Html.Raw(monthNamesShort)], // Short namese of months
                 dayNames: [@Html.Raw(dayNames)], // Names of days
@@ -142,7 +142,7 @@
             </text>
         }
 
-        $.calendars.picker.regional[localizationName] = {
+        $.calendarsPicker.regionalOptions[localizationName] = {
             prevText: '@HttpUtility.JavaScriptStringEncode(T("Prev").Text)', // Display text for previous month link
             prevStatus: '@HttpUtility.JavaScriptStringEncode(T("Show the previous month").Text)', // Tooltip text for previous month link
             prevJumpText: '@HttpUtility.JavaScriptStringEncode(T("<<").Text)', // Display text for previous year link
@@ -168,8 +168,8 @@
             isRTL: @(currentCulture.TextInfo.IsRightToLeft ? "true" : "false") // True if right-to-left language, false if left-to-right
         };
 
-        $.calendars.picker.setDefaults($.calendars.picker.regional[localizationName]);
-        $.calendars.picker.setDefaults({
+        $.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions[localizationName]);
+        $.calendarsPicker.setDefaults({
             calendar: $.calendars.instance(calendarName, localizationName),
             dateFormat: dateFormat
         });

@@ -123,7 +123,7 @@ module Orchard.Azure.MediaServices.CloudVideoEdit {
                 }
             });
 
-            scopeProxied.find(".async-upload-input").each(function () {
+            scopeProxied.find(".async-upload-file-input").each(function () {
                 initializeUpload($(this));
             });
 
