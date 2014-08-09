@@ -1,15 +1,15 @@
-﻿@using System.Globalization
+﻿@using Orchard.ContentManagement
 @using Orchard.Environment.Descriptor.Models
+@using Orchard.Localization
 
 @{
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
-    var currentCulture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
 }
 
 <script type="text/javascript">
     var mediaPickerEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaPicker") ? "true" : "false");
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
-    var directionality = '@(currentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")';
+    var directionality = '@Html.Directionality((IContent)Model.ContentItem)';
 </script>
 
 @{ 
