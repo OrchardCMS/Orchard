@@ -7,12 +7,13 @@ using System.Security;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Orchard.Framework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The Orchard Framework is the core of Orchard CMS.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("Orchard")]
 [assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyCompany("The Orchard Team")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
