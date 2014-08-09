@@ -12,7 +12,7 @@ tinyMCE.init({
     selector: "textarea.tinymce",
     theme: "modern",
     schema: "html5",
-    plugins: "fullscreen,autoresize,searchreplace,link,charmap,code" + mediaPlugins.substr(2),
+    plugins: "fullscreen,autoresize,searchreplace,link,charmap,code,directionality" + mediaPlugins.substr(2),
     toolbar: "searchreplace,|,cut,copy,paste,|,undo,redo" + mediaPlugins + ",|,link,unlink,charmap,|,bold,italic,|,numlist,bullist,formatselect,|,code,fullscreen,",
     convert_urls: false,
     valid_elements: "*[*]",
