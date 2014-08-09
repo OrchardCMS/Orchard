@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Orchard.Libraries</id>
+    <version>1.8.1</version>
+    <authors>The Orchard Team</authors>
+    <owners>The Orchard Team</owners>
+    <projectUrl>http://orchardproject.net</projectUrl>
+    <iconUrl>http://orchardproject.net/themes/OrchardProject.Net/Images/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains all the libraries used by the Orchard CMS and thus the Orchard.Framework package.</description>
+    <copyright>Copyright © Outercurve Foundation 2009</copyright>
+    <tags>Orchard CMS framework web</tags>
+  </metadata>
+</package>

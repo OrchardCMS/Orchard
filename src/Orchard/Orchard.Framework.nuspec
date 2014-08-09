@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://orchard.codeplex.com/license</licenseUrl>
+    <projectUrl>http://orchardproject.net</projectUrl>
+    <iconUrl>http://orchardproject.net/themes/OrchardProject.Net/Images/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright © Outercurve Foundation 2009</copyright>
+    <tags>Orchard CMS framework web</tags>
+    <dependencies>
+      <dependency id="Orchard.Libraries" version="$version$" />
+    </dependencies>
+  </metadata>
+</package>
