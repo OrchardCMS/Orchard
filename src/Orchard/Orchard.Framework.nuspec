@@ -17,4 +17,8 @@
       <dependency id="Orchard.Libraries" version="$version$" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="NuGet\tools\*" target="tools" />
+    <file src="NuGet\content\*" target="content" />
+  </files>
 </package>
