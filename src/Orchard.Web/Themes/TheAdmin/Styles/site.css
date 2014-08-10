@@ -212,7 +212,7 @@ form.link button:hover, button.link:hover {
 ol.decimal {list-style:decimal inside; margin:12px 0;}
 ul.disc {list-style:disc inside; margin:12px 0;}
 
-/* Header - Branding and Login  
+/* Header - Branding, Login and Culture Selection
 ***************************************************************/
 #header {
     height:50px;
@@ -225,6 +225,10 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     width: 240px;
     height:50px;
     float:left;
+}
+#culture-selection {
+    float: right;
+    margin: 10px 20px 0 0;
 }
 #header #app {
     float:left;

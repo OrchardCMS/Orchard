@@ -1,0 +1,32 @@
+﻿@using System.Globalization
+@using Orchard.Localization.Services
+@{
+    var currentCulture = WorkContext.CurrentCulture;
+    var supportedCultures = WorkContext.Resolve<ICultureManager>().ListCultures();
+}
+
+@if (supportedCultures.Count() > 1) {
+<div id="culture-selection">
+    <select>
+        @foreach (var supportedCulure in supportedCultures) {
+            var cultureInfo = CultureInfo.GetCultureInfo(supportedCulure);
+            var url = Url.Action("SetCulture", "CutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+
+            <option @if (supportedCulure.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
+                @cultureInfo.DisplayName
+            </option>
+        }
+    </select>
+</div>
+}
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+   (function ($) {
+       $("#culture-selection").change(function (e) {
+           window.location = $("#culture-selection > select > option:selected")[0].value;
+       });
+   })(jQuery);
+//]]>
+</script>
+}
