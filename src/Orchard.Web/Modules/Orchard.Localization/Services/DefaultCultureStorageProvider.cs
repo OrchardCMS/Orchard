@@ -6,13 +6,8 @@ using Orchard.Mvc;
 using Orchard.Services;
 
 namespace Orchard.Localization.Services {
-    public interface ICultureStorage : IDependency {
-        void SetCulture(string culture);
-        string GetCulture();
-    }
-
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class DefaultCultureStorage : ICultureStorage {
+    public class DefaultCultureStorageProvider : ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
@@ -20,7 +15,7 @@ namespace Orchard.Localization.Services {
         private const string CookieName = "OrchardCurrentCulture";
         private const int DefaultExpireTimeYear = 1;
 
-        public DefaultCultureStorage(IHttpContextAccessor httpContextAccessor,
+        public DefaultCultureStorageProvider(IHttpContextAccessor httpContextAccessor,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;

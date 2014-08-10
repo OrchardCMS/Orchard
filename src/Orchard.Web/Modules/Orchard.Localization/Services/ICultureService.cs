@@ -8,17 +8,17 @@ namespace Orchard.Localization.Services {
 
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
     public class CultureService : ICultureService {
-        private readonly ICultureStorage _cultureStorage;
+        private readonly ICultureStorageProvider _cultureStorageProvider;
 
-        public CultureService(ICultureStorage cultureStorage) {
-            _cultureStorage = cultureStorage;
+        public CultureService(ICultureStorageProvider cultureStorageProvider) {
+            _cultureStorageProvider = cultureStorageProvider;
         }
         public void SetCulture(string culture) {
-            _cultureStorage.SetCulture(culture);
+            _cultureStorageProvider.SetCulture(culture);
         }
 
         public string GetCulture() {
-            return _cultureStorage.GetCulture();
+            return _cultureStorageProvider.GetCulture();
         }
     }
 }
