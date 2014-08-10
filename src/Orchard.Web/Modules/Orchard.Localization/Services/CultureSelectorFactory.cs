@@ -28,7 +28,7 @@ namespace Orchard.Localization.Services {
 
         public override void Displaying(ShapeDisplayingContext context) {
             context.ShapeMetadata.OnDisplaying(displayedContext => {
-                if (IsActivable() && displayedContext.ShapeMetadata.Type == "Layout") {
+                if (displayedContext.ShapeMetadata.Type == "Layout" && IsActivable()) {
                     _workContext.Layout.Header.Add(Shape.UICultureSelector());
                 }
             });
