@@ -68,6 +68,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CutlureSelectorController.cs" />
     <Compile Include="Providers\CultureSelectorSelector.cs" />
+    <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
     <Compile Include="Services\DefaultCultureStorageProvider.cs" />
     <Compile Include="Services\ICultureService.cs" />

@@ -15,6 +15,7 @@ namespace Orchard.Localization.Services {
             _workContext = workContextAccessor.GetContext();
             Shape = shapeFactory;
         }
+
         dynamic Shape { get; set; }
 
         private bool IsActivable() {
@@ -31,7 +32,6 @@ namespace Orchard.Localization.Services {
                     _workContext.Layout.Header.Add(Shape.UICultureSelector());
                 }
             });
-
         }
     }
 }

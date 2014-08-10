@@ -19,3 +19,4 @@ Features:
 		Description: Enables a culture picker to localize the UI.
 		Category: Content
 		Name: Culture Picker
+		Dependencies: Orchard.Localization
