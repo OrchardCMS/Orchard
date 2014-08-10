@@ -4,7 +4,7 @@ Set-Alias nuget src/.nuget/nuget
 
 nuget update -self
 
-If (Test-Path "$outputDirectory"){
+If (Test-Path "$outputDirectory") {
 	rmdir "$outputDirectory" -Force -Recurse
 }
 mkdir "$outputDirectory"
@@ -16,8 +16,10 @@ move Orchard.Libraries/Libraries/Orchard.Libraries.nuspec Orchard.Libraries/Orch
 mkdir Orchard.Libraries/tools
 move Orchard.Libraries/Libraries/init.ps1 Orchard.Libraries/tools/init.ps1
 rm Orchard.Libraries.*.nupkg
+# NoPackageAnalysis so there is no warning because of all the assemblies being not in the lib folder.
 nuget pack Orchard.Libraries/Orchard.Libraries.nuspec -OutputDirectory "$outputDirectory" -NoPackageAnalysis
 rmdir Orchard.Libraries -Force -Recurse
 
 # Orchard.Framework
-nuget pack src/Orchard/Orchard.Framework.csproj -IncludeReferencedProjects -Build -Prop Configuration=Release -OutputDirectory "$outputDirectory"
+# NoPackageAnalysis so there is no warning because of CopyLibraries.ps1
+nuget pack src/Orchard/Orchard.Framework.csproj -IncludeReferencedProjects -Build -Prop Configuration=Release -OutputDirectory "$outputDirectory" -NoPackageAnalysis
