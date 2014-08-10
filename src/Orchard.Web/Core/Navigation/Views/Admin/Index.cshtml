@@ -1,6 +1,5 @@
 ﻿@model NavigationManagementViewModel
 @using Orchard.Core.Navigation.ViewModels;
-@using Orchard.Localization
 @using Orchard.Utility.Extensions;
 
 @{ 
@@ -11,9 +10,6 @@
     Script.Include("jquery.mjs.nestedSortable.js").AtFoot();
     Script.Include("navigation-admin.js").AtFoot();
 }
-<script type="text/javascript">
-    window.isRTL = @((Html.Directionality() == "rtl").ToString().ToLowerInvariant());
-</script>
 
 <div id="save-message" class="message message-Warning">@T("You need to hit \"Save All\" in order to save your changes.")</div>
 
