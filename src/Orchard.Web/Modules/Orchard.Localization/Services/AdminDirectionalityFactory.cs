@@ -42,6 +42,9 @@ namespace Orchard.Localization.Services {
                 return;
             }
 
+            if (context.ShapeType != "Zone")
+                return;
+
             ContentItem contentItem = context.Shape.ContentItem;
 
             // if not, check for ContentPart 
