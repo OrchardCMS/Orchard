@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CutlureSelectorController.cs" />
-    <Compile Include="Providers\CookieCultureSelector.cs" />
+    <Compile Include="Providers\CultureSelectorSelector.cs" />
     <Compile Include="Services\ICultureService.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Handlers\LocalizationPartHandler.cs" />

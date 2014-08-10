@@ -5,10 +5,10 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Providers {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class CookieCultureSelector : ICultureSelector {
+    public class CultureSelectorSelector : ICultureSelector {
         private readonly ICultureService _cultureService;
 
-        public CookieCultureSelector(ICultureService cultureService) {
+        public CultureSelectorSelector(ICultureService cultureService) {
             _cultureService = cultureService;
         }
 
