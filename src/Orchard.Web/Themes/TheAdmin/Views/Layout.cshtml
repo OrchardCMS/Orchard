@@ -1,5 +1,6 @@
 ﻿@model dynamic
 @using Orchard.Environment.Descriptor.Models
+@using Orchard.Localization
 @using Orchard.Security;
 @using Orchard.DisplayManagement.Descriptors;
 @using Orchard.UI.Resources;
@@ -73,7 +74,7 @@
             }
 
             @if (Model.Content != null) {
-            <div id="content" class="group">
+            <div id="content" class="group" dir="@Html.Directionality()">
                 @Zone(Model.Content)
             </div>
             }
