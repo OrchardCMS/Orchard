@@ -1,5 +1,4 @@
 ﻿@model dynamic
-@using Orchard.Environment.Descriptor.Models
 @using Orchard.Localization
 @using Orchard.Security;
 @using Orchard.DisplayManagement.Descriptors;
@@ -29,10 +28,6 @@
     Model.Header.Add(Display.Header());
 
     Model.Header.Add(Display.User(CurrentUser: WorkContext.CurrentUser));
-
-    var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
-    if (shellDescriptor.Features.Any(x => x.Name == "Orchard.Localization.CutlureSelector")) { Model.Header.Add(Display.UICultureSelector()); }
-    
     Model.Footer.Add(Display.OrchardVersion());
 
     if (Model.Title != null) {
@@ -74,7 +69,7 @@
             }
 
             @if (Model.Content != null) {
-            <div id="content" class="group" dir="@Html.Directionality()">
+            <div id="content" class="group">
                 @Zone(Model.Content)
             </div>
             }
