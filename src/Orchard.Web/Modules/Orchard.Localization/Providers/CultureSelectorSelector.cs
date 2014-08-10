@@ -5,6 +5,7 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Providers {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardSuppressDependency("Orchard.Localization.Services.SiteCultureSelector")]
     public class CultureSelectorSelector : ICultureSelector {
         private readonly ICultureService _cultureService;
 
