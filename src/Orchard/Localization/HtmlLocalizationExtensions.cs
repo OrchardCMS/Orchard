@@ -13,14 +13,18 @@ namespace Orchard.Localization {
         /// </summary>
         /// <returns>Returns rtl or ltr</returns>
         public static string Directionality(this HtmlHelper html, IContent content) {
+            return CultureInfo.GetCultureInfo(html.ContentCulture(content)).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+        }
+
+        public static string ContentCulture(this HtmlHelper html, IContent content) {
             var workContext = html.GetWorkContext();
 
             var culture = workContext.CurrentSite.SiteCulture;
             if (content.Has<ILocalizableAspect>()) {
-                culture = content.As<ILocalizableAspect>().Culture;
+                return content.As<ILocalizableAspect>().Culture;
             }
 
-            return CultureInfo.GetCultureInfo(culture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            return culture;
         }
     }
 }

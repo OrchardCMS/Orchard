@@ -21,5 +21,6 @@ tinyMCE.init({
     menubar: false,
     statusbar: false,
     skin: 'orchardlightgray',
+    language: language,
     directionality: directionality
 });

@@ -1,15 +1,26 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.Environment.Descriptor.Models
+@using Orchard.FileSystems.VirtualPath
 @using Orchard.Localization
 
 @{
     var shellDescriptor = WorkContext.Resolve<ShellDescriptor>();
+    var virtualPathProvider = WorkContext.Resolve<IVirtualPathProvider>();
+
+    // Default language for TinyMCE
+    var language = "en";
+    var customLanguage = Html.ContentCulture((IContent) Model.ContentItem).Replace('-', '_');
+    if (!language.Equals(customLanguage, StringComparison.OrdinalIgnoreCase) && 
+        virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
+        language = customLanguage;
+    }
 }
 
 <script type="text/javascript">
     var mediaPickerEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaPicker") ? "true" : "false");
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
     var directionality = '@Html.Directionality((IContent)Model.ContentItem)';
+    var language = '@language';
 </script>
 
 @{ 
