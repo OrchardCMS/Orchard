@@ -1,0 +1,22 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.Localization.Services
+@{
+    var currentCulture = WorkContext.CurrentCulture;
+    var supportedCultures = WorkContext.Resolve<ICultureManager>().ListCultures();
+}
+
+<div id="culture-selection">
+    <ul>
+        @foreach (var supportedCulure in supportedCultures) {
+            var url = Url.Action("SetCulture", "CutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+
+            <li>
+                @if (supportedCulure.Equals(currentCulture)) {
+                    <a href="@url">@T("{0} (current)", supportedCulure)</a>
+                } else {
+                    <a href="@url">@supportedCulure</a>
+                }
+            </li>
+        }
+    </ul>
+</div>
