@@ -16,7 +16,9 @@
         var culture = CultureInfo.GetCultureInfo(currentCulture);
         if (virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
             language = customLanguage;
-        } else if (virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", culture.TwoLetterISOLanguageName))) {
+        } else if (!language.Equals(culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) &&
+            virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", culture.TwoLetterISOLanguageName))) {
+            
             language = culture.TwoLetterISOLanguageName;
         }
     }
