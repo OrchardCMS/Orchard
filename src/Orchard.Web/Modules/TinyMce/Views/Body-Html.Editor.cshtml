@@ -1,4 +1,5 @@
-﻿@using Orchard.ContentManagement
+﻿@using System.Globalization
+@using Orchard.ContentManagement
 @using Orchard.Environment.Descriptor.Models
 @using Orchard.FileSystems.VirtualPath
 @using Orchard.Localization
@@ -9,10 +10,15 @@
 
     // Default language for TinyMCE
     var language = "en";
-    var customLanguage = Html.ContentCulture((IContent) Model.ContentItem).Replace('-', '_');
-    if (!language.Equals(customLanguage, StringComparison.OrdinalIgnoreCase) && 
-        virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
-        language = customLanguage;
+    var currentCulture = WorkContext.CurrentCulture;
+    var customLanguage = currentCulture.Replace('-', '_');
+    if (!language.Equals(customLanguage, StringComparison.OrdinalIgnoreCase)) {
+        var culture = CultureInfo.GetCultureInfo(currentCulture);
+        if (virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
+            language = customLanguage;
+        } else if (virtualPathProvider.FileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", culture.TwoLetterISOLanguageName))) {
+            language = culture.TwoLetterISOLanguageName;
+        }
     }
 }
 
