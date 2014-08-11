@@ -73,8 +73,10 @@
     <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
     <Content Include="Scripts\plugins\medialibrary\plugin.min.js" />
     <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
-    <Content Include="Scripts\plugins\mediapicker\plugin.min.js" />
-    <Content Include="Scripts\plugins\mediapicker\plugin_src.js" />
+    <Content Include="Scripts\plugins\mediapicker\plugin.js" />
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\plugins\searchreplace\plugin.min.js" />
     <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
@@ -154,6 +156,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
