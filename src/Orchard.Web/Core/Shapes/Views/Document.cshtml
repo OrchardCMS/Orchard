@@ -8,9 +8,7 @@
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
     bool isRtl = WorkContext.CurrentCultureInfo().TextInfo.IsRightToLeft;
-    if (isRtl) {
-        Html.AddPageClassNames("dir-rtl");
-    }
+    Html.AddPageClassNames("dir-" + (isRtl ? "rtl" : "ltr"));
 }
 <!DOCTYPE html> 
 <html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()" dir="@(isRtl?"rtl":"ltr")"> 
