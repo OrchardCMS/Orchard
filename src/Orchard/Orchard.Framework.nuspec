@@ -18,7 +18,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="NuGet\tools\*" target="tools" />
     <file src="NuGet\content\*" target="content" />
+    <file src="NuGet\tools\*" target="tools" />
   </files>
 </package>

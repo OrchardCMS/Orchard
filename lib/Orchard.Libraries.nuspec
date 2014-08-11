@@ -2,7 +2,8 @@
 <package >
   <metadata>
     <id>Orchard.Libraries</id>
-    <version>1.8.1</version>
+    <version>1.8.1.0</version>
+    <title>Orchard Libraries</title>
     <authors>The Orchard Team</authors>
     <owners>The Orchard Team</owners>
     <projectUrl>http://orchardproject.net</projectUrl>
@@ -11,5 +12,13 @@
     <description>Contains all the libraries used by the Orchard CMS and thus the Orchard.Framework package.</description>
     <copyright>Copyright © Outercurve Foundation 2009</copyright>
     <tags>Orchard CMS framework web</tags>
+    <!-- Dummy reference so dlls from lib don't get referenced. -->
+    <references>
+      <reference file="jquery-1.4.1.js" />
+    </references>
   </metadata>
+  <files>
+    <!-- When changing the framework folder here install/uninstall.ps1 inside Orchard.Framework should change too. -->
+    <file src="**\*" target="lib\net45" exclude="*.nuspec" />
+  </files>
 </package>
