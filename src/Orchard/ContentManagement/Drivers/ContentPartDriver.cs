@@ -10,7 +10,7 @@ namespace Orchard.ContentManagement.Drivers {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
-                return null;
+                return Task.FromResult<DriverResult>(null);
             }
 
             var result = Display(part, context.DisplayType, context.New);
@@ -26,7 +26,7 @@ namespace Orchard.ContentManagement.Drivers {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
-                return null;
+                return Task.FromResult<DriverResult>(null);
             }
 
             var result = Editor(part, context.New);
@@ -42,7 +42,7 @@ namespace Orchard.ContentManagement.Drivers {
             var part = context.ContentItem.As<TContent>();
 
             if (part == null) {
-                return null;
+                return Task.FromResult<DriverResult>(null);
             }
 
             // checking if the editor needs to be updated (e.g. if it was not hidden)
