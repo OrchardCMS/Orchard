@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -8,7 +9,7 @@ using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Services {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class AdminDirectionalityFactory : ShapeFactoryEvents {
+    public class AdminDirectionalityFactory : ShapeDisplayEvents {
         private readonly ILocalizationService _localizationService;
         private readonly ICultureManager _cultureManager;
         private readonly WorkContext _workContext;
@@ -34,33 +35,32 @@ namespace Orchard.Localization.Services {
             return false;
         }
 
-        public override void Creating(ShapeCreatingContext context) {
-        }
-
-        public override void Created(ShapeCreatedContext context) {
-            if (!IsActivable()) {
-                return;
-            }
-
-            if (context.ShapeType != "Zone")
-                return;
-
-            ContentItem contentItem = context.Shape.ContentItem;
-
-            // if not, check for ContentPart 
-            if (contentItem == null) {
-                ContentPart contentPart = context.Shape.ContentPart;
-                if (contentPart != null) {
-                    contentItem = contentPart.ContentItem;
+        public override void Displaying(ShapeDisplayingContext context) {
+            context.ShapeMetadata.OnDisplaying(displayedContext => {
+                if (!IsActivable()) {
+                    return;
                 }
-            }
+                
+                if (context.ShapeMetadata.Type != "Zone")
+                    return;
 
-            var culture = (contentItem != null) ? _localizationService.GetContentCulture(contentItem) : _cultureManager.GetSiteCulture();
+                ContentItem contentItem = context.Shape.ContentItem;
 
-            var cultureInfo = CultureInfo.GetCultureInfo(culture);
+                // if not, check for ContentPart 
+                if (contentItem == null) {
+                    ContentPart contentPart = context.Shape.ContentPart;
+                    if (contentPart != null) {
+                        contentItem = contentPart.ContentItem;
+                    }
+                }
 
-            if (cultureInfo.TextInfo.IsRightToLeft)
-                context.Shape.Attributes.Add("dir", "rtl");
+                var culture = (contentItem != null) ? _localizationService.GetContentCulture(contentItem) : _cultureManager.GetSiteCulture();
+
+                var cultureInfo = CultureInfo.GetCultureInfo(culture);
+
+                if (cultureInfo.TextInfo.IsRightToLeft)
+                    _workContext.Layout.Content.Attributes.Add("dir", "rtl");
+            });
         }
     }
 }

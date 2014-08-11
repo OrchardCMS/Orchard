@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+﻿@using Orchard.Localization
 @using Orchard.Mvc.Html;
 @using Orchard.UI.Resources;
 @{
@@ -7,10 +7,10 @@
 
     string title = Convert.ToString(Model.Title);
     string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
-    bool isRtl = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture).TextInfo.IsRightToLeft;
+    bool isRtl = WorkContext.CurrentCultureInfo().TextInfo.IsRightToLeft; 
 }
 <!DOCTYPE html> 
-<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()"> 
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()" dir="@(isRtl?"rtl":"ltr")"> 
 <head> 
     <meta charset="utf-8" />
     <title>@Html.Title(title, siteName)</title> 
