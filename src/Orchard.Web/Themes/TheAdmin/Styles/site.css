@@ -1269,13 +1269,14 @@ caption, th, td { text-align: right; }
 }
 .dir-rtl #layout-main {
     float:left;
-    margin-right:0;
+    margin-left:inherit;
+    margin-right:-240px;
     width:100%;
     padding:0 0 70px 0; /*Bottom padding set to footer height*/
 }
 .dir-rtl #main {
-    margin-right:20px;
-    margin-left:260px;
+    margin-right:260px;
+    margin-left:20px;
 }
 .dir-rtl #menu {
     background:#323232;
