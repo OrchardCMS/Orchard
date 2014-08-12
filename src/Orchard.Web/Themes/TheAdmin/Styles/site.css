@@ -1258,7 +1258,7 @@ html.dir-rtl {
 }
 
 /* Tables still need 'cellspacing="0"' in the markup */
-caption, th, td { text-align: right; }
+.dir-rtl caption, .dir-rtl th, .dir-rtl td { text-align: right; }
 
 /* end: reset */
 
