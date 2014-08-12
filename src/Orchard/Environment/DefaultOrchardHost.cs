@@ -92,7 +92,8 @@ namespace Orchard.Environment {
             BuildCurrent();
 
             var shellContext = CreateShellContext(shellSettings);
-            return new StandaloneEnvironmentWorkContextScopeWrapper(shellContext.LifetimeScope.CreateWorkContextScope(), shellContext);
+            var workContext = shellContext.LifetimeScope.CreateWorkContextScope();
+            return new StandaloneEnvironmentWorkContextScopeWrapper(workContext, shellContext);
         }
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace Orchard.Environment {
                     if (_shellContexts != null) {
                         foreach (var shellContext in _shellContexts) {
                             shellContext.Shell.Terminate();
-                            shellContext.LifetimeScope.Dispose();
+                            shellContext.Dispose();
                         }
                     }
                 }
@@ -352,7 +353,7 @@ namespace Orchard.Environment {
 
             public void Dispose() {
                 _workContextScope.Dispose();
-                _shellContext.LifetimeScope.Dispose();
+                _shellContext.Dispose();
             }
         }
     }
