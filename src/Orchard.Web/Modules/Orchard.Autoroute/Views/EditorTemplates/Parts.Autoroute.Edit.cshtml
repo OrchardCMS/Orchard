@@ -21,8 +21,10 @@
     <fieldset class="permalink">
         <label>@T("Permalink")</label>
         @if (Model.Settings.AllowCustomPattern) {
-            <span>@Url.MakeAbsolute("/")@urlPrefix</span>
-            <span>@Html.TextBoxFor(m => m.CurrentUrl, new {@class = "text"})</span>
+            <span class="permalink-definition" dir="ltr">
+                <span>@Url.MakeAbsolute("/")@urlPrefix</span>
+                <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text" })</span>
+            </span>
             <span class="hint">@T("Save the current item and leave the input empty to have it automatically generated using the pattern {0} e.g., {1}", defaultPattern.Name, defaultPattern.Description)</span>
         }
         else {

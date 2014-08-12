@@ -56,10 +56,10 @@ namespace Orchard.Localization.Services {
 
                 var culture = (contentItem != null) ? _localizationService.GetContentCulture(contentItem) : _cultureManager.GetSiteCulture();
 
-                var cultureInfo = CultureInfo.GetCultureInfo(culture);
+                var className = "content-" + (CultureInfo.GetCultureInfo(culture).TextInfo.IsRightToLeft ? "rtl" : "ltr");
 
-                if (cultureInfo.TextInfo.IsRightToLeft)
-                    _workContext.Layout.Content.Attributes.Add("dir", "rtl");
+                if (!_workContext.Layout.Content.Classes.Contains(className))
+                    _workContext.Layout.Content.Classes.Add(className);
             });
         }
     }

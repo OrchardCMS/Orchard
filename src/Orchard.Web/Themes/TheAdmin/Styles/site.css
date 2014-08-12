@@ -1352,9 +1352,6 @@ caption, th, td { text-align: right; }
 .dir-rtl #menu .menu-admin ul a:visited {
     padding:4px 20px 6px 0;
 }
-.dir-rtl #menu #main ul h2 {
-    
-}
 .dir-rtl #menu .menu-admin li h3 a,
 .dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
     padding:0 20px 0 0 ;
@@ -1369,6 +1366,35 @@ caption, th, td { text-align: right; }
     padding: 0 10px 0 0;
 }
 
+/* RTL Core Modules
+***************************************************************/
+/* Routable */
+.dir-rtl .permalink input.text {
+    margin-right:0;
+}
+/* Routable and Containers (Core) */
+.dir-rtl .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:inherit;
+    margin-right:10px;
+}
+.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button { 
+    float:right;
+}
+.dir-rtl fieldset.save-button {
+    clear:right;
+}
+.dir-rtl fieldset.publish-button {
+    margin: 0 0 0 12px ;
+}
+.dir-rtl fieldset.delete-button {
+    margin: 0 12px 0 0;
+}
+
+.content-rtl .permalink input.text {
+    direction: rtl;
+}
+
+
 /* RTL Forms
 ***************************************************************/
 
@@ -1381,6 +1407,16 @@ caption, th, td { text-align: right; }
 .dir-rtl .actions {
     clear:left;
     text-align:left;
+}
+
+.content-ltr textarea,
+.content-ltr input {
+    direction: ltr;
+}
+
+.content-rtl textarea,
+.content-rtl input {
+    direction: ltr;
 }
 
 

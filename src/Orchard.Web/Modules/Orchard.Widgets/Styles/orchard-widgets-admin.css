@@ -308,11 +308,11 @@ list-style:decimal inside;
     margin-right: 4px;
 }
 
-.dir-rtl .widgets-listed li, #widgets-available li {
+.dir-rtl .widgets-listed li, .dir-rtl #widgets-available li {
     margin: 0 5px 5px 0;
 }
 
-    .dir-rtl .widgets-listed li li, #widgets-layer-visibility li {
+    .dir-rtl .widgets-listed li li, .dir-rtl #widgets-layer-visibility li {
         padding: 5px 25px 5px 100px;
         border-style: none solid none none;
         border-width: 0 3px 0 0;
@@ -328,7 +328,12 @@ list-style:decimal inside;
     left: 10px;
 }
 
+.dir-rtl .widgets-listed .widgets-zone-widgets .dir-rtl .widgets-move-somewhere {
+    right: 3px;
+}
+
 .dir-rtl .widgets-listed .widgets-zone-widgets .widgets-move-somewhere {
+    left: inherit;
     right: 3px;
 }
 
