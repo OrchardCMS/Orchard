@@ -1246,3 +1246,92 @@ fieldset.delete-button {
         height: auto;
     }
 }
+
+
+/* RTL */
+html.dir-rtl {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;  
+    color:#333;
+}
+
+.dir-rtl #layout-content {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
+    min-height:100%;
+}
+.dir-rtl #layout-main {
+    float:left;
+    margin-right:0;
+    width:100%;
+    padding:0 0 70px 0; /*Bottom padding set to footer height*/
+}
+.dir-rtl #main {
+    margin-right:20px;
+    margin-left:260px;
+}
+.dir-rtl #menu {
+    background:#323232;
+    display:block;
+    float:right;
+    /*position:relative;*/
+    width:240px;
+}
+.dir-rtl #branding {
+    background:#323232;
+    /*width: 15.401%;*/
+    width: 240px;
+    height:50px;
+    float:right;
+}
+.dir-rtl #culture-selection {
+    float: right;
+    margin: 10px 20px 0 0;
+}
+.dir-rtl #header #app {
+    float:right;
+    font-size:2.4em;
+    padding:.4em 0;
+}
+.dir-rtl #header #app a {
+    background:url(images/orchardLogo.gif) no-repeat;
+    display:block;
+    height:60px;
+    margin:-11px 14px 0 0px;
+    text-indent:-9999px;
+    width:40px;
+}
+.dir-rtl #page-title {
+    /*position:relative;
+    top:12px;
+    left:24px;*/
+    padding:14px 260px 0 0;
+    text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
+}
+.dir-rtl #login {
+    display:block;
+    float:left;
+    margin:14px 0 0 20px;
+    white-space:nowrap;
+}
+.dir-rtl #footer {
+    clear:both;
+    height:70px;
+    margin-top:-70px; /*Top margin set negative px of footer height*/
+    background:url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
+}
+.dir-rtl #menu .menu-admin a {
+    background-position: right 2px !important;
+}
+.dir-rtl #menu .menu-admin ul a, 
+.dir-rtl #menu .menu-admin ul a:link, 
+.dir-rtl #menu .menu-admin ul a:visited {
+    padding:4px 20px 6px 0;
+}
+.dir-rtl #menu .menu-admin li h3 a { /* only the h3 gets an icon by default */
+    padding:0 20px 0 0 ;
+}
+.dir-rtl #menu .menu-admin a:hover {
+    background-position: right -30px !important;
+}
+.dir-rtl #menu .menu-admin .section-new .navicon-new {
+    padding: 0 10px 0 0;
+}
