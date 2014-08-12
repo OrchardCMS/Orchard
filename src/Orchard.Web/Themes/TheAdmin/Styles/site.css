@@ -1262,78 +1262,58 @@ html.dir-rtl {
 
 /* end: reset */
 
-/* RTL */
+/* RTL General
+***************************************************************/
+
 .dir-rtl #layout-content {
     background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
-    min-height:100%;
 }
 .dir-rtl #layout-main {
     float:left;
     margin-left:inherit;
     margin-right:-240px;
-    width:100%;
-    padding:0 0 70px 0; /*Bottom padding set to footer height*/
 }
 .dir-rtl #main {
-    margin-right:260px;
     margin-left:20px;
+    margin-right:260px;
 }
 .dir-rtl #menu {
-    background:#323232;
-    display:block;
     float:right;
-    /*position:relative;*/
-    width:240px;
 }
+    .dir-rtl #menu .menu-admin a {
+        background-position: right 2px !important;
+    }
+
+.dir-rtl #footer {
+    background: url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
+}
+
+/* Header - Branding, Login and Culture Selection
+***************************************************************/
 .dir-rtl #branding {
-    background:#323232;
-    /*width: 15.401%;*/
-    width: 240px;
-    height:50px;
     float:right;
 }
 .dir-rtl #culture-selection {
     float: left;
-    margin: 10px 0 0 20px;
+    margin: 10px 0 0 20px ;
 }
 .dir-rtl #header #app {
     float:right;
-    font-size:2.4em;
-    padding:.4em 0;
 }
 .dir-rtl #header #app a {
-    background:url(images/orchardLogo.gif) no-repeat;
-    display:block;
-    height:60px;
-    margin:-11px 14px 0 0px;
-    text-indent:-9999px;
-    width:40px;
+    margin:-11px 14px 0 0;
+}
+.dir-rtl #site a, .dir-rtl #site a:visited, .dir-rtl #site a:active {
+    float:right;
 }
 .dir-rtl #page-title {
-    /*position:relative;
-    top:12px;
-    left:24px;*/
     padding:14px 260px 0 0;
-    text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
 }
 .dir-rtl #login {
-    display:block;
     float:left;
     margin:14px 0 0 20px;
-    white-space:nowrap;
 }
-.dir-rtl #footer {
-    clear:both;
-    height:70px;
-    margin-top:-70px; /*Top margin set negative px of footer height*/
-    background:url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
-}
-.dir-rtl .contentItems .properties {
-    float: right;
-}
-.dir-rtl .contentItems .related {
-    text-align: left;
-}
+
 .dir-rtl .manage,
 .dir-rtl .manage a.button {
     float: left;
@@ -1343,18 +1323,39 @@ html.dir-rtl {
 /* RTL Navigation
 ***************************************************************/
 .dir-rtl #menu .expando-glyph-container .expando-glyph {
+    left:inherit;
     right:160px;
 }
-.dir-rtl #menu .menu-admin a {
-    background-position: right 2px !important;
+.dir-rtl #menu .menu-admin li h3 {
+    padding:0 10px 0 0;
 }
+.dir-rtl #menu .menu-admin li h3 a,
+.dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
+    padding:0 20px 0 0;
+}
+.dir-rtl #menu .menu-admin ul a, .dir-rtl #menu .menu-admin ul a:link, .dir-rtl #menu .menu-admin ul a:visited {
+    padding:4px 20px 6px 0;
+}
+
+.dir-rtl .admin-menu-filter {
+    padding: 3px 26px 3px 0;
+}
+
+/*.dir-rtl #menu {
+    float:right;
+}
+.dir-rtl #menu .expando-glyph-container .expando-glyph {
+    right:130px;
+    left: inherit;
+}
+
 .dir-rtl #menu .menu-admin ul a, 
 .dir-rtl #menu .menu-admin ul a:link, 
 .dir-rtl #menu .menu-admin ul a:visited {
     padding:4px 20px 6px 0;
 }
 .dir-rtl #menu .menu-admin li h3 a,
-.dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
+.dir-rtl #menu .menu-admin li h3 span {
     padding:0 20px 0 0 ;
 }
 .dir-rtl #menu .menu-admin a:hover {
@@ -1365,7 +1366,156 @@ html.dir-rtl {
 }
 .dir-rtl #menu .menu-admin li h3 {
     padding: 0 10px 0 0;
+}*/
+
+/* RTL Tabs
+***************************************************************/
+.dir-rtl .localmenu li.first {
+    margin-right:16px;
 }
+.dir-rtl .expando-glyph {
+    background:#fcfcfc no-repeat center center;
+    background-image:url(data:image/gif;base64,R0lGODlhCwALAKIFAPDz2/b70mhpREJEPjI0Lf///wAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQzQjUyNTNFOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQzQjUyNTNEOTQyODExREY5MDkxQ0U0MzJGRTdGNEExIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJENDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJDNDlGNjgyMjg5NERGMTE4RUZGQkY0Q0JCRDA3OTc2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAABQAsAAAAAAsACwAAAx1YutxeIbYIghBgWVwA4daQKZ4QjkspPsD6dG8sJwA7);
+    /*url("images/menuOpen.gif")*/
+    bottom:0;
+    cursor:pointer;
+    display:block;
+    height:17px;
+    left: inherit;
+    right:-20px;
+    padding:0 !important;
+    position:absolute;
+    width:17px;
+    -webkit-transform:rotate(0deg);
+}
+
+
+/* RTL Confirmations, Messages and the like
+***************************************************************/
+.dir-rtl span.message {
+    display:block;
+    margin:4px 4px 4px 0;
+}
+.dir-rtl .info { 
+    padding:4px 26px 4px 4px;
+}
+.dir-rtl .error { 
+    padding:4px 26px 4px 4px;
+}
+
+
+/* Forms
+***************************************************************/
+.dir-rtl .bulk-actions {
+    margin:0 0 0 4px;
+}
+
+.dir-rtl input.check-box, .dir-rtl input[type=checkbox] {
+    margin-left:inherit;
+    margin-right:0;
+}
+
+.dir-rtl .cancel {
+    margin:0 .93em 0 0;
+}
+.dir-rtl .manage {
+    float:left;
+}
+.dir-rtl .actions {
+    clear:left;
+    text-align:left;
+}
+.dir-rtl .actions .construct {
+    float:right;
+}
+.dir-rtl .actions .destruct {
+    float:left;
+}
+.dir-rtl .manage a.button {
+    float:left;
+    margin-left:inherit;
+    margin-right:4px;
+}
+
+.content-ltr textarea,
+.content-ltr input {
+    direction: ltr;
+}
+
+.content-rtl textarea,
+.content-rtl input {
+    direction: rtl;
+}
+
+
+/* RTL (Items) Tables
+***************************************************************/
+
+.dir-rtl table.items thead, .dir-rtl table.items th {
+    text-align:right;
+}
+.dir-rtl table.items th.actions {
+    text-align:left;
+}
+
+.dir-rtl table.items td .add {
+    float: left;
+}
+
+/* RTL Content item lists
+----------------------------------------------------------*/
+.dir-rtl .contentItems li {
+    padding:0 .8em .8em 1.4em;
+}
+.dir-rtl .contentItems.bulk-items li {
+    padding-left:inherit;
+    padding-right:.6em;
+}
+.dir-rtl #main .contentItems li .actions {
+    padding:0 .1em .1em 0;
+}
+.dir-rtl #main .contentItems li .actions .ibutton {
+    margin-right:inherit;
+    margin-left:6px;
+}
+.dir-rtl #main .contentItems li .actions .destruct .ibutton {
+    margin-left:0;
+    margin-right:8px;
+}
+
+.dir-rtl .contentItems .summary {
+    padding:1.2em .5em .5em .4em;
+}
+.dir-rtl .contentItems .properties {
+    float:right;
+}
+.dir-rtl .contentItems.bulk-items .metadata, .dir-rtl .contentItems.bulk-items .primary {
+    margin:.7em 2em .7em 0;
+}
+.dir-rtl .contentItems .properties li {
+    float:right;
+}
+.dir-rtl .contentItems .properties .icon {
+    margin:0 -.2em -.2em .2em;
+}
+.dir-rtl .contentItems .related {
+    text-align:left;
+}
+
+/* RTL Pager
+***************************************************************/
+
+.dir-rtl .page-size-options {
+    float: right;
+    padding-right: inherit;
+    padding-left: 40px;
+    margin-left: inherit;
+    margin-right: auto;
+}
+.dir-rtl .pager li {
+    float: right;
+    margin:0 0 0 6px;
+    }
 
 /* RTL Core Modules
 ***************************************************************/
@@ -1395,42 +1545,23 @@ html.dir-rtl {
     direction: rtl;
 }
 
-
-/* RTL Forms
+/* Print
 ***************************************************************/
-
-.dir-rtl .cancel {
-    margin:0 .93em 0 0;
+@media print {
+    .dir-rtl #main, .dir-rtl #page-title {
+        margin-left: inherit;
+        margin-right: 20px;
+        padding-left: inherit;
+        padding-right: 20px;
+    }
 }
-.dir-rtl .manage {
+
+
+/* Fields
+***************************************************************/
+.dir-rtl #orchard-version 
+{
     float:left;
-}
-.dir-rtl .actions {
-    clear:left;
-    text-align:left;
-}
-
-.content-ltr textarea,
-.content-ltr input {
-    direction: ltr;
-}
-
-.content-rtl textarea,
-.content-rtl input {
-    direction: rtl;
-}
-
-
-/* RTL (Items) Tables
-***************************************************************/
-
-.dir-rtl table.items thead, .dir-rtl table.items th {
-    text-align:right;
-}
-.dir-rtl table.items th.actions {
-    text-align:left;
-}
-
-.dir-rtl table.items td .add {
-    float: left;
+    right:inherit;
+    left:16px;
 }
