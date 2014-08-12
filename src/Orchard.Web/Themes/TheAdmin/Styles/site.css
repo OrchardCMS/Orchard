@@ -1417,7 +1417,7 @@ caption, th, td { text-align: right; }
 
 .content-rtl textarea,
 .content-rtl input {
-    direction: ltr;
+    direction: rtl;
 }
 
 
