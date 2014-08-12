@@ -71,7 +71,10 @@
     <Content Include="Scripts\plugins\fullscreen\plugin.min.js" />
     <Content Include="Scripts\plugins\link\plugin.min.js" />
     <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
-    <Content Include="Scripts\plugins\medialibrary\plugin.min.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
     <Content Include="Scripts\plugins\mediapicker\plugin.js" />
     <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
@@ -156,6 +159,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
