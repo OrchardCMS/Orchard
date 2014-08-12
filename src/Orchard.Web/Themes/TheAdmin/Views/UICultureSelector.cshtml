@@ -13,7 +13,7 @@
             var url = Url.Action("SetCulture", "CutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
 
             <option @if (supportedCulure.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
-                @cultureInfo.DisplayName
+                @cultureInfo.DisplayName&#x200E;
             </option>
         }
     </select>
