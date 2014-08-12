@@ -88,3 +88,55 @@
     height: auto;
     padding-top: 0;
 }
+
+/* RTL */
+
+.dir-rtl .custom_details {
+    padding-left: inherit;
+    padding-right: 30px;
+}
+.dir-rtl .extensionName {
+    float:right;
+}
+.dir-rtl .extensionName.installed {
+    padding:0 60px 0 0;
+}
+.dir-rtl .contentItems .properties {
+    float: right;
+    clear: both;
+}
+.dir-rtl .iconThumbnail {
+    padding-left: inherit;
+    padding-right: 70px;
+}
+.dir-rtl .screenshotThumbnail {
+    padding-left: inherit;
+    padding-right: 191px;
+}
+.dir-rtl .column {
+    float: right;
+}
+.dir-rtl .extensionThumbnail {
+    margin-left: inherit;
+    margin-right: -100%;
+}
+.dir-rtl .iconThumbnail .extensionThumbnail {
+    right: inherit;
+    left: 70px;
+}
+.dir-rtl .screenshotThumbnail .extensionThumbnail {
+    right: inherit;
+    right: 191px;
+}
+.dir-rtl .properties li p {
+    float: right;
+}
+.dir-rtl .ratings {
+    float: left;
+}
+.dir-rtl .search-actions {
+    float: left;
+}
+.dir-rtl .update-actions {
+    float: left;
+}

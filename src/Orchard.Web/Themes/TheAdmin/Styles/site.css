@@ -1248,12 +1248,21 @@ fieldset.delete-button {
 }
 
 
-/* RTL */
+
+/* RTL Reset
+***************************************************************/
+
 html.dir-rtl {
     background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;  
     color:#333;
 }
 
+/* Tables still need 'cellspacing="0"' in the markup */
+caption, th, td { text-align: right; }
+
+/* end: reset */
+
+/* RTL */
 .dir-rtl #layout-content {
     background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
     min-height:100%;
@@ -1283,8 +1292,8 @@ html.dir-rtl {
     float:right;
 }
 .dir-rtl #culture-selection {
-    float: right;
-    margin: 10px 20px 0 0;
+    float: left;
+    margin: 10px 0 0 20px;
 }
 .dir-rtl #header #app {
     float:right;
@@ -1318,6 +1327,23 @@ html.dir-rtl {
     margin-top:-70px; /*Top margin set negative px of footer height*/
     background:url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
 }
+.dir-rtl .contentItems .properties {
+    float: right;
+}
+.dir-rtl .contentItems .related {
+    text-align: left;
+}
+.dir-rtl .manage,
+.dir-rtl .manage a.button {
+    float: left;
+}
+
+
+/* RTL Navigation
+***************************************************************/
+.dir-rtl #menu .expando-glyph-container .expando-glyph {
+    right:160px;
+}
 .dir-rtl #menu .menu-admin a {
     background-position: right 2px !important;
 }
@@ -1326,7 +1352,11 @@ html.dir-rtl {
 .dir-rtl #menu .menu-admin ul a:visited {
     padding:4px 20px 6px 0;
 }
-.dir-rtl #menu .menu-admin li h3 a { /* only the h3 gets an icon by default */
+.dir-rtl #menu #main ul h2 {
+    
+}
+.dir-rtl #menu .menu-admin li h3 a,
+.dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
     padding:0 20px 0 0 ;
 }
 .dir-rtl #menu .menu-admin a:hover {
@@ -1334,4 +1364,36 @@ html.dir-rtl {
 }
 .dir-rtl #menu .menu-admin .section-new .navicon-new {
     padding: 0 10px 0 0;
+}
+.dir-rtl #menu .menu-admin li h3 {
+    padding: 0 10px 0 0;
+}
+
+/* RTL Forms
+***************************************************************/
+
+.dir-rtl .cancel {
+    margin:0 .93em 0 0;
+}
+.dir-rtl .manage {
+    float:left;
+}
+.dir-rtl .actions {
+    clear:left;
+    text-align:left;
+}
+
+
+/* RTL (Items) Tables
+***************************************************************/
+
+.dir-rtl table.items thead, .dir-rtl table.items th {
+    text-align:right;
+}
+.dir-rtl table.items th.actions {
+    text-align:left;
+}
+
+.dir-rtl table.items td .add {
+    float: left;
 }
