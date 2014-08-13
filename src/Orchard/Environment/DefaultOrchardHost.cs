@@ -277,7 +277,7 @@ namespace Orchard.Environment {
             // terminate the shell if the tenant was disabled
             else if (settings.State == TenantState.Disabled) {
                 shellContext.Shell.Terminate();
-                shellContext.LifetimeScope.Dispose();
+                shellContext.Dispose();
                 _runningShellTable.Remove(settings);
 
                 _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name);
@@ -286,7 +286,7 @@ namespace Orchard.Environment {
             else {
                 // dispose previous context
                 shellContext.Shell.Terminate();
-                shellContext.LifetimeScope.Dispose();
+                shellContext.Dispose();
 
                 var context = _shellContextFactory.CreateShellContext(settings);
 
