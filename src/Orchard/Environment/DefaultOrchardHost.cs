@@ -277,22 +277,25 @@ namespace Orchard.Environment {
             // terminate the shell if the tenant was disabled
             else if (settings.State == TenantState.Disabled) {
                 shellContext.Shell.Terminate();
-                shellContext.Dispose();
                 _runningShellTable.Remove(settings);
 
-                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name);
+                // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed context.
+                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).ToArray();
+
+                shellContext.Dispose();
             }
             // reload the shell as its settings have changed
             else {
                 // dispose previous context
                 shellContext.Shell.Terminate();
-                shellContext.Dispose();
 
                 var context = _shellContextFactory.CreateShellContext(settings);
 
-                // activate and register modified context
-                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context });
+                // Sctivate and register modified context.
+                // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
+                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
 
+                shellContext.Dispose();
                 context.Shell.Activate();
 
                 _runningShellTable.Update(settings);
