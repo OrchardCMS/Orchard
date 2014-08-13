@@ -50,7 +50,7 @@ namespace Orchard.ContentPicker.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, Fields.ContentPickerField field, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new ContentPickerFieldViewModel();
+            var model = new ContentPickerFieldViewModel { SelectedIds = string.Join(",", field.Ids) };
 
             updater.TryUpdateModel(model, GetPrefix(field, part), null, null);
 
