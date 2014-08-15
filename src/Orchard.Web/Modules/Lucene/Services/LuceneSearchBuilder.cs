@@ -20,8 +20,8 @@ namespace Lucene.Services {
         private const int MaxResults = Int16.MaxValue;
 
         private readonly Directory _directory;
-        private ILuceneAnalyzerProvider _analyzerProvider;
         private string _indexName;
+        private Analyzer _analyzer;
 
         private readonly List<BooleanClause> _clauses;
         private readonly List<BooleanClause> _filters;
@@ -47,7 +47,7 @@ namespace Lucene.Services {
             string indexName) {
             _directory = directory;
             _indexName = indexName;
-            _analyzerProvider = analyzerProvider;
+            _analyzer = analyzerProvider.GetAnalyzer(_indexName);
 
             Logger = NullLogger.Instance;
 
@@ -81,7 +81,7 @@ namespace Lucene.Services {
 
             foreach (var defaultField in defaultFields) {
                 CreatePendingClause();
-                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzerProvider.GetAnalyzer(_indexName)).Parse(query);
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, _analyzer).Parse(query);
             }
 
             return this;
