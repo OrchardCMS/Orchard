@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -184,15 +185,15 @@
     <Content Include="Scripts\lib\dash.all.js" />
     <Content Include="Scripts\lib\dash.min.js" />
     <Content Include="Scripts\lib\jquery.blockui.js" />
-    <None Include="Scripts\cloudmedia-admin-job.ts" />
-    <None Include="Scripts\cloudmedia-admin-common.ts" />
-    <None Include="Scripts\cloudmedia-autorefresh.ts" />
-    <None Include="Scripts\cloudmedia-edit-asset-video.ts" />
-    <None Include="Scripts\cloudmedia-edit-asset.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
-    <None Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
-    <None Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-job.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-common.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-autorefresh.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-asset-video.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-asset.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
     <Content Include="Scripts\lib\jquery.fileupload-process.js" />
     <Content Include="Scripts\lib\jquery.fileupload-validate.js" />
     <Content Include="Scripts\lib\jquery.fileupload.js" />
@@ -283,16 +284,16 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Scripts\cloudmedia-videoplayer-data.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-main.ts" />
-    <None Include="Scripts\typings\moment.d.ts" />
-    <None Include="Scripts\typings\underscore.d.ts" />
-    <None Include="Scripts\typings\uri.d.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-data.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-main.ts" />
+    <TypeScriptCompile Include="Scripts\typings\moment.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\underscore.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\uri.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -446,10 +447,10 @@
     <Content Include="Views\Parts\CloudVideo.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\typings\jquery.d.ts" />
-    <None Include="Scripts\typings\jqueryui.d.ts" />
-    <None Include="Scripts\typings\knockout.d.ts" />
-    <Content Include="Scripts\cloudmedia-admin-settings.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jqueryui.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-settings.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CloudVideo.Edit.Assets.cshtml" />
@@ -577,16 +578,6 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>True</TypeScriptSourceMap>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>false</TypeScriptSourceMap>
-  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
