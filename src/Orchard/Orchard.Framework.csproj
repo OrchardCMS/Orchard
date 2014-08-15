@@ -278,6 +278,7 @@
     <Compile Include="Localization\Services\IDateFormatter.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\PersianDateTimeFormatInfo.cs" />
     <Compile Include="Localization\Services\SiteCalendarSelector.cs" />
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
