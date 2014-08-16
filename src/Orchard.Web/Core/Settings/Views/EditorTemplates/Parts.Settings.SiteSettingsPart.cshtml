@@ -16,7 +16,7 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium" })
+        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium is-url" })
         <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>

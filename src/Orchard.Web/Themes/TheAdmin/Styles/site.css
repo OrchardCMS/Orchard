@@ -1095,11 +1095,15 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     margin-left:0;
     margin-right:2em;
     width:350px;
+    direction: ltr;
 }
 .permalink input.text:focus {
     background:#FFF;
     border-color:#666d51;
     border-style:solid;
+}
+.is-url {
+    direction: ltr !important;
 }
 /* Routable and Containers (Core) */
 .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
