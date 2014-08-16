@@ -21,7 +21,7 @@
     <fieldset class="permalink">
         <label>@T("Permalink")</label>
         @if (Model.Settings.AllowCustomPattern) {
-            <span class="permalink-definition">
+            <span class="permalink-definition" dir="ltr">
                 <span>@Url.MakeAbsolute("/")@urlPrefix</span>
                 <span>@Html.TextBoxFor(m => m.CurrentUrl, new { @class = "text is-url" })</span>
             </span>
