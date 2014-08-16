@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
@@ -14,10 +15,12 @@ namespace Orchard.Tasks {
     public class BackgroundService : IBackgroundService {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;
+        private readonly string _shellName;
 
-        public BackgroundService(IEnumerable<IBackgroundTask> tasks, ITransactionManager transactionManager) {
+        public BackgroundService(IEnumerable<IBackgroundTask> tasks, ITransactionManager transactionManager, ShellSettings shellSettings) {
             _tasks = tasks;
             _transactionManager = transactionManager;
+            _shellName = shellSettings.Name;
             Logger = NullLogger.Instance;
         }
 
@@ -31,9 +34,8 @@ namespace Orchard.Tasks {
                 }
                 catch (Exception e) {
                     _transactionManager.Cancel();
-                    Logger.Error(e, "Error while processing background task");
+                    Logger.Error(e, "Error while processing background task on tenant '{0}'.", _shellName);
                 }
-                
             }
         }
     }
