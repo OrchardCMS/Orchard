@@ -1545,6 +1545,59 @@ html.dir-rtl {
     direction: rtl;
 }
 
+/* Dashboard */
+
+.dir-rtl .dashboard .help-item 
+{
+    float: right;
+    margin: 0 0 55px 55px;
+}
+
+.dir-rtl .dashboard .help-item h2.gallery
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.friends
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.start
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.docs
+{
+    padding-left: inherit;
+    padding-right: 38px;
+}
+
+.dir-rtl .dashboard .help-item h2.contribute
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.advisory
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+/* Fields
+***************************************************************/
+.dir-rtl #orchard-version 
+{
+    float:left;
+    right:inherit;
+    left:16px;
+}
+
 /* Print
 ***************************************************************/
 @media print {
@@ -1554,14 +1607,4 @@ html.dir-rtl {
         padding-left: inherit;
         padding-right: 20px;
     }
-}
-
-
-/* Fields
-***************************************************************/
-.dir-rtl #orchard-version 
-{
-    float:left;
-    right:inherit;
-    left:16px;
 }
