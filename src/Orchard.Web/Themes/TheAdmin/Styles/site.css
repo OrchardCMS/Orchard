@@ -1554,7 +1554,7 @@ html.dir-rtl {
     padding-right: 40px;
 }
 
-/* Fields
+/* RTL Fields
 ***************************************************************/
 .dir-rtl #orchard-version 
 {
@@ -1563,7 +1563,7 @@ html.dir-rtl {
     left:16px;
 }
 
-/* Print
+/* RTL Print
 ***************************************************************/
 @media print {
     .dir-rtl #main, .dir-rtl #page-title {
