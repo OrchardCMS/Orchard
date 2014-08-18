@@ -57,7 +57,7 @@ namespace Orchard.Environment {
                 if (!properties.Any())
                     continue;
 
-                _config.Add(componentType, properties);
+                _config[componentType] = properties;
             }
         }
 
