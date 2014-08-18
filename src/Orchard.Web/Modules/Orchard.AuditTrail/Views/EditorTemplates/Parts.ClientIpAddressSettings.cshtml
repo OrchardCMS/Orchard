@@ -1,0 +1,16 @@
+﻿@model Orchard.AuditTrail.Models.ClientIpAddressSettingsPart
+@{
+    Script.Require("ShapesBase");
+}
+<section class="clientipaddress-settings-section">
+    <fieldset>
+        @Html.CheckBoxFor(m => m.EnableClientIpAddressHeader)
+        @Html.LabelFor(m => m.EnableClientIpAddressHeader, T("Enable client IP address header").Text, new { @class = "forcheckbox" })
+        <span class="hint">@T("Enable this when running behind a reverse proxy server.")</span>
+    </fieldset>
+    <fieldset data-controllerid="@Html.FieldIdFor(m => m.EnableClientIpAddressHeader)">
+        @Html.LabelFor(m => m.ClientIpAddressHeaderName, T("Client IP address header name"))
+        @Html.TextBoxFor(m => m.ClientIpAddressHeaderName, new { @class = "text medium" })
+        <span class="hint">@T("The client IP address header name to check for. Ususally this is the <em>X-Forwarded-For</em> header.")</span>
+    </fieldset>
+</section>

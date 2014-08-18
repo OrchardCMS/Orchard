@@ -10,5 +10,10 @@ namespace Orchard.AuditTrail.Models {
             get { return _eventProviderSettingsField.Value; }
             set { _eventProviderSettingsField.Value = value; }
         }
+
+        public bool EnableClientIpAddressLogging {
+            get { return this.Retrieve(x => x.EnableClientIpAddressLogging); }
+            set { this.Store(x => x.EnableClientIpAddressLogging, value); }
+        }
     }
 }

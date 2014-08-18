@@ -184,8 +184,10 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\ClientIpAddressSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
+    <Compile Include="Handlers\ClientIpAddressSettingsPartHandler.cs" />
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
@@ -197,11 +199,14 @@
     <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
+    <Compile Include="Models\ClientIpAddressSettingsPart.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentPartImportedEventShape.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeImportedEventShape.cs" />
+    <Compile Include="Services\DefaultClientIpAddressProvider.cs" />
+    <Compile Include="Services\IClientIpAddressProvider.cs" />
     <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
@@ -294,7 +299,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.ClientIpAddressSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

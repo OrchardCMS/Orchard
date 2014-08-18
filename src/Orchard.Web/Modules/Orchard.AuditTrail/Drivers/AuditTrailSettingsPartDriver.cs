@@ -48,7 +48,8 @@ namespace Orchard.AuditTrail.Drivers {
                     };
 
                 var viewModel = new AuditTrailSettingsViewModel {
-                    Categories = categoriesQuery.ToList() 
+                    Categories = categoriesQuery.ToList(),
+                    EnableClientIpAddressLogging = part.EnableClientIpAddressLogging
                 };
 
                 // Update the settings as we may have added new settings.
@@ -58,12 +59,13 @@ namespace Orchard.AuditTrail.Drivers {
                     var eventsDictionary = _auditTrailManager.DescribeProviders().Describe().SelectMany(x => x.Events).ToDictionary(x => x.Event);
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                         foreach (var eventSettingViewModel in viewModel.Categories.SelectMany(x => x.Events)) {
-                            var eventSetting = eventSettings.FirstOrDefault(x => x.EventName == eventSettingViewModel.Event);
+                            var eventSetting = eventSettings.First(x => x.EventName == eventSettingViewModel.Event);
                             var descriptor = eventsDictionary[eventSetting.EventName];
 
                             eventSetting.IsEnabled = eventSettingViewModel.IsEnabled || descriptor.IsMandatory;
                         }
                         part.EventSettings = eventSettings;
+                        part.EnableClientIpAddressLogging = viewModel.EnableClientIpAddressLogging;
                     }
                 }
 

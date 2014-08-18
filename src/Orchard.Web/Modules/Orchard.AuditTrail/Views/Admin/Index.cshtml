@@ -1,5 +1,7 @@
 ﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Models
 @using Orchard.AuditTrail.Services.Models
+@using Orchard.ContentManagement
 @model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
     Style.Include("audittrail-display.css");
@@ -10,6 +12,7 @@
         new SelectListItem {Text = T("Category (alphabetical)").Text, Value = AuditTrailOrderBy.CategoryAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.CategoryAscending},
         new SelectListItem {Text = T("Event name (alphabetical)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.EventAscending},
     };
+    var enablieClientIpAddressLogging = WorkContext.CurrentSite.As<AuditTrailSettingsPart>().EnableClientIpAddressLogging;
 
     Layout.Title = T("Audit Trail");
 }
@@ -38,6 +41,9 @@
                     <th class="category-column">@T("Category")</th>
                     <th class="event-column">@T("Event")</th>
                     <th class="user-column">@T("User")</th>
+                    @if (enablieClientIpAddressLogging) {
+                        <th class="client-ip-address-column">@T("Client IP Address")</th>
+                    }
                     <th class="timestamp-column">@T("Timestamp")</th>
                     <th class="summary-column">@T("Summary")</th>
                     <th class="comment-column">@T("Comment")</th>
@@ -50,6 +56,9 @@
                         <td class="category-column">@record.CategoryDescriptor.Name</td>
                         <td class="event-column">@record.EventDescriptor.Name</td>
                         <td class="user-column">@record.Record.UserName</td>
+                        @if (enablieClientIpAddressLogging) {
+                            <td class="client-ip-address-column">@record.Record.ClientIpAddress</td>
+                        }
                         <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
                         <td class="summary-column">@Display(record.SummaryShape)</td>
                         <td class="comment-column">@Html.Raw(record.Record.Comment.NewlinesToHtml())</td>
