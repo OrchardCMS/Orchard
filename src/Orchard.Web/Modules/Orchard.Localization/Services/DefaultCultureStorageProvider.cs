@@ -1,8 +1,11 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Web;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Records;
 using Orchard.Mvc;
 using Orchard.Services;
 
@@ -10,6 +13,7 @@ namespace Orchard.Localization.Services {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
     public class DefaultCultureStorageProvider : ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRepository<CultureRecord> _cultureRepository;
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
 
@@ -17,9 +21,11 @@ namespace Orchard.Localization.Services {
         private const int DefaultExpireTimeYear = 1;
 
         public DefaultCultureStorageProvider(IHttpContextAccessor httpContextAccessor,
+            IRepository<CultureRecord> cultureRepository,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
+            _cultureRepository = cultureRepository;
             _clock = clock;
             _shellSettings = shellSettings;
         }
@@ -62,14 +68,21 @@ namespace Orchard.Localization.Services {
             if (userLanguages == null || userLanguages.Length == 0)
                 return null;
 
-            var language = userLanguages[0].ToLowerInvariant().Trim();
+            var cultures = (from culture in _cultureRepository.Table select culture.Culture).ToList();
 
-            try {
-                return CultureInfo.CreateSpecificCulture(language).Name;
+            foreach (var userLanguage in userLanguages) {
+                var language = userLanguage.Split(';')[0].Trim();
+
+                if (cultures.Contains(language, StringComparer.OrdinalIgnoreCase)) {
+                    try {
+                        return CultureInfo.CreateSpecificCulture(language).Name;
+                    }
+                    catch (ArgumentException) {
+                    }
+                }
             }
-            catch (ArgumentException) {
-                return null;
-            }
+
+            return null;
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {

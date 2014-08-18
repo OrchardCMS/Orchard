@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
