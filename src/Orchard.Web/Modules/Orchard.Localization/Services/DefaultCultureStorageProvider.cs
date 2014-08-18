@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -52,9 +53,23 @@ namespace Orchard.Localization.Services {
 
             var cookie = httpContext.Request.Cookies.Get(CookieName);
 
-            if (cookie == null) return null;
+            if (cookie != null)
+                return cookie.Value;
 
-            return cookie.Value;
+            /* Fall back to Browser */
+            var userLanguages = httpContext.Request.UserLanguages;
+
+            if (userLanguages == null || userLanguages.Length == 0)
+                return null;
+
+            var language = userLanguages[0].ToLowerInvariant().Trim();
+
+            try {
+                return CultureInfo.CreateSpecificCulture(language).Name;
+            }
+            catch (ArgumentException) {
+                return null;
+            }
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {
