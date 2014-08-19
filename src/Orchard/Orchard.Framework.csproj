@@ -259,6 +259,7 @@
     <Compile Include="FileSystems\Media\ConfigurationMimeTypeProvider.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
+    <Compile Include="FileSystems\Media\StorageProviderExtensions.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\Services\CurrentCalendarWorkContext.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
