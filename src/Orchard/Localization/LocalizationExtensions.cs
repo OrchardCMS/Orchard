@@ -1,8 +1,6 @@
 using System.Globalization;
-using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Mvc.Html;
 
 namespace Orchard.Localization {
     public static class LocalizationExtensions {
