@@ -1,0 +1,35 @@
+@using Orchard.Translations.Models
+@{
+    Layout.Title = T("Translations").ToString();
+    
+    var translationStatistics = (IList<ITranslationStatistic>) Model.Statistics;
+}
+<p>TODO: total translatable recorsds shown as a global figure</p>
+<p>TODO: Check for orphaned translations</p>
+<fieldset>
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Culture")</th>
+                <th scope="col">@T("Translated")</th>
+                <th scope="col">@T("Orphaned")</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        @foreach (var translationStatistic in translationStatistics) {
+            var cultureName = translationStatistic.Culture.Name;
+        <tr>
+            <td>@translationStatistic.Culture.DisplayName</td>
+            <td>@translationStatistic.Translated</td>
+            <td>0</td>
+            <td>
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new { cultureName }) |
+                @Html.ActionLink(T("Reflush").ToString(), "Flush", new { cultureName }) |
+                @Html.ActionLink(T("Reset").ToString(), "Reset", new { cultureName }, new { itemprop = "UnsafeUrl" }) |
+                @Html.ActionLink(T("Delete").ToString(), "Delete", new { cultureName }, new { itemprop = "RemoveUrl UnsafeUrl" })
+            </td>
+        </tr>
+        }
+    </table>
+
+</fieldset>

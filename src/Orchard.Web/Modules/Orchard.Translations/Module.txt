@@ -1,0 +1,9 @@
+﻿Name: Translations Management
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.8.1
+OrchardVersion: 1.8
+Description: The Orchard Translations module allows dynamic editing of transations from the admin screens.
+Dependencies: Orchard.Localization
+Category: Content
