@@ -18,6 +18,7 @@ namespace Orchard.ContentTypes.Settings {
                 Creatable = settings.Creatable,
                 Listable = settings.Listable,
                 Draftable = settings.Draftable,
+                Securable = settings.Securable,
             };
 
             if(definition.Settings.ContainsKey("Stereotype")) {
@@ -34,6 +35,7 @@ namespace Orchard.ContentTypes.Settings {
             builder.Creatable(model.Creatable);
             builder.Listable(model.Listable);
             builder.Draftable(model.Draftable);
+            builder.Securable(model.Securable);
             builder.WithSetting("Stereotype", model.Stereotype);
 
             yield return DefinitionTemplate(model);
