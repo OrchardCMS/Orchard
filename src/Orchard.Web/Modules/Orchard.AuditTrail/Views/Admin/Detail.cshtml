@@ -6,7 +6,6 @@
 
     var record = Model.Record;
     var descriptor = Model.Descriptor;
-    var enablieClientIpAddressLogging = WorkContext.CurrentSite.As<AuditTrailSettingsPart>().EnableClientIpAddressLogging;
 
     Layout.Title = T("Audit Trail Event");
 }
@@ -14,11 +13,8 @@
     @T("Event:") <strong>@descriptor.Name</strong><br />
     @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
     @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc)</strong><br />
-    @T("Username:") <strong>@record.UserName</strong>
-    @if (enablieClientIpAddressLogging) {
-        <br/>
-        @T("Client IP Address:") <strong>@record.ClientIpAddress</strong>
-    }
+    @T("Username:") <strong>@record.UserName</strong><br />
+    @T("Client IP address:") <strong>@record.ClientIpAddress</strong>
 </section>
 <section class="audittrail-event-details-section">
     @Display(Model.DetailsShape)

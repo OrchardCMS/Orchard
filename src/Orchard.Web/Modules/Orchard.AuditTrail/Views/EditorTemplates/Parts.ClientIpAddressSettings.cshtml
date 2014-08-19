@@ -5,12 +5,12 @@
 <section class="clientipaddress-settings-section">
     <fieldset>
         @Html.CheckBoxFor(m => m.EnableClientIpAddressHeader)
-        @Html.LabelFor(m => m.EnableClientIpAddressHeader, T("Enable client IP address header").Text, new { @class = "forcheckbox" })
-        <span class="hint">@T("Enable this when running behind a reverse proxy server.")</span>
+        @Html.LabelFor(m => m.EnableClientIpAddressHeader, T("Read client IP address from HTTP header instead of network source IP").Text, new { @class = "forcheckbox" })
+        <span class="hint">@T("This can be useful when the site is behind a reverse proxy server.")</span>
     </fieldset>
     <fieldset data-controllerid="@Html.FieldIdFor(m => m.EnableClientIpAddressHeader)">
-        @Html.LabelFor(m => m.ClientIpAddressHeaderName, T("Client IP address header name"))
+        @Html.LabelFor(m => m.ClientIpAddressHeaderName, T("Client IP address HTTP header name"))
         @Html.TextBoxFor(m => m.ClientIpAddressHeaderName, new { @class = "text medium" })
-        <span class="hint">@T("The client IP address header name to check for. Ususally this is the <em>X-Forwarded-For</em> header.")</span>
+        <span class="hint">@T("The name of the HTTP header from which to read the client IP address. For most reverse proxy servers this should be <strong>X-Forwarded-For</strong>.")</span>
     </fieldset>
 </section>

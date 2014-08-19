@@ -22,7 +22,7 @@ namespace Orchard.AuditTrail {
 
             ContentDefinitionManager.AlterPartDefinition("AuditTrailPart", part => part
                 .Attachable()
-                .WithDescription("Enables the user to enter a comment about the change when saving a content item."));
+                .WithDescription("Adds an inline audit trail to content items, and allows editors to enter a comment when saving content items."));
 
             return 2;
         }
