@@ -22,6 +22,9 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
+            if (!IsActivatable())
+                return null;
+
             var masterId = part.MasterContentItem != null
                                ? part.MasterContentItem.Id
                                : part.Id;
@@ -36,6 +39,9 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
+            if (!IsActivatable())
+                return null;
+
             var localizations = GetEditorLocalizations(part).ToList();
             var model = new EditLocalizationViewModel {
                 SelectedCulture = part.Culture != null ? part.Culture.Culture : null,
@@ -50,12 +56,19 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
+            if (!IsActivatable())
+                return null;
+
             var model = new EditLocalizationViewModel();
             if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        private bool IsActivatable() {
+            return _cultureManager.ListCultures().Count() > 1;
         }
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
