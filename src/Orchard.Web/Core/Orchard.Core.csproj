@@ -152,6 +152,7 @@
     <Compile Include="Navigation\Drivers\MenuItemPartDriver.cs" />
     <Compile Include="Navigation\Drivers\MenuWidgetPartDriver.cs" />
     <Compile Include="Navigation\Drivers\ShapeMenuItemPartDriver.cs" />
+    <Compile Include="Navigation\DynamicPermissions.cs" />
     <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuHandler.cs" />
     <Compile Include="Navigation\Handlers\MenuItemPartHandler.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
+    <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
