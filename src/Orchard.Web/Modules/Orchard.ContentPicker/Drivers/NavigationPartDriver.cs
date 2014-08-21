@@ -46,7 +46,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         protected override DriverResult Editor(NavigationPart part, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, menu)).ToList();
+            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)).ToList();
 
             if (!allowedMenus.Any())
                 return null;
@@ -70,7 +70,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         protected override DriverResult Editor(NavigationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, menu)).ToList();
+            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, menu)).ToList();
 
             if (!allowedMenus.Any())
                 return null;

@@ -39,7 +39,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
-            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
+            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
 
             if (!allowedMenus.Any())
                 return null;
@@ -63,7 +63,7 @@ namespace Orchard.Core.Navigation.Drivers {
             if(updater.TryUpdateModel(model, Prefix, null, null)) {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
 
-                if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, menu))
+                if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
                     return null;
 
                 part.MenuText = model.MenuText;
