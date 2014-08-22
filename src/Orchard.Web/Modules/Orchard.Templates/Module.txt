@@ -10,7 +10,7 @@ Features:
         Name: Templates
         Description: Provides a Template type that represents a shape template, stored as a content item.
         Category: Content
-        Dependencies: Contents, Orchard.Tokens
+        Dependencies: Contents, Orchard.Tokens, Orchard.Core
     Orchard.Templates.Razor:
         Name: Razor Templates
         Description: Extends Templates with Razor templates.

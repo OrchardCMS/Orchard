@@ -211,6 +211,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\IShapeBindingResolver.cs" />
     <Compile Include="DisplayManagement\IShapeDisplay.cs" />
     <Compile Include="DisplayManagement\ShapeDisplay.cs" />
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
