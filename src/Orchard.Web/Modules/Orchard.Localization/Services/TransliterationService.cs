@@ -12,6 +12,7 @@ namespace Orchard.Localization.Services {
     public class TransliterationService : ITransliterationService {
         private readonly IRepository<TransliterationSpecificationRecord> _transliterationRepository;
         private readonly bool fOnlyMetadata = false;
+        private readonly bool fOptimizeForMemoryUsage = false;
 
         public TransliterationService(IRepository<TransliterationSpecificationRecord> transliterationRepository) {
             _transliterationRepository = transliterationRepository;
@@ -23,7 +24,7 @@ namespace Orchard.Localization.Services {
 
             var specification = GetSpecification(transliterationSpecification);
 
-            Transliterator transliterator = Transliterator.FromSpecification(specification);
+            Transliterator transliterator = Transliterator.FromSpecification(specification, fOptimizeForMemoryUsage);
             
             // TODO : Return the contents of this
             var transliteratorRuleTraceList = new TransliteratorRuleTraceList();
