@@ -17,8 +17,8 @@ namespace Orchard.Localization.Services {
             _transliterationRepository = transliterationRepository;
         }
 
-        public string Convert(string value, int transliterationSpecificationId) {
-            var transliterationSpecification = _transliterationRepository.Get(transliterationSpecificationId);
+        public string Convert(string value, string cultureFrom) {
+            var transliterationSpecification = _transliterationRepository.Get(x => x.CultureFrom == cultureFrom);
             if (transliterationSpecification == null) return value;
 
             var specification = GetSpecification(transliterationSpecification);
@@ -36,6 +36,30 @@ namespace Orchard.Localization.Services {
 
         public IEnumerable<TransliterationSpecificationRecord> GetSpecifications() {
             return _transliterationRepository.Table.ToList();
+        }
+
+        public void Create(string cultureFrom, string cultureTo, string rules) {
+            _transliterationRepository.Create(new TransliterationSpecificationRecord {
+                CultureFrom = cultureFrom, 
+                CultureTo = cultureTo,
+                Rules = rules
+            });
+        }
+
+        public void Update(int id, string cultureFrom, string cultureTo, string rules) {
+            var record = _transliterationRepository.Get(id);
+            record.CultureFrom = cultureFrom;
+            record.CultureTo = cultureTo;
+            record.Rules = rules;
+            _transliterationRepository.Update(record);
+        }
+
+        public void Remove(int id) {
+            _transliterationRepository.Delete(_transliterationRepository.Get(id));
+        }
+
+        public TransliterationSpecificationRecord Get(int id) {
+            return _transliterationRepository.Get(id);
         }
 
         private TransliteratorSpecification GetSpecification(TransliterationSpecificationRecord record) {

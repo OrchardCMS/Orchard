@@ -1,14 +1,8 @@
 ﻿@using System.Globalization
-@model Orchard.Localization.ViewModels.CreateTransliterationViewModel
+@model Orchard.Localization.ViewModels.EditTransliterationViewModel
 
 @{
-    Layout.Title = T("Create Transliteration").Text;
-
-    var value = Model.Rules;
-
-    if (string.IsNullOrWhiteSpace(value)) {
-        value = Orchard.Localization.Constants.TransliterationDefaultValue;
-    }
+    Layout.Title = T("Edit Transliteration").Text;
 
     var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 }
@@ -21,8 +15,10 @@
         <label for="CultureTo">@T("To")</label>
         @Html.DropDownList("CultureTo", new SelectList(cultures, "Name", "DisplayName", Model.CultureTo))
 
-        <textarea rows="25" cols="80" name="Rules" id="Rules">@value</textarea>
+        <textarea rows="25" cols="80" name="Rules" id="Rules">@Model.Rules</textarea>
+        
+        @Html.HiddenFor(x => x.Id)
     </fieldset>
 
-    <input class="button" type="submit" value="@T("Create")" />
+    <input class="button" type="submit" value="@T("Save")" />
 }

@@ -7,7 +7,7 @@ using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Controllers {
     [OrchardFeature("Orchard.Localization.Transliteration")]
-    [Admin]
+    [Admin, ValidateInput(false)]
     public class TransliterationAdminController : Controller {
         private readonly ITransliterationService _transliterationService;
 
@@ -35,6 +35,49 @@ namespace Orchard.Localization.Controllers {
             var viewModel = new CreateTransliterationViewModel();
 
             return View(viewModel);
+        }
+
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePost(CreateTransliterationViewModel viewModel) {
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
+
+            _transliterationService.Create(viewModel.CultureFrom, viewModel.CultureTo, viewModel.Rules);
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Edit(int id) {
+            var record = _transliterationService.Get(id);
+
+            var viewModel = new EditTransliterationViewModel {
+                Id = record.Id,
+                CultureFrom = record.CultureFrom,
+                CultureTo = record.CultureTo,
+                Rules = record.Rules
+            };
+
+            return View(viewModel);            
+        }
+
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPost(EditTransliterationViewModel viewModel) {
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
+
+            _transliterationService.Update(viewModel.Id, viewModel.CultureFrom, viewModel.CultureTo, viewModel.Rules);
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Remove(int id) {
+            _transliterationService.Remove(id);
+
+            return RedirectToAction("Index");
         }
     }
 }

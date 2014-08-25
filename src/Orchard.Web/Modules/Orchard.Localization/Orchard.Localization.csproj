@@ -94,10 +94,12 @@
     <Compile Include="Services\LocalizationDateTimeFormatProvider.cs" />
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
+    <Compile Include="Services\TransliterationSlugEventHandler.cs" />
     <Compile Include="ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="ViewModels\CreateTransliterationViewModel.cs" />
+    <Compile Include="ViewModels\EditTransliterationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -139,6 +141,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
@@ -151,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TransliterationAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\TransliterationAdmin\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
