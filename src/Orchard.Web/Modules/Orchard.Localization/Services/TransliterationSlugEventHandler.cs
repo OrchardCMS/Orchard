@@ -17,7 +17,6 @@ namespace Orchard.Localization.Services {
             if (localizationAspect == null) return;
 
             context.Title = _transliterationService.Convert(context.Title, localizationAspect.Culture);
-            context.Adjusted = true;
         }
 
         public void FilledSlugFromTitle(FillSlugContext context) {

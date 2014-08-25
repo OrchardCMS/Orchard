@@ -10,7 +10,7 @@
         value = Orchard.Localization.Constants.TransliterationDefaultValue;
     }
 
-    var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+    var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
 }
 
 @using(Html.BeginFormAntiForgeryPost()) {
