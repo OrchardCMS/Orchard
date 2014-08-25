@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.NaturalLanguage.Tools;
 using System.Text;
 using Orchard.Data;
@@ -7,11 +9,11 @@ using Orchard.Localization.Models;
 
 namespace Orchard.Localization.Services {
     [OrchardFeature("Orchard.Localization.Transliteration")]
-    public class TransliterationServices : ITransliterationServices {
+    public class TransliterationService : ITransliterationService {
         private readonly IRepository<TransliterationSpecificationRecord> _transliterationRepository;
         private readonly bool fOnlyMetadata = false;
 
-        public TransliterationServices(IRepository<TransliterationSpecificationRecord> transliterationRepository) {
+        public TransliterationService(IRepository<TransliterationSpecificationRecord> transliterationRepository) {
             _transliterationRepository = transliterationRepository;
         }
 
@@ -22,7 +24,7 @@ namespace Orchard.Localization.Services {
             var specification = GetSpecification(transliterationSpecification);
 
             Transliterator transliterator = Transliterator.FromSpecification(specification);
-
+            
             // TODO : Return the contents of this
             var transliteratorRuleTraceList = new TransliteratorRuleTraceList();
 
@@ -30,6 +32,10 @@ namespace Orchard.Localization.Services {
                 value, 
                 new StringBuilder(value.Length * 2),
                 transliteratorRuleTraceList);
+        }
+
+        public IEnumerable<TransliterationSpecificationRecord> GetSpecifications() {
+            return _transliterationRepository.Table.ToList();
         }
 
         private TransliteratorSpecification GetSpecification(TransliterationSpecificationRecord record) {

@@ -1,0 +1,41 @@
+@using System.Globalization
+@using Orchard.Localization.Models
+@{
+    Layout.Title = T("Transliteration Settings");
+
+    var currentSpecifications = (IEnumerable<TransliterationSpecificationRecord>)Model.Specifications;
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+    if (currentSpecifications.Any()) {
+        <div class="actions" style="margin-bottom: 15px;"><a class="add button primaryAction" href="#">@T("Register a new specification")</a></div>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Culture From")</th>
+                    <th scope="col">@T("Culture To")</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+
+            @foreach (var currentSpecification in currentSpecifications) {
+                CultureInfo cultureInfoFrom = CultureInfo.GetCultureInfo(currentSpecification.CultureFrom);
+                CultureInfo cultureInfoTo = CultureInfo.GetCultureInfo(currentSpecification.CultureTo);
+                
+                <tr>
+                    <td>@cultureInfoFrom.DisplayName</td>
+                    <td>@cultureInfoTo.DisplayName</td>
+                    <td>
+                        @*<a href="@Url.RemoveProviderConfiguration(currentProvider.Id)">@T("Remove")</a>*@
+                    </td>
+                </tr>
+            }
+        </table>
+        <span class="hint">@T("A provider identifier may not be shown if not supplied by an internal library. Also A key and secret are not required for every mechanism")</span>
+    }
+    else {
+        <p class="nospecifications">@T("There are no specifications registered. Why not <a href=\"{0}\">register one</a>?", "#")</p>
+    }
+}

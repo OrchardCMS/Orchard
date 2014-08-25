@@ -1,0 +1,63 @@
+﻿@model Orchard.Localization.ViewModels.ImportTransliterationViewModel
+
+@{
+    Layout.Title = T("Import Transliteration").Text;
+}
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        
+        <textarea rows="25" cols="80" name="Rules">@Model.Rules</textarea>
+        <span class="hint">@T("[Input]")</span>
+        <span class="hint">@T("// Insert a several-word description of the module’s input.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     Romanization")</span>
+
+        <span class="hint">@T("[Output]")</span>
+        <span class="hint">@T("// Insert a several-word description of the module’s output.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     Cyrillic")</span>
+
+        <span class="hint">@T("[Description]")</span>
+        <span class="hint">@T("// Give a several-sentence description of the module.")</span>
+
+        <span class="hint">@T("[Preprocess]")</span>
+        <span class="hint">@T("// If you need to preprocess your input before applying")</span>
+        <span class="hint">@T("// rules specify the procedure here.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     ToLower")</span>
+        <span class="hint">@T("//     ToUpper(tr-TR)")</span>
+
+        <span class="hint">@T("[States]")</span>
+        <span class="hint">@T("// If you need any states other than the two predefined ones")</span>
+        <span class="hint">@T("// (START and DEFAULT) then declare their names here.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     CONSONANT")</span>
+        <span class="hint">@T("//     VOWEL")</span>
+
+        <span class="hint">@T("[FollowingContextMacros]")</span>
+        <span class="hint">@T("// Insert any following context macro definitions here.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     Cons        b c d f g h j k l m n p q r s t v w x y z")</span>
+        <span class="hint">@T("//     ConsOrEnd   <END> :Cons:")</span>
+        <span class="hint">@T("//     Vowel       a e i o u")</span>
+        <span class="hint">@T("//     VowelAtEnd  a<END> e<END> i<END> o<END> u<END>")</span>
+
+        <span class="hint">@T("[EscapeSpanDelimiters]")</span>
+        <span class="hint">@T("// If you need to be able to prevent spans of the input")</span>
+        <span class="hint">@T("// from being processed you can specify one pair of strings")</span>
+        <span class="hint">@T("// to indicate the beginning and end of such escaped spans.")</span>
+        <span class="hint">@T("// For example:")</span>
+        <span class="hint">@T("//     {   }")</span>
+        <span class="hint">@T("//     /*  */")</span>
+
+        <span class="hint">@T("[Rules]")</span>
+        <span class="hint">@T("// List your rules here.  For example:")</span>
+        <span class="hint">@T("//             a          –> x")</span>
+        <span class="hint">@T("//             a(<END>)   –> y")</span>
+        <span class="hint">@T("//     [START] fa         –> z [VOWEL]")</span>
+    </fieldset>
+
+    <input class="button" type="submit" value="@T("Import")" />
+}
