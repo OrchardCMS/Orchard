@@ -43,7 +43,7 @@ namespace Orchard.MediaLibrary.Services {
         /// </summary>
         /// <param name="relativePath">The path where to retrieve the media folder from. null means root.</param>
         /// <returns>The media folder in the given path.</returns>
-        IEnumerable<MediaFolder> GetMediaFolders(string relativePath);
+        IEnumerable<IMediaFolder> GetMediaFolders(string relativePath);
 
         /// <summary>
         /// Retrieves the media files within a given relative path.

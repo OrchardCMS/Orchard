@@ -104,6 +104,7 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Models\IMediaFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
