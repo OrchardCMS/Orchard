@@ -7,7 +7,7 @@ namespace Orchard.Localization.ViewModels {
         public int Id { get; set; }
         [Required]
         public string SelectedCulture { get; set; }
-        public IEnumerable<string> SiteCultures { get; set; }
+        public IEnumerable<string> MissingCultures { get; set; }
         public IContent Content { get; set; }
     }
 }

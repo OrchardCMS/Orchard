@@ -39,37 +39,53 @@ namespace Orchard.Localization.Controllers {
         public ActionResult Translate(int id, string to) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            // only support translations from the site culture, at the moment at least
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!contentItem.Is<LocalizationPart>() || contentItem.As<LocalizationPart>().MasterContentItem != null) {
-                var metadata = _contentManager.GetItemMetadata(contentItem);
-                return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
-            }
+            var lp = contentItem.As<LocalizationPart>();
+
+            if (lp == null)
+                return HttpNotFound();
+
+            string contentItemCulture = _localizationService.GetContentCulture(contentItem);
+            var localizations = _localizationService.GetLocalizations(lp, VersionOptions.Latest);
             
-            var siteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
-            var selectedCulture = siteCultures.SingleOrDefault(s => string.Equals(s, to, StringComparison.OrdinalIgnoreCase))
-                ?? _cultureManager.GetCurrentCulture(HttpContext); // could be null but the person doing the translating might be translating into their current culture
+            var siteCultures = _cultureManager.ListCultures();
 
-            //todo: need a better solution for modifying some parts when translating - or go with a completely different experience
-            /*
-            if (contentItem.Has<RoutePart>()) {
-                RoutePart routePart = contentItem.As<RoutePart>();
-                routePart.Slug = string.Format("{0}{2}{1}", routePart.Slug, siteCultures.Any(s => string.Equals(s, selectedCulture, StringComparison.OrdinalIgnoreCase)) ? selectedCulture : "", !string.IsNullOrWhiteSpace(routePart.Slug) ? "-" : "");
-                routePart.Path = null;
-            }*/
+            var missingCultures = siteCultures.Where(s =>
+                s != contentItemCulture
+                && !localizations.Any(l => s == l.Culture.Culture))
+                .ToList();
 
-            if (contentItem.As<LocalizationPart>().Culture != null)
-                contentItem.As<LocalizationPart>().Culture.Culture = null;
+            string selectedCulture = null;
+
+            if (!String.IsNullOrEmpty(to)) {
+
+                if (!siteCultures.Any(c => String.Equals(c, to, StringComparison.OrdinalIgnoreCase)))
+                    return HttpNotFound();
+
+                var existingLocalization = String.Equals(contentItemCulture, to, StringComparison.OrdinalIgnoreCase)
+                    ? lp
+                    : localizations.FirstOrDefault(l => string.Equals(l.Culture.Culture, to, StringComparison.OrdinalIgnoreCase));
+
+                if (existingLocalization != null) {
+                    var metadata = _contentManager.GetItemMetadata(existingLocalization);
+                    return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
+                }
+
+                selectedCulture = missingCultures.SingleOrDefault(s => string.Equals(s, to, StringComparison.OrdinalIgnoreCase));
+             }
+
+            if (lp.Culture != null)
+                lp.Culture.Culture = null;
             var model = new AddLocalizationViewModel {
                 Id = id,
                 SelectedCulture = selectedCulture,
-                SiteCultures = siteCultures,
+                MissingCultures = missingCultures,
                 Content = _contentManager.BuildEditor(contentItem)
             };
 
-            // Cancel transaction so that the routepart is not modified.
+            // Cancel transaction so that the LocalizationPart is not modified.
             Services.TransactionManager.Cancel();
 
             return View(model);
@@ -92,6 +108,7 @@ namespace Orchard.Localization.Controllers {
 
         public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+            var originalLp = contentItem.As<LocalizationPart>();
 
             if (contentItem == null)
                 return HttpNotFound();
@@ -107,9 +124,17 @@ namespace Orchard.Localization.Controllers {
             } else {
                 // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
-                if (contentItemTranslation.Has<ICommonPart>() && contentItem.Has<ICommonPart>()) {
-                    contentItemTranslation.As<ICommonPart>().Container = contentItem.As<ICommonPart>().Container;
-                }
+
+                LocalizationPart translationLp = contentItemTranslation.As<LocalizationPart>();
+
+                translationLp.MasterContentItem = originalLp.MasterContentItem != null
+                    ? originalLp.MasterContentItem
+                    : contentItem;
+
+                if (!string.IsNullOrWhiteSpace(model.SelectedCulture))
+                {
+                    translationLp.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
+                 }
 
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
             }
@@ -118,8 +143,10 @@ namespace Orchard.Localization.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                model.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
-                var culture = contentItem.As<LocalizationPart>().Culture;
+                model.MissingCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
+
+                var culture = originalLp.Culture;
+                
                 if (culture != null) {
                     culture.Culture = null;
                 }
@@ -131,12 +158,6 @@ namespace Orchard.Localization.Controllers {
                 Services.Notifier.Information(T("Edited content item translation."));
             }
             else {
-                LocalizationPart localized = contentItemTranslation.As<LocalizationPart>();
-                localized.MasterContentItem = contentItem;
-                if (!string.IsNullOrWhiteSpace(model.SelectedCulture)) {
-                    localized.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
-                }
-
                 conditionallyPublish(contentItemTranslation);
 
                 Services.Notifier.Information(T("Created content item translation."));

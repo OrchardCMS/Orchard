@@ -4,13 +4,9 @@
 }
 <fieldset class="localization culture-selection">
     <label for="SelectedCulture">@T("Content Localization")</label>
-    @{ 
-        var siteCultures = Model.SiteCultures.ToList(); 
-        siteCultures.Insert(0, "");
-    }
     <div>
         @T("This is the <em>{0}</em> variation of {1}",
-        Html.DropDownList("SelectedCulture", new SelectList(siteCultures, Model.SelectedCulture)),
+        Html.DropDownList("SelectedCulture", new SelectList(Model.MissingCultures, Model.SelectedCulture)),
         Html.ItemEditLink(Model.Content))
     </div>
 </fieldset>
