@@ -10,7 +10,7 @@
     @Html.ValidationSummary()
 
     if (currentSpecifications.Any()) {
-        <div class="actions" style="margin-bottom: 15px;"><a class="add button primaryAction" href="#">@T("Register a new specification")</a></div>
+        <div class="actions" style="margin-bottom: 15px;"><a class="add button primaryAction" href="#">@T("Create a new specification")</a></div>
         <table class="items">
             <thead>
                 <tr>
@@ -36,6 +36,6 @@
         <span class="hint">@T("A provider identifier may not be shown if not supplied by an internal library. Also A key and secret are not required for every mechanism")</span>
     }
     else {
-        <p class="nospecifications">@T("There are no specifications registered. Why not <a href=\"{0}\">register one</a>?", "#")</p>
+        <p class="nospecifications">@T("There are no specifications registered. Why not <a href=\"{0}\">Create one</a>?", Url.Action("Create"))</p>
     }
 }

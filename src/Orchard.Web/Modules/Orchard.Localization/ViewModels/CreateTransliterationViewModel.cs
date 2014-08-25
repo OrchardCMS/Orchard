@@ -1,5 +1,5 @@
 ﻿namespace Orchard.Localization.ViewModels {
-    public class ImportTransliterationViewModel {
+    public class CreateTransliterationViewModel {
         public string Rules { get; set; }
     }
 }

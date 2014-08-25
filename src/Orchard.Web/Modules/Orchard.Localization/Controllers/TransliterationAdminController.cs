@@ -31,8 +31,8 @@ namespace Orchard.Localization.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Import() {
-            var viewModel = new ImportTransliterationViewModel();
+        public ActionResult Create() {
+            var viewModel = new CreateTransliterationViewModel();
 
             return View(viewModel);
         }

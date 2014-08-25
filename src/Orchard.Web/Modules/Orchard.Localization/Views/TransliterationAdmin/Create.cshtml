@@ -1,0 +1,21 @@
+﻿@model Orchard.Localization.ViewModels.CreateTransliterationViewModel
+
+@{
+    Layout.Title = T("Create Transliteration").Text;
+
+    var value = Model.Rules;
+
+    if (string.IsNullOrWhiteSpace(value)) {
+        value = Orchard.Localization.Constants.TransliterationDefaultValue;
+    }
+}
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    <fieldset>
+        
+        <textarea rows="25" cols="80" name="Rules">@value</textarea>
+    </fieldset>
+
+    <input class="button" type="submit" value="@T("Create")" />
+}

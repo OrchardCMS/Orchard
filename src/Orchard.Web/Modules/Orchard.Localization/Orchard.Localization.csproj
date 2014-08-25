@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
     <Compile Include="Controllers\CutlureSelectorController.cs" />
@@ -96,7 +97,7 @@
     <Compile Include="ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
-    <Compile Include="ViewModels\ImportTransliterationViewModel.cs" />
+    <Compile Include="ViewModels\CreateTransliterationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -149,7 +150,7 @@
     <Content Include="Views\TransliterationAdmin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\TransliterationAdmin\Import.cshtml" />
+    <Content Include="Views\TransliterationAdmin\Create.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
