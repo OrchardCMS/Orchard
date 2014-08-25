@@ -20,3 +20,8 @@ Features:
 		Category: Content
 		Name: Culture Picker
 		Dependencies: Orchard.Localization
+	Orchard.Localization.Transliteration:
+		Description: Enabled transliteration of content
+		Category: Content
+		Name: Transliteration
+		Dependencies: Orchard.Localization

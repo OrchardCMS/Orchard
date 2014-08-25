@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CutlureSelectorController.cs" />
-    <Compile Include="Providers\ContentTokens.cs" />
+    <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\CultureSelectorSelector.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
@@ -87,8 +87,10 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\ICultureStorageProvider.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
+    <Compile Include="Services\ITransliterationServices.cs" />
     <Compile Include="Services\LocalizationDateTimeFormatProvider.cs" />
     <Compile Include="Services\LocalizationService.cs" />
+    <Compile Include="Services\TransliterationServices.cs" />
     <Compile Include="ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
