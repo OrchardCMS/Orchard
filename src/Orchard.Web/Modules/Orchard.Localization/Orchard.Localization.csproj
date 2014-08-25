@@ -47,6 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MSTranslitTools">
+      <HintPath>..\..\..\..\lib\mstranslittools\MSTranslitTools.DLL</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CutlureSelectorController.cs" />
+    <Compile Include="Providers\ContentTokens.cs" />
     <Compile Include="Providers\CultureSelectorSelector.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
