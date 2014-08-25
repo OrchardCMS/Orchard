@@ -125,11 +125,9 @@ namespace Orchard.Localization.Controllers {
                 // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
 
-                LocalizationPart translationLp = contentItemTranslation.As<LocalizationPart>();
+                var translationLp = contentItemTranslation.As<LocalizationPart>();
 
-                translationLp.MasterContentItem = originalLp.MasterContentItem != null
-                    ? originalLp.MasterContentItem
-                    : contentItem;
+                translationLp.MasterContentItem = originalLp.MasterContentItem ?? contentItem;
 
                 if (!string.IsNullOrWhiteSpace(model.SelectedCulture))
                 {
