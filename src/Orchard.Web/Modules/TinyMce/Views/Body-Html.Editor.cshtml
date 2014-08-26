@@ -14,14 +14,12 @@
     if (!currentCulture.Name.Equals("en-US", StringComparison.OrdinalIgnoreCase)) {
         var customLanguage = currentCulture.Name.Replace('-', '_');
         if (!language.Equals(customLanguage, StringComparison.OrdinalIgnoreCase)) {
-            var culture = CultureInfo.GetCultureInfo(currentCulture.Name);
             if (virtualPathProvider.TryFileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
                 language = customLanguage;
             }
-            else if (!language.Equals(culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) &&
-                     virtualPathProvider.TryFileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", culture.TwoLetterISOLanguageName))) {
-
-                language = culture.TwoLetterISOLanguageName;
+            else if (!language.Equals(currentCulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) &&
+                     virtualPathProvider.TryFileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", currentCulture.TwoLetterISOLanguageName))) {
+                language = currentCulture.TwoLetterISOLanguageName;
             }
         }
     }
