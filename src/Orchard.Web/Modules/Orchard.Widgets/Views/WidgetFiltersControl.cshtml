@@ -27,18 +27,19 @@
         @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
     </div>
 
-
-    @using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
-    <fieldset class="bulk-actions-auto">
-        <label for="culture">@T("Current Culture:")</label>
-        <select id="culture" name="culture">
-            @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
-            @foreach (var culture in cultures) {
-                @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
-            }
-        </select>
-        <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-    </fieldset>
+    @if (cultures.Count() > 1) { 
+        @using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
+        <fieldset class="bulk-actions-auto">
+            <label for="culture">@T("Current Culture:")</label>
+            <select id="culture" name="culture">
+                @Html.SelectOption((string)Model.CurrentCulture, "", T("any (show all)").ToString())
+                @foreach (var culture in cultures) {
+                    @Html.SelectOption((string)Model.CurrentCulture, (string)culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+                }
+            </select>
+            <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
+        </fieldset>
+        }
     }
 
 
