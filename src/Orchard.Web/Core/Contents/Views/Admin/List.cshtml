@@ -33,6 +33,13 @@
                 @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
             }
         </select>
+        <label for="filterCultures" class="bulk-culture">@T("Culture")</label>
+        <select id="filterCultures" name="Options.SelectedCulture">
+            @Html.SelectOption((string)Model.Options.SelectedCulture, "", T("any (show all)").ToString())
+            @foreach (string culture in Model.Options.Cultures) {
+                @Html.SelectOption((string)Model.Options.SelectedCulture, culture, System.Globalization.CultureInfo.GetCultureInfo(culture).DisplayName)
+            }
+        </select>
         <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
         <select id="orderResults" name="Options.OrderBy">
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())

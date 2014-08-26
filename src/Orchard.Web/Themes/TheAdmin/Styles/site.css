@@ -623,6 +623,9 @@ legend span {
 label.bulk-order {
     text-transform:lowercase;
 }
+label.bulk-culture {
+    text-transform:lowercase;
+}
 label span {
     font-weight:normal;
 }
