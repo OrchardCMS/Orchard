@@ -22,5 +22,11 @@ tinyMCE.init({
     statusbar: false,
     skin: 'orchardlightgray',
     language: language,
-    directionality: directionality
+    directionality: directionality,
+
+    setup: function (ed) {
+        $(document).bind("localization.ui.directionalitychanged", function(event, directionality) {
+            ed.getBody().dir = directionality;
+        });
+    }
 });

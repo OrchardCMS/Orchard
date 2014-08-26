@@ -40,8 +40,8 @@ namespace Orchard.Localization.Services {
                 if (!IsActivable()) {
                     return;
                 }
-                
-                if (context.ShapeMetadata.Type != "Zone")
+
+                if (context.ShapeMetadata.Type != "EditorTemplate")
                     return;
 
                 ContentItem contentItem = context.Shape.ContentItem;
@@ -62,5 +62,7 @@ namespace Orchard.Localization.Services {
                     _workContext.Layout.Content.Classes.Add(className);
             });
         }
+
+
     }
 }

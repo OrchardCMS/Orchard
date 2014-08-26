@@ -12,9 +12,44 @@
             <label for="SelectedCulture">@T("Content Localization")</label>
             <div>
                 @T("This is the <em>{0}</em> variation of the content",
-                 BuildSelectedCultureList(Html.FieldIdFor(m => m.SelectedCulture), siteCultures, Model.SelectedCulture))
+                 BuildSelectedCultureList(
+                    Html.FieldIdFor(m => m.SelectedCulture),
+                    Html.FieldNameFor(m => m.SelectedCulture),
+                    siteCultures,
+                    Model.SelectedCulture))
             </div>
         </fieldset>
+    }
+    
+    @if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() == 0) {
+        <fieldset class="culture-selected">
+            <label for="SelectedCulture">@T("Content Localization")</label>
+            <div>
+                @T("This is the <em>{0}</em> variation of content.",
+                    Html.Encode(Model.SelectedCulture))
+            </div>
+            @Html.Hidden("SelectedCulture", Model.SelectedCulture)
+        </fieldset>
+    }
+
+    @if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() > 0) {
+        <fieldset class="culture-selected">
+            <label for="SelectedCulture">@T("Content Localization")</label>
+            <div>
+                @T("This is the <em>{0}</em> variation of {1}.",
+                    Html.Encode(Model.SelectedCulture),
+                    Html.ItemEditLink(Model.MasterContentItem ?? Model.ContentItem))
+            </div>
+            @Html.Hidden("SelectedCulture", Model.SelectedCulture)
+        </fieldset>
+        if (Model.ContentLocalizations.Localizations.Count() > 0) {
+            <dl class="content-localization">
+                <dt>@T("Other translations:")</dt>
+                <dd class="content-localizations">
+                    @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+                </dd>
+            </dl>
+        }
     }
 
     @if (Model.SelectedCulture != null && !siteCultures.All(c => c == Model.SelectedCulture || Model.ContentLocalizations.Localizations.Any(l => c == l.Culture.Culture))) {
@@ -22,15 +57,15 @@
     }
 </fieldset>
 @functions{
-    private string BuildSelectedCultureList(string name, IEnumerable<string> siteCultures, string culture) {
+    private string BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
         TagBuilder selectTag = new TagBuilder("select");
-        selectTag.Attributes["id"] = name;
+        selectTag.Attributes["id"] = id;
         selectTag.Attributes["name"] = name;
 
         foreach (var siteCulture in siteCultures) {
             TagBuilder optionTag = new TagBuilder("option");
             optionTag.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(siteCulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
-            optionTag.Attributes["value"] = siteCulture;
+            //optionTag.Attributes["value"] = siteCulture;
             optionTag.SetInnerText(siteCulture);
             selectTag.InnerHtml += optionTag.ToString();
         }
@@ -56,7 +91,7 @@
             contentZone.removeClass("content-" + oldClass);
             contentZone.addClass("content-" + optionDirectionality);
 
-            $(this).trigger("localization.ui.directionalitychanged");
+            $(document).trigger("localization.ui.directionalitychanged", optionDirectionality);
         });
     })(jQuery);
 //]]>
