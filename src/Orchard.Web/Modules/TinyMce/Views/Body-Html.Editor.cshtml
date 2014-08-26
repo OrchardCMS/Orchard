@@ -10,11 +10,11 @@
 
     // Default language for TinyMCE
     var language = "en";
-    var currentCulture = WorkContext.CurrentCulture;
-    if (!currentCulture.Equals("en-US", StringComparison.OrdinalIgnoreCase)) {
-        var customLanguage = currentCulture.Replace('-', '_');
+    var currentCulture = CultureInfo.GetCultureInfo(WorkContext.CurrentCulture);
+    if (!currentCulture.Name.Equals("en-US", StringComparison.OrdinalIgnoreCase)) {
+        var customLanguage = currentCulture.Name.Replace('-', '_');
         if (!language.Equals(customLanguage, StringComparison.OrdinalIgnoreCase)) {
-            var culture = CultureInfo.GetCultureInfo(currentCulture);
+            var culture = CultureInfo.GetCultureInfo(currentCulture.Name);
             if (virtualPathProvider.TryFileExists(string.Format(@"\modules\tinymce\scripts\langs\{0}.js", customLanguage))) {
                 language = customLanguage;
             }
