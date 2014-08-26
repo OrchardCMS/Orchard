@@ -46,7 +46,7 @@
             contentZone.removeClass("content-" + oldClass);
             contentZone.addClass("content-" + optionDirectionality);
 
-            $.trigger("localization.ui.directionalitychanged");
+            $(this).trigger("localization.ui.directionalitychanged");
         });
     })(jQuery);
 //]]>

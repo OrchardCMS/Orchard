@@ -1,4 +1,5 @@
 ﻿@model Orchard.Localization.ViewModels.EditLocalizationViewModel
+@using System.Globalization
 @using System.Linq;
 @{
     Style.Require("LocalizationAdmin");
@@ -11,32 +12,53 @@
             <label for="SelectedCulture">@T("Content Localization")</label>
             <div>
                 @T("This is the <em>{0}</em> variation of the content",
-                        Html.DropDownList("SelectedCulture", new SelectList(siteCultures, Model.SelectedCulture)))
+                 BuildSelectedCultureList(Html.FieldIdFor(m => m.SelectedCulture), siteCultures, Model.SelectedCulture))
             </div>
         </fieldset>
-    }
-    
-    @if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() > 0) {
-        <fieldset class="culture-selected">
-            <label for="SelectedCulture">@T("Content Localization")</label>
-            <div>
-                @T("This is the <em>{0}</em> variation of {1}.",
-                    Html.Encode(Model.SelectedCulture),
-                    Html.ItemEditLink(Model.MasterContentItem ?? Model.ContentItem))
-            </div>
-            @Html.Hidden("SelectedCulture", Model.SelectedCulture)
-        </fieldset>
-        if (Model.ContentLocalizations.Localizations.Count() > 0) {
-            <dl class="content-localization">
-                <dt>@T("Other translations:")</dt>
-                <dd class="content-localizations">
-                    @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations")
-                </dd>
-            </dl>
-        }
     }
 
     @if (Model.SelectedCulture != null && !siteCultures.All(c => c == Model.SelectedCulture || Model.ContentLocalizations.Localizations.Any(l => c == l.Culture.Culture))) {
         <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.ContentItem.Id }, null)</div>
     }
 </fieldset>
+@functions{
+    private string BuildSelectedCultureList(string name, IEnumerable<string> siteCultures, string culture) {
+        TagBuilder selectTag = new TagBuilder("select");
+        selectTag.Attributes["id"] = name;
+        selectTag.Attributes["name"] = name;
+
+        foreach (var siteCulture in siteCultures) {
+            TagBuilder optionTag = new TagBuilder("option");
+            optionTag.Attributes["data-content-dir"] = CultureInfo.GetCultureInfo(siteCulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+            optionTag.Attributes["value"] = siteCulture;
+            optionTag.SetInnerText(siteCulture);
+            selectTag.InnerHtml += optionTag.ToString();
+        }
+
+        return selectTag.ToString();
+    }
+}
+@using (Script.Foot()) {
+    <script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        "use strict";
+
+        var culture = $("#@Html.FieldIdFor(m => m.SelectedCulture)");
+        culture.change(function () {
+            var optionDirectionality = $("option:selected", this).attr("data-content-dir");
+            var contentZone = $(".zone-content");
+            if (contentZone.hasClass(optionDirectionality))
+                return;
+
+            var oldClass = optionDirectionality === "ltr" ? "rtl" : "";
+
+            contentZone.removeClass("content-" + oldClass);
+            contentZone.addClass("content-" + optionDirectionality);
+
+            $(this).trigger("localization.ui.directionalitychanged");
+        });
+    })(jQuery);
+//]]>
+    </script>
+}

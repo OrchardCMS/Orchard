@@ -8,8 +8,7 @@
     <label for="SelectedCulture">@T("Content Localization")</label>
     <div>
         @T("This is the <em>{0}</em> variation of {1}",
-            BuildSelectedCultureList("SelectedCulture", Model.MissingCultures, Model.SelectedCulture),
-            
+            BuildSelectedCultureList(Html.FieldIdFor(m => m.SelectedCulture), Model.MissingCultures, Model.SelectedCulture),
             Html.ItemEditLink(Model.Content))
     </div>
 </fieldset>
