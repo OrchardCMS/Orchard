@@ -17,5 +17,6 @@ namespace Orchard.AuditTrail.Models {
 
         [StringLengthMax]
         public virtual string Comment { get; set; }
+        public virtual string ClientIpAddress { get; set; }
     }
 }

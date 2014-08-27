@@ -73,7 +73,7 @@ var Orchard;
                             _super.prototype.debug.call(this, "DashInjector: " + message, args);
                         };
                         return DashInjector;
-                    })(Orchard.Azure.MediaServices.VideoPlayer.Injectors.Injector);
+                    })(Injectors.Injector);
                     Injectors.DashInjector = DashInjector;
                 })(VideoPlayer.Injectors || (VideoPlayer.Injectors = {}));
                 var Injectors = VideoPlayer.Injectors;

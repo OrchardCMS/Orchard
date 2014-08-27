@@ -22,5 +22,15 @@ namespace Orchard.ContentTypes {
             return 1;
         }
 
+        public int UpgradeFrom1() {
+            foreach (var typeDefinition in _contentDefinitionManager.ListTypeDefinitions()) {
+                if (typeDefinition.Settings.ContainsKey("ContentTypeSettings.Creatable") && Convert.ToBoolean(typeDefinition.Settings["ContentTypeSettings.Creatable"], CultureInfo.InvariantCulture)) {
+                    typeDefinition.Settings["ContentTypeSettings.Securable"] = "True";
+                    _contentDefinitionManager.StoreTypeDefinition(typeDefinition);
+                }
+            }
+
+            return 2;
+        }
     }
 }

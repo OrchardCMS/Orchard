@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Providers.AuditTrail;
 using Orchard.AuditTrail.Services;
@@ -9,7 +6,6 @@ using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.Logging;
 
 namespace Orchard.AuditTrail.Handlers {
     public class AuditTrailSettingsPartHandler : ContentHandler {

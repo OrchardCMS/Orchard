@@ -1,4 +1,6 @@
-﻿namespace Orchard.ContentManagement {
+﻿using System;
+namespace Orchard.ContentManagement {
+    [Obsolete]
     public interface IContentManagerSession : IDependency {
         void Store(ContentItem item);
         bool RecallVersionRecordId(int id, out ContentItem item);

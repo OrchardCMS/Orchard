@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.AuditTrail</RootNamespace>
     <AssemblyName>Orchard.AuditTrail</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -57,13 +57,16 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -75,7 +78,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Placement.info" />
+    <Content Include="Placement.info" />
     <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
     <Content Include="Scripts\audittrail-expando.js" />
@@ -181,8 +184,10 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\ClientIpAddressSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
+    <Compile Include="Handlers\ClientIpAddressSettingsPartHandler.cs" />
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
@@ -194,11 +199,14 @@
     <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
+    <Compile Include="Models\ClientIpAddressSettingsPart.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentPartImportedEventShape.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeImportedEventShape.cs" />
+    <Compile Include="Services\DefaultClientIpAddressProvider.cs" />
+    <Compile Include="Services\IClientIpAddressProvider.cs" />
     <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
@@ -291,7 +299,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.ClientIpAddressSettings.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

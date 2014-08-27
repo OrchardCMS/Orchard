@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard</RootNamespace>
     <AssemblyName>Orchard.Framework</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -77,8 +77,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="log4net">
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -281,6 +280,7 @@
     <Compile Include="Localization\Services\IDateFormatter.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\PersianDateTimeFormatInfo.cs" />
     <Compile Include="Localization\Services\SiteCalendarSelector.cs" />
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
@@ -382,9 +382,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DefaultContentManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ContentManagement\DefaultContentManagerSession.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DefaultContentQuery.cs">

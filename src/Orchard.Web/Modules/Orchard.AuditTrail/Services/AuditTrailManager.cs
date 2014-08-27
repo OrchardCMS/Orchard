@@ -26,6 +26,7 @@ namespace Orchard.AuditTrail.Services {
         private readonly ISiteService _siteService;
         private readonly ISignals _signals;
         private readonly IShapeFactory _shapeFactory;
+        private readonly IClientIpAddressProvider _clientIpAddressProvider;
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
@@ -36,7 +37,8 @@ namespace Orchard.AuditTrail.Services {
             ICacheManager cacheManager,
             ISiteService siteService,
             ISignals signals,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory, 
+            IClientIpAddressProvider clientIpAddressProvider) {
 
             _auditTrailRepository = auditTrailRepository;
             _providers = providers;
@@ -47,6 +49,7 @@ namespace Orchard.AuditTrail.Services {
             _siteService = siteService;
             _signals = signals;
             _shapeFactory = shapeFactory;
+            _clientIpAddressProvider = clientIpAddressProvider;
         }
 
         public IPageOfItems<AuditTrailEventRecord> GetRecords(
@@ -151,7 +154,8 @@ namespace Orchard.AuditTrail.Services {
                 EventData = _serializer.Serialize(context.EventData),
                 EventFilterKey = context.EventFilterKey,
                 EventFilterData = context.EventFilterData,
-                Comment = context.Comment
+                Comment = context.Comment,
+                ClientIpAddress = GetClientIpAddress()
             };
 
             _auditTrailRepository.Create(record);
@@ -159,18 +163,6 @@ namespace Orchard.AuditTrail.Services {
                 Record = record,
                 IsDisabled = false
             };
-        }
-
-        private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor) {
-            if (eventDescriptor.IsMandatory)
-                return true;
-
-            var settingsDictionary = _cacheManager.Get("AuditTrail.EventSettings", context => {
-                context.Monitor(_signals.When("AuditTrail.EventSettings"));
-                return _siteService.GetSiteSettings().As<AuditTrailSettingsPart>().EventSettings.ToDictionary(x => x.EventName);
-            });
-            var setting = settingsDictionary.ContainsKey(eventDescriptor.Event) ? settingsDictionary[eventDescriptor.Event] : default(AuditTrailEventSetting);
-            return setting != null ? setting.IsEnabled : eventDescriptor.IsEnabledByDefault;
         }
 
         public IEnumerable<AuditTrailCategoryDescriptor> DescribeCategories() {
@@ -244,6 +236,27 @@ namespace Orchard.AuditTrail.Services {
                 Logger.Error(ex, "Error occurred during deserialization of audit trail settings.");
             }
             return Enumerable.Empty<AuditTrailEventSetting>();
+        }
+
+        private string GetClientIpAddress() {
+            var settings = _siteService.GetSiteSettings().As<AuditTrailSettingsPart>();
+
+            if (!settings.EnableClientIpAddressLogging)
+                return null;
+
+            return _clientIpAddressProvider.GetClientIpAddress();
+        }
+
+        private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor) {
+            if (eventDescriptor.IsMandatory)
+                return true;
+
+            var settingsDictionary = _cacheManager.Get("AuditTrail.EventSettings", context => {
+                context.Monitor(_signals.When("AuditTrail.EventSettings"));
+                return _siteService.GetSiteSettings().As<AuditTrailSettingsPart>().EventSettings.ToDictionary(x => x.EventName);
+            });
+            var setting = settingsDictionary.ContainsKey(eventDescriptor.Event) ? settingsDictionary[eventDescriptor.Event] : default(AuditTrailEventSetting);
+            return setting != null ? setting.IsEnabled : eventDescriptor.IsEnabledByDefault;
         }
     }
 }

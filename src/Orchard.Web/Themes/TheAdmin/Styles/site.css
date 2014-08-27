@@ -380,6 +380,7 @@ ul.menuItems {margin:6px 0 0 0;}
     box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
     padding: 3px 0 3px 26px;
     width: 180px;
+    display: none;
 }
 
 .admin-menu-filter input#adminfilter {

@@ -12,6 +12,10 @@ namespace Orchard.Core.Common.Handlers {
             IContentManager contentManager) {
             Filters.Add(StorageFilter.For(identityRepository));
             OnInitializing<IdentityPart>(AssignIdentity);
+
+            OnIndexing<IdentityPart>((context, part) => {
+                context.DocumentIndex.Add("identifier", part.Identifier).Store();
+            });
         }
 
         protected void AssignIdentity(InitializingContentContext context, IdentityPart part) {

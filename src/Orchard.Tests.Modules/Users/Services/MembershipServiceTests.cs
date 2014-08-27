@@ -79,7 +79,6 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
-            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataProvider = "SqlCe" });
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
