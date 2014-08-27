@@ -15,7 +15,7 @@ namespace Orchard.Localization {
         public static string GetTextDirection(this WorkContext workContext, IContent content) {
             var culture = workContext.CurrentSite.SiteCulture;
             if (content != null && content.Has<ILocalizableAspect>()) {
-                culture = content.As<ILocalizableAspect>().Culture;
+                culture = content.As<ILocalizableAspect>().Culture ?? culture;
             }
 
             return CultureInfo.GetCultureInfo(culture).TextInfo.IsRightToLeft ? "rtl" : "ltr"; ;
