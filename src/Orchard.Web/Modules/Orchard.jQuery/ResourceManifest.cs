@@ -85,8 +85,8 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("5.41.0").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
 
             // jquer Color Box
-            manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.4.10").SetDependencies("jQuery");
-            manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.4.10");
+            manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox-min.js", "jquery.colorbox.js").SetVersion("1.5.13").SetDependencies("jQuery");
+            manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.5.13");
         }
     }
 }
