@@ -53,7 +53,6 @@ namespace Orchard.Tests.Localization {
             builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();

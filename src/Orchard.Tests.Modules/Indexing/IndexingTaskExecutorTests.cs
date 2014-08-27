@@ -70,11 +70,9 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
-            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
-            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();

@@ -42,7 +42,6 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
-            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
