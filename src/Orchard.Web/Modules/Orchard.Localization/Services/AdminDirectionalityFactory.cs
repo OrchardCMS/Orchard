@@ -54,9 +54,7 @@ namespace Orchard.Localization.Services {
                     }
                 }
 
-                var culture = (contentItem != null) ? _localizationService.GetContentCulture(contentItem) : _cultureManager.GetSiteCulture();
-
-                var className = "content-" + (CultureInfo.GetCultureInfo(culture).TextInfo.IsRightToLeft ? "rtl" : "ltr");
+                var className = "content-" + _workContext.GetTextDirection(contentItem);
 
                 if (!_workContext.Layout.Content.Classes.Contains(className))
                     _workContext.Layout.Content.Classes.Add(className);
