@@ -31,7 +31,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICacheManager _cacheManager;
-        private readonly Func<IContentManagerSession> _contentManagerSession;
+        private readonly Lazy<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
@@ -50,7 +50,7 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
             ICacheManager cacheManager,
-            Func<IContentManagerSession> contentManagerSession,
+            Lazy<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ISessionLocator> sessionLocator,
             Lazy<IEnumerable<IContentHandler>> handlers,
@@ -132,7 +132,7 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Get(int id, VersionOptions options, QueryHints hints) {
-            var session = _contentManagerSession();
+            var session = _contentManagerSession.Value;
             ContentItem contentItem;
 
             ContentItemVersionRecord versionRecord = null;
@@ -651,7 +651,7 @@ namespace Orchard.ContentManagement {
         public void Clear() {
             var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
             session.Clear();
-            _contentManagerSession().Clear();
+            _contentManagerSession.Value.Clear();
         }
 
         public IContentQuery<ContentItem> Query() {

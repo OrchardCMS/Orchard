@@ -52,22 +52,32 @@ namespace Orchard.Data {
         }
 
         public void RequireNew(IsolationLevel level) {
+            if (_transaction != null) {
+                Logger.Debug("New transaction required");
+
+                if (_cancelled) {
+                    if (_transaction != null) {
+                        Logger.Debug("Reverting operations from transaction");
+                        _transaction.Rollback();
+                        _transaction.Dispose();
+                        Logger.Debug("Transaction disposed");
+
+                        _transaction = null;
+                    }
+
+                    _cancelled = false;
+                }
+                else {
+                    if (_transaction != null) {
+                        Logger.Debug("Marking transaction as complete");
+                        _transaction.Commit();
+                    }
+                }
+
+                DisposeSession();
+            }
+            
             EnsureSession();
-
-            if (_cancelled) {
-                if (_transaction != null) {
-                    _transaction.Rollback();
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-
-                _cancelled = false;
-            }
-            else {
-                if (_transaction != null) {
-                    _transaction.Commit();
-                }
-            }
 
             Logger.Debug("Creating new transaction with isolation level {0}", level);
             _transaction = _session.BeginTransaction(level);
@@ -102,11 +112,15 @@ namespace Orchard.Data {
                 }
             }
 
+            DisposeSession();
+        }
+
+        private void DisposeSession() {
             if (_session != null) {
+                Logger.Debug("Disposing NHibernate session");
                 _session.Dispose();
                 _session = null;
             }
-
         }
 
         private void EnsureSession() {
@@ -115,7 +129,7 @@ namespace Orchard.Data {
             }
 
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
-            Logger.Information("Opening database session");
+            Logger.Debug("Opening NHibernate session");
             _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
         }
 
