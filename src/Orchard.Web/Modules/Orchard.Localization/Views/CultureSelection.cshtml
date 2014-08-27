@@ -1,4 +1,5 @@
 ﻿@model Orchard.Localization.ViewModels.AddLocalizationViewModel
+@using Orchard.ContentManagement;
 @{
     Style.Require("LocalizationAdmin");
 }
@@ -11,6 +12,6 @@
     <div>
         @T("This is the <em>{0}</em> variation of {1}",
         Html.DropDownList("SelectedCulture", new SelectList(siteCultures, Model.SelectedCulture)),
-        Html.ItemEditLink(Model.Content))
+        Html.ItemEditLink((ContentItem)Model.Content.ContentItem))
     </div>
 </fieldset>
