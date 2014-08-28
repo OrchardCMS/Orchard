@@ -52,6 +52,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartDriver>().As<IContentPartDriver>();

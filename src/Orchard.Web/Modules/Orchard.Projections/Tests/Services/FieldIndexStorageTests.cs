@@ -48,6 +48,7 @@ namespace Orchard.Projections.Tests.Services {
 
             // ContentDefinitionManager
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
