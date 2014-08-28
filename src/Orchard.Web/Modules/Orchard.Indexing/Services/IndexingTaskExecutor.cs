@@ -195,8 +195,8 @@ namespace Orchard.Indexing.Services {
                         loop = false;
                     }
                     else {
-                        _contentManager.Clear();
                         _transactionManager.RequireNew();
+                        _contentManager.Clear();
                     }
 
 
@@ -250,8 +250,8 @@ namespace Orchard.Indexing.Services {
                         loop = false;
                     }
                     else {
-                        _contentManager.Clear();
                         _transactionManager.RequireNew();
+                        _contentManager.Clear();
                     }
                 }
                 while (loop);
