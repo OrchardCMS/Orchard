@@ -277,6 +277,28 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region Hint
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text) {
+            return Hint(htmlHelper, text, default(object));
+        }
+
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, object htmlAttributes) {
+            return Hint(htmlHelper, text, htmlAttributes != null ? new RouteValueDictionary(htmlAttributes) : null);
+        }
+
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, IDictionary<string, object> htmlAttributes) {
+            var tagBuilder = new TagBuilder("span") { InnerHtml = text.Text };
+
+            if (htmlAttributes != null) {
+                tagBuilder.MergeAttributes(htmlAttributes);
+            }
+
+            tagBuilder.AddCssClass("hint");
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
+        }
+        #endregion
+
+        
         #region BeginFormAntiForgeryPost
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper) {
