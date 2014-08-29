@@ -126,7 +126,7 @@
 }
 .dir-rtl .screenshotThumbnail .extensionThumbnail {
     right: inherit;
-    right: 191px;
+    left: 191px;
 }
 .dir-rtl .properties li p {
     float: right;
