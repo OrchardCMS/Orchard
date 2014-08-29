@@ -75,7 +75,7 @@
     <Compile Include="Controllers\CutlureSelectorController.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
     <Compile Include="Providers\CultureSelectorSelector.cs" />
-    <Compile Include="RuleEngine\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="RuleEngine\CultureRuleProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
