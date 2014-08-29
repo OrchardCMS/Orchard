@@ -15,6 +15,7 @@ Features:
 		Description: Enables localization of date/time formats and names of days and months.
 		Category: Content
 		Name: Date/Time Format Localization
+		Dependencies: Orchard.Localization
 	Orchard.Localization.CutlureSelector:
 		Description: Enables a culture picker to localize the UI.
 		Category: Content

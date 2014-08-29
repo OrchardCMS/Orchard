@@ -28,7 +28,7 @@
     </div>
 
     @if (cultures.Count() > 1) { 
-        @using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
+        using (Html.BeginForm("index", "admin", FormMethod.Get, new { area = "Orchard.Widgets" })) {
         <fieldset class="bulk-actions-auto">
             <label for="culture">@T("Current Culture:")</label>
             <select id="culture" name="culture">

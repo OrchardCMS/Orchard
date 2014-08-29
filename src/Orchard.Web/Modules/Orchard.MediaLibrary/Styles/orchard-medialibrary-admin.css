@@ -441,6 +441,10 @@
     float: left;
 }
 
+.dir-rtl #media-library-main-navigation > ul { /* sub-navigations, e.g. folders */
+    margin-left: -1px;
+}
+
 .dir-rtl #button-recent i {
     padding-left:5px;
     padding-right: 3px;
