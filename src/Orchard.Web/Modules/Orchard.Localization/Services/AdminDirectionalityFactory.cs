@@ -41,7 +41,8 @@ namespace Orchard.Localization.Services {
                     return;
                 }
 
-                if (context.ShapeMetadata.Type != "EditorTemplate")
+                if (context.ShapeMetadata.Type != "EditorTemplate" &&
+                    context.ShapeMetadata.Type != "Zone")
                     return;
 
                 ContentItem contentItem = context.Shape.ContentItem;
