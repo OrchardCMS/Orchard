@@ -2,8 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using Orchard.Events;
-using Orchard.Localization.Services;
-using Orchard.Mvc;
 
 namespace Orchard.Localization.RuleEngine {
     public interface IRuleProvider : IEventHandler {
@@ -11,12 +9,10 @@ namespace Orchard.Localization.RuleEngine {
     }
 
     public class CultureRuleProvider : IRuleProvider {
-        private readonly ICultureManager _cultureManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly WorkContext _workContext;
 
-        public CultureRuleProvider(ICultureManager cultureManager, IHttpContextAccessor httpContextAccessor) {
-            _cultureManager = cultureManager;
-            _httpContextAccessor = httpContextAccessor;
+        public CultureRuleProvider(WorkContext workContext) {
+            _workContext = workContext;
         }
 
         public void Process(dynamic ruleContext) {
@@ -30,8 +26,7 @@ namespace Orchard.Localization.RuleEngine {
         }
 
         private void ProcessCultureCode(dynamic ruleContext) {
-            var httpContext = _httpContextAccessor.Current();
-            var currentUserCulture = CultureInfo.GetCultureInfo(_cultureManager.GetCurrentCulture(httpContext));
+            var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
             ruleContext.Result = ((object[])ruleContext.Arguments)
                 .Cast<string>()
@@ -40,8 +35,7 @@ namespace Orchard.Localization.RuleEngine {
         }
 
         private void ProcessCultureId(dynamic ruleContext) {
-            var httpContext = _httpContextAccessor.Current();
-            var currentUserCulture = CultureInfo.GetCultureInfo(_cultureManager.GetCurrentCulture(httpContext));
+            var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
 
             ruleContext.Result = ((object[])ruleContext.Arguments)
                 .Cast<int>()
