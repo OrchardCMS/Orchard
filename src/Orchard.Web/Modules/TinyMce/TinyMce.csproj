@@ -48,6 +48,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
@@ -181,6 +182,7 @@
   <ItemGroup>
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Html.Editor.cshtml" />
