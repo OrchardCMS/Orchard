@@ -32,7 +32,7 @@ namespace TinyMce.Services {
                 return;
             }
 
-            if (String.CompareOrdinal(context.Shape.EditorFlavor, "html") != 0) {
+            if (!String.Equals(context.Shape.EditorFlavor, "html", StringComparison.InvariantCultureIgnoreCase)) {
                 return;
             }
 
@@ -51,8 +51,11 @@ namespace TinyMce.Services {
 
                 var customLanguage = currentCulture.Name.Replace('-', '_');
 
+                var directoryName = _virtualPathProvider.GetDirectoryName("~/modules/tinymce/scripts/langs/");
+
                 var languageFiles = _virtualPathProvider
-                    .ListFiles("~/modules/tinymce/scripts/langs")
+                    .ListFiles(directoryName)
+                    .Select(file => file.Replace(directoryName + "/", ""))
                     .ToList();
 
                 if (languageFiles.Any(x => x == string.Format("{0}.js", customLanguage)))
