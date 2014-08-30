@@ -19,7 +19,7 @@ namespace Orchard.Localization.Services {
         dynamic Shape { get; set; }
 
         private bool IsActivable() {
-            // activate on front-end only
+            // activate on admin screen only
             if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
                 return true;
 

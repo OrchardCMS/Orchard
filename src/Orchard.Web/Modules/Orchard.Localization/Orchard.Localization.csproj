@@ -78,8 +78,9 @@
     <Compile Include="RuleEngine\CultureRuleProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
+    <Compile Include="Services\CultureService.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
-    <Compile Include="Services\DefaultCultureStorageProvider.cs" />
+    <Compile Include="Services\CultureStorageProvider.cs" />
     <Compile Include="Services\ICultureService.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Handlers\LocalizationPartHandler.cs" />

@@ -14,7 +14,7 @@ namespace Orchard.Localization.Services {
     [OrchardSuppressDependency("Orchard.Localization.Services.CultureDateTimeFormatProvider")]
     public class LocalizationDateTimeFormatProvider : IDateTimeFormatProvider {
 
-        public LocalizationDateTimeFormatProvider(IOrchardServices orchardServices) {
+        public LocalizationDateTimeFormatProvider() {
             T = NullLocalizer.Instance;
         }
 
