@@ -80,7 +80,7 @@
     <Compile Include="Services\CultureSelectorFactory.cs" />
     <Compile Include="Services\CultureService.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
-    <Compile Include="Services\CultureStorageProvider.cs" />
+    <Compile Include="Providers\CultureStorageProvider.cs" />
     <Compile Include="Services\ICultureService.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Handlers\LocalizationPartHandler.cs" />
@@ -91,13 +91,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Services\ICultureStorageProvider.cs" />
+    <Compile Include="Providers\ICultureStorageProvider.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\ITransliterationService.cs" />
-    <Compile Include="Services\LocalizationDateTimeFormatProvider.cs" />
+    <Compile Include="Providers\LocalizationDateTimeFormatProvider.cs" />
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
-    <Compile Include="Services\TransliterationSlugEventHandler.cs" />
+    <Compile Include="Events\TransliterationSlugEventHandler.cs" />
     <Compile Include="ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />

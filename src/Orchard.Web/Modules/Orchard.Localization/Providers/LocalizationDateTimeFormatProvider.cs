@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Services;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Providers {
 
     /// <summary>
     /// Provides an implementation of IDateTimeFormatProvider which uses Localizer to obtain

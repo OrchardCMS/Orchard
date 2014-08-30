@@ -1,5 +1,4 @@
-﻿using System.Web;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 
 namespace Orchard.Localization.Services {
     public class DefaultCultureFilter : ICultureFilter {

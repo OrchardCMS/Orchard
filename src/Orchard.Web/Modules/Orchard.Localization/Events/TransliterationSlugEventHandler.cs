@@ -2,8 +2,9 @@ using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Services;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Events {
     [OrchardFeature("Orchard.Localization.Transliteration")]
     public class TransliterationSlugEventHandler : ISlugEventHandler {
         private readonly ITransliterationService _transliterationService;
