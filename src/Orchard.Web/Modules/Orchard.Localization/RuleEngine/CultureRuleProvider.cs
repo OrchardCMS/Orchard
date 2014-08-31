@@ -23,6 +23,20 @@ namespace Orchard.Localization.RuleEngine {
             if (!String.Equals(ruleContext.FunctionName, "culture-lcid", StringComparison.OrdinalIgnoreCase)) {
                 ProcessCultureId(ruleContext);
             }
+
+            if (!String.Equals(ruleContext.FunctionName, "culture-isrtl", StringComparison.OrdinalIgnoreCase)) {
+                ProcessCurrentCultureIsRtl(ruleContext);
+            }
+        }
+
+        private void ProcessCurrentCultureIsRtl(dynamic ruleContext) {
+            var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
+
+            var isRtl = ((object[]) ruleContext.Arguments)
+                .Cast<bool>()
+                .SingleOrDefault();
+
+            ruleContext.Result = (isRtl == currentUserCulture.TextInfo.IsRightToLeft);
         }
 
         private void ProcessCultureCode(dynamic ruleContext) {
