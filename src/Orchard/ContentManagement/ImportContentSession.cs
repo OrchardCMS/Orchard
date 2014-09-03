@@ -17,7 +17,7 @@ namespace Orchard.ContentManagement {
         private readonly Dictionary<ContentIdentity, bool> _allIdentitiesForImportStatus; //For fast lookup of status
         private readonly Queue<ContentIdentity> _dependencyIdentities;
         private int _startIndex;
-        private int _batchSize = int.MaxValue;
+        private int _batchSize = 100;
         private int _currentIndex;
 
         public ImportContentSession(IContentManager contentManager) {

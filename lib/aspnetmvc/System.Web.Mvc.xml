@@ -217,7 +217,7 @@
       <param name="methodInfo">Information about the action method.</param>
     </member>
     <member name="T:System.Web.Mvc.ActionResult">
-      <summary>Encapsulates the result of an action method and is used to perform a framework-level operation on behalf of the action method.</summary>
+      <summary>Represents the result of an action method.</summary>
     </member>
     <member name="M:System.Web.Mvc.ActionResult.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.ActionResult" /> class.</summary>
@@ -345,6 +345,15 @@
     <member name="M:System.Web.Mvc.AllowHtmlAttribute.OnMetadataCreated(System.Web.Mvc.ModelMetadata)">
       <summary>This method supports the ASP.NET MVC validation infrastructure and is not intended to be used directly from your code.</summary>
       <param name="metadata">The model metadata.</param>
+    </member>
+    <member name="T:System.Web.Mvc.AreaReference">
+      <summary>Controls interpretation of a controller name when constructing a <see cref="T:System.Web.Mvc.RemoteAttribute" />.</summary>
+    </member>
+    <member name="F:System.Web.Mvc.AreaReference.UseCurrent">
+      <summary>Find the controller in the current area.</summary>
+    </member>
+    <member name="F:System.Web.Mvc.AreaReference.UseRoot">
+      <summary>Find the controller in the root area.</summary>
     </member>
     <member name="T:System.Web.Mvc.AreaRegistration">
       <summary>Provides a way to register one or more areas in an ASP.NET MVC application.</summary>
@@ -570,7 +579,7 @@
       <returns>The result that is returned by an action method.</returns>
     </member>
     <member name="T:System.Web.Mvc.AuthorizeAttribute">
-      <summary>Represents an attribute that is used to restrict access by callers to an action method.</summary>
+      <summary>Specifies that access to a controller or action method is restricted to users who meet the authorization requirement.</summary>
     </member>
     <member name="M:System.Web.Mvc.AuthorizeAttribute.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.AuthorizeAttribute" /> class.</summary>
@@ -597,16 +606,16 @@
       <exception cref="T:System.ArgumentNullException">The <paramref name="httpContext" /> parameter is null.</exception>
     </member>
     <member name="P:System.Web.Mvc.AuthorizeAttribute.Roles">
-      <summary>Gets or sets the user roles.</summary>
-      <returns>The user roles.</returns>
+      <summary>Gets or sets the user roles that are authorized to access the controller or action method.</summary>
+      <returns>The user roles that are authorized to access the controller or action method.</returns>
     </member>
     <member name="P:System.Web.Mvc.AuthorizeAttribute.TypeId">
       <summary>Gets the unique identifier for this attribute.</summary>
       <returns>The unique identifier for this attribute.</returns>
     </member>
     <member name="P:System.Web.Mvc.AuthorizeAttribute.Users">
-      <summary>Gets or sets the authorized users.</summary>
-      <returns>The authorized users.</returns>
+      <summary>Gets or sets the users that are authorized to access the controller or action method.</summary>
+      <returns>The users that are authorized to access the controller or action method.</returns>
     </member>
     <member name="T:System.Web.Mvc.BindAttribute">
       <summary>Represents an attribute that is used to provide details about how model binding to a parameter should occur.</summary>
@@ -680,6 +689,7 @@
       <param name="controllerContext">The controller context.</param>
       <param name="virtualPath">The virtual path.</param>
     </member>
+    <member name="P:System.Web.Mvc.BuildManagerViewEngine.IsPrecompiledNonUpdateableSite"></member>
     <member name="P:System.Web.Mvc.BuildManagerViewEngine.ViewPageActivator">
       <summary>Gets the view page activator.</summary>
       <returns>The view page activator.</returns>
@@ -1594,6 +1604,9 @@
     <member name="P:System.Web.Mvc.Controller.Request">
       <summary>Gets the HttpRequestBase object for the current HTTP request.</summary>
       <returns>The request object.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.Controller.Resolver">
+      <summary>Represents a replaceable dependency resolver providing services. By default, it uses the <see cref="P:System.Web.Mvc.DependencyResolver.CurrentCache" />.</summary>
     </member>
     <member name="P:System.Web.Mvc.Controller.Response">
       <summary>Gets the HttpResponseBase object for the current HTTP response.</summary>
@@ -3175,7 +3188,7 @@
       <summary>The RFC 3339 formatting.</summary>
     </member>
     <member name="T:System.Web.Mvc.HtmlHelper">
-      <summary>Represents support for rendering HTML controls in a view.</summary>
+      <summary>Supports the rendering of HTML controls in a view.</summary>
     </member>
     <member name="M:System.Web.Mvc.HtmlHelper.#ctor(System.Web.Mvc.ViewContext,System.Web.Mvc.IViewDataContainer)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HtmlHelper" /> class by using the specified view context and view data container.</summary>
@@ -3359,6 +3372,11 @@
       <summary>Gets or sets the character that replaces periods in the ID attribute of an element.</summary>
       <returns>The character that replaces periods in the ID attribute of an element.</returns>
     </member>
+    <member name="M:System.Web.Mvc.HtmlHelper.ObjectToDictionary(System.Object)">
+      <summary>Creates a dictionary from an object, by adding each public instance property as a key with its associated value to the dictionary. It will expose public properties from derived types as well. This is typically used with objects of an anonymous type.</summary>
+      <returns>The created dictionary of property names and property values.</returns>
+      <param name="value">The object to be converted.</param>
+    </member>
     <member name="M:System.Web.Mvc.HtmlHelper.Raw(System.Object)">
       <summary>Returns markup that is not HTML encoded.</summary>
       <returns>The HTML markup without encoding.</returns>
@@ -3373,6 +3391,12 @@
       <summary>Gets or sets the collection of routes for the application.</summary>
       <returns>The collection of routes for the application.</returns>
     </member>
+    <member name="M:System.Web.Mvc.HtmlHelper.SetValidationMessageElement(System.String)">
+      <summary>Set element name used to wrap the validation message generated by <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String)" /> and other overloads.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HtmlHelper.SetValidationSummaryMessageElement(System.String)">
+      <summary>Set element name used to wrap a top-level message in <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper)" /> and other overloads.</summary>
+    </member>
     <member name="P:System.Web.Mvc.HtmlHelper.UnobtrusiveJavaScriptEnabled">
       <summary>Gets or sets a value that indicates whether unobtrusive JavaScript is enabled.</summary>
       <returns>true if unobtrusive JavaScript is enabled; otherwise, false.</returns>
@@ -3386,11 +3410,17 @@
     <member name="F:System.Web.Mvc.HtmlHelper.ValidationMessageCssClassName">
       <summary>The name of the CSS class that is used to style the error message when a validation error occurs.</summary>
     </member>
+    <member name="P:System.Web.Mvc.HtmlHelper.ValidationMessageElement">
+      <summary>Element name used to wrap the validation message generated by <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String)" /> and other overloads.</summary>
+    </member>
     <member name="F:System.Web.Mvc.HtmlHelper.ValidationMessageValidCssClassName">
       <summary>The name of the CSS class that is used to style the validation message when the input is valid.</summary>
     </member>
     <member name="F:System.Web.Mvc.HtmlHelper.ValidationSummaryCssClassName">
       <summary>The name of the CSS class that is used to style validation summary error messages.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.HtmlHelper.ValidationSummaryMessageElement">
+      <summary>Element name used to wrap a top-level message in <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper)" /> and other overloads.</summary>
     </member>
     <member name="F:System.Web.Mvc.HtmlHelper.ValidationSummaryValidCssClassName">
       <summary>The name of the CSS class that is used to style the validation summary when the input is valid.</summary>
@@ -3657,6 +3687,13 @@
       <param name="controllerContext">The controller context.</param>
       <param name="actionName">The name of the action.</param>
     </member>
+    <member name="T:System.Web.Mvc.IActionInvokerFactory">
+      <summary>Used to create an <see cref="T:System.Web.Mvc.IActionInvoker" /> instance for the current request.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.IActionInvokerFactory.CreateInstance">
+      <summary>Creates an instance of action invoker for the current request.</summary>
+      <returns>The created <see cref="T:System.Web.Mvc.IActionInvoker" />.</returns>
+    </member>
     <member name="T:System.Web.Mvc.IAuthorizationFilter">
       <summary>Defines the methods that are required for an authorization filter.</summary>
     </member>
@@ -3752,6 +3789,12 @@
       <summary>When implemented in a class, provides metadata to the model metadata creation process.</summary>
       <param name="metadata">The model metadata.</param>
     </member>
+    <member name="T:System.Web.Mvc.IMethodInfoActionDescriptor">
+      <summary>An optional interface for <see cref="T:System.Web.Mvc.ActionDescriptor" /> types which provide a <see cref="P:System.Web.Mvc.IMethodInfoActionDescriptor.MethodInfo" />.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.IMethodInfoActionDescriptor.MethodInfo">
+      <summary>Gets the MethodInfo</summary>
+    </member>
     <member name="T:System.Web.Mvc.IModelBinder">
       <summary>Defines the methods that are required for a model binder.</summary>
     </member>
@@ -3829,6 +3872,13 @@
       <param name="controllerContext">The controller context.</param>
       <param name="values">The values.</param>
     </member>
+    <member name="T:System.Web.Mvc.ITempDataProviderFactory">
+      <summary>Used to create an <see cref="T:System.Web.Mvc.ITempDataProvider" /> instance for the controller.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.ITempDataProviderFactory.CreateInstance">
+      <summary>Creates an instance of <see cref="T:System.Web.Mvc.ITempDataProvider" /> for the controller.</summary>
+      <returns>The created <see cref="T:System.Web.Mvc.ITempDataProvider" />.</returns>
+    </member>
     <member name="T:System.Web.Mvc.IUnvalidatedValueProvider">
       <summary>Represents an <see cref="T:System.Web.Mvc.IValueProvider" /> interface that can skip request validation.</summary>
     </member>
@@ -3848,7 +3898,7 @@
     </member>
     <member name="M:System.Web.Mvc.IValueProvider.GetValue(System.String)">
       <summary>Retrieves a value object using the specified key.</summary>
-      <returns>The value object for the specified key.</returns>
+      <returns>The value object for the specified key, or null if the key is not found.</returns>
       <param name="key">The key of the value object to retrieve.</param>
     </member>
     <member name="T:System.Web.Mvc.IView">
@@ -3927,6 +3977,23 @@
     <member name="P:System.Web.Mvc.JavaScriptResult.Script">
       <summary>Gets or sets the script.</summary>
       <returns>The script.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.JQueryFormValueProvider">
+      <summary>The JQuery Form Value provider is used to handle JQuery formatted data in request Forms.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.JQueryFormValueProvider.#ctor(System.Web.Mvc.ControllerContext)">
+      <summary>Constructs a new instance of the JQuery form ValueProvider</summary>
+      <param name="controllerContext">The context on which the ValueProvider operates.</param>
+    </member>
+    <member name="T:System.Web.Mvc.JQueryFormValueProviderFactory">
+      <summary>Provides the necessary ValueProvider to handle JQuery Form data.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.JQueryFormValueProviderFactory.#ctor">
+      <summary>Constructs a new instance of the factory which provides JQuery form ValueProviders.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.JQueryFormValueProviderFactory.GetValueProvider(System.Web.Mvc.ControllerContext)">
+      <summary>Returns the suitable ValueProvider.</summary>
+      <param name="controllerContext">The context on which the ValueProvider should operate.</param>
     </member>
     <member name="T:System.Web.Mvc.JsonRequestBehavior">
       <summary>Specifies whether HTTP GET requests from the client are allowed.</summary>
@@ -4298,6 +4365,9 @@
     <member name="P:System.Web.Mvc.ModelMetadata.AdditionalValues">
       <summary>Gets a dictionary that contains additional metadata about the model.</summary>
       <returns>A dictionary that contains additional metadata about the model.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.ModelMetadata.Container">
+      <summary>A reference to the model's container object. Will be non-null if the model represents a property.</summary>
     </member>
     <member name="P:System.Web.Mvc.ModelMetadata.ContainerType">
       <summary>Gets or sets the type of the container for the model.</summary>
@@ -4723,6 +4793,12 @@
       <param name="selectedValues">The selected values.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="items" /> parameter is null.</exception>
     </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.Collections.IEnumerable,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the selected values, the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="selectedValues">The selected values field. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
     <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.MultiSelectList" /> class by using the items to include in the list, the data value field, and the data text field.</summary>
       <param name="items">The items.</param>
@@ -4738,6 +4814,51 @@
       <param name="selectedValues">The selected values.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="items" /> parameter is null.</exception>
     </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.Collections.IEnumerable,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the data value field, the data text field, the selected values, and the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValues">The selected values field. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the data value field, the data text field, and the data group field.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the data value field, the data text field, the data group field, and the selected values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValues">The selected values field. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Collections.IEnumerable,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the data value field, the data text field, the data group field, the selected values, and the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValues">The selected values field. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.MultiSelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Collections.IEnumerable,System.Collections.IEnumerable,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the MultiSelectList class by using the items to include in the list, the data value field, the data text field, the data group field, the selected values, the disabled values, and the disabled groups.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValues">The selected values field. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledGroups">The disabled groups. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListGroup" />.</param>
+    </member>
+    <member name="P:System.Web.Mvc.MultiSelectList.DataGroupField">
+      <summary>Gets the data group field.</summary>
+    </member>
     <member name="P:System.Web.Mvc.MultiSelectList.DataTextField">
       <summary>Gets or sets the data text field.</summary>
       <returns>The data text field.</returns>
@@ -4745,6 +4866,12 @@
     <member name="P:System.Web.Mvc.MultiSelectList.DataValueField">
       <summary>Gets or sets the data value field.</summary>
       <returns>The data value field.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.MultiSelectList.DisabledGroups">
+      <summary>Gets the disabled groups.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.MultiSelectList.DisabledValues">
+      <summary>Gets the disabled values.</summary>
     </member>
     <member name="M:System.Web.Mvc.MultiSelectList.GetEnumerator">
       <summary>Returns an enumerator that can be used to iterate through the collection.</summary>
@@ -4972,6 +5099,13 @@
       <param name="collection">A collection that contains the values that are used to initialize the provider.</param>
       <param name="unvalidatedCollection">A collection that contains the values that are used to initialize the provider. This collection will not be validated.</param>
       <param name="culture">An object that contains information about the target culture.</param>
+    </member>
+    <member name="M:System.Web.Mvc.NameValueCollectionValueProvider.#ctor(System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection,System.Globalization.CultureInfo,System.Boolean)">
+      <summary>Initializes Name Value collection provider.</summary>
+      <param name="collection">Key value collection from request.</param>
+      <param name="unvalidatedCollection">Unvalidated key value collection from the request.</param>
+      <param name="culture">Culture with which the values are to be used.</param>
+      <param name="jQueryToMvcRequestNormalizationRequired">jQuery POST when sending complex Javascript objects to server does not encode in the way understandable by MVC. This flag should be set if the request should be normalized to MVC form - https://aspnetwebstack.codeplex.com/workitem/1564.</param>
     </member>
     <member name="M:System.Web.Mvc.NameValueCollectionValueProvider.#ctor(System.Collections.Specialized.NameValueCollection,System.Globalization.CultureInfo)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.NameValueCollectionValueProvider" /> class.</summary>
@@ -5591,6 +5725,12 @@
       <param name="controller">The name of the controller.</param>
       <param name="areaName">The name of the area.</param>
     </member>
+    <member name="M:System.Web.Mvc.RemoteAttribute.#ctor(System.String,System.String,System.Web.Mvc.AreaReference)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.RemoteAttribute" /> class.</summary>
+      <param name="action">The route name.</param>
+      <param name="controller">The name of the controller.</param>
+      <param name="areaReference">Find the controller in the root if <see cref="F:System.Web.Mvc.AreaReference.UseRoot" />. Otherwise look in the current area.</param>
+    </member>
     <member name="P:System.Web.Mvc.RemoteAttribute.AdditionalFields">
       <summary>Gets or sets the additional fields that are required for validation.</summary>
       <returns>The additional fields that are required for validation.</returns>
@@ -5773,10 +5913,19 @@
       <summary>Maps the attribute-defined routes for the application.</summary>
       <param name="routes">A collection of routes.</param>
     </member>
+    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Web.Mvc.Routing.IDirectRouteProvider)">
+      <summary>Maps the attribute-defined routes for the application.</summary>
+      <param name="directRouteProvider">The <see cref="T:System.Web.Mvc.Routing.IDirectRouteProvider" /> to use for mapping routes.</param>
+    </member>
     <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Web.Mvc.Routing.IInlineConstraintResolver)">
       <summary>Maps the attribute-defined routes for the application.</summary>
       <param name="routes">A collection of routes.</param>
       <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints in route templates.</param>
+    </member>
+    <member name="M:System.Web.Mvc.RouteCollectionAttributeRoutingExtensions.MapMvcAttributeRoutes(System.Web.Routing.RouteCollection,System.Web.Mvc.Routing.IInlineConstraintResolver,System.Web.Mvc.Routing.IDirectRouteProvider)">
+      <summary>Maps the attribute-defined routes for the application.</summary>
+      <param name="constraintResolver">The <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" /> to use for resolving inline constraints in route templates.</param>
+      <param name="directRouteProvider">The <see cref="T:System.Web.Mvc.Routing.IDirectRouteProvider" /> to use for mapping routes.</param>
     </member>
     <member name="T:System.Web.Mvc.RouteCollectionExtensions">
       <summary>Extends a <see cref="T:System.Web.Routing.RouteCollection" /> object for MVC routing.</summary>
@@ -5911,6 +6060,12 @@
       <param name="items">The items.</param>
       <param name="selectedValue">The selected value.</param>
     </member>
+    <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.Object,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the SelectList class by using the specified items for the list, the selected value, and the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="selectedValue">The selected value. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
     <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.String,System.String)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.SelectList" /> class by using the specified items for the list, the data value field, and the data text field.</summary>
       <param name="items">The items.</param>
@@ -5924,15 +6079,66 @@
       <param name="dataTextField">The data text field.</param>
       <param name="selectedValue">The selected value.</param>
     </member>
+    <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.Object,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the SelectList class by using the specified items for the list, the data value field, the data text field, the selected value, and the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValue">The selected value. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Object)">
+      <summary>Initializes a new instance of the SelectList class by using the specified items for the list, the data value field, the data text field, the data group field, and the selected value.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValue">The selected value. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Object,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the SelectList class by using the specified items for the list, the data value field, the data text field, the data group field, the selected value, and the disabled values.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValue">The selected value. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+    </member>
+    <member name="M:System.Web.Mvc.SelectList.#ctor(System.Collections.IEnumerable,System.String,System.String,System.String,System.Object,System.Collections.IEnumerable,System.Collections.IEnumerable)">
+      <summary>Initializes a new instance of the SelectList class by using the specified items for the list, the data value field, the data text field, the data group field. the selected value, the disabled values, and the disabled groups.</summary>
+      <param name="items">The items used to build each <see cref="T:System.Web.Mvc.SelectListItem" /> of the list.</param>
+      <param name="dataValueField">The data value field. Used to match the Value property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataTextField">The data text field. Used to match the Text property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="dataGroupField">The data group field. Used to match the Group property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="selectedValue">The selected value. Used to match the Selected property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledValues">The disabled values. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListItem" />.</param>
+      <param name="disabledGroups">The disabled groups. Used to match the Disabled property of the corresponding <see cref="T:System.Web.Mvc.SelectListGroup" />.</param>
+    </member>
     <member name="P:System.Web.Mvc.SelectList.SelectedValue">
       <summary>Gets the list value that was selected by the user.</summary>
       <returns>The selected value.</returns>
+    </member>
+    <member name="T:System.Web.Mvc.SelectListGroup">
+      <summary>Represents the optgroup HTML element and its attributes. In a select list, multiple groups with the same name are supported. They are compared with reference equality.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.SelectListGroup.#ctor"></member>
+    <member name="P:System.Web.Mvc.SelectListGroup.Disabled">
+      <summary>Gets or sets a value that indicates whether this <see cref="T:System.Web.Mvc.SelectListGroup" /> is disabled.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.SelectListGroup.Name">
+      <summary>Represents the value of the optgroup's label.</summary>
     </member>
     <member name="T:System.Web.Mvc.SelectListItem">
       <summary>Represents the selected item in an instance of the <see cref="T:System.Web.Mvc.SelectList" /> class.</summary>
     </member>
     <member name="M:System.Web.Mvc.SelectListItem.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.SelectListItem" /> class.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.SelectListItem.Disabled">
+      <summary>Gets or sets a value that indicates whether this <see cref="T:System.Web.Mvc.SelectListItem" /> is disabled.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.SelectListItem.Group">
+      <summary>Represents the optgroup HTML element this item is wrapped into. In a select list, multiple groups with the same name are supported. They are compared with reference equality.</summary>
     </member>
     <member name="P:System.Web.Mvc.SelectListItem.Selected">
       <summary>Gets or sets a value that indicates whether this <see cref="T:System.Web.Mvc.SelectListItem" /> is selected.</summary>
@@ -6669,6 +6875,12 @@
     <member name="P:System.Web.Mvc.ViewContext.UnobtrusiveJavaScriptEnabled">
       <summary>Gets or sets a value that indicates whether unobtrusive JavaScript is enabled.</summary>
       <returns>true if unobtrusive JavaScript is enabled; otherwise, false.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.ViewContext.ValidationMessageElement">
+      <summary>Element name used to wrap a top-level message generated by <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String)" /> and other overloads.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.ViewContext.ValidationSummaryMessageElement">
+      <summary>Element name used to wrap a top-level message generated by <see cref="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper)" /> and other overloads.</summary>
     </member>
     <member name="P:System.Web.Mvc.ViewContext.View">
       <summary>Gets an object that implements the <see cref="T:System.Web.Mvc.IView" /> interface to render in the browser.</summary>
@@ -7972,6 +8184,7 @@
     <member name="M:System.Web.Mvc.Ajax.AjaxOptions.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Ajax.AjaxOptions" /> class.</summary>
     </member>
+    <member name="P:System.Web.Mvc.Ajax.AjaxOptions.AllowCache"></member>
     <member name="P:System.Web.Mvc.Ajax.AjaxOptions.Confirm">
       <summary>Gets or sets the message to display in a confirmation window before a request is submitted.</summary>
       <returns>The message to display in a confirmation window.</returns>
@@ -8031,6 +8244,9 @@
     </member>
     <member name="F:System.Web.Mvc.Ajax.InsertionMode.Replace">
       <summary>Replace the element.</summary>
+    </member>
+    <member name="F:System.Web.Mvc.Ajax.InsertionMode.ReplaceWith">
+      <summary>Replace the entire element.</summary>
     </member>
     <member name="T:System.Web.Mvc.Async.AsyncActionDescriptor">
       <summary>Provides information about an asynchronous action method, such as its name, controller, parameters, attributes, and filters.</summary>
@@ -8158,6 +8374,13 @@
       <returns>true if the asynchronous method could be canceled; otherwise, false.</returns>
       <param name="asyncResult">The asynchronous result.</param>
     </member>
+    <member name="T:System.Web.Mvc.Async.IAsyncActionInvokerFactory">
+      <summary>Used to create an <see cref="T:System.Web.Mvc.Async.IAsyncActionInvoker" /> instance for the current request.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Async.IAsyncActionInvokerFactory.CreateInstance">
+      <summary>Creates an instance of async action invoker for the current request.</summary>
+      <returns>The created <see cref="T:System.Web.Mvc.Async.IAsyncActionInvoker" />.</returns>
+    </member>
     <member name="T:System.Web.Mvc.Async.IAsyncController">
       <summary>Defines the methods that are required for an asynchronous controller.</summary>
     </member>
@@ -8279,6 +8502,7 @@
       <param name="attributeType">The type of the custom attribute.</param>
       <param name="inherit">true to look up the hierarchy chain for the inherited custom attribute; otherwise, false.</param>
     </member>
+    <member name="P:System.Web.Mvc.Async.ReflectedAsyncActionDescriptor.MethodInfo"></member>
     <member name="P:System.Web.Mvc.Async.ReflectedAsyncActionDescriptor.UniqueId">
       <summary>Gets the lazy initialized unique ID of the instance of this class.</summary>
       <returns>The lazy initialized unique ID of the instance of this class.</returns>
@@ -8407,6 +8631,7 @@
       <param name="attributeType">The type of the custom attribute.</param>
       <param name="inherit">true to look up the hierarchy chain for the inherited custom attribute; otherwise, false.</param>
     </member>
+    <member name="P:System.Web.Mvc.Async.TaskAsyncActionDescriptor.MethodInfo"></member>
     <member name="P:System.Web.Mvc.Async.TaskAsyncActionDescriptor.TaskMethodInfo">
       <summary>Gets information for the asynchronous task.</summary>
       <returns>Information for the asynchronous task.</returns>
@@ -8965,25 +9190,25 @@
       <summary>Represents support for HTML in an application.</summary>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response. The form uses the POST method, and the request is processed by the action method for the view.</summary>
       <returns>An opening &lt;form&gt; tag. </returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.Object)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and includes the route values in the action attribute. The form uses the POST method, and the request is processed by the action method for the view.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="routeValues">An object that contains the parameters for a route. The parameters are retrieved through reflection by examining the properties of the object. This object is typically created by using object initializer syntax.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller and action. The form uses the POST method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
       <param name="controllerName">The name of the controller.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response, and sets the action tag to the specified controller, action, and route values. The form uses the POST method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -8991,7 +9216,7 @@
       <param name="routeValues">An object that contains the parameters for a route. The parameters are retrieved through reflection by examining the properties of the object. This object is typically created by using object initializer syntax.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object,System.Web.Mvc.FormMethod)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller, action, and route values. The form uses the specified HTTP method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9000,7 +9225,7 @@
       <param name="method">The HTTP method for processing the form, either GET or POST.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object,System.Web.Mvc.FormMethod,System.Object)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller, action, and route values. The form uses the specified HTTP method and includes the HTML attributes.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9010,7 +9235,7 @@
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Mvc.FormMethod)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller and action. The form uses the specified HTTP method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9018,7 +9243,7 @@
       <param name="method">The HTTP method for processing the form, either GET or POST.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Mvc.FormMethod,System.Collections.Generic.IDictionary{System.String,System.Object})">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller and action. The form uses the specified HTTP method and includes the HTML attributes from a dictionary.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9027,7 +9252,7 @@
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Mvc.FormMethod,System.Object)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and sets the action tag to the specified controller and action. The form uses the specified HTTP method and includes the HTML attributes.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9036,7 +9261,7 @@
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Routing.RouteValueDictionary)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response, and sets the action tag to the specified controller, action, and route values from the route value dictionary. The form uses the POST method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9044,7 +9269,7 @@
       <param name="routeValues">An object that contains the parameters for a route.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Mvc.FormMethod)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response, and sets the action tag to the specified controller, action, and route values from the route value dictionary. The form uses the specified HTTP method.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9053,7 +9278,7 @@
       <param name="method">The HTTP method for processing the form, either GET or POST.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Web.Mvc.FormMethod,System.Collections.Generic.IDictionary{System.String,System.Object})">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response, and sets the action tag to the specified controller, action, and route values from the route value dictionary. The form uses the specified HTTP method, and includes the HTML attributes from the dictionary.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="actionName">The name of the action method.</param>
@@ -9063,7 +9288,7 @@
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.FormExtensions.BeginForm(System.Web.Mvc.HtmlHelper,System.Web.Routing.RouteValueDictionary)">
-      <summary>Writes an opening &lt;form&gt; tag to the response. When the user submits the form, the request will be processed by an action method.</summary>
+      <summary>Writes an opening &lt;form&gt; tag to the response and includes the route values from the route value dictionary in the action attribute. The form uses the POST method, and the request is processed by the action method for the view.</summary>
       <returns>An opening &lt;form&gt; tag.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="routeValues">An object that contains the parameters for a route.</param>
@@ -9175,14 +9400,14 @@
       <returns>An input element whose type attribute is set to "checkbox".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field.</param>
-      <param name="isChecked">true to select the check box; otherwise, false.</param>
+      <param name="isChecked">true to select the check box; otherwise, false. The value of the check box is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a checked attribute in the html attributes.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBox(System.Web.Mvc.HtmlHelper,System.String,System.Boolean,System.Collections.Generic.IDictionary{System.String,System.Object})">
       <summary>Returns a check box input element by using the specified HTML helper, the name of the form field, a value to indicate whether the check box is selected, and the HTML attributes.</summary>
       <returns>An input element whose type attribute is set to "checkbox".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field.</param>
-      <param name="isChecked">true to select the check box; otherwise, false.</param>
+      <param name="isChecked">true to select the check box; otherwise, false. The value of the check box is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a checked attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBox(System.Web.Mvc.HtmlHelper,System.String,System.Boolean,System.Object)">
@@ -9190,7 +9415,7 @@
       <returns>An input element whose type attribute is set to "checkbox".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field.</param>
-      <param name="isChecked">true to select the check box; otherwise, false.</param>
+      <param name="isChecked">true to select the check box; otherwise, false. The value of the check box is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a checked attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBox(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
@@ -9244,14 +9469,14 @@
       <returns>An input element whose type attribute is set to "hidden".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the hidden input element. The value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object. If the element is not found in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" />, the value parameter is used.</param>
+      <param name="value">The value of the hidden input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Hidden(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
       <summary>Returns a hidden input element by using the specified HTML helper, the name of the form field, the value, and the HTML attributes.</summary>
       <returns>An input element whose type attribute is set to "hidden".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the hidden input element. The value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object. If the element is not found in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value parameter is used.</param>
+      <param name="value">The value of the hidden input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Hidden(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Object)">
@@ -9259,7 +9484,7 @@
       <returns>An input element whose type attribute is set to "hidden".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the hidden input element The value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object. If the element is not found in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value parameter is used.</param>
+      <param name="value">The value of the hidden input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
@@ -9299,14 +9524,14 @@
       <returns>An input element whose type attribute is set to "password".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the password input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the password input element. If a value for this parameter is not provided, the value attribute in the html attributes is used to retrieve the value.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Password(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
       <summary>Returns a password input element by using the specified HTML helper, the name of the form field, the value, and the HTML attributes.</summary>
       <returns>An input element whose type attribute is set to "password".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the password input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the password input element. If a value for this parameter is not provided, the value attribute in the html attributes is used to retrieve the value.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Password(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Object)">
@@ -9314,7 +9539,7 @@
       <returns>An input element whose type attribute is set to "password".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the password input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the password input element. If a value for this parameter is not provided, the value attribute in the html attributes is used to retrieve the value.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
@@ -9351,7 +9576,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
     </member>
@@ -9360,7 +9585,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="isChecked">true to select the radio button; otherwise, false.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
@@ -9370,7 +9595,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="isChecked">true to select the radio button; otherwise, false.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
@@ -9381,7 +9606,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="isChecked">true to select the radio button; otherwise, false.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
@@ -9392,7 +9617,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
@@ -9402,7 +9627,7 @@
       <returns>An input element whose type attribute is set to "radio".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
@@ -9412,7 +9637,7 @@
       <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="expression">An expression that identifies the object that contains the properties to render.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TProperty">The type of the value.</typeparam>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
@@ -9422,7 +9647,7 @@
       <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="expression">An expression that identifies the object that contains the properties to render.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TProperty">The type of the value.</typeparam>
@@ -9433,7 +9658,7 @@
       <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="expression">An expression that identifies the object that contains the properties to render.</param>
-      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="value">The value of the selected radio button. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TProperty">The type of the value.</typeparam>
@@ -9450,14 +9675,14 @@
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
       <summary>Returns a text input element by using the specified HTML helper, the name of the form field, the value, and the HTML attributes.</summary>
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.Object)">
@@ -9465,7 +9690,7 @@
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String)">
@@ -9473,7 +9698,7 @@
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="format">A string that is used to format the input.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
@@ -9481,7 +9706,7 @@
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="format">A string that is used to format the input.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
@@ -9490,7 +9715,7 @@
       <returns>An input element whose type attribute is set to "text".</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
-      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="value">The value of the text input element. The value is retrieved in this order - the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value of this parameter, the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object, and lastly, a value attribute in the html attributes.</param>
       <param name="format">A string that is used to format the input.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
@@ -9694,7 +9919,7 @@
       <summary>Represents support for HTML links in an application.</summary>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text and action.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9702,7 +9927,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, and route values.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9711,7 +9936,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object,System.Object)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, route values, and HTML attributes.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9721,7 +9946,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, and controller.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9730,7 +9955,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String,System.Object,System.Object)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, controller, route values, and HTML attributes.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9741,7 +9966,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String,System.String,System.String,System.String,System.Object,System.Object)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, controller, protocol, host name, URL fragment, route values, and HTML attributes.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9755,7 +9980,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String,System.String,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Collections.Generic.IDictionary{System.String,System.Object})">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, controller, protocol, host name, URL fragment, route values as a route value dictionary, and HTML attributes as a dictionary.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9769,7 +9994,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Collections.Generic.IDictionary{System.String,System.Object})">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, controller, route values as a route value dictionary, and HTML attributes as a dictionary.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9780,7 +10005,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Routing.RouteValueDictionary)">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, and route values as a route value dictionary.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -9789,7 +10014,7 @@
       <exception cref="T:System.ArgumentException">The <paramref name="linkText" /> parameter is null or empty.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.LinkExtensions.ActionLink(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Web.Routing.RouteValueDictionary,System.Collections.Generic.IDictionary{System.String,System.Object})">
-      <summary>Returns an anchor element (a element) that contains the virtual path of the specified action.</summary>
+      <summary>Returns an anchor element (a element) for the specified link text, action, route values as a route value dictionary, and HTML attributes as a dictionary.</summary>
       <returns>An anchor element (a element).</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="linkText">The inner text of the anchor element.</param>
@@ -10438,12 +10663,28 @@
       <param name="modelName">The name of the property or model object that is being validated.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+      <summary>Displays a validation message if an error exists for the specified entry in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
+      <returns>null if the entry is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="modelName">The name of the entry being validated.</param>
+      <param name="htmlAttributes">An <see cref="T:System.Collections.Generic.IDictionary`2" /> that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
+    </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.Object)">
       <summary>Displays a validation message if an error exists for the specified field in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
       <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
       <param name="htmlHelper">The HTML helper instance that this method extends.</param>
       <param name="modelName">The name of the property or model object that is being validated.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element. </param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String)">
+      <summary>Displays a validation message if an error exists for the specified entry in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
+      <returns>null if the entry is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="modelName">The name of the entry being validated.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.String)">
       <summary>Displays a validation message if an error exists for the specified field in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
@@ -10460,6 +10701,15 @@
       <param name="validationMessage">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+      <summary>Displays a validation message if an error exists for the specified entry in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
+      <returns>null if the model object is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="modelName">The name of the model object being validated.</param>
+      <param name="validationMessage">The message to display if the specified entry contains an error.</param>
+      <param name="htmlAttributes">An <see cref="T:System.Collections.Generic.IDictionary`2" /> that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
+    </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object)">
       <summary>Displays a validation message if an error exists for the specified field in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
       <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
@@ -10467,6 +10717,23 @@
       <param name="modelName">The name of the property or model object that is being validated.</param>
       <param name="validationMessage">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element. </param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object,System.String)">
+      <summary>Displays a validation message if an error exists for the specified entry in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
+      <returns>null if the entry is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="modelName">The name of the entry being validated.</param>
+      <param name="validationMessage">The message to display if the specified entry contains an error.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String,System.String,System.String)">
+      <summary>Displays a validation message if an error exists for the specified entry in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
+      <returns>null if the entry is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="modelName">The name of the entry being validated.</param>
+      <param name="validationMessage">The message to display if the specified entry contains an error.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
       <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression.</summary>
@@ -10495,6 +10762,17 @@
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
+      <summary>Returns the HTML markup for a validation-error message for the specified expression.</summary>
+      <returns>null if the model object is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if a validation error occurs.</param>
+      <param name="htmlAttributes">An <see cref="T:System.Collections.Generic.IDictionary`2" /> that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+    </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
       <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression, using the specified message and HTML attributes.</summary>
       <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
@@ -10502,6 +10780,27 @@
       <param name="expression">An expression that identifies the object that contains the properties to render.</param>
       <param name="validationMessage">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object,System.String)">
+      <summary>Returns the HTML markup for a validation-error message for the specified expression.</summary>
+      <returns>null if the model object is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if a validation error occurs.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.String)">
+      <summary>Returns the HTML markup for a validation-error message for the specified expression.</summary>
+      <returns>null if the model object is valid and client-side validation is disabled. Otherwise, a <paramref name="tag" /> element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method operates on.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if a validation error occurs.</param>
+      <param name="tag">The tag to be set for the wrapping HTML element of the validation message.</param>
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
@@ -10531,6 +10830,7 @@
       <param name="message">The message to display with the validation summary.</param>
       <param name="htmlAttributes">A dictionary that contains the HTML attributes for the element.</param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.Boolean,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)"></member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.Boolean,System.String,System.Object)">
       <summary>Returns an unordered list (ul element) of validation messages that are in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object and optionally displays only model-level errors.</summary>
       <returns>A string that contains an unordered list (ul element) of validation messages.</returns>
@@ -10539,6 +10839,8 @@
       <param name="message">The message to display with the validation summary.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.Boolean,System.String,System.Object,System.String)"></member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.Boolean,System.String,System.String)"></member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns an unordered list (ul element) of validation messages that are in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
       <returns>A string that contains an unordered list (ul element) of validation messages.</returns>
@@ -10552,6 +10854,7 @@
       <param name="message">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">A dictionary that contains the HTML attributes for the element.</param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object},System.String)"></member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.String,System.Object)">
       <summary>Returns an unordered list (ul element) of validation messages in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
       <returns>A string that contains an unordered list (ul element) of validation messages.</returns>
@@ -10559,6 +10862,8 @@
       <param name="message">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element. </param>
     </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String)"></member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper,System.String,System.String)"></member>
     <member name="T:System.Web.Mvc.Html.ValueExtensions">
       <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
     </member>
@@ -10646,6 +10951,50 @@
       <summary>Returns the ASP.NET MVC language-specific Razor code parser using the specified language parser.</summary>
       <returns>The ASP.NET MVC language-specific Razor code parser.</returns>
       <param name="incomingCodeParser">The C# or Visual Basic code parser.</param>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.DefaultDirectRouteProvider"></member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.#ctor"></member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetActionDirectRoutes(System.Web.Mvc.ActionDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Mvc.Routing.IDirectRouteFactory},System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>Creates <see cref="T:System.Web.Mvc.Routing.RouteEntry" /> instances based on the provided factories and action. The route entries provide direct routing to the provided action.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="actionDescriptor">The action descriptor.</param>
+      <param name="factories">The direct route factories.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetActionRouteFactories(System.Web.Mvc.ActionDescriptor)">
+      <summary>Gets a set of route factories for the given action descriptor.</summary>
+      <returns>A set of route factories.</returns>
+      <param name="actionDescriptor">The action descriptor.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetAreaPrefix(System.Web.Mvc.ControllerDescriptor)">
+      <summary>Gets the area prefix from the provided controller.</summary>
+      <returns>The area prefix or null.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetControllerDirectRoutes(System.Web.Mvc.ControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Mvc.ActionDescriptor},System.Collections.Generic.IReadOnlyList{System.Web.Mvc.Routing.IDirectRouteFactory},System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>Creates <see cref="T:System.Web.Mvc.Routing.RouteEntry" /> instances based on the provided factories, controller and actions. The route entries provided direct routing to the provided controller and can reach the set of provided actions.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors.</param>
+      <param name="factories">The direct route factories.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetControllerRouteFactories(System.Web.Mvc.ControllerDescriptor)">
+      <summary>Gets route factories for the given controller descriptor.</summary>
+      <returns>A set of route factories.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetDirectRoutes(System.Web.Mvc.ControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Mvc.ActionDescriptor},System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>Gets direct routes for the given controller descriptor and action descriptors based on <see cref="T:System.Web.Mvc.Routing.IDirectRouteFactory" /> attributes.</summary>
+      <returns>A set of route entries.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors for all actions.</param>
+      <param name="constraintResolver">The constraint resolver.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.DefaultDirectRouteProvider.GetRoutePrefix(System.Web.Mvc.ControllerDescriptor)">
+      <summary>Gets the route prefix from the provided controller.</summary>
+      <returns>The route prefix or null.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.DefaultInlineConstraintResolver">
       <summary>The default implementation of <see cref="T:System.Web.Mvc.Routing.IInlineConstraintResolver" />. Resolves constraints by parsing a constraint key and constraint arguments, using a map to resolve the constraint type, and calling an appropriate constructor for the constraint type.</summary>
@@ -10747,6 +11096,16 @@
       <summary>Creates a direct route entry.</summary>
       <returns>The direct route entry.</returns>
       <param name="context">The context to use to create the route.</param>
+    </member>
+    <member name="T:System.Web.Mvc.Routing.IDirectRouteProvider">
+      <summary>Defines a provider for routes that directly target action descriptors (attribute routes).</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Routing.IDirectRouteProvider.GetDirectRoutes(System.Web.Mvc.ControllerDescriptor,System.Collections.Generic.IReadOnlyList{System.Web.Mvc.ActionDescriptor},System.Web.Mvc.Routing.IInlineConstraintResolver)">
+      <summary>Gets the direct routes for a controller.</summary>
+      <returns>A set of route entries for the controller.</returns>
+      <param name="controllerDescriptor">The controller descriptor.</param>
+      <param name="actionDescriptors">The action descriptors.</param>
+      <param name="constraintResolver">The inline constraint resolver.</param>
     </member>
     <member name="T:System.Web.Mvc.Routing.IInlineConstraintResolver">
       <summary>Defines an abstraction for resolving inline constraints as instances of <see cref="T:System.Web.Routing.IRouteConstraint" />.</summary>

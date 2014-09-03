@@ -38,11 +38,11 @@ namespace Orchard.Core.Contents {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            // manage rights only for Creatable types
-            var creatableTypes = _contentDefinitionManager.ListTypeDefinitions()
-                .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable);
+            // manage rights only for Securable types
+            var securableTypes = _contentDefinitionManager.ListTypeDefinitions()
+                .Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Securable);
 
-            foreach (var typeDefinition in creatableTypes) {
+            foreach (var typeDefinition in securableTypes) {
                 foreach (var permissionTemplate in PermissionTemplates.Values) {
                     yield return CreateDynamicPermission(permissionTemplate, typeDefinition);
                 }

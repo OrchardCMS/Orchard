@@ -37,6 +37,7 @@
 .audittrail-list-section table .category-column,
 .audittrail-list-section table .event-column,
 .audittrail-list-section table .user-column,
+.audittrail-list-section table .client-ip-address-column,
 .audittrail-list-section table .timestamp-column {
     white-space: nowrap;
 }

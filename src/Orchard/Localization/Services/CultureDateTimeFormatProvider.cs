@@ -174,7 +174,7 @@ namespace Orchard.Localization.Services {
 
         public virtual string[] AmPmDesignators {
             get {
-                return new [] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
+                return new[] { DateTimeFormat.AMDesignator, DateTimeFormat.PMDesignator };
             }
         }
 
@@ -208,30 +208,7 @@ namespace Orchard.Localization.Services {
                     // "orphaned" (i.e. not supported for any culture!) in the .NET Framework, something generally
                     // considered a serious bug, I think it's justified to add this particular override
                     if (culture.Name == "fa-IR" && calendar is PersianCalendar) {
-                        var persianFormats = (DateTimeFormatInfo)culture.DateTimeFormat.Clone();
-                        var persianCalendarMonthNames = new[] {
-                            "فررودين",
-                            "ارديبهشت",
-                            "خرداد",
-                            "تير",
-                            "مرداد",
-                            "شهريور",
-                            "مهر",
-                            "آبان",
-                            "آذر",
-                            "دي",
-                            "بهمن",
-                            "اسفند",
-                            "" // 13 months names always necessary...
-                        };
-
-                        persianFormats.MonthNames = 
-                            persianFormats.AbbreviatedMonthNames = 
-                            persianFormats.MonthGenitiveNames = 
-                            persianFormats.AbbreviatedMonthGenitiveNames = 
-                            persianCalendarMonthNames;
-
-                        return persianFormats;
+                        return PersianDateTimeFormatInfo.Build(culture.DateTimeFormat);
                     }
                 }
 

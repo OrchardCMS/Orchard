@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.ContentPermissions</RootNamespace>
     <AssemblyName>Orchard.ContentPermissions</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModels\SecurableContentItemsSettingsViewModel.cs" />
     <Content Include="Styles\Images\lock.gif" />
     <Content Include="Styles\orchard-contentpermissions-admin.css" />
     <Content Include="Web.config" />
@@ -95,9 +96,13 @@
     <Compile Include="Drivers\ContentPermissionsPartDriver.cs" />
     <Compile Include="Models\ContentPermissionsPart.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Security\SecurableContentItemsAuthorizationEventHandler.cs" />
+    <Compile Include="Security\ContentPermissionsPartAuthorizationEventHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Services\DynamicPermissions.cs" />
     <Compile Include="Settings\ContentPermissionsPartSettings.cs" />
+    <Compile Include="Settings\ContentPermissionsTypeSettings.cs" />
+    <Compile Include="Settings\SecurableContentItemsEditorEvents.cs" />
     <Compile Include="ViewModels\ContentPermissionsPartViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\SecurableContentItemsSettingsViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

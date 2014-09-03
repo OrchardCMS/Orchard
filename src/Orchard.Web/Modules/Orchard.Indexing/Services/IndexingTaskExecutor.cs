@@ -206,7 +206,7 @@ namespace Orchard.Indexing.Services {
                     .Take(ContentItemsPerLoop)
                     .ToList()
                     .GroupBy(x => x.ContentItemRecord.Id)
-                    .Select(group => new {TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
+                    .Select(group => new { TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Latest) })
                     .OrderBy(x => x.TaskId)
                     .ToArray();
 

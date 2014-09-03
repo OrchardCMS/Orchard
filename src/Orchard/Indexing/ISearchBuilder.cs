@@ -27,11 +27,16 @@ namespace Orchard.Indexing {
         ISearchBuilder Forbidden();
 
         /// <summary>
+        /// Applied on string clauses, the searched value will not be tokenized.
+        /// </summary>
+        ISearchBuilder NotAnalyzed();
+
+        /// <summary>
         /// Applied on string clauses, it removes the default Prefix mecanism. Like 'broadcast' won't
-        /// return 'broadcasting'. 
+        /// return 'broadcasting'.
         /// </summary>
         ISearchBuilder ExactMatch();
-        
+
         /// <summary>
         /// Apply a specific boost to a clause.
         /// </summary>

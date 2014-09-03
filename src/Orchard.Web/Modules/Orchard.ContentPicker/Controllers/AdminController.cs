@@ -93,7 +93,7 @@ namespace Orchard.ContentPicker.Controllers {
                     .ToArray();
             }
             else {
-                contentTypes = GetCreatableTypes(false).ToList();
+                contentTypes = GetListableTypes(false).ToList();
             }
 
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
@@ -151,8 +151,8 @@ namespace Orchard.ContentPicker.Controllers {
             return new ShapeResult(this, Services.New.ContentPicker().Tab(tab));
         }
 
-        private IEnumerable<ContentTypeDefinition> GetCreatableTypes(bool andContainable) {
-            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable) {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Listable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
     }
 }

@@ -170,11 +170,25 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+        [FormValueRequired("submit.Save")]
+        public ActionResult AddWidgetSavePOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+            return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("AddWidget")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult AddWidgetPublishPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+            return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        private ActionResult AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
-            WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
+            var widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
             if (widgetPart == null)
                 return HttpNotFound();
 
@@ -182,6 +196,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
+                conditionallyPublish(widgetPart.ContentItem);
             }
             catch (Exception exception) {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
@@ -332,7 +347,7 @@ namespace Orchard.Widgets.Controllers {
             });
         }
 
-        public ActionResult EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private ActionResult EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 

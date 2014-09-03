@@ -87,7 +87,7 @@ namespace Orchard.ContentTypes.Services {
 
             var contentTypeDefinition = new ContentTypeDefinition(name, displayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
-            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable().Draftable().Listable());
+            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable().Draftable().Listable().Securable());
             _contentDefinitionEventHandlers.ContentTypeCreated(new ContentTypeCreatedContext { ContentTypeDefinition = contentTypeDefinition});
 
             return contentTypeDefinition;
@@ -195,22 +195,30 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public IEnumerable<EditPartViewModel> GetParts(bool metadataPartsOnly) {
-            var typeNames = GetTypes().Select(ctd => ctd.Name);
+            var typeNames = new HashSet<string>(GetTypes().Select(ctd => ctd.Name));
 
             // user-defined parts
             // except for those parts with the same name as a type (implicit type's part or a mistake)
-            var userContentParts = _contentDefinitionManager
-                .ListPartDefinitions()
+            var userContentParts = _contentDefinitionManager.ListPartDefinitions()
                 .Where(cpd => !typeNames.Contains(cpd.Name))
-                .Select(cpd => new EditPartViewModel(cpd));
+                .Select(cpd => new EditPartViewModel(cpd))
+                .ToDictionary(
+                    k => k.Name,
+                    v => v);
 
             // code-defined parts
-            var codeDefinedParts = metadataPartsOnly ?
-                Enumerable.Empty<EditPartViewModel>() :
-                _contentPartDrivers.SelectMany(d => d.GetPartInfo().Where(cpd => !userContentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
+            var codeDefinedParts = metadataPartsOnly
+                ? Enumerable.Empty<EditPartViewModel>()
+                : _contentPartDrivers
+                    .SelectMany(d => d.GetPartInfo()
+                        .Where(cpd => !userContentParts.ContainsKey(cpd.PartName))
+                        .Select(cpi => new EditPartViewModel { Name = cpi.PartName, DisplayName = cpi.PartName }))
+                    .ToList();
 
             // Order by display name
-            return userContentParts.Union(codeDefinedParts).OrderBy(m => m.DisplayName);
+            return codeDefinedParts
+                .Union(userContentParts.Values)
+                .OrderBy(m => m.DisplayName);
         }
 
         public EditPartViewModel GetPart(string name) {

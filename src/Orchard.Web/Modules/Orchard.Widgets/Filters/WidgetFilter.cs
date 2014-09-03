@@ -53,7 +53,7 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
+            IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart, LayerPartRecord>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {

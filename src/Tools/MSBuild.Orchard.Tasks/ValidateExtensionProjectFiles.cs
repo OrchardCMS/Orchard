@@ -96,15 +96,25 @@ namespace MSBuild.Orchard.Tasks {
                     .Elements(None);
 
                 foreach (var element in elements) {
-                    var include = (element.Attribute(Include) == null ? null : element.Attribute(Include).Value);
-                    bool isValid = string.IsNullOrEmpty(include);
+                    var filePath = (element.Attribute(Include) == null ? null : element.Attribute(Include).Value);
+                    bool isValid = IsValidExcludeFile(filePath);
                     if (!isValid) {
                         string message = string.Format(
                             "\"{0}\" element name for include \"{1}\" should be \"{2}\".",
-                            element.Name.LocalName, include, Content.LocalName);
+                            element.Name.LocalName, filePath, Content.LocalName);
                         AddValidationError(element, message);
                     }
                 }
+            }
+
+            private static bool IsValidExcludeFile(string filePath) {
+                var validExtensions = new[] { ".sass", ".scss", ".less", ".coffee", ".ls", ".ts", ".md", ".docx" };
+                if (string.IsNullOrEmpty(filePath)) return true;
+
+                var fileExtension = Path.GetExtension(filePath);
+                if (string.IsNullOrEmpty(fileExtension)) return false;
+
+                return validExtensions.Contains(fileExtension, StringComparer.InvariantCultureIgnoreCase);
             }
 
             private void CheckCodeAnalysisRuleSet(XDocument document) {

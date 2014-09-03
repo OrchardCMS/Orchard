@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Environment.Descriptor.Models;
@@ -57,11 +58,11 @@ namespace Orchard.Modules.Commands {
         [CommandName("feature enable")]
         public void Enable(params string[] featureNames) {
             Context.Output.WriteLine(T("Enabling features {0}", string.Join(",", featureNames)));
-            bool listAvailableFeatures = false;
-            List<string> featuresToEnable = new List<string>();
-            string[] availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Id).ToArray();
+            var listAvailableFeatures = false;
+            var featuresToEnable = new List<string>();
+            var availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Id).OrderBy(x => x).ToArray();
             foreach (var featureName in featureNames) {
-                if (availableFeatures.Contains(featureName)) {
+                if (availableFeatures.Contains(featureName, StringComparer.OrdinalIgnoreCase)) {
                     featuresToEnable.Add(featureName);
                 }
                 else {

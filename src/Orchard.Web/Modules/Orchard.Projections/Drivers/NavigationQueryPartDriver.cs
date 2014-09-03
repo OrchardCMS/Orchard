@@ -34,7 +34,7 @@ namespace Orchard.Projections.Drivers {
                     Items = part.Items,
                     Skip = part.Skip,
                     QueryRecordId = part.QueryPartRecord == null ? "-1" :　part.QueryPartRecord.Id.ToString(), 
-                    Queries = Services.ContentManager.Query<QueryPart>().Join<TitlePartRecord>().OrderBy(x => x.Title).List(),
+                    Queries = Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List(),
                 };
 
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);

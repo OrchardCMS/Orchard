@@ -493,12 +493,12 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(3).Add("media-path", "images/pets/kitties").Store());
 
             // Assert.That(SearchBuilder.WithField("media-path", "Pets").Mandatory().Count(), Is.EqualTo(0));
-            Assert.That(SearchBuilder.WithField("media-path", "Images").Mandatory().Count(), Is.EqualTo(3));
-            Assert.That(SearchBuilder.WithField("media-path", "Images").ExactMatch().Mandatory().Count(), Is.EqualTo(1));
-            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets").Mandatory().Count(), Is.EqualTo(2));
-            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets").ExactMatch().Mandatory().Count(), Is.EqualTo(0));
-            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets/Puppies").ExactMatch().Mandatory().Count(), Is.EqualTo(1));
-            Assert.That(SearchBuilder.WithField("media-path", "Images/Pets/Puppies").Mandatory().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("media-path", "images").NotAnalyzed().Mandatory().Count(), Is.EqualTo(3));
+            Assert.That(SearchBuilder.WithField("media-path", "images").NotAnalyzed().ExactMatch().Mandatory().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("media-path", "images/pets").NotAnalyzed().Mandatory().Count(), Is.EqualTo(2));
+            Assert.That(SearchBuilder.WithField("media-path", "images/pets").NotAnalyzed().ExactMatch().Mandatory().Count(), Is.EqualTo(0));
+            Assert.That(SearchBuilder.WithField("media-path", "images/pets/puppies").NotAnalyzed().ExactMatch().Mandatory().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("media-path", "images/pets/puppies").NotAnalyzed().Mandatory().Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -543,6 +543,7 @@ namespace Orchard.Tests.Modules.Indexing {
             // trying in full word match mode
             Assert.That(SearchBuilder.WithField("tag-value", "tag1").ExactMatch().Count(), Is.EqualTo(1));
             Assert.That(SearchBuilder.WithField("tag-value", "Tag1").ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(SearchBuilder.WithField("tag-value", "Tag1").NotAnalyzed().ExactMatch().Count(), Is.EqualTo(0));
         }
 
         [Test]
