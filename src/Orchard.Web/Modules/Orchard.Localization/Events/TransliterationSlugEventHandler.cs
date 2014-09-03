@@ -5,7 +5,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Events {
-    [OrchardFeature("Orchard.Localization.Transliteration")]
+    [OrchardFeature("Orchard.Localization.Transliteration.SlugGeneration")]
     public class TransliterationSlugEventHandler : ISlugEventHandler {
         private readonly ITransliterationService _transliterationService;
 

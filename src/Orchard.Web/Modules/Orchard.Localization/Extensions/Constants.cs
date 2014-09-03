@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Orchard.Localization {
+﻿namespace Orchard.Localization {
     public static class Constants {
         public static string TransliterationDefaultValue = @"
 [Input]

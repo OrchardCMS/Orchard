@@ -2,10 +2,11 @@ using System;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Services;
 
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Providers {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
     public class CultureStorageProvider : ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;

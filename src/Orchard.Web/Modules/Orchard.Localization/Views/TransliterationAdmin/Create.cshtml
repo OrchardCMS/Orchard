@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using Orchard.Localization
 @model Orchard.Localization.ViewModels.CreateTransliterationViewModel
 
 @{
@@ -7,7 +8,7 @@
     var value = Model.Rules;
 
     if (string.IsNullOrWhiteSpace(value)) {
-        value = Orchard.Localization.Constants.TransliterationDefaultValue;
+        value = Constants.TransliterationDefaultValue;
     }
 
     var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);

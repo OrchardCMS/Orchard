@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Providers;
 using Orchard.Localization.Records;
 using Orchard.Mvc;
 

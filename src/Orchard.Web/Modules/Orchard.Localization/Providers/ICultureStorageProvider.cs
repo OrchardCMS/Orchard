@@ -1,4 +1,4 @@
-namespace Orchard.Localization.Services {
+namespace Orchard.Localization.Providers {
     public interface ICultureStorageProvider : IDependency {
         void SetCulture(string culture);
         string GetCulture();

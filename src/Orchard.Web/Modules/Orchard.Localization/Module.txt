@@ -26,3 +26,8 @@ Features:
 		Category: Content
 		Name: Transliteration
 		Dependencies: Orchard.Localization
+	Orchard.Localization.Transliteration.SlugGeneration:
+		Description: Enabled transliteration of the slug when creating a piece of content
+		Category: Content
+		Name: Url Transliteration
+		Dependencies: Orchard.Localization.Transliteration
