@@ -76,8 +76,8 @@ namespace Orchard.Azure.MediaServices.Controllers {
 
             var presetPattern = new Regex(@"^[\w\s]*$");
             foreach (var preset in viewModel.EncodingSettings.WamsEncodingPresets) {
-                if (!presetPattern.IsMatch(preset)) {
-                    _services.Notifier.Error(T("The encoding preset '{0}' is invalid. Encoding presets can only contain letters, numbers and spaces.", preset));
+                if (!presetPattern.IsMatch(preset.Name)) {
+                    _services.Notifier.Error(T("The encoding preset name '{0}' is invalid. Encoding presets can only contain letters, numbers and spaces.", preset.Name));
                     return View("Index", viewModel);
                 }
             }

@@ -149,6 +149,7 @@
     <Content Include="Content\expressInstall.swf" />
     <Content Include="Content\MSAdaptiveStreamingPlugin.swf" />
     <Content Include="Content\StrobeMediaPlayback.swf" />
+    <Compile Include="Models\EncodingPreset.cs" />
     <Compile Include="Shapes\CloudVideoPlayerShape.cs" />
     <Compile Include="Helpers\BitExtensions.cs" />
     <Compile Include="Infrastructure\Assets\AssetDriverResult.cs" />
@@ -553,6 +554,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\lib\MPEG Dash Notice.docx" />
+    <Content Include="Styles\cloudmedia-admin-settings.css.map">
+      <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\cloudmedia-admin-common.js.map" />
