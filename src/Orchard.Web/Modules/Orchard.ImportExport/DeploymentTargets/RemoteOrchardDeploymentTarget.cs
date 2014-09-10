@@ -24,7 +24,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             if (targetConfiguration.Is<RemoteOrchardDeploymentPart>()) {
                 DeploymentPart = targetConfiguration.As<RemoteOrchardDeploymentPart>();
                 Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock));
-                return new DeploymentTargetMatch { DeploymentTarget = this, Priority = 0 };
+                return new DeploymentTargetMatch {DeploymentTarget = this, Priority = 0};
             }
             return null;
         }
@@ -38,11 +38,12 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var actionUrl = string.Format("import/recipejournal?executionId={0}", executionId);
             var journal = Client.Value.Get(actionUrl);
             var element = XElement.Parse(journal);
+            var statusElement = element.Element("Status");
             RecipeStatus status;
-            if (element.Element("Status") == null || !Enum.TryParse(element.Element("Status").Value, out status)) {
-                status = RecipeStatus.Unknown;
+            if (statusElement != null && Enum.TryParse(statusElement.Value, out status)) {
+                return status;
             }
-            return status;
+            return RecipeStatus.Unknown;
         }
 
         public void PushContent(IContent content) {

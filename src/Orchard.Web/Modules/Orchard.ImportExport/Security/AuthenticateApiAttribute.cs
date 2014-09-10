@@ -37,8 +37,8 @@ namespace Orchard.ImportExport.Security {
                     return;
                 }
 
-                var authenticationParts = authenticationString.Split(new[] { ":" },
-                        StringSplitOptions.RemoveEmptyEntries);
+                var authenticationParts = authenticationString.Split(new[] {":"},
+                    StringSplitOptions.RemoveEmptyEntries);
 
                 if (authenticationParts.Length != 2) {
                     actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
@@ -57,8 +57,7 @@ namespace Orchard.ImportExport.Security {
 
                 if (isAuthenticated &&
                     (authorizationService.TryCheckAccess(DeploymentPermissions.ImportFromDeploymentSources, user, null) ||
-                    authorizationService.TryCheckAccess(DeploymentPermissions.ExportToDeploymentTargets, user, null)))
-                {
+                     authorizationService.TryCheckAccess(DeploymentPermissions.ExportToDeploymentTargets, user, null))) {
                     authenticationService.SetAuthenticatedUserForRequest(user);
                 }
                 else {
@@ -71,10 +70,8 @@ namespace Orchard.ImportExport.Security {
             }
         }
 
-        private static string GetHttpRequestHeader(HttpHeaders headers, string headerName)
-        {
-            if (!headers.Contains(headerName))
-                return string.Empty;
+        private static string GetHttpRequestHeader(HttpHeaders headers, string headerName) {
+            if (!headers.Contains(headerName)) return string.Empty;
 
             return headers
                 .GetValues(headerName)

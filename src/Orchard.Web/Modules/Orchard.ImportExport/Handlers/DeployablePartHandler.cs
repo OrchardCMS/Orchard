@@ -11,8 +11,10 @@ namespace Orchard.ImportExport.Handlers {
     [OrchardFeature("Orchard.Deployment")]
     public class DeployablePartHandler : ContentHandler {
 
-        public DeployablePartHandler(IRepository<DeployablePartRecord> repository,
-            IClock clock) {
+        public DeployablePartHandler(
+            IRepository<DeployablePartRecord> repository,
+            IClock clock
+            ) {
 
             Filters.Add(StorageFilter.For(repository));
 
@@ -41,14 +43,14 @@ namespace Orchard.ImportExport.Handlers {
             var publishPart = context.ContentItem.As<DeployablePart>();
 
             var publishedUtc = context.Attribute("CommonPart", "PublishedUtc");
-            if (publishedUtc != null) {
-                var date = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
-                if (commonPart != null)
-                    commonPart.PublishedUtc = date;
+            if (publishedUtc == null) return;
+            
+            var date = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
+            if (commonPart != null)
+                commonPart.PublishedUtc = date;
 
-                if (publishPart != null)
-                    publishPart.ImportedPublishedUtc = date;
-            }
+            if (publishPart != null)
+                publishPart.ImportedPublishedUtc = date;
         }
     }
 }

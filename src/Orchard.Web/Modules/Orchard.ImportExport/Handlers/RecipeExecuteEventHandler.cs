@@ -20,12 +20,14 @@ namespace Orchard.ImportExport.Handlers {
         private readonly IRecipeSerializer _recipeSerializer;
         private readonly IClock _clock;
 
-        public RecipeExecuteEventHandler(IRecurringScheduledTaskManager recurringScheduledTaskManager,
+        public RecipeExecuteEventHandler(
+            IRecurringScheduledTaskManager recurringScheduledTaskManager,
             IContentManager contentManager,
             IRecipeJournal recipeJournal,
             IAppDataFolder appDataFolder,
             IRecipeSerializer recipeSerializer,
-            IClock clock) {
+            IClock clock
+            ) {
             _recurringScheduledTaskManager = recurringScheduledTaskManager;
             _contentManager = contentManager;
             _recipeJournal = recipeJournal;
@@ -36,8 +38,9 @@ namespace Orchard.ImportExport.Handlers {
 
         public void ExecutionStart(string executionId, Recipe recipe) {
             var deploymentMetaItems = (recipe.Description ?? string.Empty)
-                .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(DeploymentMetadata.FromDisplayString).ToList();
+                .Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(DeploymentMetadata.FromDisplayString)
+                .ToList();
 
             int subscriptionId;
             var subscriptionMeta = deploymentMetaItems.FirstOrDefault(m => m.Key == "Subscription");
@@ -81,24 +84,24 @@ namespace Orchard.ImportExport.Handlers {
         }
 
         public void RecipeStepExecuted(string executionId, RecipeContext context) {
-            if (context.RecipeStep.Name == "Data") {
-                int tempBatchSize, tempBatchStartIndex;
-                var itemCount = context.RecipeStep.Step.Elements().Count();
+            if (context.RecipeStep.Name != "Data") return;
 
-                if (context.RecipeStep.Step.Attribute("BatchSize") != null &&
-                    int.TryParse(context.RecipeStep.Step.Attribute("BatchSize").Value, out tempBatchSize) &&
-                    context.RecipeStep.Step.Attribute("BatchStartIndex") != null &&
-                    int.TryParse(context.RecipeStep.Step.Attribute("BatchStartIndex").Value, out tempBatchStartIndex)) {
+            int tempBatchSize, tempBatchStartIndex;
+            var itemCount = context.RecipeStep.Step.Elements().Count();
 
-                    var lastIndex = tempBatchStartIndex + tempBatchSize > itemCount - 1 ? itemCount - 1 : tempBatchStartIndex + tempBatchSize - 1;
-                    var firstId = context.RecipeStep.Step.Elements().ElementAt(tempBatchStartIndex).Attribute("Id");
-                    var lastId = context.RecipeStep.Step.Elements().ElementAt(lastIndex).Attribute("Id");
-                    _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported items {0} to {1}. First item id {2} to last item id {3}",
-                        tempBatchStartIndex + 1, lastIndex + 1, firstId.Value, lastId.Value).ToString());
-                }
-                else {
-                    _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported {0} items.", itemCount).ToString());
-                }
+            if (context.RecipeStep.Step.Attribute("BatchSize") != null &&
+                int.TryParse(context.RecipeStep.Step.Attribute("BatchSize").Value, out tempBatchSize) &&
+                context.RecipeStep.Step.Attribute("BatchStartIndex") != null &&
+                int.TryParse(context.RecipeStep.Step.Attribute("BatchStartIndex").Value, out tempBatchStartIndex)) {
+
+                var lastIndex = tempBatchStartIndex + tempBatchSize > itemCount - 1 ? itemCount - 1 : tempBatchStartIndex + tempBatchSize - 1;
+                var firstId = context.RecipeStep.Step.Elements().ElementAt(tempBatchStartIndex).Attribute("Id");
+                var lastId = context.RecipeStep.Step.Elements().ElementAt(lastIndex).Attribute("Id");
+                _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported items {0} to {1}. First item id {2} to last item id {3}",
+                    tempBatchStartIndex + 1, lastIndex + 1, firstId.Value, lastId.Value).ToString());
+            }
+            else {
+                _recipeJournal.WriteJournalEntry(executionId, T("Successfully imported {0} items.", itemCount).ToString());
             }
         }
 
@@ -112,13 +115,11 @@ namespace Orchard.ImportExport.Handlers {
             //Update subscription export date
             var task = _recurringScheduledTaskManager.GetTaskRunByExecutionId(executionId);
 
-            if (task == null || task.ContentItemRecord == null)
-                return;
+            if (task == null || task.ContentItemRecord == null) return;
 
             var subscription = _contentManager.Get<DeploymentSubscriptionPart>(task.ContentItemRecord.Id);
 
-            if (subscription == null)
-                return;
+            if (subscription == null) return;
 
             var journal = _recipeJournal.GetRecipeJournal(executionId);
             var exportUtcMeta = journal != null && journal.Messages != null ?

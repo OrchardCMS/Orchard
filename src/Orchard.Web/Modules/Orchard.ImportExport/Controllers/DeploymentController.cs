@@ -27,13 +27,15 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IAppDataFolder _appDataFolder;
         private readonly IRecipeJournal _recipeJournal;
 
-        public DeploymentController(IOrchardServices services,
+        public DeploymentController(
+            IOrchardServices services,
             IRecurringScheduledTaskManager taskManager,
             IDeploymentService deploymentService,
             IStorageProvider storageProvider,
             IAppDataFolder appDataFolder,
             IRecipeJournal recipeJournal,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory
+            ) {
             _taskManager = taskManager;
             _deploymentService = deploymentService;
             _storageProvider = storageProvider;
@@ -46,7 +48,7 @@ namespace Orchard.ImportExport.Controllers {
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
-        dynamic Shape { get; set; }
+        private dynamic Shape { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ViewDeploymentHistory, T("Not allowed to view deployment history."))) {
@@ -81,8 +83,7 @@ namespace Orchard.ImportExport.Controllers {
             return Index(null);
         }
 
-        public ActionResult QueueContent(int id, int targetId, string returnUrl = null)
-        {
+        public ActionResult QueueContent(int id, int targetId, string returnUrl = null) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to deploy content."))) {
                 return new HttpUnauthorizedResult();
             }
@@ -139,7 +140,7 @@ namespace Orchard.ImportExport.Controllers {
                 }
 
                 historyItem.ExecutionId = subscriptionRun.ExecutionId;
-                historyItem.SubscriptionId = subscriptionRun.ContentItemRecord != null ? (int?)subscriptionRun.ContentItemRecord.Id : null;
+                historyItem.SubscriptionId = subscriptionRun.ContentItemRecord != null ? (int?) subscriptionRun.ContentItemRecord.Id : null;
                 historyItem.RunStatus = subscriptionRun.RunStatus;
                 historyItem.RunStarted = subscriptionRun.RunStartUtc;
                 historyItem.RunCompleted = subscriptionRun.RunCompletedUtc;

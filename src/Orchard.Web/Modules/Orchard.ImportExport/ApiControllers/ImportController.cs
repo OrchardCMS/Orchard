@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Security;
@@ -21,25 +20,25 @@ namespace Orchard.ImportExport.ApiControllers {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeJournal _recipeJournal;
 
-        public ImportController(IOrchardServices services,
+        public ImportController(
+            IOrchardServices services,
             IImportExportService importExportService,
             IRecipeJournal recipeJournal,
             ISigningService signingService,
             IAuthenticationService authenticationService,
-            IClock clock,
-            IShapeFactory shapeFactory) : base(signingService, authenticationService, clock) {
+            IClock clock
+            ) : base(signingService, authenticationService, clock) {
+
             _importExportService = importExportService;
             _recipeJournal = recipeJournal;
             Services = services;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeFactory;
         }
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        dynamic Shape { get; set; }
 
         [AuthenticateApi]
         [HttpPost]

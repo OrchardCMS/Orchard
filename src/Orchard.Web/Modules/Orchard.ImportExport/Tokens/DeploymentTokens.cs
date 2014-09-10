@@ -13,7 +13,6 @@ namespace Orchard.ImportExport.Tokens {
             IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
 
-
             T = NullLocalizer.Instance;
         }
 
@@ -26,15 +25,18 @@ namespace Orchard.ImportExport.Tokens {
         }
 
         public void Evaluate(dynamic context) {
-            if (_workContextAccessor.GetContext().HttpContext == null) {
-                return;
-            }
-            context.For<RecipeRequest>("Deployment", _workContextAccessor.GetContext().GetState<RecipeRequest>("Deployment.RecipeRequest"))
-                .Token("DeployChangesAfter", (Func<RecipeRequest, object>)(FormatUtcDateAsLocal))
-                .Token("ContentTypes", (Func<RecipeRequest, object>)(FormatContentTypesString));
+            if (_workContextAccessor.GetContext().HttpContext == null) return;
+
+            context.For<RecipeRequest>("Deployment",
+                _workContextAccessor.GetContext()
+                    .GetState<RecipeRequest>("Deployment.RecipeRequest"))
+                .Token("DeployChangesAfter",
+                    (Func<RecipeRequest, object>) (FormatUtcDateAsLocal))
+                .Token("ContentTypes",
+                    (Func<RecipeRequest, object>) (FormatContentTypesString));
         }
 
-        private object FormatUtcDateAsLocal(RecipeRequest recipeRequest) {
+        private static object FormatUtcDateAsLocal(RecipeRequest recipeRequest) {
             if (recipeRequest == null || !recipeRequest.DeployChangesAfterUtc.HasValue)
                 return null;
 
@@ -50,7 +52,7 @@ namespace Orchard.ImportExport.Tokens {
             return date.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        private object FormatContentTypesString(RecipeRequest recipeRequest) {
+        private static object FormatContentTypesString(RecipeRequest recipeRequest) {
             if (recipeRequest == null || recipeRequest.ContentTypes == null)
                 return null;
 

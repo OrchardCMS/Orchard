@@ -16,9 +16,7 @@ namespace Orchard.ImportExport.Models {
             set { _value = CleanString(value, ";"); }
         }
 
-        public DeploymentMetadata() {
-
-        }
+        public DeploymentMetadata() {}
 
         public DeploymentMetadata(string key, string value) {
             Key = key;
@@ -40,7 +38,7 @@ namespace Orchard.ImportExport.Models {
             var key = displayString.Substring(0, displayString.IndexOf(':')).Trim();
             var value = displayString.Substring(displayString.IndexOf(':') + 1).Trim();
 
-            return !string.IsNullOrEmpty(key) ? new DeploymentMetadata { Key = key, Value = value } : null;
+            return !string.IsNullOrEmpty(key) ? new DeploymentMetadata {Key = key, Value = value} : null;
         }
 
         /// <summary>
@@ -55,14 +53,13 @@ namespace Orchard.ImportExport.Models {
             var key = exportStep.Substring(0, exportStep.IndexOf(':')).Replace(ExportStepPrefix, string.Empty).Trim();
             var value = exportStep.Substring(exportStep.IndexOf(':') + 1).Trim();
 
-            return !string.IsNullOrEmpty(key) ? new DeploymentMetadata { Key = key, Value = value } : null;
+            return !string.IsNullOrEmpty(key) ? new DeploymentMetadata {Key = key, Value = value} : null;
         }
 
         private static string CleanString(string input, params string[] illegalStrings) {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            return illegalStrings.Aggregate(input, (current, illegalString) => current.Replace(illegalString, string.Empty));
+            return string.IsNullOrEmpty(input) 
+                ? input 
+                : illegalStrings.Aggregate(input, (current, illegalString) => current.Replace(illegalString, string.Empty));
         }
     }
 }

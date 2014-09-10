@@ -19,12 +19,11 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public DeploymentSourceMatch Match(IContent sourceConfiguration) {
-            if (sourceConfiguration.Is<RemoteOrchardDeploymentPart>()) {
-                DeploymentPart = sourceConfiguration.As<RemoteOrchardDeploymentPart>();
-                Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock));
-                return new DeploymentSourceMatch { DeploymentSource = this, Priority = 0 };
-            }
-            return null;
+            if (!sourceConfiguration.Is<RemoteOrchardDeploymentPart>()) return null;
+            
+            DeploymentPart = sourceConfiguration.As<RemoteOrchardDeploymentPart>();
+            Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock));
+            return new DeploymentSourceMatch {DeploymentSource = this, Priority = 0};
         }
 
         public string GetRecipe(RecipeRequest request) {

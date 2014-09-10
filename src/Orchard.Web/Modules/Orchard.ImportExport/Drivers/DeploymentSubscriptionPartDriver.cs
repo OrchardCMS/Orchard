@@ -18,8 +18,10 @@ namespace Orchard.ImportExport.Drivers {
         private readonly IDeploymentService _deploymentService;
         private readonly Lazy<CultureInfo> _cultureInfo;
 
-        public DeploymentSubscriptionDriver(IOrchardServices orchardServices,
-            IDeploymentService deploymentService) {
+        public DeploymentSubscriptionDriver(
+            IOrchardServices orchardServices,
+            IDeploymentService deploymentService
+            ) {
             _orchardServices = orchardServices;
             _deploymentService = deploymentService;
 
@@ -40,7 +42,7 @@ namespace Orchard.ImportExport.Drivers {
             switch (part.DeploymentType) {
                 case DeploymentType.Export:
                     contentTypes = _orchardServices.ContentManager.GetContentTypeDefinitions()
-                        .Select(c => new DeploymentContentType { Name = c.Name, DisplayName = c.DisplayName }).ToList();
+                        .Select(c => new DeploymentContentType {Name = c.Name, DisplayName = c.DisplayName}).ToList();
                     queries = _orchardServices.ContentManager.Query("Query").List<QueryPart>().Select(q =>
                         new DeploymentQuery {
                             Name = q.Name,
@@ -60,7 +62,7 @@ namespace Orchard.ImportExport.Drivers {
                     throw new ArgumentOutOfRangeException();
             }
 
-            queries.Insert(0, new DeploymentQuery { Identity = string.Empty, Name = "None" });
+            queries.Insert(0, new DeploymentQuery {Identity = string.Empty, Name = "None"});
 
             var deploymentDescription = string.Empty;
             if (part.DeploymentConfiguration != null) {
@@ -77,19 +79,29 @@ namespace Orchard.ImportExport.Drivers {
                 DeploymentType = part.DeploymentType.ToString(),
                 DeploymentConfigurationId = part.DeploymentConfiguration != null ? part.DeploymentConfiguration.Id : 0,
                 DeploymentDescription = deploymentDescription,
-                FilterChoice= part.Filter.ToString(),
+                FilterChoice = part.Filter.ToString(),
                 DataImportChoice = part.VersionHistoryOption.ToString(),
                 Queries = queries,
                 SelectedQueryIdentity = part.QueryIdentity,
                 DeploymentConfigurations = deploymentConfigurations
             };
 
-            if (part.DeployedChangesToUtc.HasValue) {
-                // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
-                var localDate = new Lazy<DateTime>(() => TimeZoneInfo.ConvertTimeFromUtc(part.DeployedChangesToUtc.Value, _orchardServices.WorkContext.CurrentTimeZone));
-
-                viewModel.DeployedChangesToDisplay = string.Format("{0} {1}", localDate.Value.ToString("d", _cultureInfo.Value), localDate.Value.ToString("t", _cultureInfo.Value));
+            if (!part.DeployedChangesToUtc.HasValue) {
+                return ContentShape("Parts_DeploymentSubscription_Edit",
+                    () => shapeHelper.EditorTemplate(
+                        TemplateName: "Parts/Deployment.Subscription",
+                        Model: viewModel,
+                        Prefix: Prefix));
             }
+
+            // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
+            var localDate = new Lazy<DateTime>(() => TimeZoneInfo.ConvertTimeFromUtc(
+                part.DeployedChangesToUtc.Value,
+                _orchardServices.WorkContext.CurrentTimeZone));
+
+            viewModel.DeployedChangesToDisplay = string.Format("{0} {1}",
+                localDate.Value.ToString("d", _cultureInfo.Value),
+                localDate.Value.ToString("t", _cultureInfo.Value));
 
             return ContentShape("Parts_DeploymentSubscription_Edit",
                 () => shapeHelper.EditorTemplate(
@@ -102,36 +114,42 @@ namespace Orchard.ImportExport.Drivers {
         protected override DriverResult Editor(
             DeploymentSubscriptionPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new SubscriptionPartViewModel();
-            if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                //TODO:For now cannot edit target. to be added back in.
-                //var source = part.ContentItem.ContentManager.Get(viewModel.DeploymentConfigurationId);
-                //if (source != null) {
-                //    part.DeploymentConfiguration = source;
-                //}
-                //else {
-                //    updater.AddModelError("DeploymentConfigurationId", T("Subscription could not be saved as no target was provided."));
-                //}
-                part.IncludeMetadata = viewModel.Metadata;
-                part.IncludeData = viewModel.Data;
-                part.Filter = (FilterOptions)Enum.Parse(typeof(FilterOptions), viewModel.FilterChoice);
-                part.VersionHistoryOption = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice);
-                part.ContentTypes = viewModel.SelectedContentTypes.ToList();
-                part.QueryIdentity = viewModel.SelectedQueryIdentity;
-                part.DeploymentConfiguration = _orchardServices.ContentManager.Get(viewModel.DeploymentConfigurationId);
 
-                if (!string.IsNullOrWhiteSpace(viewModel.DeployedChangesToDate) && !string.IsNullOrWhiteSpace(viewModel.DeployedChangesToTime)) {
-                    DateTime scheduled;
-                    string parseDateTime = String.Concat(viewModel.DeployedChangesToDate, " ", viewModel.DeployedChangesToTime);
+            if (!updater.TryUpdateModel(viewModel, Prefix, null, null)) return Editor(part, shapeHelper);
+            
+            //TODO:For now cannot edit target. to be added back in.
+            //var source = part.ContentItem.ContentManager.Get(viewModel.DeploymentConfigurationId);
+            //if (source != null) {
+            //    part.DeploymentConfiguration = source;
+            //}
+            //else {
+            //    updater.AddModelError("DeploymentConfigurationId", T("Subscription could not be saved as no target was provided."));
+            //}
+            part.IncludeMetadata = viewModel.Metadata;
+            part.IncludeData = viewModel.Data;
+            part.Filter = (FilterOptions) Enum.Parse(typeof (FilterOptions), viewModel.FilterChoice);
+            part.VersionHistoryOption = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice);
+            part.ContentTypes = viewModel.SelectedContentTypes.ToList();
+            part.QueryIdentity = viewModel.SelectedQueryIdentity;
+            part.DeploymentConfiguration = _orchardServices.ContentManager.Get(viewModel.DeploymentConfigurationId);
 
-                    // use current culture
-                    if (DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
-                        // the date time is entered locally for the configured timezone
-                        var timeZone = _orchardServices.WorkContext.CurrentTimeZone;
-
-                        part.DeployedChangesToUtc = TimeZoneInfo.ConvertTimeToUtc(scheduled, timeZone);
-                    }
-                }
+            if (string.IsNullOrWhiteSpace(viewModel.DeployedChangesToDate)
+                || string.IsNullOrWhiteSpace(viewModel.DeployedChangesToTime)) {
+                return Editor(part, shapeHelper);
             }
+
+            DateTime scheduled;
+            var parseDateTime = String.Concat(viewModel.DeployedChangesToDate, " ", viewModel.DeployedChangesToTime);
+
+            // use current culture
+            if (!DateTime.TryParse(parseDateTime, _cultureInfo.Value, DateTimeStyles.None, out scheduled)) {
+                return Editor(part, shapeHelper);
+            }
+
+            // the date time is entered locally for the configured timezone
+            var timeZone = _orchardServices.WorkContext.CurrentTimeZone;
+
+            part.DeployedChangesToUtc = TimeZoneInfo.ConvertTimeToUtc(scheduled, timeZone);
 
             return Editor(part, shapeHelper);
         }

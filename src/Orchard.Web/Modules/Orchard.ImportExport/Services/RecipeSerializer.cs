@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using Orchard.Recipes.Models;
 
 namespace Orchard.ImportExport.Services {
@@ -20,8 +21,13 @@ namespace Orchard.ImportExport.Services {
                     )
                 );
 
+            var orchardElement = exportDocument.Element("Orchard");
+            if (orchardElement == null) {
+                throw new InvalidOperationException();
+            }
+
             foreach (var step in recipe.RecipeSteps) {
-                exportDocument.Element("Orchard").Add(step.Step);
+                orchardElement.Add(step.Step);
             }
 
             return exportDocument.ToString();

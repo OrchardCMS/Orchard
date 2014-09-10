@@ -30,15 +30,15 @@ namespace Orchard.ImportExport.RecipeHandlers {
             var importContentSession = new ImportContentSession(_orchardServices.ContentManager);
 
             foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
-                if (element.Attribute("Id") == null)
-                    continue;
+                var idElement = element.Attribute("Id");
+                if (idElement == null) continue;
 
-                var identity = element.Attribute("Id").Value;
-                if (!string.IsNullOrEmpty(identity)) {
-                    var item = importContentSession.Get(identity, VersionOptions.Published, element.Name.LocalName);
-                    if (item != null) {
-                        _orchardServices.ContentManager.Unpublish(item);
-                    }
+                var identity = idElement.Value;
+                if (string.IsNullOrEmpty(identity)) continue;
+                
+                var item = importContentSession.Get(identity, VersionOptions.Published, element.Name.LocalName);
+                if (item != null) {
+                    _orchardServices.ContentManager.Unpublish(item);
                 }
             }
 

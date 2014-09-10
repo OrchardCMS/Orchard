@@ -32,7 +32,7 @@ namespace Orchard.ImportExport.Controllers {
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        dynamic Shape { get; set; }
+        private dynamic Shape { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
@@ -48,7 +48,8 @@ namespace Orchard.ImportExport.Controllers {
             var pagerShape = Shape.Pager(pager).TotalItemCount(configs.Count());
 
             configs = configs
-                .Skip(pager.GetStartIndex()).Take(pager.PageSize)
+                .Skip(pager.GetStartIndex())
+                .Take(pager.PageSize)
                 .ToList();
 
             dynamic viewModel = Shape.ViewModel()
@@ -67,7 +68,7 @@ namespace Orchard.ImportExport.Controllers {
             dynamic viewModel = Shape.ViewModel(ContentTypes: sourceAndTargetTypes);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View("CreatableTypeList", (object)viewModel);
+            return View("CreatableTypeList", (object) viewModel);
         }
 
         public ActionResult TestConnection(int id) {

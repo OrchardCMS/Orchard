@@ -27,12 +27,14 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IDeploymentService _deploymentService;
         private readonly IRecipeJournal _recipeJournal;
 
-        public SubscriptionController(IOrchardServices services,
+        public SubscriptionController(
+            IOrchardServices services,
             ISubscriptionService subscriptionService,
             IRecurringScheduledTaskManager recurringScheduledTaskManager,
             IDeploymentService deploymentService,
             IRecipeJournal recipeJournal,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory
+            ) {
             _orchardServices = services;
             _subscriptionService = subscriptionService;
             _recurringScheduledTaskManager = recurringScheduledTaskManager;
@@ -45,7 +47,7 @@ namespace Orchard.ImportExport.Controllers {
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
-        dynamic Shape { get; set; }
+        private dynamic Shape { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
@@ -59,8 +61,11 @@ namespace Orchard.ImportExport.Controllers {
             var pagerShape = Shape.Pager(pager).TotalItemCount(subscriptions.Count());
 
             return View(new SubscriptionsViewModel {
-                Subscriptions = subscriptions.Skip(pager.GetStartIndex()).Take(pager.PageSize).ToList()
-                .Select(PopulateSubscriptionSummary).ToList(),
+                Subscriptions = subscriptions
+                    .Skip(pager.GetStartIndex())
+                    .Take(pager.PageSize)
+                    .Select(PopulateSubscriptionSummary)
+                    .ToList(),
                 Pager = pagerShape
             });
         }
@@ -72,14 +77,14 @@ namespace Orchard.ImportExport.Controllers {
             var model = new CreateSubscriptionViewModel {
                 Sources = _deploymentService.GetDeploymentSourceConfigurations(),
                 Targets = _deploymentService.GetDeploymentTargetConfigurations(),
-                SubscriptionTypes = new List<string> { DeploymentType.Export.ToString(), DeploymentType.Import.ToString() }
+                SubscriptionTypes = new List<string> {DeploymentType.Export.ToString(), DeploymentType.Import.ToString()}
             };
 
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST() {
+        public ActionResult CreatePost() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
                 return new HttpUnauthorizedResult();
 
@@ -88,8 +93,8 @@ namespace Orchard.ImportExport.Controllers {
             if (!TryUpdateModel(model) || !ModelState.IsValid) {
                 model.Sources = _deploymentService.GetDeploymentSourceConfigurations();
                 model.Targets = _deploymentService.GetDeploymentTargetConfigurations();
-                model.SubscriptionTypes = new List<string> { DeploymentType.Import.ToString(), DeploymentType.Export.ToString() };
-                return View((object)model);
+                model.SubscriptionTypes = new List<string> {DeploymentType.Import.ToString(), DeploymentType.Export.ToString()};
+                return View(model);
             }
             var subscription = _orchardServices.ContentManager.New("DeploymentSubscription").As<DeploymentSubscriptionPart>();
             _orchardServices.ContentManager.Create(subscription);
@@ -103,7 +108,7 @@ namespace Orchard.ImportExport.Controllers {
 
             Services.Notifier.Information(T("Subscription {0} created successfully", subscription.Title));
 
-            return RedirectToAction("Edit", new { id = subscription.Id });
+            return RedirectToAction("Edit", new {id = subscription.Id});
         }
 
         public ActionResult Edit(int id) {
@@ -115,11 +120,11 @@ namespace Orchard.ImportExport.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(subscription);
-            return View((object)model);
+            return View((object) model);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(int id) {
+        public ActionResult EditPost(int id) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
                 return new HttpUnauthorizedResult();
 
@@ -128,7 +133,7 @@ namespace Orchard.ImportExport.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View((object)model);
+                return View((object) model);
             }
 
             Services.Notifier.Information(T("Subscription {0} updated successfully", subscription.Title));

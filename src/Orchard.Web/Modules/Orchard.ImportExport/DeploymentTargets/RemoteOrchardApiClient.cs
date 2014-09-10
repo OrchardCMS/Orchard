@@ -31,15 +31,17 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
             using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, null)) {
                 using (var stream = webClient.OpenRead(fullyQualifiedUri.ToString())) {
+                    if (stream == null) {
+                        throw new WebException("Deployment API did not return a valid stream.");
+                    }
                     using (var reader = new StreamReader(stream)) {
-                        string json = reader.ReadToEnd();
+                        var json = reader.ReadToEnd();
                         stream.Close();
                         reader.Close();
 
                         if (!ResponseIsValid(json,
                             webClient.ResponseHeaders[_signingService.TimestampHeaderName],
-                            webClient.ResponseHeaders[_signingService.ContentHashHeaderName]))
-                        {
+                            webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
                             throw new WebException("Deployment API response does not contain a valid hash");
                         }
 
@@ -59,10 +61,10 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 webClient.Headers["Content-Type"] = contentType;
                 var result = webClient.UploadString(fullyQualifiedUri.ToString(), data);
 
-                if (!ResponseIsValid(result, 
+                if (!ResponseIsValid(result,
                     webClient.ResponseHeaders[_signingService.TimestampHeaderName],
                     webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                        throw new WebException("Deployment API response does not contain a valid hash");
+                    throw new WebException("Deployment API response does not contain a valid hash");
                 }
                 return result;
             }
@@ -76,7 +78,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         private WebClient CreateWebClient(string username, string timestamp, string signature, string contentHash) {
             var webClient = new WebClient {Encoding = Encoding.UTF8};
-            webClient.Headers[_signingService.AuthenticationHeaderName] = 
+            webClient.Headers[_signingService.AuthenticationHeaderName] =
                 string.Format("{0}:{1}", username, HttpUtility.UrlEncode(signature));
             webClient.Headers[_signingService.TimestampHeaderName] = timestamp;
             if (!string.IsNullOrEmpty(contentHash)) {

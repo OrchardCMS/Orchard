@@ -20,8 +20,8 @@ namespace Orchard.ImportExport.Controllers {
         private readonly IRecipeJournal _recipeJournal;
 
         public AdminController(
-            IOrchardServices services, 
-            IImportExportService importExportService, 
+            IOrchardServices services,
+            IImportExportService importExportService,
             IContentDefinitionManager contentDefinitionManager,
             ICustomExportStep customExportStep,
             IRecipeJournal recipeJournal
@@ -44,22 +44,23 @@ namespace Orchard.ImportExport.Controllers {
         }
 
         [HttpPost, ActionName("Import")]
-        public ActionResult ImportPOST() {
+        public ActionResult ImportPost() {
             if (!Services.Authorizer.Authorize(ImportExportPermissions.Import, T("Not allowed to import.")))
                 return new HttpUnauthorizedResult();
 
-            if (String.IsNullOrEmpty(Request.Files["RecipeFile"].FileName)) {
+            var recipeFile = Request.Files["RecipeFile"];
+            if (recipeFile == null || String.IsNullOrEmpty(recipeFile.FileName)) {
                 ModelState.AddModelError("RecipeFile", T("Please choose a recipe file to import.").Text);
                 Services.Notifier.Error(T("Please choose a recipe file to import."));
+                return View(new ImportViewModel());
             }
 
-            if (ModelState.IsValid) {
-                var executionId = _importExportService.Import(new StreamReader(Request.Files["RecipeFile"].InputStream).ReadToEnd());
-                Services.Notifier.Information(T("Your recipe has been imported."));
+            if (!ModelState.IsValid) return View(new ImportViewModel());
 
-                return RedirectToAction("ImportResult", new { ExecutionId = executionId });
-            }
-            return View(new ImportViewModel());
+            var executionId = _importExportService.Import(new StreamReader(recipeFile.InputStream).ReadToEnd());
+            Services.Notifier.Information(T("Your recipe has been imported."));
+
+            return RedirectToAction("ImportResult", new {ExecutionId = executionId});
         }
 
         public ActionResult ImportResult(string executionId) {
@@ -73,20 +74,21 @@ namespace Orchard.ImportExport.Controllers {
 
             var viewModel = new ExportViewModel {
                 ContentTypes = new List<ContentTypeEntry>(),
-                CustomSteps = customSteps.Select(x => new CustomStepEntry { CustomStep = x }).ToList()
+                CustomSteps = customSteps.Select(x => new CustomStepEntry {CustomStep = x}).ToList()
             };
 
             foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
-                viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
+                viewModel.ContentTypes.Add(new ContentTypeEntry {ContentTypeName = contentType.Name});
             }
 
             return View(viewModel);
         }
 
         [HttpPost, ActionName("Export")]
-        public ActionResult ExportPOST() {
-            if (!Services.Authorizer.Authorize(ImportExportPermissions.Export, T("Not allowed to export.")))
+        public ActionResult ExportPost() {
+            if (!Services.Authorizer.Authorize(ImportExportPermissions.Export, T("Not allowed to export."))) {
                 return new HttpUnauthorizedResult();
+            }
 
             var viewModel = new ExportViewModel {
                 ContentTypes = new List<ContentTypeEntry>(),
@@ -96,16 +98,16 @@ namespace Orchard.ImportExport.Controllers {
             UpdateModel(viewModel);
             var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
             var customSteps = viewModel.CustomSteps.Where(c => c.IsChecked).Select(c => c.CustomStep);
-            
+
             var exportOptions = new ExportOptions {
-                ExportMetadata = viewModel.Metadata, 
+                ExportMetadata = viewModel.Metadata,
                 ExportSiteSettings = viewModel.SiteSettings,
                 CustomSteps = customSteps
             };
 
             if (viewModel.Data) {
                 exportOptions.ExportData = true;
-                exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
+                exportOptions.VersionHistoryOptions = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice, true);
             }
             var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
             return File(exportFilePath, "text/xml", "export.xml");

@@ -6,16 +6,21 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
+using Orchard.Localization;
 
 namespace Orchard.ImportExport.Handlers {
     [OrchardFeature("Orchard.Deployment")]
     public class ExportUnpublishedEventHandler : IExportEventHandler, ICustomExportStep {
         public const string StepName = "ExportUnpublishedContent";
+
         private readonly IContentManager _contentManager;
 
         public ExportUnpublishedEventHandler(IContentManager contentManager) {
             _contentManager = contentManager;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void Register(IList<string> steps) {
             steps.Add(StepName);
@@ -29,8 +34,7 @@ namespace Orchard.ImportExport.Handlers {
             var unpublishedDataStep = context.ExportOptions.CustomSteps
                 .FirstOrDefault(step => step.StartsWith(StepName));
 
-            if (unpublishedDataStep == null)
-                return;
+            if (unpublishedDataStep == null) return;
 
             DateTime? unpublishedFrom = null;
 
@@ -39,14 +43,20 @@ namespace Orchard.ImportExport.Handlers {
                 var unpublishedFromStr = unpublishedDataStep.Substring(unpublishedDataStep.IndexOf(':')).TrimStart(':');
 
                 DateTime tempDate;
-                if (DateTime.TryParse(unpublishedFromStr, out tempDate))
+                if (DateTime.TryParse(unpublishedFromStr, out tempDate)) {
                     unpublishedFrom = tempDate.ToUniversalTime();
+                }
             }
 
             var unpublishedElement = ExportUnpublishedData(unpublishedFrom, context.ContentTypes);
 
-            if (unpublishedElement.Elements().Any())
-                context.Document.Element("Orchard").Add(ExportUnpublishedData(unpublishedFrom, context.ContentTypes));
+            if (!unpublishedElement.Elements().Any()) return;
+            
+            var orchardElement = context.Document.Element("Orchard");
+            if (orchardElement == null) {
+                throw new InvalidOperationException(T("Recipe has no Orchard top-level element.").Text);
+            }
+            orchardElement.Add(ExportUnpublishedData(unpublishedFrom, context.ContentTypes));
         }
 
         private XElement ExportUnpublishedData(DateTime? unpublishedFromUtc, IEnumerable<string> contentTypes) {
@@ -63,21 +73,21 @@ namespace Orchard.ImportExport.Handlers {
         }
 
         private IEnumerable<ContentItem> GetUnpublishedContentItems(DateTime? unpublishedFromUtc, IEnumerable<string> contentTypes) {
-            var query = _contentManager.HqlQuery().ForType(contentTypes.ToArray()).ForPart<DeployablePart>().ForVersion(VersionOptions.AllVersions);
+            Action<IHqlExpressionFactory> gtPredicate = exp => exp.Gt("UnpublishedUtc", unpublishedFromUtc);
+            Action<IHqlExpressionFactory> notNullPredicate = exp => exp.IsNotNull("UnpublishedUtc");
+            var predicate = unpublishedFromUtc.HasValue ? gtPredicate : notNullPredicate;
 
-            if (unpublishedFromUtc.HasValue) {
-                query = query.Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.Gt("UnpublishedUtc", unpublishedFromUtc));
-            }
-            else {
-                query = query.Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.IsNotNull("UnpublishedUtc"));
-            }
-
-            query = query.Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.Eq("Latest", true));
-
-            //Needed to fix bug with HQL in orchard 1.7 pre-release where query would fail if order not specified
-            query = query.OrderBy(a => a.ContentItem(), o => o.Asc("Id"));
-
-            return query.List().Select(c => c.ContentItem);
+            return _contentManager.HqlQuery()
+                .ForType(contentTypes.ToArray())
+                .ForPart<DeployablePart>()
+                .ForVersion(VersionOptions.AllVersions)
+                .Where(a => a.ContentPartRecord(typeof (DeployablePartRecord)), predicate)
+                .Where(a => a.ContentPartRecord(typeof (DeployablePartRecord)), exp => exp.Eq("Latest", true))
+                //Needed to fix bug with HQL in orchard 1.7 pre-release where query would fail if order not specified
+                .OrderBy(a => a.ContentItem(), o => o.Asc("Id"))
+                .List()
+                .Select(c => c.ContentItem)
+                .ToList();
         }
     }
 }

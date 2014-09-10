@@ -15,7 +15,11 @@ namespace Orchard.ImportExport.Services {
         private readonly ICacheManager _cacheManager;
         private readonly IClock _clock;
 
-        public SigningService(ShellSettings shellSettings, ICacheManager cacheManager, IClock clock) {
+        public SigningService(
+            ShellSettings shellSettings,
+            ICacheManager cacheManager,
+            IClock clock
+            ) {
             _shellSettings = shellSettings;
             _cacheManager = cacheManager;
             _clock = clock;
@@ -31,7 +35,7 @@ namespace Orchard.ImportExport.Services {
         public string TimestampHeaderName {
             get { return "Timestamp"; }
         }
-        
+
         public string ContentHashHeaderName {
             get { return "ContentHash"; }
         }
@@ -96,30 +100,22 @@ namespace Orchard.ImportExport.Services {
             }
 
             var verifiedHash = ComputeHash(secret, message);
-            if (signature != null && signature.Equals(verifiedHash))
-                return true;
-
-            return false;
+            return signature != null && signature.Equals(verifiedHash);
         }
 
         private bool IsDateValidated(string timestampString) {
             DateTime timestamp;
 
-            bool isDateTime = DateTime.TryParse(timestampString, null,
+            var isDateTime = DateTime.TryParse(timestampString, null,
                 DateTimeStyles.AssumeUniversal, out timestamp);
 
-            if (!isDateTime)
-                return false;
+            if (!isDateTime) return false;
 
             var now = _clock.UtcNow;
             timestamp = timestamp.ToUniversalTime();
-            if (timestamp < now.AddMinutes(-5))
-                return false;
+            if (timestamp < now.AddMinutes(-5)) return false;
 
-            if (timestamp > now.AddMinutes(5))
-                return false;
-
-            return true;
+            return timestamp <= now.AddMinutes(5);
         }
     }
 }

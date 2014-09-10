@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
+using Orchard.Localization;
 
 namespace Orchard.ImportExport.Handlers {
     [OrchardFeature("Orchard.Deployment")]
@@ -15,7 +16,10 @@ namespace Orchard.ImportExport.Handlers {
 
         public UnpublishedExportEventHandler(IContentManager contentManager) {
             _contentManager = contentManager;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void Register(IList<string> steps) {
             steps.Add(StepName);
@@ -29,8 +33,7 @@ namespace Orchard.ImportExport.Handlers {
             var unpublishedDataStep = context.ExportOptions.CustomSteps
                 .FirstOrDefault(step => step.StartsWith(StepName));
 
-            if (unpublishedDataStep == null)
-                return;
+            if (unpublishedDataStep == null) return;
 
             DateTime? unpublishedFrom = null;
 
@@ -45,8 +48,13 @@ namespace Orchard.ImportExport.Handlers {
 
             var unpublishedElement = ExportUnpublishedData(unpublishedFrom, context.ContentTypes);
 
-            if (unpublishedElement.Elements().Any())
-                context.Document.Element("Orchard").Add(ExportUnpublishedData(unpublishedFrom, context.ContentTypes));
+            if (!unpublishedElement.Elements().Any()) return;
+            
+            var orchardElement = context.Document.Element("Orchard");
+            if (orchardElement == null) {
+                throw new InvalidOperationException(T("Recipe document does not have a Orchard top-level element.").Text);
+            }
+            orchardElement.Add(ExportUnpublishedData(unpublishedFrom, context.ContentTypes));
         }
 
         private XElement ExportUnpublishedData(DateTime? unpublishedFromUtc, IEnumerable<string> contentTypes) {
@@ -63,18 +71,20 @@ namespace Orchard.ImportExport.Handlers {
         }
 
         private IEnumerable<ContentItem> GetUnpublishedContentItems(DateTime? unpublishedFromUtc, IEnumerable<string> contentTypes) {
-            var query = _contentManager.HqlQuery().ForType(contentTypes.ToArray()).ForPart<DeployablePart>().ForVersion(VersionOptions.AllVersions);
+            Action<IHqlExpressionFactory> gtPredicate = exp => exp.Gt("UnpublishedUtc", unpublishedFromUtc);
+            Action<IHqlExpressionFactory> notNullPredicate = exp => exp.IsNotNull("UnpublishedUtc");
+            var predicate = unpublishedFromUtc.HasValue ? gtPredicate : notNullPredicate;
 
-            if (unpublishedFromUtc.HasValue) {
-                query = query.Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.Gt("UnpublishedUtc", unpublishedFromUtc));
-            }
-            else {
-                query = query.Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.IsNotNull("UnpublishedUtc"));
-            }
-
-            query = query.OrderBy(a => a.ContentItem(), o => o.Asc("Id"))
-                .Where(a => a.ContentPartRecord(typeof(DeployablePartRecord)), exp => exp.Eq("Latest", true));
-            return query.List().Select(c => c.ContentItem);
+            return _contentManager.HqlQuery()
+                .ForType(contentTypes.ToArray())
+                .ForPart<DeployablePart>()
+                .ForVersion(VersionOptions.AllVersions)
+                .Where(a => a.ContentPartRecord(typeof (DeployablePartRecord)), predicate)
+                .OrderBy(a => a.ContentItem(), o => o.Asc("Id"))
+                .Where(a => a.ContentPartRecord(typeof (DeployablePartRecord)), exp => exp.Eq("Latest", true))
+                .List()
+                .Select(c => c.ContentItem)
+                .ToList();
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Handlers;
 using Orchard.ImportExport.Models;
@@ -25,25 +24,25 @@ namespace Orchard.ImportExport.ApiControllers {
         private readonly IImportExportService _importExportService;
         private readonly IDeploymentService _deploymentService;
 
-        public ExportController(IOrchardServices services,
+        public ExportController(
+            IOrchardServices services,
             IImportExportService importExportService,
             IDeploymentService deploymentService,
             ISigningService signingService,
             IAuthenticationService authenticationService,
-            IClock clock,
-            IShapeFactory shapeFactory) : base(signingService,authenticationService,clock) {
+            IClock clock
+            ) : base(signingService, authenticationService, clock) {
+
             _importExportService = importExportService;
             _deploymentService = deploymentService;
             Services = services;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeFactory;
         }
 
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        dynamic Shape { get; set; }
 
         [AuthenticateApi]
         [HttpPost]
@@ -54,14 +53,13 @@ namespace Orchard.ImportExport.ApiControllers {
             var exportingItems = _deploymentService.GetContentForExport(request);
 
             var unpublishStep = UnpublishedExportEventHandler.StepName +
-                (request.DeployChangesAfterUtc.HasValue ? ":" + request.DeployChangesAfterUtc.Value.ToString("u") : string.Empty);
+                                (request.DeployChangesAfterUtc.HasValue ? ":" + request.DeployChangesAfterUtc.Value.ToString("u") : string.Empty);
 
             var exportSteps = request.DeploymentMetadata != null ?
                 request.DeploymentMetadata.Select(m => m.ToExportStep()).ToList() : new List<string>();
             exportSteps.Add(unpublishStep);
 
-            var recipePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions
-            {
+            var recipePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions {
                 ExportData = exportingItems.Any(),
                 ExportMetadata = request.IncludeMetadata,
                 VersionHistoryOptions = request.VersionHistoryOption,
@@ -79,12 +77,12 @@ namespace Orchard.ImportExport.ApiControllers {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);
 
             var queries = Services.ContentManager.Query<QueryPart, QueryPartRecord>()
-                                  .ForType(new[] { "Query" }).List()
-                                  .Select(q =>
-                                          new DeploymentQuery {
-                                              Name = q.Name,
-                                              Identity = Services.ContentManager.GetItemMetadata(q.ContentItem).Identity.ToString()
-                                          }).ToList();
+                .ForType(new[] {"Query"}).List()
+                .Select(q =>
+                    new DeploymentQuery {
+                        Name = q.Name,
+                        Identity = Services.ContentManager.GetItemMetadata(q.ContentItem).Identity.ToString()
+                    }).ToList();
 
             var content = JsonConvert.SerializeObject(queries);
             return CreateSignedResponse(content);
@@ -97,7 +95,7 @@ namespace Orchard.ImportExport.ApiControllers {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);
 
             var contentTypes = Services.ContentManager.GetContentTypeDefinitions()
-                .Select(c => new DeploymentContentType { Name = c.Name, DisplayName = c.DisplayName }).ToList();
+                .Select(c => new DeploymentContentType {Name = c.Name, DisplayName = c.DisplayName}).ToList();
 
             var content = JsonConvert.SerializeObject(contentTypes);
             return CreateSignedResponse(content);

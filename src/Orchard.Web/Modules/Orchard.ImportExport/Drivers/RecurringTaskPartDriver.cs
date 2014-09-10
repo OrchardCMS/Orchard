@@ -11,8 +11,10 @@ namespace Orchard.ImportExport.Drivers {
     public class RecurringTaskPartDriver : ContentPartDriver<RecurringTaskPart> {
         private readonly IRecurringScheduledTaskManager _taskManager;
 
-        public RecurringTaskPartDriver(IRecurringScheduledTaskManager taskManager,
-            IOrchardServices services) {
+        public RecurringTaskPartDriver(
+            IRecurringScheduledTaskManager taskManager,
+            IOrchardServices services
+            ) {
             _taskManager = taskManager;
             T = NullLocalizer.Instance;
             Services = services;
@@ -42,9 +44,9 @@ namespace Orchard.ImportExport.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
             part.RepeatFrequencyInMinutes = model.RepeatFrequencyInMinutes;
             part.IsActive = model.IsActive;
-
-            if (model.IsActive)//Schedule date time is not required if the task is run on demand
-            {
+            
+            //Schedule date time is not required if the task is run on demand
+            if (model.IsActive) {
                 _taskManager.ScheduleTaskForNextRun(part, true);
             }
 

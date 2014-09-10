@@ -1,5 +1,4 @@
-﻿
-namespace Orchard.ImportExport.Models {
+﻿namespace Orchard.ImportExport.Models {
     public enum DeploymentAction {
         Deploy,
         Queue

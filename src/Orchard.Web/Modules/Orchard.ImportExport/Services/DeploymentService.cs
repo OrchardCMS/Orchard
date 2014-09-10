@@ -20,11 +20,13 @@ namespace Orchard.ImportExport.Services {
         private readonly Lazy<IEnumerable<IDeploymentTargetProvider>> _deploymentTargetProviders;
         private readonly IClock _clock;
 
-        public DeploymentService(IOrchardServices orchardServices,
+        public DeploymentService(
+            IOrchardServices orchardServices,
             IProjectionManager projectionManager,
             Lazy<IEnumerable<IDeploymentSourceProvider>> deploymentSourceProviders,
             Lazy<IEnumerable<IDeploymentTargetProvider>> deploymentTargetProviders,
-            IClock clock) {
+            IClock clock
+            ) {
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
             _deploymentSourceProviders = deploymentSourceProviders;
@@ -49,8 +51,9 @@ namespace Orchard.ImportExport.Services {
                 .OrderByDescending(match => match.Priority)
                 .FirstOrDefault();
 
-            return bestSourceProviderMatch != null ?
-                bestSourceProviderMatch.DeploymentSource : null;
+            return bestSourceProviderMatch != null
+                ? bestSourceProviderMatch.DeploymentSource
+                : null;
         }
 
         public IDeploymentTarget GetDeploymentTarget(IContent configuration) {
@@ -60,34 +63,55 @@ namespace Orchard.ImportExport.Services {
                 .OrderByDescending(match => match.Priority)
                 .FirstOrDefault();
 
-            return bestTargetProviderMatch != null ?
-                bestTargetProviderMatch.DeploymentTarget : null;
+            return bestTargetProviderMatch != null
+                ? bestTargetProviderMatch.DeploymentTarget
+                : null;
         }
 
         public List<IContent> GetDeploymentSourceConfigurations() {
-            return _orchardServices.ContentManager.Query(GetDeploymentConfigurationContentTypes().Select(c => c.Name).ToArray())
-                .List<IContent>().Where(config =>
+            return _orchardServices.ContentManager
+                .Query(
+                    GetDeploymentConfigurationContentTypes()
+                        .Select(c => c.Name)
+                        .ToArray())
+                .List<IContent>()
+                .Where(config =>
                     GetDeploymentSource(config) != null)
-                    .ToList();
+                .ToList();
         }
 
         public List<IContent> GetDeploymentTargetConfigurations() {
-            return _orchardServices.ContentManager.Query(GetDeploymentConfigurationContentTypes().Select(c => c.Name).ToArray())
-                .List<IContent>().Where(config =>
+            return _orchardServices.ContentManager
+                .Query(
+                    GetDeploymentConfigurationContentTypes()
+                        .Select(c => c.Name)
+                        .ToArray())
+                .List<IContent>()
+                .Where(config =>
                     GetDeploymentTarget(config) != null)
-                    .ToList();
+                .ToList();
         }
 
         public List<ContentTypeDefinition> GetDeploymentConfigurationContentTypes() {
             return _orchardServices.ContentManager.GetContentTypeDefinitions()
-                .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") &&
-                    contentTypeDefinition.Settings["Stereotype"].Split(',').Select(s => s.Trim())
-                    .Contains("DeploymentConfiguration")).ToList();
+                .Where(contentTypeDefinition =>
+                    contentTypeDefinition.Settings
+                        .ContainsKey("Stereotype")
+                    && contentTypeDefinition.Settings["Stereotype"]
+                        .Split(',')
+                        .Select(s => s.Trim())
+                        .Contains("DeploymentConfiguration"))
+                .ToList();
         }
 
         public List<DeployableItemTargetPart> GetItemsPendingDeployment(IContent deploymentTarget) {
-            return _orchardServices.ContentManager.Query<DeployableItemTargetPart, DeployableItemTargetPartRecord>()
-                .Where(c => c.DeploymentTargetId == deploymentTarget.Id && c.DeploymentStatus == DeploymentStatus.Queued.ToString()).List().ToList();
+            return _orchardServices.ContentManager
+                .Query<DeployableItemTargetPart, DeployableItemTargetPartRecord>()
+                .Where(c =>
+                    c.DeploymentTargetId == deploymentTarget.Id
+                    && c.DeploymentStatus == DeploymentStatus.Queued.ToString())
+                .List()
+                .ToList();
         }
 
         public DeployableItemTargetPart GetDeploymentItemTarget(IContent deployableContent, IContent targetConfiguration, bool createIfNotFound = true) {
@@ -95,15 +119,20 @@ namespace Orchard.ImportExport.Services {
                 throw new ArgumentException("deployableContent");
             }
 
-            var itemTarget = _orchardServices.ContentManager.Query<DeployableItemTargetPart, DeployableItemTargetPartRecord>()
-                .Where(c => c.DeployableContentId == deployableContent.Id && c.DeploymentTargetId == targetConfiguration.Id)
-                .Slice(0, 2).SingleOrDefault();
+            var itemTarget = _orchardServices.ContentManager
+                .Query<DeployableItemTargetPart, DeployableItemTargetPartRecord>()
+                .Where(c => 
+                    c.DeployableContentId == deployableContent.Id
+                    && c.DeploymentTargetId == targetConfiguration.Id)
+                .Slice(0, 2)
+                .SingleOrDefault();
 
-            if (itemTarget == null && createIfNotFound) {
-                itemTarget = _orchardServices.ContentManager.Create<DeployableItemTargetPart>("DeployableItemTarget");
-                itemTarget.DeployableContent = deployableContent.As<DeployablePart>();
-                itemTarget.DeploymentTarget = targetConfiguration;
+            if (itemTarget != null || !createIfNotFound) {
+                return itemTarget;
             }
+            itemTarget = _orchardServices.ContentManager.Create<DeployableItemTargetPart>("DeployableItemTarget");
+            itemTarget.DeployableContent = deployableContent.As<DeployablePart>();
+            itemTarget.DeploymentTarget = targetConfiguration;
 
             return itemTarget;
         }
@@ -117,67 +146,82 @@ namespace Orchard.ImportExport.Services {
 
         public void DeployContentToTarget(IContent content, IContent targetConfiguration) {
             var deploymentTarget = GetDeploymentTarget(targetConfiguration);
-            if (deploymentTarget != null) {
-                var itemTarget = GetDeploymentItemTarget(content, targetConfiguration);
-                try {
-                    deploymentTarget.PushContent(content);
-                    itemTarget.DeploymentStatus = DeploymentStatus.Successful;
-                }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error deploying content item {0}", content.Id);
-                    itemTarget.DeploymentStatus = DeploymentStatus.Failed;
-                }
-
-                itemTarget.DeployedUtc = _clock.UtcNow;
+            if (deploymentTarget == null) return;
+            
+            var itemTarget = GetDeploymentItemTarget(content, targetConfiguration);
+            try {
+                deploymentTarget.PushContent(content);
+                itemTarget.DeploymentStatus = DeploymentStatus.Successful;
             }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error deploying content item {0}", content.Id);
+                itemTarget.DeploymentStatus = DeploymentStatus.Failed;
+            }
+
+            itemTarget.DeployedUtc = _clock.UtcNow;
         }
 
         public List<ContentItem> GetContentForExport(RecipeRequest request, int? queuedToTargetId = null) {
             var contentItems = new List<ContentItem>();
 
             //ensure date is specified as Utc
-            var deployChangesAfterUtc = request.DeployChangesAfterUtc.HasValue ? new DateTime(request.DeployChangesAfterUtc.Value.Ticks, DateTimeKind.Utc) : (DateTime?)null;
+            var deployChangesAfterUtc = request.DeployChangesAfterUtc.HasValue ? new DateTime(request.DeployChangesAfterUtc.Value.Ticks, DateTimeKind.Utc) : (DateTime?) null;
 
             if (request.ContentIdentities != null && request.ContentIdentities.Any()) {
                 return request.ContentIdentities
-                    .Select(c => _orchardServices.ContentManager.ResolveIdentity(new ContentIdentity(c)))
+                    .Select(c => _orchardServices.ContentManager
+                        .ResolveIdentity(new ContentIdentity(c)))
                     .Where(c => c != null).ToList();
             }
-            
+
             if (!string.IsNullOrEmpty(request.QueryIdentity)) {
-                var query = _orchardServices.ContentManager.ResolveIdentity(new ContentIdentity(request.QueryIdentity));
-                return _projectionManager.GetContentItems(query.Id).ToList();
+                var queryItem = _orchardServices.ContentManager
+                    .ResolveIdentity(new ContentIdentity(request.QueryIdentity));
+                return _projectionManager.GetContentItems(queryItem.Id).ToList();
             }
 
-            if (request.ContentTypes != null && request.ContentTypes.Any()) {
-                var version = request.VersionHistoryOption.HasFlag(VersionHistoryOptions.Draft) ? VersionOptions.Draft : VersionOptions.Published;
-                var query = _orchardServices.ContentManager.HqlQuery()
-                    .ForType(request.ContentTypes.ToArray())
-                    .ForVersion(version);
-
-                if (queuedToTargetId.HasValue) {
-                    var pendingItems = _orchardServices.ContentManager.Query<DeployableItemTargetPart>()
-                        .Where<DeployableItemTargetPartRecord>(c => c.DeploymentStatus == DeploymentStatus.Queued.ToString() &&
-                        c.DeploymentTargetId == queuedToTargetId.Value).List().Select(c => c.DeployableContent.Id).ToList();
-
-                    if (!pendingItems.Any()) {
-                        //if there are no queued items, no need to run outer query
-                        return contentItems;
-                    }
-
-                    query = query.Where(a => a.ContentItem(), p => p.In("Id", pendingItems));
-                }
-
-                if (deployChangesAfterUtc.HasValue) {
-                    var changeDateField = request.VersionHistoryOption == VersionHistoryOptions.Published ? "PublishedUtc" : "ModifiedUtc";
-                    query = query.Where(a => a.ContentPartRecord(typeof(CommonPartRecord)), exp => exp.Gt(changeDateField, deployChangesAfterUtc));
-                }
-              
-                //Order by id so that dependencies are usually imported first
-                //Also needed to fix bug with HQL in orchard 1.7 pre-release where query would fail if order not specified
-                query = query.OrderBy(a => a.ContentItem(), o => o.Asc("Id"));
-                contentItems = query.List().ToList();
+            if (request.ContentTypes == null || !request.ContentTypes.Any()) {
+                return contentItems;
             }
+            var version = request.VersionHistoryOption.HasFlag(VersionHistoryOptions.Draft)
+                ? VersionOptions.Draft
+                : VersionOptions.Published;
+            var query = _orchardServices.ContentManager.HqlQuery()
+                .ForType(request.ContentTypes.ToArray())
+                .ForVersion(version);
+
+            if (queuedToTargetId.HasValue) {
+                var pendingItems = _orchardServices.ContentManager
+                    .Query<DeployableItemTargetPart>()
+                    .Where<DeployableItemTargetPartRecord>(c =>
+                        c.DeploymentStatus == DeploymentStatus.Queued.ToString()
+                        && c.DeploymentTargetId == queuedToTargetId.Value)
+                    .List()
+                    .Select(c => c.DeployableContent.Id)
+                    .ToList();
+
+                if (!pendingItems.Any()) {
+                    //if there are no queued items, no need to run outer query
+                    return contentItems;
+                }
+
+                query = query.Where(a => a.ContentItem(), p => p.In("Id", pendingItems));
+            }
+
+            if (deployChangesAfterUtc.HasValue) {
+                var changeDateField =
+                    request.VersionHistoryOption == VersionHistoryOptions.Published
+                    ? "PublishedUtc"
+                    : "ModifiedUtc";
+                query = query.Where(
+                    a => a.ContentPartRecord(typeof (CommonPartRecord)),
+                    exp => exp.Gt(changeDateField, deployChangesAfterUtc));
+            }
+
+            //Order by id so that dependencies are usually imported first
+            //Also needed to fix bug with HQL in orchard 1.7 pre-release where query would fail if order not specified
+            query = query.OrderBy(a => a.ContentItem(), o => o.Asc("Id"));
+            contentItems = query.List().ToList();
 
             return contentItems;
         }

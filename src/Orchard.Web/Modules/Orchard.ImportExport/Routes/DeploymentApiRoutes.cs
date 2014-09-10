@@ -9,7 +9,7 @@ namespace Orchard.ImportExport.Routes {
     public class DeploymentApiRoutes : IHttpRouteProvider {
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
-            foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
+            foreach (var routeDescriptor in GetRoutes()) {
                 routes.Add(routeDescriptor);
             }
         }
