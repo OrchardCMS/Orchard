@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using Orchard.Alias.Implementation.Holder;
 using Orchard.Alias.Implementation.Storage;
 using Orchard.Mvc.Routes;
 using Orchard.Utility.Extensions;
@@ -13,12 +14,15 @@ namespace Orchard.Alias.Implementation {
         private readonly IAliasStorage _aliasStorage;
         private readonly IEnumerable<IRouteProvider> _routeProviders;
         private readonly Lazy<IEnumerable<RouteDescriptor>> _routeDescriptors;
+        private readonly IAliasHolder _aliasHolder;
 
         public DefaultAliasService(
             IAliasStorage aliasStorage,
-            IEnumerable<IRouteProvider> routeProviders) {
+            IEnumerable<IRouteProvider> routeProviders,
+            IAliasHolder aliasHolder) {
             _aliasStorage = aliasStorage;
             _routeProviders = routeProviders;
+            _aliasHolder = aliasHolder;
 
             _routeDescriptors = new Lazy<IEnumerable<RouteDescriptor>>(GetRouteDescriptors);
         }
@@ -79,7 +83,14 @@ namespace Orchard.Alias.Implementation {
         }
 
         public IEnumerable<string> Lookup(RouteValueDictionary routeValues) {
-            return List().Where(item => item.Item2.Match(routeValues)).Select(item=>item.Item1).ToList();
+            if (routeValues.ContainsKey("area")) {
+                var map = _aliasHolder.GetMap(routeValues["area"].ToString());
+                if (map == null) {
+                    return Enumerable.Empty<string>();
+                }
+                return new[] { map.Locate(routeValues).Item2 };
+            }
+            return _aliasHolder.GetMaps().Where(map => map.Locate(routeValues) != null).Select(map => map.Locate(routeValues).Item2);
         }
         
         public IEnumerable<Tuple<string, RouteValueDictionary>> List() {
