@@ -83,14 +83,37 @@ namespace Orchard.Alias.Implementation {
         }
 
         public IEnumerable<string> Lookup(RouteValueDictionary routeValues) {
-            if (routeValues.ContainsKey("area")) {
-                var map = _aliasHolder.GetMap(routeValues["area"].ToString());
+            object area;
+
+            if (routeValues.TryGetValue("area", out area)) {
+                // the route has an area, lookup in the specific alias map
+
+                var map = _aliasHolder.GetMap(area.ToString());
+                
                 if (map == null) {
                     return Enumerable.Empty<string>();
                 }
-                return new[] { map.Locate(routeValues).Item2 };
+
+                var locate = map.Locate(routeValues);
+
+                if (locate == null) {
+                    return Enumerable.Empty<string>();
+                }
+
+                return new[] { locate.Item2 };
             }
-            return _aliasHolder.GetMaps().Where(map => map.Locate(routeValues) != null).Select(map => map.Locate(routeValues).Item2);
+            
+            // no specific area, lookup in all alias maps
+            var result = new List<string>();
+            foreach (var map in _aliasHolder.GetMaps()) {
+                var locate = map.Locate(routeValues);
+
+                if (locate != null) {
+                    result.Add(locate.Item2);
+                }
+            }
+
+            return result;
         }
         
         public IEnumerable<Tuple<string, RouteValueDictionary>> List() {
