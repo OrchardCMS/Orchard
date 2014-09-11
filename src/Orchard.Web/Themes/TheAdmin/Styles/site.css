@@ -1438,7 +1438,6 @@ html.dir-rtl {
 }
 .dir-rtl .contentItems.bulk-items li {
     padding-left:inherit;
-    padding-right:.6em;
 }
 .dir-rtl #main .contentItems li .actions {
     padding:0 .1em .1em 0;
