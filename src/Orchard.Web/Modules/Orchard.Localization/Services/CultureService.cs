@@ -30,6 +30,10 @@ namespace Orchard.Localization.Services {
             var culture = _cultureStorageProvider.GetCulture();
 
             if (culture == null) {
+                var httpContext = _httpContextAccessor.Current();
+
+                if (httpContext == null) return null;
+
                 var browserCulture = GetBrowserCulture();
 
                 if (browserCulture == null)
