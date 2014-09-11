@@ -31,7 +31,6 @@ namespace Orchard.Templates.Services {
 
         public bool TryGetDescriptorBinding(string shapeType, out ShapeBinding shapeBinding) {
             var processors = BuildShapeProcessors();
-            Func<dynamic, IHtmlString> processor;
 
             TemplateResult templateResult = null;
             if (processors.TryGetValue(shapeType, out templateResult)) {
