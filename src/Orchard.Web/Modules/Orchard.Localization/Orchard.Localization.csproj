@@ -98,7 +98,6 @@
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\TransliterationService.cs" />
     <Compile Include="Events\TransliterationSlugEventHandler.cs" />
-    <Compile Include="ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="ViewModels\CreateTransliterationViewModel.cs" />
@@ -116,9 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Translate.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\CultureSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Localization.ContentTranslations.Edit.cshtml" />

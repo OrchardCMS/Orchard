@@ -1,54 +1,8 @@
-@model AddLocalizationViewModel
-@using Orchard.Localization.ViewModels;
 @{
-    dynamic content = Model.Content;
-    content.Zones.Content.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");
-
     Layout.Title = T("Translate Content").ToString();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
-    @Display(Model.Content)
-}
-@using (Script.Foot()) {
-<script type="text/javascript">
-//<![CDATA[
-    (function ($) {
-        "use strict";
-
-        // grab the slug input
-        var slug = $("#Autoroute_CurrentUrl");
-        if (slug) {
-            // grab the current culture
-            var culture = $("#SelectedCulture");
-            var currentCulture = culture.val();
-            // when the culture is changed update the slug
-            culture.change(function () {
-                var slugValue = slug.val();
-                var newCulture = $(this).val();
-                if (slugValue && slugValue.match(currentCulture + "$")) {
-                    slug.val(slugValue.replace(new RegExp(currentCulture + "$", "i"), newCulture));
-                    currentCulture = newCulture;
-                }
-            });
-        }
-
-        var culture = $("#SelectedCulture");
-        culture.change(function () {
-            var optionDirectionality = $("option:selected", this).attr("data-content-dir");
-            var contentZone = $(".zone-content");
-            if (contentZone.hasClass(optionDirectionality))
-                return;
-
-            var oldClass = optionDirectionality === "ltr" ? "rtl" : "";
-
-            contentZone.removeClass("content-" + oldClass);
-            contentZone.addClass("content-" + optionDirectionality);
-
-            $(document).trigger("localization.ui.directionalitychanged", optionDirectionality);
-        });
-    })(jQuery);
-//]]>
-</script>
+    @Display(Model)
 }

@@ -39,10 +39,33 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
-            var localizations = GetEditorLocalizations(part).ToList();
+            List<LocalizationPart> localizations = GetEditorLocalizations(part).ToList();
+
+            var siteCultures = _cultureManager.ListCultures().ToList();
+
+            List<string> missingCultures;
+             
+            if (part.MasterContentItem != null) {
+                var localizationPart = part.MasterContentItem.As<LocalizationPart>();
+                missingCultures =
+                    siteCultures.Where(s => GetEditorLocalizations(localizationPart).All(l => l.Culture.Culture != s))
+                        .ToList();
+
+                missingCultures.Remove(localizationPart.Culture.Culture);
+            }
+            else {
+                missingCultures =
+                    siteCultures.Where(s => GetEditorLocalizations(part).All(l => l.Culture.Culture != s))
+                        .ToList();
+
+                if (part.Culture != null)
+                    missingCultures.Remove(part.Culture.Culture);
+            }
+
             var model = new EditLocalizationViewModel {
                 SelectedCulture = GetCulture(part),
-                SiteCultures = _cultureManager.ListCultures().Where(s => !localizations.Any(l => l.Culture.Culture == s)).ToList(),
+                SiteCultures = siteCultures,
+                MissingCultures = missingCultures,
                 ContentItem = part,
                 MasterContentItem = part.MasterContentItem,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
@@ -84,7 +107,7 @@ namespace Orchard.Localization.Drivers {
                     return c;
                 }).ToList();
         }
-
+        
         protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
             var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
             if (masterContentItem != null) {

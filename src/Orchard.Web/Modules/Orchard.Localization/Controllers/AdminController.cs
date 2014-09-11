@@ -37,58 +37,32 @@ namespace Orchard.Localization.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Translate(int id, string to) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
-
-            if (contentItem == null)
+            var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
+            if (masterContentItem == null)
                 return HttpNotFound();
 
-            var lp = contentItem.As<LocalizationPart>();
-
-            if (lp == null)
+            var masterLocalizationPart = masterContentItem.As<LocalizationPart>();
+            if (masterLocalizationPart == null)
                 return HttpNotFound();
 
-            string contentItemCulture = _localizationService.GetContentCulture(contentItem);
-            var localizations = _localizationService.GetLocalizations(lp, VersionOptions.Latest);
+            // Check is current item stll exists, and redirect.
+            var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, to);
+            if (existingTranslation != null) {
+                var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
+                return RedirectToAction(
+                    Convert.ToString(existingTranslationMetadata.EditorRouteValues["action"]),
+                    existingTranslationMetadata.EditorRouteValues);
+            }
+
+            var contentItemTranslation = _contentManager.New(masterContentItem.ContentType);
+
+            var contentItemTranslationPart = contentItemTranslation.As<LocalizationPart>();
+
+            contentItemTranslationPart.MasterContentItem = masterContentItem;
+
+            var content = _contentManager.BuildEditor(contentItemTranslation);
             
-            var siteCultures = _cultureManager.ListCultures();
-
-            var missingCultures = siteCultures.Where(s =>
-                s != contentItemCulture
-                && !localizations.Any(l => s == l.Culture.Culture))
-                .ToList();
-
-            string selectedCulture = null;
-
-            if (!String.IsNullOrEmpty(to)) {
-
-                if (!siteCultures.Any(c => String.Equals(c, to, StringComparison.OrdinalIgnoreCase)))
-                    return HttpNotFound();
-
-                var existingLocalization = String.Equals(contentItemCulture, to, StringComparison.OrdinalIgnoreCase)
-                    ? lp
-                    : localizations.FirstOrDefault(l => string.Equals(l.Culture.Culture, to, StringComparison.OrdinalIgnoreCase));
-
-                if (existingLocalization != null) {
-                    var metadata = _contentManager.GetItemMetadata(existingLocalization);
-                    return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
-                }
-
-                selectedCulture = missingCultures.SingleOrDefault(s => string.Equals(s, to, StringComparison.OrdinalIgnoreCase));
-             }
-
-            if (lp.Culture != null)
-                lp.Culture.Culture = null;
-            var model = new AddLocalizationViewModel {
-                Id = id,
-                SelectedCulture = selectedCulture,
-                MissingCultures = missingCultures,
-                Content = _contentManager.BuildEditor(contentItem)
-            };
-
-            // Cancel transaction so that the LocalizationPart is not modified.
-            Services.TransactionManager.Cancel();
-
-            return View(model);
+            return View(content);
         }
 
         [HttpPost, ActionName("Translate")]
@@ -107,64 +81,47 @@ namespace Orchard.Localization.Controllers {
         }
 
         public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
-            var originalLp = contentItem.As<LocalizationPart>();
-
-            if (contentItem == null)
+            var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
+            if (masterContentItem == null)
                 return HttpNotFound();
 
-            var model = new AddLocalizationViewModel();
-            TryUpdateModel(model);
+            var masterLocalizationPart = masterContentItem.As<LocalizationPart>();
+            if (masterLocalizationPart == null)
+                return HttpNotFound();
 
-            ContentItem contentItemTranslation;
-            var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, model.SelectedCulture);
+            var model = new EditLocalizationViewModel();
+            TryUpdateModel(model, "Localization");
+
+            var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, model.SelectedCulture);
             if (existingTranslation != null) {
-                // edit existing
-                contentItemTranslation = _contentManager.Get(existingTranslation.ContentItem.Id, VersionOptions.DraftRequired);
-            } else {
-                // create
-                contentItemTranslation = _contentManager.New(contentItem.ContentType);
-
-                var translationLp = contentItemTranslation.As<LocalizationPart>();
-
-                translationLp.MasterContentItem = originalLp.MasterContentItem ?? contentItem;
-
-                if (!string.IsNullOrWhiteSpace(model.SelectedCulture))
-                {
-                    translationLp.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
-                 }
-
-                _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
+                var existingTranslationMetadata = _contentManager.GetItemMetadata(existingTranslation);
+                return RedirectToAction(
+                    Convert.ToString(existingTranslationMetadata.EditorRouteValues["action"]), 
+                    existingTranslationMetadata.EditorRouteValues);
             }
 
-            model.Content = _contentManager.UpdateEditor(contentItemTranslation, this);
+            var contentItemTranslation = _contentManager.New(masterContentItem.ContentType);
+
+            var contentItemTranslationPart = contentItemTranslation.As<LocalizationPart>();
+
+            contentItemTranslationPart.MasterContentItem = masterContentItem;
+
+            _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
+
+            var content = _contentManager.UpdateEditor(contentItemTranslation, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                model.MissingCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
 
-                var culture = originalLp.Culture;
-                
-                if (culture != null) {
-                    culture.Culture = null;
-                }
-                model.Content = _contentManager.BuildEditor(contentItem);
-                return View(model);
+                return View(content);
             }
 
-            if (existingTranslation != null) {
-                Services.Notifier.Information(T("Edited content item translation."));
-            }
-            else {
-                conditionallyPublish(contentItemTranslation);
+            conditionallyPublish(contentItemTranslation);
 
-                Services.Notifier.Information(T("Created content item translation."));
-            }
+            Services.Notifier.Information(T("Created content item translation."));
 
-            var metadata = _contentManager.GetItemMetadata(model.Content.ContentItem);
-
-            //todo: (heskew) if null, redirect to somewhere better than nowhere
-            return metadata.EditorRouteValues == null ? null : RedirectToRoute(metadata.EditorRouteValues);
+            var metadata = _contentManager.GetItemMetadata(contentItemTranslation);
+            return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
