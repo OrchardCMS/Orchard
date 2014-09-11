@@ -14,7 +14,8 @@
     var eventVersionNumber = eventData.Get<int>("VersionNumber");
     var isPublishedEvent = eventData.Get<bool>("Published");
     var diffNodes = (IList<DiffNode>)Model.DiffNodes;
-    var title = contentItem != null ? Html.ItemDisplayText(contentItem).ToString() : eventData.Get<string>("Title") ?? "[untitled]";
+    var itemDisplayText = contentItem != null ? Html.ItemDisplayText(contentItem) : default(IHtmlString);
+    var title = itemDisplayText != null ? itemDisplayText.ToString() : eventData.Get<string>("Title") ?? "[untitled]";
 }
 <section class="audittrail-content-eventmetadata">
     @T("ID:") <strong>@contentItemId</strong><br />

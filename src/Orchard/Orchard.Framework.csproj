@@ -384,6 +384,9 @@
     <Compile Include="ContentManagement\DefaultContentManager.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\DefaultContentManagerSession.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ContentManagement\DefaultContentQuery.cs">
       <SubType>Code</SubType>
     </Compile>

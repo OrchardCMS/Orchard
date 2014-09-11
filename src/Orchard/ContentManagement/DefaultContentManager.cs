@@ -31,6 +31,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
@@ -49,6 +50,7 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
             ICacheManager cacheManager,
+            Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
             Lazy<ISessionLocator> sessionLocator,
             Lazy<IEnumerable<IContentHandler>> handlers,
@@ -62,6 +64,7 @@ namespace Orchard.ContentManagement {
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _cacheManager = cacheManager;
+            _contentManagerSession = contentManagerSession;
             _identityResolverSelectors = identityResolverSelectors;
             _sqlStatementProviders = sqlStatementProviders;
             _shellSettings = shellSettings;
@@ -129,13 +132,28 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Get(int id, VersionOptions options, QueryHints hints) {
+            var session = _contentManagerSession();
             ContentItem contentItem;
 
             ContentItemVersionRecord versionRecord = null;
 
             // obtain the root records based on version options
             if (options.VersionRecordId != 0) {
+                // short-circuit if item held in session
+                if (session.RecallVersionRecordId(options.VersionRecordId, out contentItem)) {
+                    return contentItem;
+                }
+
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
+            }
+            else if (session.RecallContentRecordId(id, out contentItem)) {
+                // try to reload a previously loaded published content item
+
+                if (options.IsPublished) {
+                    return contentItem;
+                }
+
+                versionRecord = contentItem.VersionRecord;
             }
             else {
                 // do a query to load the records in case Get is called directly
@@ -189,10 +207,21 @@ namespace Orchard.ContentManagement {
                 }
             }
 
+            // return item if obtained earlier in session
+            if (session.RecallVersionRecordId(versionRecord.Id, out contentItem)) {
+                if (options.IsDraftRequired && versionRecord.Published) {
+                    return BuildNewVersion(contentItem);
+                }
+                return contentItem;
+            }
+
             // allocate instance and set record property
             contentItem = New(versionRecord.ContentItemRecord.ContentType.Name);
             contentItem.VersionRecord = versionRecord;
 
+            // store in session prior to loading to avoid some problems with simple circular dependencies
+            session.Store(contentItem);
+            
             // create a context with a new instance to load            
             var context = new LoadContentContext(contentItem);
 
@@ -620,8 +649,9 @@ namespace Orchard.ContentManagement {
         }
 
         public void Clear() {
-            //var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
-            //session.Clear();
+            var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
+            session.Clear();
+            _contentManagerSession().Clear();
         }
 
         public IContentQuery<ContentItem> Query() {

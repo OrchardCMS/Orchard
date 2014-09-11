@@ -58,6 +58,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
 
             builder.RegisterInstance(new Mock<IAuthenticationService>().Object);
