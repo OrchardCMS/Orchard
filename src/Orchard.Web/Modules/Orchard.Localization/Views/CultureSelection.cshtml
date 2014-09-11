@@ -8,14 +8,14 @@
     <label for="SelectedCulture">@T("Content Localization")</label>
     <div>
         @T("This is the <em>{0}</em> variation of {1}",
-            BuildSelectedCultureList(Html.FieldIdFor(m => m.SelectedCulture), Model.MissingCultures, Model.SelectedCulture),
+                     BuildSelectedCultureList(Html.FieldIdFor(m => m.SelectedCulture), Html.FieldNameFor(m => m.SelectedCulture), Model.MissingCultures, Model.SelectedCulture),
             Html.ItemEditLink(Model.Content))
     </div>
 </fieldset>
 @functions{
-    private string BuildSelectedCultureList(string name, IEnumerable<string> siteCultures, string culture) {
+    private string BuildSelectedCultureList(string id, string name, IEnumerable<string> siteCultures, string culture) {
         TagBuilder selectTag = new TagBuilder("select");
-        selectTag.Attributes["id"] = name;
+        selectTag.Attributes["id"] = id;
         selectTag.Attributes["name"] = name;
 
         foreach (var siteCulture in siteCultures) {
