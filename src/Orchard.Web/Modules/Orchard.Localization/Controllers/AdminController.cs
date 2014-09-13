@@ -54,11 +54,8 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New(masterContentItem.ContentType);
-
-            var contentItemTranslationPart = contentItemTranslation.As<LocalizationPart>();
-
-            contentItemTranslationPart.MasterContentItem = masterContentItem;
+            var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
+            contentItemTranslation.MasterContentItem = masterContentItem;
 
             var content = _contentManager.BuildEditor(contentItemTranslation);
             
@@ -100,13 +97,10 @@ namespace Orchard.Localization.Controllers {
                     existingTranslationMetadata.EditorRouteValues);
             }
 
-            var contentItemTranslation = _contentManager.New(masterContentItem.ContentType);
-
-            var contentItemTranslationPart = contentItemTranslation.As<LocalizationPart>();
-
-            contentItemTranslationPart.MasterContentItem = masterContentItem;
-
-            _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
+            var contentItemTranslation = _contentManager
+                .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, (part) => {
+                    part.MasterContentItem = masterContentItem;
+            });
 
             var content = _contentManager.UpdateEditor(contentItemTranslation, this);
 
@@ -116,7 +110,7 @@ namespace Orchard.Localization.Controllers {
                 return View(content);
             }
 
-            conditionallyPublish(contentItemTranslation);
+            conditionallyPublish(contentItemTranslation.ContentItem);
 
             Services.Notifier.Information(T("Created content item translation."));
 
