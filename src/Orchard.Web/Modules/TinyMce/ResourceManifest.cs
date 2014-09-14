@@ -4,7 +4,7 @@ namespace TinyMce {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("TinyMce").SetUrl("tinymce.min.js").SetVersion("4.1.4").SetDependencies("jQuery");
+            manifest.DefineScript("TinyMce").SetUrl("tinymce.min.js").SetVersion("4.1.5").SetDependencies("jQuery");
             manifest.DefineScript("OrchardTinyMce").SetUrl("orchard-tinymce.js").SetDependencies("TinyMce");
         }
     }
