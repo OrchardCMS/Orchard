@@ -2,13 +2,12 @@ using System;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
-using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Services;
 
 namespace Orchard.Localization.Providers {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class CultureStorageProvider : ICultureStorageProvider {
+    public class CookieCultureProvider : ICultureProvider, ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
@@ -16,7 +15,7 @@ namespace Orchard.Localization.Providers {
         private const string CookieName = "OrchardCurrentCulture";
         private const int DefaultExpireTimeYear = 1;
 
-        public CultureStorageProvider(IHttpContextAccessor httpContextAccessor,
+        public CookieCultureProvider(IHttpContextAccessor httpContextAccessor,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
@@ -57,6 +56,10 @@ namespace Orchard.Localization.Providers {
                 return cookie.Value;
 
             return null;
+        }
+
+        public int Priority {
+            get { return -5; }
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {

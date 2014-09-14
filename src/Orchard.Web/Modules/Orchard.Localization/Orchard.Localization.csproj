@@ -72,16 +72,17 @@
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TransliterationAdminController.cs" />
-    <Compile Include="Controllers\CutlureSelectorController.cs" />
+    <Compile Include="Controllers\AdminCutlureSelectorController.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
-    <Compile Include="Providers\CultureSelectorSelector.cs" />
+    <Compile Include="Providers\AdminCultureSelectorSelector.cs" />
+    <Compile Include="Providers\BrowserCultureProvider.cs" />
+    <Compile Include="Providers\DefaultFrontEndCultureSelector.cs" />
+    <Compile Include="Providers\ICultureStorageProvider.cs" />
     <Compile Include="RuleEngine\CultureRuleProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
     <Compile Include="Services\CultureSelectorFactory.cs" />
-    <Compile Include="Services\CultureService.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
-    <Compile Include="Providers\CultureStorageProvider.cs" />
-    <Compile Include="Services\ICultureService.cs" />
+    <Compile Include="Providers\CookieCultureProvider.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Handlers\LocalizationPartHandler.cs" />
     <Compile Include="Migrations.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Providers\ICultureStorageProvider.cs" />
+    <Compile Include="Providers\ICultureProvider.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\ITransliterationService.cs" />
     <Compile Include="Providers\LocalizationDateTimeFormatProvider.cs" />
@@ -140,6 +141,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Alias\Orchard.Alias.csproj">
+      <Project>{475B6C45-B27C-438B-8966-908B9D6D1077}</Project>
+      <Name>Orchard.Alias</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
@@ -149,7 +154,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\UICultureSelector.cshtml" />
+    <Content Include="Views\AdminUICultureSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TransliterationAdmin\Index.cshtml" />
@@ -159,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TransliterationAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FrontEndUICultureSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
