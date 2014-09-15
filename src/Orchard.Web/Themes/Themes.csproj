@@ -170,7 +170,7 @@
     <Content Include="TheAdmin\Views\ErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\AdminUICultureSelector.cshtml" />
+    <Content Include="TheAdmin\Views\AdminCultureSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

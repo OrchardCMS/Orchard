@@ -154,7 +154,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\AdminUICultureSelector.cshtml" />
+    <Content Include="Views\AdminCultureSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TransliterationAdmin\Index.cshtml" />
@@ -164,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\TransliterationAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\FrontEndCultureSelector.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -35,7 +35,7 @@ namespace Orchard.Localization.Services {
                 if (displayedContext.ShapeMetadata.Type == "Layout" && IsActivable()) {
                     var supportedCultures = _cultureManager.ListCultures().ToList();
                     if (supportedCultures.Count() > 1) {
-                        _workContext.Layout.Header.Add(Shape.AdminUICultureSelector(SupportedCultures: supportedCultures));
+                        _workContext.Layout.Header.Add(Shape.AdminCultureSelector(SupportedCultures: supportedCultures));
                     }
                 }
             });
