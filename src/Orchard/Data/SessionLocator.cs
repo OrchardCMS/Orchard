@@ -15,8 +15,6 @@ namespace Orchard.Data {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
         private ISession _session;
-        private ITransaction _transaction;
-        private bool _cancelled;
 
         public SessionLocator(
             ISessionFactoryHolder sessionFactoryHolder, 
@@ -32,19 +30,13 @@ namespace Orchard.Data {
 
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);
-
-            ((ITransactionManager)this).Demand();
+            Demand();
 
             return _session;
         }
 
         public void Demand() {
-            EnsureSession();
-
-            if (_transaction == null) {
-                Logger.Debug("Creating transaction on Demand");
-                _transaction = _session.BeginTransaction(IsolationLevel);
-            }
+            EnsureSession(IsolationLevel);
         }
 
         public void RequireNew() {
@@ -52,78 +44,38 @@ namespace Orchard.Data {
         }
 
         public void RequireNew(IsolationLevel level) {
-            if (_transaction != null) {
-                Logger.Debug("New transaction required");
-
-                if (_cancelled) {
-                    if (_transaction != null) {
-                        Logger.Debug("Reverting operations from transaction");
-                        _transaction.Rollback();
-                        _transaction.Dispose();
-                        Logger.Debug("Transaction disposed");
-
-                        _transaction = null;
-                    }
-
-                    _cancelled = false;
-                }
-                else {
-                    if (_transaction != null) {
-                        Logger.Debug("Marking transaction as complete");
-                        _transaction.Commit();
-                    }
-                }
-
-                DisposeSession();
-            }
-            
-            EnsureSession();
-
-            Logger.Debug("Creating new transaction with isolation level {0}", level);
-            _transaction = _session.BeginTransaction(level);
+            DisposeSession();
+            EnsureSession(level);
         }
 
         public void Cancel() {
-            Logger.Debug("Transaction cancelled flag set");
-            _cancelled = true;
+            Logger.Debug("Rolling back transaction");
+            _session.Transaction.Rollback();
         }
 
         public void Dispose() {
-            if (_transaction != null) {
-                try {
-                    if (!_cancelled) {
-                        Logger.Debug("Marking transaction as complete");
-                        _transaction.Commit();
-                    }
-                    else {
-                        Logger.Debug("Reverting operations from transaction");
-                        _transaction.Rollback();
-                    }
-                }
-                catch (Exception e) {
-                    Logger.Error(e, "Error while disposing the transaction.");
-                }
-                finally {
-                    _transaction.Dispose();
-                    Logger.Debug("Transaction disposed");
-
-                    _transaction = null;
-                    _cancelled = false;
-                }
-            }
-
             DisposeSession();
         }
 
         private void DisposeSession() {
             if (_session != null) {
-                Logger.Debug("Disposing NHibernate session");
-                _session.Dispose();
-                _session = null;
+
+                try {
+                    if (!_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+                        Logger.Debug("Committing transaction");
+                        _session.Transaction.Commit();
+                    }
+                }
+                finally {
+                    Logger.Debug("Disposing session");
+                    _session.Close();
+                    _session.Dispose();
+                    _session = null;
+                }
             }
         }
 
-        private void EnsureSession() {
+        private void EnsureSession(IsolationLevel level) {
             if (_session != null) {
                 return;
             }
@@ -131,6 +83,7 @@ namespace Orchard.Data {
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
             Logger.Debug("Opening NHibernate session");
             _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
+            _session.BeginTransaction(level);
         }
 
         class OrchardSessionInterceptor : IInterceptor {
