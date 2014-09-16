@@ -34,9 +34,15 @@ namespace Orchard.Localization.Providers {
             if (!IsActivable(context))
                 return null;
 
-            var content = GetByPath(context.Request.Path.TrimStart('/'));
+            var path = context.Request.Path;
+            if (context.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
+                && context.Request.UrlReferrer != null) {
+                path = context.Request.UrlReferrer.AbsolutePath;
+            }
+
+            var content = GetByPath(path.TrimStart('/'));
             if (content != null) {
-                return new CultureSelectorResult {Priority = -1, CultureName = _localizationService.Value.GetContentCulture(content)};
+                return new CultureSelectorResult { Priority = -1, CultureName = _localizationService.Value.GetContentCulture(content) };
             }
 
             return null;

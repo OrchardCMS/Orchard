@@ -30,4 +30,4 @@ Features:
 		Description: Enabled transliteration of the slug when creating a piece of content
 		Category: Content
 		Name: Url Transliteration
-		Dependencies: Orchard.Localization.Transliteration
+		Dependencies: Orchard.Localization.Transliteration, Orchard.Autoroute
