@@ -60,7 +60,7 @@ namespace Orchard.Core.Common.Handlers {
                 }
 
                 if (commonPart.Owner != null) {
-                    context.DocumentIndex.Add("author", commonPart.Owner.UserName).Analyze().Store();
+                    context.DocumentIndex.Add("author", commonPart.Owner.UserName).Store();
                 }
             });
         }
