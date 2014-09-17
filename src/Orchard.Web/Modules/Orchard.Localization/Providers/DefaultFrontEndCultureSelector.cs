@@ -1,5 +1,6 @@
 using System;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Alias;
 using Orchard.ContentManagement;
@@ -34,10 +35,22 @@ namespace Orchard.Localization.Providers {
             if (!IsActivable(context))
                 return null;
 
-            var path = context.Request.Path;
-            if (context.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)
-                && context.Request.UrlReferrer != null) {
+            // Attempt to determine culture by route.
+            // This normally happens when you are using non standard pages that are not content items
+            // {culture}/foo
+            var routeCulture = context.Request.RequestContext.RouteData.Values["culture"] ??
+                context.Request.RequestContext.HttpContext.Request.Params["culture"];
+            if (routeCulture != null && !string.IsNullOrWhiteSpace(routeCulture.ToString())) {
+                return new CultureSelectorResult { Priority = -1, CultureName = routeCulture.ToString() };
+            }
+
+            // Attempt to determine culture by previous route if by POST
+            string path = string.Empty;
+            if (context.Request.HttpMethod.Equals(HttpVerbs.Post.ToString(), StringComparison.OrdinalIgnoreCase)) {
                 path = context.Request.UrlReferrer.AbsolutePath;
+            }
+            else {
+                path = context.Request.Path;
             }
 
             var content = GetByPath(path.TrimStart('/'));
