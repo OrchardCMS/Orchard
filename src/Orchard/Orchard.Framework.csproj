@@ -175,6 +175,7 @@
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\AbstractSessionInterceptor.cs" />
     <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
     <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
