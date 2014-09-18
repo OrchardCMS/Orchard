@@ -89,7 +89,6 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
                         pendingAsset.UploadState.BytesComplete = 0;
                         pendingAsset.UploadState.CompletedUtc = null;
                         _transactionManager.RequireNew();
-                        _contentManager.Clear();
 
                         var assetProgressMoniker = Guid.NewGuid();
                         var assetCancellationTokenSource = new CancellationTokenSource();
@@ -186,7 +185,6 @@ namespace Orchard.Azure.MediaServices.Services.Assets {
                         if ((_clock.UtcNow - lastUpdateUtc).Seconds >= 5) {
                             progressAsset.UploadState.BytesComplete = progressInfo.Data.BytesTransferred;
                             _transactionManager.RequireNew();
-                            _contentManager.Clear();
                             lastUpdateUtc = _clock.UtcNow;
                         }
 

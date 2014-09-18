@@ -6,6 +6,7 @@ using System.Linq;
 using NHibernate;
 using NHibernate.SqlCommand;
 using NHibernate.Type;
+using Orchard.ContentManagement;
 using Orchard.Exceptions;
 using Orchard.Logging;
 using Orchard.Security;
@@ -14,13 +15,18 @@ namespace Orchard.Data {
     public class SessionLocator : ISessionLocator, ITransactionManager, IDisposable {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
+        private Func<IContentManagerSession> _contentManagerSession;
+
         private ISession _session;
 
         public SessionLocator(
             ISessionFactoryHolder sessionFactoryHolder, 
+            Func<IContentManagerSession> contentManagerSession,
             IEnumerable<ISessionInterceptor> interceptors) {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
+            _contentManagerSession = contentManagerSession;
+
             Logger = NullLogger.Instance;
             IsolationLevel = IsolationLevel.ReadCommitted;
         }
@@ -73,6 +79,8 @@ namespace Orchard.Data {
                     _session.Close();
                     _session.Dispose();
                     _session = null;
+
+                    _contentManagerSession().Clear();
                 }
             }
         }
