@@ -62,8 +62,8 @@ namespace Orchard.Recipes.RecipeHandlers {
 
                     //Create a new transaction for each batch
                     if (startIndex < elementDictionary.Count) {
-                        _orchardServices.ContentManager.Clear();
                         _transactionManager.RequireNew();
+                        _orchardServices.ContentManager.Clear();
                     }
                 }
             }

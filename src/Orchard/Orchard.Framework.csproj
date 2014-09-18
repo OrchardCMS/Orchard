@@ -171,6 +171,7 @@
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="Data\AbstractSessionInterceptor.cs" />
     <Compile Include="Data\Bags\SArray.cs" />
+    <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
     <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\INamedEnumerable.cs" />
+    <Compile Include="DisplayManagement\IShapeBindingResolver.cs" />
     <Compile Include="DisplayManagement\IShapeDisplay.cs" />
     <Compile Include="DisplayManagement\ShapeDisplay.cs" />
     <Compile Include="DisplayManagement\Shapes\Composite.cs" />
@@ -256,6 +258,7 @@
     <Compile Include="FileSystems\Media\ConfigurationMimeTypeProvider.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
+    <Compile Include="FileSystems\Media\StorageProviderExtensions.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
     <Compile Include="Localization\HtmlLocalizationExtensions.cs" />
     <Compile Include="Localization\Models\DateLocalizationOptions.cs" />

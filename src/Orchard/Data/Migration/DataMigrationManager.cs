@@ -90,6 +90,8 @@ namespace Orchard.Data.Migration {
 
             // apply update methods to each migration class for the module
             foreach (var migration in migrations) {
+                _transactionManager.RequireNew();
+
                 // copy the object for the Linq query
                 var tempMigration = migration;
 
@@ -102,8 +104,6 @@ namespace Orchard.Data.Migration {
                 }
 
                 try {
-                    _transactionManager.RequireNew();
-
                     // do we need to call Create() ?
                     if (current == 0) {
                         // try to resolve a Create method
