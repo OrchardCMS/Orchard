@@ -28,10 +28,10 @@
                     editRouteValues.Merge(new RouteValueDictionary { { "ReturnUrl", Request.RawUrl } }));
                 <li>
                     <div data-id="@contentItem.Id" data-fieldid="@fieldIdForIds" class="media-library-picker-item">
-                        <div class="thumbnail">
+                        <div class="thumbnail" title="@Html.ItemDisplayText(contentItem)">
                             @Display(contentManager.BuildDisplay(contentItem, "Thumbnail"))
                             <div class="overlay">
-                                <h3>@Html.ItemDisplayText(contentItem)</h3>                         
+                                <h3>@Html.ItemDisplayText(contentItem)</h3>
                             </div>
 
                         </div>
