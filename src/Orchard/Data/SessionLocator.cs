@@ -49,8 +49,10 @@ namespace Orchard.Data {
         }
 
         public void Cancel() {
-            Logger.Debug("Rolling back transaction");
-            _session.Transaction.Rollback();
+            if (_session!= null && !_session.Transaction.WasRolledBack && _session.Transaction.IsActive) {
+                Logger.Debug("Rolling back transaction");
+                _session.Transaction.Rollback();
+            }
         }
 
         public void Dispose() {
