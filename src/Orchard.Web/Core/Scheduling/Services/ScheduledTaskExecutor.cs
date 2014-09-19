@@ -42,7 +42,6 @@ namespace Orchard.Core.Scheduling.Services {
 
             foreach (var taskEntry in taskEntries) {
                 _transactionManager.RequireNew();
-                _contentManager.Clear();
 
                 try {
                     // fetch the task

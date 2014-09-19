@@ -207,8 +207,7 @@ namespace Orchard.Indexing.Services {
                     }
                     else {
                         _transactionManager.RequireNew();
-                        _contentManager.Clear();
-                    }
+                     }
 
 
                 } while (loop);
@@ -266,7 +265,6 @@ namespace Orchard.Indexing.Services {
                     }
                     else {
                         _transactionManager.RequireNew();
-                        _contentManager.Clear();
                     }
                 }
                 while (loop);

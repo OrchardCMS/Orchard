@@ -36,7 +36,6 @@ namespace Orchard.Tasks {
         public void Sweep() {
             foreach(var task in _tasks) {
                 try {
-                    _contentManager.Clear();
                     _transactionManager.RequireNew();
                     task.Sweep();
                 }
