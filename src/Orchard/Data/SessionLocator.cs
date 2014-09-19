@@ -15,17 +15,18 @@ namespace Orchard.Data {
     public class SessionLocator : ISessionLocator, ITransactionManager, IDisposable {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IEnumerable<ISessionInterceptor> _interceptors;
-        private Func<IContentManagerSession> _contentManagerSession;
+        private Func<IContentManagerSession> _contentManagerSessionFactory;
 
         private ISession _session;
+        private IContentManagerSession _contentManagerSession;
 
         public SessionLocator(
-            ISessionFactoryHolder sessionFactoryHolder, 
-            Func<IContentManagerSession> contentManagerSession,
+            ISessionFactoryHolder sessionFactoryHolder,
+            Func<IContentManagerSession> contentManagerSessionFactory,
             IEnumerable<ISessionInterceptor> interceptors) {
             _sessionFactoryHolder = sessionFactoryHolder;
             _interceptors = interceptors;
-            _contentManagerSession = contentManagerSession;
+            _contentManagerSessionFactory = contentManagerSessionFactory;
 
             Logger = NullLogger.Instance;
             IsolationLevel = IsolationLevel.ReadCommitted;
@@ -75,12 +76,12 @@ namespace Orchard.Data {
                     }
                 }
                 finally {
+                    _contentManagerSession.Clear();
+
                     Logger.Debug("Disposing session");
                     _session.Close();
                     _session.Dispose();
                     _session = null;
-
-                    _contentManagerSession().Clear();
                 }
             }
         }
@@ -94,6 +95,7 @@ namespace Orchard.Data {
             Logger.Debug("Opening NHibernate session");
             _session = sessionFactory.OpenSession(new OrchardSessionInterceptor(_interceptors.ToArray(), Logger));
             _session.BeginTransaction(level);
+            _contentManagerSession = _contentManagerSessionFactory();
         }
 
         class OrchardSessionInterceptor : IInterceptor {
