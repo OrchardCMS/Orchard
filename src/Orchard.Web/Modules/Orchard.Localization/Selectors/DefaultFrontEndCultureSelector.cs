@@ -8,7 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 using Orchard.UI.Admin;
 
-namespace Orchard.Localization.Providers {
+namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
     public class DefaultFrontEndCultureSelector : ICultureSelector {
         private readonly IAliasService _aliasService;

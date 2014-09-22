@@ -68,9 +68,9 @@
     <Compile Include="Controllers\TransliterationAdminController.cs" />
     <Compile Include="Controllers\AdminCutlureSelectorController.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
-    <Compile Include="Providers\AdminCultureSelectorSelector.cs" />
+    <Compile Include="Selectors\DefaultAdminCultureSelectorSelector.cs" />
     <Compile Include="Providers\BrowserCultureProvider.cs" />
-    <Compile Include="Providers\DefaultFrontEndCultureSelector.cs" />
+    <Compile Include="Selectors\DefaultFrontEndCultureSelector.cs" />
     <Compile Include="Providers\ICultureStorageProvider.cs" />
     <Compile Include="RuleEngine\CultureRuleProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
@@ -85,7 +85,6 @@
     <Compile Include="Projections\CurrentCultureFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Routes.cs" />
     <Compile Include="Providers\ICultureProvider.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\ITransliterationService.cs" />

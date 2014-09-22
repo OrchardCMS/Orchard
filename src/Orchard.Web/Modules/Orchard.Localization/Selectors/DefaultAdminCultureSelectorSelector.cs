@@ -3,15 +3,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Providers;
 using Orchard.Localization.Services;
 using Orchard.UI.Admin;
 
-namespace Orchard.Localization.Providers {
+namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class AdminCultureSelectorSelector : ICultureSelector {
+    public class DefaultAdminCultureSelectorSelector : ICultureSelector {
         private readonly IEnumerable<ICultureProvider> _providers;
 
-        public AdminCultureSelectorSelector(IEnumerable<ICultureProvider> providers) {
+        public DefaultAdminCultureSelectorSelector(IEnumerable<ICultureProvider> providers) {
             _providers = providers;
         }
 
