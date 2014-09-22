@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -15,17 +14,14 @@ namespace Orchard.Localization.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
-        private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
-            ICultureManager cultureManager,
             ILocalizationService localizationService,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
-            _cultureManager = cultureManager;
             _localizationService = localizationService;
             T = NullLocalizer.Instance;
             Services = orchardServices;
@@ -98,7 +94,7 @@ namespace Orchard.Localization.Controllers {
             }
 
             var contentItemTranslation = _contentManager
-                .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, (part) => {
+                .Create<LocalizationPart>(masterContentItem.ContentType, VersionOptions.Draft, part => {
                     part.MasterContentItem = masterContentItem;
             });
 

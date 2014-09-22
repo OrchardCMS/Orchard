@@ -9,10 +9,10 @@ using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class DefaultAdminCultureSelectorSelector : ICultureSelector {
+    public class DefaultAdminCultureSelector : ICultureSelector {
         private readonly IEnumerable<ICultureProvider> _providers;
 
-        public DefaultAdminCultureSelectorSelector(IEnumerable<ICultureProvider> providers) {
+        public DefaultAdminCultureSelector(IEnumerable<ICultureProvider> providers) {
             _providers = providers;
         }
 

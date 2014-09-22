@@ -68,7 +68,7 @@
     <Compile Include="Controllers\TransliterationAdminController.cs" />
     <Compile Include="Controllers\AdminCutlureSelectorController.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
-    <Compile Include="Selectors\DefaultAdminCultureSelectorSelector.cs" />
+    <Compile Include="Selectors\DefaultAdminCultureSelector.cs" />
     <Compile Include="Providers\BrowserCultureProvider.cs" />
     <Compile Include="Selectors\DefaultFrontEndCultureSelector.cs" />
     <Compile Include="Providers\ICultureStorageProvider.cs" />
