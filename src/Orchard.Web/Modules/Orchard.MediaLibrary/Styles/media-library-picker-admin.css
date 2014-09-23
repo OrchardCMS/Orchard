@@ -47,6 +47,8 @@
 .overlay h3 {
     padding-right:5px;
     font-size: 12px;
+    height: 40px;
+    overflow: hidden;
 }
 
 .media-thumbnail {

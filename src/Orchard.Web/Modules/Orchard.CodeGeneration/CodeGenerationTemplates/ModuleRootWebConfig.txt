@@ -27,7 +27,7 @@
   </system.web.webPages.razor>
 
   <system.web>
-    <compilation targetFramework="4.5">
+    <compilation targetFramework="4.5.1">
       <assemblies>
         <add assembly="System.Web.Abstractions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
         <add assembly="System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>

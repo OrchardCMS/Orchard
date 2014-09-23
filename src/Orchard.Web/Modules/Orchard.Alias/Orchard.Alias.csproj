@@ -76,6 +76,7 @@
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
+    <Compile Include="Implementation\Updater\AliasHolderUpdater.cs" />
     <Compile Include="Implementation\Updater\AliasUpdateCursor.cs" />
     <Compile Include="Implementation\Updater\AliasUpdaterBackgroundTask.cs" />
     <Compile Include="Implementation\Updater\IAliasUpdateCursor.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Implementation\Holder\IAliasHolder.cs" />
     <Compile Include="Implementation\Map\AliasMap.cs" />
     <Compile Include="Implementation\Storage\AliasStorage.cs" />
-    <Compile Include="Implementation\Updater\AliasHolderUpdater.cs" />
+    <Compile Include="Implementation\Updater\AliasHolderUpdaterTask.cs" />
     <Compile Include="Implementation\Utils.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Records\ActionRecord.cs" />

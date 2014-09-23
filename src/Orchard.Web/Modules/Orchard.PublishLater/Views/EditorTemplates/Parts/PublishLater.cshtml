@@ -37,6 +37,8 @@
     
     <fieldset class="publish-later-datetime">
         <legend>@T("Publish")</legend>
+        @Html.HiddenFor(m => m.Editor.ShowDate)
+        @Html.HiddenFor(m => m.Editor.ShowTime)
         @Html.EditorFor(m => m.Editor)
         <button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
     </fieldset>

@@ -69,6 +69,7 @@
     <Content Include="TheAdmin\Styles\ie7.css" />
     <Content Include="TheAdmin\Styles\ie8.css" />
     <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheAdmin\Styles\images\error.gif" />
     <Content Include="TheAdmin\Styles\images\icon-advisory.png" />
     <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
     <Content Include="TheAdmin\Styles\images\icon-docs.png" />

@@ -78,10 +78,22 @@ namespace Orchard.Indexing.Settings {
         }
 
         private void CreateTasksForType(string type) {
+            var index = 0;
+            bool contentItemProcessed;
+
+            // todo: load ids only, or create a queued job
             // we create a task even for draft items, and the executor will filter based on the settings
-            foreach (var contentItem in _contentManager.Query(VersionOptions.Latest, new [] { type }).List()) {
-                _indexingTaskManager.CreateUpdateIndexTask(contentItem);
-            }
+
+            do {
+                contentItemProcessed = false;
+                var contentItemsToIndex = _contentManager.Query(VersionOptions.Latest, new [] { type }).Slice(index, 50);
+
+                foreach (var contentItem in contentItemsToIndex) {
+                    contentItemProcessed = true;
+                    _indexingTaskManager.CreateUpdateIndexTask(contentItem);
+                }
+
+            } while (contentItemProcessed);
         }
     }
 }

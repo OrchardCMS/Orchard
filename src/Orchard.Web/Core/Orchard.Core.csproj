@@ -94,6 +94,7 @@
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
     <Compile Include="Common\Settings\TextFieldSettings.cs" />
+    <Compile Include="Common\Utilities\DateUtils.cs" />
     <Compile Include="Common\ViewModels\DateTimeEditor.cs" />
     <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
     <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />

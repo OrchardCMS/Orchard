@@ -649,9 +649,6 @@ namespace Orchard.ContentManagement {
         }
 
         public void Clear() {
-            var session = _sessionLocator.Value.For(typeof(ContentItemRecord));
-            session.Clear();
-            _contentManagerSession().Clear();
         }
 
         public IContentQuery<ContentItem> Query() {
