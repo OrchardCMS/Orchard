@@ -2,12 +2,14 @@ using System;
 using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Localization.Providers;
+using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Services;
 
-namespace Orchard.Localization.Providers {
+namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class CookieCultureProvider : ICultureProvider, ICultureStorageProvider {
+    public class CookieCultureSelector : ICultureSelector, ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
@@ -15,7 +17,7 @@ namespace Orchard.Localization.Providers {
         private const string CookieName = "OrchardCurrentCulture";
         private const int DefaultExpireTimeYear = 1;
 
-        public CookieCultureProvider(IHttpContextAccessor httpContextAccessor,
+        public CookieCultureSelector(IHttpContextAccessor httpContextAccessor,
             IClock clock,
             ShellSettings shellSettings) {
             _httpContextAccessor = httpContextAccessor;
@@ -45,21 +47,13 @@ namespace Orchard.Localization.Providers {
             httpContext.Response.Cookies.Add(cookie);
         }
 
-        public string GetCulture() {
-            var httpContext = _httpContextAccessor.Current();
-
-            if (httpContext == null) return null;
-
-            var cookie = httpContext.Request.Cookies.Get(CookieName);
+        public CultureSelectorResult GetCulture(HttpContextBase context) {
+            var cookie = context.Request.Cookies.Get(CookieName);
 
             if (cookie != null)
-                return cookie.Value;
+                return new CultureSelectorResult { Priority = -1, CultureName = cookie.Value };
 
             return null;
-        }
-
-        public int Priority {
-            get { return -5; }
         }
 
         private string GetCookiePath(HttpContextBase httpContext) {

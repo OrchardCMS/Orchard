@@ -1,32 +1,25 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
-using Orchard.Mvc;
 
-namespace Orchard.Localization.Providers {
+namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
-    public class BrowserCultureProvider : ICultureProvider {
+    public class BrowserCultureSelector : ICultureSelector {
         private readonly Lazy<ICultureManager> _cultureManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BrowserCultureProvider(
-            Lazy<ICultureManager> cultureManager,
-            IHttpContextAccessor httpContextAccessor) {
+        public BrowserCultureSelector(
+            Lazy<ICultureManager> cultureManager) {
             _cultureManager = cultureManager;
-            _httpContextAccessor = httpContextAccessor;
         }
 
-        public string GetCulture() {
-            var httpContext = _httpContextAccessor.Current();
-
-            if (httpContext == null) return null;
-
+        public CultureSelectorResult GetCulture(HttpContextBase context) {
             /* Fall back to Browser */
-            var userLanguages = httpContext.Request.UserLanguages;
+            var userLanguages = context.Request.UserLanguages;
 
-            if (userLanguages == null || userLanguages.Length == 0)
+            if (userLanguages == null || !userLanguages.Any())
                 return null;
 
             var cultures = _cultureManager.Value.ListCultures().ToList();
@@ -36,7 +29,7 @@ namespace Orchard.Localization.Providers {
 
                 if (cultures.Contains(language, StringComparer.OrdinalIgnoreCase)) {
                     try {
-                        return CultureInfo.CreateSpecificCulture(language).Name;
+                        return new CultureSelectorResult { Priority = -4, CultureName = CultureInfo.CreateSpecificCulture(language).Name };
                     }
                     catch (ArgumentException) {
                     }
@@ -44,10 +37,6 @@ namespace Orchard.Localization.Providers {
             }
 
             return null;
-        }
-
-        public int Priority {
-            get { return -6; }
         }
     }
 }
