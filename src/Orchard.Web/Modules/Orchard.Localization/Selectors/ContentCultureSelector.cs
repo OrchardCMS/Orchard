@@ -23,8 +23,7 @@ namespace Orchard.Localization.Selectors {
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
-            if (ContextHelpers.IsRequestAdmin(context))
-                return null;
+            if (context == null || ContextHelpers.IsRequestAdmin(context)) return null;
 
             // Attempt to determine culture by previous route if by POST
             string path;

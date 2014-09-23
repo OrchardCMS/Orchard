@@ -16,6 +16,8 @@ namespace Orchard.Localization.Selectors {
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
+            if (context == null) return null;
+
             /* Fall back to Browser */
             var userLanguages = context.Request.UserLanguages;
 

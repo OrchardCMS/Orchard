@@ -58,6 +58,7 @@ namespace Orchard.Tests.Localization {
             builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();
             builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

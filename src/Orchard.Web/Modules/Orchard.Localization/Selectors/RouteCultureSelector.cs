@@ -7,8 +7,7 @@ namespace Orchard.Localization.Selectors {
     [OrchardFeature("Orchard.Localization.CutlureSelector")]
     public class RouteCultureSelector : ICultureSelector {
         public CultureSelectorResult GetCulture(HttpContextBase context) {
-            if (ContextHelpers.IsRequestAdmin(context))
-                return null;
+            if (context == null || ContextHelpers.IsRequestAdmin(context)) return null;
 
             // Attempt to determine culture by route.
             // This normally happens when you are using non standard pages that are not content items

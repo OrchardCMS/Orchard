@@ -48,6 +48,8 @@ namespace Orchard.Localization.Selectors {
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
+            if (context == null) return null;
+
             var cookie = context.Request.Cookies.Get(CookieName);
 
             if (cookie != null)
