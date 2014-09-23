@@ -26,15 +26,11 @@ namespace Orchard.Localization.Selectors {
 
             var cultures = _cultureManager.Value.ListCultures().ToList();
 
-            foreach (var userLanguage in userLanguages) {
-                var language = userLanguage.Split(';')[0].Trim();
+            foreach (var userLanguage in userLanguages
+                .Select(ul => ul.Split(';')[0].Trim())) {
 
-                if (cultures.Contains(language, StringComparer.OrdinalIgnoreCase)) {
-                    try {
-                        return new CultureSelectorResult { Priority = -4, CultureName = CultureInfo.CreateSpecificCulture(language).Name };
-                    }
-                    catch (ArgumentException) {
-                    }
+                if (cultures.Contains(userLanguage, StringComparer.OrdinalIgnoreCase)) {
+                    return new CultureSelectorResult { Priority = -4, CultureName = CultureInfo.CreateSpecificCulture(userLanguage).Name };
                 }
             }
 
