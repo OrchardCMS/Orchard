@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
@@ -242,6 +242,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.MediaServices", "Orchard.Web\Modules\Orchard.Azure.MediaServices\Orchard.Azure.MediaServices.csproj", "{14A96B1A-9DC9-44C8-A675-206329E15263}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.AuditTrail", "Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj", "{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.MessageBus", "Orchard.Web\Modules\Orchard.MessageBus\Orchard.MessageBus.csproj", "{ED715544-E649-4F48-B8EE-9368C41C3AC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1008,6 +1010,13 @@ Global
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1087,5 +1096,6 @@ Global
 		{7528BF74-25C7-4ABE-883A-443B4EEC4776} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{14A96B1A-9DC9-44C8-A675-206329E15263} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal
