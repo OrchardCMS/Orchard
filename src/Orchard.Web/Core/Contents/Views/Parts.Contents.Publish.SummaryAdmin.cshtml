@@ -15,7 +15,7 @@
             @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
             @T(" | ")
         
-            @Html.ActionLink(T("Preview").Text, "Display", "Item", new {area = "Contents", id = ((ContentItem) Model.ContentPart.ContentItem, version = ((ContentItem)Model.ContentPart.ContentItem).Version).Id}, new {})
+            @Html.ActionLink(T("Preview").Text, "Display", "Item", new {area = "Contents", id = ((ContentItem) Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new {})
             @T(" | ")
         }
     }
