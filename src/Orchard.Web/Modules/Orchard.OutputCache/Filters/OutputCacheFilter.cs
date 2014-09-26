@@ -23,6 +23,7 @@ using Orchard.Utility.Extensions;
 using System.Collections.Specialized;
 using Orchard.OutputCache.ViewModels;
 using Orchard.UI.Admin.Notification;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.OutputCache.Filters {
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
@@ -38,7 +39,6 @@ namespace Orchard.OutputCache.Filters {
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
         private readonly ICacheControlStrategy _cacheControlStrategy;
-        private readonly INotificationManager _notificationManager;
 
         TextWriter _originalWriter;
         StringWriter _cachingWriter;
@@ -57,8 +57,7 @@ namespace Orchard.OutputCache.Filters {
             ICacheService cacheService,
             ISignals signals,
             ShellSettings shellSettings,
-            ICacheControlStrategy cacheControlStrategy,
-            INotificationManager notificationManager 
+            ICacheControlStrategy cacheControlStrategy
             ) {
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -71,7 +70,6 @@ namespace Orchard.OutputCache.Filters {
             _signals = signals;
             _shellSettings = shellSettings;
             _cacheControlStrategy = cacheControlStrategy;
-            _notificationManager = notificationManager;
 
             Logger = NullLogger.Instance;
         }
@@ -345,7 +343,9 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // don't cache the result if there were some notifications
-            if (_notificationManager.GetNotifications().Any()) {
+            // notifications can come from Notifier and NotificationProvider
+            var messagesZone = _workContextAccessor.GetContext(filterContext).Layout.Zones["Messages"] as Shape;
+            if (messagesZone != null && messagesZone.Items.Any()) {
                 return;
             }
 

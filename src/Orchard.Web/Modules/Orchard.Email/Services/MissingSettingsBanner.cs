@@ -22,8 +22,6 @@ namespace Orchard.Email.Services {
             var workContext = _orchardServices.WorkContext;
             var smtpSettings = workContext.CurrentSite.As<SmtpSettingsPart>();
 
-            var smtpClient = new SmtpClient();
-
             if (smtpSettings == null || !smtpSettings.IsValid()) {
                 var urlHelper = new UrlHelper(workContext.HttpContext.Request.RequestContext);
                 var url = urlHelper.Action("Email", "Admin", new {Area = "Settings"});
