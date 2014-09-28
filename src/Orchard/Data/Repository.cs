@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -111,6 +112,27 @@ namespace Orchard.Data {
             Logger.Debug("Copy {0} {1}", source, target);
             var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
             var values = metadata.GetPropertyValues(source, EntityMode.Poco);
+
+            for (var index = 0; index < values.Length; index++) {
+                var value = values[index];
+                if (value == null)
+                    continue;
+                
+                var type = value.GetType();
+                var isGenericList = type.GetInterfaces()
+                    .Where(i => i.IsGenericType)
+                    .Any(i => i.GetGenericTypeDefinition() == typeof(IList<>));
+
+                if(!isGenericList)
+                    continue;
+
+                var genericType = type.GetGenericArguments().First();
+                var makeGenericType = typeof (List<>).MakeGenericType(new[] {genericType});
+
+                var listValues = ((IList)value);
+                values[index] = Activator.CreateInstance(makeGenericType, new[] { listValues });
+            }
+
             metadata.SetPropertyValues(target, values, EntityMode.Poco);
         }
 
