@@ -126,11 +126,11 @@ namespace Orchard.Data {
                 if(!isGenericList)
                     continue;
 
-                var genericType = type.GetGenericArguments().First();
-                var makeGenericType = typeof (List<>).MakeGenericType(new[] {genericType});
+                var genericArgument = type.GetGenericArguments().First();
+                var genericType = typeof(List<>).MakeGenericType(new[] { genericArgument });
 
                 var listValues = ((IList)value);
-                values[index] = Activator.CreateInstance(makeGenericType, new[] { listValues });
+                values[index] = Activator.CreateInstance(genericType, new[] { listValues });
             }
 
             metadata.SetPropertyValues(target, values, EntityMode.Poco);
