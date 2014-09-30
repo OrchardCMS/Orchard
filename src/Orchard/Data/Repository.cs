@@ -113,6 +113,9 @@ namespace Orchard.Data {
             var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
             var values = metadata.GetPropertyValues(source, EntityMode.Poco);
 
+            //This method is currently only used by StorageVersionFilter<>.Versioning()
+            //In order to prevent shared references to the same collection instance
+            //Instances of IList<> need to be copied to a new collection instance
             for (var index = 0; index < values.Length; index++) {
                 var value = values[index];
                 if (value == null)
