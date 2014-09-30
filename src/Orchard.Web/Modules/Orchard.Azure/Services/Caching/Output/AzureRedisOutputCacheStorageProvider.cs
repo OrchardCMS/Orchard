@@ -28,6 +28,7 @@ namespace Orchard.Azure.Services.Caching.Output {
         private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
         private readonly IPlatformConfigurationAccessor _pca;
+        private HashSet<string> _keysCache;
 
         public AzureRedisCacheStorageProvider(
             ShellSettings shellSettings, 
@@ -73,15 +74,20 @@ namespace Orchard.Azure.Services.Caching.Output {
 
         public IDatabase Cache {
             get {
-
-                var connectionMultiplexer = _connectionMultiplexers.GetOrAdd(CacheConfiguration, cfg => {
-                    Logger.Debug("Creating a new cache client ({0})", CacheConfiguration.GetHashCode());
-                    var connectionString = cfg.HostIdentifier + ",password=" + cfg.AuthorizationToken;
-                    return ConnectionMultiplexer.Connect(connectionString);
-                });
                 
-                return connectionMultiplexer.GetDatabase();
+                return GetConnection().GetDatabase();
             }
+        }
+
+        private ConnectionMultiplexer GetConnection() {
+            var connectionMultiplexer = _connectionMultiplexers.GetOrAdd(CacheConfiguration, cfg => {
+                Logger.Debug("Creating a new cache client ({0})", CacheConfiguration.GetHashCode());
+                var connectionString = cfg.HostIdentifier + ",password=" + cfg.AuthorizationToken;
+                return ConnectionMultiplexer.Connect(connectionString);
+            });
+
+
+            return connectionMultiplexer;
         }
 
         public void Set(string key, CacheItem cacheItem) {
@@ -90,18 +96,21 @@ namespace Orchard.Azure.Services.Caching.Output {
             }
 
             var value = JsonConvert.SerializeObject(cacheItem);
-            Cache.StringSet(key, value, TimeSpan.FromSeconds(cacheItem.ValidFor));
+            Cache.StringSet(GetLocalizedKey(key), value, TimeSpan.FromSeconds(cacheItem.ValidFor));
         }
-
+        
         public void Remove(string key) {
-            Cache.StringSet(key, String.Empty, TimeSpan.MinValue);
+            Cache.KeyDelete(GetLocalizedKey(key));
         }
 
         public void RemoveAll() {
+            foreach (var key in GetAllKeys()) {
+                Remove(key);
+            }
         }
 
         public CacheItem GetCacheItem(string key) {
-            string value = Cache.StringGet(key);
+            string value = Cache.StringGet(GetLocalizedKey(key));
             if(String.IsNullOrEmpty(value)) {
                 return null;
             }
@@ -110,12 +119,48 @@ namespace Orchard.Azure.Services.Caching.Output {
         }
 
         public IEnumerable<CacheItem> GetCacheItems(int skip, int count) {
-
-            return Enumerable.Empty<CacheItem>();
+            foreach (var key in GetAllKeys().Skip(skip).Take(count)) {
+                var cacheItem = GetCacheItem(key);
+                // the item could have expired in the meantime
+                if (cacheItem != null) {
+                    yield return cacheItem;
+                }
+            }
         }
 
         public int GetCacheItemsCount() {
-            return 0;
+            return GetAllKeys().Count();
+        }
+
+        /// <summary>
+        /// Creates a namespaced key to support multiple tenants on top of a single Redis connection.
+        /// </summary>
+        /// <param name="key">The key to localized.</param>
+        /// <returns>A localized key based on the tenant name.</returns>
+        private string GetLocalizedKey(string key) {
+            return _shellSettings.Name + ":" + key;
+        }
+
+        /// <summary>
+        /// Returns all the keys for the current tenant.
+        /// </summary>
+        /// <returns>The keys for the current tenant.</returns>
+        private IEnumerable<string> GetAllKeys() {
+            // prevent the same request from computing the list twice (count + list)
+            if (_keysCache == null) {
+                _keysCache = new HashSet<string>();
+                var prefix = GetLocalizedKey("");
+
+                var connection = GetConnection();
+                foreach (var endPoint in connection.GetEndPoints()) {
+                    var server = GetConnection().GetServer(endPoint);
+                    foreach (var key in server.Keys(pattern: GetLocalizedKey("*"))) {
+                        _keysCache.Add(key.ToString().Substring(prefix.Length));
+                    }
+                }
+            }
+
+            return _keysCache;
         }
     }
 }
