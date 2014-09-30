@@ -145,16 +145,16 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
             GetHandlersForChannel(channel).Add(handler);
         }
 
-        private List<Action<string, string>> GetHandlersForChannel(string channel) {
-            List<Action<string, string>> channelHandlers;
+            private List<Action<string, string>> GetHandlersForChannel(string channel) {
+                List<Action<string, string>> channelHandlers;
                 
-            if(!_handlers.TryGetValue(channel, out channelHandlers)) {
-                channelHandlers = new List<Action<string,string>>();
-                _handlers.Add(channel, channelHandlers);
-            }
+                if(!_handlers.TryGetValue(channel, out channelHandlers)) {
+                    channelHandlers = new List<Action<string,string>>();
+                    _handlers.Add(channel, channelHandlers);
+                }
 
-            return channelHandlers;
-        }
+                return channelHandlers;
+            }
 
         public SqlCommand CreateCommand(SqlConnection connection) {
             SqlCommand command = new SqlCommand(commandText, connection);
