@@ -1,0 +1,20 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@{
+    Style.Include("audittrail-contentdefinition-event.css");
+}
+@{
+    var eventData = (IDictionary<string, object>)Model.EventData;
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var diff = (DiffDictionary<string, string>)Model.Diff ?? new DiffDictionary<string, string>();
+}
+<section class="audittrail-contentpart-eventsummary">
+    @T("Settings for the content part {0} were changed:", Html.ContentPartEditLink(contentPartName))
+    <ul>
+        @foreach (var setting in diff) {
+            <li>
+                @T("<strong>{0}</strong> was changed from <strong>{1}</strong> to <strong>{2}</strong>.", setting.Key, setting.Value.OldValue.OrIfEmpty(T("[Empty]")), setting.Value.NewValue.OrIfEmpty(T("[Empty]")))
+            </li>
+        }
+    </ul>
+</section>

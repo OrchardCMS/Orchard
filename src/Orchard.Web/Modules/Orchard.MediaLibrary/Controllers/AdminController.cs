@@ -180,7 +180,7 @@ namespace Orchard.MediaLibrary.Controllers {
             }
         }
 
-        private FolderHierarchy GetFolderHierarchy(MediaFolder root) {
+        private FolderHierarchy GetFolderHierarchy(IMediaFolder root) {
             Argument.ThrowIfNull(root, "root");
             return new FolderHierarchy(root) {Children = _mediaLibraryService.GetMediaFolders(root.MediaPath).Select(GetFolderHierarchy)};
         }

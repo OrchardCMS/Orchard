@@ -16,7 +16,7 @@
         <input type="hidden" name="@String.Format("{0}.TemporaryFileName", prefix)" value="@tempFileViewModel.TemporaryFileName" />
         <input type="hidden" name="@String.Format("{0}.FileSize", prefix)" value="@tempFileViewModel.FileSize" />
         @if (String.IsNullOrWhiteSpace(tempFileViewModel.TemporaryFileName)) {
-            <input class="async-upload-input" name="@fileUploadName" type="file" />
+            <input class="async-upload-file-input" name="@fileUploadName" type="file" />
             <div class="progress-bar">
                 <div class="progress"></div>
             </div>

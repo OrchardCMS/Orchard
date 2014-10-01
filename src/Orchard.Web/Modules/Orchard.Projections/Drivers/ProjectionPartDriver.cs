@@ -249,7 +249,7 @@ namespace Orchard.Projections.Drivers {
 
                                     // populating the list of queries and layouts
                                     var layouts = _projectionManager.DescribeLayouts().SelectMany(x => x.Descriptors).ToList();
-                                    model.QueryRecordEntries = Services.ContentManager.Query<QueryPart>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
+                                    model.QueryRecordEntries = Services.ContentManager.Query<QueryPart, QueryPartRecord>().Join<TitlePartRecord>().OrderBy(x => x.Title).List()
                                         .Select(x => new QueryRecordEntry {
                                             Id = x.Id,
                                             Name = x.Name,

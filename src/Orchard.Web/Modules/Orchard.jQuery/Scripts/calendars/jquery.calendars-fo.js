@@ -2,7 +2,7 @@
    Faroese localisation for Gregorian/Julian calendars for jQuery.
    Written by Sverri Mohr Olsen, sverrimo@gmail.com */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['fo'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['fo'] = {
 		name: 'Gregorianskur',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','Mars','Apríl','Mei','Juni',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['fo'] =
-			$.calendars.calendars.gregorian.prototype.regional['fo'];
+		$.calendars.calendars.julian.prototype.regionalOptions['fo'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['fo'];
 	}
 })(jQuery);

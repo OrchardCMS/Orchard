@@ -1,0 +1,32 @@
+﻿section.audittrail-contenttype-eventsummary,
+section.audittrail-contentpart-eventsummary {
+    margin-bottom: 1em;
+}
+
+section.audittrail-contenttype-eventsummary p.code,
+section.audittrail-contentpart-eventsummary p.code {
+    font-family: Consolas;
+}
+
+section.audittrail-contenttype-eventsummary table.items,
+section.audittrail-contentpart-eventsummary table.items {
+    width: auto;
+    min-width: 600px;
+    margin: 0;
+}
+
+section.audittrail-contenttype-eventsummary table.items thead th,
+section.audittrail-contentpart-eventsummary table.items thead th {
+    font-weight: bold;
+}
+
+section.audittrail-contenttype-eventsummary ul,
+section.audittrail-contentpart-eventsummary ul {
+    list-style-type: square;
+    margin-left: 1.5em;
+}
+
+section.audittrail-contenttype-eventsummary ul li,
+section.audittrail-contentpart-eventsummary ul li {
+    padding-left: 0.5em;
+}

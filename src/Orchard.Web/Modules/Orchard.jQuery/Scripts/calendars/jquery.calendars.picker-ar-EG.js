@@ -3,8 +3,8 @@
    Mahmoud Khaled -- mahmoud.khaled@badrit.com
    NOTE: monthNames are the new months names */
 (function($) {
-	$.calendars.picker.regional['ar-EG'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ar-EG'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;السابق', prevStatus: 'عرض الشهر السابق',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'التالي&#x3e;', nextStatus: 'عرض الشهر القادم',
@@ -18,5 +18,5 @@
 		dayStatus: 'اختر D, M d', defaultStatus: 'اختر يوم',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ar-EG']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ar-EG']);
 })(jQuery);

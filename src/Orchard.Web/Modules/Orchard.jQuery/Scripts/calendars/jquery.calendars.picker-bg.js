@@ -2,8 +2,8 @@
    Bulgarian localisation for calendars datepicker for jQuery.
    Written by Stoyan Kyosev (http://svest.org). */
 (function($) {
-	$.calendars.picker.regional['bg'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['bg'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
         prevText: '&#x3c;назад', prevStatus: 'покажи последния месец',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
         nextText: 'напред&#x3e;', nextStatus: 'покажи следващия месец',
@@ -17,5 +17,5 @@
 		dayStatus: 'Избери D, M d', defaultStatus: 'Избери дата',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['bg']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['bg']);
 })(jQuery);

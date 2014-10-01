@@ -2,8 +2,8 @@
    Estonian localisation for calendars datepicker for jQuery.
    Written by Mart Sõmermaa (mrts.pydev at gmail com). */
 (function($) {
-	$.calendars.picker.regional['et'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['et'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Eelnev', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Järgnev', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['et']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['et']);
 })(jQuery);

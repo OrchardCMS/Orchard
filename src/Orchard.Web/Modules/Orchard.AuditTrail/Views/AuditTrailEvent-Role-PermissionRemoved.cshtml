@@ -1,0 +1,9 @@
+﻿@using Orchard.AuditTrail.Helpers
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var roleName = eventData.Get<string>("RoleName");
+    var permissionName = eventData.Get<string>("PermissionName");
+}
+<section class="audittrail-role-eventsummary">
+    @T("The permission <strong>{0}</strong> was removed from the role <strong>{1}</strong>.", permissionName, roleName)
+</section>

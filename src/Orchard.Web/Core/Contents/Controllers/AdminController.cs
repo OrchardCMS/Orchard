@@ -73,7 +73,7 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            var query = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            var query = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -101,7 +101,7 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = GetCreatableTypes(false)
+            model.Options.FilterOptions = GetListableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
 
@@ -128,6 +128,13 @@ namespace Orchard.Core.Contents.Controllers {
                 (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
+        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable) {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
+                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
+                ctd.Settings.GetModel<ContentTypeSettings>().Listable &&
+                (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+        }
+
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.Filter")]
         public ActionResult ListFilterPOST(ContentOptions options) {
@@ -135,7 +142,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (options != null) {
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
-                if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 }
                 else {
@@ -199,6 +206,12 @@ namespace Orchard.Core.Contents.Controllers {
             var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
 
             return View("CreatableTypeList", viewModel);
+        }
+
+        ActionResult ListableTypeList(int? containerId) {
+            var viewModel = Shape.ViewModel(ContentTypes: GetListableTypes(containerId.HasValue), ContainerId: containerId);
+
+            return View("ListableTypeList", viewModel);
         }
 
         public ActionResult Create(string id, int? containerId) {

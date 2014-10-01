@@ -2,7 +2,7 @@
    English/UK localisation for Gregorian/Julian calendars for jQuery.
    Stuart. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['en-GB'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['en-GB'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['January','February','March','April','May','June',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['en-GB'] =
-			$.calendars.calendars.gregorian.prototype.regional['en-GB'];
+		$.calendars.calendars.julian.prototype.regionalOptions['en-GB'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['en-GB'];
 	}
 })(jQuery);

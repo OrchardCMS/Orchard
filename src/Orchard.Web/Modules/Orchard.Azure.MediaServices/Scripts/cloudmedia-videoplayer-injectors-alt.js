@@ -49,7 +49,7 @@ var Orchard;
                             _super.prototype.debug.call(this, "AltInjector: " + message, args);
                         };
                         return AltInjector;
-                    })(Orchard.Azure.MediaServices.VideoPlayer.Injectors.Injector);
+                    })(Injectors.Injector);
                     Injectors.AltInjector = AltInjector;
                 })(VideoPlayer.Injectors || (VideoPlayer.Injectors = {}));
                 var Injectors = VideoPlayer.Injectors;

@@ -2,9 +2,9 @@
    Hong Kong Chinese localisation for calendars datepicker for jQuery.
    Written by SCCY (samuelcychan@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['zh-HK'] = {
-		renderer: $.extend({}, $.calendars.picker.defaultRenderer,
-			{month: $.calendars.picker.defaultRenderer.month.
+	$.calendarsPicker.regionalOptions['zh-HK'] = {
+		renderer: $.extend({}, $.calendarsPicker.defaultRenderer,
+			{month: $.calendarsPicker.defaultRenderer.month.
 				replace(/monthHeader/, 'monthHeader:yyyy年 MM')}),
 		prevText: '&#x3c;上月', prevStatus: '顯示上月',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '顯示上一年',
@@ -19,5 +19,5 @@
 		dayStatus: '選擇 m月 d日, DD', defaultStatus: '請選擇日期',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['zh-HK']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['zh-HK']);
 })(jQuery);

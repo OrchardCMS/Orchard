@@ -2,7 +2,7 @@
    Croatian localisation for Gregorian/Julian calendars for jQuery.
    Written by Vjekoslav Nesek. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['hr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['hr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Siječanj','Veljača','Ožujak','Travanj','Svibanj','Lipanj',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['hr'] =
-			$.calendars.calendars.gregorian.prototype.regional['hr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['hr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['hr'];
 	}
 })(jQuery);

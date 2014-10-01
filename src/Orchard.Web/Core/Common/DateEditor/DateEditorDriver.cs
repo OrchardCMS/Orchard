@@ -2,18 +2,19 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Utilities;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 
 namespace Orchard.Core.Common.DateEditor {
     public class DateEditorDriver : ContentPartDriver<CommonPart> {
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public DateEditorDriver(
             IOrchardServices services,
-            IDateServices dateServices) {
-                _dateServices = dateServices;
+            IDateLocalizationServices dateLocalizationServices) {
+                _dateLocalizationServices = dateLocalizationServices;
                 T = NullLocalizer.Instance;
                 Services = services;
         }
@@ -51,7 +52,11 @@ namespace Orchard.Core.Common.DateEditor {
 
                         var itemHasNeverBeenPublished = part.PublishedUtc == null;
                         var thisIsTheInitialVersionRecord = part.ContentItem.Version < 2;
-                        var theDatesHaveNotBeenModified = part.CreatedUtc == part.VersionCreatedUtc;
+
+                        // Dates are assumed the same if the millisecond part is the only difference.
+                        // This is because SqlCe doesn't support high precision times (Datetime2) and the infoset does
+                        // implying some discrepancies between values read from different storage mechanism.
+                        var theDatesHaveNotBeenModified = DateUtils.DatesAreEquivalent(part.CreatedUtc, part.VersionCreatedUtc);
 
                         var theEditorShouldBeBlank =
                             itemHasNeverBeenPublished &&
@@ -59,8 +64,8 @@ namespace Orchard.Core.Common.DateEditor {
                             theDatesHaveNotBeenModified;
 
                         if (!theEditorShouldBeBlank) {
-                            model.Editor.Date = _dateServices.ConvertToLocalDateString(part.CreatedUtc, "");
-                            model.Editor.Time = _dateServices.ConvertToLocalTimeString(part.CreatedUtc, "");
+                            model.Editor.Date = _dateLocalizationServices.ConvertToLocalizedDateString(part.CreatedUtc);
+                            model.Editor.Time = _dateLocalizationServices.ConvertToLocalizedTimeString(part.CreatedUtc);
                         }
                     }
 
@@ -69,9 +74,8 @@ namespace Orchard.Core.Common.DateEditor {
 
                         if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                             try {
-                                var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                                var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                                 part.CreatedUtc = utcDateTime;
-                                part.VersionCreatedUtc = utcDateTime;
                             }
                             catch (FormatException) {
                                 updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));
@@ -87,5 +91,6 @@ namespace Orchard.Core.Common.DateEditor {
                     return model;
                 });
         }
+
     }
 }

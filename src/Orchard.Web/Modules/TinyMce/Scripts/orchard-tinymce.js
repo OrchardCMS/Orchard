@@ -20,5 +20,6 @@ tinyMCE.init({
     extended_valid_elements: "script[type|defer|src|language]",
     menubar: false,
     statusbar: false,
-    skin: 'orchardlightgray'
+    skin: 'orchardlightgray',
+    directionality: directionality
 });

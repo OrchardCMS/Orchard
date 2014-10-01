@@ -15,6 +15,25 @@ var Orchard;
                     })();
                     Settings.StringItem = StringItem;
 
+                    var EncodingPreset = (function () {
+                        function EncodingPreset(name, customXml) {
+                            this.name = ko.observable(name);
+                            this.customXml = ko.observable(customXml);
+                            this.isExpanded = ko.observable(false);
+                            this.type = ko.computed(function () {
+                                var customXml = this.customXml();
+                                if (!!customXml && customXml.length > 0)
+                                    return "Custom preset";
+                                return "Standard preset";
+                            }, this);
+                        }
+                        EncodingPreset.prototype.toggle = function () {
+                            this.isExpanded(!this.isExpanded());
+                        };
+                        return EncodingPreset;
+                    })();
+                    Settings.EncodingPreset = EncodingPreset;
+
                     Settings.clientViewModel = {
                         wamsEncodingPresets: ko.observableArray(),
                         defaultWamsEncodingPresetIndex: ko.observable(),
@@ -32,7 +51,7 @@ var Orchard;
                     Settings.deleteWamsEncodingPreset = deleteWamsEncodingPreset;
 
                     function addNewWamsEncodingPreset() {
-                        Settings.clientViewModel.wamsEncodingPresets.push(new StringItem("Unnamed"));
+                        Settings.clientViewModel.wamsEncodingPresets.push(new EncodingPreset("Unnamed", null));
                         $("#presets-table tbody:first-of-type tr:last-of-type td:nth-child(2) input").focus().select();
                     }
                     Settings.addNewWamsEncodingPreset = addNewWamsEncodingPreset;
@@ -49,8 +68,8 @@ var Orchard;
                     Settings.addNewSubtitleLanguage = addNewSubtitleLanguage;
 
                     $(function () {
-                        $.each(initWamsEncodingPresets, function (presetIndex, presetName) {
-                            Settings.clientViewModel.wamsEncodingPresets.push(new StringItem(presetName));
+                        $.each(initWamsEncodingPresets, function (presetIndex, preset) {
+                            Settings.clientViewModel.wamsEncodingPresets.push(new EncodingPreset(preset.name, preset.customXml));
                         });
 
                         Settings.clientViewModel.defaultWamsEncodingPresetIndex(initDefaultWamsEncodingPresetIndex);

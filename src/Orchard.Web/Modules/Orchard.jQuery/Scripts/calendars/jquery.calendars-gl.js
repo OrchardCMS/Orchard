@@ -2,7 +2,7 @@
    Iniciacion en galego para a extensión 'UI date picker' para jQuery.
    Traducido por Manuel (McNuel@gmx.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['gl'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['gl'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Xaneiro','Febreiro','Marzo','Abril','Maio','Xuño',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['gl'] =
-			$.calendars.calendars.gregorian.prototype.regional['gl'];
+		$.calendars.calendars.julian.prototype.regionalOptions['gl'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['gl'];
 	}
 })(jQuery);

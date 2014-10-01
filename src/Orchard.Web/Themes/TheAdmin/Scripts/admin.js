@@ -70,10 +70,84 @@
 
         return confirm(confirmRemoveMessage);
     });
-    
+
     $(".check-all").change(function () {
         $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
-    }); 
+    });
+
+    var generateMenuFilter = function () {
+        var adminMenu = $("ul.menu-admin");
+        var filterText = adminMenu.data("filter-watermark");
+        var filterMenuItem = $('<li><div class="admin-menu-filter"><input id="adminfilter" type="text" class="text-box" placeholder=' + filterText + '></div></li>');
+
+        $("ul.menu-admin").prepend(filterMenuItem);
+
+        var allListItems = $("ul.menu-admin li ul li").not("#NavFilter");
+        var itemHeading = $("ul.menu-admin li h3");
+
+        $("#adminfilter").on("keyup", function (e) {
+            var a = $(this).val().toLowerCase();
+
+            var filteredItemHeading = itemHeading.filter(function (b, c) {
+                return $(c).text().toLowerCase().indexOf(a) !== -1;
+            });
+
+            itemHeading.show();
+            itemHeading.parent().hide();
+            filteredItemHeading.parent().show();
+            if (filteredItemHeading.length == 0) {
+                itemHeading.parent().hide();
+                var childListItem = allListItems.filter(function (b, c) {
+                    return $(c).text().toLowerCase().indexOf(a) !== -1;
+                });
+
+                allListItems.hide();
+                childListItem.parent().parent().show();
+                childListItem.show();
+            } else {
+                allListItems.show();
+            }
+
+            if (e.keyCode == 13) {
+                var visibleItems = adminMenu.find("li a").filter(":visible");
+
+                if (visibleItems.length > 0) {
+                    var hit = visibleItems.filter(function(b, c) {
+                        return $(c).text().toLowerCase().indexOf(a) !== -1;
+                    });
+                    location.href = hit.attr("href");
+                }
+            }
+        });
+
+        // Bind global hotkey 'CTRL+M' and 'ESC.
+        $(document).on("keyup", function (e) {
+            if ((e.which == 77 && e.ctrlKey) || e.which == 27) {
+                var filterWrapper = $(".admin-menu-filter");
+
+                var hideFilter = function() {
+                    $("#adminfilter").val("");
+                    filterWrapper.slideUp(75);
+                };
+
+                switch(e.keyCode) {
+                    case 77: // 'm'
+                        if (filterWrapper.is(":visible")) {
+                            hideFilter();
+                        } else {
+                            filterWrapper.slideDown(75);
+                            $("#adminfilter").focus();
+                        }
+                        break;
+                    case 27: // 'esc'
+                        hideFilter();
+                        break;
+                }
+            }
+        });
+    };
+
+    generateMenuFilter();
 })(jQuery);
 
 

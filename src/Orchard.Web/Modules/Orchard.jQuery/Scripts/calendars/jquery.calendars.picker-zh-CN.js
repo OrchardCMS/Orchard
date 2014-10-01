@@ -2,9 +2,9 @@
    Simplified Chinese localisation for calendars datepicker for jQuery.
    Written by Cloudream (cloudream@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['zh-CN'] = {
-		renderer: $.extend({}, $.calendars.picker.defaultRenderer,
-			{month: $.calendars.picker.defaultRenderer.month.
+	$.calendarsPicker.regionalOptions['zh-CN'] = {
+		renderer: $.extend({}, $.calendarsPicker.defaultRenderer,
+			{month: $.calendarsPicker.defaultRenderer.month.
 				replace(/monthHeader/, 'monthHeader:MM yyyy年')}),
 		prevText: '&#x3c;上月', prevStatus: '显示上月',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '显示上一年',
@@ -19,5 +19,5 @@
 		dayStatus: '选择 m月 d日, DD', defaultStatus: '请选择日期',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['zh-CN']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['zh-CN']);
 })(jQuery);

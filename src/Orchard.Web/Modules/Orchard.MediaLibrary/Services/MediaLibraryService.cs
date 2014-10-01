@@ -20,6 +20,8 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
+        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
+
         public MediaLibraryService(
             IOrchardServices orchardServices,
             IMimeTypeProvider mimeTypeProvider,
@@ -125,6 +127,12 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public string GetUniqueFilename(string folderPath, string filename) {
+
+            // remove any char which is unallowed in an HTTP request
+            foreach (var unallowedChar in HttpUnallowed) {
+                filename = filename.Replace(unallowedChar.ToString(), "");
+            }
+
             // compute a unique filename
             var uniqueFilename = filename;
             var index = 1;
@@ -207,19 +215,19 @@ namespace Orchard.MediaLibrary.Services {
         /// </summary>
         /// <param name="relativePath">The path where to retrieve the media folder from. null means root.</param>
         /// <returns>The media folder in the given path.</returns>
-        public IEnumerable<MediaFolder> GetMediaFolders(string relativePath) {
+        public IEnumerable<IMediaFolder> GetMediaFolders(string relativePath) {
             return _storageProvider
                 .ListFolders(relativePath)
+                .Where(f => !f.GetName().Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase))
+                .Where(f => !f.GetName().StartsWith("_"))
                 .Select(BuildMediaFolder)
-                .Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase))
-                .Where(f => !f.Name.StartsWith("_"))
                 .ToList();
         }
 
-        private static MediaFolder BuildMediaFolder(IStorageFolder folder) {
+        private static IMediaFolder BuildMediaFolder(IStorageFolder folder) {
             return new MediaFolder {
                 Name = folder.GetName(),
-                Size = folder.GetSize(),
+                SizeField = new Lazy<long>(folder.GetSize),
                 LastUpdated = folder.GetLastUpdated(),
                 MediaPath = folder.GetPath()
             };

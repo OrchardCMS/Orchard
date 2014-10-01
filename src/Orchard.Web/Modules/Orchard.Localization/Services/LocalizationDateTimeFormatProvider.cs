@@ -20,31 +20,43 @@ namespace Orchard.Localization.Services {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<string> MonthNames {
+        public string[] MonthNames {
             get {
                 return T("January, February, March, April, May, June, July, August, September, October, November, December").Text.Split(new string[] {", "}, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> MonthNamesShort {
+        public virtual string[] MonthNamesGenitive {
+            get {
+                return MonthNames;
+            }
+        }
+
+        public string[] MonthNamesShort {
             get {
                 return T("Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> DayNames {
+        public virtual string[] MonthNamesShortGenitive {
+            get {
+                return MonthNamesShort;
+            }
+        }
+
+        public string[] DayNames {
             get {
                 return T("Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> DayNamesShort {
+        public string[] DayNamesShort {
             get {
                 return T("Sun, Mon, Tue, Wed, Thu, Fri, Sat").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        public IEnumerable<string> DayNamesMin {
+        public string[] DayNamesMin {
             get {
                 return T("Su, Mo, Tu, We, Th, Fr, Sa").Text.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             }
@@ -64,7 +76,7 @@ namespace Orchard.Localization.Services {
 
         public string ShortDateTimeFormat {
             get {
-                return String.Format("{0} {1}", ShortDateFormat, ShortTimeFormat);
+                return T("M/d/yyyy h:mm tt").Text;
             }
         }
 
@@ -82,7 +94,25 @@ namespace Orchard.Localization.Services {
 
         public string LongDateTimeFormat {
             get {
-                return String.Format("{0} {1}", LongDateFormat, LongTimeFormat);
+                return T("dddd, MMMM d, yyyy h:mm:ss tt").Text;
+            }
+        }
+
+        public IEnumerable<string> AllDateFormats {
+            get {
+                return new[] { ShortDateFormat, LongDateFormat };
+            }
+        }
+
+        public IEnumerable<string> AllTimeFormats {
+            get {
+                return new[] { ShortTimeFormat, LongTimeFormat };
+            }
+        }
+
+        public IEnumerable<string> AllDateTimeFormats {
+            get {
+                return new[] { ShortDateTimeFormat, LongDateTimeFormat };
             }
         }
 
@@ -112,6 +142,12 @@ namespace Orchard.Localization.Services {
             }
         }
 
+        public string DateSeparator {
+            get {
+                return "/"; // Since we can't do it with TimeSeparator why do it with this one...
+            }
+        }
+
         public string TimeSeparator {
             get {
                 return ":"; // No good way to put a colon through a colon-separated translation process...
@@ -124,7 +160,7 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public IEnumerable<string> AmPmDesignators {
+        public string[] AmPmDesignators {
             get {
                 var t = T("AM;PM").Text;
                 var parts = t.Split(';');

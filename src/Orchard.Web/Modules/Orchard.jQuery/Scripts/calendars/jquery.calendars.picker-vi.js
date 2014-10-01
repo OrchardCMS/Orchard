@@ -2,8 +2,8 @@
    Vietnamese localisation for calendars datepicker for jQuery.
    Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */
 (function($) {
-	$.calendars.picker.regional['vi'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['vi'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Trước', prevStatus: 'Tháng trước',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Năm trước',
 		nextText: 'Tiếp&#x3e;', nextStatus: 'Tháng sau',
@@ -17,5 +17,5 @@
 		dayStatus: 'Đang chọn DD, \'ngày\' d M', defaultStatus: 'Chọn ngày',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['vi']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['vi']);
 })(jQuery);

@@ -321,8 +321,8 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string ReplaceAll(this string original, IDictionary<string, string> replacements) {
-            var pattern = String.Format("({0})", String.Join("|", replacements.Keys.ToArray()));
-            return Regex.Replace(original, pattern, (match) => replacements[match.Value]);
+            var pattern = String.Format("{0}", String.Join("|", replacements.Keys));
+            return Regex.Replace(original, pattern, match => replacements[match.Value]);
         }
     }
 }

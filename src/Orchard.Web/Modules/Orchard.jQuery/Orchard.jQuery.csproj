@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.jQuery</RootNamespace>
     <AssemblyName>Orchard.jQuery</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -128,6 +128,7 @@
     <Content Include="Scripts\calendars\jquery.calendars-ta.js" />
     <Content Include="Scripts\calendars\jquery.calendars-th.js" />
     <Content Include="Scripts\calendars\jquery.calendars-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars-tt.js" />
     <Content Include="Scripts\calendars\jquery.calendars-uk.js" />
     <Content Include="Scripts\calendars\jquery.calendars-ur.js" />
     <Content Include="Scripts\calendars\jquery.calendars-vi.js" />
@@ -229,6 +230,7 @@
     <Content Include="Scripts\calendars\jquery.calendars.picker-ta.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-th.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-tr.js" />
+    <Content Include="Scripts\calendars\jquery.calendars.picker-tt.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-uk.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-ur.js" />
     <Content Include="Scripts\calendars\jquery.calendars.picker-vi.js" />
@@ -256,13 +258,10 @@
     <Content Include="Scripts\calendars\jquery.calendars.validation.min.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
-    <Content Include="Scripts\jquery-datetime-editor.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
-    <Content Include="Scripts\jquery.ui.multiselect.js" />
-    <Content Include="Scripts\jquery.ui.multiselect.min.js">
-      <DependentUpon>jquery.ui.multiselect.js</DependentUpon>
-    </Content>
+    <Content Include="Scripts\jquery.plugin.js" />
+    <Content Include="Scripts\jquery.plugin.min.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ca.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-cs.js" />
@@ -289,7 +288,6 @@
     <Content Include="Scripts\timeentry\jquery.timeentry-zh-TW.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.min.js" />
-    <Content Include="Scripts\ui.multiselect.js" />
     <Content Include="Styles\colorbox.css" />
     <Content Include="Styles\jquery-datetime-editor.css" />
     <Content Include="Styles\images\calendar-blue.gif" />
@@ -443,10 +441,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\ui.multiselect.css" />
-    <Content Include="Styles\ui.multiselect.min.css">
-      <DependentUpon>ui.multiselect.css</DependentUpon>
-    </Content>
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -472,11 +466,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.11.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery.ui.multiselect.min.js.map">
-      <DependentUpon>jquery.ui.multiselect.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -2,7 +2,7 @@
    Hong Kong  Chinese localisation for Gregorian/Julian calendars for jQuery.
    Written by SCCY (samuelcychan@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['zh-HK'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['zh-HK'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['一月','二月','三月','四月','五月','六月',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['zh-HK'] =
-			$.calendars.calendars.gregorian.prototype.regional['zh-HK'];
+		$.calendars.calendars.julian.prototype.regionalOptions['zh-HK'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['zh-HK'];
 	}
 })(jQuery);

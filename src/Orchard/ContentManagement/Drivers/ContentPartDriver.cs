@@ -75,6 +75,13 @@ namespace Orchard.ContentManagement.Drivers {
                     if(String.IsNullOrEmpty(location) || location == "-") {
                         return editor;
                     }
+
+                    var editorGroup = editor.GetGroup() ?? "";
+                    var contextGroup = context.GroupId ?? "";
+
+                    if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
+                        return editor;
+                    }
                 }
             }
 

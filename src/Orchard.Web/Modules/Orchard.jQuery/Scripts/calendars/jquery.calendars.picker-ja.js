@@ -2,9 +2,9 @@
    Japanese localisation for calendars datepicker for jQuery.
    Written by Kentaro SATO (kentaro@ranvis.com). */
 (function($) {
-	$.calendars.picker.regional['ja'] = {
-		renderer: $.extend({}, $.calendars.picker.defaultRenderer,
-			{month: $.calendars.picker.defaultRenderer.month.
+	$.calendarsPicker.regionalOptions['ja'] = {
+		renderer: $.extend({}, $.calendarsPicker.defaultRenderer,
+			{month: $.calendarsPicker.defaultRenderer.month.
 				replace(/monthHeader/, 'monthHeader:yyyy年 MM')}),
 		prevText: '&#x3c;前', prevStatus: '前月を表示します',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '前年を表示します',
@@ -19,5 +19,5 @@
 		dayStatus: 'yyyy/mm/dd', defaultStatus: '日付を選択します',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ja']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ja']);
 })(jQuery);
