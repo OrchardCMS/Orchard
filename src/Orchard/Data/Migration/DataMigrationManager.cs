@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using Orchard.ContentManagement.MetaData;
@@ -21,8 +22,7 @@ namespace Orchard.Data.Migration {
         private readonly IDataMigrationInterpreter _interpreter;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
-
-        private List<string> _processedFeatures;
+        private readonly List<string> _processedFeatures;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations,
@@ -31,6 +31,7 @@ namespace Orchard.Data.Migration {
             IDataMigrationInterpreter interpreter,
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager) {
+
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
@@ -40,9 +41,11 @@ namespace Orchard.Data.Migration {
 
             _processedFeatures = new List<string>();
             Logger = NullLogger.Instance;
+            IsolationLevel = IsolationLevel.ReadCommitted;
         }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        public IsolationLevel IsolationLevel { get; set; }
 
         public IEnumerable<string> GetFeaturesThatNeedUpdate() {
             var currentVersions = _dataMigrationRepository.Table.ToDictionary(r => r.DataMigrationClass);
@@ -90,7 +93,7 @@ namespace Orchard.Data.Migration {
 
             // apply update methods to each migration class for the module
             foreach (var migration in migrations) {
-                _transactionManager.RequireNew();
+                _transactionManager.RequireNew(IsolationLevel);
 
                 // copy the object for the Linq query
                 var tempMigration = migration;
