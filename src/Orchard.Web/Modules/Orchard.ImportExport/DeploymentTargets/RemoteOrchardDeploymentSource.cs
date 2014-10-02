@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
@@ -12,10 +13,12 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private Lazy<RemoteOrchardApiClient> Client { get; set; }
         private readonly ISigningService _signingService;
         private readonly IClock _clock;
+        private readonly UrlHelper _url;
 
-        public RemoteOrchardDeploymentSource(ISigningService signingService, IClock clock) {
+        public RemoteOrchardDeploymentSource(ISigningService signingService, IClock clock, UrlHelper url) {
             _signingService = signingService;
             _clock = clock;
+            _url = url;
         }
 
         public DeploymentSourceMatch Match(IContent sourceConfiguration) {
@@ -27,19 +30,28 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public string GetRecipe(RecipeRequest request) {
-            const string actionUrl = "export/recipe";
+            var actionUrl = _url.Action("Recipe", "Export", new {
+                httproute = true,
+                area = "Orchard.ImportExport"
+            });
             var data = JsonConvert.SerializeObject(request);
             return Client.Value.Post(actionUrl, data);
         }
 
         public IList<DeploymentContentType> GetContentTypes() {
-            const string actionUrl = "export/contenttypes";
+            var actionUrl = _url.Action("ContentTypes", "Export", new {
+                httproute = true,
+                area = "Orchard.ImportExport"
+            });
             var result = Client.Value.Get(actionUrl);
             return JsonConvert.DeserializeObject<List<DeploymentContentType>>(result);
         }
 
         public IList<DeploymentQuery> GetQueries() {
-            const string actionUrl = "export/queries";
+            var actionUrl = _url.Action("Queries", "Export", new {
+                httproute = true,
+                area = "Orchard.ImportExport"
+            });
             var result = Client.Value.Get(actionUrl);
             return JsonConvert.DeserializeObject<List<DeploymentQuery>>(result);
         }

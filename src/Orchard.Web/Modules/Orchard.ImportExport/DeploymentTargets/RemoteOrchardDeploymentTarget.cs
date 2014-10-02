@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
@@ -13,11 +14,13 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private RemoteOrchardDeploymentPart DeploymentPart { get; set; }
         private Lazy<RemoteOrchardApiClient> Client { get; set; }
         private readonly IClock _clock;
+        private readonly UrlHelper _url;
 
-        public OrchardDeploymentTarget(IContentManager contentManager, ISigningService signingService, IClock clock) {
+        public OrchardDeploymentTarget(IContentManager contentManager, ISigningService signingService, IClock clock, UrlHelper url) {
             _contentManager = contentManager;
             _signingService = signingService;
             _clock = clock;
+            _url = url;
         }
 
         public DeploymentTargetMatch Match(IContent targetConfiguration) {
@@ -30,12 +33,20 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public void PushRecipe(string executionId, string recipeText) {
-            var actionUrl = string.Format("import/recipe?executionId={0}", executionId);
+            var actionUrl = _url.Action("Recipe", "Import", new {
+                httproute = true,
+                area = "Orchard.ImportExport",
+                executionId
+            });
             Client.Value.Post(actionUrl, recipeText);
         }
 
         public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
-            var actionUrl = string.Format("import/recipejournal?executionId={0}", executionId);
+            var actionUrl = _url.Action("RecipeJournal", "Import", new {
+                httproute = true,
+                area = "Orchard.ImportExport",
+                executionId
+            });
             var journal = Client.Value.Get(actionUrl);
             var element = XElement.Parse(journal);
             var statusElement = element.Element("Status");
@@ -47,7 +58,10 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public void PushContent(IContent content) {
-            const string actionUrl = "import/content";
+            var actionUrl = _url.Action("Content", "Import", new {
+                httproute = true,
+                area = "Orchard.ImportExport"
+            });
             var exportedItem = _contentManager.Export(content.ContentItem);
             Client.Value.Post(actionUrl, exportedItem.ToString());
         }

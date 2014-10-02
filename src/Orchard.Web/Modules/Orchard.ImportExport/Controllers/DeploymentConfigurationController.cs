@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -77,23 +78,27 @@ namespace Orchard.ImportExport.Controllers {
 
             try {
                 var deploymentSource = _deploymentService.GetDeploymentSource(Services.ContentManager.Get(id));
-                deploymentSource.GetContentTypes();
-
-                Services.Notifier.Add(NotifyType.Information, T("Successfully tested import from remote target."));
+                if (deploymentSource != null) {
+                    deploymentSource.GetContentTypes();
+                    Services.Notifier.Add(NotifyType.Information, T("Successfully tested import from remote target."));
+                }
             }
-            catch (Exception ex) {
-                Services.Notifier.Add(NotifyType.Warning, T("Unable to import from deployment source. Review configuration and ensure deployment source is configured with required permissions for deployment content export."));
+            catch (WebException ex) {
+                Services.Notifier.Add(NotifyType.Warning,T
+                    ("Unable to import from deployment source. Review configuration and ensure that features are enabled, deployment source is configured with required permissions for deployment export of content, and that both servers have the same API key.<br/>{0}", ex.Message));
                 Logger.Information(ex, "Deployment import connection test failed.");
             }
 
             try {
                 var deploymentTarget = _deploymentService.GetDeploymentTarget(Services.ContentManager.Get(id));
-                deploymentTarget.PushRecipe(Guid.NewGuid().ToString("n"), @"<Orchard><Recipe></Recipe></Orchard>");
-
-                Services.Notifier.Add(NotifyType.Information, T("Successfully tested deployment to remote target."));
+                if (deploymentTarget != null) {
+                    deploymentTarget.PushRecipe(Guid.NewGuid().ToString("n"), @"<Orchard><Recipe></Recipe></Orchard>");
+                    Services.Notifier.Add(NotifyType.Information, T("Successfully tested deployment to remote target."));
+                }
             }
-            catch (Exception ex) {
-                Services.Notifier.Add(NotifyType.Warning, T("Unable to deploy content to target. Review configuration and ensure deployment target is configured with required permissions for deployment content import."));
+            catch (WebException ex) {
+                Services.Notifier.Add(NotifyType.Warning,
+                    T("Unable to deploy content to target. Review configuration and ensure that features are enabled, deployment target is configured with required permissions for deployment import of content, and that both servers have the same API key.<br/>{0}", ex.Message));
                 Logger.Information(ex, "Deployment export connection test failed.");
             }
 

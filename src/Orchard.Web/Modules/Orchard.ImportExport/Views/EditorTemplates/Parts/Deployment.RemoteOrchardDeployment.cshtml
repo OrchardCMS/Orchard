@@ -10,11 +10,11 @@
     @Html.LabelFor(m => m.UserName, T("User Name"))
     @Html.TextBoxFor(m=>m.UserName, new { @class = "textMedium" })
     @Html.ValidationMessageFor(m=>m.UserName, "*")
-    <span class="hint">@T("Provide the details for a user on the target Orchard CMS with permissions to Import / Export to deployment targets.")</span>
+    <span class="hint">@T("Provide the name of a user on the target Orchard CMS with permissions to Import / Export to deployment targets. This user must be anabled and configured with the API secret key.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.PrivateApiKey, T("Private API Key"))
-    @Html.PasswordFor(m=>m.PrivateApiKey, new { @class = "textMedium" })
+    @Html.TextBoxFor(m=>m.PrivateApiKey, new { @class = "textMedium" })
     @Html.ValidationMessageFor(m=>m.PrivateApiKey, "*")
-    <span class="hint">@T("The private API key is used to sign messages to import and export content to the target CMS.")</span>
+    <span class="hint">@T("The private API key is used to sign messages to import and export content to the target CMS. This key must be the same as the key that is configured on the remote server for the user.")</span>
 </fieldset>

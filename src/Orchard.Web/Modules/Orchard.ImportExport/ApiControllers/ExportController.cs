@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Mvc;
+using System.Web.Http;
 using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -45,7 +45,7 @@ namespace Orchard.ImportExport.ApiControllers {
         public ILogger Logger { get; set; }
 
         [AuthenticateApi]
-        [HttpPost]
+        [AcceptVerbs("POST")]
         public HttpResponseMessage Recipe(RecipeRequest request) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);
@@ -71,7 +71,7 @@ namespace Orchard.ImportExport.ApiControllers {
         }
 
         [AuthenticateApi]
-        [HttpGet]
+        [AcceptVerbs("GET")]
         public HttpResponseMessage Queries() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);
@@ -89,7 +89,7 @@ namespace Orchard.ImportExport.ApiControllers {
         }
 
         [AuthenticateApi]
-        [HttpGet]
+        [AcceptVerbs("GET")]
         public HttpResponseMessage ContentTypes() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);

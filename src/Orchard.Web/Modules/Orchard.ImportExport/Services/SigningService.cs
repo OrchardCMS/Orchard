@@ -46,8 +46,7 @@ namespace Orchard.ImportExport.Services {
 
         public string SignRequest(string methodType, string timestamp, string uri, string secret) {
             var message = BuildBaseString(methodType, timestamp, uri);
-            var signature = ComputeHash(secret, message);
-            return signature;
+            return ComputeHash(secret, message);
         }
 
         public bool ValidateRequest(string methodType, string timestamp, string uri, string secret, string signature) {
@@ -79,7 +78,7 @@ namespace Orchard.ImportExport.Services {
         }
 
         private static string BuildBaseString(string methodType, string timestamp, string uri) {
-            string message = string.Join("\n", methodType, timestamp, uri);
+            var message = string.Join("\n", methodType.ToUpperInvariant(), timestamp, uri.ToLowerInvariant());
             return message;
         }
 
@@ -87,7 +86,7 @@ namespace Orchard.ImportExport.Services {
             if (string.IsNullOrEmpty(secret))
                 return false;
 
-            var key = string.Format("SigningSignature:{0}", signature);
+            var key = "SigningSignature:" + signature;
             var token = _clock.UtcNow;
             var cachedToken = _cacheManager.Get(key, ctx => {
                 ctx.Monitor(_clock.When(TimeSpan.FromMinutes(10)));
@@ -113,6 +112,7 @@ namespace Orchard.ImportExport.Services {
 
             var now = _clock.UtcNow;
             timestamp = timestamp.ToUniversalTime();
+
             if (timestamp < now.AddMinutes(-5)) return false;
 
             return timestamp <= now.AddMinutes(5);

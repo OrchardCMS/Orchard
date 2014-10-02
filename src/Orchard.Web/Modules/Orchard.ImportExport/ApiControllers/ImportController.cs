@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Mvc;
+using System.Web.Http;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -15,7 +15,7 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.ImportExport.ApiControllers {
-    [OrchardFeature("Orchard.Deployment.Api.Import")]
+    [OrchardFeature("Orchard.Deployment.ImportApi")]
     public class ImportController : BaseApiController {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeJournal _recipeJournal;
@@ -41,7 +41,7 @@ namespace Orchard.ImportExport.ApiControllers {
         public ILogger Logger { get; set; }
 
         [AuthenticateApi]
-        [HttpPost]
+        [AcceptVerbs("POST")]
         public HttpResponseMessage Recipe(string executionId) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);
@@ -58,7 +58,7 @@ namespace Orchard.ImportExport.ApiControllers {
         }
 
         [AuthenticateApi]
-        [HttpGet]
+        [AcceptVerbs("GET")]
         public HttpResponseMessage RecipeJournal(string executionId)
         {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
@@ -74,7 +74,7 @@ namespace Orchard.ImportExport.ApiControllers {
         }
 
         [AuthenticateApi]
-        [HttpPost]
+        [AcceptVerbs("POST")]
         public HttpResponseMessage Content() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return Request.CreateResponse(HttpStatusCode.Unauthorized);

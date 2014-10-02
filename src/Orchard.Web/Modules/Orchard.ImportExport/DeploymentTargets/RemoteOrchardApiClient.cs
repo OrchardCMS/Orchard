@@ -10,7 +10,6 @@ using Orchard.Services;
 
 namespace Orchard.ImportExport.DeploymentTargets {
     public class RemoteOrchardApiClient {
-        private const string ApiBasePath = "api/deployment/";
         private readonly RemoteOrchardDeploymentPart _config;
         private readonly ISigningService _signingService;
         private readonly IClock _clock;
@@ -59,7 +58,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
             using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, requestContentHash)) {
                 webClient.Headers["Content-Type"] = contentType;
-                var result = webClient.UploadString(fullyQualifiedUri.ToString(), data);
+                var result = webClient.UploadString(fullyQualifiedUri.ToString(), "POST", data);
 
                 if (!ResponseIsValid(result,
                     webClient.ResponseHeaders[_signingService.TimestampHeaderName],
@@ -71,7 +70,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         private Uri BuildUri(string relativeUrl) {
-            relativeUrl = ApiBasePath + relativeUrl;
             var baseUri = new Uri(_config.BaseUrl);
             return new Uri(baseUri, relativeUrl);
         }
@@ -79,7 +77,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private WebClient CreateWebClient(string username, string timestamp, string signature, string contentHash) {
             var webClient = new WebClient {Encoding = Encoding.UTF8};
             webClient.Headers[_signingService.AuthenticationHeaderName] =
-                string.Format("{0}:{1}", username, HttpUtility.UrlEncode(signature));
+                username + ":" + HttpUtility.UrlEncode(signature);
             webClient.Headers[_signingService.TimestampHeaderName] = timestamp;
             if (!string.IsNullOrEmpty(contentHash)) {
                 webClient.Headers[_signingService.ContentHashHeaderName] = HttpUtility.UrlEncode(contentHash);
