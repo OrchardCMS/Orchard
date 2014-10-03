@@ -18,6 +18,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
     public class DefaultShapeTableManagerTests : ContainerTestBase {
         protected override void Register(ContainerBuilder builder) {
+            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
