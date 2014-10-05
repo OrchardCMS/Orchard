@@ -75,7 +75,7 @@
     <Compile Include="Providers\ICultureStorageProvider.cs" />
     <Compile Include="RuleEngine\CultureRuleProvider.cs" />
     <Compile Include="Services\AdminDirectionalityFactory.cs" />
-    <Compile Include="Services\CultureSelectorFactory.cs" />
+    <Compile Include="Services\AdminCultureSelectorFactory.cs" />
     <Compile Include="Services\LocalizationCultureFilter.cs" />
     <Compile Include="Selectors\CookieCultureSelector.cs" />
     <Compile Include="Drivers\LocalizationPartDriver.cs" />
