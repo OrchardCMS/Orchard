@@ -13,14 +13,14 @@ using Orchard.Utility.Extensions;
 namespace Orchard.DisplayManagement.Descriptors {
 
     public class DefaultShapeTableManager : IShapeTableManager {
-        private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
+        private readonly Work<IEnumerable<Meta<IShapeTableProvider>>> _bindingStrategiesWork;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
         private readonly IParallelCacheContext _parallelCacheContext;
         private readonly Work<IEnumerable<IShapeTableEventHandler>> _shapeTableEventHandlersWork;
 
         public DefaultShapeTableManager(
-            IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
+            Work<IEnumerable<Meta<IShapeTableProvider>>> bindingStrategiesWork,
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
             IParallelCacheContext parallelCacheContext,
@@ -30,7 +30,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             _cacheManager = cacheManager;
             _parallelCacheContext = parallelCacheContext;
             _shapeTableEventHandlersWork = shapeTableEventHandlersWork;
-            _bindingStrategies = bindingStrategies;
+            _bindingStrategiesWork = bindingStrategiesWork;
             Logger = NullLogger.Instance;
         }
 
@@ -40,7 +40,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             return _cacheManager.Get(themeName ?? "", x => {
                 Logger.Information("Start building shape table");
 
-                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
+                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategiesWork.Value, bindingStrategy => {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
                                                                (Feature)bindingStrategy.Metadata["Feature"] :
                                                                null;
