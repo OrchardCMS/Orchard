@@ -40,6 +40,8 @@ using System.Web.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
 using Orchard.UI.PageClass;
+using Orchard.Environment;
+using Autofac.Features.Metadata;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
@@ -68,7 +70,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
 
             builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
-            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
+            builder.RegisterInstance(new Work<IEnumerable<Meta<IShapeTableProvider>>>(resolve => _container.Resolve<IEnumerable<Meta<IShapeTableProvider>>>())).AsSelf();
+            builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();

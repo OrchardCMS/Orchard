@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Autofac.Features.Metadata;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -9,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Stubs;
@@ -18,7 +20,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
     public class DefaultShapeTableManagerTests : ContainerTestBase {
         protected override void Register(ContainerBuilder builder) {
-            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
+            builder.RegisterInstance(new Work<IEnumerable<Meta<IShapeTableProvider>>>(resolve => _container.Resolve<IEnumerable<Meta<IShapeTableProvider>>>())).AsSelf();
+            builder.RegisterInstance(new Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
