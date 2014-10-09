@@ -38,8 +38,9 @@ namespace Orchard.Templates.Services {
                     BindingName = "Templates",
                     Binding = ctx => CoerceHtmlString(_templateService.Execute(
                         templateResult.Template, 
-                        templateResult.Name, 
-                        templateResult.Processor, ctx.Value))
+                        templateResult.Name,
+                        templateResult.Processor, ctx.Value)),
+                    ShapeDescriptor = new ShapeDescriptor { ShapeType = shapeType }
                 };
 
                 return true;
