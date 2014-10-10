@@ -40,7 +40,6 @@ namespace Orchard.OutputCache.Filters {
         private readonly ISignals _signals;
         private readonly ShellSettings _shellSettings;
         private readonly ICacheControlStrategy _cacheControlStrategy;
-        private readonly INotifier _notifier;
 
         TextWriter _originalWriter;
         StringWriter _cachingWriter;
@@ -59,8 +58,7 @@ namespace Orchard.OutputCache.Filters {
             ICacheService cacheService,
             ISignals signals,
             ShellSettings shellSettings,
-            ICacheControlStrategy cacheControlStrategy, 
-            INotifier notifier) {
+            ICacheControlStrategy cacheControlStrategy) {
 
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
@@ -73,7 +71,6 @@ namespace Orchard.OutputCache.Filters {
             _signals = signals;
             _shellSettings = shellSettings;
             _cacheControlStrategy = cacheControlStrategy;
-            _notifier = notifier;
 
             Logger = NullLogger.Instance;
         }
@@ -347,7 +344,9 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // don't cache the result if there were some notifications
-            if (_notifier.List().Any()) {
+            var hasNotifications = !String.IsNullOrEmpty(Convert.ToString(filterContext.Controller.TempData["messages"]));
+            if (hasNotifications) {
+                Logger.Debug("Not caching: notifications present");
                 return;
             }
 
@@ -375,10 +374,8 @@ namespace Orchard.OutputCache.Filters {
 
             Logger.Debug("Cache item added: " + _cacheItem.CacheKey);
 
-            // remove only the current version of the page
-            _cacheService.RemoveByTag(_cacheKey);
-
-            // add data to cache
+            // update the cached data
+            _cacheStorageProvider.Remove(_cacheKey);
             _cacheStorageProvider.Set(_cacheKey, _cacheItem);
 
             // add to the tags index
