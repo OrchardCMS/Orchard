@@ -208,21 +208,16 @@
     <Content Include="Scripts\plugins\wordcount\plugin.min.js" />
     <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
-    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.dev.svg" />
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.dev.svg" />
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.svg" />
     <Content Include="Scripts\skins\orchardlightgray\img\anchor.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\loader.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\object.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\trans.gif" />
     <Content Include="Scripts\skins\orchardlightgray\skin.ie7.min.css" />
-    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
     <Content Include="Scripts\skins\lightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\lightgray\content.min.css" />
-    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.dev.svg" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\skins\lightgray\fonts\tinymce.dev.svg" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.svg" />
     <Content Include="Scripts\skins\lightgray\img\anchor.gif" />
     <Content Include="Scripts\skins\lightgray\img\loader.gif" />
@@ -230,6 +225,7 @@
     <Content Include="Scripts\skins\lightgray\img\trans.gif" />
     <Content Include="Scripts\skins\lightgray\skin.ie7.min.css" />
     <Content Include="Scripts\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
     <Content Include="Scripts\themes\modern\theme.min.js" />
     <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
@@ -257,7 +253,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\langs\readme.md" />
-    <Content Include="Scripts\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.woff" />
@@ -266,7 +261,14 @@
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\skins\orchardlightgray\fonts\readme.md" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
@@ -285,16 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
