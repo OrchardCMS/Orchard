@@ -34,13 +34,20 @@ namespace Orchard.Indexing.Settings {
             builder.WithSetting("TypeIndexing.Indexes", model.Indexes);
 
             // create indexing tasks only if settings have changed
-            if (model.Indexes != previous.Indexes) {
+            if (Clean(model.Indexes) != Clean(previous.Indexes)) {
                 
                 // if a an index is added, all existing content items need to be re-indexed
                 CreateIndexingTasks();
             }
             
             yield return DefinitionTemplate(model);
+        }
+
+        private string Clean(string value) {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return value.Trim(',', ' ');
         }
 
         /// <summary>
