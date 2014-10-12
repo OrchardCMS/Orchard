@@ -41971,6 +41971,11 @@
         <member name="F:NHibernate.Util.StringHelper.SqlParameter">
             <summary></summary>
         </member>
+        <member name="F:NHibernate.Util.StringHelper.LineSeparators">
+            <summary>
+            This allows for both CRLF and lone LF line separators.
+            </summary>
+        </member>
         <member name="M:NHibernate.Util.StringHelper.Repeat(System.String,System.Int32)">
             <summary>
             
@@ -42146,6 +42151,22 @@
             </summary>
             <param name="str">A <see cref="T:System.String"/></param>
             <returns>A <see cref="T:System.String"/></returns>
+        </member>
+        <member name="M:NHibernate.Util.StringHelper.IndexOfAnyNewLine(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Return the index of the next line separator, starting at startIndex. If will match
+            the first CRLF or LF line separator. If there is no match, -1 will be returned. When
+            returning, newLineLength will be set to the number of characters in the matched line
+            separator (1 if LF was found, 2 if CRLF was found).
+            </summary>
+        </member>
+        <member name="M:NHibernate.Util.StringHelper.IsAnyNewLine(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Check if the given index points to a line separator in the string. Both CRLF and LF
+            line separators are handled. When returning, newLineLength will be set to the number
+            of characters matched in the line separator. It will be 2 if a CRLF matched, 1 if LF
+            matched, and 0 if the index doesn't indicate (the start of) a line separator.
+            </summary>
         </member>
         <member name="T:NHibernate.Util.StringTokenizer">
             <summary>
