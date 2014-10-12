@@ -27,6 +27,10 @@ namespace Orchard.Localization.RuleEngine {
             if (String.Equals(ruleContext.FunctionName, "culture-isrtl", StringComparison.OrdinalIgnoreCase)) {
                 ProcessCurrentCultureIsRtl(ruleContext);
             }
+
+            if (String.Equals(ruleContext.FunctionName, "culture-lang", StringComparison.OrdinalIgnoreCase)) {
+                ProcessLanguageCode(ruleContext);
+            }
         }
 
         private void ProcessCurrentCultureIsRtl(dynamic ruleContext) {
@@ -46,6 +50,15 @@ namespace Orchard.Localization.RuleEngine {
                 .Cast<string>()
                 .Select(CultureInfo.GetCultureInfo)
                 .Any(c => c.Name == currentUserCulture.Name);
+        }
+
+        private void ProcessLanguageCode(dynamic ruleContext) {
+            var currentUserCulture = CultureInfo.GetCultureInfo(_workContext.CurrentCulture);
+
+            ruleContext.Result = ((object[])ruleContext.Arguments)
+                .Cast<string>()
+                .Select(CultureInfo.GetCultureInfo)
+                .Any(c => c.Name == currentUserCulture.TwoLetterISOLanguageName);
         }
 
         private void ProcessCultureId(dynamic ruleContext) {
