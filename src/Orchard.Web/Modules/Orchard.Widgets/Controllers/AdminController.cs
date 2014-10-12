@@ -18,6 +18,7 @@ using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
+using Orchard.Localization.Services;
 
 namespace Orchard.Widgets.Controllers {
 
@@ -27,18 +28,21 @@ namespace Orchard.Widgets.Controllers {
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly ICultureManager _cultureManager;
 
         public AdminController(
             IOrchardServices services,
             IWidgetsService widgetsService,
             IShapeFactory shapeFactory,
             ISiteThemeService siteThemeService,
-            IVirtualPathProvider virtualPathProvider) {
+            IVirtualPathProvider virtualPathProvider,
+            ICultureManager cultureManager) {
 
             Services = services;
             _widgetsService = widgetsService;
             _siteThemeService = siteThemeService;
             _virtualPathProvider = virtualPathProvider;
+            _cultureManager = cultureManager;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -50,7 +54,7 @@ namespace Orchard.Widgets.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(int? layerId) {
+        public ActionResult Index(int? layerId, string culture) {
             ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             if (currentTheme == null) {
                 Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
@@ -79,12 +83,26 @@ namespace Orchard.Widgets.Controllers {
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
             string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
+            var widgets = _widgetsService.GetWidgets();
+
+            if (!String.IsNullOrWhiteSpace(culture)) {
+                widgets = widgets.Where(x => {
+                    if(x.Has<ILocalizableAspect>()) {
+                        return String.Equals(x.As<ILocalizableAspect>().Culture, culture, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                    
+                    return false;
+                }).ToList();
+            }
+
             var viewModel = Shape.ViewModel()
                 .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
+                .CurrentCulture(culture)
                 .Layers(layers)
-                .Widgets(_widgetsService.GetWidgets())
+                .Widgets(widgets)
                 .Zones(currentThemesZones)
+                .Cultures(_cultureManager.ListCultures())
                 .OrphanZones(allZones.Except(currentThemesZones))
                 .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
                 .ZonePreviewImage(zonePreviewImage);

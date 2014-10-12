@@ -260,7 +260,7 @@
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="FileSystems\Media\StorageProviderExtensions.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
-    <Compile Include="Localization\HtmlLocalizationExtensions.cs" />
+    <Compile Include="Localization\LocalizationExtensions.cs" />
     <Compile Include="Localization\Models\DateLocalizationOptions.cs" />
     <Compile Include="Localization\Models\DateParts.cs" />
     <Compile Include="Localization\Models\DateTimeParts.cs" />
@@ -274,6 +274,8 @@
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ICalendarSelector.cs" />
     <Compile Include="Localization\Services\ICalendarManager.cs" />
+    <Compile Include="Localization\Services\DefaultCultureFilter.cs" />
+    <Compile Include="Localization\Services\ICultureFilter.cs" />
     <Compile Include="Localization\Services\IDateLocalizationServices.cs" />
     <Compile Include="Localization\Services\IDateFormatter.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />

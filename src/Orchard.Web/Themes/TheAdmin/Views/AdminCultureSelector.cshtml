@@ -1,0 +1,29 @@
+﻿@using System.Globalization
+@{
+    var currentCulture = WorkContext.CurrentCulture;
+    var supportedCultures = (IList<string>)Model.SupportedCultures;
+}
+
+<div id="culture-selection">
+    <select>
+        @foreach (var supportedCulure in supportedCultures) {
+            var cultureInfo = CultureInfo.GetCultureInfo(supportedCulure);
+            var url = Url.Action("ChangeCulture", "AdminCutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+
+            <option @if (supportedCulure.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
+                @cultureInfo.DisplayName&#x200E;
+            </option>
+        }
+    </select>
+</div>
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+   (function ($) {
+       $("#culture-selection").change(function (e) {
+           window.location = $("#culture-selection > select > option:selected")[0].value;
+       });
+   })(jQuery);
+//]]>
+</script>
+}
