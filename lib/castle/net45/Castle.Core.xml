@@ -343,6 +343,26 @@
             <param name = "this"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Core.Internal.ExceptionMessageBuilder.CreateMessageForInaccessibleType(System.Type,System.Type)">
+            <summary>
+            Creates a message to inform clients that a proxy couldn't be created due to reliance on an
+            inaccessible type (perhaps itself).
+            </summary>
+            <param name="inaccessibleType">the inaccessible type that prevents proxy creation</param>
+            <param name="typeToProxy">the type that couldn't be proxied</param>
+        </member>
+        <member name="M:Castle.Core.Internal.TypeExtensions.GetBestName(System.Type)">
+            <summary>
+            Find the best available name to describe a type.
+            </summary>
+            <remarks>
+            Usually the best name will be <see cref="P:System.Type.FullName"/>, but
+            sometimes that's null (see http://msdn.microsoft.com/en-us/library/system.type.fullname%28v=vs.110%29.aspx)
+            in which case the method falls back to <see cref="P:System.Reflection.MemberInfo.Name"/>.
+            </remarks>
+            <param name="type">the type to name</param>
+            <returns>the best name</returns>
+        </member>
         <member name="F:Castle.Core.Internal.InternalsVisible.ToCastleCore">
             <summary>
               Constant to use when making assembly internals visible to Castle.Core 
