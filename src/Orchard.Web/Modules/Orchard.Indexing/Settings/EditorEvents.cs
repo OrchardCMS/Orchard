@@ -72,8 +72,6 @@ namespace Orchard.Indexing.Settings {
                 CreateIndexingTasks();
             }
 
-            CreateIndexingTasks();
-
             yield return DefinitionTemplate(model);
         }
 
