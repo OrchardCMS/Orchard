@@ -84,12 +84,13 @@
 @using (Script.Foot()) {
     <script type="text/javascript">
 //<![CDATA[
-    (function ($) {
+    (function($) {
         "use strict";
 
         var culture = $("#@Html.FieldIdFor(m => m.SelectedCulture)");
-        culture.change(function () {
-            var optionDirectionality = $("option:selected", this).attr("data-content-dir");
+
+        function flipCulture() {
+            var optionDirectionality = $("option:selected", culture).attr("data-content-dir");
             var contentZone = $(".zone-content");
             if (contentZone.hasClass(optionDirectionality))
                 return;
@@ -100,7 +101,13 @@
             contentZone.addClass("content-" + optionDirectionality);
 
             $(document).trigger("localization.ui.directionalitychanged", optionDirectionality);
+        }
+
+        culture.change(function () {
+            flipCulture();
         });
+
+        flipCulture();
     })(jQuery);
 //]]>
     </script>
