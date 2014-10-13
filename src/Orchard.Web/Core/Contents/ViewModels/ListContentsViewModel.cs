@@ -35,10 +35,12 @@ namespace Orchard.Core.Contents.ViewModels {
             ContentsStatus = ContentsStatus.Latest;
         }
         public string SelectedFilter { get; set; }
+        public string SelectedCulture { get; set; }
         public IEnumerable<KeyValuePair<string, string>> FilterOptions { get; set; }
         public ContentsOrder OrderBy { get; set; }
         public ContentsStatus ContentsStatus { get; set; }
         public ContentsBulkAction BulkAction { get; set; }
+        public IEnumerable<string> Cultures { get; set; }
     }
 
     public enum ContentsOrder {

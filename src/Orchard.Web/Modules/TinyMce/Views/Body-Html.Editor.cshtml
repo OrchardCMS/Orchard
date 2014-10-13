@@ -9,7 +9,8 @@
 <script type="text/javascript">
     var mediaPickerEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaPicker") ? "true" : "false");
     var mediaLibraryEnabled = @(shellDescriptor.Features.Any(x => x.Name == "Orchard.MediaLibrary") ? "true" : "false");
-    var directionality = '@Html.Directionality((IContent)Model.ContentItem)';
+    var directionality = '@WorkContext.GetTextDirection((IContent)Model.ContentItem)';
+    var language = '@Model.Language';
 </script>
 
 @{ 

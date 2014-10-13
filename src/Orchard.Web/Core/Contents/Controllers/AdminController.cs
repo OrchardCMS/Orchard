@@ -22,6 +22,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
 using Orchard.Utility.Extensions;
+using Orchard.Localization.Services;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -30,6 +31,8 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
         private readonly ISiteService _siteService;
+        private readonly ICultureManager _cultureManager;
+        private readonly ICultureFilter _cultureFilter;
 
         public AdminController(
             IOrchardServices orchardServices,
@@ -37,12 +40,17 @@ namespace Orchard.Core.Contents.Controllers {
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ICultureManager cultureManager,
+            ICultureFilter cultureFilter) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
             _siteService = siteService;
+            _cultureManager = cultureManager;
+            _cultureFilter = cultureFilter;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -100,10 +108,16 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
+            if(!String.IsNullOrWhiteSpace(model.Options.SelectedCulture)) {
+                query = _cultureFilter.FilterCulture(query, model.Options.SelectedCulture);
+            }
+
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetListableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
+
+            model.Options.Cultures = _cultureManager.ListCultures();
 
             var maxPagedCount = _siteService.GetSiteSettings().MaxPagedCount;
             var pagerShape = Shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
@@ -140,6 +154,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult ListFilterPOST(ContentOptions options) {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
+                routeValues["Options.SelectedCulture"] = options.SelectedCulture; //todo: don't hard-code the key
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
                 routeValues["Options.ContentsStatus"] = options.ContentsStatus; //todo: don't hard-code the key
                 if (GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {

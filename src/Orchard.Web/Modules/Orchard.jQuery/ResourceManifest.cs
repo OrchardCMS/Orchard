@@ -84,13 +84,9 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryIFrameTransport").SetUrl("jquery.iframe-transport.min.js", "jquery.iframe-transport.js").SetVersion("1.8.2").SetDependencies("jQuery");
             manifest.DefineScript("jQueryFileUpload").SetUrl("jquery.fileupload.min.js", "jquery.fileupload.js").SetVersion("5.41.0").SetDependencies("jQueryIFrameTransport").SetDependencies("jQueryUI_Widget");
 
-            // jQuery Color Box
-            manifest.DefineScript("jQueryColorBox").SetUrl("jquery.colorbox.min.js", "jquery.colorbox.js").SetVersion("1.4.10").SetDependencies("jQuery");
-            manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.4.10");
-
-            // jQuery Multiselect
-            manifest.DefineScript("jQueryUI_MultiSelect").SetUrl("jquery.ui.multiselect.min.js", "jquery.ui.multiselect.js").SetVersion("0.3.1").SetDependencies("jQueryUI_Core", "jQueryUI_Sortable");
-            manifest.DefineStyle("jQueryUI_MultiSelect").SetUrl("jquery.ui.multiselect.min.css", "jquery.ui.multiselect.css").SetVersion("0.3.1");
+            // jquer Color Box
+            manifest.DefineScript("jQueryColorBox").SetUrl("colorbox/jquery.colorbox.min.js", "colorbox/jquery.colorbox.js").SetVersion("1.5.13").SetDependencies("jQuery");
+            manifest.DefineStyle("jQueryColorBox").SetUrl("colorbox.css").SetVersion("1.5.13");
         }
     }
 }

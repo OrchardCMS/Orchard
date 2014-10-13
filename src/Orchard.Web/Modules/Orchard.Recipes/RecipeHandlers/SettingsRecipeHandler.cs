@@ -76,7 +76,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
                 var property = sitePart.GetType().GetProperty(attributeName);
                 if (property == null) {
-                    throw new InvalidOperationException(string.Format("Could set setting {0} for part {1} because it was not found.", attributeName, sitePart.PartDefinition.Name));
+                    return;
                 }
 
                 var propertyType = property.PropertyType;

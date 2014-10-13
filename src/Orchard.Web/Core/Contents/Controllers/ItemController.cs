@@ -22,9 +22,12 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public ActionResult Display(int? id) {
+        public ActionResult Display(int? id, int? version) {
             if (id == null)
                 return HttpNotFound();
+
+            if (version.HasValue)
+                return Preview(id, version);
 
             var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 

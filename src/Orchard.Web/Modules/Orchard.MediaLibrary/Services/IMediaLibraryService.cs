@@ -97,6 +97,15 @@ namespace Orchard.MediaLibrary.Services {
         void MoveFile(string currentPath, string filename, string newPath, string newFilename);
 
         /// <summary>
+        /// Moves a media file.
+        /// </summary>
+        /// <param name="currentPath">The path to the file's parent folder.</param>
+        /// <param name="filename">The file name.</param>
+        /// <param name="duplicatePath">The path where the file will be copied to.</param>
+        /// <param name="duplicateFilename">The new file name.</param>
+        void CopyFile(string currentPath, string filename, string duplicatePath, string duplicateFilename);
+
+        /// <summary>
         /// Uploads a media file based on a posted file.
         /// </summary>
         /// <param name="folderPath">The path to the folder where to upload the file.</param>

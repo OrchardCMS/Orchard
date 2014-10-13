@@ -7,9 +7,10 @@
         };
     resizeInnerElements($(resizableSelector), 400);
 
-    $(".has-grip").TextAreaResizer(function(size, resizing) {
+    $(".has-grip").TextAreaResizer(function (size, resizing) {
         resizing.find(resizableSelector).each(function() { resizeInnerElements($(this), size - 18); });
     }, {
-        resizeWrapper: true
+        resizeWrapper: true,
+        useParentWidth: window.isRTL
     });
 })();

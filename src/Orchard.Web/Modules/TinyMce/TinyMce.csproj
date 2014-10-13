@@ -34,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -48,6 +48,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
@@ -63,6 +64,75 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\langs\ar.js" />
+    <Content Include="Scripts\langs\ar_SA.js" />
+    <Content Include="Scripts\langs\az.js" />
+    <Content Include="Scripts\langs\be.js" />
+    <Content Include="Scripts\langs\bg_BG.js" />
+    <Content Include="Scripts\langs\bn_BD.js" />
+    <Content Include="Scripts\langs\bs.js" />
+    <Content Include="Scripts\langs\ca.js" />
+    <Content Include="Scripts\langs\cs.js" />
+    <Content Include="Scripts\langs\cy.js" />
+    <Content Include="Scripts\langs\da.js" />
+    <Content Include="Scripts\langs\de.js" />
+    <Content Include="Scripts\langs\de_AT.js" />
+    <Content Include="Scripts\langs\dv.js" />
+    <Content Include="Scripts\langs\el.js" />
+    <Content Include="Scripts\langs\en_CA.js" />
+    <Content Include="Scripts\langs\en_GB.js" />
+    <Content Include="Scripts\langs\es.js" />
+    <Content Include="Scripts\langs\et.js" />
+    <Content Include="Scripts\langs\eu.js" />
+    <Content Include="Scripts\langs\fa.js" />
+    <Content Include="Scripts\langs\fi.js" />
+    <Content Include="Scripts\langs\fo.js" />
+    <Content Include="Scripts\langs\fr_FR.js" />
+    <Content Include="Scripts\langs\gd.js" />
+    <Content Include="Scripts\langs\gl.js" />
+    <Content Include="Scripts\langs\he_IL.js" />
+    <Content Include="Scripts\langs\hr.js" />
+    <Content Include="Scripts\langs\hu_HU.js" />
+    <Content Include="Scripts\langs\hy.js" />
+    <Content Include="Scripts\langs\id.js" />
+    <Content Include="Scripts\langs\is_IS.js" />
+    <Content Include="Scripts\langs\it.js" />
+    <Content Include="Scripts\langs\ja.js" />
+    <Content Include="Scripts\langs\ka_GE.js" />
+    <Content Include="Scripts\langs\kk.js" />
+    <Content Include="Scripts\langs\km_KH.js" />
+    <Content Include="Scripts\langs\ko_KR.js" />
+    <Content Include="Scripts\langs\lb.js" />
+    <Content Include="Scripts\langs\lt.js" />
+    <Content Include="Scripts\langs\lv.js" />
+    <Content Include="Scripts\langs\ml.js" />
+    <Content Include="Scripts\langs\ml_IN.js" />
+    <Content Include="Scripts\langs\mn_MN.js" />
+    <Content Include="Scripts\langs\nb_NO.js" />
+    <Content Include="Scripts\langs\nl.js" />
+    <Content Include="Scripts\langs\pl.js" />
+    <Content Include="Scripts\langs\pt_BR.js" />
+    <Content Include="Scripts\langs\pt_PT.js" />
+    <Content Include="Scripts\langs\ro.js" />
+    <Content Include="Scripts\langs\ru.js" />
+    <Content Include="Scripts\langs\si_LK.js" />
+    <Content Include="Scripts\langs\sk.js" />
+    <Content Include="Scripts\langs\sl_SI.js" />
+    <Content Include="Scripts\langs\sr.js" />
+    <Content Include="Scripts\langs\sv_SE.js" />
+    <Content Include="Scripts\langs\ta.js" />
+    <Content Include="Scripts\langs\ta_IN.js" />
+    <Content Include="Scripts\langs\tg.js" />
+    <Content Include="Scripts\langs\th_TH.js" />
+    <Content Include="Scripts\langs\tr_TR.js" />
+    <Content Include="Scripts\langs\tt.js" />
+    <Content Include="Scripts\langs\ug.js" />
+    <Content Include="Scripts\langs\uk.js" />
+    <Content Include="Scripts\langs\uk_UA.js" />
+    <Content Include="Scripts\langs\vi.js" />
+    <Content Include="Scripts\langs\vi_VN.js" />
+    <Content Include="Scripts\langs\zh_CN.js" />
+    <Content Include="Scripts\langs\zh_TW.js" />
     <Content Include="Scripts\license.txt" />
     <Content Include="Scripts\orchard-tinymce.js" />
     <Content Include="Scripts\plugins\advlist\plugin.min.js" />
@@ -138,21 +208,16 @@
     <Content Include="Scripts\plugins\wordcount\plugin.min.js" />
     <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
-    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.dev.svg" />
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.dev.svg" />
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.svg" />
     <Content Include="Scripts\skins\orchardlightgray\img\anchor.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\loader.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\object.gif" />
     <Content Include="Scripts\skins\orchardlightgray\img\trans.gif" />
     <Content Include="Scripts\skins\orchardlightgray\skin.ie7.min.css" />
-    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
     <Content Include="Scripts\skins\lightgray\content.inline.min.css" />
     <Content Include="Scripts\skins\lightgray\content.min.css" />
-    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.dev.svg" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.svg" />
-    <Content Include="Scripts\skins\lightgray\fonts\tinymce.dev.svg" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.svg" />
     <Content Include="Scripts\skins\lightgray\img\anchor.gif" />
     <Content Include="Scripts\skins\lightgray\img\loader.gif" />
@@ -160,12 +225,14 @@
     <Content Include="Scripts\skins\lightgray\img\trans.gif" />
     <Content Include="Scripts\skins\lightgray\skin.ie7.min.css" />
     <Content Include="Scripts\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
     <Content Include="Scripts\themes\modern\theme.min.js" />
     <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Html.Editor.cshtml" />
@@ -186,7 +253,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\langs\readme.md" />
-    <Content Include="Scripts\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.woff" />
@@ -195,7 +261,14 @@
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\skins\orchardlightgray\fonts\readme.md" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
+      <DependentUpon>plugin.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
@@ -214,16 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -356,6 +356,20 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         /// <summary>
+        /// Copies a file in the storage provider.
+        /// </summary>
+        /// <param name="originalPath">The relative path to the file to be copied.</param>
+        /// <param name="duplicatePath">The relative path to the new file.</param>
+        public void CopyFile(string currentPath, string filename, string duplicatePath, string duplicateFilename) {
+            Argument.ThrowIfNullOrEmpty(currentPath, "currentPath");
+            Argument.ThrowIfNullOrEmpty(duplicatePath, "duplicatePath");
+            Argument.ThrowIfNullOrEmpty(filename, "filename");
+            Argument.ThrowIfNullOrEmpty(duplicateFilename, "duplicateFilename");
+
+            _storageProvider.CopyFile(_storageProvider.Combine(currentPath, filename), _storageProvider.Combine(duplicatePath, duplicateFilename));
+        }
+
+        /// <summary>
         /// Uploads a media file based on a posted file.
         /// </summary>
         /// <param name="folderPath">The path to the folder where to upload the file.</param>

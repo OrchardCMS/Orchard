@@ -261,6 +261,8 @@ namespace Orchard.Projections {
                     .WithSetting("Stereotype", "MenuItem")
                 );
 
+            ContentDefinitionManager.AlterTypeDefinition("ProjectionPage", cfg => cfg.Listable());
+
             return 3;
         }
 

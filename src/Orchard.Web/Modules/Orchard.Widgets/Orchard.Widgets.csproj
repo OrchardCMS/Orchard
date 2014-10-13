@@ -172,7 +172,7 @@
     <Content Include="Views\Admin\ChooseWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\WidgetLayersControl.cshtml" />
+    <Content Include="Views\WidgetFiltersControl.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\WidgetPlacement.cshtml" />
