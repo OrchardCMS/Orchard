@@ -221,7 +221,10 @@ namespace Orchard.Modules.Controllers {
                         _moduleService.DisableFeatures(enabledFeatures, force == true);
                         break;
                     case FeaturesBulkAction.Update:
-                        foreach (var feature in selectedFeatures.Where(x => x.NeedsUpdate)) {
+                        var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+                        var selectedFeaturesThatNeedUpdate = selectedFeatures.Where(x => featuresThatNeedUpdate.Contains(x.Descriptor.Id));
+
+                        foreach (var feature in selectedFeaturesThatNeedUpdate) {
                             var id = feature.Descriptor.Id;
                             try {
                                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
