@@ -245,6 +245,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.AuditTrail", "Orcha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Layouts", "Orchard.Web\Modules\Orchard.Layouts\Orchard.Layouts.csproj", "{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DynamicForms", "Orchard.Web\Modules\Orchard.DynamicForms\Orchard.DynamicForms.csproj", "{82190F52-2901-46D6-8A4C-34649959483F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -1020,6 +1022,16 @@ Global
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1100,5 +1112,6 @@ Global
 		{14A96B1A-9DC9-44C8-A675-206329E15263} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{82190F52-2901-46D6-8A4C-34649959483F} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal
