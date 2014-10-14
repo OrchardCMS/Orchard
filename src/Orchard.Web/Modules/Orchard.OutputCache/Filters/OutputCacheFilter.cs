@@ -515,14 +515,7 @@ namespace Orchard.OutputCache.Filters {
         }
 
         private string ComputeCacheKey(ControllerContext controllerContext, IEnumerable<KeyValuePair<string, object>> parameters) {
-            var url = controllerContext.HttpContext.Request.RawUrl;
-            if (!VirtualPathUtility.IsAbsolute(url)) {
-                var applicationRoot = new UrlHelper(controllerContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
-                if (url.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
-                    url = "~/" + url.Substring(applicationRoot.Length);
-                    url = VirtualPathUtility.ToAbsolute(url);
-                }
-            }
+            var url = controllerContext.HttpContext.Request.Url.AbsolutePath;
             return ComputeCacheKey(_shellSettings.Name, url, () => _workContext.CurrentCulture, _themeManager.GetRequestTheme(controllerContext.RequestContext).Id, parameters);
         }
 
