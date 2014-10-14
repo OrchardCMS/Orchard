@@ -40,6 +40,7 @@ namespace Orchard.Data.Migration {
 
             _processedFeatures = new List<string>();
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
