@@ -1,0 +1,35 @@
+﻿@model Orchard.Layouts.ViewModels.LayoutPartViewModel
+@{
+    Style.Include("dialog.css");
+    Style.Include("parts-layout-edit.css");
+    Script.Require("jQueryUI_Position");
+    Script.Require("jQueryUI_Draggable");
+    Script.Include("jquery.browser.js");
+    Script.Include("serializer.js");
+    Script.Include("frame.js");
+    Script.Include("dialog.js");
+    Script.Include("designer.host.js");
+}
+@{
+    var contentId = Model.Part.Id;
+    var contentType = Model.Part.ContentItem.ContentType;
+    var url = Url.Action("Edit", "Layout", new { id = contentId, contentType = contentType, area = "Orchard.Layouts" });
+    var frameUrl = ViewData.ModelState.IsValid ? url : default(string);
+}
+<div class="layout-designer"
+     data-state-field-name="@Html.NameFor(m => m.State)"
+     data-trash-field-name="@Html.NameFor(m => m.Trash)"
+     data-template-picker-name="@Html.FieldNameFor(m => m.TemplateId)"
+     data-modelstate-valid="@ViewData.ModelState.IsValid.ToString().ToLower()"
+     data-frame-url="@url"
+     data-anti-forgery-token="@Html.AntiForgeryTokenValueOrchard()">
+
+    @Html.HiddenFor(m => m.TemplateId)
+    <fieldset>
+        <label>@T("Layout")</label>
+        @Html.HiddenFor(m => m.State)
+        @Html.HiddenFor(m => m.Trash)
+        <iframe class="layout-designer-host" src="@frameUrl" width="100%"></iframe>
+        @Display.DialogTemplate(Name: "Layout")
+    </fieldset>
+</div>

@@ -1,0 +1,33 @@
+﻿@{
+    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    Style.Include("admin-dialog.css");
+    Script.Require("jQuery").AtFoot();
+    Script.Require("ShapesBase").AtFoot();
+    Script.Include("~/Themes/TheAdmin/Scripts/admin.js").AtFoot();
+
+    if (Model.Title != null) {
+        Model.Header.Add(Display.Title(Title: Model.Title));
+    }
+}
+@Display.TokenHint()
+<div id="layout-content">
+    <div id="layout-main">
+        <div id="main" role="main">
+            @if (Model.Messages != null) {
+                <div id="messages">
+                    @Display(Model.Messages)
+                </div>
+            }
+            @if (Model.LocalNavigation != null) {
+                <div id="local-navigation">
+                    @Display(Model.LocalNavigation)
+                </div>
+            }
+            @if (Model.Content != null) {
+                <div id="content" class="group">
+                    @Display(Model.Content)
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@using Orchard.Mvc.Html;
+<!DOCTYPE html>
+<html lang="@WorkContext.CurrentCulture" class="static @Html.ClassForPage()">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    @Display(Model.Head)
+</head>
+<body>
+    @Display(Model.Body)
+    @Display(Model.Tail)
+</body>
+</html>
