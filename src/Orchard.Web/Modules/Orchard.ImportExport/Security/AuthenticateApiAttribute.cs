@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Collections.Specialized;
 using System.Web;
-using System.Web.Http.Filters;
+using System.Web.ClientServices;
+using System.Web.Mvc;
+using System.Web.Mvc.Filters;
+using System.Web.Security;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Models;
@@ -16,11 +16,11 @@ using Orchard.Security;
 namespace Orchard.ImportExport.Security {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     [OrchardFeature("Orchard.Deployment")]
-    public class AuthenticateApiAttribute : AuthorizationFilterAttribute {
+    public class AuthenticateApiAttribute : ActionFilterAttribute, IAuthenticationFilter {
         public ILogger Logger { get; set; }
 
-        public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext) {
-            var workContext = actionContext.ControllerContext.GetWorkContext();
+        public void OnAuthentication(AuthenticationContext filterContext) {
+            var workContext = filterContext.Controller.ControllerContext.GetWorkContext();
             var membershipService = workContext.Resolve<IMembershipService>();
             var authenticationService = workContext.Resolve<IAuthenticationService>();
             var authorizationService = workContext.Resolve<IAuthorizationService>();
@@ -29,11 +29,12 @@ namespace Orchard.ImportExport.Security {
             Logger = NullLogger.Instance;
 
             try {
-                var headers = actionContext.Request.Headers;
+                var request = filterContext.RequestContext.HttpContext.Request;
+                var headers = request.Headers;
                 var timeStampString = GetHttpRequestHeader(headers, signingService.TimestampHeaderName);
                 var authenticationString = GetHttpRequestHeader(headers, signingService.AuthenticationHeaderName);
                 if (string.IsNullOrEmpty(timeStampString) || string.IsNullOrEmpty(authenticationString)) {
-                    actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    filterContext.Result = new HttpUnauthorizedResult();
                     return;
                 }
 
@@ -41,7 +42,7 @@ namespace Orchard.ImportExport.Security {
                     StringSplitOptions.RemoveEmptyEntries);
 
                 if (authenticationParts.Length != 2) {
-                    actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    filterContext.Result = new HttpUnauthorizedResult();
                     return;
                 }
 
@@ -49,33 +50,36 @@ namespace Orchard.ImportExport.Security {
                 var signature = HttpUtility.UrlDecode(authenticationParts[1]);
 
                 var user = membershipService.GetUser(username);
-                var methodType = actionContext.Request.Method.Method;
-                var absolutePath = actionContext.Request.RequestUri.AbsolutePath.ToLower();
+                var methodType = request.HttpMethod;
+                var absolutePath = request.Url.AbsolutePath.ToLower();
                 var uri = HttpUtility.UrlDecode(absolutePath);
                 var deploymentUser = user.ContentItem.As<DeploymentUserPart>();
                 var isAuthenticated = signingService.ValidateRequest(methodType, timeStampString, uri, deploymentUser.PrivateApiKey, signature);
-
                 if (isAuthenticated &&
                     (authorizationService.TryCheckAccess(DeploymentPermissions.ImportFromDeploymentSources, user, null) ||
                      authorizationService.TryCheckAccess(DeploymentPermissions.ExportToDeploymentTargets, user, null))) {
+                    filterContext.Principal = new ApiPrincipal(user);
                     authenticationService.SetAuthenticatedUserForRequest(user);
                 }
                 else {
-                    actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    filterContext.Result = new HttpUnauthorizedResult();
                 }
             }
             catch (Exception ex) {
                 Logger.Error("Credentials could not be validated. Ensure they are in the correct format.", ex);
-                actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                filterContext.Result = new HttpUnauthorizedResult();
             }
         }
 
-        private static string GetHttpRequestHeader(HttpHeaders headers, string headerName) {
-            if (!headers.Contains(headerName)) return string.Empty;
+        public void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext) {
+            var user = filterContext.HttpContext.User;
+            if (user == null || !user.Identity.IsAuthenticated) {
+                filterContext.Result = new HttpUnauthorizedResult();
+            }
+        }
 
-            return headers
-                .GetValues(headerName)
-                .SingleOrDefault();
+        private static string GetHttpRequestHeader(NameValueCollection headers, string headerName) {
+            return headers[headerName] ?? "";
         }
     }
 }

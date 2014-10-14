@@ -31,7 +31,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public string GetRecipe(RecipeRequest request) {
             var actionUrl = _url.Action("Recipe", "Export", new {
-                httproute = true,
                 area = "Orchard.ImportExport"
             });
             var data = JsonConvert.SerializeObject(request);
@@ -40,7 +39,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public IList<DeploymentContentType> GetContentTypes() {
             var actionUrl = _url.Action("ContentTypes", "Export", new {
-                httproute = true,
                 area = "Orchard.ImportExport"
             });
             var result = Client.Value.Get(actionUrl);
@@ -49,7 +47,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public IList<DeploymentQuery> GetQueries() {
             var actionUrl = _url.Action("Queries", "Export", new {
-                httproute = true,
                 area = "Orchard.ImportExport"
             });
             var result = Client.Value.Get(actionUrl);

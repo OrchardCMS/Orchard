@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -18,7 +15,7 @@ using Orchard.Projections.Models;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.ImportExport.ApiControllers {
+namespace Orchard.ImportExport.Controllers {
     [OrchardFeature("Orchard.Deployment.ExportApi")]
     public class ExportController : BaseApiController {
         private readonly IImportExportService _importExportService;
@@ -45,15 +42,15 @@ namespace Orchard.ImportExport.ApiControllers {
         public ILogger Logger { get; set; }
 
         [AuthenticateApi]
-        [AcceptVerbs("POST")]
-        public HttpResponseMessage Recipe(RecipeRequest request) {
+        [HttpPost]
+        public ActionResult Recipe(RecipeRequest request) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
             var exportingItems = _deploymentService.GetContentForExport(request);
 
             var unpublishStep = UnpublishedExportEventHandler.StepName +
-                                (request.DeployChangesAfterUtc.HasValue ? ":" + request.DeployChangesAfterUtc.Value.ToString("u") : string.Empty);
+                (request.DeployChangesAfterUtc.HasValue ? ":" + request.DeployChangesAfterUtc.Value.ToString("u") : string.Empty);
 
             var exportSteps = request.DeploymentMetadata != null ?
                 request.DeploymentMetadata.Select(m => m.ToExportStep()).ToList() : new List<string>();
@@ -66,15 +63,15 @@ namespace Orchard.ImportExport.ApiControllers {
                 CustomSteps = exportSteps
             });
 
-            var recipe = File.ReadAllText(recipePath);
+            var recipe = System.IO.File.ReadAllText(recipePath);
             return CreateSignedResponse(recipe);
         }
 
         [AuthenticateApi]
-        [AcceptVerbs("GET")]
-        public HttpResponseMessage Queries() {
+        [HttpGet]
+        public ActionResult Queries() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
             var queries = Services.ContentManager.Query<QueryPart, QueryPartRecord>()
                 .ForType(new[] {"Query"}).List()
@@ -89,10 +86,10 @@ namespace Orchard.ImportExport.ApiControllers {
         }
 
         [AuthenticateApi]
-        [AcceptVerbs("GET")]
-        public HttpResponseMessage ContentTypes() {
+        [HttpGet]
+        public ActionResult ContentTypes() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
             var contentTypes = Services.ContentManager.GetContentTypeDefinitions()
                 .Select(c => new DeploymentContentType {Name = c.Name, DisplayName = c.DisplayName}).ToList();

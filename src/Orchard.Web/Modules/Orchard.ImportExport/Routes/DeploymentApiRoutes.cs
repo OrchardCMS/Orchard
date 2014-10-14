@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc.Routes;
-using Orchard.WebApi.Routes;
 
 namespace Orchard.ImportExport.Routes {
     [OrchardFeature("Orchard.Deployment")]
-    public class DeploymentApiRoutes : IHttpRouteProvider {
+    public class DeploymentApiRoutes : IRouteProvider {
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (var routeDescriptor in GetRoutes()) {
@@ -16,13 +16,18 @@ namespace Orchard.ImportExport.Routes {
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
-                new HttpRouteDescriptor {
+                new RouteDescriptor {
                     Priority = 5,
-                    RouteTemplate = "api/deployment/{controller}/{action}/{id}",
-                    Defaults = new {
-                        area = "Orchard.ImportExport",
-                        id = RouteParameter.Optional
-                    }
+                    Route = new Route("api/deployment/{controller}/{action}/{id}",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.ImportExport"},
+                            {"id", null}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.ImportExport"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }

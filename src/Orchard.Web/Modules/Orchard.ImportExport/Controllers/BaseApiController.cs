@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Collections.Specialized;
 using System.Web;
-using System.Web.Http;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Models;
@@ -11,9 +8,9 @@ using Orchard.ImportExport.Services;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.ImportExport.ApiControllers {
+namespace Orchard.ImportExport.Controllers {
     [OrchardFeature("Orchard.Deployment")]
-    public abstract class BaseApiController : ApiController {
+    public abstract class BaseApiController : Controller {
         protected readonly ISigningService _signingService;
         protected readonly IAuthenticationService _authenticationService;
         protected readonly IClock _clock;
@@ -28,24 +25,19 @@ namespace Orchard.ImportExport.ApiControllers {
             _clock = clock;
         }
 
-        protected HttpResponseMessage CreateSignedResponse(string content) {
-            var response = new HttpResponseMessage {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(content)
-            };
-
-            if (string.IsNullOrWhiteSpace(content)) return response;
+        protected ActionResult CreateSignedResponse(string content) {
+            if (string.IsNullOrWhiteSpace(content)) return Content("");
 
             var user = _authenticationService.GetAuthenticatedUser();
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
-            response.Content.Headers.Add(_signingService.TimestampHeaderName, timestamp);
-            response.Content.Headers.Add(_signingService.ContentHashHeaderName,
+            Response.Headers.Add(_signingService.TimestampHeaderName, timestamp);
+            Response.Headers.Add(_signingService.ContentHashHeaderName,
                 _signingService.SignContent(content, timestamp, user.As<DeploymentUserPart>().PrivateApiKey));
 
-            return response;
+            return Content(content);
         }
 
-        protected bool ValidateContent(string content, HttpRequestHeaders headers) {
+        protected bool ValidateContent(string content, NameValueCollection headers) {
             if (string.IsNullOrWhiteSpace(content)) return true;
 
             var timestamp = GetHttpRequestHeader(headers, _signingService.TimestampHeaderName);
@@ -58,12 +50,8 @@ namespace Orchard.ImportExport.ApiControllers {
             return false;
         }
 
-        protected static string GetHttpRequestHeader(HttpHeaders headers, string headerName) {
-            if (!headers.Contains(headerName)) return string.Empty;
-
-            return headers
-                .GetValues(headerName)
-                .SingleOrDefault();
+        protected static string GetHttpRequestHeader(NameValueCollection headers, string headerName) {
+            return headers[headerName] ?? "";
         }
     }
 }

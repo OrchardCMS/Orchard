@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -14,7 +14,7 @@ using Orchard.Recipes.Services;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.ImportExport.ApiControllers {
+namespace Orchard.ImportExport.Controllers {
     [OrchardFeature("Orchard.Deployment.ImportApi")]
     public class ImportController : BaseApiController {
         private readonly IImportExportService _importExportService;
@@ -41,55 +41,62 @@ namespace Orchard.ImportExport.ApiControllers {
         public ILogger Logger { get; set; }
 
         [AuthenticateApi]
-        [AcceptVerbs("POST")]
-        public HttpResponseMessage Recipe(string executionId) {
+        [HttpPost]
+        public ActionResult Recipe(string executionId) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
-            var content = Request.Content.ReadAsStringAsync().Result;
+            string content;
+            using (var reader = new StreamReader(Request.InputStream)) {
+                content = reader.ReadToEndAsync().Result;
+            }
 
             if (!ValidateContent(content, Request.Headers)) {
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult(T("Invalid recipe").Text);
             }
 
             _importExportService.Import(content);
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         [AuthenticateApi]
-        [AcceptVerbs("GET")]
-        public HttpResponseMessage RecipeJournal(string executionId)
+        [HttpGet]
+        public ActionResult RecipeJournal(string executionId)
         {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
             var journal = _recipeJournal.GetRecipeJournal(executionId);
-            if (journal.Messages.Any()) {
-                var localExecutionJournal = _recipeJournal.GetRecipeJournal(journal.Messages.First().Message);
-                return CreateSignedResponse(localExecutionJournal.ExecutionId);
+
+            if (!journal.Messages.Any()) {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, T("Unable to locate recipe journal").Text);
             }
 
-            return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Unable to locate recipe journal");
+            var localExecutionJournal = _recipeJournal.GetRecipeJournal(journal.Messages.First().Message);
+            return CreateSignedResponse(localExecutionJournal.ExecutionId);
         }
 
         [AuthenticateApi]
-        [AcceptVerbs("POST")]
-        public HttpResponseMessage Content() {
+        [HttpPost]
+        public ActionResult Content() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
 
-            var content = Request.Content.ReadAsStringAsync().Result;
+            string content;
+            using (var reader = new StreamReader(Request.InputStream)) {
+                content = reader.ReadToEndAsync().Result;
+            }
 
             if (!ValidateContent(content, Request.Headers)) {
-                    return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                return new HttpUnauthorizedResult();
             }
 
             var contentXml = XElement.Parse(content);
             var importSession = new ImportContentSession(Services.ContentManager);
             importSession.Set(contentXml.Attribute("Id").Value, contentXml.Name.LocalName);
             Services.ContentManager.Import(contentXml, importSession);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

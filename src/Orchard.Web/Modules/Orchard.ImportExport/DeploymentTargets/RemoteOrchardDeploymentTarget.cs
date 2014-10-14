@@ -34,7 +34,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public void PushRecipe(string executionId, string recipeText) {
             var actionUrl = _url.Action("Recipe", "Import", new {
-                httproute = true,
                 area = "Orchard.ImportExport",
                 executionId
             });
@@ -43,7 +42,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
             var actionUrl = _url.Action("RecipeJournal", "Import", new {
-                httproute = true,
                 area = "Orchard.ImportExport",
                 executionId
             });
@@ -59,7 +57,6 @@ namespace Orchard.ImportExport.DeploymentTargets {
 
         public void PushContent(IContent content) {
             var actionUrl = _url.Action("Content", "Import", new {
-                httproute = true,
                 area = "Orchard.ImportExport"
             });
             var exportedItem = _contentManager.Export(content.ContentItem);
