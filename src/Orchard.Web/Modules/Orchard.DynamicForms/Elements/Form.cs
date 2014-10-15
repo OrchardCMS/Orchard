@@ -8,7 +8,7 @@ namespace Orchard.DynamicForms.Elements {
         }
 
         public string Name {
-            get { return State.Get("FormName"); }
+            get { return State.Get("FormName", "Untitled"); }
             set { State["FormName"] = value; }
         }
 

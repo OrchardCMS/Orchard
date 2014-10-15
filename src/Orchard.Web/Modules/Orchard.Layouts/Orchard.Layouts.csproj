@@ -24,10 +24,14 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -91,6 +95,8 @@
     <Content Include="Scripts\serializer.js" />
     <Content Include="Scripts\dialog.js" />
     <Content Include="Scripts\designer.canvas.js" />
+    <Content Include="Styles\menu.layouts-admin.css" />
+    <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\parts-layout-edit.css" />
     <Content Include="Styles\element-editor.css" />
     <Content Include="Styles\element-browser.css" />

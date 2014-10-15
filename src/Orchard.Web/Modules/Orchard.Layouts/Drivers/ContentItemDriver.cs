@@ -27,8 +27,9 @@ namespace Orchard.Layouts.Drivers {
 
             var contentItemIds = element.ContentItemIds;
             var displayType = element.DisplayType;
+            var layoutContentId = layoutPart != null ? layoutPart.Id : 0;
 
-            viewModel.ContentItems = GetContentItems(RemoveCurrentContentItemId(contentItemIds, layoutPart.Id)).ToArray();
+            viewModel.ContentItems = GetContentItems(RemoveCurrentContentItemId(contentItemIds, layoutContentId)).ToArray();
             viewModel.DisplayType = displayType;
 
             return Editor(context, editor);
