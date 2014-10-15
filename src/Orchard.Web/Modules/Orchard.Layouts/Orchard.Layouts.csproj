@@ -91,6 +91,8 @@
     <Content Include="Scripts\serializer.js" />
     <Content Include="Scripts\dialog.js" />
     <Content Include="Scripts\designer.canvas.js" />
+    <Content Include="Styles\menu.layouts-admin.css" />
+    <Content Include="Styles\menu.elements.png" />
     <Content Include="Styles\parts-layout-edit.css" />
     <Content Include="Styles\element-editor.css" />
     <Content Include="Styles\element-browser.css" />

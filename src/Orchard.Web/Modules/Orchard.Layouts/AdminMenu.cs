@@ -8,8 +8,9 @@ namespace Orchard.Layouts {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-
-            builder.Add(T("Elements"), "1.4.5", menu => menu.Action("Index", "BlueprintAdmin", new { area = "Orchard.Layouts" }));
+            builder
+                .AddImageSet("layouts")
+                .Add(T("Elements"), "8.5", menu => menu.Action("Index", "BlueprintAdmin", new { area = "Orchard.Layouts" }));
         }
     }
 }
