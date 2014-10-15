@@ -101,6 +101,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\RedisDatabaseExtensions.cs" />
     <Compile Include="Configuration\IRedisConnectionProvider.cs" />
     <Compile Include="Configuration\RedisConnectionProvider.cs" />
     <Compile Include="MessageBus\RedisMessageBusBroker.cs" />
