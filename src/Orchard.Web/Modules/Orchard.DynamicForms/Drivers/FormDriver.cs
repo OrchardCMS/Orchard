@@ -10,6 +10,7 @@ using Orchard.DynamicForms.Services;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
@@ -47,6 +48,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Id: "FormName",
                         Name: "FormName",
                         Title: "Name",
+                        Value: "Untitled",
                         Classes: new[] { "text", "medium" },
                         Description: T("The name of the form.")),
                     _FormAction: shape.Textbox(
