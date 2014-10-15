@@ -11,6 +11,7 @@ using Orchard.ImportExport.Security;
 using Orchard.ImportExport.Services;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.AntiForgery;
 using Orchard.Projections.Models;
 using Orchard.Security;
 using Orchard.Services;
@@ -43,6 +44,7 @@ namespace Orchard.ImportExport.Controllers {
 
         [AuthenticateApi]
         [HttpPost]
+        [ValidateAntiForgeryTokenOrchard(false)]
         public ActionResult Recipe(RecipeRequest request) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to export")))
                 return new HttpUnauthorizedResult();

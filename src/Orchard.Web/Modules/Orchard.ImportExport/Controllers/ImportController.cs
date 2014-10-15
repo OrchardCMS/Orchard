@@ -10,6 +10,7 @@ using Orchard.ImportExport.Security;
 using Orchard.ImportExport.Services;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.AntiForgery;
 using Orchard.Recipes.Services;
 using Orchard.Security;
 using Orchard.Services;
@@ -42,6 +43,7 @@ namespace Orchard.ImportExport.Controllers {
 
         [AuthenticateApi]
         [HttpPost]
+        [ValidateAntiForgeryTokenOrchard(false)]
         public ActionResult Recipe(string executionId) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return new HttpUnauthorizedResult();
@@ -79,6 +81,7 @@ namespace Orchard.ImportExport.Controllers {
 
         [AuthenticateApi]
         [HttpPost]
+        [ValidateAntiForgeryTokenOrchard(false)]
         public ActionResult Content() {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return new HttpUnauthorizedResult();
