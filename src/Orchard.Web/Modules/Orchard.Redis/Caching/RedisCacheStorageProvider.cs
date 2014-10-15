@@ -5,6 +5,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Redis.Configuration;
+using Orchard.Redis.Extensions;
 using StackExchange.Redis;
 using System;
 
