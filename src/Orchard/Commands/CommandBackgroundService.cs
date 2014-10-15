@@ -11,5 +11,9 @@ namespace Orchard.Commands {
         public void Sweep() {
             // Don't run any background service in command line
         }
+
+        public void Terminate() {
+            // No need to terminate anything here
+        }
     }
 }

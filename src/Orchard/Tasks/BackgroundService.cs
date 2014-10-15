@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Hosting;
 using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
@@ -10,6 +14,7 @@ namespace Orchard.Tasks {
 
     public interface IBackgroundService : IDependency {
         void Sweep();
+        void Terminate();
     }
 
     [UsedImplicitly]
@@ -17,7 +22,9 @@ namespace Orchard.Tasks {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;
         private readonly string _shellName;
-        private readonly IContentManager _contentManager;
+        private bool _shuttingDown;
+
+        private AutoResetEvent _finishedEvent = new AutoResetEvent(true);
 
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
@@ -27,7 +34,6 @@ namespace Orchard.Tasks {
             _tasks = tasks;
             _transactionManager = transactionManager;
             _shellName = shellSettings.Name;
-            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
@@ -35,7 +41,12 @@ namespace Orchard.Tasks {
 
         public void Sweep() {
             foreach(var task in _tasks) {
+                if (_shuttingDown) {
+                    return;
+                }
+
                 try {
+                    _finishedEvent.Reset();
                     _transactionManager.RequireNew();
                     task.Sweep();
                 }
@@ -43,6 +54,21 @@ namespace Orchard.Tasks {
                     _transactionManager.Cancel();
                     Logger.Error(e, "Error while processing background task on tenant '{0}'.", _shellName);
                 }
+                finally
+                {
+                    _finishedEvent.Set();
+                }
+            }
+        }
+
+        public void Terminate() {
+            Logger.Debug("Background service terminating...");
+            _shuttingDown = true;
+
+            if (_finishedEvent != null) {
+                _finishedEvent.WaitOne(TimeSpan.FromSeconds(90));
+                _finishedEvent.Dispose();
+                _finishedEvent = null;
             }
         }
     }

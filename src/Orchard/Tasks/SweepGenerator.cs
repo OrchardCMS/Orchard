@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Timers;
+using System.Web.Hosting;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
 
-    public interface ISweepGenerator : ISingletonDependency {
+    public interface ISweepGenerator : IRegisteredObject, ISingletonDependency {
         void Activate();
         void Terminate();
     }
@@ -12,6 +14,9 @@ namespace Orchard.Tasks {
     public class SweepGenerator : ISweepGenerator, IDisposable {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
+        private bool _shuttingDown;
+
+        private IBackgroundService _manager;
 
         public SweepGenerator(IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
@@ -19,6 +24,8 @@ namespace Orchard.Tasks {
             _timer.Elapsed += Elapsed;
             Logger = NullLogger.Instance;
             Interval = TimeSpan.FromMinutes(1);
+
+            HostingEnvironment.RegisterObject(this);
         }
 
         public ILogger Logger { get; set; }
@@ -46,7 +53,7 @@ namespace Orchard.Tasks {
                 return;
 
             try {
-                if (_timer.Enabled) {
+                if (_timer.Enabled && !_shuttingDown) {
                     DoWork();
                 }
             }
@@ -61,13 +68,20 @@ namespace Orchard.Tasks {
         public void DoWork() {
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                 // resolve the manager and invoke it
-                var manager = scope.Resolve<IBackgroundService>();
-                manager.Sweep();
+                _manager = scope.Resolve<IBackgroundService>();
+                _manager.Sweep();
             }
         }
 
         public void Dispose() {
             _timer.Dispose();
+        }
+
+        public void Stop(bool immediate) {
+            _shuttingDown = true;
+            _manager.Terminate();
+
+            HostingEnvironment.UnregisterObject(this); 
         }
     }
 }
