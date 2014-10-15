@@ -65,6 +65,15 @@ namespace Orchard.Tasks {
             Logger.Debug("Background service terminating...");
             _shuttingDown = true;
 
+            foreach (var task in _tasks.Where(t => t is ITerminatable)) {
+                try {
+                    ((ITerminatable)task).Terminate();
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error while terminating background task {0}", task.GetType().Name);
+                }
+            }
+
             if (_finishedEvent != null) {
                 _finishedEvent.WaitOne(TimeSpan.FromSeconds(90));
                 _finishedEvent.Dispose();
