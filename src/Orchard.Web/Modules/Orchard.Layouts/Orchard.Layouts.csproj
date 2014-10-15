@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Orchard.Layouts</RootNamespace>
+    <AssemblyName>Orchard.Layouts</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
+    <Content Include="Scripts\contentpart-layouts-settings.js" />
+    <Content Include="Scripts\designer.grid.js" />
+    <Content Include="Scripts\designer.host.js" />
+    <Content Include="Scripts\designer.toolbar.js" />
+    <Content Include="Scripts\element-editor.js" />
+    <Content Include="Scripts\frame.js" />
+    <Content Include="Scripts\element-browser.js" />
+    <Content Include="Scripts\jquery.browser.js" />
+    <Content Include="Scripts\jquery.deserialize.js" />
+    <Content Include="Scripts\serializer.js" />
+    <Content Include="Scripts\dialog.js" />
+    <Content Include="Scripts\designer.canvas.js" />
+    <Content Include="Styles\parts-layout-edit.css" />
+    <Content Include="Styles\element-editor.css" />
+    <Content Include="Styles\element-browser.css" />
+    <Content Include="Styles\designer.css" />
+    <Content Include="Styles\custom-grid.css" />
+    <Content Include="Styles\edit.png" />
+    <Content Include="Styles\font-awesome\css\font-awesome.css" />
+    <Content Include="Styles\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.svg" />
+    <Content Include="Styles\overlay.png" />
+    <Content Include="Styles\remove.png" />
+    <Content Include="Styles\dialog.css" />
+    <Content Include="Styles\admin-dialog.css" />
+    <Content Include="Styles\layout-designer.css" />
+    <Content Include="Styles\split-arrow-down.png" />
+    <Content Include="Styles\split-arrow-up.png" />
+    <Content Include="Views\BlueprintAdmin\Edit.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Web.config" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+    <Content Include="Views\EditorTemplates\Parts.Layout.cshtml" />
+    <Content Include="Views\Element.Design.cshtml" />
+    <Content Include="Views\Element.cshtml" />
+    <Content Include="Views\Element.DesignWrapper.cshtml" />
+    <Content Include="Views\Element-Layout-Row.Design.cshtml" />
+    <Content Include="Views\Element\Edit.cshtml" />
+    <Content Include="Views\Element-Layout-Column.Design.cshtml" />
+    <Content Include="Views\LayoutRoot.cshtml" />
+    <Content Include="Views\Element-Layout-Grid.Design.cshtml" />
+    <Content Include="Views\Parts.Layout.cshtml" />
+    <Content Include="Views\Element-Layout-Grid.cshtml" />
+    <Content Include="Views\Element-Layout-Row.cshtml" />
+    <Content Include="Views\Element-Layout-Column.cshtml" />
+    <Content Include="Views\Element-Content-Text.cshtml" />
+    <Content Include="Views\Element-Media-MediaItem.cshtml" />
+    <Content Include="Views\Element-Snippets-Snippet.cshtml" />
+    <Content Include="Views\Layout-Dialog.cshtml" />
+    <Content Include="Views\Layout\Edit.cshtml" />
+    <Content Include="Views\Layout-Designer.cshtml" />
+    <Content Include="Views\Layout-Designer-Wrapper.cshtml" />
+    <Content Include="Views\DialogTemplate.cshtml" />
+    <Content Include="Views\Element\Browse.cshtml" />
+    <Content Include="Views\ElementBrowser.Tabs.cshtml" />
+    <Content Include="Views\Element\Create.cshtml" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.eot" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.ttf" />
+    <Content Include="Styles\font-awesome\font\fontawesome-webfont.woff" />
+    <Content Include="Styles\font-awesome\font\FontAwesome.otf" />
+    <Content Include="Views\Element-ContentPart.cshtml" />
+    <Content Include="Views\ContentPart.cshtml" />
+    <Content Include="Views\DefinitionTemplates\LayoutPartSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\LayoutTypePartSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Text.cshtml" />
+    <Content Include="Views\ContentField.cshtml" />
+    <Content Include="Views\Element-ContentField.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.ContentItem.cshtml" />
+    <Content Include="Views\Element-Content-ContentItem.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.MediaItem.cshtml" />
+    <Content Include="Views\DefinitionTemplates\ContentPartLayoutSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.ElementWrapper.cshtml" />
+    <Content Include="Views\Parts.ElementWrapper.cshtml" />
+    <Content Include="Views\DefinitionTemplates\ElementWrapperPartSettings.cshtml" />
+    <Content Include="Views\Parts.ZonesLayout.cshtml" />
+    <Content Include="Views\Element-Layout-Grid.Zones.cshtml" />
+    <Content Include="Views\EditorTemplates\ElementSettings.Common.cshtml" />
+    <Content Include="Views\ElementEditor.LocalNav.cshtml" />
+    <Content Include="Views\ElementEditor.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Markdown.cshtml" />
+    <Content Include="Views\Element-Content-Markdown.cshtml" />
+    <Content Include="Views\Element-Content-Html.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Html.cshtml" />
+    <Content Include="Views\BlueprintAdmin\Index.cshtml" />
+    <Content Include="Views\BlueprintAdmin\Browse.cshtml" />
+    <Content Include="Views\BlueprintAdmin\Create.cshtml" />
+    <Content Include="Views\ElementBlueprintEditor.cshtml" />
+    <Content Include="Views\BlueprintAdmin\Properties.cshtml" />
+    <Content Include="Views\Media.Design.cshtml" />
+    <Content Include="Views\Media-Image.Design.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Paragraph.cshtml" />
+    <Content Include="Views\Element-Content-Paragraph.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
+    <Content Include="Views\Element-Media-Image.cshtml" />
+    <Content Include="Views\Element-Media-Image.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Markdown\Markdown.csproj">
+      <Project>{3158c928-888c-4a84-8bc1-4a8257489538}</Project>
+      <Name>Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{cde24a24-01d3-403c-84b9-37722e18dfb7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\BlueprintAdminController.cs" />
+    <Compile Include="Drivers\ImageDriver.cs" />
+    <Compile Include="Drivers\ParagraphDriver.cs" />
+    <Compile Include="Elements\Image.cs" />
+    <Compile Include="Elements\Paragraph.cs" />
+    <Compile Include="Filters\ControllerAccessorFilter.cs" />
+    <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
+    <Compile Include="Handlers\ElementDriversCoordinator.cs" />
+    <Compile Include="Helpers\DictionaryExtensions.cs" />
+    <Compile Include="Helpers\EditorResultExtensions.cs" />
+    <Compile Include="Providers\BlueprintElementHarvester.cs" />
+    <Compile Include="Services\CurrentControllerAccessor.cs" />
+    <Compile Include="Services\ElementCreatedContext.cs" />
+    <Compile Include="Services\ElementCreatingContext.cs" />
+    <Compile Include="Services\ElementEventContext.cs" />
+    <Compile Include="Services\ElementEventHandlerBase.cs" />
+    <Compile Include="Services\ICurrentControllerAccessor.cs" />
+    <Compile Include="Services\IElementEventHandler.cs" />
+    <Compile Include="Signals.cs" />
+    <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />
+    <Compile Include="Models\ElementBlueprint.cs" />
+    <Compile Include="Services\ElementBlueprintService.cs" />
+    <Compile Include="Services\IElementBlueprintService.cs" />
+    <Compile Include="Services\ShapePositionDistinctComparer.cs" />
+    <Compile Include="Models\ShapePosition.cs" />
+    <Compile Include="Drivers\ContentFieldDriver.cs" />
+    <Compile Include="Drivers\ElementWrapperPartDriver.cs" />
+    <Compile Include="Drivers\HtmlDriver.cs" />
+    <Compile Include="Drivers\SnippetDriver.cs" />
+    <Compile Include="Drivers\MediaItemDriver.cs" />
+    <Compile Include="Drivers\ContentPartDriver.cs" />
+    <Compile Include="Drivers\ContentItemDriver.cs" />
+    <Compile Include="Drivers\MarkdownDriver.cs" />
+    <Compile Include="Elements\ContentField.cs" />
+    <Compile Include="Elements\ContentItem.cs" />
+    <Compile Include="Handlers\ElementSettingsHandler.cs" />
+    <Compile Include="Elements\Html.cs" />
+    <Compile Include="Elements\Markdown.cs" />
+    <Compile Include="Framework\Elements\StateDictionary.cs" />
+    <Compile Include="Settings\CommonElementSettings.cs" />
+    <Compile Include="Helpers\ContentFieldNameHelper.cs" />
+    <Compile Include="Helpers\MetaDataExtensions.cs" />
+    <Compile Include="Helpers\TagBuilderExtensions.cs" />
+    <Compile Include="Models\ElementWrapperPart.cs" />
+    <Compile Include="Models\ILayoutAspect.cs" />
+    <Compile Include="Services\ActivateElementArgs.cs" />
+    <Compile Include="Settings\ElementWrapperPartSettingsHooks.cs" />
+    <Compile Include="Settings\ElementWrapperPartSettings.cs" />
+    <Compile Include="Providers\ContentFieldElementHarvester.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Services\ContentDisplayBase.cs" />
+    <Compile Include="Services\ContentFieldDisplay.cs" />
+    <Compile Include="Services\IContentFieldDisplay.cs" />
+    <Compile Include="Settings\ContentPartLayoutSettings.cs" />
+    <Compile Include="Settings\LayoutSettingsHooks.cs" />
+    <Compile Include="Settings\LayoutTypePartSettings.cs" />
+    <Compile Include="Settings\ContentPartSettingsHooks.cs" />
+    <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
+    <Compile Include="ViewModels\ContentItemEditorViewModel.cs" />
+    <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
+    <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
+    <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
+    <Compile Include="ViewModels\ImageEditorViewModel.cs" />
+    <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
+    <Compile Include="ViewModels\ParagraphEditorViewModel.cs" />
+    <Compile Include="ViewModels\TextEditorViewModel.cs" />
+    <Compile Include="Framework\Elements\Category.cs" />
+    <Compile Include="Providers\DefaultCategoryProvider.cs" />
+    <Compile Include="Services\ContentPartDisplay.cs" />
+    <Compile Include="Services\ElementFactory.cs" />
+    <Compile Include="Framework\Harvesters\ICategoryProvider.cs" />
+    <Compile Include="Services\IContentPartDisplay.cs" />
+    <Compile Include="Services\IElementFactory.cs" />
+    <Compile Include="Settings\LayoutPartSettings.cs" />
+    <Compile Include="ViewModels\BrowseElementsViewModel.cs" />
+    <Compile Include="Elements\ContentPart.cs" />
+    <Compile Include="Providers\ContentPartElementHarvester.cs" />
+    <Compile Include="Framework\Harvesters\HarvestElementsContext.cs" />
+    <Compile Include="Services\DescribeElementsContext.cs" />
+    <Compile Include="Services\ILayoutManager.cs" />
+    <Compile Include="Drivers\ColumnDriver.cs" />
+    <Compile Include="Drivers\GridDriver.cs" />
+    <Compile Include="Handlers\LayoutPartHandler.cs" />
+    <Compile Include="Models\LayoutPartRecord.cs" />
+    <Compile Include="Services\LayoutManager.cs" />
+    <Compile Include="ViewModels\EditElementViewModel.cs" />
+    <Compile Include="Services\CultureAccessor.cs" />
+    <Compile Include="Services\ICultureAccessor.cs" />
+    <Compile Include="Framework\Elements\ElementRemovingContext.cs" />
+    <Compile Include="Framework\Elements\ElementSavingContext.cs" />
+    <Compile Include="Framework\Elements\LayoutSavingContext.cs" />
+    <Compile Include="Helpers\ElementInstanceHelper.cs" />
+    <Compile Include="Framework\Drivers\EditorResult.cs" />
+    <Compile Include="ViewModels\ElementStateViewModel.cs" />
+    <Compile Include="Controllers\LayoutController.cs" />
+    <Compile Include="Drivers\RowDriver.cs" />
+    <Compile Include="Drivers\TextDriver.cs" />
+    <Compile Include="Framework\Drivers\ElementDriver.cs" />
+    <Compile Include="Framework\Drivers\FormsElementDriver.cs" />
+    <Compile Include="Framework\Drivers\ElementEditorContext.cs" />
+    <Compile Include="Controllers\ElementController.cs" />
+    <Compile Include="Elements\Snippet.cs" />
+    <Compile Include="Framework\Elements\IGrid.cs" />
+    <Compile Include="Elements\Grid.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Framework\Elements\ElementDescriptor.cs" />
+    <Compile Include="Framework\Drivers\IElementDriver.cs" />
+    <Compile Include="Framework\Harvesters\IElementHarvester.cs" />
+    <Compile Include="Framework\Serialization\ILayoutSerializer.cs" />
+    <Compile Include="Helpers\ElementStateHelper.cs" />
+    <Compile Include="Models\ElementInstance.cs" />
+    <Compile Include="Framework\Display\ElementDisplayContext.cs" />
+    <Compile Include="Framework\Elements\IColumn.cs" />
+    <Compile Include="Elements\Column.cs" />
+    <Compile Include="Framework\Serialization\LayoutSerializer.cs" />
+    <Compile Include="Providers\SnippetElementHarvester.cs" />
+    <Compile Include="Providers\TypedElementHarvester.cs" />
+    <Compile Include="ViewModels\ElementViewModel.cs" />
+    <Compile Include="Drivers\LayoutPartDriver.cs" />
+    <Compile Include="Framework\Display\IElementDisplay.cs" />
+    <Compile Include="Framework\Display\ElementDisplay.cs" />
+    <Compile Include="Services\ElementManager.cs" />
+    <Compile Include="Shapes\ElementShapes.cs" />
+    <Compile Include="Framework\Elements\IRow.cs" />
+    <Compile Include="Elements\MediaItem.cs" />
+    <Compile Include="ViewModels\LayoutEditorViewModel.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\LayoutPart.cs" />
+    <Compile Include="Framework\Elements\CategoryDescriptor.cs" />
+    <Compile Include="Services\IElementManager.cs" />
+    <Compile Include="Framework\Elements\IContainer.cs" />
+    <Compile Include="Framework\Elements\IElement.cs" />
+    <Compile Include="Elements\Row.cs" />
+    <Compile Include="Elements\Container.cs" />
+    <Compile Include="Framework\Elements\Element.cs" />
+    <Compile Include="Elements\Text.cs" />
+    <Compile Include="ViewModels\LayoutPartViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

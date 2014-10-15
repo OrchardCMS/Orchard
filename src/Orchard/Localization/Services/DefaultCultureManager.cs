@@ -12,30 +12,34 @@ namespace Orchard.Localization.Services {
         private readonly IEnumerable<ICultureSelector> _cultureSelectors;
         private readonly ISignals _signals;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ICacheManager _cacheManager;
 
         public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, 
                                      IEnumerable<ICultureSelector> cultureSelectors, 
                                      ISignals signals, 
-                                     IWorkContextAccessor workContextAccessor) {
+                                     IWorkContextAccessor workContextAccessor,
+                                     ICacheManager cacheManager) {
             _cultureRepository = cultureRepository;
             _cultureSelectors = cultureSelectors;
             _signals = signals;
             _workContextAccessor = workContextAccessor;
+            _cacheManager = cacheManager;
         }
 
         public IEnumerable<string> ListCultures() {
-            var query = from culture in _cultureRepository.Table select culture.Culture;
-            return query.ToList();
+            return _cacheManager.Get("Cultures", context => {
+                context.Monitor(_signals.When("culturesChanged"));
+
+                return _cultureRepository.Table.Select(o => o.Culture).ToList();
+            });
         }
 
         public void AddCulture(string cultureName) {
             if (!IsValidCulture(cultureName)) {
                 throw new ArgumentException("cultureName");
             }
-
-            var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
             
-            if (culture != null) {
+            if (ListCultures().Any(culture => culture == cultureName)) {
                 return;
             }
 
@@ -48,8 +52,8 @@ namespace Orchard.Localization.Services {
                 throw new ArgumentException("cultureName");
             }
 
-            var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
-            if (culture != null) {
+            if (ListCultures().Any(culture => culture == cultureName)) {
+                var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
                 _cultureRepository.Delete(culture);
                 _signals.Trigger("culturesChanged");
             }

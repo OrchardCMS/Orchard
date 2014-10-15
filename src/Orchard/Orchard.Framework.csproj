@@ -65,9 +65,9 @@
       <HintPath>..\..\lib\autofac\Autofac.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\castle-windsor\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\castle\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -260,7 +260,7 @@
     <Compile Include="FileSystems\Media\IMimeTypeProvider.cs" />
     <Compile Include="FileSystems\Media\StorageProviderExtensions.cs" />
     <Compile Include="Indexing\ISearchBits.cs" />
-    <Compile Include="Localization\HtmlLocalizationExtensions.cs" />
+    <Compile Include="Localization\LocalizationExtensions.cs" />
     <Compile Include="Localization\Models\DateLocalizationOptions.cs" />
     <Compile Include="Localization\Models\DateParts.cs" />
     <Compile Include="Localization\Models\DateTimeParts.cs" />
@@ -274,6 +274,8 @@
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ICalendarSelector.cs" />
     <Compile Include="Localization\Services\ICalendarManager.cs" />
+    <Compile Include="Localization\Services\DefaultCultureFilter.cs" />
+    <Compile Include="Localization\Services\ICultureFilter.cs" />
     <Compile Include="Localization\Services\IDateLocalizationServices.cs" />
     <Compile Include="Localization\Services\IDateFormatter.cs" />
     <Compile Include="Localization\Services\IDateTimeFormatProvider.cs" />

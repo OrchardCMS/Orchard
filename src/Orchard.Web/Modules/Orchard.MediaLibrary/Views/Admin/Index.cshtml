@@ -68,6 +68,7 @@
                         </ul>
                         <div id="media-library-main-selection-actions">
                             <button id="delete-selection-button">@T("Delete")</button>
+                            <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
                         </div>
                     </div>
                 </header>
@@ -94,9 +95,11 @@ var mediaLibrarySettings = {
     importActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))',
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
+    cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
     hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
+    cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
     childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']

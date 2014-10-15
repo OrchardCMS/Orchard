@@ -1,0 +1,5 @@
+﻿@model Orchard.Layouts.Settings.ElementWrapperPartSettings
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ElementTypeName)">@T("Element Type Name")</label>
+    @Html.TextBoxFor(m => m.ElementTypeName, new { @class = "text medium" })
+</fieldset>

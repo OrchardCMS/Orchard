@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.DisplayManagement;
@@ -17,6 +18,7 @@ namespace Orchard.Tests.DisplayManagement {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();

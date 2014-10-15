@@ -22,26 +22,52 @@ namespace Orchard.Localization.Drivers {
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
-            var masterId = part.MasterContentItem != null
-                               ? part.MasterContentItem.Id
+            var masterId = part.HasTranslationGroup
+                               ? part.Record.MasterContentItemId
                                : part.Id;
+
+            var siteCultures = _cultureManager.ListCultures();
+
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
-                             () => shapeHelper.Parts_Localization_ContentTranslations(MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Latest)))
+                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(Id: part.ContentItem.Id, MasterId: masterId, Culture: GetCulture(part), Localizations: GetDisplayLocalizations(part, VersionOptions.Latest), SiteCultures: siteCultures))
                 );
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
-            var localizations = GetEditorLocalizations(part).ToList();
+            List<LocalizationPart> localizations = GetEditorLocalizations(part).ToList();
+
+            var siteCultures = _cultureManager.ListCultures().ToList();
+
+            List<string> missingCultures;
+             
+            if (part.HasTranslationGroup) {
+                var localizationPart = part.MasterContentItem.As<LocalizationPart>();
+                missingCultures =
+                    siteCultures.Where(s => GetEditorLocalizations(localizationPart).All(l => l.Culture.Culture != s))
+                        .ToList();
+
+                missingCultures.Remove(localizationPart.Culture.Culture);
+            }
+            else {
+                missingCultures =
+                    siteCultures.Where(s => GetEditorLocalizations(part).All(l => l.Culture.Culture != s))
+                        .ToList();
+
+                if (part.Culture != null)
+                    missingCultures.Remove(part.Culture.Culture);
+            }
+
             var model = new EditLocalizationViewModel {
-                SelectedCulture = part.Culture != null ? part.Culture.Culture : null,
-                SiteCultures = _cultureManager.ListCultures().Where(s => s != _cultureManager.GetSiteCulture() && !localizations.Select(l => l.Culture.Culture).Contains(s)),
+                SelectedCulture = GetCulture(part),
+                SiteCultures = siteCultures,
+                MissingCultures = missingCultures,
                 ContentItem = part,
-                MasterContentItem = part.MasterContentItem,
+                MasterContentItem = part.HasTranslationGroup ? part.MasterContentItem : null,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
@@ -56,6 +82,10 @@ namespace Orchard.Localization.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        private static string GetCulture(LocalizationPart part) {
+            return part.Culture != null ? part.Culture.Culture : null;
         }
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
@@ -77,7 +107,7 @@ namespace Orchard.Localization.Drivers {
                     return c;
                 }).ToList();
         }
-
+        
         protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
             var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
             if (masterContentItem != null) {
