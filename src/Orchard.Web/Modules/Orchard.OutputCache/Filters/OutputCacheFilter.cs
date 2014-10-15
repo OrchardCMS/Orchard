@@ -221,7 +221,8 @@ namespace Orchard.OutputCache.Filters {
             var parameters = new Dictionary<string, object>(filterContext.ActionParameters);
 
             foreach (var key in queryString.AllKeys) {
-                if (key == null) continue;
+                if (key == null || (_varyQueryStringParameters != null
+                    && !_varyQueryStringParameters.Contains(key))) continue;
 
                 // ignore pages with the RefreshKey
                 if (String.Equals(RefreshKey, key, StringComparison.OrdinalIgnoreCase)) {
@@ -488,7 +489,6 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.SetMaxAge(maxAge);
             }
 
-            response.Cache.VaryByParams["*"] = true;
             response.DisableUserCache();
 
             // keeping this examples for later usage
@@ -503,7 +503,10 @@ namespace Orchard.OutputCache.Filters {
                 }
             }
 
-            if (_varyQueryStringParameters != null) {
+            if (_varyQueryStringParameters == null) {
+                response.Cache.VaryByParams["*"] = true;
+            }
+            else {
                 foreach (var queryStringParam in _varyQueryStringParameters) {
                     response.Cache.VaryByParams[queryStringParam] = true;
                 }
