@@ -6,7 +6,7 @@ using System.Web;
 namespace Orchard.Caching.Services {
     public class DefaultCacheStorageProvider : ICacheStorageProvider {
 
-        public void Put(string key, object value) {
+        public void Put<T>(string key, T value) {
             HttpRuntime.Cache.Insert(
                 key,
                 value,
@@ -17,7 +17,7 @@ namespace Orchard.Caching.Services {
                 null);
         }
 
-        public void Put(string key, object value, TimeSpan validFor) {
+        public void Put<T>(string key, T value, TimeSpan validFor) {
             HttpRuntime.Cache.Insert(
                 key,
                 value,
@@ -44,8 +44,13 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public object Get(string key) {
-            return HttpRuntime.Cache.Get(key);
+        public T Get<T>(string key) {
+            var value = HttpRuntime.Cache.Get(key);
+            if (value is T) {
+                return (T)value;
+            }
+
+            return default(T);
         }
     }
 }
