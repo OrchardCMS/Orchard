@@ -418,25 +418,22 @@ namespace Orchard.OutputCache.Filters {
             Logger.Debug("Redirect on POST");
             var redirectUrl = redirectResult.Url;
 
-            if (!VirtualPathUtility.IsAbsolute(redirectUrl)) {
-                var applicationRoot = new UrlHelper(filterContext.HttpContext.Request.RequestContext).MakeAbsolute("/");
-                if (redirectUrl.StartsWith(applicationRoot, StringComparison.OrdinalIgnoreCase)) {
-                    redirectUrl = "~/" + redirectUrl.Substring(applicationRoot.Length);
-                    redirectUrl = VirtualPathUtility.ToAbsolute(redirectUrl);
-                }
+            if (filterContext.HttpContext.Request.IsLocalUrl(redirectUrl)) {
+                var helper = new UrlHelper(filterContext.HttpContext.Request.RequestContext);
+                var absolutePath = new Uri(helper.MakeAbsolute(redirectUrl)).AbsolutePath;
+
+                // querystring invariant key
+                var invariantCacheKey = ComputeCacheKey(
+                    _shellSettings.Name,
+                    absolutePath,
+                    () => _workContext.CurrentCulture,
+                    _themeManager.GetRequestTheme(filterContext.RequestContext).Id,
+                    null
+                    );
+
+                // remove all cached version of the same page
+                _cacheService.RemoveByTag(invariantCacheKey);
             }
-
-            // querystring invariant key
-            var invariantCacheKey = ComputeCacheKey(
-                _shellSettings.Name,
-                redirectUrl,
-                () => _workContext.CurrentCulture,
-                _themeManager.GetRequestTheme(filterContext.RequestContext).Id,
-                null
-                );
-
-            // remove all cached version of the same page
-            _cacheService.RemoveByTag(invariantCacheKey);
 
             // adding a refresh key so that the redirection doesn't get restored
             // from a cached version on a proxy
