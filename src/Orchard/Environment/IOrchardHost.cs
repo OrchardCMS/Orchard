@@ -1,9 +1,9 @@
+using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Localization;
 
 namespace Orchard.Environment {
-    public interface IOrchardHost {
+    public interface IOrchardHost : IRegisteredObject {
         /// <summary>
         /// Called once on startup to configure app domain, and load/apply existing shell configuration
         /// </summary>

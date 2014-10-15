@@ -244,6 +244,10 @@ namespace Orchard.Environment {
             StartUpdatedShells();
         }
 
+        public void Stop(bool immediate) {
+            DisposeShellContext();
+        }
+
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             Logger.Debug("Shell saved: " + settings.Name);
 
