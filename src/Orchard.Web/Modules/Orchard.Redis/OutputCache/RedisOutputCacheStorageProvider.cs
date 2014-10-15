@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.Redis.Configuration;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
+using Orchard.Redis.Extensions;
 using StackExchange.Redis;
 
 namespace Orchard.Redis.OutputCache {
@@ -51,9 +52,7 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public void RemoveAll() {
-            foreach (var key in GetAllKeys()) {
-                Remove(key);
-            }
+            Database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         public CacheItem GetCacheItem(string key) {
@@ -85,7 +84,7 @@ namespace Orchard.Redis.OutputCache {
         /// <param name="key">The key to localized.</param>
         /// <returns>A localized key based on the tenant name.</returns>
         private string GetLocalizedKey(string key) {
-            return _shellSettings.Name + ":" + key;
+            return _shellSettings.Name + ":OutputCache:" + key;
         }
 
         /// <summary>
