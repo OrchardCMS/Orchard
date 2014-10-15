@@ -1,0 +1,18 @@
+﻿.dynamic-forms tbody.forms td:last-child,
+.dynamic-forms-submissions tbody.submissions td:last-child {
+    text-align: right;
+}
+
+.bindings table thead th.property-type,
+.bindings table tbody td.property-type {
+    width: 300px;
+    text-align: right;
+}
+
+th.validator-name {
+    width: 20%;
+}
+
+th.validator-settings {
+    width: 80%;
+}

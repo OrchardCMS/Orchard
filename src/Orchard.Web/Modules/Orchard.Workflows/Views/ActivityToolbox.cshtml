@@ -1,4 +1,4 @@
-﻿@using Orchard.Utility.Extensions
+@using Orchard.Utility.Extensions
 @using Orchard.Workflows.Models
 @using Orchard.Workflows.Services
 
@@ -27,7 +27,7 @@
         //<![CDATA[
         var activities = { @foreach (var activity in allActivities) { <text>
             '@activity.Name': {
-                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "'" + HttpUtility.JavaScriptStringEncode(x.Text) + "'").ToArray()))],
+                outcomes: [@Html.Raw(String.Join(",", activity.GetPossibleOutcomes(new WorkflowContext(), new ActivityContext()).Where(x => !String.IsNullOrEmpty(x.Text)).Select(x => "{label:'" + HttpUtility.JavaScriptStringEncode(x.Text) + "', value:'" + HttpUtility.JavaScriptStringEncode(x.TextHint) + "'}").ToArray()))],
                 category: '@HttpUtility.JavaScriptStringEncode(activity.Category.Text)',
                 description: '@HttpUtility.JavaScriptStringEncode(activity.Description.Text)',
                 IsEvent: @(activity.IsEvent ? "true" : "false"),

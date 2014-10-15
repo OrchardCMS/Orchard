@@ -1,0 +1,7 @@
+﻿@model dynamic
+@{
+    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
+    Style.Include("layout-designer.css");
+    Script.Require("jQuery").AtFoot();
+}
+@Display(Model.Content)

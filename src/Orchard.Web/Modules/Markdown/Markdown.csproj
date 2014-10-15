@@ -48,11 +48,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MarkdownSharp">
-      <HintPath>..\..\..\..\lib\markdown\MarkdownSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -120,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\MarkdownSiteSettingsPartHandler.cs" />
+    <Compile Include="Markdown.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MarkdownSiteSettingsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

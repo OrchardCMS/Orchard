@@ -1,4 +1,4 @@
-﻿    var connectorPaintStyle = {
+    var connectorPaintStyle = {
         lineWidth: 2,
         strokeStyle: "#999",
         joinstyle: "round",
@@ -155,12 +155,12 @@
                 for (i = 0; i < outcomes.length; i++) {
                     var ep = jsPlumb.addEndpoint(dom, {
                         anchor: "Continuous",
-                        connectorOverlays: [["Label", { label: outcomes[i], cssClass: "connection-label" }]],
+                        connectorOverlays: [["Label", { label: outcomes[i].label, cssClass: "connection-label" }]],
                     },
                         sourceEndpointOptions);
 
-                    elt.endpoints[outcomes[i]] = ep;
-                    ep.outcome = outcomes[i];
+                    elt.endpoints[outcomes[i].value] = ep;
+                    ep.outcome = outcomes[i].value;
                     // ep.overlays[0].setLabel(outcomes[i]);
                 }
 

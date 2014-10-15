@@ -1,0 +1,5 @@
+﻿@model Orchard.Layouts.ViewModels.MarkdownEditorViewModel
+<fieldset>
+    @Html.LabelFor(m => m.Text, T("Markdown"))
+    @Display.Body_Editor(EditorFlavor: "markdown", Text: Model.Text)
+</fieldset>

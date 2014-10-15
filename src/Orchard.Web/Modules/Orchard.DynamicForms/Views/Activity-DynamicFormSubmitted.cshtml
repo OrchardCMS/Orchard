@@ -1,0 +1,9 @@
+﻿@{
+    var formNames = (string)Model.State.DynamicForms;
+    var isEventClass = Model.IsEvent ? "event" : null;
+    var canStartClass = Model.CanStartWorkflow ? "canStart" : null;
+    var description = String.IsNullOrEmpty(formNames) ? T("Any Dynamic Form Submitted") : T("{0} Form Submitted", formNames);
+}
+<div class="@isEventClass @canStartClass activity-dynamic-form-submitted">
+    <div>@description</div>
+</div>

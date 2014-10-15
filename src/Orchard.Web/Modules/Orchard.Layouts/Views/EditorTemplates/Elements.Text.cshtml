@@ -1,0 +1,5 @@
+﻿@model Orchard.Layouts.ViewModels.TextEditorViewModel
+<fieldset>
+    @Html.LabelFor(m => m.Text, T("Body"))
+    @Display.Body_Editor(EditorFlavor: Model.Flavor, Text: Model.Text)
+</fieldset>

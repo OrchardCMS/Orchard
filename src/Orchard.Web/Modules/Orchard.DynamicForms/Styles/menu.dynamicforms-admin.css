@@ -1,0 +1,7 @@
+﻿.navicon-dynamic-forms {
+    background-image: url(menu.dynamicforms.png) !important;
+}
+
+    .navicon-dynamic-forms:hover {
+        background-position: 0 -30px !important;
+    }

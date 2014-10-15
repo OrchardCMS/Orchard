@@ -1,0 +1,79 @@
+﻿.dialog-wrapper {
+    display: none;
+}
+
+    .dialog-wrapper .overlay {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: url('overlay.png');
+        z-index: 500;
+        /* Restore styles inherited from media-library-picker-admin.css when a media picker field is rendered. */
+        -ms-opacity: inherit;
+        opacity: inherit;
+        color: inherit;
+        font-size: inherit;
+        text-align: inherit;
+        width: inherit;
+    }
+
+    .dialog-wrapper .dialog {
+        position: absolute;
+        left: 500px;
+        top: 250px;
+        -moz-min-width: 800px;
+        -ms-min-width: 800px;
+        -o-min-width: 800px;
+        -webkit-min-width: 800px;
+        min-width: 600px;
+        z-index: 200;
+        -webkit-box-shadow: 5px 5px 95px #525252;
+        -ms-box-shadow: 5px 5px 95px #525252;
+        box-shadow: 5px 5px 95px #525252;
+    }
+
+        .dialog-wrapper .dialog > header {
+            background: #323232;
+            padding: 0.5em 1em;
+            color: #ffffff;
+            cursor: move;
+        }
+
+            .dialog-wrapper .dialog > header h1 {
+                color: inherit;
+                font-size: 0.9em;
+                font-weight: bold;
+            }
+
+        .dialog-wrapper .dialog > .view {
+            background: #f3f4f5;
+            padding: 1em;
+            min-height: 150px;
+            border: 1px solid #bdbcbc;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .dialog-wrapper .dialog > footer {
+            background: #f3f4f5;
+            border: 1px solid #bdbcbc;
+            border-top: none;
+            text-align: right;
+            padding: 1em;
+        }
+
+    .dialog-wrapper iframe {
+        width: 100%;
+        height: 600px;
+    }
+
+.dialog-settings {
+    display: none;
+}
+
+/* Overrides an existing rule from TheAdmin theme. */
+#main #content .dialog-wrapper .dialog > header h1 {
+    margin: 0;
+}
