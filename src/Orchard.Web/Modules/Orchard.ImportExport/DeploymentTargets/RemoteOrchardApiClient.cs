@@ -31,7 +31,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, null)) {
                 using (var stream = webClient.OpenRead(fullyQualifiedUri.ToString())) {
                     if (stream == null) {
-                        throw new WebException("Deployment API did not return a valid stream.");
+                        throw new WebException(T("Deployment API did not return a valid stream.").Text);
                     }
                     using (var reader = new StreamReader(stream)) {
                         var json = reader.ReadToEnd();
@@ -41,7 +41,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                         if (!ResponseIsValid(json,
                             webClient.ResponseHeaders[_signingService.TimestampHeaderName],
                             webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                            throw new WebException("Deployment API response does not contain a valid hash");
+                            throw new WebException(T("Deployment API response does not contain a valid hash").Text);
                         }
 
                         return json;
@@ -50,20 +50,19 @@ namespace Orchard.ImportExport.DeploymentTargets {
             }
         }
 
-        public string Post(string url, string data, string contentType = "application/json") {
+        public string Post(string url, string data) {
             var fullyQualifiedUri = BuildUri(url);
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
             var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
             using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, requestContentHash)) {
-                webClient.Headers["Content-Type"] = contentType;
                 var result = webClient.UploadString(fullyQualifiedUri.ToString(), "POST", data);
 
                 if (!ResponseIsValid(result,
                     webClient.ResponseHeaders[_signingService.TimestampHeaderName],
                     webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                    throw new WebException("Deployment API response does not contain a valid hash");
+                    throw new WebException(T("Deployment API response does not contain a valid hash").Text);
                 }
                 return result;
             }
