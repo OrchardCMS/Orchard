@@ -1,11 +1,10 @@
-﻿using System.Web.Mvc;
-using Orchard.DynamicForms.Elements;
+﻿using System.Collections.Specialized;
+using System.Web.Mvc;
 
 namespace Orchard.DynamicForms.Services.Models {
-    public class ValidateInputContext {
-        public FormElement Element { get; set; }
+    public class ValidateInputContext : ValidationContext {
         public ModelStateDictionary ModelState { get; set; }
-        public string FieldName { get; set; }
         public string AttemptedValue { get; set; }
+        public NameValueCollection Values { get; set; }
     }
 }

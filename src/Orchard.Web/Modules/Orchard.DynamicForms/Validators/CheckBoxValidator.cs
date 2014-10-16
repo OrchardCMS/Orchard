@@ -1,41 +1,20 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services;
-using Orchard.DynamicForms.Services.Models;
-using Orchard.DynamicForms.Validators.Settings;
+using Orchard.DynamicForms.ValidationRules;
 
 namespace Orchard.DynamicForms.Validators {
     public class CheckBoxValidator : ElementValidator<CheckBox> {
-        protected override void OnValidate(CheckBox element, ValidateInputContext context) {
-            var settings = element.ValidationSettings;
-
-            if (settings.IsMandatory != true)
-                return;
-
-            if (String.IsNullOrWhiteSpace(context.AttemptedValue)) {
-                var message = GetValidationMessage(settings);
-                context.ModelState.AddModelError(context.FieldName, T(message, context.FieldName).Text);
-            }
+        private readonly IValidationRuleFactory _validationRuleFactory;
+        public CheckBoxValidator(IValidationRuleFactory validationRuleFactory) {
+            _validationRuleFactory = validationRuleFactory;
         }
 
-        protected override void OnRegisterClientValidation(CheckBox element, RegisterClientValidationAttributesEventContext context) {
+        protected override IEnumerable<IValidationRule> GetValidationRules(CheckBox element) {
             var settings = element.ValidationSettings;
 
-            if (settings.IsMandatory != true)
-                return;
-
-            var message = GetValidationMessage(settings);
-
-            context.ClientAttributes["data-val"] = "true";
-            context.ClientAttributes["data-val-mandatory"] = T(message, context.Element.Name).Text;
-        }
-
-        private string GetValidationMessage(CheckBoxValidationSettings settings) {
-            var message = String.IsNullOrWhiteSpace(settings.CustomValidationMessage)
-                    ? "{0} is a mandatory field."
-                    : settings.CustomValidationMessage;
-
-            return message;
+            if (settings.IsMandatory == true)
+                yield return _validationRuleFactory.Create<Mandatory>(settings.CustomValidationMessage);
         }
     }
 }

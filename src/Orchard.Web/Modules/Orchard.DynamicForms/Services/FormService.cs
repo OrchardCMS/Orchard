@@ -10,7 +10,6 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.DynamicForms.Elements;
-using Orchard.DynamicForms.Handlers;
 using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Models;
 using Orchard.DynamicForms.Services.Models;
@@ -32,7 +31,7 @@ namespace Orchard.DynamicForms.Services {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IBindingManager _bindingManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IFormEventHandler _formEventHandler;
+        private readonly IDynamicFormEventHandler _formEventHandler;
         private readonly Lazy<IEnumerable<IElementValidator>> _validators;
 
         public FormService(
@@ -44,7 +43,7 @@ namespace Orchard.DynamicForms.Services {
             IContentDefinitionManager contentDefinitionManager, 
             IBindingManager bindingManager, 
             IHttpContextAccessor httpContextAccessor,
-            IFormEventHandler formEventHandler, 
+            IDynamicFormEventHandler formEventHandler, 
             Lazy<IEnumerable<IElementValidator>> validators) {
 
             _serializer = serializer;
@@ -272,8 +271,8 @@ namespace Orchard.DynamicForms.Services {
             return _validators.Value.ToArray();
         }
 
-        public void RegisterClientValidationAttributes(RegisterClientValidationAttributesEventContext context) {
-            _elementHandlers.RegisterClientValidation(context);
+        public void RegisterClientValidationAttributes(FormElement element, RegisterClientValidationAttributesContext context) {
+            _elementHandlers.RegisterClientValidation(element, context);
         }
 
         private static void InvokePartBindings(

@@ -1,8 +1,9 @@
+using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services.Models;
 
 namespace Orchard.DynamicForms.Services {
     public interface IElementValidator : IDependency {
-        void Validate(ValidateInputContext context);
-        void RegisterClientValidation(RegisterClientValidationAttributesEventContext context);
+        void Validate(FormElement element, ValidateInputContext context);
+        void RegisterClientValidation(FormElement element, RegisterClientValidationAttributesContext context);
     }
 }
