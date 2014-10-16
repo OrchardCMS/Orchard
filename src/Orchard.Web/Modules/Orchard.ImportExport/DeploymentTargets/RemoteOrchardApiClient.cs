@@ -50,13 +50,14 @@ namespace Orchard.ImportExport.DeploymentTargets {
             }
         }
 
-        public string Post(string url, string data) {
+        public string Post(string url, string data, string contentType = "application/json") {
             var fullyQualifiedUri = BuildUri(url);
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
             var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
             using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, requestContentHash)) {
+                webClient.Headers["Content-Type"] = contentType;
                 var result = webClient.UploadString(fullyQualifiedUri.ToString(), "POST", data);
 
                 if (!ResponseIsValid(result,

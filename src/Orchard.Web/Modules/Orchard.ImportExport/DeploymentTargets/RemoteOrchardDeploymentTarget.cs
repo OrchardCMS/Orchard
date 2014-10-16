@@ -37,7 +37,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 area = "Orchard.ImportExport",
                 executionId
             });
-            Client.Value.Post(actionUrl, recipeText);
+            Client.Value.Post(actionUrl, recipeText, "application/xml");
         }
 
         public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
