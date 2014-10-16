@@ -1,5 +1,4 @@
-﻿@using Orchard.Layouts.Helpers
-@using Orchard.Layouts.Models
+﻿@using Orchard.Layouts.Models
 @model Orchard.Layouts.ViewModels.EditElementViewModel
 @{
     Style.Include("element-editor.css");
@@ -37,7 +36,7 @@
                         command: "@command",
                         element: {
                             typeName: "@Model.TypeName",
-                            state: "@Url.Encode(Model.EditorResult.State.Serialize())"
+                            state: "@Url.Encode(Model.ElementState)"
                         }
                     });
                 }, 50);

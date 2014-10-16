@@ -227,6 +227,7 @@
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
+    <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />
     <Compile Include="Services\ElementCreatedContext.cs" />
