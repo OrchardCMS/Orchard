@@ -1,51 +1,84 @@
 ﻿using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
+using Orchard.Environment.Configuration;
+using Orchard.Services;
 
 namespace Orchard.Caching.Services {
-    public class DefaultCacheStorageProvider : ICacheStorageProvider {
+    // The technique of signaling tenant-specific cache entries to be invalidated comes from: http://stackoverflow.com/a/22388943/220230
+    // Singleton so signals can be stored for the shell lifetime.
+    public class DefaultCacheStorageProvider : ICacheStorageProvider, ISingletonDependency {
+        private event EventHandler Signaled;
+
+        private readonly ShellSettings _shellSettings;
+        private readonly IClock _clock;
+        // MemoryCache is optimal with one instance, see: http://stackoverflow.com/questions/8463962/using-multiple-instances-of-memorycache/13425322#13425322
+        private readonly MemoryCache _cache = MemoryCache.Default;
+
+        public DefaultCacheStorageProvider(ShellSettings shellSettings, IClock clock) {
+            _shellSettings = shellSettings;
+            _clock = clock;
+        }
 
         public void Put(string key, object value) {
-            HttpRuntime.Cache.Insert(
-                key,
-                value,
-                null,
-                System.Web.Caching.Cache.NoAbsoluteExpiration,
-                System.Web.Caching.Cache.NoSlidingExpiration,
-                System.Web.Caching.CacheItemPriority.Normal,
-                null);
+            // Keys are already prefixed by DefaultCacheService so no need to do it here again.
+            _cache.Set(key, value, GetCacheItemPolicy(MemoryCache.InfiniteAbsoluteExpiration));
         }
 
         public void Put(string key, object value, TimeSpan validFor) {
-            HttpRuntime.Cache.Insert(
-                key,
-                value,
-                null,
-                System.Web.Caching.Cache.NoAbsoluteExpiration,
-                validFor,
-                System.Web.Caching.CacheItemPriority.Normal,
-                null);
+            _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
         }
 
         public void Remove(string key) {
-            HttpRuntime.Cache.Remove(key);
+            _cache.Remove(key);
         }
 
         public void Clear() {
-            var all = HttpRuntime.Cache
-                .AsParallel()
-                .Cast<DictionaryEntry>()
-                .Select(x => x.Key.ToString())
-                .ToList();
-
-            foreach (var key in all) {
-                Remove(key);
+            if (Signaled != null) {
+                Signaled(null, EventArgs.Empty);
             }
         }
 
         public object Get(string key) {
-            return HttpRuntime.Cache.Get(key);
+            return _cache.Get(key);
+        }
+
+        private CacheItemPolicy GetCacheItemPolicy(DateTimeOffset absoluteExpiration) {
+            var cacheItemPolicy = new CacheItemPolicy();
+
+            cacheItemPolicy.AbsoluteExpiration = absoluteExpiration;
+            cacheItemPolicy.SlidingExpiration = MemoryCache.NoSlidingExpiration;
+            cacheItemPolicy.ChangeMonitors.Add(new TenantCacheClearMonitor(this));
+
+            return cacheItemPolicy;
+        }
+
+        public class TenantCacheClearMonitor : ChangeMonitor {
+            private readonly DefaultCacheStorageProvider _storageProvider;
+
+            private readonly string _uniqueId = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
+            public override string UniqueId {
+                get { return _uniqueId; }
+            }
+
+            public TenantCacheClearMonitor(DefaultCacheStorageProvider storageProvider) {
+                _storageProvider = storageProvider;
+                _storageProvider.Signaled += OnSignalRaised;
+                base.InitializationComplete();
+            }
+
+            protected override void Dispose(bool disposing) {
+                base.Dispose();
+                _storageProvider.Signaled -= OnSignalRaised;
+            }
+
+            private void OnSignalRaised(object sender, EventArgs e) {
+                // Cache objects are obligated to remove entry upon change notification.
+                base.OnChanged(null);
+            }
         }
     }
 }

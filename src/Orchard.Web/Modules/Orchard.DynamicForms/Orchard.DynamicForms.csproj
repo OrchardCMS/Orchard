@@ -141,10 +141,12 @@
     <Compile Include="Controllers\SubmissionAdminController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FormController.cs" />
+    <Compile Include="Drivers\EmailFieldDriver.cs" />
     <Compile Include="Drivers\PasswordFieldDriver.cs" />
     <Compile Include="Drivers\QueryDriver.cs" />
     <Compile Include="Drivers\ValidationMessageDriver.cs" />
     <Compile Include="Drivers\ValidationSummaryDriver.cs" />
+    <Compile Include="Elements\EmailField.cs" />
     <Compile Include="Elements\PasswordField.cs" />
     <Compile Include="Elements\Query.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
@@ -166,12 +168,15 @@
     <Compile Include="Services\IValidationRule.cs" />
     <Compile Include="ValidationRules\Mandatory.cs" />
     <Compile Include="ValidationRules\Compare.cs" />
+    <Compile Include="ValidationRules\EmailAddress.cs" />
     <Compile Include="ValidationRules\RegularExpression.cs" />
     <Compile Include="ValidationRules\StringLength.cs" />
     <Compile Include="Validators\CheckBoxValidator.cs" />
     <Compile Include="ValidationRules\Required.cs" />
     <Compile Include="Services\ValidationRule.cs" />
+    <Compile Include="Validators\EmailFieldValidator.cs" />
     <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
+    <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
@@ -383,6 +388,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-Form-Query-RadioList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-EmailField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-EmailField.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
