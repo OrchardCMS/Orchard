@@ -39,6 +39,30 @@ namespace Orchard.Tests.ContentManagement {
             var identity2 = new ContentIdentity(@"/foo=bar/abaz=quux\/fr\\ed=foo/yarg=yiu=foo");
             Assert.That(comparer.Equals(identity2, new ContentIdentity(identity2.ToString())));
         }
+
+        [Test]
+        public void ContentIdentityCanSeePartialMatchesAreEquivalent() {
+            var identity1 = new ContentIdentity("/bar=baz/a=b");
+            var identity2 = new ContentIdentity(@"/foo=bar/bar=baz/glop=glop");
+            Assert.That(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity1, identity2));
+            Assert.That(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity2, identity1));
+        }
+
+        [Test]
+        public void ContentIdentityCanSeeFullMatchesAreEquivalent() {
+            var identity1 = new ContentIdentity(@"/foo=bar/bar=baz/glop=glop");
+            var identity2 = new ContentIdentity(@"/foo=bar/bar=baz/glop=glop");
+            Assert.That(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity1, identity2));
+            Assert.That(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity2, identity1));
+        }
+
+        [Test]
+        public void ContentIdentityCanSeeNonMatchesAreNotEquivalent() {
+            var identity1 = new ContentIdentity(@"/a=b/foo=baz");
+            var identity2 = new ContentIdentity(@"/foo=bar/bar=baz/glop=glop");
+            Assert.IsFalse(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity1, identity2));
+            Assert.IsFalse(ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(identity2, identity1));
+        }
     }
 }
 
