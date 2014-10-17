@@ -111,6 +111,10 @@
       <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
       <Name>Orchard.Layouts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
       <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
       <Name>Orchard.Taxonomies</Name>
@@ -138,9 +142,11 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FormController.cs" />
     <Compile Include="Drivers\PasswordFieldDriver.cs" />
+    <Compile Include="Drivers\QueryDriver.cs" />
     <Compile Include="Drivers\ValidationMessageDriver.cs" />
     <Compile Include="Drivers\ValidationSummaryDriver.cs" />
     <Compile Include="Elements\PasswordField.cs" />
+    <Compile Include="Elements\Query.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
@@ -365,6 +371,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-Form-PasswordField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-SelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-CheckList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-MultiSelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-RadioList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
