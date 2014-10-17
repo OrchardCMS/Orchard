@@ -210,12 +210,12 @@
             line-height: 2em;
         }
 
-        .layout-editor .canvas .name {
-            display: block;
-            color: #9da0a4;
-            padding: 0 7px;
-            float: left;
-        }
+    .layout-editor .canvas .name {
+        display: block;
+        color: #9da0a4;
+        padding: 0 7px;
+        float: left;
+    }
 
     .layout-editor .canvas article.element-box {
         position: relative;
@@ -253,7 +253,7 @@
             border-radius: 0 0 2px 2px;
         }
 
-.layout-editor .canvas article.element-box:hover .element-overlay {
+        .layout-editor .canvas article.element-box:hover .element-overlay {
             display: block;
         }
 
@@ -279,6 +279,17 @@
         height: 2.5em;
         padding: 0.5em;
         border: 1px dashed #bdbcbc;
+    }
+
+    .layout-editor .canvas .x-row .x-column .x-holder .x-container-widget .x-grid {
+        background: none repeat scroll 0 0 #fafafa;
+        border: 1px solid #bdbcbc;
+        margin: 27px 0 0;
+        position: relative;
+    }
+
+    .layout-editor .canvas .x-container-widget .x-grid .grid-toolbar {
+        padding: 0 0.5em 0 0.5em;
     }
 
 .layout-editor .trash {
