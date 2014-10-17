@@ -23,8 +23,14 @@ namespace Orchard.DynamicForms.Elements {
             set { State["OptionLabel"] = value; }
         }
 
-        public bool UseTermId {
-            get { return State.Get("ValueType") == "TermId"; }
+        public string TextExpression {
+            get { return State.Get("TextExpression"); }
+            set { State["TextExpression"] = value; }
+        }
+
+        public string ValueExpression {
+            get { return State.Get("ValueExpression"); }
+            set { State["ValueExpression"] = value; }
         }
     }
 }

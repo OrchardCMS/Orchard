@@ -8,8 +8,8 @@ using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
-using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
+using Orchard.Tokens;
 using Orchard.Utility.Extensions;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
@@ -17,10 +17,12 @@ namespace Orchard.DynamicForms.Drivers {
     [OrchardFeature("Orchard.DynamicForms.Taxonomies")]
     public class TaxonomyDriver : FormsElementDriver<Taxonomy> {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ITokenizer _tokenizer;
 
-        public TaxonomyDriver(IFormManager formManager, ITaxonomyService taxonomyService)
+        public TaxonomyDriver(IFormManager formManager, ITaxonomyService taxonomyService, ITokenizer tokenizer)
             : base(formManager) {
             _taxonomyService = taxonomyService;
+            _tokenizer = tokenizer;
         }
 
         protected override IEnumerable<string> FormNames {
@@ -50,20 +52,20 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "SortOrder",
                         Title: "Sort Order",
                         Description: T("The sort order to use when presenting the term values.")),
-                    _ValueType_TermText: shape.Radio(
-                        Id: "ValueType_TermText",
-                        Name: "ValueType",
-                        Title: "Use Term Name",
-                        Checked: true,
-                        Value: "TermText",
-                        Description: T("Select this option to use the term name as the option value.")),
-                    _ValueType_TermId: shape.Radio(
-                        Id: "ValueType_TermId",
-                        Name: "ValueType",
-                        Title: "Use Term ID",
-                        Checked: false,
-                        Value: "TermId",
-                        Description: T("Select this option to use the term ID as the option value.")),
+                    _TextExpression: shape.Textbox(
+                        Id: "TextExpression",
+                        Name: "TextExpression",
+                        Title: "Text Expression",
+                        Value: "{Content.DisplayText}",
+                        Description: T("Specify the expression to get the display text of each option."),
+                        Classes: new[] { "text", "large", "tokenized" }),
+                    _ValueExpression: shape.Textbox(
+                        Id: "ValueExpression",
+                        Name: "ValueExpression",
+                        Title: "Value Expression",
+                        Value: "{Content.Id}",
+                        Description: T("Specify the expression to get the value of each option."),
+                        Classes: new[] { "text", "large", "tokenized" }),
                     _InputType: shape.SelectList(
                         Id: "InputType",
                         Name: "InputType",
@@ -113,8 +115,19 @@ namespace Orchard.DynamicForms.Drivers {
                 yield break;
 
             var terms = _taxonomyService.GetTerms(taxonomyId.Value);
-            var valueAccessor = element.UseTermId ? (Func<TermPart, string>)(x => x.Id.ToString()) : (x => x.Name);
-            var projection = terms.Select(x => new SelectListItem {Text = x.Name, Value = valueAccessor(x)});
+            var valueExpression = !String.IsNullOrWhiteSpace(element.ValueExpression) ? element.ValueExpression : "{Content.Id}";
+            var textExpression = !String.IsNullOrWhiteSpace(element.TextExpression) ? element.TextExpression : "{Content.DisplayText}";
+
+            var projection = terms.Select(x => {
+                var data = new {Content = x};
+                var value = _tokenizer.Replace(valueExpression, data);
+                var text = _tokenizer.Replace(textExpression, data);
+
+                return new SelectListItem {
+                    Text = text,
+                    Value = value
+                };
+            });
 
             switch (element.SortOrder) {
                 case "Asc":
