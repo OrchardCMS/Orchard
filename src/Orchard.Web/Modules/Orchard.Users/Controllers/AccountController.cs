@@ -64,9 +64,9 @@ namespace Orchard.Users.Controllers {
         }
 
         [AlwaysAccessible]
-        public ActionResult LogOn() {
+        public ActionResult LogOn(string returnUrl) {
             if (_authenticationService.GetAuthenticatedUser() != null)
-                return Redirect("~/");
+                return this.RedirectLocal(returnUrl);
 
             var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
             return new ShapeResult(this, shape); 
