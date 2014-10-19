@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.Security;
 using Orchard.Tags.Models;
 
 namespace Orchard.Tags.Services {
@@ -17,6 +18,7 @@ namespace Orchard.Tags.Services {
         private readonly IContentManager _contentManager;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
+        private readonly IMembershipService _membershipService;
         internal static readonly string TagCloudTagsChanged = "Orchard.Tags.TagCloud.TagsChanged";
 
         public TagCloudService(
@@ -24,33 +26,33 @@ namespace Orchard.Tags.Services {
             IRepository<AutoroutePartRecord> autorouteRepository,
             IContentManager contentManager,
             ICacheManager cacheManager,
-            ISignals signals) {
+            ISignals signals,
+            IMembershipService membershipService) {
 
             _contentTagRepository = contentTagRepository;
             _autorouteRepository = autorouteRepository;
             _contentManager = contentManager;
             _cacheManager = cacheManager;
             _signals = signals;
+            _membershipService = membershipService;
         }
 
-        public IEnumerable<TagCount> GetPopularTags(int buckets, string slug) {
-            var cacheKey = "Orchard.Tags.TagCloud." + (slug ?? "") + '.' + buckets;
+        public IEnumerable<TagCount> GetPopularTags(int buckets, string slug, string username = null) {
+            var cacheKey = "Orchard.Tags.TagCloud."
+                + (!string.IsNullOrWhiteSpace(slug) ? "slug-" + slug : string.Empty)
+                + (!string.IsNullOrWhiteSpace(username) ? "username-" + username : string.Empty)
+                + '.' + buckets;
+
             return _cacheManager.Get(cacheKey,
                 ctx => {
                     ctx.Monitor(_signals.When(TagCloudTagsChanged));
-                    IEnumerable<TagCount> tagCounts;
-                    if (string.IsNullOrWhiteSpace(slug)) {
-                        tagCounts = (from tc in _contentTagRepository.Table
-                            where tc.TagsPartRecord.ContentItemRecord.Versions.Any(v => v.Published)
-                            group tc by tc.TagRecord.TagName
-                            into g
-                            select new TagCount {
-                                TagName = g.Key,
-                                Count = g.Count()
-                            }).ToList();
-                    }
-                    else {
-                        if (slug == "/") {
+
+                    var tagQuery = _contentManager
+                        .Query<TagsPart, TagsPartRecord>(VersionOptions.Published)
+                        .Join<CommonPartRecord>();
+
+                    if (!string.IsNullOrWhiteSpace(slug)) {
+                        if (slug == "/"){
                             slug = "";
                         }
 
@@ -60,26 +62,24 @@ namespace Orchard.Tags.Services {
                             .ToList() // don't try to optimize with slicing  as there should be only one result
                             .FirstOrDefault();
 
-                        if (containerId == 0) {
-                            return new List<TagCount>();
-                        }
+                        tagQuery = tagQuery.Where(record => record.Container.Id == containerId);
+                    }
 
-                        tagCounts = _contentManager
-                                          .Query<TagsPart, TagsPartRecord>(VersionOptions.Published)
-                                          .Join<CommonPartRecord>()
-                                          .Where(t => t.Container.Id == containerId)
-                                          .List()
-                                          .SelectMany(t => t.CurrentTags)
-                                          .GroupBy(t => t)
-                                          .Select(g => new TagCount {
-                                              TagName = g.Key,
-                                              Count = g.Count()
-                                          })
-                                          .ToList();
+                    if (!string.IsNullOrWhiteSpace(username)) {
+                        var user = _membershipService.GetUser(username);
+                        tagQuery = tagQuery.Where(record => record.OwnerId == user.Id);
+                    }
 
-                        if (!tagCounts.Any()) {
-                            return new List<TagCount>();
-                        }
+                    var tagCounts = tagQuery.List()
+                        .SelectMany(t => t.CurrentTags)
+                        .GroupBy(t => t)
+                        .Select(g => new TagCount {
+                            TagName = g.Key,
+                            Count = g.Count()
+                        }).ToList();
+
+                    if (!tagCounts.Any()) {
+                        return new List<TagCount>();
                     }
 
                     // initialize centroids with a linear distribution

@@ -16,5 +16,13 @@
         @Html.ValidationMessageFor(model => model.Slug)
         <span class="hint">@T("Enter the slug of the container for which you want the tag cloud, e.g. blog, /, or leave empty for the cloud to be scoped to the whole site. ")</span>
     </div>
-
+    
+    <div class="group">
+        @Html.LabelFor(model => model.Username)
+        @Html.TextBoxFor(model => model.Username, new { @class = "text medium tokenized" })
+        @Html.ValidationMessageFor(model => model.Username)
+        <span class="hint">@T("The Username owning content whose tags that will get rendered in the cloud.")</span>
+    </div>
 </fieldset>
+
+@Display.TokenHint()

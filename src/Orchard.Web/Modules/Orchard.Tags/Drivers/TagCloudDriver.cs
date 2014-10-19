@@ -40,11 +40,13 @@ namespace Orchard.Tags.Drivers {
         protected override void Exporting(TagCloudPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Slug", part.Slug);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Buckets", part.Buckets);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Username", part.Username);
         }
 
         protected override void Importing(TagCloudPart part, ImportContentContext context) {
             part.Slug = context.Attribute(part.PartDefinition.Name, "Slug");
             part.Buckets = Convert.ToInt32(context.Attribute(part.PartDefinition.Name, "Buckets"));
+            part.Username = context.Attribute(part.PartDefinition.Name, "Username");
         }
     }
 }

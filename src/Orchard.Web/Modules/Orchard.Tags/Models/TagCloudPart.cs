@@ -19,5 +19,10 @@ namespace Orchard.Tags.Models {
             get { return this.Retrieve(r => r.Slug); }
             set { this.Store(r => r.Slug, value); }
         }
+
+        public string Username {
+            get { return this.Retrieve(r => r.Username); }
+            set { this.Store(r => r.Username, value); }
+        }
     }
 }
