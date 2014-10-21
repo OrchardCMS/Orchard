@@ -572,9 +572,6 @@ namespace Orchard.ContentManagement {
             // Get the latest version.
             var latestVersionRecord = contentItem.Record.Versions.Single(x => x.Latest);
 
-            // Unpublish the latest version.
-            latestVersionRecord.Published = false;
-
             // Get the specified version.
             var specifiedVersionContentItem =
                 contentItem.VersionRecord.Number == options.VersionNumber || contentItem.VersionRecord.Id == options.VersionRecordId 
@@ -589,6 +586,9 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.RolledBack(new RollbackContentContext(rolledBackContentItem, options)), Logger);
 
             if (options.IsPublished) {
+                // Unpublish the latest version.
+                latestVersionRecord.Published = false;
+
                 var publishContext = new PublishContentContext(rolledBackContentItem, previousItemVersionRecord: latestVersionRecord);
 
                 Handlers.Invoke(handler => handler.Publishing(publishContext), Logger);

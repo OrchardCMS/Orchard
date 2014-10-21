@@ -2,6 +2,8 @@
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -13,11 +15,13 @@ namespace Orchard.AuditTrail.Controllers {
         private readonly IAuthorizer _authorizer;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public ContentController(IAuthorizer authorizer, IContentManager contentManager, INotifier notifier) {
+        public ContentController(IAuthorizer authorizer, IContentManager contentManager, INotifier notifier, IContentDefinitionManager contentDefinitionManager) {
             _authorizer = authorizer;
             _contentManager = contentManager;
             _notifier = notifier;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -44,11 +48,11 @@ namespace Orchard.AuditTrail.Controllers {
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, contentItem))
                 return new HttpUnauthorizedResult();
 
-            var title = _contentManager.GetItemMetadata(contentItem).DisplayText;
-            var currentVersion = contentItem.Version;
-            var newContentItem = _contentManager.Rollback(contentItem, VersionOptions.Rollback(version, publish: true));
+            var contentType = _contentDefinitionManager.GetTypeDefinition(contentItem.ContentType);
+            var draftable = contentType.Settings.GetModel<ContentTypeSettings>().Draftable;
+            _contentManager.Rollback(contentItem, VersionOptions.Rollback(version, publish: !draftable));
 
-            _notifier.Information(T("{0} has been rolled back from version {1} to version {2} as version {3}.", title, currentVersion, version, newContentItem.Version));
+            _notifier.Information(T("Version {0} has been restored.", version));
 
             returnUrl = Url.IsLocalUrl(returnUrl) 
                 ? returnUrl
