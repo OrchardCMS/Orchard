@@ -21,8 +21,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Removed(RemoveContentContext context, TPart instance) { }
         protected virtual void Indexing(IndexContentContext context, TPart instance) { }
         protected virtual void Indexed(IndexContentContext context, TPart instance) { }
-        protected virtual void RollingBack(RollbackContentContext context, TPart instance) { }
-        protected virtual void RolledBack(RollbackContentContext context, TPart instance) { }
+        protected virtual void Restoring(RestoreContentContext context, TPart instance) { }
+        protected virtual void Restored(RestoreContentContext context, TPart instance) { }
 
         void IContentStorageFilter.Activated(ActivatedContentContext context) {
             if (context.ContentItem.Is<TPart>())
@@ -119,14 +119,14 @@ namespace Orchard.ContentManagement.Handlers {
                 Indexed(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.RollingBack(RollbackContentContext context) {
+        void IContentStorageFilter.Restoring(RestoreContentContext context) {
             if (context.ContentItem.Is<TPart>())
-                RollingBack(context, context.ContentItem.As<TPart>());
+                Restoring(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentStorageFilter.RolledBack(RollbackContentContext context) {
+        void IContentStorageFilter.Restored(RestoreContentContext context) {
             if (context.ContentItem.Is<TPart>())
-                RolledBack(context, context.ContentItem.As<TPart>());
+                Restored(context, context.ContentItem.As<TPart>());
         }
     }
 }

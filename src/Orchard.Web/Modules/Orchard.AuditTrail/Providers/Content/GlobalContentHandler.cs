@@ -57,13 +57,13 @@ namespace Orchard.AuditTrail.Providers.Content {
             }
         }
 
-        protected override void RollingBack(RollbackContentContext context) {
+        protected override void Restoring(RestoreContentContext context) {
             _ignoreExportHandlerFor = context.ContentItem;
             _previousVersionXml = _contentManager.Export(context.ContentItem);
             _ignoreExportHandlerFor = null;
         }
 
-        protected override void RolledBack(RollbackContentContext context) {
+        protected override void Restored(RestoreContentContext context) {
             var contentItem = context.ContentItem;
            
             _ignoreExportHandlerFor = contentItem;
@@ -71,7 +71,7 @@ namespace Orchard.AuditTrail.Providers.Content {
             _ignoreExportHandlerFor = null;
 
             var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
-            RecordAuditTrailEvent(ContentAuditTrailEventProvider.RolledBack, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Restored, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);
         }
 
         protected override void Published(PublishContentContext context) {

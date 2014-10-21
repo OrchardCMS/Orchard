@@ -43,16 +43,17 @@ namespace Orchard.AuditTrail.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Rollback(int id, int version, string returnUrl) {
+        public ActionResult Restore(int id, int version, string returnUrl) {
             var contentItem = _contentManager.Get(id);
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, contentItem))
                 return new HttpUnauthorizedResult();
 
             var contentType = _contentDefinitionManager.GetTypeDefinition(contentItem.ContentType);
             var draftable = contentType.Settings.GetModel<ContentTypeSettings>().Draftable;
-            _contentManager.Rollback(contentItem, VersionOptions.Rollback(version, publish: !draftable));
+            var restoredContentItem = _contentManager.Restore(contentItem, VersionOptions.Restore(version, publish: !draftable));
+            var restoredContentItemTitle = _contentManager.GetItemMetadata(restoredContentItem).DisplayText;
 
-            _notifier.Information(T("Version {0} has been restored.", version));
+            _notifier.Information(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
 
             returnUrl = Url.IsLocalUrl(returnUrl) 
                 ? returnUrl

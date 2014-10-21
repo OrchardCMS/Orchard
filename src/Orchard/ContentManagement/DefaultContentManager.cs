@@ -565,9 +565,9 @@ namespace Orchard.ContentManagement {
             return importContentSession.Get(copyId, element.Name.LocalName);
         }
 
-        public virtual ContentItem Rollback(ContentItem contentItem, VersionOptions options) {
+        public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {
             // Invoke handlers.
-            Handlers.Invoke(handler => handler.RollingBack(new RollbackContentContext(contentItem, options)), Logger);
+            Handlers.Invoke(handler => handler.Restoring(new RestoreContentContext(contentItem, options)), Logger);
 
             // Get the latest version.
             var latestVersionRecord = contentItem.Record.Versions.Single(x => x.Latest);
@@ -583,7 +583,7 @@ namespace Orchard.ContentManagement {
             rolledBackContentItem.VersionRecord.Published = options.IsPublished;
 
             // Invoke handlers.
-            Handlers.Invoke(handler => handler.RolledBack(new RollbackContentContext(rolledBackContentItem, options)), Logger);
+            Handlers.Invoke(handler => handler.Restored(new RestoreContentContext(rolledBackContentItem, options)), Logger);
 
             if (options.IsPublished) {
                 // Unpublish the latest version.

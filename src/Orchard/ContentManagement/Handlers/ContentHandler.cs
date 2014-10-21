@@ -124,8 +124,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             public Action<IndexContentContext, TPart> OnIndexing { get; set; }
             public Action<IndexContentContext, TPart> OnIndexed { get; set; }
-            public Action<RollbackContentContext, TPart> OnRollingBack { get; set; }
-            public Action<RollbackContentContext, TPart> OnRolledBack { get; set; }
+            public Action<RestoreContentContext, TPart> OnRestoring { get; set; }
+            public Action<RestoreContentContext, TPart> OnRestored { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
                 if (OnActivated != null) OnActivated(context, instance);
             }
@@ -185,13 +185,13 @@ namespace Orchard.ContentManagement.Handlers {
                 if ( OnIndexed != null )
                     OnIndexed(context, instance);
             }
-            protected override void RollingBack(RollbackContentContext context, TPart instance) {
-                if (OnRollingBack != null)
-                    OnRollingBack(context, instance);
+            protected override void Restoring(RestoreContentContext context, TPart instance) {
+                if (OnRestoring != null)
+                    OnRestoring(context, instance);
             }
-            protected override void RolledBack(RollbackContentContext context, TPart instance) {
-                if (OnRolledBack != null)
-                    OnRolledBack(context, instance);
+            protected override void Restored(RestoreContentContext context, TPart instance) {
+                if (OnRestored != null)
+                    OnRestored(context, instance);
             }
         }
 
@@ -350,12 +350,12 @@ namespace Orchard.ContentManagement.Handlers {
             Exported(context);
         }
 
-        void IContentHandler.RollingBack(RollbackContentContext context) {
-            RollingBack(context);
+        void IContentHandler.Restoring(RestoreContentContext context) {
+            Restoring(context);
         }
 
-        void IContentHandler.RolledBack(RollbackContentContext context) {
-            RolledBack(context);
+        void IContentHandler.Restored(RestoreContentContext context) {
+            Restored(context);
         }
 
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
@@ -413,8 +413,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Imported(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
-        protected virtual void RollingBack(RollbackContentContext context) { }
-        protected virtual void RolledBack(RollbackContentContext context) { }
+        protected virtual void Restoring(RestoreContentContext context) { }
+        protected virtual void Restored(RestoreContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }

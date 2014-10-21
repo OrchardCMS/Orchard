@@ -47,7 +47,7 @@ namespace Orchard.ContentManagement {
         /// <param name="contentItem">The content item to roll back.</param>
         /// <param name="options">The version to roll back to. Either specify the version record id, version number, and IsPublished to publish the new version.</param>
         /// <returns>Returns the latest version of the content item, which is based on the specified version.</returns>
-        ContentItem Rollback(ContentItem contentItem, VersionOptions options);
+        ContentItem Restore(ContentItem contentItem, VersionOptions options);
 
         /// <summary>
         /// Gets the content item with the specified id
@@ -179,7 +179,7 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Creates a new version based on the specified version number.
         /// </summary>
-        public static VersionOptions Rollback(int version, bool publish = false) { return new VersionOptions { VersionNumber = version, IsPublished = publish}; }
+        public static VersionOptions Restore(int version, bool publish = false) { return new VersionOptions { VersionNumber = version, IsPublished = publish}; }
 
         public bool IsLatest { get; private set; }
         public bool IsPublished { get; private set; }

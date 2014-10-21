@@ -7,7 +7,6 @@ using Orchard.AuditTrail.ViewModels;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
