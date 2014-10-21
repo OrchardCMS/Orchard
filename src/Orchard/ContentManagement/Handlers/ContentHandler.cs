@@ -124,6 +124,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             public Action<IndexContentContext, TPart> OnIndexing { get; set; }
             public Action<IndexContentContext, TPart> OnIndexed { get; set; }
+            public Action<RollbackContentContext, TPart> OnRollingBack { get; set; }
+            public Action<RollbackContentContext, TPart> OnRolledBack { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
                 if (OnActivated != null) OnActivated(context, instance);
             }
@@ -183,7 +185,14 @@ namespace Orchard.ContentManagement.Handlers {
                 if ( OnIndexed != null )
                     OnIndexed(context, instance);
             }
-
+            protected override void RollingBack(RollbackContentContext context, TPart instance) {
+                if (OnRollingBack != null)
+                    OnRollingBack(context, instance);
+            }
+            protected override void RolledBack(RollbackContentContext context, TPart instance) {
+                if (OnRolledBack != null)
+                    OnRolledBack(context, instance);
+            }
         }
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
@@ -341,6 +350,14 @@ namespace Orchard.ContentManagement.Handlers {
             Exported(context);
         }
 
+        void IContentHandler.RollingBack(RollbackContentContext context) {
+            RollingBack(context);
+        }
+
+        void IContentHandler.RolledBack(RollbackContentContext context) {
+            RolledBack(context);
+        }
+
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetContentItemMetadata(context);
@@ -396,6 +413,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Imported(ImportContentContext context) { }
         protected virtual void Exporting(ExportContentContext context) { }
         protected virtual void Exported(ExportContentContext context) { }
+        protected virtual void RollingBack(RollbackContentContext context) { }
+        protected virtual void RolledBack(RollbackContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }

@@ -146,6 +146,14 @@ namespace Orchard.ContentManagement {
 
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
             }
+            else if (options.VersionNumber != 0) {
+                // short-circuit if item held in session
+                if (session.RecallVersionNumber(id, options.VersionRecordId, out contentItem)) {
+                    return contentItem;
+                }
+
+                versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
+            }
             else if (session.RecallContentRecordId(id, out contentItem)) {
                 // try to reload a previously loaded published content item
 
@@ -486,9 +494,7 @@ namespace Orchard.ContentManagement {
             if (contentItem.VersionRecord == null) {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
-                    ContentItemRecord = new ContentItemRecord {
-                        
-                    },
+                    ContentItemRecord = new ContentItemRecord(),
                     Number = 1,
                     Latest = true,
                     Published = true
@@ -557,6 +563,43 @@ namespace Orchard.ContentManagement {
             Import(element, importContentSession);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
+        }
+
+        public virtual ContentItem Rollback(ContentItem contentItem, VersionOptions options) {
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.RollingBack(new RollbackContentContext(contentItem, options)), Logger);
+
+            // Get the latest version.
+            var latestVersionRecord = contentItem.Record.Versions.Single(x => x.Latest);
+
+            // Unpublish the latest version.
+            latestVersionRecord.Published = false;
+
+            // Get the specified version.
+            var specifiedVersionContentItem =
+                contentItem.VersionRecord.Number == options.VersionNumber || contentItem.VersionRecord.Id == options.VersionRecordId 
+                ? contentItem 
+                : Get(contentItem.Id, options);
+
+            // Create a new version record based on the specified version record.
+            var rolledBackContentItem = BuildNewVersion(specifiedVersionContentItem);
+            rolledBackContentItem.VersionRecord.Published = options.IsPublished;
+
+            // Deferring the assignment of ContentType as loading a Record might force NHibernate to AutoFlush 
+            // the ContentPart, and needs the ContentItemRecord to be created before (created in previous statement)
+            rolledBackContentItem.VersionRecord.ContentItemRecord.ContentType = AcquireContentTypeRecord(contentItem.ContentType);
+
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.RolledBack(new RollbackContentContext(rolledBackContentItem, options)), Logger);
+
+            if (options.IsPublished) {
+                var publishContext = new PublishContentContext(rolledBackContentItem, previousItemVersionRecord: latestVersionRecord);
+
+                Handlers.Invoke(handler => handler.Publishing(publishContext), Logger);
+                Handlers.Invoke(handler => handler.Published(publishContext), Logger);
+            }
+
+            return rolledBackContentItem;
         }
 
         /// <summary>

@@ -19,5 +19,7 @@ namespace Orchard.ContentManagement.Handlers {
         void Removed(RemoveContentContext context);
         void Indexing(IndexContentContext context);
         void Indexed(IndexContentContext context);
+        void RollingBack(RollbackContentContext context);
+        void RolledBack(RollbackContentContext context);
     }
 }

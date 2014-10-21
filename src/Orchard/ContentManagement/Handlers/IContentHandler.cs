@@ -29,5 +29,7 @@
         void BuildDisplay(BuildDisplayContext context);
         void BuildEditor(BuildEditorContext context);
         void UpdateEditor(UpdateEditorContext context);
+        void RollingBack(RollbackContentContext context);
+        void RolledBack(RollbackContentContext context);
     }
 }
