@@ -88,6 +88,7 @@ namespace Orchard.OutputCache.Filters {
         private string[] _varyQueryStringParameters;
         private ISet<string> _varyRequestHeaders;
         private bool _transformRedirect;
+        private bool _cacheAuthenticatedRequests;
 
         private WorkContext _workContext;
         private CacheItem _cacheItem;
@@ -137,12 +138,17 @@ namespace Orchard.OutputCache.Filters {
                 return;
             }
 
-            // don't return any cached content, or cache any content, if the user is authenticated
-            if (_workContext.CurrentUser != null) {
+            // cache if authenticated setting
+            _cacheAuthenticatedRequests = _cacheManager.Get("CacheSettingsPart.CacheAuthenticatedRequests", context => {
+                context.Monitor(_signals.When(CacheSettingsPart.CacheKey));
+                return _workContext.CurrentSite.As<CacheSettingsPart>().CacheAuthenticatedRequests;
+            });
+
+            // don't return any cached content, or cache any content, if the user is authenticated, unless the setting "cache authenticated requests" is true
+            if (_workContext.CurrentUser != null && !_cacheAuthenticatedRequests) {
                 Logger.Debug("Request ignored on Authenticated user");
                 return;
             }
-
 
             // caches the default cache duration to prevent a query to the settings
             _cacheDuration = _cacheManager.Get("CacheSettingsPart.Duration",

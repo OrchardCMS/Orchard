@@ -54,8 +54,15 @@
         <label>@T("Culture")</label>
         @Html.CheckBoxFor(m => m.ApplyCulture) <label for="@Html.FieldIdFor(m => m.ApplyCulture)" class="forcheckbox">@T("Differentiate cultures")</label>
         <span class="hint">@T("When checked, the cached content will differ per culture too. For better performance, leave this unchecked if your website uses only one culture.")</span>
-    </fieldset>    
-    
+    </fieldset>
+
+    <fieldset>
+        <label>@T("Authenticated Requests")</label>
+        @Html.CheckBoxFor(m => m.CacheAuthenticatedRequests)
+        <label for="@Html.FieldIdFor(m => m.CacheAuthenticatedRequests)" class="forcheckbox">@T("Cache Authenticated Requests")</label>
+        @Html.Hint(T("When checked, the output cache filter will store the HTML output to cache and retrieve from cache even if the user is authenticated. When unchecked, it will bypass cache for authenticated users."))
+    </fieldset>
+
     <fieldset>
         <label>@T("Debug mode")</label>
         @Html.CheckBoxFor(m => m.DebugMode) <label for="@Html.FieldIdFor(m => m.DebugMode)" class="forcheckbox">@T("Render caching information in cached pages")</label>
