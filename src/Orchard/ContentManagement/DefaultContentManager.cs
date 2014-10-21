@@ -585,10 +585,6 @@ namespace Orchard.ContentManagement {
             var rolledBackContentItem = BuildNewVersion(specifiedVersionContentItem);
             rolledBackContentItem.VersionRecord.Published = options.IsPublished;
 
-            // Deferring the assignment of ContentType as loading a Record might force NHibernate to AutoFlush 
-            // the ContentPart, and needs the ContentItemRecord to be created before (created in previous statement)
-            rolledBackContentItem.VersionRecord.ContentItemRecord.ContentType = AcquireContentTypeRecord(contentItem.ContentType);
-
             // Invoke handlers.
             Handlers.Invoke(handler => handler.RolledBack(new RollbackContentContext(rolledBackContentItem, options)), Logger);
 
