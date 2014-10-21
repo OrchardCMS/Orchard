@@ -19,6 +19,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         public const string Removed = "Removed";
         public const string Imported = "Imported";
         public const string Exported = "Exported";
+        public const string RolledBack = "RolledBack";
 
         public static Filters CreateFilters(int contentId, IUpdateModel updateModel) {
             return new Filters(updateModel) {
@@ -34,7 +35,8 @@ namespace Orchard.AuditTrail.Providers.Content {
                 .Event(this, Unpublished, T("Unpublished"), T("A content item was unpublished."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content item was deleted."), enableByDefault: true)
                 .Event(this, Imported, T("Imported"), T("A content item was imported."), enableByDefault: true)
-                .Event(this, Exported, T("Exported"), T("A content item was exported."), enableByDefault: false);
+                .Event(this, Exported, T("Exported"), T("A content item was exported."), enableByDefault: false)
+                .Event(this, RolledBack, T("Rolled Back"), T("A content item was rolled back to a previous version."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);
@@ -51,7 +53,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         private void DisplayFilter(DisplayFilterContext context) {
             var contentItemId = context.Filters.Get("content").ToInt32();
             if (contentItemId != null) {
-                var contentItem = contentItemId != null ? _contentManager.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
+                var contentItem = _contentManager.Get(contentItemId.Value, VersionOptions.Latest);
                 var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentItem(ContentItem: contentItem);
 
                 context.FilterDisplay.Add(filterDisplay);

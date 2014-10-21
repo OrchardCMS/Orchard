@@ -33,9 +33,12 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Updating(UpdateContentContext context) {
             var contentItem = context.ContentItem;
+
+            _ignoreExportHandlerFor = contentItem;
             _previousVersionXml = _contentItemCreated 
                 ? default(XElement) // No need to do a diff on a newly created content item.
                 : _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
         }
 
         protected override void Updated(UpdateContentContext context) {
@@ -52,6 +55,23 @@ namespace Orchard.AuditTrail.Providers.Content {
                 var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
                 RecordAuditTrailEvent(ContentAuditTrailEventProvider.Saved, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);    
             }
+        }
+
+        protected override void RollingBack(RollbackContentContext context) {
+            _ignoreExportHandlerFor = context.ContentItem;
+            _previousVersionXml = _contentManager.Export(context.ContentItem);
+            _ignoreExportHandlerFor = null;
+        }
+
+        protected override void RolledBack(RollbackContentContext context) {
+            var contentItem = context.ContentItem;
+           
+            _ignoreExportHandlerFor = contentItem;
+            var newVersionXml = _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
+
+            var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.RolledBack, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);
         }
 
         protected override void Published(PublishContentContext context) {

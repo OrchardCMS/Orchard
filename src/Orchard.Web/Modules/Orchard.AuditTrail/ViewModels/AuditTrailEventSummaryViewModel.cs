@@ -7,5 +7,6 @@ namespace Orchard.AuditTrail.ViewModels {
         public AuditTrailEventDescriptor EventDescriptor { get; set; }
         public AuditTrailCategoryDescriptor CategoryDescriptor { get; set; }
         public dynamic SummaryShape { get; set; }
+        public dynamic ActionsShape { get; set; }
     }
 }
