@@ -3,6 +3,7 @@ using StackExchange.Redis;
 
 namespace Orchard.Redis.Extensions {
     public static class RedisDatabaseExtensions {
+
         public static void KeyDeleteWithPrefix(this IDatabase database, string prefix) {
             if (database == null) {
                 throw new ArgumentException("Database cannot be null", "database");

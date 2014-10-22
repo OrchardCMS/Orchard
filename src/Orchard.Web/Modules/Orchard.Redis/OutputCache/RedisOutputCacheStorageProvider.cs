@@ -75,7 +75,7 @@ namespace Orchard.Redis.OutputCache {
         }
 
         public int GetCacheItemsCount() {
-            return GetAllKeys().Count();
+            return Database.KeyCount(GetLocalizedKey("*"));
         }
 
         /// <summary>
