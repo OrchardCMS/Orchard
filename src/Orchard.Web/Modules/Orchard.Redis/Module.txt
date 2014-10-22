@@ -1,0 +1,27 @@
+﻿Name: Orchard.Redis
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Provides Redis integration with Orchard.
+Features:
+    Orchard.Redis
+        Name: Redis
+        Description: Used to provide Redis related functionalities.
+        Category: Hosting
+    Orchard.Redis.MessageBus:
+        Name: Redis Message Bus
+        Description: A message bus implementation using Redis pub/sub.
+        Category: Hosting
+        Dependencies: Orchard.MessageBus, Orchard.Redis
+    Orchard.Redis.OutputCache:
+        Name: Redis Output Cache
+        Description: An output cache storage provider using Redis.
+        Category: Performance
+        Dependencies: Orchard.OutputCache, Orchard.Redis
+    Orchard.Redis.Caching:
+        Name: Redis Cache
+        Description: Business data cache using Redis.
+        Category: Performance
+        Dependencies: Orchard.Caching, Orchard.Redis

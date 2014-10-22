@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.Caching;
-using System.Web;
 using Orchard.Environment.Configuration;
 using Orchard.Services;
 
@@ -23,12 +20,12 @@ namespace Orchard.Caching.Services {
             _clock = clock;
         }
 
-        public void Put(string key, object value) {
+        public void Put<T>(string key, T value) {
             // Keys are already prefixed by DefaultCacheService so no need to do it here again.
             _cache.Set(key, value, GetCacheItemPolicy(MemoryCache.InfiniteAbsoluteExpiration));
         }
 
-        public void Put(string key, object value, TimeSpan validFor) {
+        public void Put<T>(string key, T value, TimeSpan validFor) {
             _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
         }
 
@@ -42,8 +39,14 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public object Get(string key) {
-            return _cache.Get(key);
+        public T Get<T>(string key) {
+            var value = _cache.Get(key) ;
+
+            if(value is T) {
+                return (T)value;
+            }
+
+            return default(T);
         }
 
         private CacheItemPolicy GetCacheItemPolicy(DateTimeOffset absoluteExpiration) {
