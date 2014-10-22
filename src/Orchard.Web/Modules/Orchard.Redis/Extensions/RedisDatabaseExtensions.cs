@@ -1,12 +1,9 @@
 ﻿using System;
 using StackExchange.Redis;
 
-namespace Orchard.Redis.Extensions
-{
-    public static class RedisDatabaseExtensions
-    {
-        public static void KeyDeleteWithPrefix(this IDatabase database, string prefix)
-        {
+namespace Orchard.Redis.Extensions {
+    public static class RedisDatabaseExtensions {
+        public static void KeyDeleteWithPrefix(this IDatabase database, string prefix) {
             if (database == null) {
                 throw new ArgumentException("Database cannot be null", "database");
             }
@@ -33,8 +30,9 @@ namespace Orchard.Redis.Extensions
 
             var retVal = database.ScriptEvaluate("return table.getn(redis.call('keys', ARGV[1]))", values: new RedisValue[] { prefix });
 
-            if (retVal.IsNull)
+            if (retVal.IsNull) {
                 return 0;
+            }
 
             return (int)retVal;
         }

@@ -46,7 +46,7 @@ namespace Orchard.Redis.OutputCache {
             var value = JsonConvert.SerializeObject(cacheItem);
             Database.StringSet(GetLocalizedKey(key), value, TimeSpan.FromSeconds(cacheItem.ValidFor));
         }
-        
+
         public void Remove(string key) {
             Database.KeyDelete(GetLocalizedKey(key));
         }
@@ -57,7 +57,7 @@ namespace Orchard.Redis.OutputCache {
 
         public CacheItem GetCacheItem(string key) {
             string value = Database.StringGet(GetLocalizedKey(key));
-            if(String.IsNullOrEmpty(value)) {
+            if (String.IsNullOrEmpty(value)) {
                 return null;
             }
 

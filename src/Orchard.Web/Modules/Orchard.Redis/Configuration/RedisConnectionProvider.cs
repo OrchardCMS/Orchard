@@ -6,6 +6,7 @@ using Orchard.Logging;
 using StackExchange.Redis;
 
 namespace Orchard.Redis.Configuration {
+
     public class RedisConnectionProvider : IRedisConnectionProvider {
         private static ConcurrentDictionary<string, ConnectionMultiplexer> _connectionMultiplexers = new ConcurrentDictionary<string, ConnectionMultiplexer>();
         private readonly ShellSettings _shellSettings;
