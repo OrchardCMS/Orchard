@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Web;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -293,6 +295,53 @@ namespace Orchard.DesignerTools.Services {
         private void EnterNode(string tag) {
             SaveCurrentNode();
             _current.Add(_current = new XElement(tag));
+        }
+
+        public static void ConvertToJSon(XElement x, StringBuilder sb) {
+            if (x == null) {
+                return;
+            }
+
+            switch (x.Name.ToString()) {
+                case "ul":
+                    var first = true;
+                    foreach (var li in x.Elements()) {
+                        if (!first) sb.Append(",");
+                        ConvertToJSon(li, sb);
+                        first = false;
+                    }
+                    break;
+                case "li":
+                    var name = x.Element("h1").Value;
+                    var value = x.Element("span").Value;
+
+                    sb.AppendFormat("\"name\": \"{0}\", ", FormatJsonValue(name));
+                    sb.AppendFormat("\"value\": \"{0}\"", FormatJsonValue(value));
+
+                    var ul = x.Element("ul");
+                    if (ul != null && ul.Descendants().Any()) {
+                        sb.Append(", \"children\": [");
+                        first = true;
+                        foreach (var li in ul.Elements()) {
+                            sb.Append(first ? "{ " : ", {");
+                            ConvertToJSon(li, sb);
+                            sb.Append(" }");
+                            first = false;
+                        }
+                        sb.Append("]");
+                    }
+
+                    break;
+            }
+        }
+
+        public static string FormatJsonValue(string value) {
+            if (String.IsNullOrEmpty(value)) {
+                return String.Empty;
+            }
+
+            // replace " by \" in json strings
+            return HttpUtility.HtmlEncode(value).Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
         }
     }
 }
