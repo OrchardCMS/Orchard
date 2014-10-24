@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Hosting;
@@ -8,7 +9,6 @@ using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 
 namespace Orchard.Tasks {
 
@@ -29,15 +29,17 @@ namespace Orchard.Tasks {
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
             ITransactionManager transactionManager, 
-            ShellSettings shellSettings,
-            IContentManager contentManager) {
+            ShellSettings shellSettings) {
+
             _tasks = tasks;
             _transactionManager = transactionManager;
             _shellName = shellSettings.Name;
             Logger = NullLogger.Instance;
+            IsolationLevel = IsolationLevel.ReadCommitted;
         }
 
         public ILogger Logger { get; set; }
+        public IsolationLevel IsolationLevel { get; set; }
 
         public void Sweep() {
             foreach(var task in _tasks) {
@@ -47,7 +49,7 @@ namespace Orchard.Tasks {
 
                 try {
                     _finishedEvent.Reset();
-                    _transactionManager.RequireNew();
+                    _transactionManager.RequireNew(IsolationLevel);
                     task.Sweep();
                 }
                 catch (Exception e) {
