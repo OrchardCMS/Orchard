@@ -570,7 +570,8 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Restoring(new RestoreContentContext(contentItem, options)), Logger);
 
             // Get the latest version.
-            var latestVersionRecord = contentItem.Record.Versions.Single(x => x.Latest);
+            var versions = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray();
+            var latestVersionRecord = versions.SingleOrDefault(x => x.Latest) ?? versions.Last();
 
             // Get the specified version.
             var specifiedVersionContentItem =
