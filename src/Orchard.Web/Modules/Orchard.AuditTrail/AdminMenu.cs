@@ -7,9 +7,15 @@ namespace Orchard.AuditTrail {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("audittrail")
-                .Add(T("Audit Trail"), "12", menuItem => menuItem
+                .Add(T("Audit Trail"), "12", auditTrail => auditTrail
                     .Action("Index", "Admin", new { area = "Orchard.AuditTrail" })
-                    .Permission(Permissions.ManageAuditTrailSettings));
+                    .Permission(Permissions.ManageAuditTrailSettings)
+                    .Add(T("History"), "1", history => history
+                        .Action("Index", "Admin", new { area = "Orchard.AuditTrail" })
+                        .LocalNav())
+                    .Add(T("Recycle Bin"), "2", history => history
+                        .Action("Index", "RecycleBin", new { area = "Orchard.AuditTrail" })
+                        .LocalNav()));
         }
     }
 }
