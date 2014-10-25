@@ -286,11 +286,7 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                                 new JProperty("value", "null")),
                             new JObject(
                                 new JProperty("name", "TypePartDefinition"),
-                                new JProperty("value", "ContentTypePartDefinition"),
-                                new JProperty("children", new JArray(
-                                    new JObject(
-                                        new JProperty("name", "ContentTypeDefinition"),
-                                        new JProperty("value", "null"))))),
+                                new JProperty("value", "ContentTypePartDefinition")),
                             new JObject(
                                 new JProperty("name", "PartDefinition"),
                                 new JProperty("value", "ContentPartDefinition"),
@@ -379,11 +375,7 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                                                 new JProperty("value", "null")),
                                             new JObject(
                                                 new JProperty("name", "TypePartDefinition"),
-                                                new JProperty("value", "ContentTypePartDefinition"),
-                                                new JProperty("children", new JArray(
-                                                    new JObject(
-                                                        new JProperty("name", "ContentTypeDefinition"),
-                                                        new JProperty("value", "null"))))),
+                                                new JProperty("value", "ContentTypePartDefinition")),
                                             new JObject(
                                                 new JProperty("name", "PartDefinition"),
                                                 new JProperty("value", "ContentPartDefinition"),
@@ -425,10 +417,7 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                                                     new JProperty("value", "SettingsDictionary"))))),
                                     new JObject(
                                         new JProperty("name", "Settings"),
-                                        new JProperty("value", "SettingsDictionary")),
-                                    new JObject(
-                                        new JProperty("name", "ContentTypeDefinition"),
-                                        new JProperty("value", "null"))))),
+                                        new JProperty("value", "SettingsDictionary"))))),
                             new JObject(
                                 new JProperty("name", "PartDefinition"),
                                 new JProperty("value", "ContentPartDefinition"),
