@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -85,6 +89,7 @@
     <Content Include="Scripts\audittrail-checkall.js" />
     <Content Include="Scripts\audittrail-disabledcontent.js" />
     <Content Include="Styles\audittrail-content-event.css" />
+    <Content Include="Styles\audittrail-recycle-bin.css" />
     <Content Include="Styles\audittrail-display.css" />
     <Content Include="Styles\audittrail-disabledcontent.css" />
     <Content Include="Styles\audittrail-part.css" />
@@ -182,8 +187,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Helpers\ControllerExtensions.cs" />
+    <Compile Include="Helpers\HttpRequestExtensions.cs" />
+    <Compile Include="Services\IRecycleBin.cs" />
+    <Compile Include="Services\RecycleBin.cs" />
+    <Compile Include="ViewModels\RecycleBinViewModel.cs" />
     <Compile Include="Drivers\ClientIpAddressSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
@@ -307,6 +318,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AuditTrailEventActions-Content-Published.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\RecycleBin\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

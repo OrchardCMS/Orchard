@@ -1,0 +1,68 @@
+﻿@model Orchard.AuditTrail.ViewModels.RecycleBinViewModel
+@{
+    Style.Include("audittrail-recycle-bin.css");
+    Script.Require("ShapesBase");
+    Layout.Title = T("Audit Trail");
+
+    var contentItems = Model.ContentItems;
+}
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost()) {
+    <section class="recycle-bin-filter-section">
+        <div class="filter-control-group">
+            <label>@T("Actions:")</label>
+            <select name="SelectedItemsAction">
+                <option></option>
+                <option value="Restore">@T("Restore")</option>
+                <option value="Destroy">@T("Destroy Permanently")</option>
+            </select>
+        </div>
+        <div class="filter-control-group">
+            <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
+        </div>
+        <div class="filter-control-group">
+            <label>@T("Sort by:")</label>
+            <select name="RecycleBinSort">
+                <option>@T("Deleted (latest first")</option>
+                <option>@T("Title (alphabetical")</option>
+            </select>
+        </div>
+        <div class="filter-control-group">
+            <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
+        </div>
+    </section>
+    <section class="recycle-bin-list-section">
+        @if (!contentItems.Any()) {
+            <p class="info">@T("There are no records to display.")</p>
+        }
+        else {
+            <table class="items">
+                <thead>
+                    <tr>
+                        <th class="content-checkbox"><input type="checkbox" class="check-all"/></th>
+                        <th class="content-column">@T("Content Item")</th>
+                        <th class="actions-column"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var contentItem in contentItems) {
+                        var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
+                        var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
+                        <tr>
+                            <td><input type="checkbox"/></td>
+                            <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
+                            <td class="actions-column">
+                                <a href="@contentDisplayUrl">@T("View")</a> @T(" | ")
+                                @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) @T(" | ")
+                                <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </section>
+    <section class="pager">
+        @Display(Model.Pager)
+    </section>
+}

@@ -8,6 +8,7 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.AuditTrail.Controllers {
     [Admin]
@@ -44,7 +45,7 @@ namespace Orchard.AuditTrail.Controllers {
 
         [HttpPost]
         public ActionResult Restore(int id, int version, string returnUrl) {
-            var contentItem = _contentManager.Get(id);
+            var contentItem = _contentManager.Get(id, VersionOptions.Number(version));
             if (!_authorizer.Authorize(Core.Contents.Permissions.PublishContent, contentItem))
                 return new HttpUnauthorizedResult();
 
@@ -55,13 +56,7 @@ namespace Orchard.AuditTrail.Controllers {
 
             _notifier.Information(T("&quot;{0}&quot; has been restored.", restoredContentItemTitle));
 
-            returnUrl = Url.IsLocalUrl(returnUrl) 
-                ? returnUrl
-                : Request.UrlReferrer != null
-                    ? Request.UrlReferrer.ToString()
-                    : Url.Action("Index", "Admin");
-
-            return Redirect(returnUrl);
+            return this.RedirectReturn(returnUrl, () => Url.Action("Index", "Admin"));
         }
     }
 }
