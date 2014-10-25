@@ -263,19 +263,6 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                         new JProperty("value", "ContentPart"),
                         new JProperty("children", new JArray(
                             new JObject(
-                                new JProperty("name", "ContentItem"),
-                                new JProperty("value", "ContentItem"),
-                                new JProperty("children", new JArray(
-                                    new JObject(
-                                        new JProperty("name", "Id"),
-                                        new JProperty("value", "0")),
-                                    new JObject(
-                                        new JProperty("name", "Version"),
-                                        new JProperty("value", "0")),
-                                    new JObject(
-                                        new JProperty("name", "ContentType"),
-                                        new JProperty("value", "&quot;TestContentType&quot;"))))),
-                            new JObject(
                                 new JProperty("name", "Zones"),
                                 new JProperty("value", "ZoneCollection")),
                             new JObject(
@@ -334,61 +321,6 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                         new JProperty("name", "TestingPart"),
                         new JProperty("value", "ContentPart"),
                         new JProperty("children", new JArray(
-                            new JObject(
-                                new JProperty("name", "ContentItem"),
-                                new JProperty("value", "ContentItem"),
-                                new JProperty("children", new JArray(
-                                    new JObject(
-                                        new JProperty("name", "Id"),
-                                        new JProperty("value", "0")),
-                                    new JObject(
-                                        new JProperty("name", "Version"),
-                                        new JProperty("value", "0")),
-                                    new JObject(
-                                        new JProperty("name", "ContentType"),
-                                        new JProperty("value", "&quot;TestContentType&quot;")),
-                                    new JObject(
-                                        new JProperty("name", "TestingPart"),
-                                        new JProperty("value", "ContentPart"),
-                                        new JProperty("children", new JArray(
-                                            new JObject(
-                                                new JProperty("name", "ContentItem"),
-                                                new JProperty("value", "ContentItem"),
-                                                new JProperty("children", new JArray(
-                                                    new JObject(
-                                                        new JProperty("name", "Id"),
-                                                        new JProperty("value", "0")),
-                                                    new JObject(
-                                                        new JProperty("name", "Version"),
-                                                        new JProperty("value", "0")),
-                                                    new JObject(
-                                                        new JProperty("name", "ContentType"),
-                                                        new JProperty("value", "&quot;TestContentType&quot;"))))),
-                                            new JObject(
-                                                new JProperty("name", "Zones"),
-                                                new JProperty("value", "ZoneCollection")),
-                                            new JObject(
-                                                new JProperty("name", "Id"),
-                                                new JProperty("value", "0")),
-                                            new JObject(
-                                                new JProperty("name", "TypeDefinition"),
-                                                new JProperty("value", "null")),
-                                            new JObject(
-                                                new JProperty("name", "TypePartDefinition"),
-                                                new JProperty("value", "ContentTypePartDefinition")),
-                                            new JObject(
-                                                new JProperty("name", "PartDefinition"),
-                                                new JProperty("value", "ContentPartDefinition"),
-                                                new JProperty("children", new JArray(
-                                                    new JObject(
-                                                        new JProperty("name", "Name"),
-                                                        new JProperty("value", "&quot;TestingPart&quot;"))))),
-                                            new JObject(
-                                                new JProperty("name", "Settings"),
-                                                new JProperty("value", "SettingsDictionary")),
-                                            new JObject(
-                                                new JProperty("name", "Fields"),
-                                                new JProperty("value", "List&lt;ContentField&gt;")))))))),
                             new JObject(
                                 new JProperty("name", "Zones"),
                                 new JProperty("value", "ZoneCollection")),

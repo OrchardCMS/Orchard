@@ -153,6 +153,11 @@ namespace Orchard.DesignerTools.Services {
                     ) {
                     continue;
                 }
+
+                if ((o is ContentPart && (member.Name == "ContentItem"))) {
+                    continue;
+                }
+
                 SafeCall(() => DumpMember(o, member));
             }
 
