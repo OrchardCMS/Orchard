@@ -39,7 +39,7 @@ namespace Orchard.Projections.StandardQueries {
 
         public void Execute(FeedContext context) {
             var projectionId = context.ValueProvider.GetValue("projection");
-            if (projectionId == null)
+            if (projectionId == null || String.IsNullOrEmpty(projectionId.AttemptedValue))
                 return;
 
             var limitValue = context.ValueProvider.GetValue("limit");

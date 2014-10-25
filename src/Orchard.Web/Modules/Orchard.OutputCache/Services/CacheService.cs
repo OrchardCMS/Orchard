@@ -40,6 +40,9 @@ namespace Orchard.OutputCache.Services {
             foreach(var key in _tagCache.GetTaggedItems(tag)) {
                 _cacheStorageProvider.Remove(key);
             }
+
+            // we no longer need the tag entry as the items have been removed
+            _tagCache.RemoveTag(tag);
         }
 
         public IEnumerable<CacheItem> GetCacheItems() {
