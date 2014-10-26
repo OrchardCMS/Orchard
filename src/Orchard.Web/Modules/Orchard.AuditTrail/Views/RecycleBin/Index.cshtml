@@ -1,4 +1,7 @@
 ﻿@using Orchard.AuditTrail.ViewModels
+@using Orchard.ContentManagement
+@using Orchard.Core.Common.Models
+@using Orchard.Localization.Services
 @model RecycleBinViewModel
 @{
     Style.Include("audittrail-recycle-bin.css");
@@ -7,6 +10,7 @@
     Layout.Title = T("Audit Trail");
 
     var contentItems = Model.ContentItems;
+    var dateLocalizationServices = WorkContext.Resolve<IDateLocalizationServices>();
 }
 <div id="recycle-bin">
     @Html.ValidationSummary()
@@ -44,6 +48,7 @@
                         <tr>
                             <th class="content-checkbox"><input type="checkbox" class="check-all" /></th>
                             <th class="content-column">@T("Content Item")</th>
+                            <th class="content-removed-column">@T("Removed")</th>
                             <th class="actions-column"></th>
                         </tr>
                     </thead>
@@ -52,11 +57,14 @@
                             var index = 0;
                             foreach (var contentItem in contentItems) {
                                 var isSelected = Model.SelectedContentItems.Contains(contentItem.Id);
+                                var commonPart = contentItem.As<CommonPart>();
+                                var removedText = commonPart != null ? dateLocalizationServices.ConvertToLocalizedString(commonPart.VersionModifiedUtc) : T("-").Text;
                                 var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
                                 var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
                                 <tr>
                                     <td><input type="checkbox" name="SelectedContentItems[@index]" value="@contentItem.Id" @if(isSelected){<text>checked="checked"</text>} /></td>
                                     <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
+                                    <td class="content-removed-column">@removedText</td>
                                     <td class="actions-column">
                                         <a href="@contentDisplayUrl">@T("View")</a> @T(" | ")
                                         @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) @T(" | ")
