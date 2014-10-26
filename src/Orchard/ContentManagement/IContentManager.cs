@@ -83,6 +83,11 @@ namespace Orchard.ContentManagement {
         void Publish(ContentItem contentItem);
         void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
+
+        /// <summary>
+        /// Permanently deletes the specified content item, including all of its content part records.
+        /// </summary>
+        void Destroy(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
         XElement Export(ContentItem contentItem);

@@ -81,6 +81,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoved = handler });
         }
 
+        protected void OnDestroying<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnDestroying = handler });
+        }
+
+        protected void OnDestroyed<TPart>(Action<DestroyContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnDestroyed = handler });
+        }
+
         protected void OnIndexing<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnIndexing = handler });
         }
@@ -126,6 +134,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<IndexContentContext, TPart> OnIndexed { get; set; }
             public Action<RestoreContentContext, TPart> OnRestoring { get; set; }
             public Action<RestoreContentContext, TPart> OnRestored { get; set; }
+            public Action<DestroyContentContext, TPart> OnDestroying { get; set; }
+            public Action<DestroyContentContext, TPart> OnDestroyed { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
                 if (OnActivated != null) OnActivated(context, instance);
             }
@@ -192,6 +202,14 @@ namespace Orchard.ContentManagement.Handlers {
             protected override void Restored(RestoreContentContext context, TPart instance) {
                 if (OnRestored != null)
                     OnRestored(context, instance);
+            }
+            protected override void Destroying(DestroyContentContext context, TPart instance) {
+                if (OnDestroying != null)
+                    OnDestroying(context, instance);
+            }
+            protected override void Destroyed(DestroyContentContext context, TPart instance) {
+                if (OnDestroyed != null)
+                    OnDestroyed(context, instance);
             }
         }
 
@@ -351,11 +369,27 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         void IContentHandler.Restoring(RestoreContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Restoring(context);
             Restoring(context);
         }
 
         void IContentHandler.Restored(RestoreContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Restored(context);
             Restored(context);
+        }
+
+        void IContentHandler.Destroying(DestroyContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Destroying(context);
+            Destroying(context);
+        }
+
+        void IContentHandler.Destroyed(DestroyContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Destroyed(context);
+            Destroyed(context);
         }
 
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
@@ -415,6 +449,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Exported(ExportContentContext context) { }
         protected virtual void Restoring(RestoreContentContext context) { }
         protected virtual void Restored(RestoreContentContext context) { }
+        protected virtual void Destroying(DestroyContentContext context) { }
+        protected virtual void Destroyed(DestroyContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }

@@ -442,6 +442,28 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
+        public virtual void Destroy(ContentItem contentItem) {
+            var session = _sessionLocator.Value.For(typeof(ContentItemVersionRecord));
+            var context = new DestroyContentContext(contentItem);
+
+            // Give storage filters a chance to delete content part records.
+            Handlers.Invoke(handler => handler.Destroying(context), Logger);
+
+            // Delete content item version and content item records.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemVersionRecord civ where civ.ContentItemRecord.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            // Delete the content item record itself.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemRecord ci where ci.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            Handlers.Invoke(handler => handler.Destroyed(context), Logger);
+        }
+
         protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
             var contentItemRecord = existingContentItem.Record;
 

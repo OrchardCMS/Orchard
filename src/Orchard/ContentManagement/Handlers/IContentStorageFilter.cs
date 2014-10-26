@@ -21,5 +21,7 @@ namespace Orchard.ContentManagement.Handlers {
         void Indexed(IndexContentContext context);
         void Restoring(RestoreContentContext context);
         void Restored(RestoreContentContext context);
+        void Destroying(DestroyContentContext context);
+        void Destroyed(DestroyContentContext context);
     }
 }
