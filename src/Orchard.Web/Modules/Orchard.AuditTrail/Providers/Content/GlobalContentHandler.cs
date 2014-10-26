@@ -87,6 +87,10 @@ namespace Orchard.AuditTrail.Providers.Content {
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Removed, context.ContentItem);
         }
 
+        protected override void Destroyed(DestroyContentContext context) {
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Destroyed, context.ContentItem);
+        }
+
         protected override void Imported(ImportContentContext context) {
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Imported, context.ContentItem);
         }

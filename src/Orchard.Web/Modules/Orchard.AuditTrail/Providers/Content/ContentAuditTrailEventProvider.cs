@@ -17,6 +17,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         public const string Published = "Published";
         public const string Unpublished = "Unpublished";
         public const string Removed = "Removed";
+        public const string Destroyed = "Destroyed";
         public const string Imported = "Imported";
         public const string Exported = "Exported";
         public const string Restored = "Restored";
@@ -34,6 +35,7 @@ namespace Orchard.AuditTrail.Providers.Content {
                 .Event(this, Published, T("Published"), T("A content item was published."), enableByDefault: true)
                 .Event(this, Unpublished, T("Unpublished"), T("A content item was unpublished."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content item was deleted."), enableByDefault: true)
+                .Event(this, Destroyed, T("Destroyed"), T("A content item was permanently deleted."), enableByDefault: true)
                 .Event(this, Imported, T("Imported"), T("A content item was imported."), enableByDefault: true)
                 .Event(this, Exported, T("Exported"), T("A content item was exported."), enableByDefault: false)
                 .Event(this, Restored, T("Restored"), T("A content item was restored to a previous version."), enableByDefault: true);
