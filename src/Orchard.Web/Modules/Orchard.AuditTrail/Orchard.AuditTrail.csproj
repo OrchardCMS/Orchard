@@ -85,6 +85,7 @@
     <Content Include="Placement.info" />
     <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
+    <Content Include="Scripts\audittrail-recyclebin.js" />
     <Content Include="Scripts\audittrail-expando.js" />
     <Content Include="Scripts\audittrail-checkall.js" />
     <Content Include="Scripts\audittrail-disabledcontent.js" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="ViewModels\RecycleBinCommand.cs" />
     <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\AdminController.cs" />

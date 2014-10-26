@@ -1,4 +1,5 @@
-﻿using Orchard.Collections;
+﻿using System.Collections.Generic;
+using Orchard.Collections;
 using Orchard.ContentManagement;
 
 namespace Orchard.AuditTrail.Services {
@@ -12,6 +13,16 @@ namespace Orchard.AuditTrail.Services {
         /// Returns all removed content items.
         /// </summary>
         IPageOfItems<T> List<T>(int page, int pageSize) where T : class, IContent;
+
+        /// <summary>
+        /// Returns the specified list of content items from the recycle bin.
+        /// </summary>
+        IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds);
+
+        /// <summary>
+        /// Returns the specified list of content items from the recycle bin.
+        /// </summary>
+        IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds) where T : class, IContent;
 
         /// <summary>
         /// Restores the specified content item.

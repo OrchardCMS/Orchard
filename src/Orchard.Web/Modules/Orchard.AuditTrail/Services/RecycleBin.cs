@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NHibernate;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -26,9 +28,7 @@ namespace Orchard.AuditTrail.Services {
             query.SetFirstResult((page - 1) * pageSize);
             query.SetFetchSize(pageSize);
 
-            var rows = query.List<object>();
-            var versionIds = rows.Cast<object[]>().Select(x => (int)x[0]);
-            var contentItems = _contentManager.GetManyByVersionId<T>(versionIds, QueryHints.Empty);
+            var contentItems = LoadContentItems<T>(query);
             
             return new PageOfItems<T>(contentItems) {
                 PageNumber = page,
@@ -37,23 +37,53 @@ namespace Orchard.AuditTrail.Services {
             };
         }
 
+        public IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds) {
+            return GetMany<ContentItem>(contentItemIds);
+        }
+
+        public IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds) where T : class, IContent {
+            var query = GetDeletedVersionsQuery(contentItemIds);
+            return LoadContentItems<T>(query);
+        }
+
         public ContentItem Restore(ContentItem contentItem) {
             var versions = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray();
             var lastVersion = versions.Last();
+
+            if (lastVersion.Latest || lastVersion.Published)
+                throw new InvalidOperationException(String.Format("Cannot restore content item with ID {0} ftom the recycle bin, since that item is not deleted", contentItem.Id));
+
             return _contentManager.Restore(contentItem, VersionOptions.Restore(lastVersion.Number, publish: false));
         }
 
-        private IQuery GetDeletedVersionsQuery() {
+        private IEnumerable<T> LoadContentItems<T>(IQuery query) where T: class, IContent {
+            var rows = query.List<object>();
+            var versionIds = rows.Cast<object[]>().Select(x => (int)x[0]);
+            return _contentManager.GetManyByVersionId<T>(versionIds, QueryHints.Empty);
+        }
+
+        private IQuery GetDeletedVersionsQuery(IEnumerable<int> contentItemIds = null) {
             var session = _sessionLocator.For(typeof(ContentItemVersionRecord));
 
             // Select only the highest versions where both Published and Latest are false.
-            var query = session.CreateQuery(
+            var select = 
                 "select max(ContentItemVersionRecord.Id), ContentItemVersionRecord.ContentItemRecord.Id, max(ContentItemVersionRecord.Number) " +
                 "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord " +
-                "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord " +
-                "group by ContentItemVersionRecord.ContentItemRecord.Id " +
-                "having max(cast(Latest as Int32)) = 0 and max(cast(Published AS Int32)) = 0 ");
+                "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord ";
 
+            var filter = contentItemIds != null ? "WHERE ContentItemVersionRecord.ContentItemRecord.Id IN (:ids) " : default(String);
+
+            var group = 
+                "group by ContentItemVersionRecord.ContentItemRecord.Id " +
+                "having max(cast(Latest as Int32)) = 0 and max(cast(Published AS Int32)) = 0 ";
+
+            var hql = String.Concat(select, filter, group);
+            var query = session.CreateQuery(hql);
+
+            if (contentItemIds != null) {
+                query.SetParameterList("ids", contentItemIds);
+            }
+            
             return query;
         }
     }

@@ -1,68 +1,77 @@
-﻿@model Orchard.AuditTrail.ViewModels.RecycleBinViewModel
+﻿@using Orchard.AuditTrail.ViewModels
+@model RecycleBinViewModel
 @{
     Style.Include("audittrail-recycle-bin.css");
     Script.Require("ShapesBase");
+    Script.Include(("audittrail-recyclebin.js"));
     Layout.Title = T("Audit Trail");
 
     var contentItems = Model.ContentItems;
 }
-@Html.ValidationSummary()
-@using (Html.BeginFormAntiForgeryPost()) {
-    <section class="recycle-bin-filter-section">
-        <div class="filter-control-group">
-            <label>@T("Actions:")</label>
-            <select name="SelectedItemsAction">
-                <option></option>
-                <option value="Restore">@T("Restore")</option>
-                <option value="Destroy">@T("Destroy Permanently")</option>
-            </select>
-        </div>
-        <div class="filter-control-group">
-            <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
-        </div>
-        <div class="filter-control-group">
-            <label>@T("Sort by:")</label>
-            <select name="RecycleBinSort">
-                <option>@T("Deleted (latest first")</option>
-                <option>@T("Title (alphabetical")</option>
-            </select>
-        </div>
-        <div class="filter-control-group">
-            <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
-        </div>
-    </section>
-    <section class="recycle-bin-list-section">
-        @if (!contentItems.Any()) {
-            <p class="info">@T("There are no records to display.")</p>
-        }
-        else {
-            <table class="items">
-                <thead>
-                    <tr>
-                        <th class="content-checkbox"><input type="checkbox" class="check-all"/></th>
-                        <th class="content-column">@T("Content Item")</th>
-                        <th class="actions-column"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var contentItem in contentItems) {
-                        var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
-                        var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
+<div id="recycle-bin">
+    @Html.ValidationSummary()
+    @using (Html.BeginFormAntiForgeryPost()) {
+        <section class="recycle-bin-filter-section">
+            <div class="filter-control-group">
+                <label>@T("Actions:")</label>
+                <select name="RecycleBinCommand">
+                    <option></option>
+                    <option value="@RecycleBinCommand.Restore" data-unsafe-action="@T("Are you sure you want to restore the selected items?")" @if(Model.RecycleBinCommand == RecycleBinCommand.Restore){<text>selected="selected"</text>}>@T("Restore")</option>
+                    <option value="@RecycleBinCommand.Destroy" data-unsafe-action='["@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you really absolutely sure you want to do this?")", "@T("Are you absolutely sure? You will not be able to restore permanenly deleted items. You should seriously consider making a DB backup first. This is your last chance to back out my friend. Are you sure you wish to proceed?")"]' @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>
+                </select>
+            </div>
+            <div class="filter-control-group">
+                <button type="submit" class="filter-apply-button" name="ExecuteActionButton" value="ExecuteActionButton">@T("Execute")</button>
+            </div>
+            <div class="filter-control-group">
+                <label>@T("Sort by:")</label>
+                <select name="RecycleBinSort">
+                    <option>@T("Deleted (latest first")</option>
+                    <option>@T("Title (alphabetical")</option>
+                </select>
+            </div>
+            <div class="filter-control-group">
+                <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
+            </div>
+        </section>
+        <section class="recycle-bin-list-section">
+            @if (!contentItems.Any()) {
+                <p class="info">@T("There are no records to display.")</p>
+            }
+            else {
+                <table class="items">
+                    <thead>
                         <tr>
-                            <td><input type="checkbox"/></td>
-                            <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
-                            <td class="actions-column">
-                                <a href="@contentDisplayUrl">@T("View")</a> @T(" | ")
-                                @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) @T(" | ")
-                                <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
-                            </td>
+                            <th class="content-checkbox"><input type="checkbox" class="check-all" /></th>
+                            <th class="content-column">@T("Content Item")</th>
+                            <th class="actions-column"></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </section>
-    <section class="pager">
-        @Display(Model.Pager)
-    </section>
-}
+                    </thead>
+                    <tbody>
+                        @{
+                            var index = 0;
+                            foreach (var contentItem in contentItems) {
+                                var isSelected = Model.SelectedContentItems.Contains(contentItem.Id);
+                                var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
+                                var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
+                                <tr>
+                                    <td><input type="checkbox" name="SelectedContentItems[@index]" value="@contentItem.Id" @if(isSelected){<text>checked="checked"</text>} /></td>
+                                    <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
+                                    <td class="actions-column">
+                                        <a href="@contentDisplayUrl">@T("View")</a> @T(" | ")
+                                        @Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new {content = contentItem.Id, area = "Orchard.AuditTrail"}, null) @T(" | ")
+                                        <a href="@Url.Action("Restore", "RecycleBin", new {id = contentItem.Id, area = "Orchard.AuditTrail"})" data-unsafe-url="@T("Are you sure you want to restore this item?")">@T("Restore")</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </section>
+        <section class="pager">
+            @Display(Model.Pager)
+        </section>
+    }
+</div>

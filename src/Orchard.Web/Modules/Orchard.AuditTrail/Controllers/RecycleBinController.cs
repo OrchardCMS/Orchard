@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Policy;
 using System.Web.Mvc;
 using System.Web.UI;
@@ -9,6 +11,8 @@ using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -31,22 +35,17 @@ namespace Orchard.AuditTrail.Controllers {
             _services = services;
             _recycleBin = recycleBin;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index(PagerParameters pagerParameters, AuditTrailOrderBy? orderBy = null) {
             if (!_authorizer.Authorize(Permissions.ViewAuditTrail))
                 return new HttpUnauthorizedResult();
 
-            var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
-            var removedContentItems = _recycleBin.List(pager.Page, pager.PageSize);
-            var pagershape = _services.New.Pager(pager).TotalItemCount(removedContentItems.TotalItemCount);
-            var viewModel = new RecycleBinViewModel {
-                ContentItems = removedContentItems,
-                Pager = pagershape
-            };
-
+            var viewModel = SetupViewModel(new RecycleBinViewModel(), pagerParameters);
             return View(viewModel);
         }
 
@@ -63,5 +62,85 @@ namespace Orchard.AuditTrail.Controllers {
 
             return this.RedirectReturn(returnUrl, () => Url.Action("Index", "RecycleBin"));
         }
+
+        [ActionName("Index")]
+        [HttpPost]
+        [FormValueRequired("ExecuteActionButton")]
+        public ActionResult ExecuteAction(RecycleBinViewModel viewModel, PagerParameters pagerParameters) {
+            if (viewModel.RecycleBinCommand == null) {
+                ModelState.AddModelError("RecycleBinCommand", T("Please select an action to execute.").Text);
+            }
+
+            if (viewModel.SelectedContentItems == null || !viewModel.SelectedContentItems.Any()) {
+                ModelState.AddModelError("SelectedContentItems", T("Please select one or more content items.").Text);
+            }
+
+            if (!ModelState.IsValid) {
+                SetupViewModel(viewModel, pagerParameters);
+                return View("Index", viewModel);
+            }
+
+            if (ModelState.IsValid) {
+                switch (viewModel.RecycleBinCommand) {
+                    case RecycleBinCommand.Restore:
+                        RestoreContentItems(viewModel.SelectedContentItems);
+                        break;
+                    case RecycleBinCommand.Destroy:
+                        DeleteContentItems(viewModel.SelectedContentItems);
+                        break;
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        private RecycleBinViewModel SetupViewModel(RecycleBinViewModel viewModel, PagerParameters pagerParameters) {
+            var pager = new Pager(_services.WorkContext.CurrentSite, pagerParameters);
+            var removedContentItems = _recycleBin.List(pager.Page, pager.PageSize);
+            var pagershape = _services.New.Pager(pager).TotalItemCount(removedContentItems.TotalItemCount);
+
+            viewModel.ContentItems = removedContentItems;
+            viewModel.Pager = pagershape;
+
+            return viewModel;
+        }
+
+        private void RestoreContentItems(IEnumerable<int> selectedContentItems) {
+            var contentItems = _recycleBin.GetMany(selectedContentItems);
+
+            foreach (var contentItem in contentItems) {
+                var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
+                if (!_authorizer.Authorize(Core.Contents.Permissions.EditContent, contentItem)) {
+                    _notifier.Error(T("You need the EditContent permission to restore <strong>{0}</strong>.", contentItemTitle));
+                    continue;
+                }
+
+                _recycleBin.Restore(contentItem);
+                _notifier.Information(T("&quot;{0}&quot; has been restored.", contentItemTitle));
+            }
+        }
+
+        private void DeleteContentItems(IEnumerable<int> selectedContentItems) {
+            var contentItems = _recycleBin.GetMany(selectedContentItems);
+
+            foreach (var contentItem in contentItems) {
+                var contentItemTitle = _contentManager.GetItemMetadata(contentItem).DisplayText;
+                if (!_authorizer.Authorize(Core.Contents.Permissions.DeleteContent, contentItem)) {
+                    _notifier.Error(T("You need the DeleteContent permission to permanently delete <strong>{0}</strong>.", contentItemTitle));
+                    continue;
+                }
+
+                try {
+                    _contentManager.Destroy(contentItem);
+                    _notifier.Information(T("&quot;{0}&quot; has been permanently deleted.", contentItemTitle));
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An exception occurred while trying to permanently delete content with ID {0}.", contentItem.Id);
+                    _notifier.Error(T("An exception occurred while trying to permanently delete content with ID {0}.", contentItem.Id));
+                }
+                
+            }
+        }
+
     }
 }
