@@ -66,16 +66,18 @@ namespace Orchard.AuditTrail.Services {
             var session = _sessionLocator.For(typeof(ContentItemVersionRecord));
 
             // Select only the highest versions where both Published and Latest are false.
-            var select = 
+            var select =
                 "select max(ContentItemVersionRecord.Id), ContentItemVersionRecord.ContentItemRecord.Id, max(ContentItemVersionRecord.Number) " +
                 "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord " +
-                "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord ";
+                "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord, Orchard.Core.Common.Models.CommonPartVersionRecord CommonPartVersionRecord " +
+                "where CommonPartVersionRecord.Id = ContentItemVersionRecord.Id ";
 
             var filter = contentItemIds != null ? "WHERE ContentItemVersionRecord.ContentItemRecord.Id IN (:ids) " : default(String);
 
             var group = 
                 "group by ContentItemVersionRecord.ContentItemRecord.Id " +
-                "having max(cast(Latest as Int32)) = 0 and max(cast(Published AS Int32)) = 0 ";
+                "having max(cast(Latest as Int32)) = 0 and max(cast(Published AS Int32)) = 0 " +
+                "order by max(CommonPartVersionRecord.ModifiedUtc) desc ";
 
             var hql = String.Concat(select, filter, group);
             var query = session.CreateQuery(hql);

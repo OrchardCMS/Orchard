@@ -27,16 +27,6 @@
             <div class="filter-control-group">
                 <button type="submit" class="filter-apply-button" name="ExecuteActionButton" value="ExecuteActionButton">@T("Execute")</button>
             </div>
-            <div class="filter-control-group">
-                <label>@T("Sort by:")</label>
-                <select name="RecycleBinSort">
-                    <option>@T("Deleted (latest first")</option>
-                    <option>@T("Title (alphabetical")</option>
-                </select>
-            </div>
-            <div class="filter-control-group">
-                <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
-            </div>
         </section>
         <section class="recycle-bin-list-section">
             @if (!contentItems.Any()) {
