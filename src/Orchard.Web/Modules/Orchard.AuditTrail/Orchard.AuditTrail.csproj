@@ -324,6 +324,12 @@
   <ItemGroup>
     <Content Include="Views\RecycleBin\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEventActions-Content-Removed.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\AuditTrailEvent-Content-Restored.SummaryAdmin.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
