@@ -49,11 +49,19 @@ namespace Orchard.Autoroute.Handlers {
             });
         }
 
+        protected override void Imported(ImportContentContext context) {
+            var importedItem = context.ContentItem.As<AutoroutePart>();
+            if (importedItem != null && importedItem.DisplayAlias == "/") {
+                PublishAlias(importedItem);
+            }
+        }
+
         private void CreateAlias(AutoroutePart part) {
             ProcessAlias(part);
         }
 
         private void PublishAlias(AutoroutePart part) {
+            if (part.Processed) return;
             ProcessAlias(part);
 
             // should it become the home page ?
@@ -72,6 +80,7 @@ namespace Orchard.Autoroute.Handlers {
             }
 
             _autorouteService.Value.PublishAlias(part);
+            part.Processed = true;
         }
 
         private void ProcessAlias(AutoroutePart part) {

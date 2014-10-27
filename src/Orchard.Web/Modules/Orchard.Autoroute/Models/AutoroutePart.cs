@@ -20,5 +20,7 @@ namespace Orchard.Autoroute.Models {
         public string Path {
             get { return DisplayAlias; }
         }
+
+        internal bool Processed { get; set; }
     }
 }
