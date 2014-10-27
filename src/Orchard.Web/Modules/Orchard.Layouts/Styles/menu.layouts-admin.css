@@ -1,0 +1,7 @@
+﻿.navicon-elements {
+    background-image: url(menu.elements.png) !important;
+}
+
+    .navicon-elements:hover {
+        background-position: 0 -30px !important;
+    }

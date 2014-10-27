@@ -6,7 +6,6 @@ namespace Orchard.ContentManagement {
     // Maps content identities to content items on the importer.
     public class ImportContentSession {
         private readonly IContentManager _contentManager;
-        private readonly ContentIdentity.ContentIdentityEqualityComparer _identityComparer;
 
         private readonly Dictionary<ContentIdentity, int> _identities;
         private readonly Dictionary<ContentIdentity, string> _contentTypes;
@@ -17,19 +16,19 @@ namespace Orchard.ContentManagement {
         private readonly Dictionary<ContentIdentity, bool> _allIdentitiesForImportStatus; //For fast lookup of status
         private readonly Queue<ContentIdentity> _dependencyIdentities;
         private int _startIndex;
-        private int _batchSize = int.MaxValue;
+        private int _batchSize = 100;
         private int _currentIndex;
 
         public ImportContentSession(IContentManager contentManager) {
-            _identityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
+            var identityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
             _contentManager = contentManager;
 
-            _identities = new Dictionary<ContentIdentity, int>(_identityComparer);
-            _contentTypes = new Dictionary<ContentIdentity, string>(_identityComparer);
+            _identities = new Dictionary<ContentIdentity, int>(identityComparer);
+            _contentTypes = new Dictionary<ContentIdentity, string>(identityComparer);
             _draftVersionRecordIds = new Dictionary<int, int>();
 
             _allIdentitiesForImport = new List<ContentIdentity>();
-            _allIdentitiesForImportStatus = new Dictionary<ContentIdentity, bool>(_identityComparer);
+            _allIdentitiesForImportStatus = new Dictionary<ContentIdentity, bool>(identityComparer);
             _dependencyIdentities = new Queue<ContentIdentity>();
         }
 

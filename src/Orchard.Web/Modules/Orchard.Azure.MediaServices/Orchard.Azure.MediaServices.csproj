@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Azure.MediaServices</RootNamespace>
     <AssemblyName>Orchard.Azure.MediaServices</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -25,6 +25,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -148,6 +149,7 @@
     <Content Include="Content\expressInstall.swf" />
     <Content Include="Content\MSAdaptiveStreamingPlugin.swf" />
     <Content Include="Content\StrobeMediaPlayback.swf" />
+    <Compile Include="Models\EncodingPreset.cs" />
     <Compile Include="Shapes\CloudVideoPlayerShape.cs" />
     <Compile Include="Helpers\BitExtensions.cs" />
     <Compile Include="Infrastructure\Assets\AssetDriverResult.cs" />
@@ -184,15 +186,15 @@
     <Content Include="Scripts\lib\dash.all.js" />
     <Content Include="Scripts\lib\dash.min.js" />
     <Content Include="Scripts\lib\jquery.blockui.js" />
-    <Content Include="Scripts\cloudmedia-admin-job.ts" />
-    <Content Include="Scripts\cloudmedia-admin-common.ts" />
-    <Content Include="Scripts\cloudmedia-autorefresh.ts" />
-    <Content Include="Scripts\cloudmedia-edit-asset-video.ts" />
-    <Content Include="Scripts\cloudmedia-edit-asset.ts" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
-    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-job.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-common.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-autorefresh.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-asset-video.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-asset.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart-direct.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-metadata-cloudvideopart.ts" />
     <Content Include="Scripts\lib\jquery.fileupload-process.js" />
     <Content Include="Scripts\lib\jquery.fileupload-validate.js" />
     <Content Include="Scripts\lib\jquery.fileupload.js" />
@@ -283,13 +285,13 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Scripts\cloudmedia-videoplayer-data.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
-    <Content Include="Scripts\cloudmedia-videoplayer-main.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-data.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-dash.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-html5.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-alt.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors-smp.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-injectors.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-videoplayer-main.ts" />
     <TypeScriptCompile Include="Scripts\typings\moment.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\underscore.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\uri.d.ts" />
@@ -449,7 +451,7 @@
     <TypeScriptCompile Include="Scripts\typings\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.d.ts" />
-    <Content Include="Scripts\cloudmedia-admin-settings.ts" />
+    <TypeScriptCompile Include="Scripts\cloudmedia-admin-settings.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CloudVideo.Edit.Assets.cshtml" />
@@ -551,7 +553,10 @@
     <Content Include="Content\Strobe Media Playback Notice.docx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\lib\MPEG Dash Notice.docx" />
+    <None Include="Scripts\lib\MPEG Dash Notice.docx" />
+    <Content Include="Styles\cloudmedia-admin-settings.css.map">
+      <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\cloudmedia-admin-common.js.map" />
@@ -577,16 +582,6 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>True</TypeScriptSourceMap>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>false</TypeScriptSourceMap>
-  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
@@ -620,7 +615,7 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
+          <UseCustomServer>True</UseCustomServer>
           <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>

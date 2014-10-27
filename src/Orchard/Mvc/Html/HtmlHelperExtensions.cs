@@ -105,34 +105,62 @@ namespace Orchard.Mvc.Html {
         }
 
         private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || !items.Any()) return new HtmlString(string.Empty);
+            if(items == null) {
+                return new HtmlString(string.Empty);
+            }
+
+            // prevent multiple evaluations of the enumeration
+            items = items.ToArray();
+
+            if (!items.Any()) {
+                return new HtmlString(string.Empty);
+            }
 
             var sb = new StringBuilder(250);
             int counter = 0, count = items.Count() - 1;
 
-            sb.AppendFormat(
-                !string.IsNullOrEmpty(cssClass) ? "<ul class=\"{0}\">" : "<ul>",
-                cssClass
-                );
+            if(string.IsNullOrEmpty(cssClass)) {
+                sb.Append("<ul>");
+            }
+            else {
+                sb.Append("<ul class=\"")
+                  .Append(cssClass)
+                  .Append("\">");
+            }
 
             foreach (var item in items) {
                 var sbClass = new StringBuilder(50);
 
-                if (counter == 0)
+                if (counter == 0) {
                     sbClass.Append("first ");
-                if (counter == count)
-                    sbClass.Append("last ");
-                if (generateItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateItemCssClass(item));
-                if (counter % 2 != 0 && generateAlternatingItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateAlternatingItemCssClass(item));
+                }
 
-                sb.AppendFormat(
-                    sbClass.Length > 0
-                        ? string.Format("<li class=\"{0}\">{{0}}</li>", sbClass.ToString().TrimEnd())
-                        : "<li>{0}</li>",
-                    generateContent(item, counter)
-                    );
+                if (counter == count) {
+                    sbClass.Append("last ");
+                }
+
+                if (generateItemCssClass != null) {
+                    sbClass.Append(generateItemCssClass(item)).Append(" ");
+                }
+
+                if (counter % 2 != 0 && generateAlternatingItemCssClass != null) {
+                    sbClass.Append(generateAlternatingItemCssClass(item)).Append(" ");
+                }
+
+                var clss = sbClass.ToString().TrimEnd();
+
+                if(String.IsNullOrWhiteSpace(clss)) {
+                    sb.Append("<li>")
+                      .Append(generateContent(item, counter))
+                      .Append("</li>");
+                }
+                else {
+                    sb.Append("<li class=\"")
+                      .Append(clss)
+                      .Append("\">")
+                      .Append(generateContent(item, counter))
+                      .Append("</li>");
+                }
 
                 counter++;
             }
@@ -249,6 +277,28 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region Hint
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text) {
+            return Hint(htmlHelper, text, default(object));
+        }
+
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, object htmlAttributes) {
+            return Hint(htmlHelper, text, htmlAttributes != null ? new RouteValueDictionary(htmlAttributes) : null);
+        }
+
+        public static IHtmlString Hint(this HtmlHelper htmlHelper, LocalizedString text, IDictionary<string, object> htmlAttributes) {
+            var tagBuilder = new TagBuilder("span") { InnerHtml = text.Text };
+
+            if (htmlAttributes != null) {
+                tagBuilder.MergeAttributes(htmlAttributes);
+            }
+
+            tagBuilder.AddCssClass("hint");
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
+        }
+        #endregion
+
+        
         #region BeginFormAntiForgeryPost
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper) {
@@ -363,6 +413,56 @@ namespace Orchard.Mvc.Html {
             return new HtmlString(field.Substring(beginIndex, endIndex - beginIndex));
         }
 
+        #endregion
+
+        #region HtmlHelperFor
+        // Credit: Max Toro http://maxtoroq.github.io/2012/07/patterns-for-aspnet-mvc-plugins-viewmodels.html
+        public static HtmlHelper<TModel> HtmlHelperFor<TModel>(this HtmlHelper htmlHelper) {
+            return HtmlHelperFor(htmlHelper, default(TModel));
+        }
+
+        public static HtmlHelper<TModel> HtmlHelperFor<TModel>(this HtmlHelper htmlHelper, TModel model) {
+            return HtmlHelperFor(htmlHelper, model, null);
+        }
+
+        public static HtmlHelper<TModel> HtmlHelperFor<TModel>(this HtmlHelper htmlHelper, TModel model, string htmlFieldPrefix) {
+
+            var viewDataContainer = CreateViewDataContainer(htmlHelper.ViewData, model);
+
+            var templateInfo = viewDataContainer.ViewData.TemplateInfo;
+
+            if (!String.IsNullOrEmpty(htmlFieldPrefix))
+                templateInfo.HtmlFieldPrefix = templateInfo.GetFullHtmlFieldName(htmlFieldPrefix);
+
+            var viewContext = htmlHelper.ViewContext;
+            var newViewContext = new ViewContext(
+                viewContext.Controller.ControllerContext, 
+                viewContext.View, 
+                viewDataContainer.ViewData, 
+                viewContext.TempData, 
+                viewContext.Writer);
+
+            return new HtmlHelper<TModel>(newViewContext, viewDataContainer, htmlHelper.RouteCollection);
+        }
+
+        private static IViewDataContainer CreateViewDataContainer(ViewDataDictionary viewData, object model) {
+
+            var newViewData = new ViewDataDictionary(viewData) {
+                Model = model
+            };
+
+            newViewData.TemplateInfo = new TemplateInfo {
+                HtmlFieldPrefix = newViewData.TemplateInfo.HtmlFieldPrefix
+            };
+
+            return new ViewDataContainer {
+                ViewData = newViewData
+            };
+        }
+
+        private class ViewDataContainer : IViewDataContainer {
+            public ViewDataDictionary ViewData { get; set; }
+        }
         #endregion
     }
 }

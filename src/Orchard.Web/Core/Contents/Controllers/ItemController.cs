@@ -22,8 +22,14 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public ActionResult Display(int id) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Published);
+        public ActionResult Display(int? id, int? version) {
+            if (id == null)
+                return HttpNotFound();
+
+            if (version.HasValue)
+                return Preview(id, version);
+
+            var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 
             if (contentItem == null)
                 return HttpNotFound();
@@ -38,13 +44,16 @@ namespace Orchard.Core.Contents.Controllers {
 
         // /Contents/Item/Preview/72
         // /Contents/Item/Preview/72?version=5
-        public ActionResult Preview(int id, int? version) {
+        public ActionResult Preview(int? id, int? version) {
+            if (id == null)
+                return HttpNotFound();
+
             var versionOptions = VersionOptions.Latest;
 
             if (version != null)
                 versionOptions = VersionOptions.Number((int)version);
 
-            var contentItem = _contentManager.Get(id, versionOptions);
+            var contentItem = _contentManager.Get(id.Value, versionOptions);
             if (contentItem == null)
                 return HttpNotFound();
 

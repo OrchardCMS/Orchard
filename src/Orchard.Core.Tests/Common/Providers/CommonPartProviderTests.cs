@@ -68,6 +68,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
 
             builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
+            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();

@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Orchard.Localization;
 using Orchard.Scripting;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {
-        private readonly IEnumerable<IRuleProvider> _ruleProviders;
+        private readonly IRuleProvider _ruleProviders;
         private readonly IEnumerable<IScriptExpressionEvaluator> _evaluators;
 
-        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IEnumerable<IScriptExpressionEvaluator> evaluators) {
+        public RuleManager(IRuleProvider ruleProviders, IEnumerable<IScriptExpressionEvaluator> evaluators) {
             _ruleProviders = ruleProviders;
             _evaluators = evaluators;
             T = NullLocalizer.Instance;
@@ -44,9 +45,7 @@ namespace Orchard.Widgets.RuleEngine {
                     Result = context.Result
                 };
 
-                foreach(var ruleProvider in _ruleManager._ruleProviders) {
-                    ruleProvider.Process(ruleContext);
-                }
+                _ruleManager._ruleProviders.Process(ruleContext);
 
                 context.Result = ruleContext.Result;
             }

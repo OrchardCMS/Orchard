@@ -16,3 +16,9 @@
     padding-right: 2em;
     width: inherit;
 }
+
+/* RTL */
+.dir-rtl .content-permissions .role {
+    padding-right: inherit;
+    padding-left: 2em;
+}

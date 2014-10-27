@@ -31,8 +31,6 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
         }
 
-        public string Name { get { return _name; } }
-
         public ContentTypeDefinition Build() {
             return new ContentTypeDefinition(_name, _displayName, _parts, _settings);
         }

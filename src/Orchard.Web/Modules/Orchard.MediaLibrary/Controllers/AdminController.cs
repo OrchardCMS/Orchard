@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.MediaLibrary.Models;
@@ -180,7 +182,36 @@ namespace Orchard.MediaLibrary.Controllers {
             }
         }
 
-        private FolderHierarchy GetFolderHierarchy(MediaFolder root) {
+        [HttpPost]
+        public ActionResult Clone(int mediaItemId) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Couldn't clone media items")))
+                return new HttpUnauthorizedResult();
+
+            try {
+                var media = Services.ContentManager.Get(mediaItemId).As<MediaPart>();
+
+                var newFileName = Path.GetFileNameWithoutExtension(media.FileName) + " Copy" + Path.GetExtension(media.FileName);
+                
+                _mediaLibraryService.CopyFile(media.FolderPath, media.FileName, media.FolderPath, newFileName);
+
+                var clonedContentItem = Services.ContentManager.Clone(media.ContentItem);
+                var clonedMediaPart = clonedContentItem.As<MediaPart>();
+                var clonedTitlePart = clonedContentItem.As<TitlePart>();
+
+                clonedMediaPart.FileName = newFileName;
+                clonedTitlePart.Title = clonedTitlePart.Title + " Copy";
+
+                Services.ContentManager.Publish(clonedContentItem);
+
+                return Json(true);
+            }
+            catch (Exception e) {
+                Logger.Error(e, "Could not clone media item.");
+                return Json(false);
+            }
+        }
+
+        private FolderHierarchy GetFolderHierarchy(IMediaFolder root) {
             Argument.ThrowIfNull(root, "root");
             return new FolderHierarchy(root) {Children = _mediaLibraryService.GetMediaFolders(root.MediaPath).Select(GetFolderHierarchy)};
         }

@@ -17,13 +17,20 @@ namespace Orchard.AuditTrail {
                 .Column<string>("EventData", c => c.Unlimited())
                 .Column<string>("EventFilterKey", c => c.WithLength(16))
                 .Column<string>("EventFilterData", c => c.WithLength(256))
-                .Column<string>("Comment", c => c.Unlimited()));
+                .Column<string>("Comment", c => c.Unlimited())
+                .Column<string>("ClientIpAddress", c => c.WithLength(46)));
 
             ContentDefinitionManager.AlterPartDefinition("AuditTrailPart", part => part
                 .Attachable()
-                .WithDescription("Enables the user to enter a comment about the change when saving a content item."));
+                .WithDescription("Adds an inline audit trail to content items, and allows editors to enter a comment when saving content items."));
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("AuditTrailEventRecord", table => table
+                .AddColumn<string>("ClientIpAddress", c => c.WithLength(46)));
+            return 2;
         }
     }
 }

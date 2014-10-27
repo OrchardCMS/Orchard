@@ -15,6 +15,10 @@ namespace Orchard.Core.Contents.Extensions {
             return builder.WithSetting("ContentTypeSettings.Draftable", draftable.ToString());
         }
 
+        public static ContentTypeDefinitionBuilder Securable(this ContentTypeDefinitionBuilder builder, bool securable = true) {
+            return builder.WithSetting("ContentTypeSettings.Securable", securable.ToString());
+        }
+
         public static ContentPartDefinitionBuilder Attachable(this ContentPartDefinitionBuilder builder, bool attachable = true) {
             return builder.WithSetting("ContentPartSettings.Attachable", attachable.ToString());
         }

@@ -1,0 +1,53 @@
+﻿@using Orchard.Layouts.Models
+@model Orchard.Layouts.ViewModels.EditElementViewModel
+@{
+    Style.Include("element-editor.css");
+    Script.Require("jQuery");
+    Script.Include("element-editor.js");
+    Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
+
+    var command = (string)ViewBag.Command;
+    var titleFormat = (string) ViewBag.TitleFormat;
+    
+}
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { layoutId = Model.Layout.Id, contentType = Model.Layout.ContentItem.ContentType, area = "Orchard.Layouts" }))) {
+    @Html.HiddenFor(m => m.TypeName)
+    @Html.HiddenFor(m => m.ElementState)
+    foreach (var tab in Model.Tabs) {
+        var id = String.Format("element-{0}", tab.ToLowerInvariant());
+        <div id="@id" class="tab-view">
+            @foreach (var editor in Model.EditorResult.Editors) {
+                var position = ShapePosition.Parse((String) editor.Metadata.Position);
+                if (position.Name == tab) {
+                    @Display(editor)
+                }
+            }
+        </div>
+     }
+}
+@if (Model.Submitted == true) {
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            jQuery(function () {
+                // Adding a small delay to prevent certain third party scripts from throwing up when the window is destroyed.
+                setTimeout(function () {
+                    window.parent.currentDialog.trigger("command", {
+                        command: "@command",
+                        element: {
+                            typeName: "@Model.TypeName",
+                            state: "@Url.Encode(Model.ElementState)"
+                        }
+                    });
+                }, 50);
+            });
+        </script>
+    }
+}
+<div class="dialog-settings">
+    <div class="title">@T(titleFormat, Model.DisplayText)</div>
+    <div class="buttons">
+        <a href="#" class="button save">@T("Save")</a>
+        <a href="#" class="button cancel">@T("Cancel")</a>
+    </div>
+</div>

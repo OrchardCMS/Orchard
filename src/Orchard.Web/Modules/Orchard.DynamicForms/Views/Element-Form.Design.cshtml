@@ -1,0 +1,29 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Utility.Extensions
+@{
+    Style.Include("form.designer.css");
+}
+@{
+    var element = (Form)Model.Element;
+    var isTemplated = element.IsTemplated;
+    var formTitle = !String.IsNullOrWhiteSpace(element.Name) ? element.Name.CamelFriendly() : T("Form").Text;
+}
+<div class="x-form x-element x-container x-container-widget @if (isTemplated) {<text>templated</text>}" data-element="@Model.ElementJson">
+    @if (!isTemplated) {
+        <div class="drag-handle">
+            <div class="toolbar form-toolbar group">
+                <div class="pull-left">
+                    <a class="edit icon-cog" href="#" title="@T("Edit form properties")"></a>
+                    <a class="remove icon-trash" href="#" title="@T("Remove form")"></a>
+                </div>
+                <div class="pull-right">
+                    <span class="name">@formTitle</span>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="element container x-holder drop-target">
+        @DisplayChildren(Model)
+    </div>
+    <a href="#" class="add" title="@T("Add Element")"></a>
+</div>

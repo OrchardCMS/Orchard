@@ -69,7 +69,11 @@ namespace Orchard.Indexing {
         public ISearchBuilder ExactMatch() {
             return this;
         }
-        
+
+        public ISearchBuilder NotAnalyzed() {
+            return this;
+        }
+
         /// <summary>
         /// Apply a specific boost to a clause.
         /// </summary>

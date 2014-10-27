@@ -49,7 +49,7 @@
 <script type="text/javascript">
 //<![CDATA[
     $(function() {
-        $.datepicker.regionalOptions[''] = {
+        $.datepicker.regional[''] = {
             closeText: '@HttpUtility.JavaScriptStringEncode(T("Done").Text)', // Display text for close link
             prevText: '@HttpUtility.JavaScriptStringEncode(T("Prev").Text)', // Display text for previous month link
             nextText: '@HttpUtility.JavaScriptStringEncode(T("Next").Text)', // Display text for next month link
@@ -67,7 +67,7 @@
             yearSuffix: '@HttpUtility.JavaScriptStringEncode(dateTimeLocalization.YearSuffix)' // Additional text to append to the year in the month headers*@
         };
 
-        $.datepicker.setDefaults($.datepicker.regionalOptions['']);
+        $.datepicker.setDefaults($.datepicker.regional['']);
     })
 //]]>
 </script>

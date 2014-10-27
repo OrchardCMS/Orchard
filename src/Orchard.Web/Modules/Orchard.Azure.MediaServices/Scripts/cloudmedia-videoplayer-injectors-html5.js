@@ -111,7 +111,7 @@ var Orchard;
                             _super.prototype.debug.call(this, "Html5Injector: " + message, args);
                         };
                         return Html5Injector;
-                    })(Orchard.Azure.MediaServices.VideoPlayer.Injectors.Injector);
+                    })(Injectors.Injector);
                     Injectors.Html5Injector = Html5Injector;
                 })(VideoPlayer.Injectors || (VideoPlayer.Injectors = {}));
                 var Injectors = VideoPlayer.Injectors;

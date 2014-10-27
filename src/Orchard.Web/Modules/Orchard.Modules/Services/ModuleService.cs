@@ -92,7 +92,7 @@ namespace Orchard.Modules.Services {
         /// <param name="force">Boolean parameter indicating if the feature should disable the features which depend on it if required or fail otherwise.</param>
         public void DisableFeatures(IEnumerable<string> featureIds, bool force) {
             foreach (string featureId in _featureManager.DisableFeatures(featureIds, force)) {
-                var featureName = _featureManager.GetAvailableFeatures().Where(f => f.Id == featureId).First().Name;
+                var featureName = _featureManager.GetAvailableFeatures().Single(f => f.Id.Equals(featureId, StringComparison.OrdinalIgnoreCase)).Name;
                 Services.Notifier.Information(T("{0} was disabled", featureName));
             }
         }

@@ -15,3 +15,19 @@ Features:
 		Description: Enables localization of date/time formats and names of days and months.
 		Category: Content
 		Name: Date/Time Format Localization
+		Dependencies: Orchard.Localization
+	Orchard.Localization.CutlureSelector:
+		Description: Enables a culture picker services, and also the admin cutlure picker.
+		Category: Content
+		Name: Culture Picker
+		Dependencies: Orchard.Localization, Orchard.Alias
+	Orchard.Localization.Transliteration:
+		Description: Enabled transliteration of content
+		Category: Content
+		Name: Transliteration
+		Dependencies: Orchard.Localization
+	Orchard.Localization.Transliteration.SlugGeneration:
+		Description: Enabled transliteration of the slug when creating a piece of content
+		Category: Content
+		Name: Url Transliteration
+		Dependencies: Orchard.Localization.Transliteration, Orchard.Autoroute

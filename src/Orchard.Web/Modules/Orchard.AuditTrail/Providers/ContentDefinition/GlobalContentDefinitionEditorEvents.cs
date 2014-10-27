@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
 using Orchard.ContentManagement.MetaData;
@@ -38,7 +36,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
         }
 
         public override void TypeEditorUpdating(ContentTypeDefinitionBuilder definition) {
-            var contentType = _contentDefinitionService.GetType(definition.Name);
+            var contentType = _contentDefinitionService.GetType(definition.Current.Name);
             _oldContentTypeDisplayName = contentType.DisplayName;
             _oldContentTypeSettings = new SettingsDictionary(contentType.Settings);
         }
@@ -50,7 +48,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
             if (newDisplayName != _oldContentTypeDisplayName) {
                 var eventData = new Dictionary<string, object> {
-                    {"ContentTypeName", builder.Name},
+                    {"ContentTypeName", builder.Current.Name},
                     {"OldDisplayName", _oldContentTypeDisplayName},
                     {"NewDisplayName", newDisplayName}
                 };
@@ -59,7 +57,7 @@ namespace Orchard.AuditTrail.Providers.ContentDefinition {
 
             if (!AreEqual(newSettings, _oldContentTypeSettings)) {
                 var eventData = new Dictionary<string, object> {
-                    {"ContentTypeName", builder.Name},
+                    {"ContentTypeName", builder.Current.Name},
                     {"OldSettings", ToXml(_oldContentTypeSettings)},
                     {"NewSettings", ToXml(newSettings)}
                 };

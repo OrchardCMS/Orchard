@@ -21,6 +21,19 @@ namespace Orchard.MediaLibrary.Fields {
             }
         }
 
+        /// <summary>
+        /// Gets the MediaUrl property of the first Media, or null if none
+        /// </summary>
+        public string FirstMediaUrl {
+            get {
+                if (!MediaParts.Any()) {
+                    return null;
+                }
+
+                return MediaParts.First().MediaUrl;
+            }
+        }
+
         private string EncodeIds(ICollection<int> ids) {
             if (ids == null || !ids.Any()) {
                 return string.Empty;

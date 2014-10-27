@@ -1,0 +1,25 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Helpers
+@using Orchard.MediaLibrary.Models
+@using Orchard.Mvc.Spooling
+@{
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
+    var imagePart = (ImagePart)Model.ImagePart;
+    var mediaPart = imagePart != null ? imagePart.As<MediaPart>() : default(MediaPart);
+    var url = mediaPart != null 
+        ? (HtmlStringWriter)Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)
+        : default(HtmlStringWriter);
+
+    if (mediaPart != null) {
+        tagBuilder.Attributes["src"] = url.ToString();
+        tagBuilder.Attributes["alt"] = mediaPart.AlternateText;
+    }
+    else {
+        tagBuilder.Attributes["alt"] = T("Image not found").Text;
+    }
+}
+<div class="element-component">
+    <div>@T("Image")</div>
+    @Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+</div>

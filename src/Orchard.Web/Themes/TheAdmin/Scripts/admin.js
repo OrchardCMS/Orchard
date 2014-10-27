@@ -75,6 +75,23 @@
         $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
     });
 
+    // Handle keypress events in bulk action fieldsets that are part of a single form.
+    // This will make sure the expected action executes when pressing "enter" on a text field.
+    $("form .bulk-actions").on("keypress", "input[type='text']", function (e) {
+        if (e.which != 13)
+            return;
+
+        var sender = $(this);
+        var fieldset = sender.closest("fieldset.bulk-actions");
+        var submitButton = fieldset.find("button[type='submit']");
+
+        if (submitButton.length == 0)
+            return;
+
+        e.preventDefault();
+        submitButton.click();
+    });
+
     var generateMenuFilter = function () {
         var adminMenu = $("ul.menu-admin");
         var filterText = adminMenu.data("filter-watermark");
@@ -82,17 +99,10 @@
 
         $("ul.menu-admin").prepend(filterMenuItem);
 
-        // If no one else wants the focus, take it.
-        setTimeout(function () {
-            if ($("[autofocus]").length == 0) {
-                $("#adminfilter").focus();
-            }
-        }, 100);
-
         var allListItems = $("ul.menu-admin li ul li").not("#NavFilter");
         var itemHeading = $("ul.menu-admin li h3");
 
-        $("#adminfilter").keyup(function (e) {
+        $("#adminfilter").on("keyup", function (e) {
             var a = $(this).val().toLowerCase();
 
             var filteredItemHeading = itemHeading.filter(function (b, c) {
@@ -123,6 +133,32 @@
                         return $(c).text().toLowerCase().indexOf(a) !== -1;
                     });
                     location.href = hit.attr("href");
+                }
+            }
+        });
+
+        // Bind global hotkey 'CTRL+M' and 'ESC.
+        $(document).on("keyup", function (e) {
+            if ((e.which == 77 && e.ctrlKey) || e.which == 27) {
+                var filterWrapper = $(".admin-menu-filter");
+
+                var hideFilter = function() {
+                    $("#adminfilter").val("");
+                    filterWrapper.slideUp(75);
+                };
+
+                switch(e.keyCode) {
+                    case 77: // 'm'
+                        if (filterWrapper.is(":visible")) {
+                            hideFilter();
+                        } else {
+                            filterWrapper.slideDown(75);
+                            $("#adminfilter").focus();
+                        }
+                        break;
+                    case 27: // 'esc'
+                        hideFilter();
+                        break;
                 }
             }
         });

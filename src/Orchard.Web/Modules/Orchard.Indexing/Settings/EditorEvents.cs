@@ -12,6 +12,8 @@ namespace Orchard.Indexing.Settings {
         private readonly IIndexingTaskManager _indexingTaskManager;
         private readonly IContentManager _contentManager;
 
+        private const int PageSize = 50;
+
         public EditorEvents(IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
@@ -34,13 +36,20 @@ namespace Orchard.Indexing.Settings {
             builder.WithSetting("TypeIndexing.Indexes", model.Indexes);
 
             // create indexing tasks only if settings have changed
-            if (model.Indexes != previous.Indexes) {
+            if (Clean(model.Indexes) != Clean(previous.Indexes)) {
                 
                 // if a an index is added, all existing content items need to be re-indexed
                 CreateIndexingTasks();
             }
             
             yield return DefinitionTemplate(model);
+        }
+
+        private string Clean(string value) {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return value.Trim(',', ' ');
         }
 
         /// <summary>
@@ -72,16 +81,28 @@ namespace Orchard.Indexing.Settings {
                 CreateIndexingTasks();
             }
 
-            CreateIndexingTasks();
-
             yield return DefinitionTemplate(model);
         }
 
         private void CreateTasksForType(string type) {
+            var index = 0;
+            bool contentItemProcessed;
+
+            // todo: load ids only, or create a queued job
             // we create a task even for draft items, and the executor will filter based on the settings
-            foreach (var contentItem in _contentManager.Query(VersionOptions.Latest, new [] { type }).List()) {
-                _indexingTaskManager.CreateUpdateIndexTask(contentItem);
-            }
+
+            do {
+                contentItemProcessed = false;
+                var contentItemsToIndex = _contentManager.Query(VersionOptions.Latest, new [] { type }).Slice(index, PageSize);
+
+                foreach (var contentItem in contentItemsToIndex) {
+                    contentItemProcessed = true;
+                    _indexingTaskManager.CreateUpdateIndexTask(contentItem);
+                }
+
+                index += PageSize;
+
+            } while (contentItemProcessed);
         }
     }
 }

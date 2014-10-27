@@ -1,0 +1,12 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Button)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("button"), Model);
+
+    tagBuilder.Attributes["type"] = "submit";
+    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.SetInnerText(element.Text);
+}
+@Html.Raw(tagBuilder.ToString(TagRenderMode.Normal))

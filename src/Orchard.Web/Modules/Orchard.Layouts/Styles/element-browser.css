@@ -1,0 +1,29 @@
+﻿.element-browser .elements {
+    display: none;
+}
+
+    .element-browser .elements ul {
+        background: none repeat scroll 0 0 #f3f4f5;
+        border: 1px solid #e4e5e6;
+        padding: 0 5px 0 5px;
+    }
+
+    .element-browser .elements ul li {
+        margin: 5px 0;
+        background: #fff;
+        color: #aec3ce;
+    }
+
+        .element-browser .elements ul li a {
+            border: 1px solid #eaeaea;
+            display: block;
+            padding: 5px 10px;
+        }
+
+            .element-browser .elements ul li a:hover {
+                border-color: #487328;
+            }
+
+            .element-browser .elements ul li a h2 {
+                font-size: 1.231em;
+            }

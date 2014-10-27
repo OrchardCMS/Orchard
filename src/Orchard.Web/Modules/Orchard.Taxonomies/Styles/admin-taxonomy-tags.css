@@ -123,3 +123,44 @@ ul.tagit li.tagit-choice a.tagit-close:hover {
 .tagit-hiddenSelect {
     display:none;
 }
+
+
+/* RTL */
+
+
+.content-rtl ul.tagit {
+    margin-right: inherit;
+    margin-left: 6px;
+}
+
+.content-rtl ul.tagit li {
+    float: right;
+    margin:0px 0px 0px 5px;
+}
+
+.content-rtl ul.tagit.ui-sortable li.tagit-choice a.ui-icon.ui-icon-grip-dotted-vertical {
+    float: right;
+    margin-left: inherit;
+    margin-right: -5px;
+}
+
+.content-rtl ul.tagit li.tagit-choice {
+    padding: 4px 4px 4px 14px;
+}
+
+.content-rtl ul.tagit li.tagit-new {
+    padding: 2px 3px 3px 4px;
+    padding: 2px 1px 1px 4px;
+    padding: 2px 0 1px 4px;
+}
+
+.content-rtl ul.tagit li.tagit-choice input {
+    float: right;
+    margin: 0 0 0 5px;
+}
+
+.content-rtl ul.tagit li.tagit-choice a.tagit-close {
+    padding: 1px 3px 1px 0;
+    right: inherit;
+    left: 3px;
+}
