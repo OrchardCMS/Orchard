@@ -114,5 +114,23 @@ namespace Orchard.Autoroute.Handlers {
         void RemoveAlias(AutoroutePart part) {
             _autorouteService.Value.RemoveAliases(part);
         }
+
+        protected override void RegisteringIdentityResolvers(RegisteringIdentityResolversContext context) {
+            context.Register(
+                contentIdentity => contentIdentity.Has("alias"),
+                contentIdentity => {
+                    var identifier = contentIdentity.Get("alias");
+
+                    if (identifier == null) {
+                        return null;
+                    }
+
+                    return _orchardServices.ContentManager
+                        .Query<AutoroutePart, AutoroutePartRecord>()
+                        .Where(p => p.DisplayAlias == identifier)
+                        .List<ContentItem>()
+                        .FirstOrDefault();
+                });
+        }
     }
 }

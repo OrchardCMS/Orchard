@@ -100,7 +100,6 @@
   <ItemGroup>
     <Compile Include="Commands\AutorouteCommands.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Services\AliasResolverSelector.cs" />
     <Compile Include="Services\PathResolutionService.cs" />
     <Compile Include="Services\IPathResolutionService.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
