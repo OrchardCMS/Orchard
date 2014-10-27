@@ -17,15 +17,15 @@ namespace Orchard.Caching.Services {
             _prefix = shellSettings.Name;
         }
 
-        public object Get(string key) {
-            return _cacheStorageProvider.Get(BuildFullKey(key));
+        public T Get<T>(string key) {
+            return _cacheStorageProvider.Get<T>(BuildFullKey(key));
         }
 
-        public void Put(string key, object value) {
+        public void Put<T>(string key, T value) {
             _cacheStorageProvider.Put(BuildFullKey(key), value);
         }
 
-        public void Put(string key, object value, TimeSpan validFor) {
+        public void Put<T>(string key, T value, TimeSpan validFor) {
             _cacheStorageProvider.Put(BuildFullKey(key), value, validFor);
         }
 
@@ -38,7 +38,7 @@ namespace Orchard.Caching.Services {
         }
 
         private string BuildFullKey(string key) {
-            return String.Concat(_prefix, "_", key);
+            return String.Concat(_prefix, ":", key);
         }
     }
 }

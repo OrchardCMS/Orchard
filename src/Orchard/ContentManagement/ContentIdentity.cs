@@ -159,6 +159,17 @@ namespace Orchard.ContentManagement {
 
 
         public class ContentIdentityEqualityComparer : IEqualityComparer<ContentIdentity> {
+            public static bool AreEquivalent(ContentIdentity contentIdentity1, ContentIdentity contentIdentity2) {
+                if (contentIdentity1 == null) return contentIdentity2 == null;
+                if (contentIdentity2 == null) return false;
+                return contentIdentity1._dictionary.Keys
+                    .Any(k => {
+                        var other = contentIdentity2.Get(k);
+                        if (other == null) return false;
+                        return contentIdentity1._dictionary[k] == other;
+                    });
+            }
+
             public bool Equals(ContentIdentity contentIdentity1, ContentIdentity contentIdentity2) {
                 return contentIdentity1.ToString().Equals(contentIdentity2.ToString());
             }

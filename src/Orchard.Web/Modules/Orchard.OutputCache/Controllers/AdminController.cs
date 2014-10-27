@@ -90,7 +90,8 @@ namespace Orchard.OutputCache.Controllers {
                 DebugMode = settings.DebugMode,
                 ApplyCulture = settings.ApplyCulture,
                 RouteConfigurations = routeConfigurations,
-                IgnoreNoCache = settings.IgnoreNoCache
+                IgnoreNoCache = settings.IgnoreNoCache,
+                CacheAuthenticatedRequests = settings.CacheAuthenticatedRequests
             };
 
             return View(model);
@@ -115,10 +116,10 @@ namespace Orchard.OutputCache.Controllers {
                 settings.DebugMode = model.DebugMode;
                 settings.ApplyCulture = model.ApplyCulture;
                 settings.IgnoreNoCache = model.IgnoreNoCache;
+                settings.CacheAuthenticatedRequests = model.CacheAuthenticatedRequests;
 
                 // invalidates the settings cache
                 _signals.Trigger(CacheSettingsPart.CacheKey);
-
                 _cacheService.SaveCacheConfigurations(model.RouteConfigurations);
 
                 Services.Notifier.Information(T("Cache Settings saved successfully."));

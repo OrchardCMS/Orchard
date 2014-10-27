@@ -30,6 +30,6 @@ namespace Orchard.DynamicForms.Services {
         IEnumerable<IElementValidator> GetValidators(FormElement element);
         IEnumerable<IElementValidator> GetValidators(Type elementType);
         IEnumerable<IElementValidator> GetValidators();
-        void RegisterClientValidationAttributes(RegisterClientValidationAttributesEventContext context);
+        void RegisterClientValidationAttributes(FormElement element, RegisterClientValidationAttributesContext context);
     }
 }

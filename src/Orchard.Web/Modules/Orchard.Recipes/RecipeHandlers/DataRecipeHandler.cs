@@ -40,7 +40,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             //Populate import session with all identities to be imported
             foreach (var identity in elementDictionary.Keys) {
-                importContentSession.Set(identity.ToString(), elementDictionary[identity].Name.LocalName);
+                importContentSession.Set(identity, elementDictionary[identity].Name.LocalName);
             }
 
             //Determine if the import is to be batched in multiple transactions
@@ -56,7 +56,9 @@ namespace Orchard.Recipes.RecipeHandlers {
                     //so that dependencies can be managed within the same transaction
                     var nextIdentity = importContentSession.GetNextInBatch();
                     while (nextIdentity != null) {
-                        _orchardServices.ContentManager.Import(elementDictionary[nextIdentity], importContentSession);
+                        _orchardServices.ContentManager.Import(
+                            elementDictionary[nextIdentity.ToString()],
+                            importContentSession);
                         nextIdentity = importContentSession.GetNextInBatch();
                     }
 
@@ -77,13 +79,14 @@ namespace Orchard.Recipes.RecipeHandlers {
             recipeContext.Executed = true;
         }
 
-        private Dictionary<ContentIdentity, XElement> CreateElementDictionary(XElement step) {
-            var elementDictionary = new Dictionary<ContentIdentity, XElement>(new ContentIdentity.ContentIdentityEqualityComparer());
+        private Dictionary<string, XElement> CreateElementDictionary(XElement step) {
+            var elementDictionary = new Dictionary<string, XElement>();
             foreach (var element in step.Elements()) {
-                if (element.Attribute("Id") == null || string.IsNullOrEmpty(element.Attribute("Id").Value))
+                if (element.Attribute("Id") == null
+                    || string.IsNullOrEmpty(element.Attribute("Id").Value))
                     continue;
 
-                var identity = new ContentIdentity(element.Attribute("Id").Value);
+                var identity = new ContentIdentity(element.Attribute("Id").Value).ToString();
                 elementDictionary[identity] = element;
             }
             return elementDictionary;

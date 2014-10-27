@@ -10,7 +10,7 @@ namespace Orchard.Layouts.Helpers {
         private static readonly string[] _elementStateBlackList = {"ElementState", "__RequestVerificationToken"};
 
         public static string Get(this StateDictionary state, string key, string defaultValue = null) {
-            return state == null ? null : state.ContainsKey(key) ? state[key] : null;
+            return state != null ? state.ContainsKey(key) ? state[key] : defaultValue : defaultValue;
         }
 
         public static string Serialize(this StateDictionary state) {

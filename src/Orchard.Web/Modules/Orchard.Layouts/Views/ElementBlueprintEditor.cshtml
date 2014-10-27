@@ -4,7 +4,7 @@
     Style.Include("element-editor.css");
     Script.Require("jQuery");
     Script.Include("element-editor.js");
-    Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));   
+    Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
 }
 @Html.ValidationSummary()
 @Html.HiddenFor(m => m.TypeName)

@@ -43,5 +43,10 @@ namespace Orchard.OutputCache.Models {
             get { return this.Retrieve(x => x.IgnoreNoCache); }
             set { this.Store(x => x.IgnoreNoCache, value); }
         }
+
+        public bool CacheAuthenticatedRequests {
+            get { return this.Retrieve(x => x.CacheAuthenticatedRequests); }
+            set { this.Store(x => x.CacheAuthenticatedRequests, value); }
+        }
     }
 }

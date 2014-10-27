@@ -111,6 +111,10 @@
       <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
       <Name>Orchard.Layouts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
       <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
       <Name>Orchard.Taxonomies</Name>
@@ -137,8 +141,14 @@
     <Compile Include="Controllers\SubmissionAdminController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FormController.cs" />
+    <Compile Include="Drivers\EmailFieldDriver.cs" />
+    <Compile Include="Drivers\PasswordFieldDriver.cs" />
+    <Compile Include="Drivers\QueryDriver.cs" />
     <Compile Include="Drivers\ValidationMessageDriver.cs" />
     <Compile Include="Drivers\ValidationSummaryDriver.cs" />
+    <Compile Include="Elements\EmailField.cs" />
+    <Compile Include="Elements\PasswordField.cs" />
+    <Compile Include="Elements\Query.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
@@ -146,15 +156,30 @@
     <Compile Include="Handlers\FormSubmissionCoordinator.cs" />
     <Compile Include="Helpers\FormControllerExtensions.cs" />
     <Compile Include="Helpers\FieldValidatorsExtensions.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Services\ElementValidator.cs" />
     <Compile Include="Services\FormEventHandlerBase.cs" />
+    <Compile Include="Services\IValidationRuleFactory.cs" />
     <Compile Include="Services\ITempDataAccessor.cs" />
     <Compile Include="Services\IElementValidator.cs" />
-    <Compile Include="Services\Models\RegisterClientValidationAttributesEventContext.cs" />
+    <Compile Include="Services\Models\RegisterClientValidationAttributesContext.cs" />
+    <Compile Include="Services\Models\ValidationContext.cs" />
+    <Compile Include="Services\ValidationRuleFactory.cs" />
+    <Compile Include="Services\IValidationRule.cs" />
+    <Compile Include="ValidationRules\Mandatory.cs" />
+    <Compile Include="ValidationRules\Compare.cs" />
+    <Compile Include="ValidationRules\EmailAddress.cs" />
+    <Compile Include="ValidationRules\RegularExpression.cs" />
+    <Compile Include="ValidationRules\StringLength.cs" />
     <Compile Include="Validators\CheckBoxValidator.cs" />
+    <Compile Include="ValidationRules\Required.cs" />
+    <Compile Include="Services\ValidationRule.cs" />
+    <Compile Include="Validators\EmailFieldValidator.cs" />
     <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
+    <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
+    <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
-    <Compile Include="Validators\Settings\ValidationSettingsBase.cs" />
+    <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
     <Compile Include="Drivers\ValidationElementDriver.cs" />
     <Compile Include="Drivers\BindingsElementDriver.cs" />
@@ -181,7 +206,7 @@
     <Compile Include="ImportExport\FormsExportStep.cs" />
     <Compile Include="ImportExport\FormsExportHandler.cs" />
     <Compile Include="ImportExport\FormsImportHandler.cs" />
-    <Compile Include="Services\IFormEventHandler.cs" />
+    <Compile Include="Services\IDynamicFormEventHandler.cs" />
     <Compile Include="Services\Models\FieldValidatorDescriptor.cs" />
     <Compile Include="Services\Models\FormSubmittedEventContext.cs" />
     <Compile Include="Services\Models\FormValidatedEventContext.cs" />
@@ -190,6 +215,7 @@
     <Compile Include="Services\Models\ContentFieldBindingDescriptor.cs" />
     <Compile Include="Services\Models\ContentPartBindingDescriptor.cs" />
     <Compile Include="Services\Models\ValidateInputContext.cs" />
+    <Compile Include="Validators\PasswordFieldValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
@@ -344,6 +370,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\FormElement.Wrapper.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-PasswordField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-PasswordField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-SelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-CheckList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-MultiSelectList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-Query-RadioList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-EmailField.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-EmailField.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

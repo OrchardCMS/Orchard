@@ -23,3 +23,7 @@
 .form-field-element {
     margin: 0.8em 0 0 0;
 }
+
+.form-field-element-enumeration select {
+    margin: 1.5em 0 0 0;
+}

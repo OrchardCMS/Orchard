@@ -10,7 +10,6 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.DynamicForms.Elements;
-using Orchard.DynamicForms.Handlers;
 using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Models;
 using Orchard.DynamicForms.Services.Models;
@@ -19,7 +18,7 @@ using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
-using Orchard.Mvc;
+using Orchard.Localization.Services;
 using Orchard.Services;
 
 namespace Orchard.DynamicForms.Services {
@@ -31,32 +30,37 @@ namespace Orchard.DynamicForms.Services {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IBindingManager _bindingManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IFormEventHandler _formEventHandler;
+        private readonly IDynamicFormEventHandler _formEventHandler;
         private readonly Lazy<IEnumerable<IElementValidator>> _validators;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
+        private readonly IOrchardServices _services;
+        private readonly ICultureAccessor _cultureAccessor;
 
         public FormService(
             ILayoutSerializer serializer, 
             IClock clock, 
             IRepository<Submission> submissionRepository, 
             IFormElementEventHandler elementHandlers, 
-            IContentManager contentManager, 
             IContentDefinitionManager contentDefinitionManager, 
             IBindingManager bindingManager, 
-            IHttpContextAccessor httpContextAccessor,
-            IFormEventHandler formEventHandler, 
-            Lazy<IEnumerable<IElementValidator>> validators) {
+            IDynamicFormEventHandler formEventHandler, 
+            Lazy<IEnumerable<IElementValidator>> validators,
+            IDateLocalizationServices dateLocalizationServices, 
+            IOrchardServices services, 
+            ICultureAccessor cultureAccessor) {
 
             _serializer = serializer;
             _clock = clock;
             _submissionRepository = submissionRepository;
             _elementHandlers = elementHandlers;
-            _contentManager = contentManager;
+            _contentManager = services.ContentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _bindingManager = bindingManager;
-            _httpContextAccessor = httpContextAccessor;
             _formEventHandler = formEventHandler;
             _validators = validators;
+            _dateLocalizationServices = dateLocalizationServices;
+            _services = services;
+            _cultureAccessor = cultureAccessor;
         }
 
         public Form FindForm(LayoutPart layoutPart, string formName = null) {
@@ -174,7 +178,7 @@ namespace Orchard.DynamicForms.Services {
             }
 
             // Collect any remaining form values not handled by any specific element.
-            var requestForm = _httpContextAccessor.Current().Request.Form;
+            var requestForm = _services.WorkContext.HttpContext.Request.Form;
             var blackList = new[] {"__RequestVerificationToken", "formName", "contentId"};
             foreach (var key in 
                 from string key in requestForm 
@@ -201,7 +205,7 @@ namespace Orchard.DynamicForms.Services {
             }
 
             dataTable.Columns.Add("Id");
-            dataTable.Columns.Add("CreatedUtc", typeof (DateTime));
+            dataTable.Columns.Add("Created");
             foreach (var columnName in columnNames) {
                 dataTable.Columns.Add(columnName);
             }
@@ -210,7 +214,7 @@ namespace Orchard.DynamicForms.Services {
                 var dataRow = dataTable.NewRow();
 
                 dataRow["Id"] = record.Item1.Id;
-                dataRow["CreatedUtc"] = record.Item1.CreatedUtc;
+                dataRow["Created"] = _dateLocalizationServices.ConvertToSiteTimeZone(record.Item1.CreatedUtc).ToString(_cultureAccessor.CurrentCulture);
                 foreach (var columnName in columnNames) {
                     var value = record.Item2[columnName];
                     dataRow[columnName] = value;
@@ -272,8 +276,8 @@ namespace Orchard.DynamicForms.Services {
             return _validators.Value.ToArray();
         }
 
-        public void RegisterClientValidationAttributes(RegisterClientValidationAttributesEventContext context) {
-            _elementHandlers.RegisterClientValidation(context);
+        public void RegisterClientValidationAttributes(FormElement element, RegisterClientValidationAttributesContext context) {
+            _elementHandlers.RegisterClientValidation(element, context);
         }
 
         private static void InvokePartBindings(

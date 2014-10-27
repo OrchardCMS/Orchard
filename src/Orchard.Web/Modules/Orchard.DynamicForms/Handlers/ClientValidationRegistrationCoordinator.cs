@@ -13,11 +13,11 @@ namespace Orchard.DynamicForms.Handlers {
             _formService = formService;
         }
 
-        void IFormElementEventHandler.RegisterClientValidation(RegisterClientValidationAttributesEventContext context) {
-            var validators = _formService.GetValidators(context.Element).ToArray();
+        void IFormElementEventHandler.RegisterClientValidation(FormElement element, RegisterClientValidationAttributesContext context) {
+            var validators = _formService.GetValidators(element).ToArray();
 
             foreach (var validator in validators) {
-                validator.RegisterClientValidation(context);
+                validator.RegisterClientValidation(element, context);
             }
         }
 
@@ -27,10 +27,16 @@ namespace Orchard.DynamicForms.Handlers {
             if (element == null)
                 return;
 
-            var registrationContext = new RegisterClientValidationAttributesEventContext { Element = element };
+            var registrationContext = new RegisterClientValidationAttributesContext {
+                FieldName = element.Name
+            };
 
             if (element.Form.EnableClientValidation == true) {    
-                _formService.RegisterClientValidationAttributes(registrationContext);
+                _formService.RegisterClientValidationAttributes(element, registrationContext);
+
+                if (registrationContext.ClientAttributes.Any()) {
+                    registrationContext.ClientAttributes["data-val"] = "true";
+                }
             }
 
             context.ElementShape.ClientValidationAttributes = registrationContext.ClientAttributes;

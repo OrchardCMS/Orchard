@@ -1,6 +1,5 @@
 using System;
 using Orchard.Layouts.Framework.Drivers;
-using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Handlers {
@@ -35,8 +34,6 @@ namespace Orchard.Layouts.Handlers {
 
                     context.EditorResult.Add(editor);
                 }
-
-                context.EditorResult.State = context.EditorResult.State.Combine(editorResult.State, true);
             }
         }
     }
