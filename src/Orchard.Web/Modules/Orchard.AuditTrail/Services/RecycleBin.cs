@@ -72,11 +72,11 @@ namespace Orchard.AuditTrail.Services {
                 "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord, Orchard.Core.Common.Models.CommonPartVersionRecord CommonPartVersionRecord " +
                 "where CommonPartVersionRecord.Id = ContentItemVersionRecord.Id ";
 
-            var filter = contentItemIds != null ? "WHERE ContentItemVersionRecord.ContentItemRecord.Id IN (:ids) " : default(String);
+            var filter = contentItemIds != null ? "and ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default(String);
 
             var group = 
                 "group by ContentItemVersionRecord.ContentItemRecord.Id " +
-                "having max(cast(Latest as Int32)) = 0 and max(cast(Published AS Int32)) = 0 " +
+                "having max(cast(Latest as Int32)) = 0 and max(cast(Published as Int32)) = 0 " +
                 "order by max(CommonPartVersionRecord.ModifiedUtc) desc ";
 
             var hql = String.Concat(select, filter, group);
