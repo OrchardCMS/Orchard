@@ -1,7 +1,7 @@
 ﻿using Orchard.UI.Navigation;
 
-namespace Orchard.AuditTrail {
-    public class AdminMenu : Component, INavigationProvider {
+namespace Orchard.AuditTrail.Menus {
+    public class AuditTrailAdminMenu : Component, INavigationProvider {
         
         public string MenuName { get { return "admin"; } }
 
@@ -12,9 +12,6 @@ namespace Orchard.AuditTrail {
                     .Permission(Permissions.ManageAuditTrailSettings)
                     .Add(T("History"), "1", history => history
                         .Action("Index", "Admin", new { area = "Orchard.AuditTrail" })
-                        .LocalNav())
-                    .Add(T("Recycle Bin"), "2", history => history
-                        .Action("Index", "RecycleBin", new { area = "Orchard.AuditTrail" })
                         .LocalNav()));
         }
     }

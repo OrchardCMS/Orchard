@@ -6,8 +6,10 @@ using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.AuditTrail.Services {
+    [OrchardFeature("Orchard.AuditTrail.RecycleBin")]
     public class RecycleBin : IRecycleBin {
         private readonly ISessionLocator _sessionLocator;
         private readonly IContentManager _contentManager;

@@ -7,6 +7,7 @@ using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -16,6 +17,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.AuditTrail.Controllers {
+    [OrchardFeature("Orchard.AuditTrail.RecycleBin")]
     [Admin]
     public class RecycleBinController : Controller {
         private readonly IAuthorizer _authorizer;

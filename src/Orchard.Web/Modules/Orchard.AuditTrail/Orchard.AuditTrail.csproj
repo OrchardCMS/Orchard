@@ -187,7 +187,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Menus\AuditTrailAdminMenu.cs" />
+    <Compile Include="Menus\RecycleBinAdminMenu.cs" />
     <Compile Include="ViewModels\RecycleBinCommand.cs" />
     <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
