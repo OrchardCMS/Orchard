@@ -21,7 +21,8 @@
                 <select name="RecycleBinCommand">
                     <option></option>
                     <option value="@RecycleBinCommand.Restore" data-unsafe-action="@T("Are you sure you want to restore the selected items?")" @if(Model.RecycleBinCommand == RecycleBinCommand.Restore){<text>selected="selected"</text>}>@T("Restore")</option>
-                    <option value="@RecycleBinCommand.Destroy" data-unsafe-action='["@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you really absolutely sure you want to do this?")", "@T("Are you sure? You will not be able to restore permanenly deleted items. You should seriously consider making a DB backup first. This is your last chance to back out my friend. Are you sure you wish to proceed?")"]' @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>
+                    @**TODO: Decide wether or not to allow users to permanently delete items. Commented out for now.*@
+                    @*<option value="@RecycleBinCommand.Destroy" data-unsafe-action="@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you sure you want to do this?")" @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>*@
                 </select>
             </div>
             <div class="filter-control-group">

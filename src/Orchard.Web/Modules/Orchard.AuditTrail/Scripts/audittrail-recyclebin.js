@@ -3,17 +3,12 @@
     var executeSelectedAction = function(e, form) {
         var actionList = form.find("[name=\"RecycleBinCommand\"]");
         var selectedAction = actionList.find("option:selected");
-        var prompts = selectedAction.data("unsafe-action");
+        var prompt = selectedAction.data("unsafe-action");
 
-        if (prompts) {
-            if (!Array.isArray(prompts))
-                prompts = [prompts];
-
-            for (var i = 0; i < prompts.length; i++) {
-                if (!confirm(prompts[i])) {
-                    e.preventDefault();
-                    return;
-                }
+        if (prompt) {
+            if (!confirm(prompt)) {
+                e.preventDefault();
+                return;
             }
         }
     };
