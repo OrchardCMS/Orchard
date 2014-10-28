@@ -15,20 +15,18 @@
 <div id="recycle-bin">
     @Html.ValidationSummary()
     @using (Html.BeginFormAntiForgeryPost()) {
-        <section class="recycle-bin-filter-section">
-            <div class="filter-control-group">
-                <label>@T("Actions:")</label>
-                <select name="RecycleBinCommand">
-                    <option></option>
-                    <option value="@RecycleBinCommand.Restore" data-unsafe-action="@T("Are you sure you want to restore the selected items?")" @if(Model.RecycleBinCommand == RecycleBinCommand.Restore){<text>selected="selected"</text>}>@T("Restore")</option>
-                    @**TODO: Decide wether or not to allow users to permanently delete items. Commented out for now.*@
-                    @*<option value="@RecycleBinCommand.Destroy" data-unsafe-action="@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you sure you want to do this?")" @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>*@
-                </select>
-            </div>
-            <div class="filter-control-group">
-                <button type="submit" class="filter-apply-button" name="ExecuteActionButton" value="ExecuteActionButton">@T("Execute")</button>
-            </div>
-        </section>
+        <fieldset class="bulk-actions">
+            <label>@T("Actions:")</label>
+            <select name="RecycleBinCommand">
+                <option></option>
+                <option value="@RecycleBinCommand.Restore" data-unsafe-action="@T("Are you sure you want to restore the selected items?")" @if(Model.RecycleBinCommand == RecycleBinCommand.Restore){<text>selected="selected"</text>}>@T("Restore")</option>
+                @**TODO: Decide wether or not to allow users to permanently delete items. Commented out for now.*@
+                @*<option value="@RecycleBinCommand.Destroy" data-unsafe-action="@T("WARNING: This will PERMANENTLY delete the selected content items, including related content part records, never to be seen again. Are you sure you want to do this?")" @if (Model.RecycleBinCommand == RecycleBinCommand.Destroy) { <text> selected="selected" </text>  }>@T("Remove Permanently ☠")</option>*@
+            </select>
+        </fieldset>
+        <div class="bulk-actions">
+            <button type="submit" class="filter-apply-button" name="ExecuteActionButton" value="ExecuteActionButton">@T("Execute")</button>
+        </div>
         <section class="recycle-bin-list-section">
             @if (!contentItems.Any()) {
                 <p class="info">@T("There are no records to display.")</p>
