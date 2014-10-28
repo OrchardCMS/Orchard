@@ -293,6 +293,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Services\AuditTrailManager.cs" />
     <Compile Include="Services\IAuditTrailManager.cs" />
+    <Compile Include="ViewModels\RemovedContentItemViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Detail.cshtml" />

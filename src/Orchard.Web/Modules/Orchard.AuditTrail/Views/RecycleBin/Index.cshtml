@@ -46,13 +46,16 @@
                         @{
                             var index = 0;
                             foreach (var contentItem in contentItems) {
-                                var isSelected = Model.SelectedContentItems.Contains(contentItem.Id);
+                                var isSelected = Model.SelectedContentItems.Where(x => x.Id == contentItem.Id && x.Selected).Select(x => x.Id).Any();
                                 var commonPart = contentItem.As<CommonPart>();
                                 var removedText = commonPart != null ? dateLocalizationServices.ConvertToLocalizedString(commonPart.VersionModifiedUtc) : T("-").Text;
                                 var contentDisplayText = Html.ItemDisplayText(contentItem).ToString();
                                 var contentDisplayUrl = Url.Action("Detail", "Content", new {id = contentItem.Id, version = contentItem.Version, area = "Orchard.AuditTrail"});
                                 <tr>
-                                    <td><input type="checkbox" name="SelectedContentItems[@index]" value="@contentItem.Id" @if(isSelected){<text>checked="checked"</text>} /></td>
+                                    <td>
+                                        <input type="hidden" name="SelectedContentItems[@index].Id" value="@contentItem.Id" />
+                                        <input type="checkbox" name="SelectedContentItems[@index].Selected" value="true" @if(isSelected){<text>checked="checked"</text>} />
+                                    </td>
                                     <td class="content-column"><a href="@contentDisplayUrl">@contentDisplayText</a></td>
                                     <td class="content-removed-column">@removedText</td>
                                     <td class="actions-column">

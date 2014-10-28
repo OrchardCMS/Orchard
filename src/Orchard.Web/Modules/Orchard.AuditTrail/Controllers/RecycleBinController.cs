@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Web.Mvc;
-using System.Web.UI;
 using Orchard.AuditTrail.Helpers;
 using Orchard.AuditTrail.Services;
 using Orchard.AuditTrail.Services.Models;
 using Orchard.AuditTrail.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -17,7 +14,6 @@ using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.AuditTrail.Controllers {
     [Admin]
@@ -81,12 +77,13 @@ namespace Orchard.AuditTrail.Controllers {
             }
 
             if (ModelState.IsValid) {
+                var selectedContentItemIds = viewModel.SelectedContentItems.Where(x => x.Selected).Select(x => x.Id).ToArray();
                 switch (viewModel.RecycleBinCommand) {
                     case RecycleBinCommand.Restore:
-                        RestoreContentItems(viewModel.SelectedContentItems);
+                        RestoreContentItems(selectedContentItemIds);
                         break;
                     case RecycleBinCommand.Destroy:
-                        DeleteContentItems(viewModel.SelectedContentItems);
+                        DeleteContentItems(selectedContentItemIds);
                         break;
                 }
             }
