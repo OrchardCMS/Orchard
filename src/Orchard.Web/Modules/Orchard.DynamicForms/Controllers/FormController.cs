@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Services;
 using Orchard.Layouts.Services;
@@ -9,7 +10,7 @@ using Orchard.UI.Notify;
 using IController = Orchard.DynamicForms.Services.IController;
 
 namespace Orchard.DynamicForms.Controllers {
-    public class FormController : Controller, IController {
+    public class FormController : Controller, IController, IUpdateModel {
         private readonly INotifier _notifier;
         private readonly ILayoutManager _layoutManager;
         private readonly IFormService _formService;
@@ -40,7 +41,7 @@ namespace Orchard.DynamicForms.Controllers {
                 return Redirect(urlReferrer);
             }
 
-            var values = _formService.SubmitForm(form, ValueProvider, ModelState);
+            var values = _formService.SubmitForm(form, ValueProvider, ModelState, this);
             this.TransferFormSubmission(form, values);
 
             if(Response.IsRequestBeingRedirected)
@@ -50,5 +51,12 @@ namespace Orchard.DynamicForms.Controllers {
             return Redirect(redirectUrl);
         }
 
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.Text);
+        }
     }
 }

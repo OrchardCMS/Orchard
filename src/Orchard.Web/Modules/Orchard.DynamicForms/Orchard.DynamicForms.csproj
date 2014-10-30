@@ -99,6 +99,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.AntiSpam\Orchard.AntiSpam.csproj">
+      <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
+      <Name>Orchard.AntiSpam</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.AuditTrail\Orchard.AuditTrail.csproj">
       <Project>{3dd574cd-9c5d-4a45-85e1-ebba64c22b5f}</Project>
       <Name>Orchard.AuditTrail</Name>
@@ -144,11 +148,13 @@
     <Compile Include="Drivers\EmailFieldDriver.cs" />
     <Compile Include="Drivers\PasswordFieldDriver.cs" />
     <Compile Include="Drivers\QueryDriver.cs" />
+    <Compile Include="Drivers\ReCaptchaDriver.cs" />
     <Compile Include="Drivers\ValidationMessageDriver.cs" />
     <Compile Include="Drivers\ValidationSummaryDriver.cs" />
     <Compile Include="Elements\EmailField.cs" />
     <Compile Include="Elements\PasswordField.cs" />
     <Compile Include="Elements\Query.cs" />
+    <Compile Include="Elements\ReCaptcha.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
@@ -178,6 +184,7 @@
     <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
     <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
+    <Compile Include="Validators\Settings\ReCaptchaValidationSettings.cs" />
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
@@ -216,6 +223,7 @@
     <Compile Include="Services\Models\ContentPartBindingDescriptor.cs" />
     <Compile Include="Services\Models\ValidateInputContext.cs" />
     <Compile Include="Validators\PasswordFieldValidator.cs" />
+    <Compile Include="Validators\ReCaptchaValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
@@ -394,6 +402,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-Form-EmailField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-ReCaptcha.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-ReCaptcha.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
