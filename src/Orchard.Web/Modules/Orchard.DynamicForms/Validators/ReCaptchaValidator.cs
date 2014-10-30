@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Orchard.AntiSpam.Models;
-using Orchard.AntiSpam.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Helpers;
@@ -30,16 +29,17 @@ namespace Orchard.DynamicForms.Validators {
                 return;
             }
 
-            var submitViewModel = new ReCaptchaPartSubmitViewModel();
             var httpContext = workContext.HttpContext;
+            var response = context.Values["recaptcha_response_field"];
+            var challenge = context.Values["recaptcha_challenge_field"];
 
-            if (context.Updater.TryUpdateModel(submitViewModel, null, null, null)) {
+            if (context.ModelState.IsValid) {
                 try {
                     var result = ExecuteValidateRequest(
                         settings.PrivateKey,
                         httpContext.Request.ServerVariables["REMOTE_ADDR"],
-                        submitViewModel.recaptcha_challenge_field,
-                        submitViewModel.recaptcha_response_field
+                        challenge,
+                        response
                         );
 
                     if (!HandleValidateResponse(httpContext, result)) {
