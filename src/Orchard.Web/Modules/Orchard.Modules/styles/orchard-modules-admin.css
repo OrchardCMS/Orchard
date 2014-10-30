@@ -20,6 +20,11 @@ html.dyn #main ul.features button { display:none; }
     position:relative;
     width:31.95%;
 }
+
+.features.summary-view .missingDependencies{
+    line-height:1em;
+}
+
 .features.summary-view .feature:nth-child(3n+1),
 .features.summary-view .feature:nth-child(3n+2),
 .features.summary-view .feature:nth-child(3n) {
