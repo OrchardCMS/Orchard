@@ -137,7 +137,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\FormSubmittedActivity.cs" />
+    <Compile Include="Activities\DynamicFormSubmittedActivity.cs" />
     <Compile Include="Activities\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
     <Compile Include="Bindings\BodyPartBindings.cs" />
@@ -158,6 +158,7 @@
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
+    <Compile Include="Services\Models\FormSubmissionTokenContext.cs" />
     <Compile Include="Handlers\ValidatorsCoordinator.cs" />
     <Compile Include="Handlers\FormSubmissionCoordinator.cs" />
     <Compile Include="Helpers\FormControllerExtensions.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Services\Models\ValidationContext.cs" />
     <Compile Include="Services\ValidationRuleFactory.cs" />
     <Compile Include="Services\IValidationRule.cs" />
+    <Compile Include="Tokens\FormTokens.cs" />
     <Compile Include="ValidationRules\Mandatory.cs" />
     <Compile Include="ValidationRules\Compare.cs" />
     <Compile Include="ValidationRules\EmailAddress.cs" />

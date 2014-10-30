@@ -44,8 +44,13 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Trigger workflow event.
             var formValuesDictionary = values.ToTokenDictionary();
-            _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, contentItem, () => new Dictionary<string, object>(formValuesDictionary) {
-                {"DynamicForm", form}
+            var formTokenContext = new FormSubmissionTokenContext {
+                Form = form,
+                ModelState = context.ModelState,
+                PostedValues = values
+            };
+            _workflowManager.TriggerEvent(DynamicFormSubmittedActivity.EventName, contentItem, () => new Dictionary<string, object>(formValuesDictionary) {
+                {"FormSubmission", formTokenContext},
             });
         }
     }
