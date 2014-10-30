@@ -1,6 +1,15 @@
 ﻿(function ($) {
+    var closedDialogs = [];
+
+    var disposeClosedDialogs = function() {
+        $.each(closedDialogs, function() {
+            this.dispose();
+        });
+    };
+
     var Dialog = function (templateElementSelector) {
         var self = this;
+        
         this.template = $(templateElementSelector);
         this.root = null;
         this.element = null;
@@ -8,6 +17,8 @@
         this.view = null;
         this.isVisible = false;
         this._title = this.template.find(".title").html();
+
+        disposeClosedDialogs();
 
         this.title = function (value) {
             var titleElement = this.root.find(".title");
@@ -37,8 +48,9 @@
 
             $(document).on("keyup", onKeyUp);
 
-            this.frame.element.on("load", function(e) {
-                updateDialog(self.frame.getDocument());
+            this.frame.element.on("load", function (e) {
+                if(self.isVisible)
+                    updateDialog(self.frame.getDocument());
             });
         }
 
@@ -47,14 +59,11 @@
 
             if (this.root) {
                 $(window).off("resize", resizeIFrame);
-                this.root.remove();
+                this.root.hide();
             }
             
-            this.root = null;
-            this.element = null;
-            this.frame = null;
-
             $(document).off("keyup", onKeyUp);
+            closedDialogs.push(self);
         };
 
         this.load = function (url, data, method) {
@@ -72,6 +81,11 @@
                 resizeIFrame();
                 centerPosition();
             });
+        };
+
+        this.dispose = function() {
+            if (this.root)
+                this.root.remove();
         };
 
         this.setHtml = function(html) {
