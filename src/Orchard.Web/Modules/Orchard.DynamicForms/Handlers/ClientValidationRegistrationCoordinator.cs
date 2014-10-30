@@ -22,6 +22,9 @@ namespace Orchard.DynamicForms.Handlers {
         }
 
         void IElementEventHandler.Displaying(ElementDisplayContext context) {
+            if (context.DisplayType == "Design")
+                return;
+
             var element = context.Element as FormElement;
 
             if (element == null)
