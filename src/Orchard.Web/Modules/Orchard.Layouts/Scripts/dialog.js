@@ -1,15 +1,17 @@
 ﻿(function ($) {
     var closedDialogs = [];
 
-    var disposeClosedDialogs = function() {
-        $.each(closedDialogs, function() {
+    var disposeClosedDialogs = function () {
+        $.each(closedDialogs, function () {
             this.dispose();
         });
+
+        closedDialogs = [];
     };
 
     var Dialog = function (templateElementSelector) {
         var self = this;
-        
+
         this.template = $(templateElementSelector);
         this.root = null;
         this.element = null;
@@ -49,7 +51,7 @@
             $(document).on("keyup", onKeyUp);
 
             this.frame.element.on("load", function (e) {
-                if(self.isVisible)
+                if (self.isVisible)
                     updateDialog(self.frame.getDocument());
             });
         }
@@ -59,9 +61,19 @@
 
             if (this.root) {
                 $(window).off("resize", resizeIFrame);
-                this.root.hide();
+
+                // Hiding is tricky - TinyMCE throws an exception in FF when we hide the root element.
+                // To avoid this, move the dialog out of view. The next time a Dialog is instantiated, it will be disposed of.
+                this.overlay.css({
+                    position: "absolute",
+                    left: "0",
+                    top: "0",
+                    width: "0",
+                    height: "0",
+                    overflow: "hidden"
+                });
             }
-            
+
             $(document).off("keyup", onKeyUp);
             closedDialogs.push(self);
         };
@@ -83,12 +95,12 @@
             });
         };
 
-        this.dispose = function() {
+        this.dispose = function () {
             if (this.root)
                 this.root.remove();
         };
 
-        this.setHtml = function(html) {
+        this.setHtml = function (html) {
             this.frame.element.hide();
             this.view.show();
             this.view.html(html);
@@ -126,7 +138,7 @@
             self.view.width($(window).width() * .75);
         };
 
-        var onKeyUp = function(e) {
+        var onKeyUp = function (e) {
             var esc = 27;
             if (e.keyCode == esc) {
                 self.close();
@@ -165,7 +177,7 @@
             });
         };
 
-        var updateDialog = function(scope) {
+        var updateDialog = function (scope) {
             //var document = self.frame.getDocument();
             var dialogSettings = scope.find(".dialog-settings");
             var title = dialogSettings.find(".title");
