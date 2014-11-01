@@ -85,7 +85,7 @@ namespace Orchard.AuditTrail.Services {
             var query = session.CreateQuery(hql);
 
             if (contentItemIds != null) {
-                query.SetParameterList("ids", contentItemIds);
+                query.SetParameterList("ids", contentItemIds.ToArray());
             }
             
             return query;
