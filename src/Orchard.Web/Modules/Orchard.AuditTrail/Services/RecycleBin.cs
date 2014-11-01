@@ -39,13 +39,13 @@ namespace Orchard.AuditTrail.Services {
             };
         }
 
-        public IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds) {
-            return GetMany<ContentItem>(contentItemIds);
+        public IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds, QueryHints hints = null) {
+            return GetMany<ContentItem>(contentItemIds, hints);
         }
 
-        public IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds) where T : class, IContent {
+        public IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds, QueryHints hints = null) where T : class, IContent {
             var query = GetDeletedVersionsQuery(contentItemIds);
-            return LoadContentItems<T>(query);
+            return LoadContentItems<T>(query, hints);
         }
 
         public ContentItem Restore(ContentItem contentItem) {
@@ -58,10 +58,10 @@ namespace Orchard.AuditTrail.Services {
             return _contentManager.Restore(contentItem, VersionOptions.Restore(lastVersion.Number, publish: false));
         }
 
-        private IEnumerable<T> LoadContentItems<T>(IQuery query) where T: class, IContent {
+        private IEnumerable<T> LoadContentItems<T>(IQuery query, QueryHints hints = null) where T: class, IContent {
             var rows = query.List<object>();
             var versionIds = rows.Cast<object[]>().Select(x => (int)x[0]);
-            return _contentManager.GetManyByVersionId<T>(versionIds, QueryHints.Empty);
+            return _contentManager.GetManyByVersionId<T>(versionIds, hints ?? QueryHints.Empty);
         }
 
         private IQuery GetDeletedVersionsQuery(IEnumerable<int> contentItemIds = null) {

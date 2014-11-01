@@ -17,12 +17,12 @@ namespace Orchard.AuditTrail.Services {
         /// <summary>
         /// Returns the specified list of content items from the recycle bin.
         /// </summary>
-        IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds);
+        IEnumerable<ContentItem> GetMany(IEnumerable<int> contentItemIds, QueryHints hints = null);
 
         /// <summary>
         /// Returns the specified list of content items from the recycle bin.
         /// </summary>
-        IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds) where T : class, IContent;
+        IEnumerable<T> GetMany<T>(IEnumerable<int> contentItemIds, QueryHints hints = null) where T : class, IContent;
 
         /// <summary>
         /// Restores the specified content item.
