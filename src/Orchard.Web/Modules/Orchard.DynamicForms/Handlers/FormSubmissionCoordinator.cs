@@ -5,6 +5,8 @@ using Orchard.DynamicForms.Activities;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Helpers;
+using Orchard.Localization;
+using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
 
@@ -12,10 +14,12 @@ namespace Orchard.DynamicForms.Handlers {
     public class FormSubmissionCoordinator : FormEventHandlerBase {
         private readonly INotifier _notifier;
         private readonly IWorkflowManager _workflowManager;
+        private readonly ITokenizer _tokenizer;
 
-        public FormSubmissionCoordinator(INotifier notifier, IWorkflowManager workflowManager) {
+        public FormSubmissionCoordinator(INotifier notifier, IWorkflowManager workflowManager, ITokenizer tokenizer) {
             _notifier = notifier;
             _workflowManager = workflowManager;
+            _tokenizer = tokenizer;
         }
 
         public override void Validated(FormValidatedEventContext context) {
@@ -40,7 +44,7 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Notifiy.
             if (!String.IsNullOrWhiteSpace(form.Notification))
-                _notifier.Information(T(form.Notification));
+                _notifier.Information(T(_tokenizer.Replace(T(form.Notification).Text, null)));
 
             // Trigger workflow event.
             var formValuesDictionary = values.ToTokenDictionary();
