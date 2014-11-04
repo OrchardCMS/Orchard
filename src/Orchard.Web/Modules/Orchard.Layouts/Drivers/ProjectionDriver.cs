@@ -94,11 +94,6 @@ namespace Orchard.Layouts.Drivers {
             }
 
             var pager = new Pager(_services.WorkContext.CurrentSite, page, pageSize);
-            var pagerShape = _services.New.Pager(pager)
-                .Element(element)
-                .PagerId(pageKey);
-
-            context.ElementShape.Pager = pagerShape;
 
             // TODO: Investigate this further and see if it makes sense to implement for a Projection Element.
             //// Generates a link to the RSS feed for this term.
@@ -118,9 +113,13 @@ namespace Orchard.Layouts.Drivers {
 
             // Create pager shape.
             if (element.DisplayPager) {
-                var contentItemsCount = _projectionManager.GetCount(query.Id) - element.Skip;
-                contentItemsCount = Math.Max(0, contentItemsCount);
-                pagerShape.TotalItemCount(contentItemsCount);
+                var contentItemsCount = Math.Max(0, _projectionManager.GetCount(query.Id) - element.Skip);
+                var pagerShape = _services.New.Pager(pager)
+                    .Element(element)
+                    .PagerId(pageKey)
+                    .TotalItemCount(contentItemsCount);
+
+                context.ElementShape.Pager = pagerShape;
             }
 
             // Renders in a standard List shape if no specific layout could be found.
