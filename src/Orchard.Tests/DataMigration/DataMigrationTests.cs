@@ -237,6 +237,24 @@ namespace Orchard.Tests.DataMigration {
                 return 3;
             }
         }
+
+        public class FailingDataMigration : DataMigrationImpl {
+            public override Feature Feature {
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature4", Extension = new ExtensionDescriptor { Id = "Module4" } } }; }
+            }
+
+            public int Create() {
+                SchemaBuilder.CreateTable("FOO", table =>
+                    table.Column("Id", DbType.Int32, column =>
+                        column.PrimaryKey().Identity()));
+
+                return 1;
+            }
+
+            public int UpdateFrom1() {
+                throw new Exception();
+            }
+        }
         
         public class DataMigrationSimpleBuilder : DataMigrationImpl {
             public override Feature Feature {
@@ -471,9 +489,28 @@ Features:
         Description: Feature
 ");
 
-            _dataMigrationManager.Update("Feature1");
+            try {_dataMigrationManager.Update("Feature1"); } 
+            catch (OrchardException) {}
+            
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
+
             _dataMigrationManager.Update("Feature1");
+        }
+
+        [Test]
+        public void FailingDataMigrationShouldThrowOrchardException() {
+            Init(new[] { typeof(FailingDataMigration) });
+
+            _folders.Manifests.Add("Module4", @"
+Name: Module4
+Version: 0.1
+OrchardVersion: 1
+Features:
+    Feature4: 
+        Description: Feature
+");
+
+            Assert.Throws<OrchardException>(() => _dataMigrationManager.Update("Feature4"));
         }
     }
 }

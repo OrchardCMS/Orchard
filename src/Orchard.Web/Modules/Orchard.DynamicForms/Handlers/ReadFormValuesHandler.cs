@@ -19,11 +19,9 @@ namespace Orchard.DynamicForms.Handlers {
             if (items == null)
                 return;
 
-            foreach (var item in items) {
-                context.Output[key] = item;
-            }
-
-            element.RuntimeValue = String.Join(",", items);
+            var combinedValues = String.Join(",", items);
+            context.Output[key] = combinedValues;
+            element.RuntimeValue = combinedValues;
         }
     }
 }

@@ -1,13 +1,10 @@
 using System.Collections.Generic;
-using Orchard.DynamicForms.Elements;
 
 namespace Orchard.DynamicForms.Services.Models {
-    public class RegisterClientValidationAttributesEventContext {
-        public RegisterClientValidationAttributesEventContext() {
+    public class RegisterClientValidationAttributesContext : ValidationContext {
+        public RegisterClientValidationAttributesContext() {
             ClientAttributes = new Dictionary<string, string>();
         }
         public IDictionary<string, string> ClientAttributes { get; set; }
-        public FormElement Element { get; set; }
-
     }
 }

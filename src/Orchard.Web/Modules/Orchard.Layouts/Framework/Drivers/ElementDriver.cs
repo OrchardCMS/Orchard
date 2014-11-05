@@ -54,7 +54,6 @@ namespace Orchard.Layouts.Framework.Drivers {
             }
 
             var result = new EditorResult {
-                State = context.Element.State,
                 Editors = editorShapes.ToList()
             };
 

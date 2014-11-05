@@ -14,5 +14,6 @@ namespace Orchard.OutputCache.ViewModels {
         public string VaryQueryStringParameters { get; set; }
         public string VaryRequestHeaders { get; set; }
         public bool IgnoreNoCache { get; set; }
+        public bool CacheAuthenticatedRequests { get; set; }
     }
 }

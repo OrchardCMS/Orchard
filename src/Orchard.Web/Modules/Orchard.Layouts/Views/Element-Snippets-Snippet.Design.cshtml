@@ -1,0 +1,8 @@
+﻿@using Orchard.Layouts.Elements
+@{
+    var element = (Snippet) Model.Element;
+}
+<div class="element-snippet">
+    <strong>@T("Snippet -")</strong>
+    @element.Descriptor.DisplayText
+</div>

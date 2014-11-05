@@ -112,7 +112,7 @@ namespace Orchard.Layouts.Controllers {
                 EditorResult = editorResult,
                 TypeName = blueprint.BaseElementTypeName,
                 DisplayText = descriptor.DisplayText,
-                ElementState = editorResult.State.Serialize(),
+                ElementState = element.State.Serialize(),
                 Tabs = editorResult.CollectTabs().ToArray(),
                 BaseElement = element
             };
@@ -134,7 +134,7 @@ namespace Orchard.Layouts.Controllers {
                 EditorResult = editorResult,
                 TypeName = model.TypeName,
                 DisplayText = descriptor.DisplayText,
-                ElementState = editorResult.State.Serialize(),
+                ElementState = element.State.Serialize(),
                 Tabs = editorResult.CollectTabs().ToArray(),
                 BaseElement = element
             };

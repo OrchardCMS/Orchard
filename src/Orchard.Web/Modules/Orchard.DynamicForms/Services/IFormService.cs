@@ -15,7 +15,7 @@ namespace Orchard.DynamicForms.Services {
         Form FindForm(LayoutPart layoutPart, string formName = null);
         IEnumerable<FormElement> GetFormElements(Form form);
         IEnumerable<string> GetFormElementNames(Form form);
-        NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState);
+        NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater);
         Submission CreateSubmission(string formName, NameValueCollection values);
         Submission CreateSubmission(Submission submission);
         Submission GetSubmission(int id);
@@ -30,6 +30,6 @@ namespace Orchard.DynamicForms.Services {
         IEnumerable<IElementValidator> GetValidators(FormElement element);
         IEnumerable<IElementValidator> GetValidators(Type elementType);
         IEnumerable<IElementValidator> GetValidators();
-        void RegisterClientValidationAttributes(RegisterClientValidationAttributesEventContext context);
+        void RegisterClientValidationAttributes(FormElement element, RegisterClientValidationAttributesContext context);
     }
 }

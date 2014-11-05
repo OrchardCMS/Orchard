@@ -1,0 +1,14 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@using Orchard.Layouts.Settings
+@{
+    var element = (Query)Model.Element;
+    var commonSettings = element.State.GetModel<CommonElementSettings>();
+    var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var name = String.IsNullOrWhiteSpace(element.Name) ? "MultiSelectList1" : element.Name;
+    var options = (IEnumerable<SelectListItem>)Model.Options;
+}
+@if (element.ShowLabel) {
+    <label for="@commonSettings.Id">@Html.Raw(element.Label)</label>
+}
+@Html.ListBox(name, options, attributes)

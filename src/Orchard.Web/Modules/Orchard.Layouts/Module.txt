@@ -22,3 +22,8 @@ Features:
         Description: Adds a Markdown element to the system.
         Category: Layout
         Dependencies: Orchard.Layouts, Markdown
+    Orchard.Layouts.Projections:
+        Name: Projection Element
+        Description: Adds a Projection element to the system.
+        Category: Layout
+        Dependencies: Orchard.Layouts, Orchard.Projections

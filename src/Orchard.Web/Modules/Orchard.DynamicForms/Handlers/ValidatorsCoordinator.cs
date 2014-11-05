@@ -17,12 +17,13 @@ namespace Orchard.DynamicForms.Handlers {
 
                 foreach (var validator in validators) {
                     var validateContext = new ValidateInputContext {
-                        Element = element,
                         ModelState = modelState,
                         AttemptedValue = attemptedValue,
-                        FieldName = element.Name
+                        FieldName = element.Name,
+                        Values = values,
+                        Updater = context.Updater
                     };
-                    validator.Validate(validateContext);
+                    validator.Validate(element, validateContext);
                 }
             }
         }
