@@ -362,6 +362,9 @@
   <ItemGroup>
     <Content Include="Views\Element-Content-Projection.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-ContentPart.Design.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

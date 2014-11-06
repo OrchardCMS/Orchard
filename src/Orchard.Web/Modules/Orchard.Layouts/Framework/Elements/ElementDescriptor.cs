@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Localization;
 
@@ -11,6 +12,7 @@ namespace Orchard.Layouts.Framework.Elements {
             Category = category;
             CreatingDisplay = context => {};
             Displaying = context => {};
+            StateBag = new Dictionary<string, object>();
         }
 
         public LocalizedString DisplayText { get; set; }
@@ -21,5 +23,6 @@ namespace Orchard.Layouts.Framework.Elements {
         public Action<ElementDisplayContext> Displaying { get; set; }
         public bool IsSystemElement { get; set; }
         public bool EnableEditorDialog { get; set; }
+        public IDictionary<string, object> StateBag { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace Orchard.Layouts.Services {
 
         public ElementBlueprint CreateBlueprint(IElement baseElement, string elementTypeName, string elementDisplayName, string elementCategory) {
             var blueprint = new ElementBlueprint {
-                BaseElementTypeName = baseElement.Type,
+                BaseElementTypeName = baseElement.Descriptor.TypeName,
                 ElementTypeName = elementTypeName,
                 ElementDisplayName = elementDisplayName,
                 ElementCategory = elementCategory
