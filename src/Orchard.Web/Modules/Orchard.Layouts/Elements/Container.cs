@@ -7,6 +7,5 @@ namespace Orchard.Layouts.Elements {
             Elements = new List<IElement>();
         }
         public IList<IElement> Elements { get; set; }
-        public int Index { get; set; }
     }
 }
