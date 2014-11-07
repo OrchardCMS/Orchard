@@ -41,6 +41,9 @@ namespace Orchard.Layouts.Providers {
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
                         Displaying = displayContext => Displaying(displayContext, baseElement),
+                        StateBag = new Dictionary<string, object> {
+                            {"ElementTypeName", baseElement.Descriptor.TypeName}
+                        }
                     };
 
             var descriptors = query.ToArray();
