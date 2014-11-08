@@ -4,7 +4,7 @@
 @using Orchard.MediaLibrary.Models
 @{
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
-    var vectorGraphicPart = (VectorGraphicPart)Model.ImagePart;
+    var vectorGraphicPart = (VectorGraphicPart)Model.VectorGraphicPart;
     var mediaPart = vectorGraphicPart != null ? vectorGraphicPart.As<MediaPart>() : default(MediaPart);
 
     if (mediaPart != null) {
