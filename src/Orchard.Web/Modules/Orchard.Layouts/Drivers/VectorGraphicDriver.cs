@@ -17,12 +17,18 @@ namespace Orchard.Layouts.Drivers {
 
         protected override EditorResult OnBuildEditor(VectorGraphic element, ElementEditorContext context) {
 
-            var viewModel = new VectorGraphicEditorViewModel();
+            var viewModel = new VectorGraphicEditorViewModel {
+                VectorGraphicId = element.MediaId.ToString(),
+                Width = element.Width,
+                Height = element.Height
+            };
             var editor = context.ShapeFactory.EditorTemplate(TemplateName: "Elements.VectorGraphic", Model: viewModel);
 
             if (context.Updater != null) {
                 context.Updater.TryUpdateModel(viewModel, context.Prefix, null, null);
                 element.MediaId = ParseVectorGraphicId(viewModel.VectorGraphicId);
+                element.Width = viewModel.Width;
+                element.Height = viewModel.Height;
             }
 
             var mediaId = element.MediaId;
@@ -41,8 +47,8 @@ namespace Orchard.Layouts.Drivers {
             return _contentManager.Get<VectorGraphicPart>(id, VersionOptions.Published);
         }
 
-        private static int? ParseVectorGraphicId(string imageId) {
-            return ContentItem.Deserialize(imageId).FirstOrDefault();
+        private static int? ParseVectorGraphicId(string vectorGraphicId) {
+            return ContentItem.Deserialize(vectorGraphicId).FirstOrDefault();
         }
     }
 }

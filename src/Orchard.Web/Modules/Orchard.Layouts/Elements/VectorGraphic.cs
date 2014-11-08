@@ -15,5 +15,15 @@ namespace Orchard.Layouts.Elements {
             get { return State.Get("MediaId").ToInt32(); }
             set { State["MediaId"] = value.ToString(); }
         }
+
+        public int? Width {
+            get { return State.Get("Width").ToInt32(); }
+            set { State["Width"] = value.ToString(); }
+        }
+
+        public int? Height {
+            get { return State.Get("Height").ToInt32(); }
+            set { State["Height"] = value.ToString(); }
+        }
     }
 }
