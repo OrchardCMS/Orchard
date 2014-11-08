@@ -24,8 +24,9 @@ namespace Orchard.Templates.Services {
 
         public RazorTemplateProcessor(
             IRazorCompiler compiler,
-            HttpContextBase httpContextBase, 
+            HttpContextBase httpContextBase,
             IWorkContextAccessor wca) {
+
             _compiler = compiler;
             _httpContextBase = httpContextBase;
             _wca = wca;
@@ -69,7 +70,19 @@ namespace Orchard.Templates.Services {
                     }
                     else {
 
-                        obj.ViewData = new ViewDataDictionary(model);
+                        // Setup a fake view context in order to support razor syntax inside of HTML attributes,
+                        // for instance: <a href="@WorkContext.CurrentSite.BaseUrl">Homepage</a>.
+                        var viewData = new ViewDataDictionary(model);
+                        obj.ViewContext = new ViewContext(
+                            new ControllerContext(
+                                _httpContextBase.Request.RequestContext,
+                                new StubController()),
+                                new StubView(),
+                                viewData,
+                                new TempDataDictionary(),
+                                htmlWriter);
+
+                        obj.ViewData = viewData;
                         obj.WebPageContext = new WebPageContext(_httpContextBase, obj as WebPageRenderingBase, model);
                         obj.WorkContext = _wca.GetContext();
                     }
@@ -81,6 +94,11 @@ namespace Orchard.Templates.Services {
 
             return buffer.ToString();
         }
-    }
 
+        private class StubController : Controller { }
+
+        private class StubView : IView {
+            public void Render(ViewContext viewContext, TextWriter writer) { }
+        }
+    }
 }
