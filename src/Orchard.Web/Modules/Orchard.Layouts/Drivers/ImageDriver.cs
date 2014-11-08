@@ -22,17 +22,17 @@ namespace Orchard.Layouts.Drivers {
 
             if (context.Updater != null) {
                 context.Updater.TryUpdateModel(viewModel, context.Prefix, null, null);
-                element.ImageId = ParseImageId(viewModel.ImageId);
+                element.MediaId = ParseImageId(viewModel.ImageId);
             }
 
-            var imageId = element.ImageId;
+            var imageId = element.MediaId;
             viewModel.CurrentImage = imageId != null ? GetImage(imageId.Value) : default(ImagePart);
 
             return Editor(context, editor);
         }
 
         protected override void OnDisplaying(Image element, ElementDisplayContext context) {
-            var imageId = element.ImageId;
+            var imageId = element.MediaId;
             var image = imageId != null ? GetImage(imageId.Value) : default(ImagePart);
             context.ElementShape.ImagePart = image;
         }

@@ -1,0 +1,18 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Helpers
+@using Orchard.MediaLibrary.Models
+@{
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
+    var vectorGraphicPart = (VectorGraphicPart)Model.ImagePart;
+    var mediaPart = vectorGraphicPart != null ? vectorGraphicPart.As<MediaPart>() : default(MediaPart);
+
+    if (mediaPart != null) {
+        tagBuilder.Attributes["src"] = Url.Content(mediaPart.MediaUrl);
+        tagBuilder.Attributes["alt"] = mediaPart.AlternateText;
+    }
+    else {
+        tagBuilder.Attributes["alt"] = T("Image not found").Text;
+    }
+}
+@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))

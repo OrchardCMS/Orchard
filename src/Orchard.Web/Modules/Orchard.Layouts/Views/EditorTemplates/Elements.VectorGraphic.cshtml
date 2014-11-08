@@ -1,0 +1,22 @@
+﻿@using Orchard.ContentManagement
+@model Orchard.Layouts.ViewModels.VectorGraphicEditorViewModel
+@{
+    var contentItems = new List<ContentItem>();
+
+    if (Model.CurrentVectorGraphic != null) {
+        contentItems.Add(Model.CurrentVectorGraphic.ContentItem);
+    }
+}
+<fieldset>
+    <div>
+        @Display.MediaLibraryPicker(
+            Required: false,
+            Multiple: false,
+            DisplayName: T("Vector Graphic").Text,
+            FieldName: Html.FieldNameFor(m => m.VectorGraphicId),
+            ContentItems: contentItems.ToArray(),
+            Hint: "",
+            PromptOnNavigate: false,
+            ShowSaveWarning: false)
+    </div>
+</fieldset>
