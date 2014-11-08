@@ -104,6 +104,9 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\VectorGraphicPartDriver.cs" />
+    <Compile Include="Factories\VectorGraphicFactory.cs" />
+    <Compile Include="Models\VectorGraphicPart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
     <Compile Include="MediaFileName\MediaFileNameDriver.cs" />
     <Compile Include="MediaFileName\MediaFileNameEditorSettings.cs" />
@@ -359,6 +362,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\Media.Edit.FileName.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorGraphic.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorGraphic.Metadata.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorGraphic.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\VectorGraphic.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Media-VectorGraphic.Thumbnail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

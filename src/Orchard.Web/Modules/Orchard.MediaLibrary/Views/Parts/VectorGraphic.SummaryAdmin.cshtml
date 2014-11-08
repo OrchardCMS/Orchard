@@ -1,0 +1,9 @@
+﻿@using Orchard.ContentManagement
+@using Orchard.MediaLibrary.Models
+@{
+    VectorGraphicPart vectorGraphicPart = Model.ContentPart;
+    var mediaPart = ((ContentItem) Model.ContentItem).As<MediaPart>();
+}
+
+@* Use a 200x200 profile in order to reuse the general thumbnail *@
+<img width="120" height="120" alt="@mediaPart.AlternateText" src="@mediaPart.MediaUrl" />
