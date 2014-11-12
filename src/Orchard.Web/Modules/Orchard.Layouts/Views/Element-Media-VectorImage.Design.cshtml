@@ -4,13 +4,13 @@
 @using Orchard.Layouts.Helpers
 @using Orchard.MediaLibrary.Models
 @{
-    var element = (VectorGraphic)Model.Element;
+    var element = (VectorImage)Model.Element;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
-    var vectorGraphicPart = (VectorGraphicPart)Model.VectorGraphicPart;
-    var mediaPart = vectorGraphicPart != null ? vectorGraphicPart.As<MediaPart>() : default(MediaPart);
+    var vectorImagePart = (VectorImagePart)Model.VectorImagePart;
+    var mediaPart = vectorImagePart != null ? vectorImagePart.As<MediaPart>() : default(MediaPart);
 
     if (mediaPart != null) {
-        tagBuilder.Attributes["src"] = Url.Content(mediaPart.MediaUrl);
+        tagBuilder.Attributes["src"] = mediaPart.MediaUrl;
         tagBuilder.Attributes["alt"] = mediaPart.AlternateText;
     }
     else {
@@ -25,4 +25,7 @@
         tagBuilder.Attributes["height"] = element.Height.ToString();
     }
 }
-@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+<div class="element-component">
+    <div>@T("Vector Image")</div>
+    @Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+</div>

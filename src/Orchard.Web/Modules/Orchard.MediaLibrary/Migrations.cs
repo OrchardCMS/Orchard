@@ -30,9 +30,9 @@ namespace Orchard.MediaLibrary {
                 .WithDescription("Provides common metadata for an Image Media.")
             );
 
-            ContentDefinitionManager.AlterPartDefinition("VectorGraphicPart", part => part
+            ContentDefinitionManager.AlterPartDefinition("VectorImagePart", part => part
                 .Attachable()
-                .WithDescription("Provides common metadata for a Vector Graphic Media.")
+                .WithDescription("Provides common metadata for a Vector Image Media.")
             );
 
             ContentDefinitionManager.AlterPartDefinition("VideoPart", part => part
@@ -66,14 +66,14 @@ namespace Orchard.MediaLibrary {
                 .WithPart("TitlePart")
             );
 
-            ContentDefinitionManager.AlterTypeDefinition("VectorGraphic", td => td
-                .DisplayedAs("Vector Graphic")
+            ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
+                .DisplayedAs("Vector Image")
                 .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .WithPart("IdentityPart")
                 .WithPart("CommonPart")
                 .WithPart("MediaPart")
-                .WithPart("VectorGraphicPart")
+                .WithPart("VectorImagePart")
                 .WithPart("TitlePart")
             );
 
@@ -211,19 +211,19 @@ namespace Orchard.MediaLibrary {
         }
 
         public int UpdateFrom6() {
-            ContentDefinitionManager.AlterPartDefinition("VectorGraphicPart", part => part
+            ContentDefinitionManager.AlterPartDefinition("VectorImagePart", part => part
                 .Attachable()
-                .WithDescription("Provides common metadata for a Vector Graphic Media.")
+                .WithDescription("Provides common metadata for a Vector Image Media.")
             );
 
-            ContentDefinitionManager.AlterTypeDefinition("VectorGraphic", td => td
-                .DisplayedAs("Vector Graphic")
+            ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
+                .DisplayedAs("Vector Image")
                 .WithSetting("Stereotype", "Media")
                 .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
                 .WithPart("IdentityPart")
                 .WithPart("CommonPart")
                 .WithPart("MediaPart")
-                .WithPart("VectorGraphicPart")
+                .WithPart("VectorImagePart")
                 .WithPart("TitlePart")
             );
 

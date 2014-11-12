@@ -2,7 +2,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Elements {
-    public class VectorGraphic : Element {
+    public class VectorImage : Element {
         public override string Category {
             get { return "Media"; }
         }

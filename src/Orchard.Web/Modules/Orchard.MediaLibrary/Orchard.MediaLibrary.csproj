@@ -104,9 +104,9 @@
     </Content>
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
-    <Compile Include="Drivers\VectorGraphicPartDriver.cs" />
-    <Compile Include="Factories\VectorGraphicFactory.cs" />
-    <Compile Include="Models\VectorGraphicPart.cs" />
+    <Compile Include="Drivers\VectorImagePartDriver.cs" />
+    <Compile Include="Factories\VectorImageFactory.cs" />
+    <Compile Include="Models\VectorImagePart.cs" />
     <Compile Include="Models\IMediaFolder.cs" />
     <Compile Include="MediaFileName\MediaFileNameDriver.cs" />
     <Compile Include="MediaFileName\MediaFileNameEditorSettings.cs" />
@@ -364,19 +364,19 @@
     <Content Include="Views\Parts\Media.Edit.FileName.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\VectorGraphic.cshtml" />
+    <Content Include="Views\Parts\VectorImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\VectorGraphic.Metadata.cshtml" />
+    <Content Include="Views\Parts\VectorImage.Metadata.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\VectorGraphic.Summary.cshtml" />
+    <Content Include="Views\Parts\VectorImage.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\VectorGraphic.SummaryAdmin.cshtml" />
+    <Content Include="Views\Parts\VectorImage.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Media-VectorGraphic.Thumbnail.cshtml" />
+    <Content Include="Views\Media-VectorImage.Thumbnail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

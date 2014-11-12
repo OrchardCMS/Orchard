@@ -214,11 +214,11 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
-    <Compile Include="Drivers\VectorGraphicDriver.cs" />
+    <Compile Include="Drivers\VectorImageDriver.cs" />
     <Compile Include="Drivers\ProjectionDriver.cs" />
     <Compile Include="Drivers\ImageDriver.cs" />
     <Compile Include="Drivers\ParagraphDriver.cs" />
-    <Compile Include="Elements\VectorGraphic.cs" />
+    <Compile Include="Elements\VectorImage.cs" />
     <Compile Include="Elements\Image.cs" />
     <Compile Include="Elements\Paragraph.cs" />
     <Compile Include="Elements\Projection.cs" />
@@ -281,7 +281,7 @@
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
     <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
-    <Compile Include="ViewModels\VectorGraphicEditorViewModel.cs" />
+    <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
     <Compile Include="ViewModels\ParagraphEditorViewModel.cs" />
@@ -369,13 +369,13 @@
     <Content Include="Views\Element-ContentPart.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.VectorGraphic.cshtml" />
+    <Content Include="Views\EditorTemplates\Elements.VectorImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Element-Media-VectorGraphic.cshtml" />
+    <Content Include="Views\Element-Media-VectorImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Element-Media-VectorGraphic.Design.cshtml" />
+    <Content Include="Views\Element-Media-VectorImage.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
