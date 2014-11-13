@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -52,15 +53,19 @@ namespace Orchard.Mvc.Routes {
 
                 preloading.Add(routeDescriptor.Name, routeDescriptor.Route);
             }
-                
+
 
             using (_routeCollection.GetWriteLock()) {
                 // existing routes are removed while the collection is briefly inaccessable
                 _routeCollection
                     .OfType<HubRoute>()
                     .ForEach(x => x.ReleaseShell(_shellSettings));
-                
-                // new routes are added
+
+                // HACK: For inserting names in internal dictionary when inserting route to RouteCollection.
+                var routeCollectionType = typeof (RouteCollection);
+                var namedMap = (Dictionary<string, RouteBase>) routeCollectionType.GetField("_namedMap", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_routeCollection);
+
+            // new routes are added
                 foreach (var routeDescriptor in routesArray) {
                     // Loading session state information. 
                     var defaultSessionState = SessionStateBehavior.Default;
@@ -120,6 +125,11 @@ namespace Orchard.Mvc.Routes {
                         }
                         
                         _routeCollection.Insert(index, matchedHubRoute);
+
+                        // HACK: For inserting names in internal dictionary when inserting route to RouteCollection.
+                        if (!string.IsNullOrEmpty(matchedHubRoute.Name) && !namedMap.ContainsKey(matchedHubRoute.Name)) {
+                            namedMap[matchedHubRoute.Name] = matchedHubRoute;
+                        }
                     }
 
                     matchedHubRoute.Add(shellRoute, _shellSettings);
