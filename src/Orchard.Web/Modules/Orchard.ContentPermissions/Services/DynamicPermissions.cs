@@ -18,6 +18,9 @@ namespace Orchard.ContentPermissions.Services {
         private static readonly Permission DeleteOwnContent = new Permission { Description = "Delete {0}", Name = "DeleteOwn_{0}", ImpliedBy = new[] { DeleteContent, Orchard.Core.Contents.Permissions.DeleteOwnContent } };
         private static readonly Permission ViewContent = new Permission { Description = "View {0} by others", Name = "View_{0}", ImpliedBy = new[] { EditContent, Orchard.Core.Contents.Permissions.ViewContent } };
         private static readonly Permission ViewOwnContent = new Permission { Description = "View own {0}", Name = "ViewOwn_{0}", ImpliedBy = new[] { ViewContent, Orchard.Core.Contents.Permissions.ViewOwnContent } };
+        private static readonly Permission PreviewContent = new Permission { Description = "Preview {0} by others", Name = "Preview_{0}", ImpliedBy = new[] { EditContent, Orchard.Core.Contents.Permissions.PreviewContent } };
+        private static readonly Permission PreviewOwnContent = new Permission { Description = "Preview own {0}", Name = "PreviewOwn_{0}", ImpliedBy = new[] { PreviewContent, Orchard.Core.Contents.Permissions.PreviewOwnContent } };
+
 
         public static readonly Dictionary<string, Permission> PermissionTemplates = new Dictionary<string, Permission> {
             {Orchard.Core.Contents.Permissions.PublishContent.Name, PublishContent},
@@ -27,7 +30,9 @@ namespace Orchard.ContentPermissions.Services {
             {Orchard.Core.Contents.Permissions.DeleteContent.Name, DeleteContent},
             {Orchard.Core.Contents.Permissions.DeleteOwnContent.Name, DeleteOwnContent},
             {Orchard.Core.Contents.Permissions.ViewContent.Name, ViewContent},
-            {Orchard.Core.Contents.Permissions.ViewOwnContent.Name, ViewOwnContent}
+            {Orchard.Core.Contents.Permissions.ViewOwnContent.Name, ViewOwnContent},
+            {Orchard.Core.Contents.Permissions.PreviewContent.Name, PreviewContent},
+            {Orchard.Core.Contents.Permissions.PreviewOwnContent.Name, PreviewOwnContent}
         };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;

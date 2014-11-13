@@ -60,6 +60,9 @@ namespace Orchard.Core.Contents.Security {
                 return Permissions.DeleteOwnContent;
             if (permission.Name == Permissions.ViewContent.Name)
                 return Permissions.ViewOwnContent;
+            if (permission.Name == Permissions.PreviewContent.Name)
+                return Permissions.PreviewOwnContent;
+
             return null;
         }
 

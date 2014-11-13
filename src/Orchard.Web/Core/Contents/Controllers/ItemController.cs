@@ -57,11 +57,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot preview content"))) {
-                return new HttpUnauthorizedResult();
-            }
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot preview content"))) {
+            if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem, T("Cannot preview content"))) {
                 return new HttpUnauthorizedResult();
             }
 
