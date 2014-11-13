@@ -72,7 +72,7 @@ namespace Orchard.AuditTrail.Services {
                 "select max(ContentItemVersionRecord.Id), ContentItemVersionRecord.ContentItemRecord.Id, max(ContentItemVersionRecord.Number) " +
                 "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord ";
 
-            var filter = contentItemIds != null ? "and ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default(String);
+            var filter = contentItemIds != null ? "where ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default(String);
 
             var group =
                 "group by ContentItemVersionRecord.ContentItemRecord.Id " +
