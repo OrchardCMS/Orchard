@@ -27,7 +27,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         protected override void Created(CreateContentContext context) {
             // At this point the UpdateEditor hasn't been invoked on the content item yet,
             // so we don't have access to all of the information we might need (such as Title).
-            // We set a flag against we check in the Updated method (which is invoked when UpdateEditor is invoked).
+            // We set a flag which we will check in the Updated method (which is invoked when UpdateEditor is invoked).
             _contentItemCreated = true;
         }
 
@@ -117,9 +117,9 @@ namespace Orchard.AuditTrail.Providers.Content {
                 {"ContentId", content.Id},
                 {"ContentIdentity", metaData.Identity.ToString()},
                 {"ContentType", content.ContentItem.ContentType},
-                {"VersionId", content.ContentItem.VersionRecord.Id},
-                {"VersionNumber", content.ContentItem.VersionRecord.Number},
-                {"Published", content.ContentItem.VersionRecord.Published},
+                {"VersionId", content.ContentItem.Version},
+                {"VersionNumber", content.ContentItem.VersionRecord != null ? content.ContentItem.VersionRecord.Number : 0},
+                {"Published", content.ContentItem.VersionRecord != null && content.ContentItem.VersionRecord.Published},
                 {"Title", metaData.DisplayText}
             };
 

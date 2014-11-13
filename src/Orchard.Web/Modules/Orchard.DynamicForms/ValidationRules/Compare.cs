@@ -22,7 +22,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(ErrorMessage.WithDefault("{0} must match the value of {1}."), context.FieldName, TargetName);
+            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} must match the value of {1}.", context.FieldName, TargetName)), context));
         }
     }
 }

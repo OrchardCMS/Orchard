@@ -30,16 +30,13 @@
     using (Script.Foot()) {
         <script type="text/javascript">
             jQuery(function () {
-                // Adding a small delay to prevent certain third party scripts from throwing up when the window is destroyed.
-                setTimeout(function () {
-                    window.parent.currentDialog.trigger("command", {
-                        command: "@command",
-                        element: {
-                            typeName: "@Model.TypeName",
-                            state: "@Url.Encode(Model.ElementState)"
-                        }
-                    });
-                }, 50);
+                window.parent.currentDialog.trigger("command", {
+                    command: "@command",
+                    element: {
+                        typeName: "@Model.TypeName",
+                        state: "@Url.Encode(Model.ElementState)"
+                    }
+                });
             });
         </script>
     }

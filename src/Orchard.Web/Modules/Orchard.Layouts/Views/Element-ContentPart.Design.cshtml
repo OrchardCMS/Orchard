@@ -1,0 +1,14 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Helpers
+@{
+    var element = Model.Element;
+    var tagBuilder = TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
+}
+<div class="element-component">
+    <div>@element.Descriptor.DisplayText</div>
+</div>
+<div>
+    @tagBuilder.StartElement
+    @Display(Model.Content)
+    @tagBuilder.EndElement
+</div>

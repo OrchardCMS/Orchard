@@ -198,6 +198,10 @@
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
+      <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
+      <Name>Orchard.Projections</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{cde24a24-01d3-403c-84b9-37722e18dfb7}</Project>
       <Name>Orchard.Themes</Name>
@@ -210,10 +214,14 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
+    <Compile Include="Drivers\VectorImageDriver.cs" />
+    <Compile Include="Drivers\ProjectionDriver.cs" />
     <Compile Include="Drivers\ImageDriver.cs" />
     <Compile Include="Drivers\ParagraphDriver.cs" />
+    <Compile Include="Elements\VectorImage.cs" />
     <Compile Include="Elements\Image.cs" />
     <Compile Include="Elements\Paragraph.cs" />
+    <Compile Include="Elements\Projection.cs" />
     <Compile Include="Filters\ControllerAccessorFilter.cs" />
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
@@ -273,6 +281,7 @@
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
     <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
+    <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
     <Compile Include="ViewModels\ParagraphEditorViewModel.cs" />
@@ -352,6 +361,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-Snippets-Snippet.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Content-Projection.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-ContentPart.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.VectorImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Media-VectorImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Media-VectorImage.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,34 @@
+﻿@using Orchard.ContentManagement
+@model Orchard.Layouts.ViewModels.VectorImageEditorViewModel
+@{
+    var contentItems = new List<ContentItem>();
+
+    if (Model.CurrentVectorImage != null) {
+        contentItems.Add(Model.CurrentVectorImage.ContentItem);
+    }
+}
+<fieldset>
+    <div>
+        @Display.MediaLibraryPicker(
+            Required: false,
+            Multiple: false,
+            DisplayName: T("Vector Image").Text,
+            FieldName: Html.FieldNameFor(m => m.VectorImageId),
+            ContentItems: contentItems.ToArray(),
+            Hint: "",
+            PromptOnNavigate: false,
+            ShowSaveWarning: false)
+    </div>
+</fieldset>
+<fieldset>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Width, T("Width"))
+        @Html.TextBoxFor(m => m.Width, new { @class = "text medium" })
+        @Html.Hint(T("Optional. Specify the width of this element."))
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Height, T("Height"))
+        @Html.TextBoxFor(m => m.Height, new { @class = "text medium" })
+        @Html.Hint(T("Optional. Specify the height of this element."))
+    </div>
+</fieldset>

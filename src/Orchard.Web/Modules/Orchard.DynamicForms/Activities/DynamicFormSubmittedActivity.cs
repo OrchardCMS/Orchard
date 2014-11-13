@@ -7,7 +7,7 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.DynamicForms.Activities {
-    public class FormSubmittedActivity : Event {
+    public class DynamicFormSubmittedActivity : Event {
 
         public const string EventName = "DynamicFormSubmitted";
 
@@ -18,14 +18,14 @@ namespace Orchard.DynamicForms.Activities {
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var state = activityContext.GetState<string>("DynamicForms");
+            var state = activityContext.GetState<string>("FormSubmission");
 
             // "" means 'any'.
             if (String.IsNullOrEmpty(state)) {
                 return true;
             }
 
-            var form = workflowContext.Tokens["DynamicForm"] as Form;
+            var form = workflowContext.Tokens["FormSubmission"] as Form;
 
             if (form == null) {
                 return false;
