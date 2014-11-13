@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
@@ -19,7 +20,7 @@ namespace Orchard.Layouts.Drivers {
         protected override EditorResult OnBuildEditor(Text element, ElementEditorContext context) {
             var content = context.Content;
             var layoutPart = content.As<LayoutPart>();
-            var flavor = layoutPart != null ? layoutPart.GetFlavor() : LayoutPartSettings.FlavorDefaultDefault; // TODO: make this configurable.
+            var flavor = GetFlavor(layoutPart);
 
             var viewModel = new TextEditorViewModel {
                 Flavor = flavor,
@@ -38,10 +39,23 @@ namespace Orchard.Layouts.Drivers {
         protected override void OnDisplaying(Text element, ElementDisplayContext context) {
             var text = element.Content;
             var layoutPart = context.Content.As<LayoutPart>();
-            var flavor = layoutPart != null ? layoutPart.GetFlavor() : LayoutPartSettings.FlavorDefaultDefault; // TODO: provide a different way to configure flavor, so that an ElementWrapperWidget can control this setting as well.
+            var flavor = GetFlavor(layoutPart);
             var processedText = _htmlFilters.Aggregate(text, (t, filter) => filter.ProcessContent(t, flavor));
 
             context.ElementShape.ProcessedText = processedText;
+        }
+
+        protected override void OnIndexing(Text element, ElementIndexingContext context) {
+            var layoutPart = context.Layout.As<LayoutPart>();
+            var flavor = GetFlavor(layoutPart);
+
+            context.DocumentIndex
+                .Add("body", element.Content).RemoveTags().Analyze()
+                .Add("format", flavor).Store();
+        }
+
+        private static string GetFlavor(LayoutPart part) {
+            return part != null ? part.GetFlavor() : LayoutPartSettings.FlavorDefaultDefault; // TODO: make this configurable.
         }
     }
 }

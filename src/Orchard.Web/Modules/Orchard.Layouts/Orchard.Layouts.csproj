@@ -224,6 +224,8 @@
     <Compile Include="Elements\Projection.cs" />
     <Compile Include="Filters\ControllerAccessorFilter.cs" />
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
+    <Compile Include="Framework\Elements\ElementIndexingContext.cs" />
+    <Compile Include="Framework\Elements\LayoutIndexingContext.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />

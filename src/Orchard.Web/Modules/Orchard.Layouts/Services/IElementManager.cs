@@ -22,5 +22,6 @@ namespace Orchard.Layouts.Services {
         EditorResult UpdateEditor(ElementEditorContext context);
         void Saving(LayoutSavingContext context);
         void Removing(LayoutSavingContext context);
+        void Indexing(LayoutIndexingContext context);
     }
 }

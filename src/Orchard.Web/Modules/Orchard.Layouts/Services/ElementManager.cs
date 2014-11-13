@@ -145,7 +145,14 @@ namespace Orchard.Layouts.Services {
 
         public void Removing(LayoutSavingContext context) {
             var elementInstances = context.RemovedElements.Flatten();
-            InvokeDriver(elementInstances, (driver, elementInstance) => driver.ElementRemoving(new ElementRemovingContext(context) {
+            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Removing(new ElementRemovingContext(context) {
+                Element = elementInstance
+            }));
+        }
+
+        public void Indexing(LayoutIndexingContext context) {
+            var elementInstances =  context.Elements.Flatten();
+            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Indexing(new ElementIndexingContext(context) {
                 Element = elementInstance
             }));
         }

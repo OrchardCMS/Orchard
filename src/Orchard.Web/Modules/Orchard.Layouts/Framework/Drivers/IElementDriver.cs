@@ -8,6 +8,7 @@ namespace Orchard.Layouts.Framework.Drivers {
         EditorResult UpdateEditor(ElementEditorContext context);
         void Displaying(ElementDisplayContext context);
         void LayoutSaving(ElementSavingContext context);
-        void ElementRemoving(ElementRemovingContext context);
+        void Removing(ElementRemovingContext context);
+        void Indexing(ElementIndexingContext context);
     }
 }
