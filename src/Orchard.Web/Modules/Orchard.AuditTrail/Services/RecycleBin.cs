@@ -26,7 +26,7 @@ namespace Orchard.AuditTrail.Services {
         public IPageOfItems<T> List<T>(int page, int pageSize) where T: class, IContent {
             var query = GetDeletedVersionsQuery();
             var totalCount = query.List().Count;
-
+            
             query.SetFirstResult((page - 1) * pageSize);
             query.SetFetchSize(pageSize);
 
@@ -70,16 +70,13 @@ namespace Orchard.AuditTrail.Services {
             // Select only the highest versions where both Published and Latest are false.
             var select =
                 "select max(ContentItemVersionRecord.Id), ContentItemVersionRecord.ContentItemRecord.Id, max(ContentItemVersionRecord.Number) " +
-                "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord " +
-                "join ContentItemVersionRecord.ContentItemRecord ContentItemRecord, Orchard.Core.Common.Models.CommonPartVersionRecord CommonPartVersionRecord " +
-                "where CommonPartVersionRecord.Id = ContentItemVersionRecord.Id ";
+                "from Orchard.ContentManagement.Records.ContentItemVersionRecord ContentItemVersionRecord ";
 
             var filter = contentItemIds != null ? "and ContentItemVersionRecord.ContentItemRecord.Id in (:ids) " : default(String);
 
-            var group = 
+            var group =
                 "group by ContentItemVersionRecord.ContentItemRecord.Id " +
-                "having max(cast(Latest as Int32)) = 0 and max(cast(Published as Int32)) = 0 " +
-                "order by max(CommonPartVersionRecord.ModifiedUtc) desc ";
+                "having max(cast(Latest as Int32)) = 0 and max(cast(Published as Int32)) = 0 ";
 
             var hql = String.Concat(select, filter, group);
             var query = session.CreateQuery(hql);
