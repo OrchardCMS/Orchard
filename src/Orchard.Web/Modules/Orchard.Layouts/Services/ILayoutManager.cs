@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
 
@@ -36,5 +37,7 @@ namespace Orchard.Layouts.Services {
 
         IEnumerable<LayoutPart> GetTemplateClients(int templateId, VersionOptions versionOptions);
         IEnumerable<IElement> CreateDefaultLayout();
+        void Exporting(ExportLayoutContext context);
+        void Importing(ImportLayoutContext context);
     }
 }

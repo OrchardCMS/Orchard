@@ -12,5 +12,7 @@ namespace Orchard.Layouts.Framework.Drivers {
         void Removing(ElementRemovingContext context);
         void Indexing(ElementIndexingContext context);
         void BuildDocument(BuildElementDocumentContext context);
+        void Exporting(ExportElementContext context);
+        void Importing(ImportElementContext context);
     }
 }

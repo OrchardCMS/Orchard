@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Helpers;
@@ -47,6 +48,22 @@ namespace Orchard.Layouts.Services {
         public LayoutDocument BuildDocument(ILayoutAspect layout) {
             var elements = LoadElements(layout).Flatten().ToArray();
             return _elementManager.BuildDocument(layout, elements);
+        }
+
+        public void Exporting(ExportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.Exporting(elements, context);
+            context.Layout.LayoutState = _serializer.Serialize(elementTree);
+        }
+
+        public void Importing(ImportLayoutContext context) {
+            var elementTree = LoadElements(context.Layout).ToArray();
+            var elements = elementTree.Flatten().ToArray();
+
+            _elementManager.Importing(elements, context);
+            context.Layout.LayoutState = _serializer.Serialize(elementTree);
         }
 
         public dynamic RenderLayout(ILayoutAspect layout, string state = null, string displayType = null) {

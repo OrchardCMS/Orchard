@@ -25,5 +25,7 @@ namespace Orchard.Layouts.Services {
         void Removing(LayoutSavingContext context);
         void Indexing(LayoutIndexingContext context);
         LayoutDocument BuildDocument(ILayoutAspect layout, IEnumerable<IElement> elements);
+        void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context);
+        void Importing(IEnumerable<IElement> elements, ImportLayoutContext context);
     }
 }

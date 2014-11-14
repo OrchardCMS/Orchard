@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.ViewModels;
 using ContentItem = Orchard.Layouts.Elements.ContentItem;
 
@@ -44,6 +46,28 @@ namespace Orchard.Layouts.Drivers {
             var contentItemShapes = contentItems.Select(x => _contentManager.BuildDisplay(x, displayType)).ToArray();
 
             context.ElementShape.ContentItems = contentItemShapes;
+        }
+
+        protected override void OnExporting(MediaItem element, ExportElementContext context) {
+            var contentItems = GetContentItems(element.MediaItemIds).ToArray();
+
+            if (!contentItems.Any())
+                return;
+
+            var identities = contentItems.Select(x => _contentManager.GetItemMetadata(x).Identity.ToString()).ToArray();
+            context.ExportableState["ContentItems"] = String.Join(",", identities);
+        }
+
+        protected override void OnImporting(MediaItem element, ImportElementContext context) {
+            var contentItemIdentities = context.ExportableState.Get("ContentItems");
+
+            if (String.IsNullOrWhiteSpace(contentItemIdentities))
+                return;
+
+            var identities = contentItemIdentities.Split(',');
+            var contentItems = identities.Select(x => context.Session.GetItemFromSession(x)).Where(x => x != null);
+
+            element.MediaItemIds = contentItems.Select(x => x.Id);
         }
 
         protected IEnumerable<ContentManagement.ContentItem> GetContentItems(IEnumerable<int> ids) {

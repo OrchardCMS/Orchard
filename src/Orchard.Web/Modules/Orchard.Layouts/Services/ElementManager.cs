@@ -178,6 +178,29 @@ namespace Orchard.Layouts.Services {
             return document;
         }
 
+        public void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var exportElementContext = new ExportElementContext {
+                    Layout = context.Layout,
+                    Element = element
+                };
+                driver.Exporting(exportElementContext);
+                element.ExportableState = new StateDictionary(exportElementContext.ExportableState);
+            });
+        }
+
+        public void Importing(IEnumerable<IElement> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableState = element.ExportableState,
+                    Session = context.Session
+                };
+                driver.Importing(importElementContext);
+            });
+        }
+
         private IDictionary<string, Category> GetCategories() {
             var providers = _categoryProviders.Value;
             var categories = providers.SelectMany(x => x.GetCategories());

@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Layouts.Framework.Display;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Helpers;
@@ -79,6 +80,8 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
+            _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
+
             context.Element(part.PartDefinition.Name).SetElementValue("LayoutState", part.LayoutState);
 
             if (part.TemplateId != null) {
@@ -93,6 +96,10 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
             part.LayoutState = context.Data.Element(part.PartDefinition.Name).El("LayoutState");
+            _layoutManager.Importing(new ImportLayoutContext {
+                Layout = part,
+                Session = new ImportContentContextWrapper(context)
+            });
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 

@@ -33,7 +33,8 @@ namespace Orchard.Layouts.Services {
             element.Descriptor = descriptor;
             element.T = T;
             element.Index = args.Index;
-            element.State = args.ElementState ?? new StateDictionary();
+            element.State = args.State ?? new StateDictionary();
+            element.ExportableState = args.ExportableState ?? new StateDictionary();
 
             _elementEventHandler.Created(new ElementCreatedContext {
                 Element = element,

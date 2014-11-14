@@ -96,7 +96,7 @@ namespace Orchard.Layouts.Controllers {
             var describeContext = CreateDescribeContext(layoutId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
             var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary());
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
             var context = CreateEditorContext(describeContext.Content, element, elementState: state);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
@@ -124,7 +124,7 @@ namespace Orchard.Layouts.Controllers {
             var describeContext = CreateDescribeContext(layoutId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, typeName);
             var state = ElementStateHelper.Deserialize(elementState);
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
             var context = CreateEditorContext(describeContext.Content, element, elementState: state);
             var editorResult = _elementManager.BuildEditor(context);
 
@@ -147,7 +147,7 @@ namespace Orchard.Layouts.Controllers {
             var describeContext = CreateDescribeContext(layoutId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
             var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary(), removeNonExistingItems: true);
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
             var context = CreateEditorContext(describeContext.Content, element, state);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
