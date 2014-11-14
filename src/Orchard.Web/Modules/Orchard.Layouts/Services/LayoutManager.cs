@@ -44,6 +44,11 @@ namespace Orchard.Layouts.Services {
             return _serializer.Deserialize(layout.LayoutState, describeContext);
         }
 
+        public LayoutDocument BuildDocument(ILayoutAspect layout) {
+            var elements = LoadElements(layout).Flatten().ToArray();
+            return _elementManager.BuildDocument(layout, elements);
+        }
+
         public dynamic RenderLayout(ILayoutAspect layout, string state = null, string displayType = null) {
             var elements = _serializer.Deserialize(state ?? layout.LayoutState, new DescribeElementsContext { Content = layout });
             var layoutRoot = _elementDisplay.DisplayElements(elements, layout, displayType);

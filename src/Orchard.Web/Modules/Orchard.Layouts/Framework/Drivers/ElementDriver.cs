@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Framework.Drivers {
     public abstract class ElementDriver<TElement> : Component, IElementDriver where TElement: IElement {
@@ -33,6 +34,10 @@ namespace Orchard.Layouts.Framework.Drivers {
             OnIndexing((TElement)context.Element, context);
         }
 
+        public void BuildDocument(BuildElementDocumentContext context) {
+            OnBuildDocument((TElement)context.Element, context);
+        }
+
         protected virtual EditorResult OnBuildEditor(TElement element, ElementEditorContext context) {
             return null;
         }
@@ -51,6 +56,9 @@ namespace Orchard.Layouts.Framework.Drivers {
         }
 
         protected virtual void OnIndexing(TElement element, ElementIndexingContext context) {
+        }
+
+        protected virtual void OnBuildDocument(TElement element, BuildElementDocumentContext context) {
         }
 
         protected EditorResult Editor(ElementEditorContext context, params dynamic[] editorShapes) {

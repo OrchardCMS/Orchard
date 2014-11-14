@@ -6,6 +6,7 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
+using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Services {
     public class ElementManager : Component, IElementManager {
@@ -21,9 +22,9 @@ namespace Orchard.Layouts.Services {
             Lazy<IEnumerable<IElementHarvester>> elementHarvesters,
             ICacheManager cacheManager,
             Lazy<IEnumerable<IElementDriver>> drivers,
-            Lazy<IEnumerable<ICategoryProvider>> categoryProviders, 
-            IElementFactory factory, 
-            ISignals signals, 
+            Lazy<IEnumerable<ICategoryProvider>> categoryProviders,
+            IElementFactory factory,
+            ISignals signals,
             IElementEventHandler elementEventHandler) {
 
             _elementHarvesters = elementHarvesters;
@@ -151,10 +152,30 @@ namespace Orchard.Layouts.Services {
         }
 
         public void Indexing(LayoutIndexingContext context) {
-            var elementInstances =  context.Elements.Flatten();
+            var elementInstances = context.Elements.Flatten();
             InvokeDriver(elementInstances, (driver, elementInstance) => driver.Indexing(new ElementIndexingContext(context) {
                 Element = elementInstance
             }));
+        }
+
+        public LayoutDocument BuildDocument(ILayoutAspect layout, IEnumerable<IElement> elements) {
+            var document = new LayoutDocument();
+
+            InvokeDriver(elements, (driver, element) => {
+                var context = new BuildElementDocumentContext {
+                    Layout = layout,
+                    Element = element
+                };
+                driver.BuildDocument(context);
+
+                if (!String.IsNullOrWhiteSpace(context.HtmlContent))
+                    document.Elements.Add(new ElementDocument {
+                        Element = element,
+                        Content = context.HtmlContent
+                    });
+            });
+
+            return document;
         }
 
         private IDictionary<string, Category> GetCategories() {

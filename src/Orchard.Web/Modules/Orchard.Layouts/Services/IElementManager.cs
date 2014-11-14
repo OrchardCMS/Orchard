@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Services {
     public interface IElementManager : IDependency {
@@ -23,5 +24,6 @@ namespace Orchard.Layouts.Services {
         void Saving(LayoutSavingContext context);
         void Removing(LayoutSavingContext context);
         void Indexing(LayoutIndexingContext context);
+        LayoutDocument BuildDocument(ILayoutAspect layout, IEnumerable<IElement> elements);
     }
 }

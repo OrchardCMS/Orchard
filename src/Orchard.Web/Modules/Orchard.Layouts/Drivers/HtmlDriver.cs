@@ -1,6 +1,7 @@
 ﻿using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
 
 namespace Orchard.Layouts.Drivers {
@@ -24,6 +25,10 @@ namespace Orchard.Layouts.Drivers {
             context.DocumentIndex
                 .Add("body", element.Content).RemoveTags().Analyze()
                 .Add("format", "html").Store();
+        }
+
+        protected override void OnBuildDocument(Html element, BuildElementDocumentContext context) {
+            context.HtmlContent = element.Content;
         }
     }
 }

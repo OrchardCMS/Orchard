@@ -6,6 +6,7 @@ using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
+using Orchard.Layouts.Services;
 using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
 using Orchard.Services;
@@ -40,7 +41,7 @@ namespace Orchard.Layouts.Drivers {
             var text = element.Content;
             var layoutPart = context.Content.As<LayoutPart>();
             var flavor = GetFlavor(layoutPart);
-            var processedText = _htmlFilters.Aggregate(text, (t, filter) => filter.ProcessContent(t, flavor));
+            var processedText = ToHtml(text, flavor);
 
             context.ElementShape.ProcessedText = processedText;
         }
@@ -52,6 +53,17 @@ namespace Orchard.Layouts.Drivers {
             context.DocumentIndex
                 .Add("body", element.Content).RemoveTags().Analyze()
                 .Add("format", flavor).Store();
+        }
+
+        protected override void OnBuildDocument(Text element, BuildElementDocumentContext context) {
+            var layoutPart = context.Layout.As<LayoutPart>();
+            var flavor = GetFlavor(layoutPart);
+
+            context.HtmlContent = ToHtml(element.Content, flavor);
+        }
+
+        private string ToHtml(string content, string flavor) {
+            return _htmlFilters.Aggregate(content, (t, filter) => filter.ProcessContent(t, flavor));
         }
 
         private static string GetFlavor(LayoutPart part) {

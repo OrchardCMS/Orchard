@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Serialization;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
@@ -15,20 +16,31 @@ namespace Orchard.Layouts.Drivers {
         private readonly ILayoutSerializer _serializer;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
+        private readonly ILayoutManager _layoutManager;
 
-        public LayoutPartDriver(ILayoutSerializer serializer, IElementDisplay elementDisplay, IElementManager elementManager) {
+        public LayoutPartDriver(
+            ILayoutSerializer serializer, 
+            IElementDisplay elementDisplay, 
+            IElementManager elementManager, 
+            ILayoutManager layoutManager) {
+
             _serializer = serializer;
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
+            _layoutManager = layoutManager;
         }
 
         protected override DriverResult Display(LayoutPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Layout", () => {
-                var describeContext = new DescribeElementsContext { Content = part };
-                var instances = _serializer.Deserialize(part.LayoutState, describeContext);
-                var layoutRoot = _elementDisplay.DisplayElements(instances, part, displayType: displayType);
-                return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
-            });
+            return Combined(
+                ContentShape("Parts_Layout", () => {
+                    var elements = _layoutManager.LoadElements(part);
+                    var layoutRoot = _elementDisplay.DisplayElements(elements, part, displayType: displayType);
+                    return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
+                }),
+                ContentShape("Parts_Layout_Summary", () => {
+                    var document = _layoutManager.BuildDocument(part);
+                    return shapeHelper.Parts_Layout_Summary(Document: document);
+                }));
         }
 
         protected override DriverResult Editor(LayoutPart part, dynamic shapeHelper) {
