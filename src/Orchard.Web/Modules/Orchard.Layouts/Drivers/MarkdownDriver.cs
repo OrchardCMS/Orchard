@@ -2,7 +2,6 @@
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
 using MarkdownElement = Orchard.Layouts.Elements.Markdown;
 
@@ -32,10 +31,6 @@ namespace Orchard.Layouts.Drivers {
             context.DocumentIndex
                 .Add("body", element.Content).RemoveTags().Analyze()
                 .Add("format", "markdown").Store();
-        }
-
-        protected override void OnBuildDocument(MarkdownElement element, BuildElementDocumentContext context) {
-            context.HtmlContent = ToHtml(element.Content);
         }
 
         private string ToHtml(string markdown) {

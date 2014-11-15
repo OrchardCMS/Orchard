@@ -237,16 +237,13 @@
     <Compile Include="Helpers\EditorResultExtensions.cs" />
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
-    <Compile Include="Services\BuildElementDocumentContext.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />
     <Compile Include="Services\ElementCreatedContext.cs" />
     <Compile Include="Services\ElementCreatingContext.cs" />
-    <Compile Include="Services\ElementDocument.cs" />
     <Compile Include="Services\ElementEventContext.cs" />
     <Compile Include="Services\ElementEventHandlerBase.cs" />
     <Compile Include="Services\ICurrentControllerAccessor.cs" />
     <Compile Include="Services\IElementEventHandler.cs" />
-    <Compile Include="Services\LayoutDocument.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
     <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />

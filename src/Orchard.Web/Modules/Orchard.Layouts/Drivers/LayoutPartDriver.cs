@@ -3,11 +3,11 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.DisplayManagement;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Serialization;
-using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
@@ -18,17 +18,23 @@ namespace Orchard.Layouts.Drivers {
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
         private readonly ILayoutManager _layoutManager;
+        private readonly Lazy<IContentPartDisplay> _contentPartDisplay;
+        private readonly IShapeDisplay _shapeDisplay;
 
         public LayoutPartDriver(
             ILayoutSerializer serializer, 
             IElementDisplay elementDisplay, 
             IElementManager elementManager, 
-            ILayoutManager layoutManager) {
+            ILayoutManager layoutManager,
+            Lazy<IContentPartDisplay> contentPartDisplay, 
+            IShapeDisplay shapeDisplay) {
 
             _serializer = serializer;
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
             _layoutManager = layoutManager;
+            _contentPartDisplay = contentPartDisplay;
+            _shapeDisplay = shapeDisplay;
         }
 
         protected override DriverResult Display(LayoutPart part, string displayType, dynamic shapeHelper) {
@@ -39,8 +45,9 @@ namespace Orchard.Layouts.Drivers {
                     return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
                 }),
                 ContentShape("Parts_Layout_Summary", () => {
-                    var document = _layoutManager.BuildDocument(part);
-                    return shapeHelper.Parts_Layout_Summary(Document: document);
+                    var layoutShape = _contentPartDisplay.Value.BuildDisplay(part);
+                    var layoutHtml = _shapeDisplay.Display(layoutShape);
+                    return shapeHelper.Parts_Layout_Summary(LayoutHtml: layoutHtml);
                 }));
         }
 

@@ -6,7 +6,6 @@ using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
-using Orchard.Layouts.Services;
 using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
 using Orchard.Services;
@@ -53,13 +52,6 @@ namespace Orchard.Layouts.Drivers {
             context.DocumentIndex
                 .Add("body", element.Content).RemoveTags().Analyze()
                 .Add("format", flavor).Store();
-        }
-
-        protected override void OnBuildDocument(Text element, BuildElementDocumentContext context) {
-            var layoutPart = context.Layout.As<LayoutPart>();
-            var flavor = GetFlavor(layoutPart);
-
-            context.HtmlContent = ToHtml(element.Content, flavor);
         }
 
         private string ToHtml(string content, string flavor) {

@@ -9,7 +9,6 @@ namespace Orchard.Layouts.Services {
         IEnumerable<LayoutPart> GetTemplates();
         LayoutPart GetLayout(int id);
         IEnumerable<IElement> LoadElements(ILayoutAspect layout);
-        LayoutDocument BuildDocument(ILayoutAspect layout);
         dynamic RenderLayout(ILayoutAspect layout, string state = null, string displayType = null);
 
         /// <summary>

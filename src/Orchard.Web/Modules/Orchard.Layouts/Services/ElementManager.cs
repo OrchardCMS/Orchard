@@ -6,7 +6,6 @@ using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Harvesters;
 using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Services {
     public class ElementManager : Component, IElementManager {
@@ -156,26 +155,6 @@ namespace Orchard.Layouts.Services {
             InvokeDriver(elementInstances, (driver, elementInstance) => driver.Indexing(new ElementIndexingContext(context) {
                 Element = elementInstance
             }));
-        }
-
-        public LayoutDocument BuildDocument(ILayoutAspect layout, IEnumerable<IElement> elements) {
-            var document = new LayoutDocument();
-
-            InvokeDriver(elements, (driver, element) => {
-                var context = new BuildElementDocumentContext {
-                    Layout = layout,
-                    Element = element
-                };
-                driver.BuildDocument(context);
-
-                if (!String.IsNullOrWhiteSpace(context.HtmlContent))
-                    document.Elements.Add(new ElementDocument {
-                        Element = element,
-                        Content = context.HtmlContent
-                    });
-            });
-
-            return document;
         }
 
         public void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context) {

@@ -1,13 +1,10 @@
-﻿@*doing excerpt generation on the way out for now so we don't stick ourselves with needing to regen excerpts for existing data
-    also, doing this here, inline, until we have a pluggable processing model (both in and out)
-    also, ...this is ugly *@
-@using Orchard.ContentManagement
-@using Orchard.Layouts.Services
-@using Orchard.Utility.Extensions
+﻿@using Orchard.ContentManagement
+@*doing excerpt generation on the way out for now so we don't stick ourselves with needing to regen excerpts for existing data
+  also, doing this here, inline, until we have a pluggable processing model (both in and out)
+  also, ...this is ugly *@
 @{
     var contentItem = (ContentItem)Model.ContentItem;
-    var document = (LayoutDocument)Model.Document;
-    var documentText = document.ToString(separator: Environment.NewLine).RemoveTags();
-    var excerpt = new HtmlString(Html.Excerpt(documentText, 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>")); 
+    var layoutHtml = (string)Model.LayoutHtml;
+    var excerpt = new HtmlString(Html.Excerpt(layoutHtml, 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>"));
 }
 <p>@excerpt @Html.ItemDisplayLink(T("more").ToString(), contentItem)</p>

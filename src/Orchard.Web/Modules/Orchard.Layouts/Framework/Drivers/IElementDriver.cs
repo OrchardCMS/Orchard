@@ -1,6 +1,5 @@
 ﻿using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Framework.Drivers {
     public interface IElementDriver : IDependency {
@@ -11,7 +10,6 @@ namespace Orchard.Layouts.Framework.Drivers {
         void LayoutSaving(ElementSavingContext context);
         void Removing(ElementRemovingContext context);
         void Indexing(ElementIndexingContext context);
-        void BuildDocument(BuildElementDocumentContext context);
         void Exporting(ExportElementContext context);
         void Importing(ImportElementContext context);
     }

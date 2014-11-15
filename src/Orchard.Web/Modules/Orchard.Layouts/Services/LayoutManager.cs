@@ -45,11 +45,6 @@ namespace Orchard.Layouts.Services {
             return _serializer.Deserialize(layout.LayoutState, describeContext);
         }
 
-        public LayoutDocument BuildDocument(ILayoutAspect layout) {
-            var elements = LoadElements(layout).Flatten().ToArray();
-            return _elementManager.BuildDocument(layout, elements);
-        }
-
         public void Exporting(ExportLayoutContext context) {
             var elementTree = LoadElements(context.Layout).ToArray();
             var elements = elementTree.Flatten().ToArray();
