@@ -4,6 +4,7 @@ using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentPicker.Models;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Security;
@@ -124,20 +125,20 @@ Modules are created by other users of Orchard just like you so if you feel up to
 <a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
 <p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
 
-                var asideFirstText = 
+                var asideFirstText = T(
 @"<h2>First Leader Aside</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
-Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
 
-                var asideSecondText =
+                var asideSecondText = T(
 @"<h2>Second Leader Aside</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
-Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
 
-                var asideThirdText =
+                var asideThirdText = T(
 @"<h2>Third Leader Aside</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
-Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
 
                 layout =
                     "{\"elements\": [{" +
@@ -192,8 +193,17 @@ Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
             }
 
             // (Layout) Hackish way to access the LayoutPart on the page without having to declare a dependency on Orchard.Layouts.
-            // This will break if the Page type does not have a LayoutPart.
-            ((dynamic) page).LayoutPart.LayoutState = layout;
+            var layoutPart = ((dynamic) page).LayoutPart;
+            var bodyPart = page.As<BodyPart>();
+
+            if (bodyPart != null)
+                bodyPart.Text = Text;
+
+            // Check if we have a LayoutPart attached of type "LayoutPart". If Layouts is disabled, then the type would be "ContentPart".
+            // This happens when the user executed the Core recipe, which does not enable the Layouts feature.
+            if (layoutPart != null && layoutPart.GetType().Name == "LayoutPart")
+                layoutPart.LayoutState = layout;
+
             if (Publish) {
                 _contentManager.Publish(page);
             }
@@ -201,7 +211,7 @@ Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
             Context.Output.WriteLine(T("Page created successfully.").Text);
         }
 
-        private string Encode(string text) {
+        private static string Encode(string text) {
             return HttpUtility.UrlEncode(text);
         }
     }

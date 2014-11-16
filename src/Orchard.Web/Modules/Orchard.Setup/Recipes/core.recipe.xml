@@ -14,7 +14,9 @@
   
   <Metadata>
     <Types>
-      <Page ContentTypeSettings.Draftable="True" />    
+        <Page ContentTypeSettings.Draftable="True">
+            <BodyPart />
+        </Page>
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />
