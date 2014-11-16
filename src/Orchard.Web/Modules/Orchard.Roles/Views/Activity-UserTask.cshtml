@@ -1,9 +1,8 @@
 ﻿@using Orchard.Utility.Extensions
-
+@using Orchard.Workflows.Helpers
 @{
-    string name = Model.Name;
-    string actions = Model.State.Actions;
-    var outcomes = String.Join(",", actions == null ? new string[0] : actions.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).Select(x => "'" + x.Trim() + "'").ToArray());
+    var name = (string)Model.Name;
+    var outcomes = ((string)Model.State.Actions).FormatOutcomesJson();
 }
 
 <div class="event activity-@name.HtmlClassify()" title="@Model.Description" data-outcomes="@outcomes">
