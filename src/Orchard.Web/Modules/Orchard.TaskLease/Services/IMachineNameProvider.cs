@@ -1,15 +1,12 @@
-﻿namespace Orchard.TaskLease.Services
-{
+﻿namespace Orchard.TaskLease.Services {
+
     /// <summary>
-    /// Describes a service which returns a name for the machine running the application.
+    /// Describes a service which the name of the machine running the application.
     /// </summary>
-    /// <remarks>
-    /// Should be delocalized to IHostEnvironment in a leter version
-    /// </remarks>
-    public interface IMachineNameProvider : IDependency
-    {
+    public interface IMachineNameProvider {
+    
         /// <summary>
-        /// Returns the current machine's name
+        /// Returns the name of the machine running the application.
         /// </summary>
         string GetMachineName();
     }

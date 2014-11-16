@@ -3,44 +3,42 @@ using Orchard.Data;
 using Orchard.Services;
 using Orchard.TaskLease.Models;
 
-namespace Orchard.TaskLease.Services
-{
+namespace Orchard.TaskLease.Services {
+
     /// <summary>
     /// Provides a database driven implementation of <see cref="ITaskLeaseService" />
     /// </summary>
-    public class TaskLeaseService : ITaskLeaseService
-    {
+    public class TaskLeaseService : ITaskLeaseService {
+
         private readonly IRepository<TaskLeaseRecord> _repository;
         private readonly IClock _clock;
         private readonly IMachineNameProvider _machineNameProvider;
 
         public TaskLeaseService(
-            IRepository<TaskLeaseRecord> repository, 
+            IRepository<TaskLeaseRecord> repository,
             IClock clock,
-            IMachineNameProvider machineNameProvider)
-        {
+            IMachineNameProvider machineNameProvider) {
+
             _repository = repository;
             _clock = clock;
             _machineNameProvider = machineNameProvider;
         }
 
-        public string Acquire(string taskName, DateTime expiredUtc)
-        {
+        public string Acquire(string taskName, DateTime expiredUtc) {
             var machineName = _machineNameProvider.GetMachineName();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName);
 
             // create a new lease if there is no current lease for this task
-            if (taskLease == null)
-            {
+            if (taskLease == null) {
                 taskLease = new TaskLeaseRecord {
-                                    TaskName = taskName,
-                                    MachineName = machineName,
-                                    State = String.Empty,
-                                    UpdatedUtc = _clock.UtcNow,
-                                    ExpiredUtc = expiredUtc
-                                };
+                    TaskName = taskName,
+                    MachineName = machineName,
+                    State = String.Empty,
+                    UpdatedUtc = _clock.UtcNow,
+                    ExpiredUtc = expiredUtc
+                };
 
                 _repository.Create(taskLease);
                 _repository.Flush();
@@ -49,8 +47,7 @@ namespace Orchard.TaskLease.Services
             }
 
             // lease can't be aquired only if for a different machine and it has not expired
-            if (taskLease.MachineName != machineName && taskLease.ExpiredUtc >= _clock.UtcNow)
-            {
+            if (taskLease.MachineName != machineName && taskLease.ExpiredUtc >= _clock.UtcNow) {
                 return null;
             }
 
@@ -64,15 +61,13 @@ namespace Orchard.TaskLease.Services
             return taskLease.State;
         }
 
-        public void Update(string taskName, string state)
-        {
+        public void Update(string taskName, string state) {
             var machineName = _machineNameProvider.GetMachineName();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName && x.MachineName == machineName);
 
-            if(taskLease == null)
-            {
+            if (taskLease == null) {
                 return;
             }
 
@@ -80,15 +75,13 @@ namespace Orchard.TaskLease.Services
             _repository.Flush();
         }
 
-        public void Update(string taskName, string state, DateTime expiredUtc)
-        {
+        public void Update(string taskName, string state, DateTime expiredUtc) {
             var machineName = _machineNameProvider.GetMachineName();
 
             // retrieve current lease for the specified task
             var taskLease = _repository.Get(x => x.TaskName == taskName && x.MachineName == machineName);
 
-            if (taskLease == null)
-            {
+            if (taskLease == null) {
                 return;
             }
 
