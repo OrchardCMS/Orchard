@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Orchard.Environment.Extensions;
-using Orchard.TaskLease.Services;
+using Orchard.Environment;
 
 namespace Orchard.Azure.Services.TaskLease {
     public class AzureMachineNameProvider : IMachineNameProvider {

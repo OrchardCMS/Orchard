@@ -238,8 +238,10 @@
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
     <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
     <Compile Include="Environment\IFeatureEventHandler.cs" />
+    <Compile Include="Environment\IMachineNameProvider.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\IWorkContextEvents.cs" />
+    <Compile Include="Environment\MachineNameProvider.cs" />
     <Compile Include="Environment\State\ContextState.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
