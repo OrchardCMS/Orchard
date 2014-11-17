@@ -14,6 +14,7 @@
                    Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,PackagingServices,Orchard.Packaging,
                    Orchard.Projections,Orchard.Fields,Orchard.OutputCache,Orchard.Taxonomies,Orchard.Workflows,
+                   Orchard.Layouts,
                    TheThemeMachine" />
 
   <Metadata>
@@ -48,9 +49,6 @@
     layer create Anonymous /LayerRule:"not authenticated" /Description:"The widgets in this layer are displayed when the user is anonymous"
     layer create Disabled /LayerRule:"false" /Description:"The widgets in this layer are never displayed"
     layer create TheHomepage /LayerRule:"url '~/'" /Description:"The widgets in this layer are displayed on the home page"
-    widget create HtmlWidget /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget1" /UseLoremIpsumText:true
-    widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
-    widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
     menu create /MenuName:"Main Menu"
     page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true

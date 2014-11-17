@@ -70,6 +70,10 @@ namespace Orchard.ContentPermissions.Security {
             {
                 authorizedRoles = (hasOwnership ? part.DeleteOwnContent : part.DeleteContent).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             }
+            else if (grantingPermissions.Any(grantingPermission => String.Equals(Core.Contents.Permissions.PreviewContent.Name, grantingPermission, StringComparison.OrdinalIgnoreCase)))
+            {
+                authorizedRoles = (hasOwnership ? part.PreviewOwnContent : part.PreviewContent).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            }
             else
             {
                 return;

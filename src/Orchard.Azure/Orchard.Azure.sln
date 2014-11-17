@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
 	ProjectSection(SolutionItems) = preProject
@@ -149,6 +149,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.MediaServices", "..\Orchard.Web\Modules\Orchard.Azure.MediaServices\Orchard.Azure.MediaServices.csproj", "{14A96B1A-9DC9-44C8-A675-206329E15263}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.AuditTrail", "..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj", "{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DynamicForms", "..\Orchard.Web\Modules\Orchard.DynamicForms\Orchard.DynamicForms.csproj", "{82190F52-2901-46D6-8A4C-34649959483F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.JobsQueue", "..\Orchard.Web\Modules\Orchard.JobsQueue\Orchard.JobsQueue.csproj", "{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Layouts", "..\Orchard.Web\Modules\Orchard.Layouts\Orchard.Layouts.csproj", "{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.MessageBus", "..\Orchard.Web\Modules\Orchard.MessageBus\Orchard.MessageBus.csproj", "{ED715544-E649-4F48-B8EE-9368C41C3AC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Redis", "..\Orchard.Web\Modules\Orchard.Redis\Orchard.Redis.csproj", "{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -424,6 +434,26 @@ Global
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82190F52-2901-46D6-8A4C-34649959483F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -493,5 +523,10 @@ Global
 		{10AB3CE2-A720-467F-9EC8-EBB4BAC9A1C9} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{14A96B1A-9DC9-44C8-A675-206329E15263} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 		{3DD574CD-9C5D-4A45-85E1-EBBA64C22B5F} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{82190F52-2901-46D6-8A4C-34649959483F} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{6BD8B2FA-F2E3-4AC8-A4C3-2925A653889A} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{ED715544-E649-4F48-B8EE-9368C41C3AC0} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
+		{2C5EB8B3-A313-413D-BAA0-5C21D2A6EC6E} = {8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}
 	EndGlobalSection
 EndGlobal

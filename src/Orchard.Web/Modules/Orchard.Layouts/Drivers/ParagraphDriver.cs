@@ -1,5 +1,6 @@
 ﻿using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.ViewModels;
 
 namespace Orchard.Layouts.Drivers {
@@ -17,6 +18,12 @@ namespace Orchard.Layouts.Drivers {
             }
             
             return Editor(context, editor);
+        }
+
+        protected override void OnIndexing(Paragraph element, ElementIndexingContext context) {
+            context.DocumentIndex
+                .Add("body", element.Content).RemoveTags().Analyze()
+                .Add("format", "text").Store();
         }
     }
 }

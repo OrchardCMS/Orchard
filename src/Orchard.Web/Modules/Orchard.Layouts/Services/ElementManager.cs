@@ -21,9 +21,9 @@ namespace Orchard.Layouts.Services {
             Lazy<IEnumerable<IElementHarvester>> elementHarvesters,
             ICacheManager cacheManager,
             Lazy<IEnumerable<IElementDriver>> drivers,
-            Lazy<IEnumerable<ICategoryProvider>> categoryProviders, 
-            IElementFactory factory, 
-            ISignals signals, 
+            Lazy<IEnumerable<ICategoryProvider>> categoryProviders,
+            IElementFactory factory,
+            ISignals signals,
             IElementEventHandler elementEventHandler) {
 
             _elementHarvesters = elementHarvesters;
@@ -145,9 +145,39 @@ namespace Orchard.Layouts.Services {
 
         public void Removing(LayoutSavingContext context) {
             var elementInstances = context.RemovedElements.Flatten();
-            InvokeDriver(elementInstances, (driver, elementInstance) => driver.ElementRemoving(new ElementRemovingContext(context) {
+            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Removing(new ElementRemovingContext(context) {
                 Element = elementInstance
             }));
+        }
+
+        public void Indexing(LayoutIndexingContext context) {
+            var elementInstances = context.Elements.Flatten();
+            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Indexing(new ElementIndexingContext(context) {
+                Element = elementInstance
+            }));
+        }
+
+        public void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var exportElementContext = new ExportElementContext {
+                    Layout = context.Layout,
+                    Element = element
+                };
+                driver.Exporting(exportElementContext);
+                element.ExportableState = new StateDictionary(exportElementContext.ExportableState);
+            });
+        }
+
+        public void Importing(IEnumerable<IElement> elements, ImportLayoutContext context) {
+            InvokeDriver(elements, (driver, element) => {
+                var importElementContext = new ImportElementContext {
+                    Layout = context.Layout,
+                    Element = element,
+                    ExportableState = element.ExportableState,
+                    Session = context.Session
+                };
+                driver.Importing(importElementContext);
+            });
         }
 
         private IDictionary<string, Category> GetCategories() {

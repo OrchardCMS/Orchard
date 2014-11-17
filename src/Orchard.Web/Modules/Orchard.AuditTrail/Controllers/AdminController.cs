@@ -7,7 +7,6 @@ using Orchard.AuditTrail.ViewModels;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
@@ -55,7 +54,8 @@ namespace Orchard.AuditTrail.Controllers {
                     Record = record,
                     EventDescriptor = descriptor,
                     CategoryDescriptor = descriptor.CategoryDescriptor,
-                    SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
+                    SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin"),
+                    ActionsShape = _displayBuilder.BuildActions(record, "SummaryAdmin"),
                 };
 
             var viewModel = new AuditTrailViewModel {

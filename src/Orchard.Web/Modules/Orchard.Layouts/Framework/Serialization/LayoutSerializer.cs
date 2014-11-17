@@ -44,6 +44,7 @@ namespace Orchard.Layouts.Framework.Serialization {
             var dto = new {
                 typeName = element.Descriptor.TypeName,
                 state = element.State.Serialize(),
+                exportableState = element.ExportableState.Serialize(),
                 index = index,
                 elements = container != null ? container.Elements.Select(Serialize).ToList() : new List<object>(),
                 isTemplated = element.IsTemplated
@@ -58,6 +59,7 @@ namespace Orchard.Layouts.Framework.Serialization {
                 return null;
 
             var elementState = ElementStateHelper.Deserialize((string)node["state"]);
+            var elementExportableState = ElementStateHelper.Deserialize((string)node["exportableState"]);
             var childNodes = node["elements"];
             var elementDescriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, elementTypeName);
 
@@ -68,7 +70,8 @@ namespace Orchard.Layouts.Framework.Serialization {
                 new ActivateElementArgs {
                     Container = parent, 
                     Index = index, 
-                    ElementState = elementState
+                    State = elementState,
+                    ExportableState = elementExportableState
                 });
             var container = element as IContainer;
 

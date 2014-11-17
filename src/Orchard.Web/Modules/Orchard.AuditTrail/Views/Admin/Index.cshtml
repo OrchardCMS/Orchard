@@ -1,7 +1,5 @@
 ﻿@using Orchard.AuditTrail.Helpers
-@using Orchard.AuditTrail.Models
 @using Orchard.AuditTrail.Services.Models
-@using Orchard.ContentManagement
 @model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
 @{
     Style.Include("audittrail-display.css");
@@ -16,7 +14,7 @@
     Layout.Title = T("Audit Trail");
 }
 @Html.ValidationSummary()
-@using (Html.BeginForm("Index", "Admin", new { area = "Orchard.AuditTrail" }, FormMethod.Get)) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin", new { area = "Orchard.AuditTrail" }), FormMethod.Get)) {
     <section class="audittrail-filter-section">
         @Display(Model.FilterDisplay)
         <div class="filter-control-group">
@@ -57,7 +55,7 @@
                         <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
                         <td class="summary-column">@Display(record.SummaryShape)</td>
                         <td class="comment-column">@Html.Raw(record.Record.Comment.NewlinesToHtml())</td>
-                        <td class="actions-column">@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
+                        <td class="actions-column">@Display(record.ActionsShape)</td>
                     </tr>
                 }
             </tbody>

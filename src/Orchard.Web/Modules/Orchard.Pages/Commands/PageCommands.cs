@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -103,10 +104,10 @@ namespace Orchard.Pages.Commands {
                 }
             }
 
-            var text = String.Empty;
+            var layout = default(string);
             if (UseWelcomeText) {
-                text = T(
-@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
+                var text = T(
+                    @"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
 Here are a few things you can look at to get familiar with the application.
 Once you feel confident you don't need this anymore, you can
 <a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
@@ -123,18 +124,95 @@ you can do so by creating your own module or by installing one that somebody els
 Modules are created by other users of Orchard just like you so if you feel up to it,
 <a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
 <p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
+
+                var asideFirstText = T(
+@"<h2>First Leader Aside</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
+
+                var asideSecondText = T(
+@"<h2>Second Leader Aside</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
+
+                var asideThirdText = T(
+@"<h2>Third Leader Aside</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum.
+Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>").Text;
+
+                layout =
+                    "{\"elements\": [{" +
+                        "\"typeName\": \"Orchard.Layouts.Elements.Grid\"," +
+                        "\"elements\": [{" +
+                            "\"typeName\": \"Orchard.Layouts.Elements.Row\"," +
+                            "\"elements\": [{" +
+                                "\"typeName\": \"Orchard.Layouts.Elements.Column\"," +
+                                "\"state\": \"ColumnSpan=12\"," +
+                                "\"elements\": [{" +
+                                    "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
+                                    "\"state\": \"Content=" + Encode(text) + "\"" +
+                                "}]" +
+                            "}]" +
+                        "},{" +
+                            "\"typeName\": \"Orchard.Layouts.Elements.Row\"," +
+                            "\"elements\": [{" +
+                                "\"typeName\": \"Orchard.Layouts.Elements.Column\"," +
+                                "\"state\": \"ColumnSpan=4\"," +
+                                "\"elements\": [{" +
+                                    "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
+                                    "\"state\": \"Content=" + Encode(asideFirstText) + "\"" +
+                                "}]" +
+                            "},{" +
+                                "\"typeName\": \"Orchard.Layouts.Elements.Column\"," +
+                                "\"state\": \"ColumnSpan=4\"," +
+                                "\"elements\": [{" +
+                                    "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
+                                    "\"state\": \"Content=" + Encode(asideSecondText) + "\"" +
+                                "}]" +
+                            "},{" +
+                                "\"typeName\": \"Orchard.Layouts.Elements.Column\"," +
+                                "\"state\": \"ColumnSpan=4\"," +
+                                "\"elements\": [{" +
+                                    "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
+                                    "\"state\": \"Content=" + Encode(asideThirdText) + "\"" +
+                                "}]" +
+                            "}]" +
+                        "}]" +
+                    "}]}";
             }
             else {
                 if (!String.IsNullOrEmpty(Text)) {
-                    text = Text;
+                    layout = 
+                        "{\"elements\": [" +
+                            "{" +
+                              "\"typeName\": \"Orchard.Layouts.Elements.Html\"," +
+                              "\"state\": \"Content=" + Encode(Text) + "\"" +
+                            "}" +
+                          "]}";
                 }
             }
-            page.As<BodyPart>().Text = text;
+
+            // (Layout) Hackish way to access the LayoutPart on the page without having to declare a dependency on Orchard.Layouts.
+            var layoutPart = ((dynamic) page).LayoutPart;
+            var bodyPart = page.As<BodyPart>();
+
+            if (bodyPart != null)
+                bodyPart.Text = Text;
+
+            // Check if we have a LayoutPart attached of type "LayoutPart". If Layouts is disabled, then the type would be "ContentPart".
+            // This happens when the user executed the Core recipe, which does not enable the Layouts feature.
+            if (layoutPart != null && layoutPart.GetType().Name == "LayoutPart")
+                layoutPart.LayoutState = layout;
+
             if (Publish) {
                 _contentManager.Publish(page);
             }
 
             Context.Output.WriteLine(T("Page created successfully.").Text);
+        }
+
+        private static string Encode(string text) {
+            return HttpUtility.UrlEncode(text);
         }
     }
 }

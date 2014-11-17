@@ -49,9 +49,9 @@
 
             // Register media button
             ed.addButton('mediapicker', {
+                icon: "image",
                 title: jQuery("#" + ed.id).data("mediapicker-title"), //ed.getParam("mediapicker_title"),
-                cmd: 'mceMediaPicker',
-                image: url + '/img/picture_add.png'
+                cmd: 'mceMediaPicker'
             });
         },
 

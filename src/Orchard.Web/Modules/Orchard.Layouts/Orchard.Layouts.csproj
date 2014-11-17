@@ -214,14 +214,24 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
+    <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
+    <Compile Include="Framework\Drivers\IContentImportSession.cs" />
+    <Compile Include="Framework\Drivers\ExportElementContext.cs" />
+    <Compile Include="Framework\Drivers\ExportLayoutContext.cs" />
+    <Compile Include="Drivers\VectorImageDriver.cs" />
     <Compile Include="Drivers\ProjectionDriver.cs" />
     <Compile Include="Drivers\ImageDriver.cs" />
     <Compile Include="Drivers\ParagraphDriver.cs" />
+    <Compile Include="Elements\VectorImage.cs" />
     <Compile Include="Elements\Image.cs" />
     <Compile Include="Elements\Paragraph.cs" />
     <Compile Include="Elements\Projection.cs" />
     <Compile Include="Filters\ControllerAccessorFilter.cs" />
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
+    <Compile Include="Framework\Drivers\ImportElementContext.cs" />
+    <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
+    <Compile Include="Framework\Elements\ElementIndexingContext.cs" />
+    <Compile Include="Framework\Elements\LayoutIndexingContext.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
@@ -279,6 +289,7 @@
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
     <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
+    <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
     <Compile Include="ViewModels\ParagraphEditorViewModel.cs" />
@@ -364,6 +375,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-ContentPart.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.VectorImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Media-VectorImage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Media-VectorImage.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Layout.Summary.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

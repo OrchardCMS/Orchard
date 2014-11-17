@@ -17,6 +17,8 @@ namespace Orchard.ContentPermissions.ViewModels {
         public IList<RoleEntry> EditOwnRoles { get; set; }
         public IList<RoleEntry> DeleteRoles { get; set; }
         public IList<RoleEntry> DeleteOwnRoles { get; set; }
+        public IList<RoleEntry> PreviewRoles { get; set; }
+        public IList<RoleEntry> PreviewOwnRoles { get; set; }
 
         public static IList<RoleEntry> ExtractRoleEntries(IEnumerable<string> allRoles, string allowed) {
             if(String.IsNullOrWhiteSpace(allowed)) {

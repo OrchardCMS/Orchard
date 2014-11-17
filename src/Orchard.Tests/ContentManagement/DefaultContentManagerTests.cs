@@ -687,6 +687,99 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(contentItem.TypeDefinition.Parts.Count(), Is.EqualTo(0));
         }
 
+        [Test]
+        public void RestoreCreatesNewVersionBasedOnLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that a new version was created and that it is the latest.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(4));
+            Assert.That(gamma.Version, Is.EqualTo(4));
+            Assert.That(gamma.VersionRecord.Latest, Is.True);
+        }
+
+        [Test]
+        public void RestoreUnsetsPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that version 3 is no longer the latest version.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Latest, Is.False);
+        }
+
+        [Test]
+        public void RestoreDoesNotUnpublishPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Number(1));
+            FlushAndClear();
+
+            // Assert that version 3 is still published.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Published, Is.True);
+        }
+
+        [Test]
+        public void RestoreWithPublishUnpublishesPreviousLatestVersion() {
+            // Generate some versions
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
+            Flush();
+
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma2);
+            Flush();
+
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            _manager.Publish(gamma3);
+            Flush();
+
+            // Restore to version 1.
+            var gamma4 = _manager.Restore(gamma1, VersionOptions.Restore(1, publish: true));
+            FlushAndClear();
+
+            // Assert that version 3 is no longer published and that version 4 is now published.
+            var gamma = _manager.Get(gamma1.Id, VersionOptions.Number(3));
+            Assert.That(gamma.VersionRecord.Published, Is.False);
+            Assert.That(gamma4.VersionRecord.Published, Is.True);
+        }
 
         [Test]
         public void ExistingTypeAndPartDefinitionShouldBeUsed() {

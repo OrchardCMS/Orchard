@@ -33,9 +33,12 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Updating(UpdateContentContext context) {
             var contentItem = context.ContentItem;
+
+            _ignoreExportHandlerFor = contentItem;
             _previousVersionXml = _contentItemCreated 
                 ? default(XElement) // No need to do a diff on a newly created content item.
                 : _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
         }
 
         protected override void Updated(UpdateContentContext context) {
@@ -54,6 +57,23 @@ namespace Orchard.AuditTrail.Providers.Content {
             }
         }
 
+        protected override void Restoring(RestoreContentContext context) {
+            _ignoreExportHandlerFor = context.ContentItem;
+            _previousVersionXml = _contentManager.Export(context.ContentItem);
+            _ignoreExportHandlerFor = null;
+        }
+
+        protected override void Restored(RestoreContentContext context) {
+            var contentItem = context.ContentItem;
+           
+            _ignoreExportHandlerFor = contentItem;
+            var newVersionXml = _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
+
+            var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Restored, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);
+        }
+
         protected override void Published(PublishContentContext context) {
             var previousVersion = context.PreviousItemVersionRecord;
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Published, context.ContentItem, previousVersion);
@@ -65,6 +85,10 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Removed(RemoveContentContext context) {
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Removed, context.ContentItem);
+        }
+
+        protected override void Destroyed(DestroyContentContext context) {
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Destroyed, context.ContentItem);
         }
 
         protected override void Imported(ImportContentContext context) {

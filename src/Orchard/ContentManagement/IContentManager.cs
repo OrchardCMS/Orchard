@@ -41,6 +41,13 @@ namespace Orchard.ContentManagement {
         /// <returns>Clone of the item</returns>
         ContentItem Clone(ContentItem contentItem);
 
+        /// <summary>
+        /// Rolls back the specified content item by creating a new version based on the specified version.
+        /// </summary>
+        /// <param name="contentItem">The content item to roll back.</param>
+        /// <param name="options">The version to roll back to. Either specify the version record id, version number, and IsPublished to publish the new version.</param>
+        /// <returns>Returns the latest version of the content item, which is based on the specified version.</returns>
+        ContentItem Restore(ContentItem contentItem, VersionOptions options);
 
         /// <summary>
         /// Gets the content item with the specified id
@@ -76,6 +83,11 @@ namespace Orchard.ContentManagement {
         void Publish(ContentItem contentItem);
         void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
+
+        /// <summary>
+        /// Permanently deletes the specified content item, including all of its content part records.
+        /// </summary>
+        void Destroy(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
         XElement Export(ContentItem contentItem);
@@ -168,6 +180,11 @@ namespace Orchard.ContentManagement {
         /// Gets a specific version based on the version record identifier.
         /// </summary>
         public static VersionOptions VersionRecord(int id) { return new VersionOptions { VersionRecordId = id }; }
+
+        /// <summary>
+        /// Creates a new version based on the specified version number.
+        /// </summary>
+        public static VersionOptions Restore(int version, bool publish = false) { return new VersionOptions { VersionNumber = version, IsPublished = publish}; }
 
         public bool IsLatest { get; private set; }
         public bool IsPublished { get; private set; }

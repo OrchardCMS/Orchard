@@ -4,7 +4,6 @@ using Orchard.Environment.Configuration;
 namespace Orchard.Caching.Services {
     /// <summary>
     /// Provides a per tenant <see cref="ICacheService"/> implementation.
-    /// Default timeout is 20 minutes.
     /// </summary>
     public class DefaultCacheService : ICacheService {
         private readonly ICacheStorageProvider _cacheStorageProvider;
@@ -17,7 +16,7 @@ namespace Orchard.Caching.Services {
             _prefix = shellSettings.Name;
         }
 
-        public T Get<T>(string key) {
+        public object Get<T>(string key) {
             return _cacheStorageProvider.Get<T>(BuildFullKey(key));
         }
 

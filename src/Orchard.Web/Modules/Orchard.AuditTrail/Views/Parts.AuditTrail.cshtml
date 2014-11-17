@@ -43,7 +43,7 @@
                                 <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
                                 <td class="summary-column">@Display(record.SummaryShape)</td>
                                 <td class="comment-column">@Html.Raw(StringExtensions.NewlinesToHtml(record.Record.Comment))</td>
-                                <td class="actions-column">@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Record.Id, area = "Orchard.AuditTrail" }, null)</td>
+                                <td class="actions-column">@Display(record.ActionsShape)</td>
                             </tr>
                         }
                     </tbody>

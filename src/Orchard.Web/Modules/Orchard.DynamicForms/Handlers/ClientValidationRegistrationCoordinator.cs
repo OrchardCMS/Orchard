@@ -34,7 +34,7 @@ namespace Orchard.DynamicForms.Handlers {
                 FieldName = element.Name
             };
 
-            if (element.Form.EnableClientValidation == true) {    
+            if (element.Form != null && element.Form.EnableClientValidation == true) {    
                 _formService.RegisterClientValidationAttributes(element, registrationContext);
 
                 if (registrationContext.ClientAttributes.Any()) {

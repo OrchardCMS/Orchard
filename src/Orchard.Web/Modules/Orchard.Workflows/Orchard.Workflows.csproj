@@ -104,6 +104,7 @@
     <Content Include="Styles\Web.config" />
     <Compile Include="Activities\LoggingActivity.cs" />
     <Compile Include="Forms\LoggingActivityForms.cs" />
+    <Compile Include="Helpers\OutcomeSerializerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>

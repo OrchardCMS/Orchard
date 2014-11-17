@@ -25,7 +25,7 @@ namespace Orchard.Layouts.Drivers {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
                 var state = ElementStateHelper.Deserialize(part.ElementState);
-                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state});
+                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state});
                 var elementShape = _elementDisplay.DisplayElement(element, part, displayType);
                 
                 return shapeHelper.Parts_ElementWrapper(ElementShape: elementShape);
@@ -41,7 +41,7 @@ namespace Orchard.Layouts.Drivers {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
                 var state = ElementStateHelper.Deserialize(part.ElementState);
-                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
                 var context = (ElementEditorContext)CreateEditorContext(describeContext.Content, element, updater, shapeHelper);
                 var editorResult = updater != null ? _elementManager.UpdateEditor(context) : _elementManager.BuildEditor(context);
                 var viewModel = new ElementWrapperPartViewModel {
