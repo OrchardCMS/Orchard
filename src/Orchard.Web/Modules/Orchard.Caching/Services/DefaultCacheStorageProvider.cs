@@ -39,9 +39,8 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public object Get<T>(string key) {
+        public Cached<T> Get<T>(string key) {
             var value = _cache.Get(key);
-
             // if the provided expression is non-null, and the provided object can 
             // be cast to the provided type without causing an exception to be thrown
             if(value is T) {

@@ -2,7 +2,7 @@
 
 namespace Orchard.Caching.Services {
     public interface ICacheService : IDependency {
-        object Get<T>(string key);
+        Cached<T> Get<T>(string key);
 
         void Put<T>(string key, T value);
         void Put<T>(string key, T value, TimeSpan validFor);
@@ -12,30 +12,66 @@ namespace Orchard.Caching.Services {
     }
 
     public static class CachingExtensions {
-        public static object Get<T>(this ICacheService cacheService, string key, Func<T> factory) {
-            var result = cacheService.Get<T>(key);
-            
-            if (result == null) {
-                var computed = factory();
-                cacheService.Put(key, computed);
-                return computed;
-            }
-
-            // try to convert to T
-            return result;
+        public static Cached<T> Get<T>(this ICacheService cacheService, string key, Func<T> factory) {
+            return cacheService.GetOrPut(key, factory, value => cacheService.Put(key, value));
         }
 
-        public static object Get<T>(this ICacheService cacheService, string key, Func<T> factory, TimeSpan validFor) {
+        public static Cached<T> Get<T>(this ICacheService cacheService, string key, Func<T> factory, TimeSpan validFor) {
+            return cacheService.GetOrPut(key, factory, value => cacheService.Put(key, value, validFor));
+        }
+
+        private static Cached<T> GetOrPut<T>(this ICacheService cacheService, string key, Func<T> factory, Action<T> putter) {
             var result = cacheService.Get<T>(key);
-            
-            if (result == null) {
+
+            if (result == null && factory != null) {
                 var computed = factory();
-                cacheService.Put(key, computed, validFor);
-                return computed;
+                putter(computed);
+                return new Cached<T>(computed);
             }
 
-            // try to convert to T
             return result;
+        }
+    }
+
+    public class Cached<T> {
+        public T Value { get; private set; }
+        public bool HasValue { get; private set; }
+
+        public Cached(object value) {
+            if (value == null) {
+                HasValue = false;
+                Value = default(T);
+            }
+            else {
+                HasValue = true;
+                Value = (T)value;
+            }
+        }
+
+        public static implicit operator Cached<T>(T value)
+        {
+            return new Cached<T>(value);
+        }
+
+        public static implicit operator T(Cached<T> value)
+        {
+            return value.HasValue ? value.Value : default(T);
+        }
+
+        public static bool operator ==(Cached<T> a, T b) {
+            if (a.HasValue) {
+                return a.Value.Equals(b);
+            }
+
+            if (typeof(T).IsValueType) {
+                return b.Equals(default(T));
+            }
+
+            return b == null;
+        }
+
+        public static bool operator !=(Cached<T> a, T b) {
+            return !(a == b);
         }
     }
 }
