@@ -32,8 +32,13 @@ namespace Orchard.Redis.Caching {
             Logger = NullLogger.Instance;
         }
 
-        public object Get<T>(string key) {
+        public Cached<T> Get<T>(string key) {
             var json = Database.StringGet(GetLocalizedKey(key));
+     
+            if (json.IsNullOrEmpty) {
+                return null;
+            }
+
             return JsonConvert.DeserializeObject<T>(json);
         }
 
