@@ -28,7 +28,7 @@ namespace Orchard.Localization {
     }
 
     [OrchardFeature("Orchard.Localization.Transliteration")]
-    public class TransliteratoinMigrations : DataMigrationImpl {
+    public class TransliterationMigrations : DataMigrationImpl {
 
         public int Create() {
             SchemaBuilder.CreateTable("TransliterationSpecificationRecord",
