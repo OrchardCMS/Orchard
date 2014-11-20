@@ -235,7 +235,7 @@ namespace Orchard.DynamicForms.Services {
             if (contentTypeDefinition == null)
                 return null;
 
-            var contentItem = _contentManager.Create(contentTypeDefinition.Name, VersionOptions.Draft);
+            var contentItem = _contentManager.New(contentTypeDefinition.Name);
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
 
@@ -257,9 +257,12 @@ namespace Orchard.DynamicForms.Services {
                 }
             }
 
+            _contentManager.Create(contentItem, VersionOptions.Draft);
+
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
             if (form.Publication == "Publish" || !contentTypeSettings.Draftable)
                 _contentManager.Publish(contentItem);
+
             return contentItem;
         }
 
