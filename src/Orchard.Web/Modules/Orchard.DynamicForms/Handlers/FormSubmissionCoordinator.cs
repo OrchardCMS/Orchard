@@ -5,7 +5,6 @@ using Orchard.DynamicForms.Activities;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.Layouts.Helpers;
-using Orchard.Localization;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Workflows.Services;
