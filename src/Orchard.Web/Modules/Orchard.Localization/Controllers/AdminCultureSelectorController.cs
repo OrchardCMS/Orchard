@@ -5,12 +5,12 @@ using Orchard.Mvc.Extensions;
 using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Controllers {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     [Admin]
-    public class AdminCutlureSelectorController : Controller {
+    public class AdminCultureSelectorController : Controller {
         private readonly ICultureStorageProvider _cultureStorageProvider;
 
-        public AdminCutlureSelectorController(ICultureStorageProvider cultureStorageProvider) {
+        public AdminCultureSelectorController(ICultureStorageProvider cultureStorageProvider) {
             _cultureStorageProvider = cultureStorageProvider;
         }
 

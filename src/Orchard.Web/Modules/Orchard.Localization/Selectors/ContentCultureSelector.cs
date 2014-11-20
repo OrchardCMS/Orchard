@@ -7,7 +7,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Selectors {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class ContentCultureSelector : ICultureSelector {
         private readonly IAliasService _aliasService;
         private readonly IContentManager _contentManager;

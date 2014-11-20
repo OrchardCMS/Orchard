@@ -5,14 +5,14 @@
 
 <div id="culture-selection">
     <ul>
-        @foreach (var supportedCulure in supportedCultures) {
-            var url = Url.Action("ChangeCulture", "AdminCutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+        @foreach (var supportedCulture in supportedCultures) {
+            var url = Url.Action("ChangeCulture", "AdminCultureSelector", new { area = "Orchard.Localization", culture = supportedCulture, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
 
             <li>
-                @if (supportedCulure.Equals(currentCulture)) {
-                    <a href="@url">@T("{0} (current)", supportedCulure)</a>
+                @if (supportedCulture.Equals(currentCulture)) {
+                    <a href="@url">@T("{0} (current)", supportedCulture)</a>
                 } else {
-                    <a href="@url">@supportedCulure</a>
+                    <a href="@url">@supportedCulture</a>
                 }
             </li>
         }

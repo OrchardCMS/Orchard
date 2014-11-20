@@ -16,7 +16,7 @@ Features:
 		Category: Content
 		Name: Date/Time Format Localization
 		Dependencies: Orchard.Localization
-	Orchard.Localization.CutlureSelector:
+	Orchard.Localization.CultureSelector:
 		Description: Enables a culture picker services, and also the admin cutlure picker.
 		Category: Content
 		Name: Culture Picker

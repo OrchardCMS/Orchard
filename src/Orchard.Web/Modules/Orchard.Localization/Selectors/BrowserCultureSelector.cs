@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Selectors {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class BrowserCultureSelector : ICultureSelector {
         private readonly Lazy<ICultureManager> _cultureManager;
 
