@@ -150,13 +150,6 @@ namespace Orchard.Layouts.Services {
             }));
         }
 
-        public void Indexing(LayoutIndexingContext context) {
-            var elementInstances = context.Elements.Flatten();
-            InvokeDriver(elementInstances, (driver, elementInstance) => driver.Indexing(new ElementIndexingContext(context) {
-                Element = elementInstance
-            }));
-        }
-
         public void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context) {
             InvokeDriver(elements, (driver, element) => {
                 var exportElementContext = new ExportElementContext {

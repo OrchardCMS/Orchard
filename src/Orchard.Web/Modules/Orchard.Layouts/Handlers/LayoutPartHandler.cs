@@ -1,8 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Helpers;
+using Orchard.DisplayManagement;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 
@@ -10,29 +9,32 @@ namespace Orchard.Layouts.Handlers {
     public class LayoutPartHandler : ContentHandler {
         private readonly ILayoutManager _layoutManager;
         private readonly IContentManager _contentManager;
-        private readonly IElementManager _elementManager;
+        private readonly IContentPartDisplay _contentPartDisplay;
+        private readonly IShapeDisplay _shapeDisplay;
 
         public LayoutPartHandler(
             IRepository<LayoutPartRecord> repository, 
             ILayoutManager layoutManager, 
             IContentManager contentManager, 
-            IElementManager elementManager) {
+            IContentPartDisplay contentPartDisplay, 
+            IShapeDisplay shapeDisplay) {
 
             _layoutManager = layoutManager;
             _contentManager = contentManager;
-            _elementManager = elementManager;
+            _contentPartDisplay = contentPartDisplay;
+            _shapeDisplay = shapeDisplay;
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
-            OnIndexing<LayoutPart>(IndexElements);
+            OnIndexing<LayoutPart>(IndexLayout);
         }
 
-        private void IndexElements(IndexContentContext context, LayoutPart part) {
-            var elements = _layoutManager.LoadElements(part).Flatten();
-            _elementManager.Indexing(new LayoutIndexingContext {
-                Layout = part,
-                Elements = elements,
-                DocumentIndex = context.DocumentIndex
-            });
+        private void IndexLayout(IndexContentContext context, LayoutPart part) {
+            var layoutShape = _contentPartDisplay.BuildDisplay(part);
+            var layoutHtml = _shapeDisplay.Display(layoutShape);
+
+            context.DocumentIndex
+                .Add("body", layoutHtml).RemoveTags().Analyze()
+                .Add("format", "html").Store();
         }
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {

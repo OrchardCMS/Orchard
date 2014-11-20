@@ -230,8 +230,6 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
-    <Compile Include="Framework\Elements\ElementIndexingContext.cs" />
-    <Compile Include="Framework\Elements\LayoutIndexingContext.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />

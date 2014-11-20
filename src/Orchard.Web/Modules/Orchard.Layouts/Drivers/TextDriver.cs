@@ -45,15 +45,6 @@ namespace Orchard.Layouts.Drivers {
             context.ElementShape.ProcessedText = processedText;
         }
 
-        protected override void OnIndexing(Text element, ElementIndexingContext context) {
-            var layoutPart = context.Layout.As<LayoutPart>();
-            var flavor = GetFlavor(layoutPart);
-
-            context.DocumentIndex
-                .Add("body", element.Content).RemoveTags().Analyze()
-                .Add("format", flavor).Store();
-        }
-
         private string ToHtml(string content, string flavor) {
             return _htmlFilters.Aggregate(content, (t, filter) => filter.ProcessContent(t, flavor));
         }

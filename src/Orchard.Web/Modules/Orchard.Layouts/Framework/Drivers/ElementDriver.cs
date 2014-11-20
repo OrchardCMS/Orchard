@@ -29,10 +29,6 @@ namespace Orchard.Layouts.Framework.Drivers {
             OnRemoving((TElement) context.Element, context);
         }
 
-        public void Indexing(ElementIndexingContext context) {
-            OnIndexing((TElement)context.Element, context);
-        }
-
         public void Exporting(ExportElementContext context) {
             OnExporting((TElement)context.Element, context);
         }
@@ -56,9 +52,6 @@ namespace Orchard.Layouts.Framework.Drivers {
         }
 
         protected virtual void OnRemoving(TElement element, ElementRemovingContext context) {
-        }
-
-        protected virtual void OnIndexing(TElement element, ElementIndexingContext context) {
         }
 
         protected virtual void OnExporting(TElement element, ExportElementContext context) {
