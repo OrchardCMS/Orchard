@@ -57,8 +57,7 @@ namespace Orchard.Layouts.Providers {
 
         private void CreatingDisplay(ElementCreatingDisplayShapeContext context, ElementBlueprint blueprint) {
             var bluePrintState = ElementStateHelper.Deserialize(blueprint.BaseElementState);
-            var elementState = context.Element.State.Where(x => !String.IsNullOrWhiteSpace(x.Value)).ToDictionary(x => x.Key, x => x.Value);
-            context.Element.State = bluePrintState.Combine(new StateDictionary(elementState));
+            context.Element.State = bluePrintState;
         }
 
         private void Displaying(ElementDisplayContext context, IElement element) {
