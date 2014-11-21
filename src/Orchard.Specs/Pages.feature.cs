@@ -88,8 +88,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Super Duper"});
             table1.AddRow(new string[] {
-                        "Body.Text",
-                        "This is super."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+super.\"} ] }"});
 #line 14
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
 #line 18
@@ -110,8 +111,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Super Duper"});
             table2.AddRow(new string[] {
-                        "Body.Text",
-                        "This is super number two."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+super+number+two.\"} ] }"});
 #line 25
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 29
@@ -132,8 +134,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Another"});
             table3.AddRow(new string[] {
-                        "Body.Text",
-                        "This is a draft of the new home page."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+the+draft+of+a+new+homepage.\"} ] }"});
             table3.AddRow(new string[] {
                         "Autoroute.PromoteToHomePage",
                         "true"});
@@ -159,8 +162,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Drafty"});
             table4.AddRow(new string[] {
-                        "Body.Text",
-                        "This is a draft of the new home page."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+the+draft+of+a+new+homepage.\"} ] }"});
             table4.AddRow(new string[] {
                         "Autoroute.PromoteToHomePage",
                         "true"});
