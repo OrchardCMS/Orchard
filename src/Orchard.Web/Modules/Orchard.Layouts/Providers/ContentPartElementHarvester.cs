@@ -31,7 +31,7 @@ namespace Orchard.Layouts.Providers {
             var contentParts = GetContentParts(context);
 
             return contentParts.Select(contentPart => new ElementDescriptor(elementType, contentPart.Name, T(contentPart.Name), contentPartElement.Category) {
-                Displaying = displayContext => Displaying(displayContext),
+                Display = displayContext => Displaying(displayContext),
                 StateBag = new Dictionary<string, object> {
                     {"ElementTypeName", contentPart.Name}
                 }

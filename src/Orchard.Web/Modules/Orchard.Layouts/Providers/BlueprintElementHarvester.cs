@@ -40,7 +40,7 @@ namespace Orchard.Layouts.Providers {
                         EnableEditorDialog = false,
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
-                        Displaying = displayContext => Displaying(displayContext, baseElement),
+                        Display = displayContext => Displaying(displayContext, baseElement),
                         StateBag = new Dictionary<string, object> {
                             {"ElementTypeName", baseElement.Descriptor.TypeName}
                         }
@@ -56,7 +56,9 @@ namespace Orchard.Layouts.Providers {
         }
 
         private void CreatingDisplay(ElementCreatingDisplayShapeContext context, ElementBlueprint blueprint) {
-            context.Element.State = ElementStateHelper.Deserialize(blueprint.BaseElementState);
+            var bluePrintState = ElementStateHelper.Deserialize(blueprint.BaseElementState);
+            var elementState = context.Element.State.Where(x => !String.IsNullOrWhiteSpace(x.Value)).ToDictionary(x => x.Key, x => x.Value);
+            context.Element.State = bluePrintState.Combine(new StateDictionary(elementState));
         }
 
         private void Displaying(ElementDisplayContext context, IElement element) {

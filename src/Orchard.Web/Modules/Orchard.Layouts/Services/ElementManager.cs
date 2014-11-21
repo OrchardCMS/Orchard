@@ -110,7 +110,7 @@ namespace Orchard.Layouts.Services {
         }
 
         public IEnumerable<IElementDriver> GetDrivers(ElementDescriptor descriptor) {
-            return GetDrivers(descriptor.ElementType);
+            return descriptor.GetDrivers();
         }
 
         public IEnumerable<IElementDriver> GetDrivers(IElement element) {
@@ -128,11 +128,13 @@ namespace Orchard.Layouts.Services {
 
         public EditorResult BuildEditor(ElementEditorContext context) {
             _elementEventHandler.BuildEditor(context);
+            context.Element.Descriptor.Editor(context);
             return context.EditorResult;
         }
 
         public EditorResult UpdateEditor(ElementEditorContext context) {
             _elementEventHandler.UpdateEditor(context);
+            context.Element.Descriptor.UpdateEditor(context);
             return context.EditorResult;
         }
 

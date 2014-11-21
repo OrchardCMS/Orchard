@@ -260,7 +260,6 @@
     <Compile Include="Drivers\MarkdownDriver.cs" />
     <Compile Include="Elements\ContentField.cs" />
     <Compile Include="Elements\ContentItem.cs" />
-    <Compile Include="Handlers\ElementSettingsHandler.cs" />
     <Compile Include="Elements\Html.cs" />
     <Compile Include="Elements\Markdown.cs" />
     <Compile Include="Framework\Elements\StateDictionary.cs" />

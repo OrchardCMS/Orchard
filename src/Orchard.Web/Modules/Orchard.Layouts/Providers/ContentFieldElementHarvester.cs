@@ -45,7 +45,7 @@ namespace Orchard.Layouts.Providers {
                 var name = String.Format("{0}.{1}", part.Name, field.Name);
                 var displayName = field.DisplayName;
                 yield return new ElementDescriptor(elementType, name, T(displayName), contentFieldElement.Category) {
-                    Displaying = displayContext => Displaying(displayContext),
+                    Display = displayContext => Displaying(displayContext),
                 };
             }
         }

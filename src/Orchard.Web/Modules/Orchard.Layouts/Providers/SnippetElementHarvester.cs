@@ -49,7 +49,7 @@ namespace Orchard.Layouts.Providers {
                 var elementName = GetDisplayName(shapeDescriptor.Value.BindingSource);
                 var closureDescriptor = shapeDescriptor;
                 yield return new ElementDescriptor(elementType, shapeType, T(elementName), snippetElement.Category) {
-                    Displaying = displayContext => Displaying(displayContext, closureDescriptor.Value)
+                    Display = displayContext => Displaying(displayContext, closureDescriptor.Value)
                 };
             }
         }
