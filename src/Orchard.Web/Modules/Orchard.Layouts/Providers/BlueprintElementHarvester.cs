@@ -28,8 +28,8 @@ namespace Orchard.Layouts.Providers {
             var blueprints = _elementBlueprintService.Value.GetBlueprints().ToArray();
 
             var query = 
-                from blueprint in blueprints 
-                let describeContext = DescribeElementsContext.Empty 
+                from blueprint in blueprints
+                let describeContext = new DescribeElementsContext { Content = context.Content, CacheVaryParam = "Blueprints"}
                 let baseElementDescriptor = _elementManager.Value.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName)
                 let baseElement = _elementManager.Value.ActivateElement(baseElementDescriptor)
                 select new ElementDescriptor(

@@ -93,7 +93,7 @@ namespace Orchard.Layouts.Framework.Display {
             var dictionary = new Dictionary<string, object> {
                 {"Element", element},
                 {"Elements", children},
-                {"ContentItem", content.ContentItem}
+                {"ContentItem", content != null ? content.ContentItem : default(ContentItem)}
             };
 
             if (elementState != null) {
