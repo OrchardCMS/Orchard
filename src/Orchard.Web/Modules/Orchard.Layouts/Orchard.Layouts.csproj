@@ -214,6 +214,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlueprintAdminController.cs" />
+    <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
     <Compile Include="Framework\Drivers\ExportElementContext.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Services\ICurrentControllerAccessor.cs" />
     <Compile Include="Services\IElementEventHandler.cs" />
     <Compile Include="Signals.cs" />
+    <Compile Include="Tokens\ElementTokens.cs" />
     <Compile Include="ViewModels\ElementBlueprintPropertiesViewModel.cs" />
     <Compile Include="ViewModels\CreateElementBlueprintViewModel.cs" />
     <Compile Include="Models\ElementBlueprint.cs" />
@@ -385,6 +387,7 @@
   <ItemGroup>
     <Content Include="Views\Parts.Layout.Summary.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
