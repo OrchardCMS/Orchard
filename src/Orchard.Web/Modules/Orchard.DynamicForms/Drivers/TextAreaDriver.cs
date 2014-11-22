@@ -13,11 +13,12 @@ namespace Orchard.DynamicForms.Drivers {
             _tokenizer = tokenizer;
         }
 
-        protected override IEnumerable<string> FormNames {
-            get {
-                yield return "AutoLabel";
-                yield return "TextArea";
-            }
+        protected override EditorResult OnBuildEditor(TextArea element, ElementEditorContext context) {
+            var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var textAreaEditor = BuildForm(context, "TextArea");
+            var textAreaValidation = BuildForm(context, "TextAreaValidation", "Validation:10");
+
+            return Editor(context, autoLabelEditor, textAreaEditor, textAreaValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -43,6 +44,44 @@ namespace Orchard.DynamicForms.Drivers {
                         Title: "Columns",
                         Classes: new[] { "text", "small" },
                         Description: T("The number of columns for this text area.")));
+
+                return form;
+            });
+
+            context.Form("TextAreaValidation", factory => {
+                var shape = (dynamic)factory;
+                var form = shape.Fieldset(
+                    Id: "TextAreaValidation",
+                    _IsRequired: shape.Checkbox(
+                        Id: "IsRequired",
+                        Name: "IsRequired",
+                        Title: "Required",
+                        Value: "true",
+                        Description: T("Check to make this text area a required field.")),
+                    _MinimumLength: shape.Textbox(
+                        Id: "MinimumLength",
+                        Name: "MinimumLength",
+                        Title: "Minimum Length",
+                        Classes: new[] { "text", "medium", "tokenized" },
+                        Description: T("The minimum length required.")),
+                    _MaximumLength: shape.Textbox(
+                        Id: "MaximumLength",
+                        Name: "MaximumLength",
+                        Title: "Maximum Length",
+                        Classes: new[] { "text", "medium", "tokenized" },
+                        Description: T("The maximum length allowed.")),
+                    _CustomValidationMessage: shape.Textbox(
+                        Id: "CustomValidationMessage",
+                        Name: "CustomValidationMessage",
+                        Title: "Custom Validation Message",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("Optionally provide a custom validation message.")),
+                    _ShowValidationMessage: shape.Checkbox(
+                        Id: "ShowValidationMessage",
+                        Name: "ShowValidationMessage",
+                        Title: "Show Validation Message",
+                        Value: "true",
+                        Description: T("Autogenerate a validation message when a validation error occurs for the current field. Alternatively, to control the placement of the validation message you can use the ValidationMessage element instead.")));
 
                 return form;
             });

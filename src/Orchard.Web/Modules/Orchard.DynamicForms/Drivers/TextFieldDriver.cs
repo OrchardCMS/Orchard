@@ -44,7 +44,7 @@ namespace Orchard.DynamicForms.Drivers {
                         Name: "IsRequired",
                         Title: "Required",
                         Value: "true",
-                        Description: T("Tick this checkbox to make this text field a required field.")),
+                        Description: T("Check to make this text field a required field.")),
                     _MinimumLength: shape.Textbox(
                         Id: "MinimumLength",
                         Name: "MinimumLength",

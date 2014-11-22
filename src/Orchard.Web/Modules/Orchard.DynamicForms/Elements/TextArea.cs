@@ -1,4 +1,5 @@
-﻿using Orchard.Layouts.Helpers;
+﻿using Orchard.DynamicForms.Validators.Settings;
+using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
     public class TextArea : LabeledFormElement {
@@ -10,6 +11,10 @@ namespace Orchard.DynamicForms.Elements {
         public int? Columns {
             get { return State.Get("Columns").ToInt32(); }
             set { State["Columns"] = value.ToString(); }
+        }
+
+        public TextAreaValidationSettings ValidationSettings {
+            get { return State.GetModel<TextAreaValidationSettings>(""); }
         }
     }
 }

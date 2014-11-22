@@ -187,6 +187,7 @@
     <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\ReCaptchaValidationSettings.cs" />
+    <Compile Include="Validators\Settings\TextAreaValidationSettings.cs" />
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="Services\Models\ValidateInputContext.cs" />
     <Compile Include="Validators\PasswordFieldValidator.cs" />
     <Compile Include="Validators\ReCaptchaValidator.cs" />
+    <Compile Include="Validators\TextAreaValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
