@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.DynamicForms.Elements;
@@ -236,6 +237,16 @@ namespace Orchard.DynamicForms.Services {
                 return null;
 
             var contentItem = _contentManager.New(contentTypeDefinition.Name);
+
+            // Create the version record before updating fields to prevent those field values from being lost when invoking Create.
+            // If Create is invoked while VersionRecord is null, a new VersionRecord will be created, wiping out our field values.
+            contentItem.VersionRecord = new ContentItemVersionRecord {
+                ContentItemRecord = new ContentItemRecord(),
+                Number = 1,
+                Latest = true,
+                Published = true
+            };
+
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
 
@@ -257,12 +268,11 @@ namespace Orchard.DynamicForms.Services {
                 }
             }
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
-            if (form.Publication == "Publish" || !contentTypeSettings.Draftable)
-                _contentManager.Publish(contentItem);
-
+            var versionOptions = form.Publication == "Publish" || !contentTypeSettings.Draftable ? VersionOptions.Published : VersionOptions.Draft;
+            
+            _contentManager.Create(contentItem, versionOptions);
+            
             return contentItem;
         }
 
