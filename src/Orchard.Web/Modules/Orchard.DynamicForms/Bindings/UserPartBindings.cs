@@ -1,14 +1,26 @@
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
+using Orchard.Security;
 using Orchard.Users.Models;
 
 namespace Orchard.DynamicForms.Bindings {
     public class UserPartBindings : Component, IBindingProvider {
+        private readonly IMembershipService _membershipService;
+        public UserPartBindings(IMembershipService membershipService) {
+            _membershipService = membershipService;
+        }
+
         public void Describe(BindingDescribeContext context) {
             context.For<UserPart>()
-                .Binding("UserName", (part, s) => part.UserName = s)
+                .Binding("UserName", (part, s) => {
+                    part.UserName = s;
+                    part.NormalizedUserName = s.ToLowerInvariant();
+                })
                 .Binding("Email", (part, s) => part.Email = s)
-                .Binding("Password", (part, s) => part.Password = s);
+                .Binding("Password", (part, s) => {
+                    part.HashAlgorithm = "SHA1";
+                    _membershipService.SetPassword(part, s);
+                });
         }
     }
 }
