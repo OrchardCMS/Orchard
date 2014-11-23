@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
@@ -18,21 +19,21 @@ namespace Orchard.DynamicForms.Activities {
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var state = activityContext.GetState<string>("FormSubmission");
+            var forms = activityContext.GetState<string>("DynamicForms");
 
             // "" means 'any'.
-            if (String.IsNullOrEmpty(state)) {
+            if (String.IsNullOrEmpty(forms)) {
                 return true;
             }
 
-            var form = workflowContext.Tokens["FormSubmission"] as Form;
+            var submission = (FormSubmissionTokenContext)workflowContext.Tokens["FormSubmission"];
 
-            if (form == null) {
+            if (submission == null) {
                 return false;
             }
 
-            var formNames = state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return formNames.Any(x => x == form.Name);
+            var formNames = forms.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return formNames.Any(x => x == submission.Form.Name);
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
