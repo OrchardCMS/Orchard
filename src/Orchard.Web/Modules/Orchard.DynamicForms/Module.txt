@@ -10,7 +10,7 @@ Features:
         Name: Dynamic Forms
         Description: Create custom forms like contact forms using layouts.
         Category: Forms
-        Dependencies: Orchard.Layouts, Orchard.Tokens, Orchard.Workflows, Orchard.Users, Orchard.AuditTrail, Common
+        Dependencies: Orchard.Layouts, Orchard.Scripting.CSharp, Orchard.Tokens, Orchard.Workflows, Orchard.Users, Orchard.AuditTrail, Common
     Orchard.DynamicForms.AntiSpam:
         Name: Anti-Spam Elements
         Description: Provides anti-spam elements to protect your content from malicious submissions.

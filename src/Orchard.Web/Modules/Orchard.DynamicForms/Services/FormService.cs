@@ -269,9 +269,11 @@ namespace Orchard.DynamicForms.Services {
             }
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
-            var versionOptions = form.Publication == "Publish" || !contentTypeSettings.Draftable ? VersionOptions.Published : VersionOptions.Draft;
-            
-            _contentManager.Create(contentItem, versionOptions);
+            _contentManager.Create(contentItem, VersionOptions.Draft);
+
+            if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
+                _contentManager.Publish(contentItem);
+            }
             
             return contentItem;
         }

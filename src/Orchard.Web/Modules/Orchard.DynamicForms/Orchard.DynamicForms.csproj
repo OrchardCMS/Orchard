@@ -119,6 +119,10 @@
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
       <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
       <Name>Orchard.Taxonomies</Name>
@@ -137,8 +141,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\DynamicFormActivity.cs" />
+    <Compile Include="Activities\AddModelErrorActivity.cs" />
+    <Compile Include="Activities\DynamicFormValidatingActivity.cs" />
     <Compile Include="Activities\DynamicFormSubmittedActivity.cs" />
-    <Compile Include="Activities\SelectDynamicForms.cs" />
+    <Compile Include="Forms\AddModelErrorForm.cs" />
+    <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
     <Compile Include="Bindings\BodyPartBindings.cs" />
     <Compile Include="Bindings\UserPartBindings.cs" />
@@ -157,7 +165,9 @@
     <Compile Include="Elements\ReCaptcha.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
+    <Compile Include="Forms\DynamicFormValidatingForm.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
+    <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
     <Compile Include="Services\Models\FormSubmissionTokenContext.cs" />
     <Compile Include="Handlers\ValidatorsCoordinator.cs" />
     <Compile Include="Handlers\FormSubmissionCoordinator.cs" />
