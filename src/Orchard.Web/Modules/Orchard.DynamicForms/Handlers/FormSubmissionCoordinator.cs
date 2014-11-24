@@ -36,6 +36,7 @@ namespace Orchard.DynamicForms.Handlers {
                 PostedValues = values
             };
             var tokensData = new Dictionary<string, object>(formValuesDictionary) {
+                {"Updater", context.Updater},
                 {"FormSubmission", formTokenContext},
             };
 
