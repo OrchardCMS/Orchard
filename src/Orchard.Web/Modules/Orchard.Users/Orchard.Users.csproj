@@ -67,6 +67,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\SignInUserActivity.cs" />
     <Compile Include="Activities\VerifyUserUnicityActivity.cs" />
     <Compile Include="Activities\ApproveUserActivity.cs" />
     <Compile Include="Activities\CreateUserActivity.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Forms\SignInUserForm.cs" />
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />
     <Compile Include="Handlers\WorkflowUserEventHandler.cs" />
