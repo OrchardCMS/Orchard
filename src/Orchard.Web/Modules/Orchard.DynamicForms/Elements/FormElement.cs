@@ -26,10 +26,18 @@ namespace Orchard.DynamicForms.Elements {
             get { return State.Get("Value"); }
         }
 
+        /// <summary>
+        /// The runtime value for this element. This is either the default value, or the submitted value.
+        /// </summary>
         public string RuntimeValue {
             get { return _runtimeValue.Value; }
             set { _runtimeValue = new Lazy<string>(() => value); }
         }
+
+        /// <summary>
+        /// The value posted back for this element.
+        /// </summary>
+        public string PostedValue { get; set; }
 
         public string FormBindingContentType {
             get { return State.Get("FormBindingContentType"); }
