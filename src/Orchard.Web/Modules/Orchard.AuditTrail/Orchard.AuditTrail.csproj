@@ -189,6 +189,8 @@
   <ItemGroup>
     <Compile Include="Menus\AuditTrailAdminMenu.cs" />
     <Compile Include="Menus\RecycleBinAdminMenu.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailEventSettingEventData.cs" />
+    <Compile Include="Providers\AuditTrail\AuditTrailManagerExtensions.cs" />
     <Compile Include="ViewModels\RecycleBinCommand.cs" />
     <Compile Include="Controllers\RecycleBinController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
