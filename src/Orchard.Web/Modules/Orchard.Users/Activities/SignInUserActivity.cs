@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Users.Models;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
@@ -30,7 +32,7 @@ namespace Orchard.Users.Activities {
         }
 
         public override LocalizedString Description {
-            get { return T("Signs in a user based on the specified credentials."); }
+            get { return T("Signs in a user based on the specified credentials, or if the current content item us a user, that user is signed in."); }
         }
 
         public override string Form {
@@ -54,7 +56,9 @@ namespace Orchard.Users.Activities {
                 yield break;
             }
 
-            var user = _membershipService.ValidateUser(userNameOrEmail, password);
+            var user = !String.IsNullOrWhiteSpace(userNameOrEmail)
+                ? _membershipService.ValidateUser(userNameOrEmail, password)
+                : workflowContext.Content != null ? workflowContext.Content.As<UserPart>() : default(UserPart);
 
             if (user == null) {
                 yield return T("IncorrectUserNameOrPassword");
