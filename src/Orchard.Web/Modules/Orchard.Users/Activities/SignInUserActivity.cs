@@ -50,15 +50,16 @@ namespace Orchard.Users.Activities {
             var userNameOrEmail = activityContext.GetState<string>("UserNameOrEmail");
             var password = activityContext.GetState<string>("Password");
             var createPersistentCookie = IsTrueish(activityContext.GetState<string>("CreatePersistentCookie"));
+            var user = workflowContext.Content != null ? workflowContext.Content.As<IUser>() : default(IUser);
 
-            if (String.IsNullOrWhiteSpace(userNameOrEmail) || String.IsNullOrWhiteSpace(password)) {
-                yield return T("IncorrectUserNameOrPassword");
-                yield break;
+            if (user == null) {
+                if (String.IsNullOrWhiteSpace(userNameOrEmail) || String.IsNullOrWhiteSpace(password)) {
+                    yield return T("IncorrectUserNameOrPassword");
+                    yield break;
+                }
+
+                user = _membershipService.ValidateUser(userNameOrEmail, password);
             }
-
-            var user = !String.IsNullOrWhiteSpace(userNameOrEmail)
-                ? _membershipService.ValidateUser(userNameOrEmail, password)
-                : workflowContext.Content != null ? workflowContext.Content.As<UserPart>() : default(UserPart);
 
             if (user == null) {
                 yield return T("IncorrectUserNameOrPassword");
