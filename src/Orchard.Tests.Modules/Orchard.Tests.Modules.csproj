@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Autoroute\DefaultSlugServiceTests.cs" />
+    <Compile Include="Caching\CachedTests.cs" />
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
     <Compile Include="Email\EmailChannelTests.cs" />
@@ -208,6 +209,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Caching\Orchard.Caching.csproj">
+      <Project>{7528bf74-25c7-4abe-883a-443b4eec4776}</Project>
+      <Name>Orchard.Caching</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
       <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
