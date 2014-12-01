@@ -23,21 +23,37 @@ namespace Orchard.Caching.Services {
         private static Cached<T> GetOrPut<T>(this ICacheService cacheService, string key, Func<T> factory, Action<T> putter) {
             var result = cacheService.Get<T>(key);
 
-            if (result == null && factory != null) {
+            if (!result.HasValue && factory != null) {
                 var computed = factory();
                 putter(computed);
-                return new Cached<T>(computed);
+                return computed;
             }
 
             return result;
         }
     }
 
+    /// <summary>
+    /// Wrapper class for a cache entry.
+    /// </summary>
+    /// <typeparam name="T">Type of the wrapped cache value.</typeparam>
     public class Cached<T> {
+        /// <summary>
+        /// Cache entry value.
+        /// </summary>
         public T Value { get; private set; }
+
+        /// <summary>
+        /// Checks if an entry is not empty.
+        /// </summary>
         public bool HasValue { get; private set; }
 
-        public Cached(object value) {
+        /// <summary>
+        /// Expiration date of this entry.
+        /// </summary>
+        public DateTimeOffset Expires { get; set; }
+
+        protected Cached(object value) {
             if (value == null) {
                 HasValue = false;
                 Value = default(T);
@@ -46,19 +62,23 @@ namespace Orchard.Caching.Services {
                 HasValue = true;
                 Value = (T)value;
             }
+
+            Expires = DateTimeOffset.MaxValue;
         }
 
-        public static implicit operator Cached<T>(T value)
-        {
+        public static implicit operator Cached<T>(T value) {
             return new Cached<T>(value);
         }
 
-        public static implicit operator T(Cached<T> value)
-        {
-            return value.HasValue ? value.Value : default(T);
+        public static explicit operator T(Cached<T> value) {
+            return value.Value;
         }
 
         public static bool operator ==(Cached<T> a, T b) {
+            if (a == null) {
+                return false;
+            }
+
             if (a.HasValue) {
                 return a.Value.Equals(b);
             }
@@ -70,8 +90,28 @@ namespace Orchard.Caching.Services {
             return b == null;
         }
 
+        public static bool operator ==(T a, Cached<T> b) {
+            return b == a;
+        }
+
+        public static bool operator !=(T a, Cached<T> b) {
+            return !(a == b);
+        }
+
         public static bool operator !=(Cached<T> a, T b) {
             return !(a == b);
+        }
+
+        public override bool Equals(object other)
+        {
+            if (!HasValue) return other == null;
+            if (other == null) return false;
+            return Value.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HasValue ? Value.GetHashCode() : 0;
         }
     }
 }

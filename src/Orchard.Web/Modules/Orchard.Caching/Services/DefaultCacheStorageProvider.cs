@@ -22,11 +22,18 @@ namespace Orchard.Caching.Services {
 
         public void Put<T>(string key, T value) {
             // Keys are already prefixed by DefaultCacheService so no need to do it here again.
-            _cache.Set(key, value, GetCacheItemPolicy(MemoryCache.InfiniteAbsoluteExpiration));
+            _cache.Set(
+                key, 
+                BuildCacheItem(value, ObjectCache.InfiniteAbsoluteExpiration), 
+                GetCacheItemPolicy(ObjectCache.InfiniteAbsoluteExpiration));
         }
 
         public void Put<T>(string key, T value, TimeSpan validFor) {
-            _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
+            var expiration = new DateTimeOffset(_clock.UtcNow).ToOffset(validFor);
+            _cache.Set(
+                key, 
+                BuildCacheItem(value, expiration), 
+                GetCacheItemPolicy(expiration));
         }
 
         public void Remove(string key) {
@@ -43,18 +50,31 @@ namespace Orchard.Caching.Services {
             var value = _cache.Get(key);
             // if the provided expression is non-null, and the provided object can 
             // be cast to the provided type without causing an exception to be thrown
-            if(value is T) {
+            if (value is Cached<T>) {
+                return (Cached<T>)value;
+            }
+
+            if (value is T) {
                 return (T)value;
             }
 
-            return null;
+            value = null;
+            return (T)value;
+        }
+
+        private Cached<T> BuildCacheItem<T>(T item, DateTimeOffset expiration) {
+            Cached<T> cached = item;
+            cached.Expires = expiration;
+
+            return cached;
         }
 
         private CacheItemPolicy GetCacheItemPolicy(DateTimeOffset absoluteExpiration) {
-            var cacheItemPolicy = new CacheItemPolicy();
+            var cacheItemPolicy = new CacheItemPolicy {
+                AbsoluteExpiration = absoluteExpiration, 
+                SlidingExpiration = ObjectCache.NoSlidingExpiration
+            };
 
-            cacheItemPolicy.AbsoluteExpiration = absoluteExpiration;
-            cacheItemPolicy.SlidingExpiration = MemoryCache.NoSlidingExpiration;
             cacheItemPolicy.ChangeMonitors.Add(new TenantCacheClearMonitor(this));
 
             return cacheItemPolicy;

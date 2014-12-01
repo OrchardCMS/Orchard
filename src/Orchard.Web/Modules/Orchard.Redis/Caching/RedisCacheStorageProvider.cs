@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Orchard.Caching.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Redis.Configuration;
 using Orchard.Redis.Extensions;
+using Orchard.Services;
 using StackExchange.Redis;
 using System;
 
@@ -17,6 +19,7 @@ namespace Orchard.Redis.Caching {
 
         private readonly ShellSettings _shellSettings;
         private readonly IRedisConnectionProvider _redisConnectionProvider;
+        private readonly IClock _clock;
         private readonly string _connectionString;
 
         public IDatabase Database {
@@ -25,21 +28,35 @@ namespace Orchard.Redis.Caching {
             }
         }
 
-        public RedisCacheStorageProvider(ShellSettings shellSettings, IRedisConnectionProvider redisConnectionProvider) {
+        public RedisCacheStorageProvider(ShellSettings shellSettings, IRedisConnectionProvider redisConnectionProvider, IClock clock) {
             _shellSettings = shellSettings;
             _redisConnectionProvider = redisConnectionProvider;
+            _clock = clock;
             _connectionString = _redisConnectionProvider.GetConnectionString(ConnectionStringKey);
             Logger = NullLogger.Instance;
         }
 
         public Cached<T> Get<T>(string key) {
-            var json = Database.StringGet(GetLocalizedKey(key));
-     
+            var jsonTask = Database.StringGetAsync(GetLocalizedKey(key));
+            var timeToLiveTask = Database.KeyTimeToLiveAsync(GetLocalizedKey(key));
+
+            Task.WaitAll(jsonTask, timeToLiveTask);
+
+            var json = jsonTask.Result;
+            var timeToLive = timeToLiveTask.Result;
+
             if (json.IsNullOrEmpty) {
-                return null;
+                object value = null;
+                return (T)value;
             }
 
-            return JsonConvert.DeserializeObject<T>(json);
+            Cached<T> entry = JsonConvert.DeserializeObject<T>(json);
+
+            if (timeToLive.HasValue) {
+                entry.Expires = new DateTimeOffset(_clock.UtcNow).ToOffset(timeToLive.Value);
+            }
+
+            return entry;
         }
 
         public void Put<T>(string key, T value) {
