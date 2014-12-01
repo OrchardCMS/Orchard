@@ -22,5 +22,7 @@ namespace Orchard.Layouts.Services {
         EditorResult UpdateEditor(ElementEditorContext context);
         void Saving(LayoutSavingContext context);
         void Removing(LayoutSavingContext context);
+        void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context);
+        void Importing(IEnumerable<IElement> elements, ImportLayoutContext context);
     }
 }

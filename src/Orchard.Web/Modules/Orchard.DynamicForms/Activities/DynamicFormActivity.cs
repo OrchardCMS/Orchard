@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.DynamicForms.Elements;
+using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Orchard.DynamicForms.Activities {
-    public class FormSubmittedActivity : Event {
-
-        public const string EventName = "DynamicFormSubmitted";
+    public abstract class DynamicFormActivity : Event {
+        protected DynamicFormActivity() {
+            T = NullLocalizer.Instance;
+        }
 
         public Localizer T { get; set; }
 
@@ -18,21 +19,21 @@ namespace Orchard.DynamicForms.Activities {
         }
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var state = activityContext.GetState<string>("DynamicForms");
+            var forms = activityContext.GetState<string>("DynamicForms");
 
             // "" means 'any'.
-            if (String.IsNullOrEmpty(state)) {
+            if (String.IsNullOrEmpty(forms)) {
                 return true;
             }
 
-            var form = workflowContext.Tokens["DynamicForm"] as Form;
+            var submission = (FormSubmissionTokenContext)workflowContext.Tokens["FormSubmission"];
 
-            if (form == null) {
+            if (submission == null) {
                 return false;
             }
 
-            var formNames = state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return formNames.Any(x => x == form.Name);
+            var formNames = forms.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return formNames.Any(x => x == submission.Form.Name);
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
@@ -49,16 +50,8 @@ namespace Orchard.DynamicForms.Activities {
             }
         }
 
-        public override string Name {
-            get { return EventName; }
-        }
-
         public override LocalizedString Category {
             get { return T("Forms"); }
-        }
-
-        public override LocalizedString Description {
-            get { return T("A dynamic form is submitted."); }
         }
     }
 

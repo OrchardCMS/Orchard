@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.DynamicForms.Elements;
@@ -77,14 +78,15 @@ namespace Orchard.DynamicForms.Services {
             return GetFormElements(form).Select(x => x.Name).Where(x => !String.IsNullOrWhiteSpace(x)).Distinct();
         }
 
-        public NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState) {
+        public NameValueCollection SubmitForm(Form form, IValueProvider valueProvider, ModelStateDictionary modelState, IUpdateModel updater) {
             var values = ReadElementValues(form, valueProvider);
 
             _formEventHandler.Submitted(new FormSubmittedEventContext {
                 Form = form,
                 FormService = this,
                 ValueProvider = valueProvider,
-                Values = values
+                Values = values,
+                Updater = updater
             });
 
             _formEventHandler.Validating(new FormValidatingEventContext {
@@ -92,7 +94,8 @@ namespace Orchard.DynamicForms.Services {
                 FormService = this,
                 Values = values,
                 ModelState = modelState,
-                ValueProvider = valueProvider
+                ValueProvider = valueProvider,
+                Updater = updater
             });
 
             _formEventHandler.Validated(new FormValidatedEventContext {
@@ -100,7 +103,8 @@ namespace Orchard.DynamicForms.Services {
                 FormService = this,
                 Values = values,
                 ModelState = modelState,
-                ValueProvider = valueProvider
+                ValueProvider = valueProvider,
+                Updater = updater
             });
 
             return values;
@@ -232,7 +236,17 @@ namespace Orchard.DynamicForms.Services {
             if (contentTypeDefinition == null)
                 return null;
 
-            var contentItem = _contentManager.Create(contentTypeDefinition.Name, VersionOptions.Draft);
+            var contentItem = _contentManager.New(contentTypeDefinition.Name);
+
+            // Create the version record before updating fields to prevent those field values from being lost when invoking Create.
+            // If Create is invoked while VersionRecord is null, a new VersionRecord will be created, wiping out our field values.
+            contentItem.VersionRecord = new ContentItemVersionRecord {
+                ContentItemRecord = new ContentItemRecord(),
+                Number = 1,
+                Latest = true,
+                Published = true
+            };
+
             var lookup = _bindingManager.DescribeBindingsFor(contentTypeDefinition);
             var formElements = GetFormElements(form);
 
@@ -255,8 +269,12 @@ namespace Orchard.DynamicForms.Services {
             }
 
             var contentTypeSettings = contentTypeDefinition.Settings.GetModel<ContentTypeSettings>();
-            if (form.Publication == "Publish" || !contentTypeSettings.Draftable)
+            _contentManager.Create(contentItem, VersionOptions.Draft);
+
+            if (form.Publication == "Publish" || !contentTypeSettings.Draftable) {
                 _contentManager.Publish(contentItem);
+            }
+            
             return contentItem;
         }
 

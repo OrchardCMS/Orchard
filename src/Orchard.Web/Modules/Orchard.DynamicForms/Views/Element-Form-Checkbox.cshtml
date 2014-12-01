@@ -9,6 +9,10 @@
     tagBuilder.Attributes["name"] = element.Name;
     tagBuilder.Attributes["value"] = Model.TokenizedValue;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+
+    if (!String.IsNullOrWhiteSpace(element.PostedValue)) {
+        tagBuilder.Attributes["checked"] = "checked";
+    }
 }
 @if (element.ShowLabel) {
     <label>

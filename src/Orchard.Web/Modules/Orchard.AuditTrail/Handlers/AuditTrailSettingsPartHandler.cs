@@ -10,9 +10,9 @@ using Orchard.Localization;
 namespace Orchard.AuditTrail.Handlers {
     public class AuditTrailSettingsPartHandler : ContentHandler {
         private readonly ISignals _signals;
-        private string _oldEventSettings;
         private readonly IAuditTrailManager _auditTrailManager;
         private readonly IWorkContextAccessor _wca;
+        private string _oldEventSettings;
 
         public AuditTrailSettingsPartHandler(ISignals signals, IAuditTrailManager auditTrailManager, IWorkContextAccessor wca) {
             _signals = signals;
@@ -54,8 +54,8 @@ namespace Orchard.AuditTrail.Handlers {
             _auditTrailManager.CreateRecord<AuditTrailSettingsEventProvider>(
                 eventName: AuditTrailSettingsEventProvider.EventsChanged,
                 eventData: new Dictionary<string, object> {
-                    {"OldSettings", _oldEventSettings},
-                    {"NewSettings", newEventSettings}
+                    {"OldSettings", _auditTrailManager.ToEventData(_oldEventSettings)},
+                    {"NewSettings", _auditTrailManager.ToEventData(newEventSettings)}
                 },
                 user: _wca.GetContext().CurrentUser);
         }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
-using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
+﻿using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
-namespace Orchard.DynamicForms.Activities {
+namespace Orchard.DynamicForms.Forms {
     public class SelectDynamicForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }

@@ -15,7 +15,7 @@
     <div>
         <label for="@Html.FieldIdFor(m => m.Description)">@T("Description")</label>
         @Html.TextBoxFor(m => m.Description, new { @class = "tokenized text medium" })
-        <span class="hint">@T("The description field of the RSS item")</span>
+        <span class="hint">@T("The description field of the RSS item. The content needs to be raw HTML, i.e. not encoded.")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Author)">@T("Author")</label>

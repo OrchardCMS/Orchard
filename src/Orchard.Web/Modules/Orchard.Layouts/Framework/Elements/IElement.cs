@@ -10,6 +10,7 @@ namespace Orchard.Layouts.Framework.Elements {
         bool HasEditor { get; }
         bool IsTemplated { get; set; }
         StateDictionary State { get; set; }
+        StateDictionary ExportableState { get; set; }
         ElementDescriptor Descriptor { get; set; }
         int Index { get; set; }
         Localizer T { get; set; }

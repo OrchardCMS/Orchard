@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 
@@ -8,12 +9,32 @@ namespace Orchard.Layouts.Handlers {
     public class LayoutPartHandler : ContentHandler {
         private readonly ILayoutManager _layoutManager;
         private readonly IContentManager _contentManager;
+        private readonly IContentPartDisplay _contentPartDisplay;
+        private readonly IShapeDisplay _shapeDisplay;
 
-        public LayoutPartHandler(IRepository<LayoutPartRecord> repository, ILayoutManager layoutManager, IContentManager contentManager) {
+        public LayoutPartHandler(
+            IRepository<LayoutPartRecord> repository, 
+            ILayoutManager layoutManager, 
+            IContentManager contentManager, 
+            IContentPartDisplay contentPartDisplay, 
+            IShapeDisplay shapeDisplay) {
+
             _layoutManager = layoutManager;
             _contentManager = contentManager;
+            _contentPartDisplay = contentPartDisplay;
+            _shapeDisplay = shapeDisplay;
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
+            OnIndexing<LayoutPart>(IndexLayout);
+        }
+
+        private void IndexLayout(IndexContentContext context, LayoutPart part) {
+            var layoutShape = _contentPartDisplay.BuildDisplay(part);
+            var layoutHtml = _shapeDisplay.Display(layoutShape);
+
+            context.DocumentIndex
+                .Add("body", layoutHtml).RemoveTags().Analyze()
+                .Add("format", "html").Store();
         }
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {

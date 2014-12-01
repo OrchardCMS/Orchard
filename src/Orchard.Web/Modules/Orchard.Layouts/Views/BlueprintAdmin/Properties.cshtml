@@ -3,12 +3,12 @@
     Layout.Title = T("Edit Blueprint Properties based on {0}", Model.BaseElement.DisplayText);
 }
 @using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
     <fieldset>
         <div>
             @Html.LabelFor(m => m.ElementDisplayName, T("Element Display Name"))
-            @Html.TextBoxFor(m => m.ElementDisplayName, new {@class = "text large"})
+            @Html.TextBoxFor(m => m.ElementDisplayName, new { @class = "text large" })
             @Html.Hint(T("The friendly name of the specialized element. Example: Special {0}", Model.BaseElement.Descriptor.DisplayText))
-            @Html.ValidationMessageFor(m => m.ElementDisplayName)
         </div>
         <div>
             @Html.LabelFor(m => m.ElementTypeName, T("Element Type Name"))
@@ -19,7 +19,6 @@
             @Html.LabelFor(m => m.ElementCategory, T("Element Category"))
             @Html.TextBoxFor(m => m.ElementCategory, new { @class = "text large" })
             @Html.Hint(T("Optionally specify a category for this element."))
-            @Html.ValidationMessageFor(m => m.ElementCategory)
         </div>
     </fieldset>
     <button type="submit">@T("Save")</button>

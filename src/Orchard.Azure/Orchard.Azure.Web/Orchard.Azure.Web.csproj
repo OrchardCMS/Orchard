@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,13 +12,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Azure.Web</RootNamespace>
     <AssemblyName>Orchard.Azure.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -102,9 +103,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="NHibernate.SqlAzure">
-      <HintPath>..\..\..\lib\nhibernate.sqlazure\NHibernate.SqlAzure.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -294,6 +292,10 @@
       <Name>Orchard.DesignerTools</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.DynamicForms\Orchard.DynamicForms.csproj">
+      <Project>{82190f52-2901-46d6-8a4c-34649959483f}</Project>
+      <Name>Orchard.DynamicForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
       <Project>{05660F47-D649-48BD-9DED-DF4E01E7CFF9}</Project>
       <Name>Orchard.Email</Name>
@@ -320,10 +322,18 @@
       <Name>Orchard.Indexing</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.JobsQueue\Orchard.JobsQueue.csproj">
+      <Project>{085948ff-0e9b-4a9a-b564-f8b8b4bdddbc}</Project>
+      <Name>Orchard.JobsQueue</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.jQuery\Orchard.jQuery.csproj">
       <Project>{8F116B06-1C0E-4E4C-9A0A-D2FAB851E768}</Project>
       <Name>Orchard.jQuery</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Lists\Orchard.Lists.csproj">
       <Project>{137906EA-15FE-4AD8-A6A0-27528F0477D6}</Project>
@@ -352,6 +362,10 @@
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MessageBus\Orchard.MessageBus.csproj">
+      <Project>{ed715544-e649-4f48-b8ee-9368c41c3ac0}</Project>
+      <Name>Orchard.MessageBus</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj">
       <Project>{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}</Project>
@@ -396,6 +410,10 @@
       <Name>Orchard.Recipes</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Redis\Orchard.Redis.csproj">
+      <Project>{2c5eb8b3-a313-413d-baa0-5c21d2a6ec6e}</Project>
+      <Name>Orchard.Redis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
@@ -418,6 +436,10 @@
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002b65-86f7-415e-bf4a-381aa8ab9ccc}</Project>
+      <Name>Orchard.Scripting</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Search\Orchard.Search.csproj">
       <Project>{4BE4EB01-AC56-4048-924E-2CA77F509ABA}</Project>

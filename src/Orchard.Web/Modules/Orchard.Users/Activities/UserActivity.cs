@@ -6,6 +6,10 @@ using Orchard.Workflows.Services;
 
 namespace Orchard.Users.Activities {
     public abstract class UserActivity : Event {
+        protected UserActivity() {
+            T = NullLocalizer.Instance;
+        }
+
         public Localizer T { get; set; }
 
         public override bool CanStartWorkflow {

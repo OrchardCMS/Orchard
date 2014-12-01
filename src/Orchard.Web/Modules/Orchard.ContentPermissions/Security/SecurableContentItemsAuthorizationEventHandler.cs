@@ -71,6 +71,9 @@ namespace Orchard.ContentPermissions.Security {
                 return Orchard.Core.Contents.Permissions.DeleteOwnContent;
             if (permission.Name == Orchard.Core.Contents.Permissions.ViewContent.Name)
                 return Orchard.Core.Contents.Permissions.ViewOwnContent;
+            if (permission.Name == Orchard.Core.Contents.Permissions.PreviewContent.Name)
+                return Orchard.Core.Contents.Permissions.PreviewOwnContent;
+
             return null;
         }
 

@@ -15,6 +15,7 @@
     <thead>
         <tr>
             <th scope="col">@T("Url")</th>
+            <th scope="col">@T("Cache Key")</th>
             <th scope="col">@T("Cached On")</th>
             <th scope="col">@T("Cached Until")</th>
             <th scope="col">&nbsp;</th>
@@ -23,6 +24,7 @@
     @foreach (var cacheItem in Model.CacheItems) {
         <tr>
             <td><span title="@cacheItem.QueryString">@cacheItem.Url</span></td>
+            <td>@cacheItem.CacheKey</td>
             <td>@Display.DateTimeRelative(DateTimeUtc: cacheItem.CachedOnUtc)</td>
             <td>@cacheItem.ValidUntilUtc.ToLocalTime()</td>
             <td>@Html.ActionLink(T("Evict").Text, "Evict", new { Area = "Orchard.OutputCache", Controller = "Statistics", cacheKey = cacheItem.CacheKey })</td>

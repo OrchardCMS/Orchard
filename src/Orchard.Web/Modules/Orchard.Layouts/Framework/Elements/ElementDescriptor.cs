@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.Layouts.Framework.Display;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Framework.Elements {
@@ -9,17 +12,25 @@ namespace Orchard.Layouts.Framework.Elements {
             TypeName = typeName;
             DisplayText = displayText;
             Category = category;
-            CreatingDisplay = context => {};
-            Displaying = context => {};
+            GetDrivers = Enumerable.Empty<IElementDriver>;
+            CreatingDisplay = context => { };
+            Display = context => {};
+            Editor = context => { };
+            UpdateEditor = context => { };
+            StateBag = new Dictionary<string, object>();
         }
 
         public LocalizedString DisplayText { get; set; }
         public string Category { get; set; }
         public Type ElementType { get; set; }
         public string TypeName { get; set; }
+        public Func<IEnumerable<IElementDriver>> GetDrivers { get; set; }
         public Action<ElementCreatingDisplayShapeContext> CreatingDisplay { get; set; }
-        public Action<ElementDisplayContext> Displaying { get; set; }
+        public Action<ElementDisplayContext> Display { get; set; }
+        public Action<ElementEditorContext> Editor { get; set; }
+        public Action<ElementEditorContext> UpdateEditor { get; set; }
         public bool IsSystemElement { get; set; }
         public bool EnableEditorDialog { get; set; }
+        public IDictionary<string, object> StateBag { get; set; }
     }
 }

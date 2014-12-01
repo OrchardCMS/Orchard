@@ -84,8 +84,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Super Duper"});
             table1.AddRow(new string[] {
-                        "Body.Text",
-                        "This is super."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+super.\"} ] }"});
             table1.AddRow(new string[] {
                         "Tags.Tags",
                         "Foo, Bar"});
@@ -124,8 +125,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Super Duper"});
             table2.AddRow(new string[] {
-                        "Body.Text",
-                        "This is super."});
+                        "LayoutPart.State",
+                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
+                            "This+is+super.\"} ] }"});
             table2.AddRow(new string[] {
                         "Tags.Tags",
                         "Foo, I <3 Orchard"});

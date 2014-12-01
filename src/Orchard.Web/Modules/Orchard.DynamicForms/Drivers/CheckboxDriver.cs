@@ -65,7 +65,7 @@ namespace Orchard.DynamicForms.Drivers {
         }
 
         protected override void OnDisplaying(CheckBox element, ElementDisplayContext context) {
-            context.ElementShape.TokenizedValue = _tokenizer.Replace(element.Value, null);
+            context.ElementShape.TokenizedValue = _tokenizer.Replace(element.RuntimeValue, null);
         }
     }
 }

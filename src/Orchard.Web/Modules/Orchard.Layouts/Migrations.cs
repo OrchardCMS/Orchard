@@ -56,6 +56,10 @@ namespace Orchard.Layouts {
             DefineElementWidget("MediaWidget", "Media Widget", "Orchard.Layouts.Elements.MediaItem");
             DefineElementWidget("ContentWidget", "Content Widget", "Orchard.Layouts.Elements.ContentItem");
 
+            ContentDefinitionManager.AlterTypeDefinition("Page", type => type
+                .WithPart("LayoutPart", p => p
+                    .WithSetting("LayoutTypePartSettings.IsTemplate", "False")));
+
             return 1;
         }
 

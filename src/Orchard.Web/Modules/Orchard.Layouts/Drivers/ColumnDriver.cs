@@ -17,7 +17,7 @@ namespace Orchard.Layouts.Drivers {
         protected override void DescribeForm(DescribeContext context) {
             context.Form("Column", factory => {
                 var shape = (dynamic)factory;
-                var form = shape.Form(
+                var form = shape.Fieldset(
                     Id: "Column",
                     _Span: shape.Textbox(
                         Id: "ColumnSpan",

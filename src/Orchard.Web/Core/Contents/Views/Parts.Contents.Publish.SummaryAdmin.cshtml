@@ -12,10 +12,12 @@
 
     if (contentPart.HasDraft()) {
         if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
+            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new {area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString()}), new {itemprop = "UnsafeUrl"})
             @T(" | ")
-        
-            @Html.ActionLink(T("Preview").Text, "Display", "Item", new {area = "Contents", id = ((ContentItem) Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new {})
+        }
+
+        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
+            @Html.ActionLink(T("Preview").Text, "Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new { })
             @T(" | ")
         }
     }
@@ -25,9 +27,11 @@
         @T(" | ")
     }
 } else {
-    if ( contentPart.HasDraft() ) {    
-        @Html.ActionLink(T("Preview").Text, "Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new { })
-        @T(" | ")
+    if (contentPart.HasDraft()) {
+        if (Authorizer.Authorize(Permissions.PreviewContent, contentPart)) {
+            @Html.ActionLink(T("Preview").Text, "Display", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id, version = ((ContentItem)Model.ContentPart.ContentItem).Version }, new { })
+            @T(" | ")
+        }
     }
 
     if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {

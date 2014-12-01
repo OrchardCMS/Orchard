@@ -43,6 +43,7 @@
                     }
                     self.renderGraph(targetContainer, graph, self.settings.domOperations.append);
                     self.element.find("a.add.start").removeClass("start").hide();
+
                     dialog.close();
                 }
             });

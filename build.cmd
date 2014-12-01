@@ -1,3 +1,2 @@
-if "%~1"=="" build Build
-msbuild /t:%~1 Orchard.proj
-
+if "%~1"=="" call clicktobuild 
+call clicktobuild %~1 

@@ -30,5 +30,9 @@
         void BuildDisplay(BuildDisplayContext context);
         void BuildEditor(BuildEditorContext context);
         void UpdateEditor(UpdateEditorContext context);
+        void Restoring(RestoreContentContext context);
+        void Restored(RestoreContentContext context);
+        void Destroying(DestroyContentContext context);
+        void Destroyed(DestroyContentContext context);
     }
 }

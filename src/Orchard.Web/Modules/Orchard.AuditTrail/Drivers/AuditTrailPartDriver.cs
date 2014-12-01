@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using Orchard.AuditTrail.Models;
 using Orchard.AuditTrail.Providers.Content;
 using Orchard.AuditTrail.Services;
@@ -56,11 +55,12 @@ namespace Orchard.AuditTrail.Drivers {
                         var pager = new Pager(_services.WorkContext.CurrentSite, null, null);
                         var pageOfData = _auditTrailManager.GetRecords(pager.Page, pager.PageSize, ContentAuditTrailEventProvider.CreateFilters(part.Id, updater));
                         var pagerShape = shapeHelper.Pager(pager).TotalItemCount(pageOfData.TotalItemCount);
-                        var eventDescriptors =
+                        var eventDescriptorsQuery =
                             from c in _auditTrailManager.DescribeCategories()
                             from e in c.Events
                             select e;
-                        var recordViewModels =
+                        var eventDescriptors = eventDescriptorsQuery.ToArray();
+                        var recordViewModelsQuery =
                             from record in pageOfData
                             let descriptor = eventDescriptors.FirstOrDefault(x => x.Event == record.FullEventName)
                             where descriptor != null
@@ -68,9 +68,10 @@ namespace Orchard.AuditTrail.Drivers {
                                 Record = record,
                                 EventDescriptor = descriptor,
                                 CategoryDescriptor = descriptor.CategoryDescriptor,
-                                SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin")
+                                SummaryShape = _displayBuilder.BuildDisplay(record, "SummaryAdmin"),
+                                ActionsShape = _displayBuilder.BuildActions(record, "SummaryAdmin")
                             };
-
+                        var recordViewModels = recordViewModelsQuery.ToArray();
                         return shapeHelper.Parts_AuditTrail(Records: recordViewModels, Pager: pagerShape);
                     }));
                 }

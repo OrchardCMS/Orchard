@@ -60,9 +60,9 @@
 
             // Register media button
             ed.addButton('medialibrary', {
-                title: 'Insert Media Item', //ed.getParam("mediapicker_title"),
-                cmd: 'mceMediaLibrary',
-                image: url + '/img/picture_add.png'
+                icon: 'image',
+                title: 'Insert media', //ed.getParam("mediapicker_title"),
+                cmd: 'mceMediaLibrary'
             });
         },
 

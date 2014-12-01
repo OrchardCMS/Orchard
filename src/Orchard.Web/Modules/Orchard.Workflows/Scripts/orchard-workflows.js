@@ -1,4 +1,4 @@
-    var connectorPaintStyle = {
+﻿    var connectorPaintStyle = {
         lineWidth: 2,
         strokeStyle: "#999",
         joinstyle: "round",

@@ -27,15 +27,18 @@ namespace Orchard.AuditTrail.Providers.Content {
         protected override void Created(CreateContentContext context) {
             // At this point the UpdateEditor hasn't been invoked on the content item yet,
             // so we don't have access to all of the information we might need (such as Title).
-            // We set a flag against we check in the Updated method (which is invoked when UpdateEditor is invoked).
+            // We set a flag which we will check in the Updated method (which is invoked when UpdateEditor is invoked).
             _contentItemCreated = true;
         }
 
         protected override void Updating(UpdateContentContext context) {
             var contentItem = context.ContentItem;
+
+            _ignoreExportHandlerFor = contentItem;
             _previousVersionXml = _contentItemCreated 
                 ? default(XElement) // No need to do a diff on a newly created content item.
                 : _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
         }
 
         protected override void Updated(UpdateContentContext context) {
@@ -54,6 +57,23 @@ namespace Orchard.AuditTrail.Providers.Content {
             }
         }
 
+        protected override void Restoring(RestoreContentContext context) {
+            _ignoreExportHandlerFor = context.ContentItem;
+            _previousVersionXml = _contentManager.Export(context.ContentItem);
+            _ignoreExportHandlerFor = null;
+        }
+
+        protected override void Restored(RestoreContentContext context) {
+            var contentItem = context.ContentItem;
+           
+            _ignoreExportHandlerFor = contentItem;
+            var newVersionXml = _contentManager.Export(contentItem);
+            _ignoreExportHandlerFor = null;
+
+            var diffGram = _analyzer.GenerateDiffGram(_previousVersionXml, newVersionXml);
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Restored, context.ContentItem, diffGram: diffGram, previousVersionXml: _previousVersionXml);
+        }
+
         protected override void Published(PublishContentContext context) {
             var previousVersion = context.PreviousItemVersionRecord;
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Published, context.ContentItem, previousVersion);
@@ -65,6 +85,10 @@ namespace Orchard.AuditTrail.Providers.Content {
 
         protected override void Removed(RemoveContentContext context) {
             RecordAuditTrailEvent(ContentAuditTrailEventProvider.Removed, context.ContentItem);
+        }
+
+        protected override void Destroyed(DestroyContentContext context) {
+            RecordAuditTrailEvent(ContentAuditTrailEventProvider.Destroyed, context.ContentItem);
         }
 
         protected override void Imported(ImportContentContext context) {
@@ -93,9 +117,9 @@ namespace Orchard.AuditTrail.Providers.Content {
                 {"ContentId", content.Id},
                 {"ContentIdentity", metaData.Identity.ToString()},
                 {"ContentType", content.ContentItem.ContentType},
-                {"VersionId", content.ContentItem.VersionRecord.Id},
-                {"VersionNumber", content.ContentItem.VersionRecord.Number},
-                {"Published", content.ContentItem.VersionRecord.Published},
+                {"VersionId", content.ContentItem.Version},
+                {"VersionNumber", content.ContentItem.VersionRecord != null ? content.ContentItem.VersionRecord.Number : 0},
+                {"Published", content.ContentItem.VersionRecord != null && content.ContentItem.VersionRecord.Published},
                 {"Title", metaData.DisplayText}
             };
 

@@ -39,14 +39,16 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public T Get<T>(string key) {
-            var value = _cache.Get(key) ;
+        public object Get<T>(string key) {
+            var value = _cache.Get(key);
 
+            // if the provided expression is non-null, and the provided object can 
+            // be cast to the provided type without causing an exception to be thrown
             if(value is T) {
                 return (T)value;
             }
 
-            return default(T);
+            return null;
         }
 
         private CacheItemPolicy GetCacheItemPolicy(DateTimeOffset absoluteExpiration) {
