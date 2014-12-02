@@ -16,15 +16,15 @@ namespace Orchard.Caching.Services {
             _prefix = shellSettings.Name;
         }
 
-        public object Get<T>(string key) {
-            return _cacheStorageProvider.Get<T>(BuildFullKey(key));
+        public object Get(string key) {
+            return _cacheStorageProvider.Get(BuildFullKey(key));
         }
 
-        public void Put<T>(string key, T value) {
+        public void Put(string key, object value) {
             _cacheStorageProvider.Put(BuildFullKey(key), value);
         }
 
-        public void Put<T>(string key, T value, TimeSpan validFor) {
+        public void Put(string key, object value, TimeSpan validFor) {
             _cacheStorageProvider.Put(BuildFullKey(key), value, validFor);
         }
 

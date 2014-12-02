@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.Caching;
-using Orchard.Environment.Configuration;
 using Orchard.Services;
 
 namespace Orchard.Caching.Services {
@@ -10,22 +9,20 @@ namespace Orchard.Caching.Services {
     public class DefaultCacheStorageProvider : ICacheStorageProvider, ISingletonDependency {
         private event EventHandler Signaled;
 
-        private readonly ShellSettings _shellSettings;
         private readonly IClock _clock;
         // MemoryCache is optimal with one instance, see: http://stackoverflow.com/questions/8463962/using-multiple-instances-of-memorycache/13425322#13425322
         private readonly MemoryCache _cache = MemoryCache.Default;
 
-        public DefaultCacheStorageProvider(ShellSettings shellSettings, IClock clock) {
-            _shellSettings = shellSettings;
+        public DefaultCacheStorageProvider(IClock clock) {
             _clock = clock;
         }
 
-        public void Put<T>(string key, T value) {
+        public void Put(string key, object value) {
             // Keys are already prefixed by DefaultCacheService so no need to do it here again.
-            _cache.Set(key, value, GetCacheItemPolicy(MemoryCache.InfiniteAbsoluteExpiration));
+            _cache.Set(key, value, GetCacheItemPolicy(ObjectCache.InfiniteAbsoluteExpiration));
         }
 
-        public void Put<T>(string key, T value, TimeSpan validFor) {
+        public void Put(string key, object value, TimeSpan validFor) {
             _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
         }
 
@@ -39,23 +36,16 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public object Get<T>(string key) {
-            var value = _cache.Get(key);
-
-            // if the provided expression is non-null, and the provided object can 
-            // be cast to the provided type without causing an exception to be thrown
-            if(value is T) {
-                return (T)value;
-            }
-
-            return null;
+        public object Get(string key) {
+            return _cache.Get(key);
         }
 
         private CacheItemPolicy GetCacheItemPolicy(DateTimeOffset absoluteExpiration) {
-            var cacheItemPolicy = new CacheItemPolicy();
+            var cacheItemPolicy = new CacheItemPolicy {
+                AbsoluteExpiration = absoluteExpiration, 
+                SlidingExpiration = ObjectCache.NoSlidingExpiration
+            };
 
-            cacheItemPolicy.AbsoluteExpiration = absoluteExpiration;
-            cacheItemPolicy.SlidingExpiration = MemoryCache.NoSlidingExpiration;
             cacheItemPolicy.ChangeMonitors.Add(new TenantCacheClearMonitor(this));
 
             return cacheItemPolicy;
@@ -72,17 +62,17 @@ namespace Orchard.Caching.Services {
             public TenantCacheClearMonitor(DefaultCacheStorageProvider storageProvider) {
                 _storageProvider = storageProvider;
                 _storageProvider.Signaled += OnSignalRaised;
-                base.InitializationComplete();
+                InitializationComplete();
             }
 
             protected override void Dispose(bool disposing) {
-                base.Dispose();
+                Dispose();
                 _storageProvider.Signaled -= OnSignalRaised;
             }
 
             private void OnSignalRaised(object sender, EventArgs e) {
                 // Cache objects are obligated to remove entry upon change notification.
-                base.OnChanged(null);
+                OnChanged(null);
             }
         }
     }

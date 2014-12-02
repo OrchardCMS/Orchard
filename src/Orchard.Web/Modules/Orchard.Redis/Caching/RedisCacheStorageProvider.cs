@@ -32,17 +32,17 @@ namespace Orchard.Redis.Caching {
             Logger = NullLogger.Instance;
         }
 
-        public object Get<T>(string key) {
+        public object Get(string key) {
             var json = Database.StringGet(GetLocalizedKey(key));
-            return JsonConvert.DeserializeObject<T>(json);
+            return JsonConvert.DeserializeObject(json);
         }
 
-        public void Put<T>(string key, T value) {
+        public void Put(string key, object value) {
             var json = JsonConvert.SerializeObject(value);
             Database.StringSet(GetLocalizedKey(key), json, null);
         }
 
-        public void Put<T>(string key, T value, TimeSpan validFor) {
+        public void Put(string key, object value, TimeSpan validFor) {
             var json = JsonConvert.SerializeObject(value);
             Database.StringSet(GetLocalizedKey(key), json, validFor);
         }
