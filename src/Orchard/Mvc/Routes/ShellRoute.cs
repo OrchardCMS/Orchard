@@ -50,6 +50,11 @@ namespace Orchard.Mvc.Routes {
             if (routeData == null)
                 return null;
 
+            // if a StopRoutingHandler was registered, no need to do anything further
+            if (routeData.RouteHandler is StopRoutingHandler) {
+                return routeData;
+            }
+
             // otherwise wrap handler and return it
             routeData.RouteHandler = new RouteHandler(_workContextAccessor, routeData.RouteHandler, SessionState);
             routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
