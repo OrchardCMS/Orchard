@@ -17,12 +17,12 @@ namespace Orchard.Caching.Services {
             _clock = clock;
         }
 
-        public void Put(string key, object value) {
+        public void Put<T>(string key, T value) {
             // Keys are already prefixed by DefaultCacheService so no need to do it here again.
             _cache.Set(key, value, GetCacheItemPolicy(ObjectCache.InfiniteAbsoluteExpiration));
         }
 
-        public void Put(string key, object value, TimeSpan validFor) {
+        public void Put<T>(string key, T value, TimeSpan validFor) {
             _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
         }
 
@@ -36,7 +36,7 @@ namespace Orchard.Caching.Services {
             }
         }
 
-        public object Get(string key) {
+        public object Get<T>(string key) {
             return _cache.Get(key);
         }
 
