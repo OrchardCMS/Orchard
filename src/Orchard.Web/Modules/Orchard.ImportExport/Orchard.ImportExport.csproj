@@ -99,7 +99,6 @@
     <Compile Include="Handlers\DeploymentMetadataExportEventHandler.cs" />
     <Compile Include="Handlers\DeploymentSubscriptionPartHandler.cs" />
     <Compile Include="Handlers\DeploymentUserPartHandler.cs" />
-    <Compile Include="Handlers\ExportUnpublishedEventHandler.cs" />
     <Compile Include="Handlers\RecipeExecuteEventHandler.cs" />
     <Compile Include="Handlers\RecurringTaskPartHandler.cs" />
     <Compile Include="Handlers\RemoteOrchardDeploymentPartHandler.cs" />
