@@ -1,15 +1,15 @@
 ﻿Name: Output Cache
 AntiForgery: enabled
-Author: Sébastien Ros
+Author: The Orchard Team
 Website: http://orchardproject.net/
 Version: 1.8.1
 OrchardVersion: 1.8
-Description: Adds Output Caching functionality.
+Description: Adds output caching functiona
 Features:
     Orchard.OutputCache:
-        Description: Adds Output Caching functionality.
+        Description: Adds output caching functionality.
         Category: Performance
     Orchard.OutputCache.Database:
-        Description: Stores output cache data in the database.
+        Description: Activates a provider that stores output cache data in the database.
         Category: Performance
 		Dependencies: Orchard.OutputCache
