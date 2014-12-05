@@ -59,7 +59,7 @@ namespace Orchard.Taxonomies.Services {
             }
 
             return _contentManager
-                .Query<TaxonomyPart>()
+                .Query<TaxonomyPart, TaxonomyPartRecord>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
                 .List()
