@@ -53,6 +53,8 @@ namespace Orchard.MediaLibrary.Services {
         public IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
             var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
 
+            query = query.Join<MediaPartRecord>();
+
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
             }
@@ -94,6 +96,8 @@ namespace Orchard.MediaLibrary.Services {
 
         public int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null) {
             var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
+
+            query = query.Join<MediaPartRecord>();
 
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
