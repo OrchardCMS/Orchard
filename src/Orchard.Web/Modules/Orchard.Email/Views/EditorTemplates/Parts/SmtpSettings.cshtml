@@ -57,8 +57,20 @@
         <input type="text" id="emailtestto" class="large text" />
     </div>
     <div>
+        <label for="emailtestbcc">@T("Bcc:")</label>
+        <input type="text" id="emailtestbcc" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestcc">@T("CC:")</label>
+        <input type="text" id="emailtestcc" class="large text" />
+    </div>
+    <div>
         <label for="emailtestsubject">@T("Subject:")</label>
         <input type="text" id="emailtestsubject" class="large text" />
+    </div>
+    <div>
+        <label for="emailtestreplyto">@T("Reply To:")</label>
+        <input type="text" id="emailtestreplyto" class="large text" />
     </div>
     <div>
         <textarea id="emailtestbody"></textarea>
@@ -76,12 +88,19 @@
                     info = $("#emailtestinfo"),
                     to = $("#emailtestto"),
                     subject = $("#emailtestsubject"),
-                    body = $("#emailtestbody");
+                    body = $("#emailtestbody"),
+                    replyto = $("#emailtestreplyto"),
+                    bcc = $("#emailtestbcc"),
+                    cc = $("#emailtestcc");
+
                 $("#emailtestsend").click(function() {
                     $.post(url, {
                             to: to.val(),
                             subject: subject.val(),
                             body: body.val(),
+                            replyto: replyto.val(),
+                            bcc: bcc.val(),
+                            cc: cc.val(),
                             __RequestVerificationToken: to.closest("form").find("input[name=__RequestVerificationToken]").val()
                         })
                         .fail(function(data) {

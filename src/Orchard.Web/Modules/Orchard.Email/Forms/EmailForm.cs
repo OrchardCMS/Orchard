@@ -36,12 +36,24 @@ namespace Orchard.Email.Forms {
                                 Title: T("Email Addresses"),
                                 Description: T("Specify a comma-separated list of recipient email addresses. To include a display name, use the following format: John Doe &lt;john.doe@outlook.com&gt;"),
                                 Classes: new[] {"large", "text", "tokenized"}),
+                            _Bcc: New.TextBox(
+                                Id: "bcc",
+                                Name: "Bcc",
+                                Title: T("Bcc"),
+                                Description: T("If necessary, specify an email address for a blind carbon copy"),
+                                Classes: new[]{"large","text","tokenized"}),
+                            _CC: New.TextBox(
+                                Id: "cc",
+                                Name: "CC",
+                                Title: T("CC"),
+                                Description: T("If necessary, specify an email address for a carbon copy"),
+                                Classes: new[] { "large", "text", "tokenized" }),
                             _ReplyTo: New.Textbox(
                                 Id: "reply-to",
                                 Name: "ReplyTo",
                                 Title: T("Reply To Address"),
                                 Description: T("If necessary, specify an email address for replies."),
-                                Classes: new [] {"medium", "text", "tokenized"}),
+                                Classes: new [] {"large", "text", "tokenized"}),
                             _Subject: New.Textbox(
                                 Id: "Subject", Name: "Subject",
                                 Title: T("Subject"),
@@ -93,6 +105,7 @@ namespace Orchard.Email.Forms {
             var recipients = context.ValueProvider.GetValue("Recipients").AttemptedValue;
             var subject = context.ValueProvider.GetValue("Subject").AttemptedValue;
             var body = context.ValueProvider.GetValue("Body").AttemptedValue;
+            
 
             if (String.IsNullOrWhiteSpace(recipients)) {
                 context.ModelState.AddModelError("Recipients", T("You must specify at least one recipient.").Text);

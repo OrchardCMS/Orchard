@@ -48,7 +48,9 @@ namespace Orchard.Email.Services {
                 Body = parameters["Body"] as string,
                 Subject = parameters["Subject"] as string,
                 Recipients = parameters["Recipients"] as string,
-                ReplyTo = parameters["ReplyTo"] as string
+                ReplyTo = parameters["ReplyTo"] as string,
+                Bcc = parameters["Bcc"] as string,
+                CC = parameters["CC"] as string
             };
 
             if (emailMessage.Recipients.Length == 0) {
@@ -77,8 +79,18 @@ namespace Orchard.Email.Services {
                     mailMessage.To.Add(new MailAddress(recipient));
                 }
 
-                if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
-                    mailMessage.ReplyToList.Add(new MailAddress(emailMessage.ReplyTo));
+                foreach (var replyTo in emailMessage.ReplyTo.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                    mailMessage.ReplyToList.Add(new MailAddress(replyTo));
+                }
+
+                foreach (var bcc in emailMessage.Bcc.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    mailMessage.Bcc.Add(new MailAddress(bcc));
+                }
+
+                foreach (var cc in emailMessage.CC.Split(new[] {',', ';'},
+                    StringSplitOptions.RemoveEmptyEntries)) {
+                        mailMessage.CC.Add(new MailAddress(cc));
                 }
 
                 _smtpClientField.Value.Send(mailMessage);

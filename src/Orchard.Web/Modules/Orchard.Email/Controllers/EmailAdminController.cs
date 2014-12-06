@@ -18,7 +18,7 @@ namespace Orchard.Email.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult TestMailSettings(string to, string subject, string body) {
+        public ActionResult TestMailSettings(string to, string subject, string body, string replyTo, string bcc, string cc) {
             ILogger logger = null;
             try {
                 var fakeLogger = new FakeLogger();
@@ -30,7 +30,10 @@ namespace Orchard.Email.Controllers {
                 _smtpChannel.Process(new Dictionary<string, object> {
                     {"Recipients", to},
                     {"Subject", subject},
-                    {"Body", body}
+                    {"Body", body},
+                    {"ReplyTo",replyTo},
+                    {"Bcc", bcc},
+                    {"CC",cc}
                 });
                 if (!string.IsNullOrEmpty(fakeLogger.Message)) {
                     return Json(new { error = fakeLogger.Message });
