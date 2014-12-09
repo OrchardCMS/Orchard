@@ -27,14 +27,14 @@ namespace Orchard.Layouts.Providers {
             _isHarvesting = true;
             var blueprints = _elementBlueprintService.Value.GetBlueprints().ToArray();
 
-            var query = 
+            var query =
                 from blueprint in blueprints
-                let describeContext = new DescribeElementsContext { Content = context.Content, CacheVaryParam = "Blueprints"}
+                let describeContext = new DescribeElementsContext {Content = context.Content, CacheVaryParam = "Blueprints"}
                 let baseElementDescriptor = _elementManager.Value.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName)
                 let baseElement = _elementManager.Value.ActivateElement(baseElementDescriptor)
                 select new ElementDescriptor(
-                    baseElement.Descriptor.ElementType, 
-                    blueprint.ElementTypeName, 
+                    baseElement.Descriptor.ElementType,
+                    blueprint.ElementTypeName,
                     T(blueprint.ElementDisplayName),
                     GetCategory(blueprint)) {
                         EnableEditorDialog = false,
@@ -42,6 +42,7 @@ namespace Orchard.Layouts.Providers {
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
                         Display = displayContext => Displaying(displayContext, baseElement),
                         StateBag = new Dictionary<string, object> {
+                            {"Blueprint", true},
                             {"ElementTypeName", baseElement.Descriptor.TypeName}
                         }
                     };
