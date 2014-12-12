@@ -201,10 +201,12 @@ namespace Orchard.ImportExport.Services {
                             CustomSteps = exportSteps
                         });
 
-                    recipeText = _appDataFolder.ReadFile(recipePath);
-                    WriteSubscriptionFile(executionId, recipeText);
-                    _appDataFolder.DeleteFile(recipePath);
-
+                    recipeText = _appDataFolder.ReadFile(recipePath.FileName);
+                    var destinationPath = PrepareSubscriptionFilePath(executionId);
+                    if (destinationPath != null) {
+                        _appDataFolder.StoreFile(recipePath.FileName, destinationPath);
+                        _appDataFolder.DeleteFile(recipePath.FileName);
+                    }
                     break;
                 case DeploymentType.Import:
                     request.DeploymentMetadata.Add(
@@ -236,16 +238,22 @@ namespace Orchard.ImportExport.Services {
             }
         }
 
-        private void WriteSubscriptionFile(string executionId, string recipeText) {
-            if (string.IsNullOrEmpty(executionId)) return;
+        private string PrepareSubscriptionFilePath(string executionId) {
+            if (string.IsNullOrEmpty(executionId)) return null;
             
 
             if (!_appDataFolder.DirectoryExists(_deploymentService.DeploymentStoragePath)) {
                 _appDataFolder.CreateDirectory(_deploymentService.DeploymentStoragePath);
             }
 
-            var path = GetSubscriptionFilePath(executionId);
-            _appDataFolder.CreateFile(path, recipeText);
+            return GetSubscriptionFilePath(executionId);
+        }
+
+        private void WriteSubscriptionFile(string executionId, string recipeText) {
+            var path = PrepareSubscriptionFilePath(executionId);
+            if (path != null) {
+                _appDataFolder.CreateFile(path, recipeText);
+            }
         }
 
         private string GetSubscriptionFilePath(string executionId) {

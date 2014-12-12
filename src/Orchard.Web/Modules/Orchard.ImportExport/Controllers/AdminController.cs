@@ -109,8 +109,7 @@ namespace Orchard.ImportExport.Controllers {
                 exportOptions.ExportData = true;
                 exportOptions.VersionHistoryOptions = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice, true);
             }
-            var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-            return File(exportFilePath, "text/xml", "export.xml");
+            return _importExportService.Export(contentTypesToExport, exportOptions);
         }
     }
 }

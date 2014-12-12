@@ -9,6 +9,8 @@
         bool ValidateRequest(string methodType, string timestamp, string uri, string secret, string signature);
 
         string SignContent(string content, string timestamp, string secret);
+        string SignContent(byte[] content, string timestamp, string secret);
         bool ValidateContent(string content, string timestamp, string secret, string signature);
+        bool ValidateContent(byte[] content, string timestamp, string secret, string signature);
     }
 }

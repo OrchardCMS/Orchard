@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Orchard.Caching;
@@ -59,18 +60,32 @@ namespace Orchard.ImportExport.Services {
             return ComputeHash(secret, timestampedContent);
         }
 
+        public string SignContent(byte[] content, string timestamp, string secret) {
+            var timestampedContent = Encoding.UTF8.GetBytes(timestamp).Concat(content).ToArray();
+            return ComputeHash(secret, timestampedContent);
+        }
+
         public bool ValidateContent(string content, string timestamp, string secret, string signature) {
             var timestampedContent = timestamp + content;
             return IsDateValidated(timestamp) && IsAuthenticated(secret, timestampedContent, signature);
         }
 
+        public bool ValidateContent(byte[] content, string timestamp, string secret, string signature) {
+            var timestampedContent = Encoding.UTF8.GetBytes(timestamp).Concat(content).ToArray();
+            return IsDateValidated(timestamp) && IsAuthenticated(secret, timestampedContent, signature);
+        }
+
         private string ComputeHash(string secret, string message) {
+            return ComputeHash(secret, Encoding.UTF8.GetBytes(message));
+        }
+
+        private string ComputeHash(string secret, byte[] message) {
             var key = Encoding.UTF8.GetBytes(secret.ToUpper());
             string hashString;
 
             using (var hmac = HMAC.Create(_shellSettings.HashAlgorithm)) {
                 hmac.Key = key;
-                var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+                var hash = hmac.ComputeHash(message);
                 hashString = Convert.ToBase64String(hash);
             }
 
@@ -83,8 +98,23 @@ namespace Orchard.ImportExport.Services {
         }
 
         private bool IsAuthenticated(string secret, string message, string signature) {
-            if (string.IsNullOrEmpty(secret))
+            if (!PerformSecretAndDateVerification(secret, signature)) return false;
+
+            var verifiedHash = ComputeHash(secret, message);
+            return signature != null && signature.Equals(verifiedHash);
+        }
+
+        private bool IsAuthenticated(string secret, byte[] message, string signature) {
+            if (!PerformSecretAndDateVerification(secret, signature)) return false;
+
+            var verifiedHash = ComputeHash(secret, message);
+            return signature != null && signature.Equals(verifiedHash);
+        }
+
+        private bool PerformSecretAndDateVerification(string secret, string signature) {
+            if (string.IsNullOrEmpty(secret)) {
                 return false;
+            }
 
             var key = "SigningSignature:" + signature;
             var token = _clock.UtcNow;
@@ -97,9 +127,7 @@ namespace Orchard.ImportExport.Services {
                 //This signature has been cached earlier. Signatures can only be used once.
                 return false;
             }
-
-            var verifiedHash = ComputeHash(secret, message);
-            return signature != null && signature.Equals(verifiedHash);
+            return true;
         }
 
         private bool IsDateValidated(string timestampString) {

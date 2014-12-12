@@ -37,6 +37,17 @@ namespace Orchard.ImportExport.Controllers {
             return Content(content);
         }
 
+        protected FilePathResult CreateSignedResponse(FilePathResult result) {
+            var user = _authenticationService.GetAuthenticatedUser();
+            var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
+            Response.Headers.Add(_signingService.TimestampHeaderName, timestamp);
+            var package = System.IO.File.ReadAllBytes(result.FileName);
+            Response.Headers.Add(_signingService.ContentHashHeaderName,
+                _signingService.SignContent(package, timestamp, user.As<DeploymentUserPart>().PrivateApiKey));
+
+            return result;
+        }
+
         protected bool ValidateContent(string content, NameValueCollection headers) {
             if (string.IsNullOrWhiteSpace(content)) return true;
 

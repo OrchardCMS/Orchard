@@ -6,8 +6,14 @@ using Orchard.ImportExport.Models;
 namespace Orchard.ImportExport.Services {
     public class ExportContext {
         public XDocument Document { get; set; }
+        public IList<ExportedFileDescription> Files { get; set; }
         public IEnumerable<string> ContentTypes { get; set; }
         public ExportOptions ExportOptions { get; set; }
+    }
+
+    public class ExportedFileDescription {
+        public string PackagePath { get; set; }
+        public string LocalPath { get; set; }
     }
 
     public interface IExportEventHandler : IEventHandler {

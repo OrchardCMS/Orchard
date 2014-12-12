@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
@@ -66,7 +67,7 @@ namespace Orchard.ImportExport.Services {
             return executionId;
         }
 
-        public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
+        public FilePathResult Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
             //items need to be retrieved
             if (!exportOptions.ExportData) {
                 return Export(contentTypes, null, exportOptions);
@@ -79,12 +80,13 @@ namespace Orchard.ImportExport.Services {
             return Export(contentTypeList, contentItems, exportOptions);
         }
 
-        public string Export(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, ExportOptions exportOptions) {
+        public FilePathResult Export(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, ExportOptions exportOptions) {
             var exportDocument = CreateExportRoot();
             var contentTypeList = contentTypes.ToList();
 
             var context = new ExportContext {
                 Document = exportDocument,
+                Files = new List<ExportedFileDescription>(),
                 ContentTypes = contentTypeList,
                 ExportOptions = exportOptions
             };
@@ -111,7 +113,13 @@ namespace Orchard.ImportExport.Services {
 
             _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
 
-            return WriteExportFile(exportDocument.ToString());
+            if (context.Files.Any()) {
+                // TODO: build package
+                return null;
+            }
+            else {
+                return WriteExportFile(exportDocument.ToString());
+            }
         }
 
         private XDocument CreateExportRoot() {
@@ -229,7 +237,7 @@ namespace Orchard.ImportExport.Services {
                 : VersionOptions.Published;
         }
 
-        private string WriteExportFile(string exportDocument) {
+        private FilePathResult WriteExportFile(string exportDocument) {
             var exportFile = string.Format(
                 "Export-{0}-{1}.xml", 
                 _orchardServices.WorkContext.CurrentUser.UserName, 
@@ -242,7 +250,9 @@ namespace Orchard.ImportExport.Services {
             var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
             _appDataFolder.CreateFile(path, exportDocument);
 
-            return _appDataFolder.MapPath(path);
+            return new FilePathResult(_appDataFolder.MapPath(path), "text/xml") {
+                FileDownloadName = "export.xml"
+            };
         }
 
         private static bool ShellUpdateRequired(Recipe recipe) {

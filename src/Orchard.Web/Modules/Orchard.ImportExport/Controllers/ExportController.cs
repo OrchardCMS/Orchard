@@ -65,8 +65,7 @@ namespace Orchard.ImportExport.Controllers {
                 CustomSteps = exportSteps
             });
 
-            var recipe = System.IO.File.ReadAllText(recipePath);
-            return CreateSignedResponse(recipe);
+            return CreateSignedResponse(recipePath);
         }
 
         [AuthenticateApi]
