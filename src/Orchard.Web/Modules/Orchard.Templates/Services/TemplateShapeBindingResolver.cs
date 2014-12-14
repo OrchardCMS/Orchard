@@ -56,17 +56,10 @@ namespace Orchard.Templates.Services {
 
                 var allTemplates = _contentManager.Query<ShapePart>().List();
 
-                return allTemplates.Select(x => {
-                    var name = x.Name;
-                    var template = x.Template;
-                    var processorName = x.ProcessorName;
-
-                    return new TemplateResult {
-                        Name = x.Name,
-                        Template = x.Template,
-                        Processor = x.ProcessorName
-                    };
-
+                return allTemplates.Select(x => new TemplateResult {
+                    Name = x.Name,
+                    Template = x.Template,
+                    Processor = x.ProcessorName
                 }).ToDictionary(x => x.Name, x => x);
             });
         }
