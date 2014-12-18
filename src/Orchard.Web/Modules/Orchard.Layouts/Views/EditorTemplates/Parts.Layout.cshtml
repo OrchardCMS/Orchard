@@ -11,8 +11,8 @@
     Script.Include("designer.host.js");
 }
 @{
-    var contentId = Model.Part.Id;
-    var contentType = Model.Part.ContentItem.ContentType;
+    var contentId = Model.Content != null ? Model.Content.Id : default(int?);
+    var contentType = Model.Content != null ? Model.Content.ContentItem.ContentType : default(string);
     var url = Url.Action("Edit", "Layout", new { id = contentId, contentType = contentType, area = "Orchard.Layouts" });
     var frameUrl = ViewData.ModelState.IsValid ? url : default(string);
 }

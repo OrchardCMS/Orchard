@@ -17,15 +17,19 @@
     Script.Include("frame.js");
     Script.Include("serializer.js");
 }
+@{
+    var contentId = Model.Content != null ? Model.Content.Id : default(int?);
+    var contentType = Model.Content != null ? Model.Content.ContentItem.ContentType : default(string);
+}
 @Display.TokenHint()
 <fieldset>
     <div class="layout-editor"
          data-anti-forgery-token="@Html.AntiForgeryTokenValueOrchard()"
-         data-render-url="@Url.Action("Render", "Element", new { layoutId = Model.Part.Id, contentType = Model.Part.ContentItem.ContentType, area = "Orchard.Layouts" })"
+         data-render-url="@Url.Action("Render", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
          data-display-type="Design"
-         data-element-browser-url="@Url.Action("Browse", "Element", new { layoutId = Model.Part.Id, contentType = Model.Part.ContentItem.ContentType, area = "Orchard.Layouts" })"
-         data-edit-url="@Url.Action("Edit", "Element", new { layoutId = Model.Part.Id, contentType = Model.Part.ContentItem.ContentType, area = "Orchard.Layouts" })"
-         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { layoutId = Model.Part.Id, contentType = Model.Part.ContentItem.ContentType, area = "Orchard.Layouts" })"
+         data-element-browser-url="@Url.Action("Browse", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-edit-url="@Url.Action("Edit", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
          data-confirm-delete-prompt="@T("Are you sure you want to delete this element?")"
          data-editor-dialog-title-format="@T("$1 Properties")"
          data-editor-dialog-name="Layout">
@@ -43,11 +47,6 @@
                             </div>
                         </li>
                     }
-                    @*<li>
-                        <div class="edit-layout-state">
-                            <a class="icon icon-pencil" title="@T("View layout JSON")" href="#"></a>
-                        </div>
-                    </li>*@
                 </ol>
             </div>
         </div>

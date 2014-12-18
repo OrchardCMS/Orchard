@@ -58,9 +58,9 @@ namespace Orchard.Layouts.Drivers {
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
                 var viewModel = new LayoutPartViewModel {
-                    Part = part,
                     State = part.LayoutState,
                     TemplateId = part.TemplateId,
+                    Content = part
                 };
 
                 if (updater != null) {
