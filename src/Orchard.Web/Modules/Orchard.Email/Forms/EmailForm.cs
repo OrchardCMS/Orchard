@@ -40,13 +40,13 @@ namespace Orchard.Email.Forms {
                                 Id: "bcc",
                                 Name: "Bcc",
                                 Title: T("Bcc"),
-                                Description: T("If necessary, specify an email address for a blind carbon copy"),
+                                Description: T("Specify a comma-separated list of email addresses for a blind carbon copy"),
                                 Classes: new[]{"large","text","tokenized"}),
                             _CC: New.TextBox(
                                 Id: "cc",
                                 Name: "CC",
                                 Title: T("CC"),
-                                Description: T("If necessary, specify an email address for a carbon copy"),
+                                Description: T("Specify a comma-separated list of email addresses for a carbon copy"),
                                 Classes: new[] { "large", "text", "tokenized" }),
                             _ReplyTo: New.Textbox(
                                 Id: "reply-to",
