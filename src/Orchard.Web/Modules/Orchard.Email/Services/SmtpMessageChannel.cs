@@ -76,19 +76,19 @@ namespace Orchard.Email.Services {
 
             try {
                 foreach (var recipient in emailMessage.Recipients.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
-                  mailMessage.To.Add(new MailAddress(recipient));
+                    mailMessage.To.Add(new MailAddress(recipient));
                 }
 
                 foreach (var replyTo in emailMessage.ReplyTo.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
-                  mailMessage.ReplyToList.Add(new MailAddress(replyTo));
+                    mailMessage.ReplyToList.Add(new MailAddress(replyTo));
                 }
 
                 foreach (var bcc in emailMessage.Bcc.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
-                  mailMessage.Bcc.Add(new MailAddress(bcc));
+                    mailMessage.Bcc.Add(new MailAddress(bcc));
                 }
 
                 foreach (var cc in emailMessage.CC.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
-                  mailMessage.CC.Add(new MailAddress(cc));
+                    mailMessage.CC.Add(new MailAddress(cc));
                 }
 
                 _smtpClientField.Value.Send(mailMessage);
