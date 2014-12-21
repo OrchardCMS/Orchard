@@ -20,7 +20,12 @@ namespace Orchard.Layouts.Providers {
 
         public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
             var drivers = _elementManager.Value.GetDrivers();
-            var elementTypes = drivers.Select(x => x.GetType().BaseType.GenericTypeArguments[0]).Where(x => !x.IsAbstract && !x.IsInterface).ToArray();
+            var elementTypes = drivers
+                .Select(x => x.GetType().BaseType.GenericTypeArguments[0])
+                .Where(x => !x.IsAbstract && !x.IsInterface)
+                .Distinct()
+                .ToArray();
+
             return elementTypes.Select(elementType => {
                 var element = _factory.Value.Activate(elementType);
                 return new ElementDescriptor(elementType, element.Type, element.DisplayText, element.Category) {
