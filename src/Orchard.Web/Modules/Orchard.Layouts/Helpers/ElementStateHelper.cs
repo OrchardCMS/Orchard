@@ -7,7 +7,10 @@ using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Helpers {
     public static class ElementStateHelper {
-        private static readonly string[] _elementStateBlackList = {"ElementState", "__RequestVerificationToken"};
+        private static readonly string[] _elementStateBlackList = { "ElementState", "__RequestVerificationToken" };
+
+        public static readonly Func<NameValueCollection, string, string> CopyAllValuesStrategy = (col, key) => col[key];
+        public static readonly Func<NameValueCollection, string, string> CopyFirstValueStrategy = (col, key) => col.GetValues(key).FirstOrDefault();
 
         public static string Get(this StateDictionary state, string key, string defaultValue = null) {
             return state != null ? state.ContainsKey(key) ? state[key] : defaultValue : defaultValue;
@@ -19,7 +22,7 @@ namespace Orchard.Layouts.Helpers {
 
         public static StateDictionary Combine(this StateDictionary target, StateDictionary input, bool removeNonExistingItems = false) {
             var combined = new StateDictionary(target);
-            
+
             foreach (var item in input) {
                 combined[item.Key] = item.Value;
             }
@@ -57,33 +60,40 @@ namespace Orchard.Layouts.Helpers {
             return dictionary;
         }
 
-        public static StateDictionary ToDictionary(this NameValueCollection nameValues) {
+        public static StateDictionary ToDictionary(this NameValueCollection nameValues, Func<NameValueCollection, string, string> copyStrategy = null) {
             var copy = new NameValueCollection(nameValues);
 
             foreach (var key in _elementStateBlackList) {
                 copy.Remove(key);
-                
             }
+
             var dictionary = new StateDictionary();
 
+            if (copyStrategy == null)
+                copyStrategy = CopyFirstValueStrategy;
+
             foreach (string key in copy) {
-                dictionary[key] = copy[key];
+                dictionary[key] = copyStrategy(copy, key);
             }
 
             return dictionary;
         }
 
-        public static IDictionary<string, object> ToTokenDictionary(this NameValueCollection nameValues) {
+        public static IDictionary<string, object> ToTokenDictionary(this NameValueCollection nameValues, Func<NameValueCollection, string, string> copyStrategy = null) {
             var copy = new NameValueCollection(nameValues);
 
             foreach (var key in _elementStateBlackList) {
                 copy.Remove(key);
 
             }
+
             var dictionary = new Dictionary<string, object>();
 
+            if (copyStrategy == null)
+                copyStrategy = CopyFirstValueStrategy;
+
             foreach (string key in copy) {
-                dictionary[key] = copy[key];
+                dictionary[key] = copyStrategy(copy, key);
             }
 
             return dictionary;
