@@ -176,12 +176,10 @@
     <Content Include="Scripts\plugins\legacyoutput\plugin.min.js" />
     <Content Include="Scripts\plugins\link\plugin.min.js" />
     <Content Include="Scripts\plugins\lists\plugin.min.js" />
-    <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
     <Content Include="Scripts\plugins\medialibrary\plugin.js" />
     <Content Include="Scripts\plugins\medialibrary\plugin.min.js">
       <DependentUpon>plugin.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
     <Content Include="Scripts\plugins\mediapicker\plugin.js" />
     <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
       <DependentUpon>plugin.js</DependentUpon>

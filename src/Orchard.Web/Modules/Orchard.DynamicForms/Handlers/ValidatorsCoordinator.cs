@@ -20,7 +20,8 @@ namespace Orchard.DynamicForms.Handlers {
                         ModelState = modelState,
                         AttemptedValue = attemptedValue,
                         FieldName = element.Name,
-                        Values = values
+                        Values = values,
+                        Updater = context.Updater
                     };
                     validator.Validate(element, validateContext);
                 }

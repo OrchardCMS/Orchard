@@ -49,5 +49,15 @@ namespace Orchard.ContentPermissions.Models {
             get { return this.Retrieve(x => x.DeleteOwnContent); }
             set { this.Store(x => x.DeleteOwnContent, value); }
         }
+
+        public string PreviewContent {
+            get { return this.Retrieve(x => x.PreviewContent); }
+            set { this.Store(x => x.PreviewContent, value); }
+        }
+
+        public string PreviewOwnContent {
+            get { return this.Retrieve(x => x.PreviewOwnContent); }
+            set { this.Store(x => x.PreviewOwnContent, value); }
+        }
     }
 }

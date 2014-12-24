@@ -17,6 +17,8 @@ namespace Orchard.Core.Contents {
         private static readonly Permission DeleteOwnContent = new Permission { Description = "Delete {0}", Name = "DeleteOwn_{0}", ImpliedBy = new[] { DeleteContent, Permissions.DeleteOwnContent } };
         private static readonly Permission ViewContent = new Permission { Description = "View {0} by others", Name = "View_{0}", ImpliedBy = new[] { EditContent, Permissions.ViewContent } };
         private static readonly Permission ViewOwnContent = new Permission { Description = "View own {0}", Name = "ViewOwn_{0}", ImpliedBy = new[] { ViewContent, Permissions.ViewOwnContent } };
+        private static readonly Permission PreviewContent = new Permission { Description = "Preview {0} by others", Name = "Preview_{0}", ImpliedBy = new[] { EditContent, Permissions.PreviewContent } };
+        private static readonly Permission PreviewOwnContent = new Permission { Description = "Preview own {0}", Name = "PreviewOwn_{0}", ImpliedBy = new[] { PreviewContent, Permissions.PreviewOwnContent } };
 
         public static readonly Dictionary<string, Permission> PermissionTemplates = new Dictionary<string, Permission> {
             {Permissions.PublishContent.Name, PublishContent},
@@ -26,7 +28,9 @@ namespace Orchard.Core.Contents {
             {Permissions.DeleteContent.Name, DeleteContent},
             {Permissions.DeleteOwnContent.Name, DeleteOwnContent},
             {Permissions.ViewContent.Name, ViewContent},
-            {Permissions.ViewOwnContent.Name, ViewOwnContent}
+            {Permissions.ViewOwnContent.Name, ViewOwnContent},
+            {Permissions.PreviewContent.Name, PreviewContent},
+            {Permissions.PreviewOwnContent.Name, PreviewOwnContent}
         };
 
         private readonly IContentDefinitionManager _contentDefinitionManager;

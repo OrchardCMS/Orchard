@@ -9,6 +9,7 @@
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["type"] = "email";
+    tagBuilder.Attributes["value"] = Model.TokenizedValue;
     tagBuilder.Attributes["name"] = element.Name;
     tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 

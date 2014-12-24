@@ -4,7 +4,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Selectors {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class RouteCultureSelector : ICultureSelector {
         public CultureSelectorResult GetCulture(HttpContextBase context) {
             if (context == null || ContextHelpers.IsRequestAdmin(context)) return null;

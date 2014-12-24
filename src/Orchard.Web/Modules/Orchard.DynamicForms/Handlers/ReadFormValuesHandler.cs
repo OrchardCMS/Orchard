@@ -22,6 +22,7 @@ namespace Orchard.DynamicForms.Handlers {
             var combinedValues = String.Join(",", items);
             context.Output[key] = combinedValues;
             element.RuntimeValue = combinedValues;
+            element.PostedValue = combinedValues;
         }
     }
 }

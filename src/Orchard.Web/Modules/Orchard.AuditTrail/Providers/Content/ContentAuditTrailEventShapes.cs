@@ -41,6 +41,23 @@ namespace Orchard.AuditTrail.Providers.Content {
                 context.Shape.ContentItem = contentItem;
                 context.Shape.PreviousVersion = previousVersion;
             });
+
+            builder.Describe("AuditTrailEventActions").OnDisplaying(context => {
+                var record = (AuditTrailEventRecord)context.Shape.Record;
+
+                if (record.Category != "Content")
+                    return;
+
+                var eventData = (IDictionary<string, object>)context.Shape.EventData;
+                var contentItemId = eventData.Get<int>("ContentId");
+                var previousContentItemVersionId = eventData.Get<int>("PreviousVersionId");
+                var contentItem = _contentManager.Value.Get(contentItemId, VersionOptions.AllVersions);
+                var previousVersion = previousContentItemVersionId > 0 ? _contentManager.Value.Get(contentItemId, VersionOptions.VersionRecord(previousContentItemVersionId)) : default(ContentItem);
+
+                context.Shape.ContentItemId = contentItemId;
+                context.Shape.ContentItem = contentItem;
+                context.Shape.PreviousVersion = previousVersion;
+            });
         }
     }
 }

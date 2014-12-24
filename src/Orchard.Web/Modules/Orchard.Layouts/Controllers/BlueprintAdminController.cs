@@ -57,7 +57,7 @@ namespace Orchard.Layouts.Controllers {
         }
 
         public ActionResult Browse() {
-            var categories = _elementManager.GetCategories(DescribeElementsContext.Empty).ToArray();
+            var categories = RemoveBlueprints(_elementManager.GetCategories(DescribeElementsContext.Empty)).ToArray();
             var viewModel = new BrowseElementsViewModel {
                 Categories = categories
             };
@@ -104,7 +104,7 @@ namespace Orchard.Layouts.Controllers {
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
             var state = ElementStateHelper.Deserialize(blueprint.BaseElementState);
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
             var context = CreateEditorContext(element, state);
             var editorResult = _elementManager.BuildEditor(context);
 
@@ -127,7 +127,7 @@ namespace Orchard.Layouts.Controllers {
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
             var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary());
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { ElementState = state });
+            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
             var context = CreateEditorContext(element, elementState: state);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementBlueprintViewModel {
@@ -221,6 +221,21 @@ namespace Orchard.Layouts.Controllers {
             };
             ValueProvider = context.ValueProvider;
             return context;
+        }
+
+        private IEnumerable<CategoryDescriptor> RemoveBlueprints(IEnumerable<CategoryDescriptor> categories) {
+            foreach (var descriptor in categories) {
+                var d = new CategoryDescriptor(descriptor.Name, descriptor.DisplayName, descriptor.Description, descriptor.Position);
+
+                foreach (var element in descriptor.Elements) {
+                    if (!element.StateBag.ContainsKey("Blueprint")) {
+                        d.Elements.Add(element);
+                    }
+                }
+
+                if(d.Elements.Any())
+                    yield return d;
+            }
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -8,8 +8,8 @@ namespace Orchard.Layouts.Models {
         }
 
         public string ElementState {
-            get { return this.Retrieve(x => x.ElementState); }
-            set { this.Store(x => x.ElementState, value); }
+            get { return this.Retrieve(x => x.ElementState, versioned: true, defaultValue: this.Retrieve(x => x.ElementState)); }
+            set { this.Store(x => x.ElementState, value, versioned: true); }
         }
     }
 }

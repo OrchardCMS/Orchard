@@ -11,9 +11,9 @@ namespace Orchard.Layouts.Elements {
             get { return true; }
         }
 
-        public int? ImageId {
-            get { return State.Get("ImageId").ToInt32(); }
-            set { State["ImageId"] = value.ToString(); }
+        public int? MediaId {
+            get { return State.Get("MediaId").ToInt32(); }
+            set { State["MediaId"] = value.ToString(); }
         }
     }
 }

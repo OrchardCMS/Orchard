@@ -8,6 +8,10 @@
         <Place Parts_ElementWrapper="Content:3" />
     </Match>
 
+    <Match DisplayType="Summary">
+        <Place Parts_Layout_Summary="Content:5"/>
+    </Match>
+
     <Match DisplayType="Layout">
         <Place Parts_Common_Body="Content:0"
                Parts_Common_Body_Summary="-"

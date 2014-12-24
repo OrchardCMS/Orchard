@@ -16,7 +16,7 @@ namespace Orchard.Pages {
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
                     .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-page\"}]")
                     .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
-                .WithPart("BodyPart")
+                .WithPart("LayoutPart")
                 .Creatable()
                 .Listable()
                 .Securable());

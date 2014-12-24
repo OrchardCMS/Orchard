@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Services;
 using Orchard.DynamicForms.Services.Models;
@@ -27,7 +28,7 @@ namespace Orchard.DynamicForms.ValidationRules {
         }
 
         private LocalizedString GetValidationMessage(ValidationContext context) {
-            return T(ErrorMessage.WithDefault("{0} is not a valid email address."), context.FieldName, Pattern);
+            return T(Tokenize(ErrorMessage.WithDefault(String.Format("{0} is not a valid email address.", context.FieldName)), context));
         }
     }
 }

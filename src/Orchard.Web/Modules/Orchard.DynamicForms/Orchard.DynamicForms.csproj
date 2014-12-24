@@ -99,6 +99,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.AntiSpam\Orchard.AntiSpam.csproj">
+      <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
+      <Name>Orchard.AntiSpam</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.AuditTrail\Orchard.AuditTrail.csproj">
       <Project>{3dd574cd-9c5d-4a45-85e1-ebba64c22b5f}</Project>
       <Name>Orchard.AuditTrail</Name>
@@ -114,6 +118,10 @@
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting.CSharp\Orchard.Scripting.CSharp.csproj">
+      <Project>{5d13ef34-8b39-4ec5-847f-e12892acf841}</Project>
+      <Name>Orchard.Scripting.CSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
       <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
@@ -133,8 +141,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\FormSubmittedActivity.cs" />
-    <Compile Include="Activities\SelectDynamicForms.cs" />
+    <Compile Include="Activities\DynamicFormActivity.cs" />
+    <Compile Include="Activities\AddModelErrorActivity.cs" />
+    <Compile Include="Activities\DynamicFormValidatingActivity.cs" />
+    <Compile Include="Activities\DynamicFormSubmittedActivity.cs" />
+    <Compile Include="Forms\AddModelErrorForm.cs" />
+    <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />
     <Compile Include="Bindings\BodyPartBindings.cs" />
     <Compile Include="Bindings\UserPartBindings.cs" />
@@ -144,14 +156,19 @@
     <Compile Include="Drivers\EmailFieldDriver.cs" />
     <Compile Include="Drivers\PasswordFieldDriver.cs" />
     <Compile Include="Drivers\QueryDriver.cs" />
+    <Compile Include="Drivers\ReCaptchaDriver.cs" />
     <Compile Include="Drivers\ValidationMessageDriver.cs" />
     <Compile Include="Drivers\ValidationSummaryDriver.cs" />
     <Compile Include="Elements\EmailField.cs" />
     <Compile Include="Elements\PasswordField.cs" />
     <Compile Include="Elements\Query.cs" />
+    <Compile Include="Elements\ReCaptcha.cs" />
     <Compile Include="Elements\ValidationMessage.cs" />
     <Compile Include="Elements\ValidationSummary.cs" />
+    <Compile Include="Forms\DynamicFormValidatingForm.cs" />
     <Compile Include="Handlers\ClientValidationRegistrationCoordinator.cs" />
+    <Compile Include="Handlers\WorkflowValidatorCoordinator.cs" />
+    <Compile Include="Services\Models\FormSubmissionTokenContext.cs" />
     <Compile Include="Handlers\ValidatorsCoordinator.cs" />
     <Compile Include="Handlers\FormSubmissionCoordinator.cs" />
     <Compile Include="Helpers\FormControllerExtensions.cs" />
@@ -166,6 +183,7 @@
     <Compile Include="Services\Models\ValidationContext.cs" />
     <Compile Include="Services\ValidationRuleFactory.cs" />
     <Compile Include="Services\IValidationRule.cs" />
+    <Compile Include="Tokens\FormTokens.cs" />
     <Compile Include="ValidationRules\Mandatory.cs" />
     <Compile Include="ValidationRules\Compare.cs" />
     <Compile Include="ValidationRules\EmailAddress.cs" />
@@ -178,6 +196,8 @@
     <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
     <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
+    <Compile Include="Validators\Settings\ReCaptchaValidationSettings.cs" />
+    <Compile Include="Validators\Settings\TextAreaValidationSettings.cs" />
     <Compile Include="Validators\Settings\TextFieldValidationSettings.cs" />
     <Compile Include="Services\Models\ValidationSettingsBase.cs" />
     <Compile Include="Services\Models\FormEventContext.cs" />
@@ -216,6 +236,8 @@
     <Compile Include="Services\Models\ContentPartBindingDescriptor.cs" />
     <Compile Include="Services\Models\ValidateInputContext.cs" />
     <Compile Include="Validators\PasswordFieldValidator.cs" />
+    <Compile Include="Validators\ReCaptchaValidator.cs" />
+    <Compile Include="Validators\TextAreaValidator.cs" />
     <Compile Include="Validators\TextFieldValidator.cs" />
     <Compile Include="ViewModels\FieldValidationSettings.cs" />
     <Compile Include="ViewModels\FormBindingSettings.cs" />
@@ -394,6 +416,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Element-Form-EmailField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-ReCaptcha.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Element-Form-ReCaptcha.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

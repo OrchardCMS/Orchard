@@ -47,7 +47,8 @@ namespace Orchard.Email.Services {
             var emailMessage = new EmailMessage {
                 Body = parameters["Body"] as string,
                 Subject = parameters["Subject"] as string,
-                Recipients = parameters["Recipients"] as string
+                Recipients = parameters["Recipients"] as string,
+                ReplyTo = parameters["ReplyTo"] as string
             };
 
             if (emailMessage.Recipients.Length == 0) {
@@ -74,6 +75,10 @@ namespace Orchard.Email.Services {
             try {
                 foreach (var recipient in emailMessage.Recipients.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
                     mailMessage.To.Add(new MailAddress(recipient));
+                }
+
+                if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
+                    mailMessage.ReplyToList.Add(new MailAddress(emailMessage.ReplyTo));
                 }
 
                 _smtpClientField.Value.Send(mailMessage);

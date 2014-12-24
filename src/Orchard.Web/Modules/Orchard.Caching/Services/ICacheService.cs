@@ -2,7 +2,7 @@
 
 namespace Orchard.Caching.Services {
     public interface ICacheService : IDependency {
-        T Get<T>(string key);
+        object Get<T>(string key);
 
         void Put<T>(string key, T value);
         void Put<T>(string key, T value, TimeSpan validFor);
@@ -12,8 +12,9 @@ namespace Orchard.Caching.Services {
     }
 
     public static class CachingExtensions {
-        public static T Get<T>(this ICacheService cacheService, string key, Func<T> factory) {
+        public static object Get<T>(this ICacheService cacheService, string key, Func<T> factory) {
             var result = cacheService.Get<T>(key);
+            
             if (result == null) {
                 var computed = factory();
                 cacheService.Put(key, computed);
@@ -24,8 +25,9 @@ namespace Orchard.Caching.Services {
             return result;
         }
 
-        public static T Get<T>(this ICacheService cacheService, string key, Func<T> factory, TimeSpan validFor) {
+        public static object Get<T>(this ICacheService cacheService, string key, Func<T> factory, TimeSpan validFor) {
             var result = cacheService.Get<T>(key);
+            
             if (result == null) {
                 var computed = factory();
                 cacheService.Put(key, computed, validFor);

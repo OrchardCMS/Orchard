@@ -30,6 +30,11 @@ namespace Orchard.MediaLibrary {
                 .WithDescription("Provides common metadata for an Image Media.")
             );
 
+            ContentDefinitionManager.AlterPartDefinition("VectorImagePart", part => part
+                .Attachable()
+                .WithDescription("Provides common metadata for a Vector Image Media.")
+            );
+
             ContentDefinitionManager.AlterPartDefinition("VideoPart", part => part
                 .Attachable()
                 .WithDescription("Provides common metadata for a Video Media.")
@@ -58,6 +63,17 @@ namespace Orchard.MediaLibrary {
                 .WithPart("CommonPart")
                 .WithPart("MediaPart")
                 .WithPart("ImagePart")
+                .WithPart("TitlePart")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
+                .DisplayedAs("Vector Image")
+                .WithSetting("Stereotype", "Media")
+                .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .WithPart("IdentityPart")
+                .WithPart("CommonPart")
+                .WithPart("MediaPart")
+                .WithPart("VectorImagePart")
                 .WithPart("TitlePart")
             );
 
@@ -104,7 +120,7 @@ namespace Orchard.MediaLibrary {
                .WithPart("TitlePart")
            );
 
-            return 6;
+            return 7;
         }
 
         public int UpdateFrom2() {
@@ -164,7 +180,7 @@ namespace Orchard.MediaLibrary {
 
             return 4;
         }
-		
+        
         public int UpdateFrom4() {
 
             SchemaBuilder.AlterTable("MediaPartRecord", t => t
@@ -192,6 +208,26 @@ namespace Orchard.MediaLibrary {
             );
 
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterPartDefinition("VectorImagePart", part => part
+                .Attachable()
+                .WithDescription("Provides common metadata for a Vector Image Media.")
+            );
+
+            ContentDefinitionManager.AlterTypeDefinition("VectorImage", td => td
+                .DisplayedAs("Vector Image")
+                .WithSetting("Stereotype", "Media")
+                .WithSetting("MediaFileNameEditorSettings.ShowFileNameEditor", "True")
+                .WithPart("IdentityPart")
+                .WithPart("CommonPart")
+                .WithPart("MediaPart")
+                .WithPart("VectorImagePart")
+                .WithPart("TitlePart")
+            );
+
+            return 7;
         }
     }
 }

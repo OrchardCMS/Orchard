@@ -115,9 +115,10 @@
     <Compile Include="Services\DefaultCacheStorageProvider.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IOutputCacheStorageProvider.cs" />
+    <Compile Include="Models\CacheSettings.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
-    <Compile Include="ViewModels\RouteConfiguration.cs" />
+    <Compile Include="Models\CacheRouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Statistics\Index.cshtml" />

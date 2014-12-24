@@ -1,20 +1,41 @@
 ﻿using Orchard.DynamicForms.Elements;
 using Orchard.Forms.Services;
+using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Tokens;
 using DescribeContext = Orchard.Forms.Services.DescribeContext;
 
 namespace Orchard.DynamicForms.Drivers {
     public class EmailFieldDriver : FormsElementDriver<EmailField>{
-        public EmailFieldDriver(IFormManager formManager) : base(formManager) {}
+        private readonly ITokenizer _tokenizer;
+
+        public EmailFieldDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
+            _tokenizer = tokenizer;
+        }
 
         protected override EditorResult OnBuildEditor(EmailField element, ElementEditorContext context) {
             var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var emailFieldEditor = BuildForm(context, "EmailField");
             var emailFieldValidation = BuildForm(context, "EmailFieldValidation", "Validation:10");
 
-            return Editor(context, autoLabelEditor, emailFieldValidation);
+            return Editor(context, autoLabelEditor, emailFieldEditor, emailFieldValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
+            context.Form("EmailField", factory => {
+                var shape = (dynamic)factory;
+                var form = shape.Fieldset(
+                    Id: "EmailField",
+                    _Value: shape.Textbox(
+                        Id: "Value",
+                        Name: "Value",
+                        Title: "Value",
+                        Classes: new[] { "text", "medium", "tokenized" },
+                        Description: T("The value of this email field.")));
+
+                return form;
+            });
+
             context.Form("EmailFieldValidation", factory => {
                 var shape = (dynamic)factory;
                 var form = shape.Fieldset(
@@ -52,6 +73,10 @@ namespace Orchard.DynamicForms.Drivers {
 
                 return form;
             });
+        }
+
+        protected override void OnDisplaying(EmailField element, ElementDisplayContext context) {
+            context.ElementShape.TokenizedValue = _tokenizer.Replace(element.RuntimeValue, null);
         }
     }
 }

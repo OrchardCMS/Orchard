@@ -12,5 +12,9 @@ namespace Orchard.Layouts.Elements {
         public override LocalizedString DisplayText {
             get { return T("Grid"); }
         }
+
+        public override bool HasEditor {
+            get { return true; }
+        }
     }
 }

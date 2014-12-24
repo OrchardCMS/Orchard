@@ -43,10 +43,9 @@ namespace Orchard.Core.Common.Handlers {
             OnVersioning<CommonPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
             OnUpdateEditorShape<CommonPart>(AssignUpdateDates);
-
             OnVersioning<CommonPart>(AssignVersioningDates);
-
             OnPublishing<CommonPart>(AssignPublishingDates);
+            OnRemoving<CommonPart>(AssignRemovingDates);
 
             OnIndexing<CommonPart>((context, commonPart) => {
                 var utcNow = _clock.UtcNow;
@@ -103,6 +102,13 @@ namespace Orchard.Core.Common.Handlers {
         }
 
         private void AssignUpdateDates(UpdateEditorContext context, CommonPart part) {
+            var utcNow = _clock.UtcNow;
+
+            part.ModifiedUtc = utcNow;
+            part.VersionModifiedUtc = utcNow;
+        }
+
+        private void AssignRemovingDates(RemoveContentContext context, CommonPart part) {
             var utcNow = _clock.UtcNow;
 
             part.ModifiedUtc = utcNow;

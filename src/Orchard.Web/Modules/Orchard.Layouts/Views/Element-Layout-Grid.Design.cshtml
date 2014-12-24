@@ -1,9 +1,24 @@
-﻿@using Orchard.Layouts.Elements
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.Layouts.Elements
+@using Orchard.Layouts.Helpers
 @{
     var element = (Grid)Model.Element;
     var isTemplated = element.IsTemplated;
+
+    var tagBuilder = TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
+    tagBuilder.AddCssClass("table");
+    tagBuilder.AddCssClass("x-grid");
+    tagBuilder.AddCssClass("x-element");
+    tagBuilder.AddCssClass("x-container");
+    tagBuilder.AddCssClass("x-holder");
+
+    if (isTemplated) {
+        tagBuilder.AddCssClass("templated");
+    }
+
+    tagBuilder.Attributes["data-element"] = Model.ElementJson;
 }
-<div class="table x-grid x-element x-container x-holder @if (isTemplated) {<text>templated</text>}" data-element="@Model.ElementJson">
+@tagBuilder.StartElement
     @if (!isTemplated) {
         <div class="drag-handle">
             <div class="toolbar grid-toolbar group">
@@ -21,4 +36,4 @@
         </div>
     }
     @DisplayChildren(Model)
-</div>
+@tagBuilder.EndElement

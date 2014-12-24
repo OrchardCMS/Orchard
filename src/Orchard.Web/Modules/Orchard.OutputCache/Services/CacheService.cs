@@ -14,6 +14,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.OutputCache.Services {
     public class CacheService : ICacheService {
+        private const string RouteConfigsCacheKey = "OutputCache_RouteConfigs";
+        
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRepository<CacheParameterRecord> _repository;
         private readonly ICacheManager _cacheManager;
@@ -96,36 +98,36 @@ namespace Orchard.OutputCache.Services {
             return _repository.Get(c => c.RouteKey == key);
         }
 
-        public IEnumerable<RouteConfiguration> GetRouteConfigurations() {
-            return _cacheManager.Get("GetRouteConfigurations",
+        public IEnumerable<CacheRouteConfig> GetRouteConfigs() {
+            return _cacheManager.Get(RouteConfigsCacheKey,
                 ctx => {
-                    ctx.Monitor(_signals.When("GetRouteConfigurations"));
-                    return _repository.Fetch(c => true).Select(c => new RouteConfiguration { RouteKey = c.RouteKey, Duration = c.Duration }).ToReadOnlyCollection();
+                    ctx.Monitor(_signals.When(RouteConfigsCacheKey));
+                    return _repository.Fetch(c => true).Select(c => new CacheRouteConfig { RouteKey = c.RouteKey, Duration = c.Duration, GraceTime = c.GraceTime }).ToReadOnlyCollection();
                 });
         }
 
-        public void SaveCacheConfigurations(IEnumerable<RouteConfiguration> routeConfigurations) {
+        public void SaveRouteConfigs(IEnumerable<CacheRouteConfig> routeConfigurations) {
             // remove all current configurations
             var configurations = _repository.Fetch(c => true);
-
             foreach (var configuration in configurations) {
                 _repository.Delete(configuration);
             }
 
             // save the new configurations
             foreach (var configuration in routeConfigurations) {
-                if (!configuration.Duration.HasValue) {
+                if (!configuration.Duration.HasValue && !configuration.GraceTime.HasValue) {
                     continue;
                 }
 
                 _repository.Create(new CacheParameterRecord {
-                    Duration = configuration.Duration.Value,
+                    Duration = configuration.Duration,
+                    GraceTime = configuration.GraceTime,
                     RouteKey = configuration.RouteKey
                 });
             }
 
             // invalidate the cache
-            _signals.Trigger("GetRouteConfigurations");
+            _signals.Trigger(RouteConfigsCacheKey);
         }
     }
 }

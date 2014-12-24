@@ -4759,6 +4759,11 @@
             Gets the actual method. Indicates correct method to use in the post tunneling case.
             </summary>
         </member>
+        <member name="P:System.Data.Services.Client.DataServiceClientRequestMessageArgs.UseDefaultCredentials">
+            <summary>
+            Gets a System.Boolean value that controls whether default credentials are sent with requests.
+            </summary>
+        </member>
         <member name="T:System.Data.Services.Client.HttpStack">
             <summary>Represents the type of HTTP implementation to use when accessing the data service.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
         </member>
@@ -9623,6 +9628,19 @@
             <param name="source">The source.</param>
             <param name="target">The target.</param>
         </member>
+        <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteNavigationLinkEnd(Microsoft.Data.OData.ODataNavigationLink,System.Object,System.Object)">
+            <summary>
+            Writes the end Actions.
+            </summary>
+            <param name="navlink">The link.</param>
+            <param name="source">The source.</param>
+            <param name="target">The target.</param>
+        </member>
+        <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteNavigationLinksEnd">
+            <summary>
+            Writes the navigation link end.
+            </summary>
+        </member>
         <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteStart(Microsoft.Data.OData.ODataNavigationLink,System.Object,System.Object)">
             <summary>
             Writes the start.
@@ -9630,6 +9648,20 @@
             <param name="navigationLink">The navigation link.</param>
             <param name="source">The source.</param>
             <param name="target">The target.</param>
+        </member>
+        <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteNavigationLinkStart(Microsoft.Data.OData.ODataNavigationLink,System.Object,System.Object)">
+            <summary>
+            Writes the start for Navigation link.
+            </summary>
+            <param name="navigationLink">The navigation link.</param>
+            <param name="source">The source.</param>
+            <param name="target">The target.</param>
+        </member>
+        <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteNavigationLinksStart(Microsoft.Data.OData.ODataNavigationLink)">
+            <summary>
+            Writes the start for a collection of navigation links.
+            </summary>
+            <param name="navigationLink">The navigation link.</param>
         </member>
         <member name="M:System.Data.Services.Client.ODataWriterWrapper.WriteEntityReferenceLink(Microsoft.Data.OData.ODataEntityReferenceLink,System.Object,System.Object)">
             <summary>
@@ -13718,6 +13750,11 @@
         <member name="F:System.Data.Services.Client.UriWriter.leafResourceSet">
             <summary>the leaf resourceset for the URI being written</summary>
         </member>
+        <member name="F:System.Data.Services.Client.UriWriter.cachedQueryOptions">
+            <summary>
+            For caching query options to be grouped
+            </summary>
+        </member>
         <member name="M:System.Data.Services.Client.UriWriter.#ctor(System.Data.Services.Client.DataServiceContext)">
             <summary>
             Private constructor for creating UriWriter
@@ -13898,6 +13935,18 @@
             VisitCustomQueryOptions visit method.
             </summary>
             <param name="options">Custom query options</param>
+        </member>
+        <member name="M:System.Data.Services.Client.UriWriter.AddAsCachedQueryOption(System.String,System.String)">
+            <summary>
+            Caches query option to be grouped
+            </summary>
+            <param name="optionKey">The key.</param>
+            <param name="optionValue">The value</param>
+        </member>
+        <member name="M:System.Data.Services.Client.UriWriter.AppendCachedQueryOptionsToUriBuilder">
+            <summary>
+            Append all cached query options to uri.
+            </summary>
         </member>
         <member name="M:System.Data.Services.Client.UriWriter.ExpressionToString(System.Linq.Expressions.Expression,System.Boolean)">
             <summary>Serializes an expression to a string.</summary>
@@ -14710,6 +14759,16 @@
         <member name="M:System.Data.Services.Client.BindingObserver.StopTracking">
             <summary>Stop tracking the root DataServiceCollection associated with the observer.</summary>
         </member>
+        <member name="M:System.Data.Services.Client.BindingObserver.LookupParent``1(System.Data.Services.Client.DataServiceCollection{``0},System.Object@,System.String@)">
+            <summary>
+            Looks up parent entity that references <param ref="collection" />.
+            </summary>
+            <typeparam name="T">Type of DataServiceCollection.</typeparam>
+            <param name="collection">DataService collection</param>
+            <param name="parentEntity">Parent entity that references <param ref="collection" />. May return null if there is none.</param>
+            <param name="parentProperty">Navigation property in the parentEntity that references <param ref="collection" />. May return null if there is no parent entity.</param>
+            <returns>True if parent entity was found, otherwise false.</returns>
+        </member>
         <member name="M:System.Data.Services.Client.BindingObserver.OnPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
             <summary>Handle changes to tracked entity.</summary>
             <param name="source">The entity that raised the event.</param>
@@ -15081,6 +15140,11 @@
         <member name="F:System.Data.Services.Client.DataServiceCollection`1.entitySetName">
             <summary>Entity set name tracked until tracking is enabled.</summary>
         </member>
+        <member name="F:System.Data.Services.Client.DataServiceCollection`1.ongoingAsyncOperation">
+            <summary>
+            The async handle for the current LoadAsync Operation
+            </summary>
+        </member>
         <member name="M:System.Data.Services.Client.DataServiceCollection`1.#ctor">
             <summary>Initializes a new instance of the <see cref="T:System.Data.Services.Client.DataServiceCollection`1" /> class.</summary>
             <remarks>Creates a default data service collection, with auto-change tracking enabled as soon as data is loaded into it.</remarks>
@@ -15144,6 +15208,54 @@
             Load method checks for duplication. The collection will ignore any duplicated items been loaded.
             For large amount of items, consider DataServiceContext.LoadProperty instead.
             </remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync(System.Linq.IQueryable{`0})">
+            <summary>Asynchronously loads the collection by executing a <see cref="T:System.Data.Services.Client.DataServiceQuery`1"/>.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+            <param name="query">The <see cref="T:System.Data.Services.Client.DataServiceQuery`1"/> that, when executed, returns the entities to load into the collection.</param>
+            <exception cref="T:System.ArgumentException">When query is null or not a <see cref="T:System.Data.Services.Client.DataServiceQuery`1"/>.</exception>
+            <exception cref="T:System.InvalidOperationException">When a previous call to <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync"/> is not yet complete.</exception>
+            <remarks>This method uses the event-based async pattern.
+            The method returns immediately without waiting for the query to complete. Then it calls the handler of the
+            <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+            if the query succeeded or not.
+            This class only support one asynchronous operation in flight.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync(System.Uri)">
+            <summary>Loads the collection asynchronously by loading the results from the request Uri.</summary>
+            <param name="requestUri">The request uri to download results from.</param>
+            <remarks>This method uses the event-based async pattern.
+            The method returns immediately without waiting for the query to complete. Then it calls the handler of the
+            <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+            if the query succeeded or not.
+            This class only support one asynchronous operation in flight.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync">
+            <summary>Asynchronously loads items into the collection, when it represents the navigation property of an entity.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+            <exception cref="T:System.InvalidOperationException">When the collection does not belong to a parent entity.-or-When the parent entity is not tracked by the <see cref="T:System.Data.Services.Client.DataServiceContext"/>.-or-When a previous call to <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync"/> is not yet complete.</exception>
+            <remarks>This method loads the content of a property represented by this DataServiceCollection.
+            If this instance is not associated with any property and entity the method will fail.
+            This method uses the event-based async pattern.
+            The method returns immediately without waiting for the query to complete. Then it calls the handler of the
+            <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+            if the query succeeded or not.
+            This class only support one asynchronous operation in flight.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.LoadNextPartialSetAsync">
+            <summary>Loads the next page of data into the collection.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+            <returns>A <see cref="T:System.Boolean"/> value that is true when the <see cref="T:System.Data.Services.Client.DataServiceCollection`1"/> has a continuation token; otherwise false.</returns>
+            <remarks>This method is the same as <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync(System.Linq.IQueryable{`0})"/> except that it runs the query as defined
+            by the continuation token of this collection.
+            The method returns immediately without waiting for the query to complete. Then it calls the handler of the
+            <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+            if the query succeeded or not. Even if the method returns false, the event will be raised (immeditaly)
+            This class only support one asynchronous operation in flight.
+            If this collection doesn't have a continuation token (this.Continuation == null) then this method
+            returns false and does not issue any request.
+            If there is a continuation token the method will return true and will start a request to load
+            the next partial set based on that continuation token.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.CancelAsyncLoad">
+            <summary>Cancels any running LoadAsync operations and calls the LoadCompleted event handler after cancellation.</summary>
         </member>
         <member name="M:System.Data.Services.Client.DataServiceCollection`1.Load(`0)">
             <summary>Loads a single entity object into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
@@ -15214,6 +15326,36 @@
             <param name="entityChanged">delegate that needs to be called when an entity changes.</param>
             <param name="collectionChanged">delegate that needs to be called when an entity collection is changed.</param>
         </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.BeginLoadAsyncOperation(System.Func{System.AsyncCallback,System.IAsyncResult},System.Func{System.IAsyncResult,System.Data.Services.Client.QueryOperationResponse})">
+            <summary>Helper method to start a LoadAsync operation.</summary>
+            <param name="beginCall">Function which calls the Begin method for the load. It should take <see cref="T:System.AsyncCallback"/>
+            parameter which should be used as the callback for the Begin call. It should return <see cref="T:System.IAsyncResult"/>
+            of the started asynchronous operation (or throw).</param>
+            <param name="endCall">Function which calls the End method for the load. It should take <see cref="T:System.IAsyncResult"/>
+            which represents the asynchronous operation in flight. It should return <see cref="T:System.Data.Services.Client.QueryOperationResponse"/>
+            with the result of the operation (or throw).</param>
+            <remarks>The method takes care of error handling as well as maintaining the <see cref="F:System.Data.Services.Client.DataServiceCollection`1.ongoingAsyncOperation"/>.
+            Note that it does not check the <see cref="F:System.Data.Services.Client.DataServiceCollection`1.ongoingAsyncOperation"/> to disallow multiple operations in flight.
+            The method makes sure that the <paramref name="endCall"/> will be called from the UI thread. It makes no assumptions
+            about the calling thread of this method.
+            The method does not process the results of the <paramref name="endCall"/>, it just raises the <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted"/>
+            event as appropriate. If there's some processing to be done for the results it should all be done by the
+            <paramref name="endCall"/> method before it returns.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.DataServiceCollection`1.EndLoadAsyncOperation(System.Func{System.IAsyncResult,System.Data.Services.Client.QueryOperationResponse},System.IAsyncResult)">
+            <summary>
+            Calls the end method for the LoadAsync operation and fires the LoadCompleted event.
+            </summary>
+            <param name="endCall">End method to complete the asynchronous query execution.</param>
+            <param name="asyncResult">IAsyncResult to be passed to <paramref name="endCall"/>.</param>
+        </member>
+        <member name="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted">
+            <summary>A completion event for the <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync(System.Linq.IQueryable{`0})"/>, <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync"/> 
+            and <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadNextPartialSetAsync"/> method.</summary>
+            <remarks>This event is raised exactly once for each call to the <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync(System.Linq.IQueryable{`0})"/>, 
+            <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadAsync"/> or <see cref="M:System.Data.Services.Client.DataServiceCollection`1.LoadNextPartialSetAsync"/> method. It is called both when the operation 
+            succeeded and/or when it failed.</remarks>
+        </member>
         <member name="P:System.Data.Services.Client.DataServiceCollection`1.Continuation">
             <summary>Gets a continuation object that is used to return the next set of paged results.</summary>
             <returns>A <see cref="T:System.Data.Services.Client.DataServiceQueryContinuation`1" /> object that contains the URI to return the next set of paged results.</returns>
@@ -15226,6 +15368,36 @@
             <summary>
             Whether this collection is actively tracking
             </summary>
+        </member>
+        <member name="T:System.Data.Services.Client.LoadCompletedEventArgs">
+            <summary>Used as the <see cref="T:System.EventArgs" /> class for the <see cref="E:System.Data.Services.Client.DataServiceCollection`1.LoadCompleted" /> event.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+        </member>
+        <member name="F:System.Data.Services.Client.LoadCompletedEventArgs.queryOperationResponse">
+            <summary>The <see cref="P:System.Data.Services.Client.LoadCompletedEventArgs.QueryOperationResponse"/> which represents
+            the response for the Load operation.</summary>
+            <remarks>This field is non-null only when the Load operation was successfull.
+            Otherwise it's null.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.LoadCompletedEventArgs.#ctor(System.Data.Services.Client.QueryOperationResponse,System.Exception)">
+            <summary>Constructor</summary>
+            <param name="queryOperationResponse">The response for the Load operation. null when the operation didn't succeed.</param>
+            <param name="error"><see cref="T:System.Exception"/> which represents the error if the Load operation failed. null if the operation
+            didn't fail.</param>
+            <remarks>This constructor doesn't allow creation of canceled event args.</remarks>
+        </member>
+        <member name="M:System.Data.Services.Client.LoadCompletedEventArgs.#ctor(System.Data.Services.Client.QueryOperationResponse,System.Exception,System.Boolean)">
+            <summary>Constructor</summary>
+            <param name="queryOperationResponse">The response for the Load operation. null when the operation didn't succeed.</param>
+            <param name="error"><see cref="T:System.Exception"/> which represents the error if the Load operation failed. null if the operation
+            didn't fail.</param>
+            <param name="cancelled">True, if the LoadAsync operation was cancelled, False otherwise.</param>
+            <remarks>This constructor doesn't allow creation of canceled event args.</remarks>
+        </member>
+        <member name="P:System.Data.Services.Client.LoadCompletedEventArgs.QueryOperationResponse">
+            <summary>Gets the response to an asynchronous load operation.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+            <returns>A <see cref="T:System.Data.Services.Client.QueryOperationResponse" /> that represents the response to a load operation.</returns>
+            <remarks>Accessing this property will throw exception if the Load operation failed
+            or it was canceled.</remarks>
         </member>
         <member name="T:System.Data.Services.Common.EntitySetAttribute">
             <summary>Indicates the entity set to which a client data service class belongs.</summary>
@@ -22050,6 +22222,21 @@
         <member name="P:System.Data.Services.Client.Strings.DataServiceCollection_InsertIntoTrackedButNotLoadedCollection">
             <summary>
             A string like "An item could not be added to the collection. When items in a DataServiceCollection are tracked by the DataServiceContext, new items cannot be added before items have been loaded into the collection."
+            </summary>
+        </member>
+        <member name="P:System.Data.Services.Client.Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime">
+            <summary>
+            A string like "A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed."
+            </summary>
+        </member>
+        <member name="P:System.Data.Services.Client.Strings.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity">
+            <summary>
+            A string like "The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity."
+            </summary>
+        </member>
+        <member name="P:System.Data.Services.Client.Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery">
+            <summary>
+            A string like "Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection."
             </summary>
         </member>
         <member name="P:System.Data.Services.Client.Strings.DataBinding_BindingOperation_DetachedSource">

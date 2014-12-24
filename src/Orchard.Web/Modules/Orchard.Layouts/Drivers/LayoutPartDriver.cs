@@ -3,7 +3,9 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.DisplayManagement;
 using Orchard.Layouts.Framework.Display;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Models;
@@ -15,20 +17,38 @@ namespace Orchard.Layouts.Drivers {
         private readonly ILayoutSerializer _serializer;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
+        private readonly ILayoutManager _layoutManager;
+        private readonly Lazy<IContentPartDisplay> _contentPartDisplay;
+        private readonly IShapeDisplay _shapeDisplay;
 
-        public LayoutPartDriver(ILayoutSerializer serializer, IElementDisplay elementDisplay, IElementManager elementManager) {
+        public LayoutPartDriver(
+            ILayoutSerializer serializer, 
+            IElementDisplay elementDisplay, 
+            IElementManager elementManager, 
+            ILayoutManager layoutManager,
+            Lazy<IContentPartDisplay> contentPartDisplay, 
+            IShapeDisplay shapeDisplay) {
+
             _serializer = serializer;
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
+            _layoutManager = layoutManager;
+            _contentPartDisplay = contentPartDisplay;
+            _shapeDisplay = shapeDisplay;
         }
 
         protected override DriverResult Display(LayoutPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Layout", () => {
-                var describeContext = new DescribeElementsContext { Content = part };
-                var instances = _serializer.Deserialize(part.LayoutState, describeContext);
-                var layoutRoot = _elementDisplay.DisplayElements(instances, part, displayType: displayType);
-                return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
-            });
+            return Combined(
+                ContentShape("Parts_Layout", () => {
+                    var elements = _layoutManager.LoadElements(part);
+                    var layoutRoot = _elementDisplay.DisplayElements(elements, part, displayType: displayType);
+                    return shapeHelper.Parts_Layout(LayoutRoot: layoutRoot);
+                }),
+                ContentShape("Parts_Layout_Summary", () => {
+                    var layoutShape = _contentPartDisplay.Value.BuildDisplay(part);
+                    var layoutHtml = _shapeDisplay.Display(layoutShape);
+                    return shapeHelper.Parts_Layout_Summary(LayoutHtml: layoutHtml);
+                }));
         }
 
         protected override DriverResult Editor(LayoutPart part, dynamic shapeHelper) {
@@ -38,9 +58,9 @@ namespace Orchard.Layouts.Drivers {
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
                 var viewModel = new LayoutPartViewModel {
-                    Part = part,
                     State = part.LayoutState,
                     TemplateId = part.TemplateId,
+                    Content = part
                 };
 
                 if (updater != null) {
@@ -67,6 +87,8 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
+            _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
+
             context.Element(part.PartDefinition.Name).SetElementValue("LayoutState", part.LayoutState);
 
             if (part.TemplateId != null) {
@@ -81,6 +103,10 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
             part.LayoutState = context.Data.Element(part.PartDefinition.Name).El("LayoutState");
+            _layoutManager.Importing(new ImportLayoutContext {
+                Layout = part,
+                Session = new ImportContentContextWrapper(context)
+            });
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 

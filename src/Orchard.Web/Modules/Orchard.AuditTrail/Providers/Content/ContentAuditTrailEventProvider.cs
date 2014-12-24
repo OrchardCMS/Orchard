@@ -17,8 +17,10 @@ namespace Orchard.AuditTrail.Providers.Content {
         public const string Published = "Published";
         public const string Unpublished = "Unpublished";
         public const string Removed = "Removed";
+        public const string Destroyed = "Destroyed";
         public const string Imported = "Imported";
         public const string Exported = "Exported";
+        public const string Restored = "Restored";
 
         public static Filters CreateFilters(int contentId, IUpdateModel updateModel) {
             return new Filters(updateModel) {
@@ -33,8 +35,10 @@ namespace Orchard.AuditTrail.Providers.Content {
                 .Event(this, Published, T("Published"), T("A content item was published."), enableByDefault: true)
                 .Event(this, Unpublished, T("Unpublished"), T("A content item was unpublished."), enableByDefault: true)
                 .Event(this, Removed, T("Removed"), T("A content item was deleted."), enableByDefault: true)
+                .Event(this, Destroyed, T("Destroyed"), T("A content item was permanently deleted."), enableByDefault: true)
                 .Event(this, Imported, T("Imported"), T("A content item was imported."), enableByDefault: true)
-                .Event(this, Exported, T("Exported"), T("A content item was exported."), enableByDefault: false);
+                .Event(this, Exported, T("Exported"), T("A content item was exported."), enableByDefault: false)
+                .Event(this, Restored, T("Restored"), T("A content item was restored to a previous version."), enableByDefault: true);
 
             context.QueryFilter(QueryFilter);
             context.DisplayFilter(DisplayFilter);
@@ -51,7 +55,7 @@ namespace Orchard.AuditTrail.Providers.Content {
         private void DisplayFilter(DisplayFilterContext context) {
             var contentItemId = context.Filters.Get("content").ToInt32();
             if (contentItemId != null) {
-                var contentItem = contentItemId != null ? _contentManager.Get(contentItemId.Value, VersionOptions.Latest) : default(ContentItem);
+                var contentItem = _contentManager.Get(contentItemId.Value, VersionOptions.AllVersions);
                 var filterDisplay = context.ShapeFactory.AuditTrailFilter__ContentItem(ContentItem: contentItem);
 
                 context.FilterDisplay.Add(filterDisplay);

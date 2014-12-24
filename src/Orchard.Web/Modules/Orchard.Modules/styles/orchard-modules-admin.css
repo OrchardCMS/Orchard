@@ -18,20 +18,7 @@ html.dyn #main ul.features button { display:none; }
     height:6em;
     margin:0 .5% 1% .5%;
     position:relative;
-    width:31.95%;
-}
-.features.summary-view .feature:nth-child(3n+1),
-.features.summary-view .feature:nth-child(3n+2),
-.features.summary-view .feature:nth-child(3n) {
-    width:32.3%;
-}
-.features.summary-view .feature:nth-child(3n+1) {
-    margin-left:0;
-}
-.features.summary-view .feature:nth-child(3n+2) {
-}
-.features.summary-view .feature:nth-child(3n) {
-    margin-right:0;
+    width:32.2%;
 }
 
 .features.detail-view .feature {

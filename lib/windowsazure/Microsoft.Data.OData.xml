@@ -10357,6 +10357,16 @@
         <member name="P:Microsoft.Data.OData.Query.ExpressionLexer.Position">
             <summary>Position on text being parsed.</summary>
         </member>
+        <member name="P:Microsoft.Data.OData.Query.ExpressionLexer.IsValidWhiteSpace">
+            <summary>
+            Gets if the current char is whitespace.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.OData.Query.ExpressionLexer.IsValidDigit">
+            <summary>
+            Gets if the current char is digit.
+            </summary>
+        </member>
         <member name="P:Microsoft.Data.OData.Query.ExpressionLexer.IsValidStartingCharForIdentifier">
             <summary>
             Is the current char a valid starting char for an identifier.
@@ -16252,6 +16262,267 @@
             <param name="isOpenProperty">true if the type name belongs to an open property, false otherwise.</param>
             <returns>Type name to write to the payload, or null if no type should be written.</returns>
         </member>
+        <member name="T:Microsoft.Data.OData.JsonLight.ODataJsonLightGeneralDeserializer">
+            <summary>
+            Reads payload as untyped object.
+            </summary>   
+        </member>
+        <member name="T:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer">
+            <summary>
+            Base class for all OData JsonLight deserializers.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.jsonLightInputContext">
+            <summary>The JsonLight input context to use for reading.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.metadataContext">
+            <summary>Context for entry etadata centric responsibilities.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.metadataUriParseResult">
+            <summary>Result of parsing the metadata URI for the payload (or null if none are available).</summary>
+            <remarks>This field is only available after the ReadPayloadStart was called.</remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.#ctor(Microsoft.Data.OData.JsonLight.ODataJsonLightInputContext)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="jsonLightInputContext">The JsonLight input context to read from.</param>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.TryParsePropertyAnnotation(System.String,System.String@,System.String@)">
+            <summary>
+            Parses the name of a property and returns the property name and annotation name if the property is a property annotation.
+            </summary>
+            <param name="propertyAnnotationName">The property name to parse.</param>
+            <param name="propertyName">The name of the annotated property, or null if the property is not a property annotation.</param>
+            <param name="annotationName">The annotation name, or null if the property is not a property annotation.</param>
+            <returns>true if the <paramref name="propertyAnnotationName"/> is a property annotation, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStart(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
+            <summary>
+            Read the start of the top-level data wrapper in JSON responses.
+            </summary>
+            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
+            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
+            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
+            <remarks>
+            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
+            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
+                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStartAsync(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
+            <summary>
+            Read the start of the top-level data wrapper in JSON responses.
+            </summary>
+            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
+            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
+            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
+            <returns>The parsed metadata URI.</returns>
+            <remarks>
+            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
+            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
+                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadEnd(System.Boolean)">
+            <summary>
+            Reads the end of the top-level data wrapper in JSON responses.
+            </summary>
+            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
+            <remarks>
+            Pre-Condition:  any node:                when reading response or a nested payload, will fail if find anything else then EndObject.
+                            JsonNodeType.EndOfInput: otherwise
+            Post-Condition: JsonNodeType.EndOfInput
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValue(System.String)">
+            <summary>
+            Reads and validates a string value from the json reader.
+            </summary>
+            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
+            <returns>The string that was read.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValueAsUri(System.String)">
+            <summary>
+            Reads and validates a string value from the json reader and processes it as a Uri.
+            </summary>
+            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
+            <returns>The Uri that was read.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValueAsLong(System.String)">
+            <summary>
+            Reads and validates a string value from the json reader and processes it as a long.
+            </summary>
+            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
+            <returns>The long that was read.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessUriFromPayload(System.String)">
+            <summary>
+            Given a URI from the payload, this method will try to make it absolute, or fail otherwise.
+            </summary>
+            <param name="uriFromPayload">The URI string from the payload to process.</param>
+            <returns>An absolute URI to report.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessProperty(Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object},System.Action{Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult,System.String})">
+            <summary>
+            Parses JSON object property starting with the current position of the JSON reader.
+            </summary>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
+            <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
+            <param name="handleProperty">Function callback to handle to resule of parse property.</param>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.AssertJsonCondition(Microsoft.Data.OData.Json.JsonNodeType[])">
+            <summary>
+            Asserts that the JSON reader is positioned on one of the specified node types.
+            </summary>
+            <param name="allowedNodeTypes">The node types which should appear at this point.</param>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ShouldSkipCustomInstanceAnnotation(System.String)">
+            <summary>
+            Returns true if <paramref name="annotationName"/> should be skipped by the reader; false otherwise.
+            </summary>
+            <param name="annotationName">The custom instance annotation name in question.</param>
+            <returns>Returns true if <paramref name="annotationName"/> should be skipped by the reader; false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.SkippedOverUnknownODataAnnotation(System.String)">
+            <summary>
+            If <paramref name="annotationName"/> is under the odata namespace but is not known to ODataLib, move the JSON reader forward to skip the
+            annotation name and value then return true; return false otherwise.
+            </summary>
+            <remarks>
+            The unknown odata annotation is skipped so that when this version of the reader reads a feed produced by a future version of ODataLib
+            that contains an odata annotation that is not recognized on this version, we would simply ignore the annotation rather than failing.
+            Note that when we add new odata annotations that cannot be skipped, we would bump the protocol version.
+            </remarks>
+            <param name="annotationName">The annotation name in question.</param>
+            <returns>Returns true if the annotation name and value is skipped; returns false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ParseProperty(Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object},System.String@)">
+            <summary>
+            Parses JSON object property starting with the current position of the JSON reader.
+            </summary>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
+            <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
+            <param name="parsedPropertyName">The name of the property or instance annotation found.</param>
+            <returns>
+            PropertyWithValue - a property with value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
+                                The reader is positioned on the property value.
+            PropertyWithoutValue - a property without a value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
+                                   The reader is positioned on the node after property annotations (so either a property or end of object).
+            ODataInstanceAnnotation - an odata instance annotation was found. The <paramref name="parsedPropertyName"/> contains the name of the annotation.
+                                 The reader is positioned on the value of the annotation.
+            CustomInstanceAnnotation - a custom instance annotation was found. The <paramref name="parsedPropertyName"/> contains the name of the annotation.
+                                 The reader is positioned on the value of the annotation.
+            MetadataReferenceProperty - a property which is a reference into the metadata was found.
+                                        The reader is positioned on the value of the property.
+            EndOfObject - end of the object scope was reached and no properties are to be reported. The <paramref name="parsedPropertyName"/> is null.
+                          This can only happen if there's a property annotation which is ignored (for example custom one) at the end of the object.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessPropertyAnnotation(System.String,System.String,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object})">
+            <summary>
+            Process the current property annotation.
+            </summary>
+            <param name="annotatedPropertyName">The name being annotated. Can be a property or an instance annotation.</param>
+            <param name="annotationName">The annotation targeting the <paramref name="annotatedPropertyName"/>.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
+            <param name="readPropertyAnnotationValue">Callback to read the property annotation value.</param>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStartImplementation(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
+            <summary>
+            Read the start of the top-level data wrapper in JSON responses.
+            </summary>
+            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
+            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
+            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
+            <returns>The value of the metadata URI annotation (or null if it was not found).</returns>
+            <remarks>
+            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
+            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
+                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadMetadataUriAnnotation(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean)">
+            <summary>
+            Reads the odata.metadata annotation.
+            </summary>
+            <param name="payloadKind">The payload kind for which to read the metadata URI.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
+            <param name="failOnMissingMetadataUriAnnotation">true if the method should fail if the metadata URI annotation is missing, false if that can be ignored.</param>
+            <returns>The value of the metadata URI annotation.</returns>
+        </member>
+        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataContext">
+            <summary>
+            Context for entry metadata centric responsibilities.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.JsonReader">
+            <summary>
+            Returns the <see cref="T:Microsoft.Data.OData.Json.BufferingJsonReader"/> which is to be used to read the content of the message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataUriParseResult">
+            <summary>Result of parsing the metadata URI for the payload (or null if none are available).</summary>
+            <remarks>This property is only available after the ReadPayloadStart was called.</remarks>
+        </member>
+        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.JsonLightInputContext">
+            <summary>
+            The Json lite input context to use for reading.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataDocumentUri">
+            <summary>
+            Gets the metadata document Uri from the MetadataUriParseResult.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult">
+            <summary>Possible results of parsing JSON object property.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.EndOfObject">
+            <summary>An end of object was reached without any property to be reported.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithValue">
+            <summary>A property with value was found.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithoutValue">
+            <summary>A property without value was found.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.ODataInstanceAnnotation">
+            <summary>A 'odata' instance annotation was found.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation">
+            <summary>A custom instance annotation was found.</summary>
+        </member>
+        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.MetadataReferenceProperty">
+            <summary>A metadata reference property was found.</summary>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightGeneralDeserializer.#ctor(Microsoft.Data.OData.JsonLight.ODataJsonLightInputContext)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="jsonLightInputContext">The JsonLight input context to read from.</param>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightGeneralDeserializer.ReadValue">
+            <summary>
+            Reads untyped value.
+            </summary>
+            <returns>primitive value or ODataComplexValue orODataCollectionValue.</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightGeneralDeserializer.ReadAsComplexValue">
+            <summary>
+            Reads json object value.
+            </summary>
+            <returns>ODataComplexValue with TypeName=null</returns>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightGeneralDeserializer.ReadAsCollectionValue">
+            <summary>
+            Read json array.
+            </summary>
+            <returns>ODataCollectionValue with TypeName=null</returns>
+        </member>
         <member name="T:Microsoft.Data.OData.ODataFeedAndEntryTypeContext">
             <summary>
             The context object to answer basic questions regarding the type of the entry or feed.
@@ -18552,238 +18823,6 @@
             <summary>
             Responsible for reading annotation groups (both declarations and references) in JSON Light.
             </summary>
-        </member>
-        <member name="T:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer">
-            <summary>
-            Base class for all OData JsonLight deserializers.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.jsonLightInputContext">
-            <summary>The JsonLight input context to use for reading.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.metadataContext">
-            <summary>Context for entry etadata centric responsibilities.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.metadataUriParseResult">
-            <summary>Result of parsing the metadata URI for the payload (or null if none are available).</summary>
-            <remarks>This field is only available after the ReadPayloadStart was called.</remarks>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.#ctor(Microsoft.Data.OData.JsonLight.ODataJsonLightInputContext)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="jsonLightInputContext">The JsonLight input context to read from.</param>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.TryParsePropertyAnnotation(System.String,System.String@,System.String@)">
-            <summary>
-            Parses the name of a property and returns the property name and annotation name if the property is a property annotation.
-            </summary>
-            <param name="propertyAnnotationName">The property name to parse.</param>
-            <param name="propertyName">The name of the annotated property, or null if the property is not a property annotation.</param>
-            <param name="annotationName">The annotation name, or null if the property is not a property annotation.</param>
-            <returns>true if the <paramref name="propertyAnnotationName"/> is a property annotation, false otherwise.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStart(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
-            <summary>
-            Read the start of the top-level data wrapper in JSON responses.
-            </summary>
-            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
-            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
-            <remarks>
-            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
-            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
-                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
-            </remarks>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStartAsync(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
-            <summary>
-            Read the start of the top-level data wrapper in JSON responses.
-            </summary>
-            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
-            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
-            <returns>The parsed metadata URI.</returns>
-            <remarks>
-            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
-            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
-                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
-            </remarks>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadEnd(System.Boolean)">
-            <summary>
-            Reads the end of the top-level data wrapper in JSON responses.
-            </summary>
-            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
-            <remarks>
-            Pre-Condition:  any node:                when reading response or a nested payload, will fail if find anything else then EndObject.
-                            JsonNodeType.EndOfInput: otherwise
-            Post-Condition: JsonNodeType.EndOfInput
-            </remarks>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValue(System.String)">
-            <summary>
-            Reads and validates a string value from the json reader.
-            </summary>
-            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
-            <returns>The string that was read.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValueAsUri(System.String)">
-            <summary>
-            Reads and validates a string value from the json reader and processes it as a Uri.
-            </summary>
-            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
-            <returns>The Uri that was read.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadAndValidateAnnotationStringValueAsLong(System.String)">
-            <summary>
-            Reads and validates a string value from the json reader and processes it as a long.
-            </summary>
-            <param name="annotationName">The name of the annotation being read (used for error reporting).</param>
-            <returns>The long that was read.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessUriFromPayload(System.String)">
-            <summary>
-            Given a URI from the payload, this method will try to make it absolute, or fail otherwise.
-            </summary>
-            <param name="uriFromPayload">The URI string from the payload to process.</param>
-            <returns>An absolute URI to report.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessProperty(Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object},System.Action{Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult,System.String})">
-            <summary>
-            Parses JSON object property starting with the current position of the JSON reader.
-            </summary>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
-            <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
-            <param name="handleProperty">Function callback to handle to resule of parse property.</param>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.AssertJsonCondition(Microsoft.Data.OData.Json.JsonNodeType[])">
-            <summary>
-            Asserts that the JSON reader is positioned on one of the specified node types.
-            </summary>
-            <param name="allowedNodeTypes">The node types which should appear at this point.</param>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ShouldSkipCustomInstanceAnnotation(System.String)">
-            <summary>
-            Returns true if <paramref name="annotationName"/> should be skipped by the reader; false otherwise.
-            </summary>
-            <param name="annotationName">The custom instance annotation name in question.</param>
-            <returns>Returns true if <paramref name="annotationName"/> should be skipped by the reader; false otherwise.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.SkippedOverUnknownODataAnnotation(System.String)">
-            <summary>
-            If <paramref name="annotationName"/> is under the odata namespace but is not known to ODataLib, move the JSON reader forward to skip the
-            annotation name and value then return true; return false otherwise.
-            </summary>
-            <remarks>
-            The unknown odata annotation is skipped so that when this version of the reader reads a feed produced by a future version of ODataLib
-            that contains an odata annotation that is not recognized on this version, we would simply ignore the annotation rather than failing.
-            Note that when we add new odata annotations that cannot be skipped, we would bump the protocol version.
-            </remarks>
-            <param name="annotationName">The annotation name in question.</param>
-            <returns>Returns true if the annotation name and value is skipped; returns false otherwise.</returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ParseProperty(Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object},System.String@)">
-            <summary>
-            Parses JSON object property starting with the current position of the JSON reader.
-            </summary>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
-            <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
-            <param name="parsedPropertyName">The name of the property or instance annotation found.</param>
-            <returns>
-            PropertyWithValue - a property with value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
-                                The reader is positioned on the property value.
-            PropertyWithoutValue - a property without a value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
-                                   The reader is positioned on the node after property annotations (so either a property or end of object).
-            ODataInstanceAnnotation - an odata instance annotation was found. The <paramref name="parsedPropertyName"/> contains the name of the annotation.
-                                 The reader is positioned on the value of the annotation.
-            CustomInstanceAnnotation - a custom instance annotation was found. The <paramref name="parsedPropertyName"/> contains the name of the annotation.
-                                 The reader is positioned on the value of the annotation.
-            MetadataReferenceProperty - a property which is a reference into the metadata was found.
-                                        The reader is positioned on the value of the property.
-            EndOfObject - end of the object scope was reached and no properties are to be reported. The <paramref name="parsedPropertyName"/> is null.
-                          This can only happen if there's a property annotation which is ignored (for example custom one) at the end of the object.
-            </returns>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ProcessPropertyAnnotation(System.String,System.String,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Func{System.String,System.Object})">
-            <summary>
-            Process the current property annotation.
-            </summary>
-            <param name="annotatedPropertyName">The name being annotated. Can be a property or an instance annotation.</param>
-            <param name="annotationName">The annotation targeting the <paramref name="annotatedPropertyName"/>.</param>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-            <param name="readPropertyAnnotationValue">Callback to read the property annotation value.</param>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadPayloadStartImplementation(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean,System.Boolean)">
-            <summary>
-            Read the start of the top-level data wrapper in JSON responses.
-            </summary>
-            <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the metadata URI.</param>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-            <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. an entry, a feed or a collection within a parameters payload.</param>
-            <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
-            <returns>The value of the metadata URI annotation (or null if it was not found).</returns>
-            <remarks>
-            Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
-            Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the metadata URI property.
-                            Or the reader is positioned on an end-object node if there are no properties (other than the metadata URI which is required in responses and optional in requests).
-            </remarks>
-        </member>
-        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.ReadMetadataUriAnnotation(Microsoft.Data.OData.ODataPayloadKind,Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.Boolean)">
-            <summary>
-            Reads the odata.metadata annotation.
-            </summary>
-            <param name="payloadKind">The payload kind for which to read the metadata URI.</param>
-            <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
-            <param name="failOnMissingMetadataUriAnnotation">true if the method should fail if the metadata URI annotation is missing, false if that can be ignored.</param>
-            <returns>The value of the metadata URI annotation.</returns>
-        </member>
-        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataContext">
-            <summary>
-            Context for entry metadata centric responsibilities.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.JsonReader">
-            <summary>
-            Returns the <see cref="T:Microsoft.Data.OData.Json.BufferingJsonReader"/> which is to be used to read the content of the message.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataUriParseResult">
-            <summary>Result of parsing the metadata URI for the payload (or null if none are available).</summary>
-            <remarks>This property is only available after the ReadPayloadStart was called.</remarks>
-        </member>
-        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.JsonLightInputContext">
-            <summary>
-            The Json lite input context to use for reading.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.MetadataDocumentUri">
-            <summary>
-            Gets the metadata document Uri from the MetadataUriParseResult.
-            </summary>
-        </member>
-        <member name="T:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult">
-            <summary>Possible results of parsing JSON object property.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.EndOfObject">
-            <summary>An end of object was reached without any property to be reported.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithValue">
-            <summary>A property with value was found.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithoutValue">
-            <summary>A property without value was found.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.ODataInstanceAnnotation">
-            <summary>A 'odata' instance annotation was found.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation">
-            <summary>A custom instance annotation was found.</summary>
-        </member>
-        <member name="F:Microsoft.Data.OData.JsonLight.ODataJsonLightDeserializer.PropertyParsingResult.MetadataReferenceProperty">
-            <summary>A metadata reference property was found.</summary>
         </member>
         <member name="F:Microsoft.Data.OData.JsonLight.JsonLightAnnotationGroupDeserializer.annotationGroups">
             <summary>
@@ -21199,6 +21238,33 @@
             - <see cref="T:Microsoft.Data.OData.ODataCollectionValue"/>
             </remarks>
         </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightPropertyAndValueDeserializer.ReadNonEntityValue(System.String,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.DuplicatePropertyNamesChecker,Microsoft.Data.OData.CollectionWithoutExpectedTypeValidator,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Reads a primitive value, complex value or collection.
+            </summary>
+            <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
+            <param name="expectedValueTypeReference">The expected type reference of the property value.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
+            <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
+            <param name="validateNullValue">true to validate null values; otherwise false.</param>
+            <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
+            <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+            <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+            <param name="readRawValueEvenIfNoTypeFound">If true: when no type info, read raw value as primitive (not including spatial type), untyped complex or untype collection.</param>
+            <returns>The value of the property read.</returns>
+            <remarks>
+            Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
+                            JsonNodeType.StartObject      - the value of the property is an object
+                            JsonNodeType.StartArray       - the value of the property is an array - method will fail in this case.
+            Post-Condition: almost anything - the node after the property value.
+                            
+            Returns the value of the property read, which can be one of:
+            - null
+            - primitive value
+            - <see cref="T:Microsoft.Data.OData.ODataComplexValue"/>
+            - <see cref="T:Microsoft.Data.OData.ODataCollectionValue"/>
+            </remarks>
+        </member>
         <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightPropertyAndValueDeserializer.ValidateDataPropertyTypeNameAnnotation(Microsoft.Data.OData.DuplicatePropertyNamesChecker,System.String)">
             <summary>
             Gets and validates the type name annotation for the specified property.
@@ -21338,6 +21404,33 @@
             <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
             <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
             <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+            <returns>The value of the property read.</returns>
+            <remarks>
+            Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
+                            JsonNodeType.StartObject      - the value of the property is an object
+                            JsonNodeType.StartArray       - the value of the property is an array
+            Post-Condition: almost anything - the node after the property value.
+                            
+            Returns the value of the property read, which can be one of:
+            - null
+            - primitive value
+            - <see cref="T:Microsoft.Data.OData.ODataComplexValue"/>
+            - <see cref="T:Microsoft.Data.OData.ODataCollectionValue"/>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.JsonLight.ODataJsonLightPropertyAndValueDeserializer.ReadNonEntityValueImplementation(System.String,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.DuplicatePropertyNamesChecker,Microsoft.Data.OData.CollectionWithoutExpectedTypeValidator,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Reads a primitive, complex or collection value.
+            </summary>
+            <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
+            <param name="expectedTypeReference">The expected type reference of the property value.</param>
+            <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
+            <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
+            <param name="validateNullValue">true to validate null values; otherwise false.</param>
+            <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
+            <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+            <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+            <param name="readRawValueEvenIfNoTypeFound">If true: when no type info, read raw value as primitive (not including spatial type), untyped complex or untype collection.</param>
             <returns>The value of the property read.</returns>
             <remarks>
             Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
@@ -52858,11 +52951,6 @@
         <member name="M:Microsoft.Data.OData.Strings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType(System.Object)">
             <summary>
             A string like "An undeclared property '{0}' which only has property annotations in the payload but no property value was found in the payload. In OData, only declared navigation properties and declared named streams can be represented as properties without values."
-            </summary>
-        </member>
-        <member name="M:Microsoft.Data.OData.Strings.ODataJsonLightEntryAndFeedDeserializer_InvalidFunctionImportName(System.Object,System.Object)">
-            <summary>
-            A string like "The metadata URI '{0}' references the function import '{1}'. However, no or multiple function imports with name '{1}' are declared in the metadata."
             </summary>
         </member>
         <member name="M:Microsoft.Data.OData.Strings.ODataJsonLightEntryAndFeedDeserializer_FunctionImportIsNotActionOrFunction(System.Object)">

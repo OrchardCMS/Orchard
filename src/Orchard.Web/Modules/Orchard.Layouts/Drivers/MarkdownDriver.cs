@@ -23,7 +23,11 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void OnDisplaying(MarkdownElement element, ElementDisplayContext context) {
-            context.ElementShape.ProcessedContent = new MarkdownSharp.Markdown().Transform(element.Content);
+            context.ElementShape.ProcessedContent = ToHtml(element.Content);
+        }
+
+        private string ToHtml(string markdown) {
+            return new MarkdownSharp.Markdown().Transform(markdown);
         }
     }
 }

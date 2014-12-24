@@ -82,8 +82,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\TaskLeaseRecord.cs" />
-    <Compile Include="Services\MachineNameProvider.cs" />
-    <Compile Include="Services\IMachineNameProvider.cs" />
     <Compile Include="Services\ITaskLeaseService.cs" />
     <Compile Include="Services\TaskLeaseService.cs" />
   </ItemGroup>

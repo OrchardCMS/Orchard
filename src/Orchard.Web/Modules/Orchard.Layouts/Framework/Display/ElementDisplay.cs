@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Services;
 using Orchard.UI.Zones;
@@ -19,11 +20,11 @@ namespace Orchard.Layouts.Framework.Display {
         }
 
         public dynamic DisplayElement(
-            IElement element, 
-            IContent content, 
-            string displayType = null, 
+            IElement element,
+            IContent content,
+            string displayType = null,
             IUpdateModel updater = null,
-            string renderEventName = null, 
+            string renderEventName = null,
             string renderEventArgs = null) {
 
             var createShapeContext = new ElementCreatingDisplayShapeContext {
@@ -38,6 +39,8 @@ namespace Orchard.Layouts.Framework.Display {
             var elementShape = (dynamic)_shapeFactory.Create("Element", elementShapeArguments, () => new ZoneHolding(() => _shapeFactory.Create("ElementZone")));
             var typeName = element.GetType().Name;
             var category = element.Category.ToSafeName();
+            var drivers = element.Descriptor.GetDrivers();
+
             elementShape.Metadata.DisplayType = displayType;
             elementShape.Metadata.Alternates.Add(String.Format("Element_{0}", displayType));
             elementShape.Metadata.Alternates.Add(String.Format("Element__{0}", typeName));
@@ -56,7 +59,8 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             _elementEventHandlerHandler.Displaying(displayContext);
-            element.Descriptor.Displaying(displayContext);
+            InvokeDrivers(drivers, driver => driver.Displaying(displayContext));
+            element.Descriptor.Display(displayContext);
 
             var container = element as IContainer;
 
@@ -74,7 +78,7 @@ namespace Orchard.Layouts.Framework.Display {
         }
 
         public dynamic DisplayElements(IEnumerable<IElement> elements, IContent content, string displayType = null, IUpdateModel updater = null, string renderEventName = null, string renderEventArgs = null) {
-            var layoutRoot = (dynamic) _shapeFactory.Create("LayoutRoot");
+            var layoutRoot = (dynamic)_shapeFactory.Create("LayoutRoot");
 
             foreach (var element in elements) {
                 var elementShape = DisplayElement(element, content, displayType, updater, renderEventName, renderEventArgs);
@@ -89,7 +93,7 @@ namespace Orchard.Layouts.Framework.Display {
             var dictionary = new Dictionary<string, object> {
                 {"Element", element},
                 {"Elements", children},
-                {"ContentItem", content.ContentItem}
+                {"ContentItem", content != null ? content.ContentItem : default(ContentItem)}
             };
 
             if (elementState != null) {
@@ -103,6 +107,12 @@ namespace Orchard.Layouts.Framework.Display {
 
         private static string MakeValidName(string key) {
             return key.Replace(".", "_");
+        }
+
+        private void InvokeDrivers(IEnumerable<IElementDriver> drivers, Action<IElementDriver> driverAction) {
+            foreach (var driver in drivers) {
+                driverAction(driver);
+            }
         }
     }
 }

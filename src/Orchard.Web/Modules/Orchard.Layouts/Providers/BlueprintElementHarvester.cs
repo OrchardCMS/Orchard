@@ -27,20 +27,24 @@ namespace Orchard.Layouts.Providers {
             _isHarvesting = true;
             var blueprints = _elementBlueprintService.Value.GetBlueprints().ToArray();
 
-            var query = 
-                from blueprint in blueprints 
-                let describeContext = DescribeElementsContext.Empty 
+            var query =
+                from blueprint in blueprints
+                let describeContext = new DescribeElementsContext {Content = context.Content, CacheVaryParam = "Blueprints"}
                 let baseElementDescriptor = _elementManager.Value.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName)
                 let baseElement = _elementManager.Value.ActivateElement(baseElementDescriptor)
                 select new ElementDescriptor(
-                    baseElement.Descriptor.ElementType, 
-                    blueprint.ElementTypeName, 
+                    baseElement.Descriptor.ElementType,
+                    blueprint.ElementTypeName,
                     T(blueprint.ElementDisplayName),
                     GetCategory(blueprint)) {
                         EnableEditorDialog = false,
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
-                        Displaying = displayContext => Displaying(displayContext, baseElement),
+                        Display = displayContext => Displaying(displayContext, baseElement),
+                        StateBag = new Dictionary<string, object> {
+                            {"Blueprint", true},
+                            {"ElementTypeName", baseElement.Descriptor.TypeName}
+                        }
                     };
 
             var descriptors = query.ToArray();
@@ -53,7 +57,8 @@ namespace Orchard.Layouts.Providers {
         }
 
         private void CreatingDisplay(ElementCreatingDisplayShapeContext context, ElementBlueprint blueprint) {
-            context.Element.State = ElementStateHelper.Deserialize(blueprint.BaseElementState);
+            var bluePrintState = ElementStateHelper.Deserialize(blueprint.BaseElementState);
+            context.Element.State = bluePrintState;
         }
 
         private void Displaying(ElementDisplayContext context, IElement element) {
