@@ -166,7 +166,8 @@ namespace Orchard.Mvc.Routes {
                     var environment = context.Items["owin.Environment"] as IDictionary<string, object>;
 
                     if (environment == null) {
-                        throw new ArgumentException("owin.Environment can't be null");
+                        // It seems Owin is disabled by the owin:AutomaticAppStartup=false appSettings configuration.
+                        environment = new Dictionary<string, object>();
                     }
 
                     environment["orchard.Handler"] = new Func<Task>(async () => {
