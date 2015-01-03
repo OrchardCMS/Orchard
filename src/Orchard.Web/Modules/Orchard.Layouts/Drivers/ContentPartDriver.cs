@@ -4,6 +4,7 @@ using Orchard.Data;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Drivers {
@@ -28,7 +29,7 @@ namespace Orchard.Layouts.Drivers {
                 var controller = (Controller)context.Updater;
                 var oldValueProvider = controller.ValueProvider;
 
-                controller.ValueProvider = new DictionaryValueProvider<string>(context.Element.State, _cultureAccessor.CurrentCulture);
+                controller.ValueProvider = context.Element.State.ToValueProvider(_cultureAccessor.CurrentCulture);
                 _contentPartDisplay.UpdateEditor(contentPart, context.Updater);
                 _transactionManager.Cancel();
                 controller.ValueProvider = oldValueProvider;

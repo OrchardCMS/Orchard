@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Helpers {
     public static class ElementStateHelper {
-        private static readonly string[] _elementStateBlackList = {"ElementState", "__RequestVerificationToken"};
+        private static readonly string[] _elementStateBlackList = { "ElementState", "__RequestVerificationToken" };
 
         public static string Get(this StateDictionary state, string key, string defaultValue = null) {
             return state != null ? state.ContainsKey(key) ? state[key] : defaultValue : defaultValue;
@@ -19,7 +21,7 @@ namespace Orchard.Layouts.Helpers {
 
         public static StateDictionary Combine(this StateDictionary target, StateDictionary input, bool removeNonExistingItems = false) {
             var combined = new StateDictionary(target);
-            
+
             foreach (var item in input) {
                 combined[item.Key] = item.Value;
             }
@@ -62,12 +64,12 @@ namespace Orchard.Layouts.Helpers {
 
             foreach (var key in _elementStateBlackList) {
                 copy.Remove(key);
-                
             }
+
             var dictionary = new StateDictionary();
 
             foreach (string key in copy) {
-                dictionary[key] = copy[key];
+                dictionary[key] = String.Join(",", copy.GetValues(key).Select(HttpUtility.UrlEncode));
             }
 
             return dictionary;
@@ -80,13 +82,32 @@ namespace Orchard.Layouts.Helpers {
                 copy.Remove(key);
 
             }
+
             var dictionary = new Dictionary<string, object>();
 
             foreach (string key in copy) {
-                dictionary[key] = copy[key];
+                dictionary[key] = copy.GetValues(key);
             }
 
             return dictionary;
+        }
+
+        public static NameValueCollection ToNameValueCollection(this StateDictionary dictionary) {
+            var collection = new NameValueCollection();
+
+            foreach (var entry in dictionary) {
+                var values = entry.Value != null ? entry.Value.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries) : new string[0];
+
+                foreach (var value in values) {
+                    collection.Add(entry.Key, HttpUtility.UrlDecode(value));
+                }
+            }
+
+            return collection;
+        }
+
+        public static IValueProvider ToValueProvider(this StateDictionary dictionary, CultureInfo culture) {
+            return new NameValueCollectionValueProvider(dictionary.ToNameValueCollection(), culture);
         }
     }
 }

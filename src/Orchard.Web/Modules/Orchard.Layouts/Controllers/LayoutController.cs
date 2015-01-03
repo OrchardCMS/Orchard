@@ -23,9 +23,9 @@ namespace Orchard.Layouts.Controllers {
 
         public LayoutController(
             IContentManager contentManager,
-            IWorkContextAccessor wca, 
+            IWorkContextAccessor wca,
             IShapeDisplay shapeDisplay,
-            ILayoutManager layoutManager, 
+            ILayoutManager layoutManager,
             ILayoutSerializer serializer) {
 
             _contentManager = contentManager;
@@ -36,7 +36,7 @@ namespace Orchard.Layouts.Controllers {
         }
 
         [Admin]
-        public ViewResult Edit(string contentType = null, int? id = null, string state = null) {
+        public ViewResult Edit(string session, string contentType = null, int? id = null, string state = null) {
             var describeContext = CreateDescribeElementsContext(id, contentType);
             var layoutPart = describeContext.Content.As<LayoutPart>();
 
@@ -52,7 +52,8 @@ namespace Orchard.Layouts.Controllers {
                 SelectedTemplateId = layoutPart.TemplateId,
                 State = state,
                 LayoutRoot = _layoutManager.RenderLayout(state, displayType: "Design", content: layoutPart),
-                Content = layoutPart
+                Content = layoutPart,
+                SessionKey = session
             };
 
             var workContext = _wca.GetContext();

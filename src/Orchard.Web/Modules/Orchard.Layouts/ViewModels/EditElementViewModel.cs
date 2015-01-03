@@ -16,5 +16,6 @@ namespace Orchard.Layouts.ViewModels {
         public ILayoutAspect Layout { get; set; }
         public IList<string> Tabs { get; set; }
         public bool Submitted { get; set; }
+        public string SessionKey { get; set; }
     }
 }

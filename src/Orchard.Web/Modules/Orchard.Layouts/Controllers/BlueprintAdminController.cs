@@ -216,7 +216,7 @@ namespace Orchard.Layouts.Controllers {
             var context = new ElementEditorContext {
                 Element = element,
                 Updater = this,
-                ValueProvider = new DictionaryValueProvider<string>(elementState, _cultureAccessor.CurrentCulture),
+                ValueProvider = elementState.ToValueProvider(_cultureAccessor.CurrentCulture),
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;

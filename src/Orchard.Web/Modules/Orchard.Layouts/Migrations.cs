@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
@@ -6,6 +7,14 @@ using Orchard.Layouts.Helpers;
 namespace Orchard.Layouts {
     public class Migrations : DataMigrationImpl {
         public int Create() {
+            SchemaBuilder.CreateTable("ObjectStoreEntry", table => table
+                .Column<int>("Id", c => c.PrimaryKey().Identity())
+                .Column<string>("EntryKey", c => c.WithLength(64))
+                .Column<string>("Data", c => c.Unlimited())
+                .Column<int>("UserId")
+                .Column<DateTime>("CreatedUtc")
+                .Column<DateTime>("LastModifiedUtc"));
+
             SchemaBuilder.CreateTable("ElementBlueprint", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("BaseElementTypeName", c => c.WithLength(256))
@@ -60,7 +69,19 @@ namespace Orchard.Layouts {
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "False")));
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("ObjectStoreEntry", table => table
+                .Column<int>("Id", c => c.PrimaryKey().Identity())
+                .Column<string>("EntryKey", c => c.WithLength(64))
+                .Column<string>("Data", c => c.Unlimited())
+                .Column<int>("UserId")
+                .Column<DateTime>("CreatedUtc")
+                .Column<DateTime>("LastModifiedUtc"));
+
+            return 2;
         }
 
         private void DefineElementWidget(string widgetTypeName, string widgetDisplayedAs, string elementTypeName) {

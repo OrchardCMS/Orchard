@@ -27,12 +27,13 @@
          data-anti-forgery-token="@Html.AntiForgeryTokenValueOrchard()"
          data-render-url="@Url.Action("Render", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
          data-display-type="Design"
-         data-element-browser-url="@Url.Action("Browse", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
-         data-edit-url="@Url.Action("Edit", "Element", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-element-browser-url="@Url.Action("Browse", "Element", new { session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
+         data-edit-url="@Url.Action("Edit", "Element", new { session = Model.SessionKey, contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
          data-apply-template-url="@Url.Action("ApplyTemplate", "Layout", new { contentId = contentId, contentType = contentType, area = "Orchard.Layouts" })"
          data-confirm-delete-prompt="@T("Are you sure you want to delete this element?")"
          data-editor-dialog-title-format="@T("$1 Properties")"
-         data-editor-dialog-name="Layout">
+         data-editor-dialog-name="Layout"
+         data-session-key="@Model.SessionKey">
         <div class="group canvas-toolbar">
             <div class="pull-right">
                 <ol class="group">

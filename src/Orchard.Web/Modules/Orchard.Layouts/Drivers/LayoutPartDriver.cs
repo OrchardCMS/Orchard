@@ -60,7 +60,8 @@ namespace Orchard.Layouts.Drivers {
                 var viewModel = new LayoutPartViewModel {
                     State = part.LayoutState,
                     TemplateId = part.TemplateId,
-                    Content = part
+                    Content = part,
+                    SessionKey = part.SessionKey
                 };
 
                 if (updater != null) {
@@ -80,6 +81,7 @@ namespace Orchard.Layouts.Drivers {
 
                     part.LayoutState = _serializer.Serialize(elementInstances);
                     part.TemplateId = viewModel.TemplateId;
+                    part.SessionKey = viewModel.SessionKey;
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);

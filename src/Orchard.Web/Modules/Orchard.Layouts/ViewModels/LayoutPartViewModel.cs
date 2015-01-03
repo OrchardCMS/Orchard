@@ -6,5 +6,6 @@ namespace Orchard.Layouts.ViewModels {
         public string State { get; set; }
         public string Trash { get; set; }
         public int? TemplateId { get; set; }
+        public string SessionKey { get; set; }
     }
 }

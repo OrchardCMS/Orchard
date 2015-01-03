@@ -9,5 +9,6 @@ namespace Orchard.Layouts.ViewModels {
         public IList<LayoutPart> Templates { get; set; }
         public int? SelectedTemplateId { get; set; }
         public IContent Content { get; set; }
+        public string SessionKey { get; set; }
     }
 }

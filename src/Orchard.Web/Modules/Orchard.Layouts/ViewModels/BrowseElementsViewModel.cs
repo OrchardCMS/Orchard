@@ -6,5 +6,6 @@ namespace Orchard.Layouts.ViewModels {
         public IList<CategoryDescriptor> Categories { get; set; }
         public int? ContentId { get; set; }
         public string ContentType { get; set; }
+        public string Session { get; set; }
     }
 }
