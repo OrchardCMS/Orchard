@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.Core, Version=1.6.30117.9648, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nuget\NuGet.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -141,6 +145,7 @@
     <Compile Include="Services\IRecurringScheduledTaskManager.cs" />
     <Compile Include="Services\ISigningService.cs" />
     <Compile Include="Services\ISubscriptionService.cs" />
+    <Compile Include="Services\DeploymentPackageBuilder.cs" />
     <Compile Include="Services\RecipeSerializer.cs" />
     <Compile Include="Services\RecurringScheduledTaskManager.cs" />
     <Compile Include="Services\SigningService.cs" />

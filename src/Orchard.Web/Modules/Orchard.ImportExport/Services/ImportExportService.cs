@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
@@ -29,6 +31,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IClock _clock;
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
+        private readonly IDeploymentPackageBuilder _packageBuilder;
         private const string ExportsDirectory = "Exports";
 
         public ImportExportService(
@@ -40,7 +43,8 @@ namespace Orchard.ImportExport.Services {
             IRecipeManager recipeManager,
             IShellDescriptorManager shellDescriptorManager,
             IClock clock,
-            IEnumerable<IExportEventHandler> exportEventHandlers
+            IEnumerable<IExportEventHandler> exportEventHandlers,
+            IDeploymentPackageBuilder packageBuilder
             ) {
             _orchardServices = orchardServices;
             _contentDefinitionManager = contentDefinitionManager;
@@ -51,6 +55,7 @@ namespace Orchard.ImportExport.Services {
             _shellDescriptorManager = shellDescriptorManager;
             _clock = clock;
             _exportEventHandlers = exportEventHandlers;
+            _packageBuilder = packageBuilder;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -113,13 +118,16 @@ namespace Orchard.ImportExport.Services {
 
             _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
 
-            if (context.Files.Any()) {
-                // TODO: build package
-                return null;
+            if (exportOptions.ExportData && contentTypeList.Any() &&
+                exportOptions.ExportFiles && context.Files.Any()) {
+                var packageStream = _packageBuilder.BuildPackage(
+                    "export.nupkg",
+                    context.Document,
+                    context.Files
+                    );
+                return WritePackageFile(packageStream);
             }
-            else {
-                return WriteExportFile(exportDocument.ToString());
-            }
+            return WriteExportFile(exportDocument.ToString());
         }
 
         private XDocument CreateExportRoot() {
@@ -237,11 +245,34 @@ namespace Orchard.ImportExport.Services {
                 : VersionOptions.Published;
         }
 
+        private string BuildFileName(string extension) {
+            return "Export-" + _orchardServices.WorkContext.CurrentUser.UserName
+                   + "-" + DateTime.UtcNow.Ticks + "." + extension;
+        }
+
+        private FilePathResult WritePackageFile(Stream packageStream) {
+            var exportFile = BuildFileName("nupkg");
+
+            try {
+                if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
+                    _appDataFolder.CreateDirectory(ExportsDirectory);
+                }
+
+                var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
+                using (var stream = _appDataFolder.CreateFile(path)) {
+                    packageStream.CopyTo(stream);
+                }
+                return new FilePathResult(_appDataFolder.MapPath(path), "application/zip") {
+                    FileDownloadName = "export.nupkg"
+                };
+            }
+            finally {
+                packageStream.Close();
+            }
+        }
+
         private FilePathResult WriteExportFile(string exportDocument) {
-            var exportFile = string.Format(
-                "Export-{0}-{1}.xml", 
-                _orchardServices.WorkContext.CurrentUser.UserName, 
-                DateTime.UtcNow.Ticks);
+            var exportFile = BuildFileName("xml");
 
             if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
                 _appDataFolder.CreateDirectory(ExportsDirectory);

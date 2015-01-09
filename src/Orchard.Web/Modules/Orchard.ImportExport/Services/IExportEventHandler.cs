@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Events;
 using Orchard.ImportExport.Models;
 
@@ -9,11 +10,6 @@ namespace Orchard.ImportExport.Services {
         public IList<ExportedFileDescription> Files { get; set; }
         public IEnumerable<string> ContentTypes { get; set; }
         public ExportOptions ExportOptions { get; set; }
-    }
-
-    public class ExportedFileDescription {
-        public string PackagePath { get; set; }
-        public string LocalPath { get; set; }
     }
 
     public interface IExportEventHandler : IEventHandler {

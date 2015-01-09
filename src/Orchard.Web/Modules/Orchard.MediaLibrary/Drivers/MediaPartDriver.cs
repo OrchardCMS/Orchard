@@ -1,16 +1,28 @@
-﻿using Orchard.ContentManagement;
+﻿using System.IO;
+using System.Linq;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
+using Orchard.MediaLibrary.Services;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaPartDriver : ContentPartDriver<MediaPart> {
+        private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IStorageProvider _storageProvider;
 
         protected override string Prefix {
             get { return "MediaPart"; }
         }
 
-        public MediaPartDriver(IOrchardServices services) {
+        public MediaPartDriver(
+            IMediaLibraryService mediaLibraryService,
+            IStorageProvider storageProvider,
+            IOrchardServices services
+            ) {
+            _mediaLibraryService = mediaLibraryService;
+            _storageProvider = storageProvider;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -60,6 +72,16 @@ namespace Orchard.MediaLibrary.Drivers {
             if (fileName != null) {
                 part.FileName = fileName;
             }
+
+            if (context.Files != null) {
+                var path = Path.Combine(part.FolderPath, part.FileName);
+                var file = context.Files
+                    .FirstOrDefault(f => f.LocalPath == path);
+                if (file != null) {
+                    var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, file.Contents);
+                    part._publicUrl.Value = publicUrl;
+                }
+            }
         }
 
         protected override void Exporting(MediaPart part, ContentManagement.Handlers.ExportContentContext context) {
@@ -68,6 +90,15 @@ namespace Orchard.MediaLibrary.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("AlternateText", part.AlternateText);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FolderPath", part.FolderPath);
             context.Element(part.PartDefinition.Name).SetAttributeValue("FileName", part.FileName);
+
+            if (part.FolderPath != null && part.FileName != null) {
+                var path = Path.Combine(part.FolderPath, part. FileName);
+                var file = _storageProvider.GetFile(path);
+                if (file != null) {
+                    var stream = file.OpenRead();
+                    context.AddFile(path, stream);
+                }
+            }
         }
     }
 }

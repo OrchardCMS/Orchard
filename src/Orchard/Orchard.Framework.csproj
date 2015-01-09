@@ -149,6 +149,7 @@
     <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\Handlers\ExportedFileDescription.cs" />
     <Compile Include="ContentManagement\Handlers\RegisteringIdentityResolversContext.cs" />
     <Compile Include="ContentManagement\Handlers\DestroyContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\RestoreContentContext.cs" />
