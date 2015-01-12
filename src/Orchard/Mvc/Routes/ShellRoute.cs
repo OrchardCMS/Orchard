@@ -145,7 +145,7 @@ namespace Orchard.Mvc.Routes {
             }
         }
 
-        class HttpAsyncHandler : HttpTaskAsyncHandler, IRequiresSessionState {
+        class HttpAsyncHandler : HttpTaskAsyncHandler, IRequiresSessionState, IHasRequestContext {
             private readonly IWorkContextAccessor _workContextAccessor;
             private readonly IHttpAsyncHandler _httpAsyncHandler;
             private readonly Func<IDictionary<string, object>, Task> _pipeline;
@@ -179,6 +179,13 @@ namespace Orchard.Mvc.Routes {
                     });
 
                     await _pipeline.Invoke(environment);
+                }
+            }
+
+            public RequestContext RequestContext {
+                get {
+                    var mvcHandler = _httpAsyncHandler as MvcHandler;
+                    return mvcHandler == null ? null : mvcHandler.RequestContext;
                 }
             }
         }
