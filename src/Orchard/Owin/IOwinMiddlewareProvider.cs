@@ -10,9 +10,9 @@ namespace Orchard.Owin {
     /// </remarks>
     public interface IOwinMiddlewareProvider : IDependency {
         /// <summary>
-        /// Gets Owin middlewares that will be injected into the Orchard Owin pipeline.
+        /// Gets <see cref="OwinMiddlewareRegistration"/> objects that will be used to alter the Orchard Owin pipeline.
         /// </summary>
-        /// <returns>Owin middlewares that will be injected into the Orchard Owin pipeline.</returns>
-        IEnumerable<OwinMiddleware> GetOwinMiddlewares();
+        /// <returns><see cref="OwinMiddlewareRegistration"/> objects that will be used to alter the Orchard Owin pipeline.</returns>
+        IEnumerable<OwinMiddlewareRegistration> GetOwinMiddlewares();
     }
 }
