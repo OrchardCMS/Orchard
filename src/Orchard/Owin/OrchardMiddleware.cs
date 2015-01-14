@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Owin;
 
 namespace Orchard.Owin {
+    /// <summary>
+    /// A special Owin middleware that is executed last in the Owin pipeline and runs the non-Owin part of the request.
+    /// </summary>
     public static class OrchardMiddleware {
         public static IAppBuilder UseOrchard(this IAppBuilder app) {
             app.Use(async (context, next) => {
