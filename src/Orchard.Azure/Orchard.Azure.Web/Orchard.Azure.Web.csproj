@@ -53,50 +53,52 @@
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.Client">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.ApplicationServer.Caching.Core">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.DistributedCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.DistributedCache">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.Web.DistributedCache.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.Infrastructure">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>True</Private>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>False</Private>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\windowsazure\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Storage">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
@@ -116,7 +118,7 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.Data.SqlServerCe, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SqlServerCe">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
@@ -135,7 +137,7 @@
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -157,7 +159,7 @@
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.WebPages.Deployment">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
       <Private>True</Private>

@@ -13282,6 +13282,12 @@
         <member name="T:System.Data.Services.Client.TypeSystem">
             <summary>Utility functions for processing Expression trees</summary>
         </member>
+        <member name="F:System.Data.Services.Client.TypeSystem.OfficialSilverLightPublicKeyToken">
+            <summary>Used for comparison with external assemblies for silverlight like Microsoft.VisualBasic.</summary>
+        </member>
+        <member name="F:System.Data.Services.Client.TypeSystem.OfficialDesktopPublicKeyToken">
+            <summary>Used for comparison with external assemblies for desktop like Microsoft.VisualBasic.</summary>
+        </member>
         <member name="F:System.Data.Services.Client.TypeSystem.VisualBasicAssemblyName">
             <summary> VB Assembly name</summary>
         </member>

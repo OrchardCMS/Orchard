@@ -402,7 +402,7 @@
         <member name="T:Microsoft.Data.OData.Query.BindingState">
             <summary>
             Encapsulates the state of metadata binding.
-            TODO finish moving fields from MetadataBinder here and see if anything can be removed.
+            TODO : finish moving fields from MetadataBinder here and see if anything can be removed.
             </summary>
         </member>
         <member name="F:Microsoft.Data.OData.Query.BindingState.configuration">
@@ -2376,7 +2376,7 @@
         <member name="T:Microsoft.Data.OData.Query.FunctionCallParser">
             <summary>
             Implementation of IFunctionCallParser that allows functions calls and parses arguments with a provided method.
-            TODO This inmplementaiton is incomplete.
+            TODO : This implementation is incomplete.
             </summary>
         </member>
         <member name="T:Microsoft.Data.OData.Query.IFunctionCallParser">
@@ -2684,7 +2684,7 @@
         <member name="F:Microsoft.Data.OData.Query.KeyBinder.keyValueBindMethod">
             <summary>
             Method to bind the value of a key.
-            TODO Make it of return type SingleValueQueryNode.
+            TODO : Make it of return type SingleValueQueryNode.
             </summary>
         </member>
         <member name="M:Microsoft.Data.OData.Query.KeyBinder.#ctor(Microsoft.Data.OData.Query.MetadataBinder.QueryTokenVisitor)">
@@ -4579,7 +4579,7 @@
         <member name="F:Microsoft.Data.OData.Query.EndPathBinder.bind">
             <summary>
             Method to bind the value of a key.
-            TODO Make it of return type SingleValueQueryNode.
+            TODO : Make it of return type SingleValueQueryNode.
             </summary>
         </member>
         <member name="F:Microsoft.Data.OData.Query.EndPathBinder.functionCallBinder">
@@ -5928,7 +5928,7 @@
             <summary>
             Gets the <see cref="P:Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause.Selection"/> object that describes what properties and functions should be selected from the associated <see cref="T:Microsoft.Data.Edm.IEdmEntityType"/>.
             
-            TODO Note that this is a legacy internal concept. 
+            TODO : Note that this is a legacy internal concept. 
             At the last minute we changed the public API but chose not to change how the implementation work to manage risk.
             We should clean this up and remove this property.
             </summary>
@@ -5937,7 +5937,7 @@
             <summary>
             Mapping that contains the set of navigation properties for the associated entity that should be expanded, and respective details about the expansions. 
             
-            TODO Note that this is a legacy internal concept. 
+            TODO : Note that this is a legacy internal concept. 
             At the last minute we changed the public API but chose not to change how the implementation work to manage risk.
             We should clean this up and remove this property.
             </summary>
@@ -10905,7 +10905,7 @@
         <member name="T:Microsoft.Data.OData.Query.MetadataBinder.QueryTokenVisitor">
             <summary>
             Delegate for a function that visits a QueryToken and translates it into a bound QueryNode.
-            TODO Eventually replace this with a real interface for a visitor.
+            TODO : Eventually replace this with a real interface for a visitor.
             </summary>
             <param name="token">QueryToken to visit.</param>
             <returns>Metadata bound QueryNode.</returns>
@@ -11512,7 +11512,7 @@
         <member name="T:Microsoft.Data.OData.Query.SemanticAst.EntitySetNode">
             <summary>
             Node representing an entity set.
-            TODO This should be deleted but it is used in many, many tests.
+            TODO : This should be deleted but it is used in many, many tests.
             </summary>
         </member>
         <member name="F:Microsoft.Data.OData.Query.SemanticAst.EntitySetNode.entitySet">
@@ -13093,6 +13093,12 @@
             Post-Condition: XmlNodeType.Element    - The element to read properties from if it is an empty element.
                             XmlNodeType.EndElement - The end element of the element to read properties from.
             </remarks>
+        </member>
+        <member name="M:Microsoft.Data.OData.Atom.ODataAtomPropertyAndValueDeserializer.ReadUndeclarePropertyOrSkip">
+            <summary>
+            Reads undeclared property in an element (primitive type value, or null value of complex type)
+            </summary>
+            <returns>The result ODataProperty.</returns>
         </member>
         <member name="M:Microsoft.Data.OData.Atom.ODataAtomPropertyAndValueDeserializer.ReadProperty(System.String,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.Metadata.ODataNullValueBehaviorKind,System.Boolean)">
             <summary>
