@@ -558,7 +558,7 @@ namespace Orchard.ContentManagement {
             // Mostly taken from: http://orchard.codeplex.com/discussions/396664
             var importContentSession = new ImportContentSession(this);
 
-            var element = Export(contentItem);
+            var element = Export(contentItem).Data;
 
             // If a handler prevents this element from being exported, it can't be cloned
             if (element == null) {
@@ -573,7 +573,8 @@ namespace Orchard.ContentManagement {
 
             importContentSession.Set(copyId, element.Name.LocalName);
 
-            Import(element, importContentSession);
+            var importContext = new ImportContentContext(element, null, importContentSession);
+            Import(importContext);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
         }
@@ -691,7 +692,8 @@ namespace Orchard.ContentManagement {
 
         // Insert or Update imported data into the content manager.
         // Call content item handlers.
-        public void Import(XElement element, ImportContentSession importContentSession) {
+        public void Import(ImportContentContext context) {
+            var element = context.Data;
             var elementId = element.Attribute("Id");
             if (elementId == null) {
                 return;
@@ -705,7 +707,7 @@ namespace Orchard.ContentManagement {
 
             var status = element.Attribute("Status");
 
-            var item = importContentSession.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var item = context.Session.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
@@ -725,10 +727,10 @@ namespace Orchard.ContentManagement {
                     Number = 1,
                     Latest = true,
                     Published = true
-                };                
+                };
             }
 
-            var context = new ImportContentContext(item, element, importContentSession);
+            context.ContentItem = item;
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
             }
@@ -754,7 +756,7 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public XElement Export(ContentItem contentItem) {
+        public ExportContentContext Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
             foreach (var contentHandler in Handlers) {
@@ -777,7 +779,7 @@ namespace Orchard.ContentManagement {
                 context.Data.SetAttributeValue("Status", Draft);
             }
 
-            return context.Data;
+            return context;
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {

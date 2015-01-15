@@ -1,12 +1,14 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.ContentManagement.Handlers {
     public class ExportContentContext : ContentContextBase {
+        private readonly IList<ExportedFileDescription> _files;
+
         public XElement Data { get; set; }
-        protected IList<ExportedFileDescription> Files { get; set; }
+        public IEnumerable<ExportedFileDescription> Files { get { return _files; } }
 
         /// <summary>
         /// Wether the content item should be exclude from the export or not
@@ -14,7 +16,7 @@ namespace Orchard.ContentManagement.Handlers {
         public bool Exclude { get; set; }
 
         protected ExportContentContext(ContentItem contentItem) : base(contentItem) {
-            Files = new List<ExportedFileDescription>();
+            _files = new List<ExportedFileDescription>();
         }
 
         public ExportContentContext(ContentItem contentItem, XElement data)
@@ -31,9 +33,9 @@ namespace Orchard.ContentManagement.Handlers {
             return element;
         }
 
-        public void AddFile(string localPath, Stream contents) {
-            if (Files.Any(file => file.LocalPath == localPath)) return;
-            Files.Add(new ExportedFileDescription {
+        public void AddFile(string localPath, IStorageFile contents) {
+            if (_files.Any(file => file.LocalPath == localPath)) return;
+            _files.Add(new ExportedFileDescription {
                 LocalPath = localPath,
                 Contents = contents
             });

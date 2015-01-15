@@ -171,7 +171,7 @@ namespace Orchard.ImportExport.Services {
 
         private XElement ExportSiteSettings() {
             var siteContentItem = _orchardServices.WorkContext.CurrentSite.ContentItem;
-            var exportedElements = ExportContentItem(siteContentItem).Elements().ToList();
+            var exportedElements = ExportContentItem(siteContentItem).Data.Elements().ToList();
 
             foreach (var contentPart in siteContentItem.Parts) {
                 var exportedElement = exportedElements.FirstOrDefault(element => element.Name == contentPart.PartDefinition.Name);
@@ -226,7 +226,7 @@ namespace Orchard.ImportExport.Services {
                 .Select(type => itemList
                     .Where(i => i.ContentType == type))
                 .SelectMany(items => items
-                    .Select(ExportContentItem)
+                    .Select(contentItemElement => ExportContentItem(contentItemElement).Data)
                     .Where(contentItemElement => contentItemElement != null))) {
                 data.Add(contentItemElement);
             }
@@ -234,7 +234,7 @@ namespace Orchard.ImportExport.Services {
             return data;
         }
 
-        private XElement ExportContentItem(ContentItem contentItem) {
+        private ExportContentContext ExportContentItem(ContentItem contentItem) {
             // Call export handler for the item.
             return _orchardServices.ContentManager.Export(contentItem);
         }

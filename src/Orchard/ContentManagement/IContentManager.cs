@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
@@ -90,8 +91,8 @@ namespace Orchard.ContentManagement {
         void Destroy(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
-        XElement Export(ContentItem contentItem);
-        void Import(XElement element, ImportContentSession importContentSession);
+        ExportContentContext Export(ContentItem contentItem);
+        void Import(ImportContentContext context);
 
         /// <summary>
         /// Clears the current referenced content items

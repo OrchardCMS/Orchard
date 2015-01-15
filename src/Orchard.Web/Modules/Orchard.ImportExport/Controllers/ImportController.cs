@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Security;
@@ -98,7 +99,8 @@ namespace Orchard.ImportExport.Controllers {
             var contentXml = XElement.Parse(content);
             var importSession = new ImportContentSession(Services.ContentManager);
             importSession.Set(contentXml.Attribute("Id").Value, contentXml.Name.LocalName);
-            Services.ContentManager.Import(contentXml, importSession);
+            var importContext = new ImportContentContext(contentXml, null, importSession);
+            Services.ContentManager.Import(importContext);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }

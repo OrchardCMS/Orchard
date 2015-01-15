@@ -47,7 +47,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             var importContentSession = new ImportContentSession(_contentManager);
 
-            var context = new ImportContentContext(siteContentItem, recipeContext.RecipeStep.Step, importContentSession);
+            var context = new ImportContentContext(siteContentItem, recipeContext.RecipeStep.Step, null, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -56,9 +57,11 @@ namespace Orchard.Recipes.RecipeHandlers {
                     //so that dependencies can be managed within the same transaction
                     var nextIdentity = importContentSession.GetNextInBatch();
                     while (nextIdentity != null) {
-                        _orchardServices.ContentManager.Import(
+                        var itemContext = new ImportContentContext(
                             elementDictionary[nextIdentity.ToString()],
+                            recipeContext.Files,
                             importContentSession);
+                        _orchardServices.ContentManager.Import(itemContext);
                         nextIdentity = importContentSession.GetNextInBatch();
                     }
 

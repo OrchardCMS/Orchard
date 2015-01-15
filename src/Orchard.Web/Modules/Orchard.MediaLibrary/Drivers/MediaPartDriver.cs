@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.MediaLibrary.Models;
@@ -47,7 +48,7 @@ namespace Orchard.MediaLibrary.Drivers {
             return ContentShape("Parts_Media_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts.Media.Edit", Model: part, Prefix: Prefix));
         }
 
-        protected override void Importing(MediaPart part, ContentManagement.Handlers.ImportContentContext context) {
+        protected override void Importing(MediaPart part, ImportContentContext context) {
             var mimeType = context.Attribute(part.PartDefinition.Name, "MimeType");
             if (mimeType != null) {
                 part.MimeType = mimeType;
@@ -76,15 +77,17 @@ namespace Orchard.MediaLibrary.Drivers {
             if (context.Files != null) {
                 var path = Path.Combine(part.FolderPath, part.FileName);
                 var file = context.Files
-                    .FirstOrDefault(f => f.LocalPath == path);
+                    .FirstOrDefault(f => f.Path == path);
                 if (file != null) {
-                    var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, file.Contents);
-                    part._publicUrl.Value = publicUrl;
+                    using (var stream = file.GetStream()) {
+                        var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, stream);
+                        part._publicUrl.Value = publicUrl;
+                    }
                 }
             }
         }
 
-        protected override void Exporting(MediaPart part, ContentManagement.Handlers.ExportContentContext context) {
+        protected override void Exporting(MediaPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("MimeType", part.MimeType);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Caption", part.Caption);
             context.Element(part.PartDefinition.Name).SetAttributeValue("AlternateText", part.AlternateText);
@@ -95,8 +98,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 var path = Path.Combine(part.FolderPath, part. FileName);
                 var file = _storageProvider.GetFile(path);
                 if (file != null) {
-                    var stream = file.OpenRead();
-                    context.AddFile(path, stream);
+                    context.AddFile(path, file);
                 }
             }
         }
