@@ -9,7 +9,15 @@ namespace Orchard.Layouts.Services {
         IEnumerable<LayoutPart> GetTemplates();
         LayoutPart GetLayout(int id);
         IEnumerable<IElement> LoadElements(ILayoutAspect layout);
-        dynamic RenderLayout(ILayoutAspect layout, string state = null, string displayType = null);
+
+        /// <summary>
+        /// Renders the specified layout state into a shape tree.
+        /// </summary>
+        /// <param name="state">The layout state.</param>
+        /// <param name="displayType">Optional. The dislay type to use when rendering the elements.</param>
+        /// <param name="content">Optional. Provides additional context to the elements being loaded and rendered.</param>
+        /// <returns>A shape representing the layout to be rendered.</returns>
+        dynamic RenderLayout(string state, string displayType = null, IContent content = null);
 
         /// <summary>
         /// Updates the specified layout with the specified template layout.

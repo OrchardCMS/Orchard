@@ -42,6 +42,10 @@ namespace Orchard.OutputCache.Services {
         private void Convert(CacheItem cacheItem, CacheItemRecord record) {
             record.CacheKey = cacheItem.CacheKey;
             record.CachedOnUtc = cacheItem.CachedOnUtc;
+            record.Duration = cacheItem.Duration;
+            record.GraceTime = cacheItem.GraceTime;
+            record.ValidUntilUtc = cacheItem.ValidUntilUtc;
+            record.StoredUntilUtc = cacheItem.StoredUntilUtc;
             record.ContentType = cacheItem.ContentType;
             record.InvariantCacheKey = cacheItem.InvariantCacheKey;
             record.Output = cacheItem.Output;
@@ -50,8 +54,6 @@ namespace Orchard.OutputCache.Services {
             record.Tags = String.Join(";", cacheItem.Tags);
             record.Tenant = cacheItem.Tenant;
             record.Url = cacheItem.Url;
-            record.ValidFor = cacheItem.ValidFor;
-            record.ValidUntilUtc = cacheItem.ValidUntilUtc;
         }
 
         private CacheItem Convert(CacheItemRecord record) {
@@ -59,6 +61,8 @@ namespace Orchard.OutputCache.Services {
 
             cacheItem.CacheKey = record.CacheKey;
             cacheItem.CachedOnUtc = record.CachedOnUtc;
+            cacheItem.Duration = record.Duration;
+            cacheItem.GraceTime = record.GraceTime;
             cacheItem.ContentType = record.ContentType;
             cacheItem.InvariantCacheKey = record.InvariantCacheKey;
             cacheItem.Output = record.Output;
@@ -67,7 +71,6 @@ namespace Orchard.OutputCache.Services {
             cacheItem.Tags = record.Tags.Split(';');
             cacheItem.Tenant = record.Tenant;
             cacheItem.Url = record.Url;
-            cacheItem.ValidFor = record.ValidFor;
 
             return cacheItem;
         }
@@ -117,7 +120,7 @@ namespace Orchard.OutputCache.Services {
         }
 
         public void RemoveExpiredEntries() {
-            foreach (var record in _repository.Table.Where( x => x.ValidUntilUtc < _clock.UtcNow)) {
+            foreach (var record in _repository.Table.Where( x => x.StoredUntilUtc < _clock.UtcNow)) {
                 _repository.Delete(record);
             }
         }

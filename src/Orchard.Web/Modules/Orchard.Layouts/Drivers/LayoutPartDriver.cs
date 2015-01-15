@@ -58,9 +58,10 @@ namespace Orchard.Layouts.Drivers {
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
                 var viewModel = new LayoutPartViewModel {
-                    Part = part,
                     State = part.LayoutState,
                     TemplateId = part.TemplateId,
+                    Content = part,
+                    SessionKey = part.SessionKey
                 };
 
                 if (updater != null) {
@@ -80,6 +81,7 @@ namespace Orchard.Layouts.Drivers {
 
                     part.LayoutState = _serializer.Serialize(elementInstances);
                     part.TemplateId = viewModel.TemplateId;
+                    part.SessionKey = viewModel.SessionKey;
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);

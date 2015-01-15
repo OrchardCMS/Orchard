@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Framework.Elements {
     public class StateDictionary : Dictionary<string, string> {
@@ -12,7 +13,7 @@ namespace Orchard.Layouts.Framework.Elements {
             var context = new ModelBindingContext {
                 ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(T)),
                 ModelName = key,
-                ValueProvider = new DictionaryValueProvider<string>(this, null)
+                ValueProvider = this.ToValueProvider(null)
             };
             return (T)binder.BindModel(controllerContext, context);
 

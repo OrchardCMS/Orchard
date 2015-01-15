@@ -6,7 +6,7 @@ using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Services {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class AdminCultureSelectorFactory : ShapeDisplayEvents {
         private readonly ICultureManager _cultureManager;
         private readonly WorkContext _workContext;

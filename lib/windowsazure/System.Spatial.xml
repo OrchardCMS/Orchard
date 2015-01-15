@@ -2713,6 +2713,17 @@
             <param name="operand1">The first operand.</param>
             <param name="operand2">The second operand.</param>
         </member>
+        <member name="M:System.Spatial.GeographyOperationsExtensions.Length(System.Spatial.Geography)">
+            <summary>Determines the Length of the geography LineString.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand">The LineString operand.</param>
+        </member>
+        <member name="M:System.Spatial.GeographyOperationsExtensions.Intersects(System.Spatial.Geography,System.Spatial.Geography)">
+            <summary>Determines if geography point and polygon will intersect.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand1">The first operand.</param>
+            <param name="operand2">The second operand.</param>
+        </member>
         <member name="M:System.Spatial.GeographyOperationsExtensions.OperationsFor(System.Spatial.Geography[])">
             <summary>
             Finds the ops instance registered for the operands.
@@ -2730,6 +2741,17 @@
             <returns>The operation result.</returns>
             <param name="operand1">The first operand.</param>
             <param name="operand2">The second operand.</param>
+        </member>
+        <member name="M:System.Spatial.GeometryOperationsExtensions.Length(System.Spatial.Geometry)">
+            <summary>Determines the Length of the geometry LineString.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand">The LineString operand.</param>
+        </member>
+        <member name="M:System.Spatial.GeometryOperationsExtensions.Intersects(System.Spatial.Geometry,System.Spatial.Geometry)">
+            <summary>Determines if geometry point and polygon will intersect.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand1">The first operand, point.</param>
+            <param name="operand2">The second operand, polygon.</param>
         </member>
         <member name="M:System.Spatial.GeometryOperationsExtensions.OperationsFor(System.Spatial.Geometry[])">
             <summary>
@@ -2850,6 +2872,28 @@
             <returns>The operation result.</returns>
             <param name="operand1">The Operand 1.</param>
             <param name="operand2">The Operand 2.</param>
+        </member>
+        <member name="M:System.Spatial.SpatialOperations.Length(System.Spatial.Geometry)">
+            <summary>Indicates the Geometry LineString's length.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand">The Operand.</param>
+        </member>
+        <member name="M:System.Spatial.SpatialOperations.Length(System.Spatial.Geography)">
+            <summary>Indicates a Geography LineString's length.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand">The Operand.</param>
+        </member>
+        <member name="M:System.Spatial.SpatialOperations.Intersects(System.Spatial.Geometry,System.Spatial.Geometry)">
+            <summary>Indicates the Geometry Intersects() method.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand1">The Operand 1, point.</param>
+            <param name="operand2">The Operand 2, polygon.</param>
+        </member>
+        <member name="M:System.Spatial.SpatialOperations.Intersects(System.Spatial.Geography,System.Spatial.Geography)">
+            <summary>Indicates a Geography Intersects() method.</summary>
+            <returns>The operation result.</returns>
+            <param name="operand1">The Operand 1, point.</param>
+            <param name="operand2">The Operand 2, polygon.</param>
         </member>
         <member name="T:System.Spatial.OrcasExtensions">
             <summary>

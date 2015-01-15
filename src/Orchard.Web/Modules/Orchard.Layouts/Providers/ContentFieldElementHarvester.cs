@@ -77,7 +77,7 @@ namespace Orchard.Layouts.Providers {
                 var controller = (Controller)context.Updater;
                 var oldValueProvider = controller.ValueProvider;
 
-                controller.ValueProvider = new DictionaryValueProvider<string>(context.Element.State, _cultureAccessor.Value.CurrentCulture);
+                controller.ValueProvider = context.Element.State.ToValueProvider(_cultureAccessor.Value.CurrentCulture);
                 _contentFieldDisplay.Value.UpdateEditor(contentItem, contentField, context.Updater);
                 _transactionManager.Value.Cancel();
                 controller.ValueProvider = oldValueProvider;

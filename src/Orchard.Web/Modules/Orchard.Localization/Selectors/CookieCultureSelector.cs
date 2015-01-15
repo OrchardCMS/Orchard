@@ -8,7 +8,7 @@ using Orchard.Mvc;
 using Orchard.Services;
 
 namespace Orchard.Localization.Selectors {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class CookieCultureSelector : ICultureSelector, ICultureStorageProvider {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClock _clock;

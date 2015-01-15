@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Models;
@@ -7,8 +8,11 @@ using Orchard.Layouts.Models;
 namespace Orchard.Layouts.Services {
     public class ElementBlueprintService : IElementBlueprintService {
         private readonly IRepository<ElementBlueprint> _blueprintRepository;
-        public ElementBlueprintService(IRepository<ElementBlueprint> blueprintRepository) {
+        private readonly ISignals _signals;
+
+        public ElementBlueprintService(IRepository<ElementBlueprint> blueprintRepository, ISignals signals) {
             _blueprintRepository = blueprintRepository;
+            _signals = signals;
         }
 
         public ElementBlueprint GetBlueprint(int id) {
@@ -21,6 +25,7 @@ namespace Orchard.Layouts.Services {
 
         public void DeleteBlueprint(ElementBlueprint blueprint) {
             _blueprintRepository.Delete(blueprint);
+            _signals.Trigger(Signals.ElementDescriptors);
         }
 
         public int DeleteBlueprints(IEnumerable<int> ids) {

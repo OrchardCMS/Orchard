@@ -19,6 +19,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Owin;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
@@ -62,7 +63,9 @@ namespace Orchard.Tests.Environment {
                         .Ignore<IExtensionFolders>()
                         .Ignore<IRouteProvider>()
                         .Ignore<IHttpRouteProvider>()
-                        .Ignore<IModelBinderProvider>();
+                        .Ignore<IModelBinderProvider>()
+                        .Ignore<IWorkContextEvents>()
+                        .Ignore<IOwinMiddlewareProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();
 

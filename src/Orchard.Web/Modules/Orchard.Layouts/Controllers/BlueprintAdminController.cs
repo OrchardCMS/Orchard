@@ -57,7 +57,7 @@ namespace Orchard.Layouts.Controllers {
         }
 
         public ActionResult Browse() {
-            var categories = _elementManager.GetCategories(DescribeElementsContext.Empty).ToArray();
+            var categories = RemoveBlueprints(_elementManager.GetCategories(DescribeElementsContext.Empty)).ToArray();
             var viewModel = new BrowseElementsViewModel {
                 Categories = categories
             };
@@ -216,11 +216,26 @@ namespace Orchard.Layouts.Controllers {
             var context = new ElementEditorContext {
                 Element = element,
                 Updater = this,
-                ValueProvider = new DictionaryValueProvider<string>(elementState, _cultureAccessor.CurrentCulture),
+                ValueProvider = elementState.ToValueProvider(_cultureAccessor.CurrentCulture),
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;
             return context;
+        }
+
+        private IEnumerable<CategoryDescriptor> RemoveBlueprints(IEnumerable<CategoryDescriptor> categories) {
+            foreach (var descriptor in categories) {
+                var d = new CategoryDescriptor(descriptor.Name, descriptor.DisplayName, descriptor.Description, descriptor.Position);
+
+                foreach (var element in descriptor.Elements) {
+                    if (!element.StateBag.ContainsKey("Blueprint")) {
+                        d.Elements.Add(element);
+                    }
+                }
+
+                if(d.Elements.Any())
+                    yield return d;
+            }
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -23,9 +23,9 @@ namespace Orchard.Layouts.Controllers {
 
         public LayoutController(
             IContentManager contentManager,
-            IWorkContextAccessor wca, 
+            IWorkContextAccessor wca,
             IShapeDisplay shapeDisplay,
-            ILayoutManager layoutManager, 
+            ILayoutManager layoutManager,
             ILayoutSerializer serializer) {
 
             _contentManager = contentManager;
@@ -36,7 +36,7 @@ namespace Orchard.Layouts.Controllers {
         }
 
         [Admin]
-        public ViewResult Edit(string contentType = null, int? id = null, string state = null) {
+        public ViewResult Edit(string session, string contentType = null, int? id = null, string state = null) {
             var describeContext = CreateDescribeElementsContext(id, contentType);
             var layoutPart = describeContext.Content.As<LayoutPart>();
 
@@ -48,11 +48,12 @@ namespace Orchard.Layouts.Controllers {
             }
 
             var viewModel = new LayoutEditorViewModel {
-                Part = layoutPart,
                 Templates = _layoutManager.GetTemplates().Where(x => x.Id != layoutPart.Id).ToArray(),
                 SelectedTemplateId = layoutPart.TemplateId,
-                State = state, 
-                LayoutRoot = _layoutManager.RenderLayout(layoutPart, state, displayType: "Design"),
+                State = state,
+                LayoutRoot = _layoutManager.RenderLayout(state, displayType: "Design", content: layoutPart),
+                Content = layoutPart,
+                SessionKey = session
             };
 
             var workContext = _wca.GetContext();
@@ -75,7 +76,7 @@ namespace Orchard.Layouts.Controllers {
                 layoutState = ApplyTemplateInternal(templateId, layoutState, layoutId, contentType);
             }
 
-            var layoutShape = _layoutManager.RenderLayout(layoutPart, state: layoutState, displayType: "Design");
+            var layoutShape = _layoutManager.RenderLayout(state: layoutState, displayType: "Design", content: layoutPart);
             return new ShapeResult(this, layoutShape);
         }
 
@@ -95,12 +96,12 @@ namespace Orchard.Layouts.Controllers {
             _shapeDisplay.Display(layout);
         }
 
-        private DescribeElementsContext CreateDescribeElementsContext(int? layoutId, string contentType) {
-            var layoutPart = layoutId != null && layoutId != 0
-                ? _contentManager.Get<LayoutPart>(layoutId.Value, VersionOptions.Latest) ?? _contentManager.New<LayoutPart>(contentType)
-                : _contentManager.New<LayoutPart>(contentType);
+        private DescribeElementsContext CreateDescribeElementsContext(int? contentId, string contentType) {
+            var content = contentId != null && contentId != 0
+                ? _contentManager.Get(contentId.Value, VersionOptions.Latest) ?? _contentManager.New(contentType)
+                : _contentManager.New(contentType);
 
-            return new DescribeElementsContext { Content = layoutPart };
+            return new DescribeElementsContext { Content = content };
         }
     }
 }

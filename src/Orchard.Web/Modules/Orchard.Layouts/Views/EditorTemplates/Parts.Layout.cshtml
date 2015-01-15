@@ -11,9 +11,9 @@
     Script.Include("designer.host.js");
 }
 @{
-    var contentId = Model.Part.Id;
-    var contentType = Model.Part.ContentItem.ContentType;
-    var url = Url.Action("Edit", "Layout", new { id = contentId, contentType = contentType, area = "Orchard.Layouts" });
+    var contentId = Model.Content != null ? Model.Content.Id : default(int?);
+    var contentType = Model.Content != null ? Model.Content.ContentItem.ContentType : default(string);
+    var url = Url.Action("Edit", "Layout", new { id = contentId, contentType = contentType, session = Model.SessionKey, area = "Orchard.Layouts" });
     var frameUrl = ViewData.ModelState.IsValid ? url : default(string);
 }
 <div class="layout-designer"
@@ -22,9 +22,11 @@
      data-template-picker-name="@Html.FieldNameFor(m => m.TemplateId)"
      data-modelstate-valid="@ViewData.ModelState.IsValid.ToString().ToLower()"
      data-frame-url="@url"
-     data-anti-forgery-token="@Html.AntiForgeryTokenValueOrchard()">
+     data-anti-forgery-token="@Html.AntiForgeryTokenValueOrchard()"
+     data-session-key="@Model.SessionKey">
 
     @Html.HiddenFor(m => m.TemplateId)
+    @Html.HiddenFor(m => m.SessionKey)
     <fieldset>
         <label>@T("Layout")</label>
         @Html.HiddenFor(m => m.State)

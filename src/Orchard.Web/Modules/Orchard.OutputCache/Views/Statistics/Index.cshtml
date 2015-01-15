@@ -1,8 +1,10 @@
-﻿@using Orchard.OutputCache.ViewModels
+﻿@using Orchard.Localization.Services
+@using Orchard.OutputCache.ViewModels
 @model StatisticsViewModel
            
 @{
     Layout.Title = T("Cache Statistics");
+    var dateTimeFormatProvider = WorkContext.Resolve<IDateTimeFormatProvider>();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -10,14 +12,15 @@
     <div class="manage">@Html.ActionLink(T("Evict All").ToString(), "EvictAll", new { Area = "Orchard.OutputCache", Controller = "Statistics" }, new { @class = "button primaryAction", itemprop = "UnsafeUrl" })</div>
 }
 
-<h2>@T("Cached pages")</h2>
+<h2>@T("Cached Items")</h2>
 <table class="items">
     <thead>
         <tr>
-            <th scope="col">@T("Url")</th>
+            <th scope="col">@T("URL")</th>
             <th scope="col">@T("Cache Key")</th>
-            <th scope="col">@T("Cached On")</th>
-            <th scope="col">@T("Cached Until")</th>
+            <th scope="col">@T("Cached")</th>
+            <th scope="col">@T("Valid Until")</th>
+            <th scope="col">@T("Stored Until")</th>
             <th scope="col">&nbsp;</th>
         </tr>
     </thead>
@@ -26,7 +29,8 @@
             <td><span title="@cacheItem.QueryString">@cacheItem.Url</span></td>
             <td>@cacheItem.CacheKey</td>
             <td>@Display.DateTimeRelative(DateTimeUtc: cacheItem.CachedOnUtc)</td>
-            <td>@cacheItem.ValidUntilUtc.ToLocalTime()</td>
+            <td>@Display.DateTime(DateTimeUtc: cacheItem.ValidUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
+            <td>@Display.DateTime(DateTimeUtc: cacheItem.StoredUntilUtc, CustomFormat: T("{0} {1}", dateTimeFormatProvider.ShortDateFormat, dateTimeFormatProvider.LongTimeFormat))</td>
             <td>@Html.ActionLink(T("Evict").Text, "Evict", new { Area = "Orchard.OutputCache", Controller = "Statistics", cacheKey = cacheItem.CacheKey })</td>
         </tr>
     }

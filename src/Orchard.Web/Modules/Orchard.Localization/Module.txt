@@ -12,22 +12,22 @@ Features:
 		Dependencies: Settings
 		Name: Content Localization
 	Orchard.Localization.DateTimeFormat:
-		Description: Enables localization of date/time formats and names of days and months.
+		Description: Enables PO-based translation of date/time formats and names of days and months.
 		Category: Content
-		Name: Date/Time Format Localization
+		Name: Date/Time Format Translation
 		Dependencies: Orchard.Localization
-	Orchard.Localization.CutlureSelector:
-		Description: Enables a culture picker services, and also the admin cutlure picker.
+	Orchard.Localization.CultureSelector:
+		Description: Enables culture picker services, and also the admin culture picker.
 		Category: Content
 		Name: Culture Picker
 		Dependencies: Orchard.Localization, Orchard.Alias
 	Orchard.Localization.Transliteration:
-		Description: Enabled transliteration of content
+		Description: Enables transliteration of content.
 		Category: Content
 		Name: Transliteration
 		Dependencies: Orchard.Localization
 	Orchard.Localization.Transliteration.SlugGeneration:
-		Description: Enabled transliteration of the slug when creating a piece of content
+		Description: Enables transliteration of the autoroute slug when creating a piece of content.
 		Category: Content
-		Name: Url Transliteration
+		Name: URL Transliteration
 		Dependencies: Orchard.Localization.Transliteration, Orchard.Autoroute

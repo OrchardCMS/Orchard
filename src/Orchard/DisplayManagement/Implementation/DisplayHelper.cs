@@ -53,31 +53,31 @@ namespace Orchard.DisplayManagement.Implementation {
         }
 
         public class Combined : IHtmlString {
-            private readonly IEnumerable<object> _fragments;
+            private readonly IEnumerable<IHtmlString> _fragments;
 
-            public Combined(IEnumerable<object> fragments) {
+            public Combined(IEnumerable<IHtmlString> fragments) {
                 _fragments = fragments;
             }
 
             public string ToHtmlString() {
-                return _fragments.Aggregate("", (a, b) => a + b);
+                return string.Join("", _fragments);
             }
             public override string ToString() {
                 return ToHtmlString();
             }
         }
 
-        private object ShapeTypeExecute(string name, INamedEnumerable<object> parameters) {
+        private IHtmlString ShapeTypeExecute(string name, INamedEnumerable<object> parameters) {
             var shape = _shapeFactory.Create(name, parameters);
             return ShapeExecute(shape);
         }
 
-        public object ShapeExecute(Shape shape) {
+        public IHtmlString ShapeExecute(Shape shape) {
             // disambiguates the call to ShapeExecute(object) as Shape also implements IEnumerable
             return ShapeExecute((object) shape);
         }
 
-        public object ShapeExecute(object shape) {
+        public IHtmlString ShapeExecute(object shape) {
             if (shape == null) {
                 return new HtmlString(string.Empty);
             }
@@ -86,7 +86,7 @@ namespace Orchard.DisplayManagement.Implementation {
             return _displayManager.Execute(context);
         }
 
-        public IEnumerable<object> ShapeExecute(IEnumerable<object> shapes) {
+        public IEnumerable<IHtmlString> ShapeExecute(IEnumerable<object> shapes) {
             return shapes.Select(ShapeExecute).ToArray();
         }
     }

@@ -22,39 +22,39 @@ namespace Orchard.Layouts.Controllers {
         private readonly ILayoutSerializer _layoutSerializer;
         private readonly IElementManager _elementManager;
         private readonly IShapeFactory _shapeFactory;
-        private readonly IWorkContextAccessor _wca;
         private readonly ITransactionManager _transactionManager;
         private readonly ICultureAccessor _cultureAccessor;
         private readonly IContentManager _contentManager;
+        private readonly IObjectStore _objectStore;
 
         public ElementController(
             IElementDisplay elementDisplay,
             ILayoutSerializer layoutSerializer,
             IElementManager elementManager,
             IShapeFactory shapeFactory,
-            IWorkContextAccessor wca,
             ITransactionManager transactionManager,
             ICultureAccessor cultureAccessor,
-            IContentManager contentManager) {
+            IContentManager contentManager, IObjectStore objectStore) {
 
             _elementDisplay = elementDisplay;
             _layoutSerializer = layoutSerializer;
             _elementManager = elementManager;
             _shapeFactory = shapeFactory;
-            _wca = wca;
             _transactionManager = transactionManager;
             _cultureAccessor = cultureAccessor;
             _contentManager = contentManager;
+            _objectStore = objectStore;
         }
 
         [Admin]
-        public ViewResult Browse(int? layoutId = null, string contentType = null) {
+        public ViewResult Browse(string session, int? layoutId = null, string contentType = null) {
             var context = CreateDescribeContext(layoutId, contentType);
             var categories = _elementManager.GetCategories(context).ToArray();
             var viewModel = new BrowseElementsViewModel {
                 Categories = categories,
-                LayoutId = layoutId,
-                ContentType = contentType
+                ContentId = layoutId,
+                ContentType = contentType,
+                Session = session
             };
             return View(viewModel);
         }
@@ -62,21 +62,31 @@ namespace Orchard.Layouts.Controllers {
         [HttpPost]
         [Themed(false)]
         [ValidateInput(false)]
-        public ShapeResult Render(string graph, string displayType, int? layoutId = null, string contentType = null, string renderEventName = null, string renderEventArgs = null) {
-            var context = CreateDescribeContext(layoutId, contentType);
+        public ShapeResult Render(string graph, string displayType, int? contentId = null, string contentType = null, string renderEventName = null, string renderEventArgs = null) {
+            var context = CreateDescribeContext(contentId, contentType);
             var instances = _layoutSerializer.Deserialize(graph, context);
             var shape = _elementDisplay.DisplayElements(instances, context.Content, displayType: displayType, updater: this, renderEventName: renderEventName, renderEventArgs: renderEventArgs);
             return new ShapeResult(this, shape);
         }
 
         [Admin]
-        public ViewResult Create(string id, int? layoutId = null, string contentType = null) {
-            var describeContext = CreateDescribeContext(layoutId, contentType);
+        public ViewResult Create(string id, string session, int? contentId = null, string contentType = null) {
+            var sessionState = new ElementSessionState {
+                TypeName = id,
+                State = null,
+                ContentId = contentId,
+                ContentType = contentType
+            };
+
+            _objectStore.Set(session, sessionState);
+
+            var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, id);
             var element = _elementManager.ActivateElement(descriptor);
-            var context = CreateEditorContext(describeContext.Content, element);
+            var context = CreateEditorContext(session, describeContext.Content, element);
             var editorResult = _elementManager.BuildEditor(context);
             var viewModel = new EditElementViewModel {
+                SessionKey = session,
                 Layout = describeContext.Content.As<ILayoutAspect>(),
                 EditorResult = editorResult,
                 TypeName = id,
@@ -92,14 +102,18 @@ namespace Orchard.Layouts.Controllers {
         [Admin]
         [HttpPost]
         [ValidateInput(false)]
-        public ViewResult Create(ElementStateViewModel model, int? layoutId = null, string contentType = null) {
-            var describeContext = CreateDescribeContext(layoutId, contentType);
+        public ViewResult Create(ElementStateViewModel model, string session) {
+            var sessionState = _objectStore.Get<ElementSessionState>(session);
+            var contentId = sessionState.ContentId;
+            var contentType = sessionState.ContentType;
+            var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
             var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary());
             var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
-            var context = CreateEditorContext(describeContext.Content, element, elementState: state);
+            var context = CreateEditorContext(session, describeContext.Content, element, elementState: state, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
+                SessionKey = session,
                 Layout = describeContext.Content.As<ILayoutAspect>(),
                 EditorResult = editorResult,
                 TypeName = model.TypeName,
@@ -120,12 +134,30 @@ namespace Orchard.Layouts.Controllers {
         [Admin]
         [HttpPost]
         [ValidateInput(false)]
-        public ViewResult Edit(string typeName, string elementState, int? layoutId = null, string contentType = null) {
-            var describeContext = CreateDescribeContext(layoutId, contentType);
+        public RedirectToRouteResult Edit(string session, string typeName, string elementState, int? contentId = null, string contentType = null) {
+            var state = new ElementSessionState {
+                TypeName = typeName,
+                State = elementState,
+                ContentId = contentId,
+                ContentType = contentType
+            };
+
+            _objectStore.Set(session, state);
+            return RedirectToAction("Edit", new {session = session});
+        }
+
+        [Admin]
+        public ViewResult Edit(string session) {
+            var sessionState = _objectStore.Get<ElementSessionState>(session);
+            var contentId = sessionState.ContentId;
+            var contentType = sessionState.ContentType;
+            var typeName = sessionState.TypeName;
+            var elementState = sessionState.State;
+            var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, typeName);
             var state = ElementStateHelper.Deserialize(elementState);
             var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
-            var context = CreateEditorContext(describeContext.Content, element, elementState: state);
+            var context = CreateEditorContext(session, describeContext.Content, element, elementState: state);
             var editorResult = _elementManager.BuildEditor(context);
 
             var viewModel = new EditElementViewModel {
@@ -134,7 +166,8 @@ namespace Orchard.Layouts.Controllers {
                 TypeName = typeName,
                 DisplayText = descriptor.DisplayText,
                 ElementState = element.State.Serialize(),
-                Tabs = editorResult.CollectTabs().ToArray()
+                Tabs = editorResult.CollectTabs().ToArray(),
+                SessionKey = session
             };
 
             return View(viewModel);
@@ -143,12 +176,15 @@ namespace Orchard.Layouts.Controllers {
         [Admin]
         [HttpPost]
         [ValidateInput(false)]
-        public ViewResult Update(ElementStateViewModel model, int? layoutId = null, string contentType = null) {
-            var describeContext = CreateDescribeContext(layoutId, contentType);
+        public ViewResult Update(ElementStateViewModel model, string session) {
+            var sessionState = _objectStore.Get<ElementSessionState>(session);
+            var contentId = sessionState.ContentId;
+            var contentType = sessionState.ContentType;
+            var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
-            var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary(), removeNonExistingItems: true);
+            var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary());
             var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
-            var context = CreateEditorContext(describeContext.Content, element, state);
+            var context = CreateEditorContext(session, describeContext.Content, element, state, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
                 Layout = describeContext.Content.As<ILayoutAspect>(),
@@ -156,7 +192,8 @@ namespace Orchard.Layouts.Controllers {
                 TypeName = model.TypeName,
                 DisplayText = descriptor.DisplayText,
                 ElementState = element.State.Serialize(),
-                Tabs = editorResult.CollectTabs().ToArray()
+                Tabs = editorResult.CollectTabs().ToArray(),
+                SessionKey = session
             };
 
             if (!ModelState.IsValid) {
@@ -169,29 +206,35 @@ namespace Orchard.Layouts.Controllers {
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {
-            var workContext = _wca.GetContext();
+            var workContext = filterContext.GetWorkContext();
             workContext.Layout.Metadata.Alternates.Add("Layout__Dialog");
         }
 
         private ElementEditorContext CreateEditorContext(
-            IContent content, 
-            IElement element, 
-            StateDictionary elementState = null) {
+            string session,
+            IContent content,
+            IElement element,
+            StateDictionary elementState = null,
+            IUpdateModel updater = null) {
 
             elementState = elementState ?? new StateDictionary();
             var context = new ElementEditorContext {
+                Session = session,
                 Content = content,
                 Element = element,
-                Updater = this,
-                ValueProvider = new DictionaryValueProvider<string>(elementState, _cultureAccessor.CurrentCulture),
+                Updater = updater,
+                ValueProvider = elementState.ToValueProvider(_cultureAccessor.CurrentCulture),
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;
             return context;
         }
 
-        private DescribeElementsContext CreateDescribeContext(int? layoutId, string contentType) {
-            var part = layoutId != null && layoutId != 0 ? _contentManager.Get<ILayoutAspect>(layoutId.Value)
+        private DescribeElementsContext CreateDescribeContext(int? contentId = null, string contentType = null) {
+            if (contentId == null && contentType == null)
+                return DescribeElementsContext.Empty;
+
+            var part = contentId != null && contentId != 0 ? _contentManager.Get<ILayoutAspect>(contentId.Value)
                 ?? _contentManager.New<ILayoutAspect>(contentType)
                 : _contentManager.New<ILayoutAspect>(contentType);
 

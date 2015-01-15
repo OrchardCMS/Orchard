@@ -11,16 +11,16 @@ namespace Orchard.Localization.Services {
             var persianFormats = (DateTimeFormatInfo)original.Clone();
 
             var persianCalendarMonthNames = new[] {
-                "فررودين",
-                "ارديبهشت",
+                "فررودین",
+                "اردیبهشت",
                 "خرداد",
-                "تير",
+                "تیر",
                 "مرداد",
-                "شهريور",
+                "شهریور",
                 "مهر",
                 "آبان",
                 "آذر",
-                "دي",
+                "دی",
                 "بهمن",
                 "اسفند",
                 "" // 13 months names always necessary...
@@ -31,6 +31,20 @@ namespace Orchard.Localization.Services {
                 persianFormats.MonthGenitiveNames =
                 persianFormats.AbbreviatedMonthGenitiveNames =
                 persianCalendarMonthNames;
+
+            var persianDayNames = new[] {
+                "یکشنبه", // Changes the Arabic "ي" and "ك" to the Farsi "ی" and "ک" respectively (incorrect in .NET Framework).
+                "دوشنبه",
+                "سه شنبه",
+                "چهارشنبه",
+                "پنجشنبه",
+                "جمعه",
+                "شنبه"
+            };
+
+            persianFormats.DayNames =
+                persianFormats.AbbreviatedDayNames =
+                persianDayNames;
 
             persianFormats.SetAllDateTimePatterns(new[] {
                 "yyyy/MM/dd",

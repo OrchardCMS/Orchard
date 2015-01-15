@@ -36,7 +36,7 @@ namespace Orchard.Indexing.Services {
                 return;
             }
 
-            foreach (var task in _repository.Table.Where(task => task.ContentItemRecord == contentItem.Record)) {
+            foreach (var task in _repository.Fetch(task => task.ContentItemRecord == contentItem.Record)) {
                 _repository.Delete(task);
             }
 

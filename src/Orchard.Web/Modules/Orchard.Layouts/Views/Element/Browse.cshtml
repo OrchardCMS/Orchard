@@ -19,7 +19,7 @@
                         continue;
                     }
                     <li>
-                        <a class="element" href="@Url.Action("Create", "Element", new { layoutId = Model.LayoutId, contentType = Model.ContentType, id = element.TypeName, area = "Orchard.Layouts" })">
+                        <a class="element" href="@Url.Action("Create", "Element", new { session = Model.Session, layoutId = Model.ContentId, contentType = Model.ContentType, id = element.TypeName, area = "Orchard.Layouts" })">
                             <h2>@element.DisplayText</h2>
                         </a>
                     </li>

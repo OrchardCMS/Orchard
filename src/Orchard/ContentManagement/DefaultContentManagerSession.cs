@@ -31,6 +31,7 @@ namespace Orchard.ContentManagement {
 
         public void Clear() {
             _itemByVersionRecordId.Clear();
+            _itemByVersionNumber.Clear();
             _publishedItemsByContentRecordId.Clear();
         }
     }

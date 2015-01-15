@@ -6,11 +6,11 @@
 
 <div id="culture-selection">
     <select>
-        @foreach (var supportedCulure in supportedCultures) {
-            var cultureInfo = CultureInfo.GetCultureInfo(supportedCulure);
-            var url = Url.Action("ChangeCulture", "AdminCutlureSelector", new { area = "Orchard.Localization", culture = supportedCulure, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
+        @foreach (var supportedCulture in supportedCultures) {
+            var cultureInfo = CultureInfo.GetCultureInfo(supportedCulture);
+            var url = Url.Action("ChangeCulture", "AdminCultureSelector", new { area = "Orchard.Localization", culture = supportedCulture, returnUrl = Html.ViewContext.HttpContext.Request.RawUrl });
 
-            <option @if (supportedCulure.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
+            <option @if (supportedCulture.Equals(currentCulture)) { <text> selected="selected" </text>  } value="@url">
                 @cultureInfo.DisplayName&#x200E;
             </option>
         }

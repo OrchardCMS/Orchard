@@ -5,7 +5,7 @@ using Orchard.Environment.Extensions;
 using Orchard.UI.Admin;
 
 namespace Orchard.Localization.Services {
-    [OrchardFeature("Orchard.Localization.CutlureSelector")]
+    [OrchardFeature("Orchard.Localization.CultureSelector")]
     public class AdminDirectionalityFactory : ShapeDisplayEvents {
         private readonly WorkContext _workContext;
 

@@ -8,6 +8,7 @@ using DescribeContext = Orchard.Forms.Services.DescribeContext;
 namespace Orchard.DynamicForms.Drivers {
     public class TextFieldDriver : FormsElementDriver<TextField>{
         private readonly ITokenizer _tokenizer;
+
         public TextFieldDriver(IFormManager formManager, ITokenizer tokenizer) : base(formManager) {
             _tokenizer = tokenizer;
         }

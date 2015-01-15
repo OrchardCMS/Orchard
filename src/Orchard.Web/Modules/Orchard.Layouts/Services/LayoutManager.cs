@@ -27,10 +27,10 @@ namespace Orchard.Layouts.Services {
 
         public IEnumerable<LayoutPart> GetTemplates() {
             var templateTypeNamesQuery = from typeDefinition in _contentManager.GetContentTypeDefinitions()
-                from typePartDefinition in typeDefinition.Parts
-                let settings = typePartDefinition.Settings.GetModel<LayoutTypePartSettings>()
-                where settings.IsTemplate
-                select typeDefinition.Name;
+                                         from typePartDefinition in typeDefinition.Parts
+                                         let settings = typePartDefinition.Settings.GetModel<LayoutTypePartSettings>()
+                                         where settings.IsTemplate
+                                         select typeDefinition.Name;
 
             var templateTypeNames = templateTypeNamesQuery.ToArray();
             return _contentManager.Query<LayoutPart>(templateTypeNames).List();
@@ -61,9 +61,9 @@ namespace Orchard.Layouts.Services {
             context.Layout.LayoutState = _serializer.Serialize(elementTree);
         }
 
-        public dynamic RenderLayout(ILayoutAspect layout, string state = null, string displayType = null) {
-            var elements = _serializer.Deserialize(state ?? layout.LayoutState, new DescribeElementsContext { Content = layout });
-            var layoutRoot = _elementDisplay.DisplayElements(elements, layout, displayType);
+        public dynamic RenderLayout(string state, string displayType = null, IContent content = null) {
+            var elements = _serializer.Deserialize(state, new DescribeElementsContext { Content = content });
+            var layoutRoot = _elementDisplay.DisplayElements(elements, content, displayType);
             return layoutRoot;
         }
 
@@ -125,7 +125,7 @@ namespace Orchard.Layouts.Services {
             grid.Elements.Add(row);
             row.Elements.Add(column);
 
-            var elements = new List<IElement> {grid};
+            var elements = new List<IElement> { grid };
             return elements;
         }
 

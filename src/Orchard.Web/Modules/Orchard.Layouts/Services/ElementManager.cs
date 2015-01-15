@@ -72,6 +72,7 @@ namespace Orchard.Layouts.Services {
                     descriptor.Elements.Add(element);
                 }
 
+                acquireContext.Monitor(_signals.When(Signals.ElementDescriptors));
                 return categoryDescriptorDictionary.Values.OrderBy(x => x.Position);
             });
         }
