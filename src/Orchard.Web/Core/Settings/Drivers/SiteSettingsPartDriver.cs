@@ -18,7 +18,7 @@ namespace Orchard.Core.Settings.Drivers {
     public class SiteSettingsPartDriver : ContentPartDriver<SiteSettingsPart> {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
-		private readonly ICalendarManager _calendarProvider;
+        private readonly ICalendarManager _calendarProvider;
         private readonly IMembershipService _membershipService;
         private readonly INotifier _notifier;
         private readonly IAuthorizer _authorizer;
@@ -26,13 +26,13 @@ namespace Orchard.Core.Settings.Drivers {
         public SiteSettingsPartDriver(
             ISiteService siteService, 
             ICultureManager cultureManager,
-			ICalendarManager calendarProvider,
+            ICalendarManager calendarProvider,
             IMembershipService membershipService, 
             INotifier notifier,
             IAuthorizer authorizer) {
             _siteService = siteService;
             _cultureManager = cultureManager;
-			_calendarProvider = calendarProvider;
+            _calendarProvider = calendarProvider;
             _membershipService = membershipService;
             _notifier = notifier;
             _authorizer = authorizer;
@@ -52,7 +52,7 @@ namespace Orchard.Core.Settings.Drivers {
             var model = new SiteSettingsPartViewModel {
                 Site = site,
                 SiteCultures = _cultureManager.ListCultures(),
-				SiteCalendars = _calendarProvider.ListCalendars(),
+                SiteCalendars = _calendarProvider.ListCalendars(),
                 TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
@@ -65,8 +65,8 @@ namespace Orchard.Core.Settings.Drivers {
             var model = new SiteSettingsPartViewModel { 
                 Site = site,
                 SiteCultures = _cultureManager.ListCultures(),
-				SiteCalendars = _calendarProvider.ListCalendars(),
-				TimeZones = TimeZoneInfo.GetSystemTimeZones()
+                SiteCalendars = _calendarProvider.ListCalendars(),
+                TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
             var previousBaseUrl = model.Site.BaseUrl;
