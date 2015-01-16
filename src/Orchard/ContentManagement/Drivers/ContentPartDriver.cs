@@ -19,14 +19,14 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
-            
-            if(part == null) {
+
+            if (part == null) {
                 return null;
             }
 
             DriverResult result = Display(part, context.DisplayType, context.New);
-            
-            if(result != null ) {
+
+            if (result != null) {
                 result.ContentPart = part;
             }
 
@@ -35,13 +35,13 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            
+
             if (part == null) {
                 return null;
             }
 
             DriverResult result = Editor(part, context.New);
-            
+
             if (result != null) {
                 result.ContentPart = part;
             }
@@ -51,7 +51,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            
+
             if (part == null) {
                 return null;
             }
@@ -59,9 +59,9 @@ namespace Orchard.ContentManagement.Drivers {
             // checking if the editor needs to be updated (e.g. if it was not hidden)
             var editor = Editor(part, context.New) as ContentShapeResult;
 
-            if(editor != null) {
+            if (editor != null) {
                 ShapeDescriptor descriptor;
-                if(context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         Content = part.ContentItem,
                         ContentType = part.ContentItem.ContentType,
@@ -72,7 +72,7 @@ namespace Orchard.ContentManagement.Drivers {
 
                     var location = descriptor.Placement(placementContext).Location;
 
-                    if(String.IsNullOrEmpty(location) || location == "-") {
+                    if (String.IsNullOrEmpty(location) || location == "-") {
                         return editor;
                     }
 
@@ -118,16 +118,16 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
-        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) {}
+        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { }
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
-        protected virtual void Importing(TContent part, ImportContentContext context) {}
-        protected virtual void Imported(TContent part, ImportContentContext context) {}
-        protected virtual void Exporting(TContent part, ExportContentContext context) {}
-        protected virtual void Exported(TContent part, ExportContentContext context) {}
+        protected virtual void Importing(TContent part, ImportContentContext context) { }
+        protected virtual void Imported(TContent part, ImportContentContext context) { }
+        protected virtual void Exporting(TContent part, ExportContentContext context) { }
+        protected virtual void Exported(TContent part, ExportContentContext context) { }
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
@@ -145,12 +145,12 @@ namespace Orchard.ContentManagement.Drivers {
         private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
             return new ContentShapeResult(shapeType, Prefix, ctx => {
                 var shape = shapeBuilder(ctx);
-                                                                 
-                if(shape == null) {
+
+                if (shape == null) {
                     return null;
                 }
 
-                return AddAlternates(shape, ctx);;
+                return AddAlternates(shape, ctx); ;
             });
         }
 
@@ -166,10 +166,10 @@ namespace Orchard.ContentManagement.Drivers {
 
             // [ShapeType]__[Id] e.g. Parts/Common.Metadata-42
             metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.Id.ToString(CultureInfo.InvariantCulture));
-            
+
             // [ShapeType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost
             metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.ContentType);
-            
+
             return shape;
         }
 
