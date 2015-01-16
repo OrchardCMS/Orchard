@@ -95,7 +95,7 @@
     "TermSemicolons": true
   },
   "Less": {
-    "CompileOnBuild": true,
+    "CompileOnBuild": false,
     "CompileOnSave": true,
     "EnableChainCompilation": true,
     "GenerateSourceMaps": false,
@@ -161,7 +161,7 @@
     "ShowPreviewPane": true
   },
   "TypeScript": {
-    "LintOnBuild": true,
+    "LintOnBuild": false,
     "LintOnSave": true,
     "LintResultLocation": "Message",
     "ShowPreviewPane": true
