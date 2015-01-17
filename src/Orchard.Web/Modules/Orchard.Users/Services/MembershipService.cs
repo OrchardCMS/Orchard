@@ -14,16 +14,21 @@ using Orchard.Users.Models;
 using Orchard.Messaging.Services;
 using System.Collections.Generic;
 using Orchard.Services;
+using System.Web.Helpers;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
+        private const string Pkdf2 = "PBKDF2"; // To avoid typos.
+
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageService _messageService;
         private readonly IUserEventHandler _userEventHandlers;
         private readonly IEncryptionService _encryptionService;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeDisplay _shapeDisplay;
+        private readonly IAppConfigurationAccessor _appConfigurationAccessor;
 
         public MembershipService(
             IOrchardServices orchardServices, 
@@ -32,13 +37,15 @@ namespace Orchard.Users.Services {
             IClock clock, 
             IEncryptionService encryptionService,
             IShapeFactory shapeFactory,
-            IShapeDisplay shapeDisplay) {
+            IShapeDisplay shapeDisplay,
+            IAppConfigurationAccessor appConfigurationAccessor) {
             _orchardServices = orchardServices;
             _messageService = messageService;
             _userEventHandlers = userEventHandlers;
             _encryptionService = encryptionService;
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
+            _appConfigurationAccessor = appConfigurationAccessor;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -62,7 +69,7 @@ namespace Orchard.Users.Services {
             user.UserName = createUserParams.Username;
             user.Email = createUserParams.Email;
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
-            user.HashAlgorithm = "SHA1";
+            user.HashAlgorithm = Pkdf2;
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
@@ -194,40 +201,62 @@ namespace Orchard.Users.Services {
         }
 
         private static void SetPasswordHashed(UserPart userPart, string password) {
-
             var saltBytes = new byte[0x10];
             using (var random = new RNGCryptoServiceProvider()) {
                 random.GetBytes(saltBytes);
             }
 
-            var passwordBytes = Encoding.Unicode.GetBytes(password);
-
-            var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
-
-            byte[] hashBytes;
-            using (var hashAlgorithm = HashAlgorithm.Create(userPart.HashAlgorithm)) {
-                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
-            }
-
             userPart.PasswordFormat = MembershipPasswordFormat.Hashed;
-            userPart.Password = Convert.ToBase64String(hashBytes);
+            userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password);
             userPart.PasswordSalt = Convert.ToBase64String(saltBytes);
         }
 
-        private static bool ValidatePasswordHashed(UserPart userPart, string password) {
-
+        private bool ValidatePasswordHashed(UserPart userPart, string password) {
             var saltBytes = Convert.FromBase64String(userPart.PasswordSalt);
 
-            var passwordBytes = Encoding.Unicode.GetBytes(password);
-
-            var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
-
-            byte[] hashBytes;
-            using (var hashAlgorithm = HashAlgorithm.Create(userPart.HashAlgorithm)) {
-                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            bool isValid;
+            if (IsPbkdf2(userPart.HashAlgorithm)) {
+                // Due to the internally generated salt repeated calls to Crypto.HashPassword() return different results.
+                isValid = Crypto.VerifyHashedPassword(userPart.Password, Encoding.Unicode.GetString(CombineSaltAndPassword(saltBytes, password)));
+            }
+            else {
+                isValid = userPart.Password == ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
             }
 
-            return userPart.Password == Convert.ToBase64String(hashBytes);
+            // Migrating older password hashes to PBKDF2 if necessary and enabled.
+            if (isValid && !IsPbkdf2(userPart.HashAlgorithm)) {
+                var keepSha1Configuration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
+                if (String.IsNullOrEmpty(keepSha1Configuration) || keepSha1Configuration.Equals("false", StringComparison.InvariantCultureIgnoreCase)) {
+                    userPart.HashAlgorithm = Pkdf2;
+                    userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
+                }
+            }
+
+            return isValid;
+        }
+
+        private static string ComputeHashBase64(string hashAlgorithmName, byte[] saltBytes, string password) {
+            var combinedBytes = CombineSaltAndPassword(saltBytes, password);
+
+            // Extending HashAlgorithm would be too complicated: http://stackoverflow.com/questions/6460711/adding-a-custom-hashalgorithmtype-in-c-sharp-asp-net?lq=1
+            if (IsPbkdf2(hashAlgorithmName)) {
+                // HashPassword() already returns a base64 string.
+                return Crypto.HashPassword(Encoding.Unicode.GetString(combinedBytes));
+            }
+            else {
+                using (var hashAlgorithm = HashAlgorithm.Create(hashAlgorithmName)) {
+                    return Convert.ToBase64String(hashAlgorithm.ComputeHash(combinedBytes));
+                }
+            }
+        }
+
+        private static byte[] CombineSaltAndPassword(byte[] saltBytes, string password) {
+            var passwordBytes = Encoding.Unicode.GetBytes(password);
+            return saltBytes.Concat(passwordBytes).ToArray();
+        }
+
+        private static bool IsPbkdf2(string hashAlgorithmName) {
+            return hashAlgorithmName == Pkdf2;
         }
 
         private void SetPasswordEncrypted(UserPart userPart, string password) {
