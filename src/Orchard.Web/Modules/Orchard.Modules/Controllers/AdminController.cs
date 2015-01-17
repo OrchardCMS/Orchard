@@ -117,7 +117,7 @@ namespace Orchard.Modules.Controllers {
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
-                .Where(extensionDescriptor => extensionDescriptor.Id != "Orchard.Setup" && ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => ModuleIsAllowed(extensionDescriptor))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
@@ -126,7 +126,7 @@ namespace Orchard.Modules.Controllers {
             if (_recipeHarvester != null) {
                 viewModel.Modules = modules.Select(x => new ModuleRecipesViewModel {
                     Module = x,
-                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).ToList()
+                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
                 })
                 .Where(x => x.Recipes.Any());
             }
@@ -148,7 +148,7 @@ namespace Orchard.Modules.Controllers {
                 return HttpNotFound();
             }
 
-            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => x.Name == name);
+            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => !x.IsSetupRecipe && x.Name == name);
 
             if (recipe == null) {
                 return HttpNotFound();

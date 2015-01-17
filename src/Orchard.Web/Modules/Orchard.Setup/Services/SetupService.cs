@@ -14,6 +14,8 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Localization;
@@ -33,8 +35,9 @@ namespace Orchard.Setup.Services {
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
+        private readonly IExtensionManager _extensionManager;
         private readonly IRecipeHarvester _recipeHarvester;
-        private readonly IEnumerable<Recipe> _recipes;
+        private IEnumerable<Recipe> _recipes;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -43,6 +46,7 @@ namespace Orchard.Setup.Services {
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
             IProcessingEngine processingEngine,
+            IExtensionManager extensionManager,
             IRecipeHarvester recipeHarvester) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
@@ -50,8 +54,8 @@ namespace Orchard.Setup.Services {
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
+            _extensionManager = extensionManager;
             _recipeHarvester = recipeHarvester;
-            _recipes = _recipeHarvester.HarvestRecipes("Orchard.Setup");
             T = NullLocalizer.Instance;
         }
 
@@ -62,6 +66,16 @@ namespace Orchard.Setup.Services {
         }
 
         public IEnumerable<Recipe> Recipes() {
+            if (_recipes == null) {
+                var recipes = new List<Recipe>();
+
+                foreach (var extension in _extensionManager.AvailableExtensions().Where(extension => DefaultExtensionTypes.IsModule(extension.ExtensionType))) {
+                    recipes.AddRange(_recipeHarvester.HarvestRecipes(extension.Id).Where(recipe => recipe.IsSetupRecipe)); 
+                }
+
+                _recipes = recipes;
+            }
+
             return _recipes;
         }
 
