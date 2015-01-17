@@ -225,6 +225,8 @@
     <Compile Include="Environment\AutofacUtil\ConfigurationSettingsReaderConstants.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Configuration\AppConfigurationAccessor.cs" />
+    <Compile Include="Environment\Configuration\IAppConfigurationAccessor.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />
     <Compile Include="Environment\Extensions\DefaultCriticalErrorProvider.cs" />
     <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />
