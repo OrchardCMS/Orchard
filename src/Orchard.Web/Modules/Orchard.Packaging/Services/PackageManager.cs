@@ -13,15 +13,15 @@ namespace Orchard.Packaging.Services {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
-        private readonly IPackageInstaller _packageExpander;
+        private readonly IPackageInstaller _packageInstaller;
 
         public PackageManager(
             IExtensionManager extensionManager,
             IPackageBuilder packageBuilder,
-            IPackageInstaller packageExpander) {
+            IPackageInstaller packageInstaller) {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
-            _packageExpander = packageExpander;
+            _packageInstaller = packageInstaller;
 
             T = NullLocalizer.Instance;
         }
@@ -61,15 +61,15 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageInfo Install(IPackage package, string location, string applicationPath) {
-            return DoInstall(() => _packageExpander.Install(package, location, applicationPath));
+            return DoInstall(() => _packageInstaller.Install(package, location, applicationPath));
         }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
-            return DoInstall(() => _packageExpander.Install(packageId, version, location, applicationPath));
+            return DoInstall(() => _packageInstaller.Install(packageId, version, location, applicationPath));
         }
 
         public void Uninstall(string packageId, string applicationPath) {
-            _packageExpander.Uninstall(packageId, applicationPath);
+            _packageInstaller.Uninstall(packageId, applicationPath);
         }
 
         #endregion
