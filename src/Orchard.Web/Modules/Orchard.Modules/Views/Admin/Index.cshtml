@@ -23,7 +23,7 @@
     if (Model.Modules.Any()) {
         <ul class="contentItems">
             @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
-                <li>@Display.ModuleEntry(ContentPart: module)</li>
+                <li>@Display.ModuleEntry(Module: module)</li>
             }
         </ul>
     } else {
