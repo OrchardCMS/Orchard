@@ -5,6 +5,8 @@
 @using Orchard.Utility.Extensions;
 
 @{
+    Script.Require("ShapesBase").AtFoot();
+    
     Orchard.Modules.Models.ModuleEntry module = Model.Module;
     var moduleClasses = module.IsRecentlyInstalled ? "class=\"recentlyInstalledModule\"" : String.Empty;
 }

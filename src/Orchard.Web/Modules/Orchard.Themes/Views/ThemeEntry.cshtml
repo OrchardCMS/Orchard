@@ -4,6 +4,8 @@
 @using Orchard.Utility.Extensions;
 
 @{
+    Script.Require("ShapesBase").AtFoot();
+    
     Orchard.Themes.Models.ThemeEntry theme = Model.Theme;
     var themeClasses = theme.IsRecentlyInstalled ? "class=\"recentlyInstalledTheme\"" : String.Empty;
 }
