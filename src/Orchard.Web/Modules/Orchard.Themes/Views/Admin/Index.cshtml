@@ -15,7 +15,7 @@
 } else {
     <h3 id="currentThemeTitle">@T("Current Theme")</h3>
 
-    @Display.ThemeEntry_Current(ContentPart: Model.CurrentTheme)
+    @Display.ThemeEntry_Current(Theme: Model.CurrentTheme)
 }
 
 <div id="installedBar" class="group">
@@ -29,8 +29,8 @@
     <p>@T("There are no additional themes installed.")</p>
 } else {
     <ul class="templates">
-        @foreach (ThemeEntry themeEntry in Model.Themes) {
-            <li>@Display.ThemeEntry(ContentPart: themeEntry)</li>
+        @foreach (var themeEntry in Model.Themes) {
+            <li>@Display.ThemeEntry(Theme: themeEntry)</li>
         }
     </ul>
 }
