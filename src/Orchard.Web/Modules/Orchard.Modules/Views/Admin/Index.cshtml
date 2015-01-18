@@ -17,8 +17,8 @@
     </fieldset>
 
     if (Model.InstallModules) {
-    <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
-}
+        <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
+    }
 
     if (Model.Modules.Any()) {
         <ul class="contentItems">
@@ -26,7 +26,8 @@
                 <li>@Display.ModuleEntry(Module: module)</li>
             }
         </ul>
-    } else {
+    }
+    else {
         <p>@T("No modules available").ToString()</p>
     }
 
