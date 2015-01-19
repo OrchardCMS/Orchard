@@ -6,6 +6,7 @@ namespace Orchard.ImportExport.ViewModels {
         public IList<CustomStepEntry> CustomSteps { get; set; }
         public virtual bool Metadata { get; set; }
         public virtual bool Data { get; set; }
+        public virtual bool Files { get; set; }
         public virtual string DataImportChoice { get; set; }
         public virtual bool SiteSettings { get; set; }
     }

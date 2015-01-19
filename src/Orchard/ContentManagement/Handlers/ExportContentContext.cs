@@ -24,6 +24,12 @@ namespace Orchard.ContentManagement.Handlers {
             Data = data;
         }
 
+        public ExportContentContext(ContentItem contentItem, XElement data, IList<ExportedFileDescription> files)
+            : base(contentItem) {
+            Data = data;
+            _files = files;
+        }
+
         public XElement Element(string elementName) {
             var element = Data.Element(elementName);
             if (element == null) {

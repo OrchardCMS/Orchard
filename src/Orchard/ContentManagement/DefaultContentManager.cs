@@ -756,8 +756,8 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public ExportContentContext Export(ContentItem contentItem) {
-            var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
+        public ExportContentContext Export(ContentItem contentItem, ExportContentContext context = null) {
+            context = context ?? new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
             foreach (var contentHandler in Handlers) {
                 contentHandler.Exporting(context);
@@ -772,12 +772,7 @@ namespace Orchard.ContentManagement {
             }
 
             context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
-            if (contentItem.IsPublished()) {
-                context.Data.SetAttributeValue("Status", Published);
-            }
-            else {
-                context.Data.SetAttributeValue("Status", Draft);
-            }
+            context.Data.SetAttributeValue("Status", contentItem.IsPublished() ? Published : Draft);
 
             return context;
         }

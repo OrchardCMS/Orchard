@@ -113,7 +113,7 @@ namespace Orchard.ImportExport.Services {
 
             if (exportOptions.ExportData && contentTypeList.Any()) {
                 orchardElement.Add(
-                    ExportData(contentTypeList, contentItems, exportOptions.ImportBatchSize));
+                    ExportData(contentTypeList, contentItems, context, exportOptions.ImportBatchSize));
             }
 
             _exportEventHandlers.Invoke(x => x.Exported(context), Logger);
@@ -214,7 +214,7 @@ namespace Orchard.ImportExport.Services {
                     propertyTypeAndValue.value));
         }
 
-        private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, int? batchSize) {
+        private XElement ExportData(IEnumerable<string> contentTypes, IEnumerable<ContentItem> contentItems, ExportContext context, int? batchSize) {
             var data = new XElement("Data");
 
             if (batchSize.HasValue && batchSize.Value > 0)
@@ -226,7 +226,7 @@ namespace Orchard.ImportExport.Services {
                 .Select(type => itemList
                     .Where(i => i.ContentType == type))
                 .SelectMany(items => items
-                    .Select(contentItemElement => ExportContentItem(contentItemElement).Data)
+                    .Select(contentItemElement => ExportContentItem(contentItemElement, context).Data)
                     .Where(contentItemElement => contentItemElement != null))) {
                 data.Add(contentItemElement);
             }
@@ -234,9 +234,13 @@ namespace Orchard.ImportExport.Services {
             return data;
         }
 
-        private ExportContentContext ExportContentItem(ContentItem contentItem) {
+        private ExportContentContext ExportContentItem(ContentItem contentItem, ExportContext context = null) {
             // Call export handler for the item.
-            return _orchardServices.ContentManager.Export(contentItem);
+            var contentContext = new ExportContentContext(
+                contentItem,
+                new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)),
+                context == null ? null : context.Files);
+            return _orchardServices.ContentManager.Export(contentItem, contentContext);
         }
 
         private static VersionOptions GetContentExportVersionOptions(VersionHistoryOptions versionHistoryOptions) {

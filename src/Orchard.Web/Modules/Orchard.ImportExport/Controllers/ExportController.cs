@@ -61,6 +61,7 @@ namespace Orchard.ImportExport.Controllers {
             var recipePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions {
                 ExportData = exportingItems.Any(),
                 ExportMetadata = request.IncludeMetadata,
+                ExportFiles = request.IncludeFiles,
                 VersionHistoryOptions = request.VersionHistoryOption,
                 CustomSteps = exportSteps
             });

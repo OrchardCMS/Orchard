@@ -91,7 +91,7 @@ namespace Orchard.ContentManagement {
         void Destroy(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
-        ExportContentContext Export(ContentItem contentItem);
+        ExportContentContext Export(ContentItem contentItem, ExportContentContext context = null);
         void Import(ImportContentContext context);
 
         /// <summary>

@@ -77,7 +77,7 @@ namespace Orchard.MediaLibrary.Drivers {
             if (context.Files != null) {
                 var path = Path.Combine(part.FolderPath, part.FileName);
                 var file = context.Files
-                    .FirstOrDefault(f => f.Path == path);
+                    .FirstOrDefault(f => Path.Combine("Media", f.Path) == path);
                 if (file != null) {
                     using (var stream = file.GetStream()) {
                         var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, stream);
@@ -98,7 +98,7 @@ namespace Orchard.MediaLibrary.Drivers {
                 var path = Path.Combine(part.FolderPath, part. FileName);
                 var file = _storageProvider.GetFile(path);
                 if (file != null) {
-                    context.AddFile(path, file);
+                    context.AddFile(Path.Combine("Media", path), file);
                 }
             }
         }
