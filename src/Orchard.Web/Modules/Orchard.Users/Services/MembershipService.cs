@@ -20,7 +20,7 @@ using Orchard.Environment.Configuration;
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
-        private const string Pkdf2 = "PBKDF2"; // To avoid typos.
+        private const string Pbkdf2 = "PBKDF2"; // To avoid typos.
 
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageService _messageService;
@@ -69,7 +69,7 @@ namespace Orchard.Users.Services {
             user.UserName = createUserParams.Username;
             user.Email = createUserParams.Email;
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
-            user.HashAlgorithm = Pkdf2;
+            user.HashAlgorithm = Pbkdf2;
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
@@ -227,7 +227,7 @@ namespace Orchard.Users.Services {
             if (isValid && !IsPbkdf2(userPart.HashAlgorithm)) {
                 var keepSha1Configuration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
                 if (String.IsNullOrEmpty(keepSha1Configuration) || keepSha1Configuration.Equals("false", StringComparison.InvariantCultureIgnoreCase)) {
-                    userPart.HashAlgorithm = Pkdf2;
+                    userPart.HashAlgorithm = Pbkdf2;
                     userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
                 }
             }
@@ -256,7 +256,7 @@ namespace Orchard.Users.Services {
         }
 
         private static bool IsPbkdf2(string hashAlgorithmName) {
-            return hashAlgorithmName == Pkdf2;
+            return hashAlgorithmName == Pbkdf2;
         }
 
         private void SetPasswordEncrypted(UserPart userPart, string password) {
