@@ -60,7 +60,8 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 area = "Orchard.ImportExport"
             });
             var exportedItem = _contentManager.Export(content.ContentItem);
-            Client.Value.Post(actionUrl, exportedItem.ToString());
+            // TODO: handle packages
+            Client.Value.Post(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting));
         }
     }
 }

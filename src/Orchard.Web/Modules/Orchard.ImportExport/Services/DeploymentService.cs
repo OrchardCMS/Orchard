@@ -115,10 +115,6 @@ namespace Orchard.ImportExport.Services {
         }
 
         public DeployableItemTargetPart GetDeploymentItemTarget(IContent deployableContent, IContent targetConfiguration, bool createIfNotFound = true) {
-            if (!deployableContent.Is<DeployablePart>() && createIfNotFound) {
-                throw new ArgumentException("deployableContent");
-            }
-
             var itemTarget = _orchardServices.ContentManager
                 .Query<DeployableItemTargetPart, DeployableItemTargetPartRecord>()
                 .Where(c => 
@@ -131,7 +127,7 @@ namespace Orchard.ImportExport.Services {
                 return itemTarget;
             }
             itemTarget = _orchardServices.ContentManager.Create<DeployableItemTargetPart>("DeployableItemTarget");
-            itemTarget.DeployableContent = deployableContent.As<DeployablePart>();
+            itemTarget.DeployableContent = deployableContent;
             itemTarget.DeploymentTarget = targetConfiguration;
 
             return itemTarget;

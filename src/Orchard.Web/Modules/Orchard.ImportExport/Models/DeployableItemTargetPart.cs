@@ -14,16 +14,19 @@ namespace Orchard.ImportExport.Models {
     }
 
     public class DeployableItemTargetPart : ContentPart<DeployableItemTargetPartRecord> {
+        private IContent _deployableContent;
 
-        public DeployablePart DeployableContent {
+        public IContent DeployableContent {
             get {
-                return ContentItem.ContentManager.Get<DeployablePart>(Record.DeployableContentId);
+                _deployableContent = _deployableContent ?? ContentItem.ContentManager.Get(Record.DeployableContentId);
+                return _deployableContent;
             }
             set {
                 if (value == null) {
                     throw new ArgumentNullException("value", "DeployableContent cannot be set to null");
                 }
                 Record.DeployableContentId = value.Id;
+                _deployableContent = value;
             }
         }
 
