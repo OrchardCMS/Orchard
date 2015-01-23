@@ -20,7 +20,8 @@ using Orchard.Environment.Configuration;
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
-        private const string Pbkdf2 = "PBKDF2"; // To avoid typos.
+        private const string PBKDF2 = "PBKDF2";
+        private const string DefaultHashAlgorithm = PBKDF2;
 
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageService _messageService;
@@ -69,7 +70,7 @@ namespace Orchard.Users.Services {
             user.UserName = createUserParams.Username;
             user.Email = createUserParams.Email;
             user.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
-            user.HashAlgorithm = Pbkdf2;
+            user.HashAlgorithm = PBKDF2;
             SetPassword(user, createUserParams.Password);
 
             if ( registrationSettings != null ) {
@@ -215,19 +216,19 @@ namespace Orchard.Users.Services {
             var saltBytes = Convert.FromBase64String(userPart.PasswordSalt);
 
             bool isValid;
-            if (IsPbkdf2(userPart.HashAlgorithm)) {
-                // Due to the internally generated salt repeated calls to Crypto.HashPassword() return different results.
+            if (userPart.HashAlgorithm == PBKDF2) {
+                // We can't reuse ComputeHashBase64 as the internally generated salt repeated calls to Crypto.HashPassword() return different results.
                 isValid = Crypto.VerifyHashedPassword(userPart.Password, Encoding.Unicode.GetString(CombineSaltAndPassword(saltBytes, password)));
             }
             else {
-                isValid = userPart.Password == ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
+                isValid = SecureStringEquality(userPart.Password, ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password)); 
             }
 
-            // Migrating older password hashes to PBKDF2 if necessary and enabled.
-            if (isValid && !IsPbkdf2(userPart.HashAlgorithm)) {
-                var keepSha1Configuration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
-                if (String.IsNullOrEmpty(keepSha1Configuration) || keepSha1Configuration.Equals("false", StringComparison.InvariantCultureIgnoreCase)) {
-                    userPart.HashAlgorithm = Pbkdf2;
+            // Migrating older password hashes to Default algorithm if necessary and enabled.
+            if (isValid && userPart.HashAlgorithm != DefaultHashAlgorithm) {
+                var keepOldConfiguration = _appConfigurationAccessor.GetConfiguration("Orchard.Users.KeepOldPasswordHash");
+                if (String.IsNullOrEmpty(keepOldConfiguration) || keepOldConfiguration.Equals("false", StringComparison.OrdinalIgnoreCase)) {
+                    userPart.HashAlgorithm = DefaultHashAlgorithm;
                     userPart.Password = ComputeHashBase64(userPart.HashAlgorithm, saltBytes, password); 
                 }
             }
@@ -239,7 +240,7 @@ namespace Orchard.Users.Services {
             var combinedBytes = CombineSaltAndPassword(saltBytes, password);
 
             // Extending HashAlgorithm would be too complicated: http://stackoverflow.com/questions/6460711/adding-a-custom-hashalgorithmtype-in-c-sharp-asp-net?lq=1
-            if (IsPbkdf2(hashAlgorithmName)) {
+            if (hashAlgorithmName == PBKDF2) {
                 // HashPassword() already returns a base64 string.
                 return Crypto.HashPassword(Encoding.Unicode.GetString(combinedBytes));
             }
@@ -250,13 +251,31 @@ namespace Orchard.Users.Services {
             }
         }
 
+        /// <summary>
+        /// Compares two strings without giving hint about the time it takes to do so.
+        /// </summary>
+        /// <param name="a">The first string to compare.</param>
+        /// <param name="b">The second string to compare.</param>
+        /// <returns><c>true</c> if both strings are equal, <c>false</c>.</returns>
+        private bool SecureStringEquality(string a, string b) {
+            if (a == null || b == null || (a.Length != b.Length)) {
+                return false;
+            }
+
+            var aBytes = Encoding.Unicode.GetBytes(a);
+            var bBytes = Encoding.Unicode.GetBytes(b);
+
+            var bytesAreEqual = true;
+            for (int i = 0; i < a.Length; i++) {
+                bytesAreEqual &= (aBytes[i] == bBytes[i]);
+            }
+
+            return bytesAreEqual;
+        }
+
         private static byte[] CombineSaltAndPassword(byte[] saltBytes, string password) {
             var passwordBytes = Encoding.Unicode.GetBytes(password);
             return saltBytes.Concat(passwordBytes).ToArray();
-        }
-
-        private static bool IsPbkdf2(string hashAlgorithmName) {
-            return hashAlgorithmName == Pbkdf2;
         }
 
         private void SetPasswordEncrypted(UserPart userPart, string password) {
