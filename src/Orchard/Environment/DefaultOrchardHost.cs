@@ -294,7 +294,7 @@ namespace Orchard.Environment {
 
                 var context = _shellContextFactory.CreateShellContext(settings);
 
-                // Sctivate and register modified context.
+                // Activate and register modified context.
                 // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
                 _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
 
