@@ -26,6 +26,7 @@ namespace Orchard.Environment {
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly static object _syncLock = new object();
+        private readonly static object _shellContextsWriteLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
 
@@ -158,10 +159,12 @@ namespace Orchard.Environment {
             Logger.Debug("Activating context for tenant {0}", context.Settings.Name);
             context.Shell.Activate();
 
-            _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
-                            .Where(c => c.Settings.Name != context.Settings.Name)
-                            .Concat(new[] { context })
-                            .ToArray();
+            lock (_shellContextsWriteLock) {
+                _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
+                                .Where(c => c.Settings.Name != context.Settings.Name)
+                                .Concat(new[] { context })
+                                .ToArray();
+            }
 
             _runningShellTable.Add(context.Settings);
         }
