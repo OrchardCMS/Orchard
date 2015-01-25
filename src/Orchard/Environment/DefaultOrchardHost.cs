@@ -129,7 +129,9 @@ namespace Orchard.Environment {
             Logger.Information("Start creation of shells");
 
             // is there any tenant right now ?
-            var allSettings = _shellSettingsManager.LoadSettings().ToArray();
+            var allSettings = _shellSettingsManager.LoadSettings()
+                .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized)
+                .ToArray();
 
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
