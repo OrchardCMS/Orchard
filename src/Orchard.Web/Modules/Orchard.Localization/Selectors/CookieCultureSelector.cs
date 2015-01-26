@@ -14,7 +14,8 @@ namespace Orchard.Localization.Selectors {
         private readonly IClock _clock;
         private readonly ShellSettings _shellSettings;
 
-        private const string CookieName = "OrchardCurrentCulture";
+        private const string FrontEndCookieName = "OrchardCurrentCulture-FrontEnd";
+        private const string AdminCookieName = "OrchardCurrentCulture-Admin";
         private const int DefaultExpireTimeYear = 1;
 
         public CookieCultureSelector(IHttpContextAccessor httpContextAccessor,
@@ -30,7 +31,9 @@ namespace Orchard.Localization.Selectors {
 
             if (httpContext == null) return;
 
-            var cookie = new HttpCookie(CookieName, culture) {
+            var cookieName = ContextHelpers.IsRequestAdmin(httpContext) ? AdminCookieName : FrontEndCookieName;
+
+            var cookie = new HttpCookie(cookieName, culture) {
                 Expires = _clock.UtcNow.AddYears(DefaultExpireTimeYear), 
             };
 
@@ -42,15 +45,17 @@ namespace Orchard.Localization.Selectors {
                 cookie.Path = GetCookiePath(httpContext);
             }
 
-            httpContext.Request.Cookies.Remove(CookieName);
-            httpContext.Response.Cookies.Remove(CookieName);
+            httpContext.Request.Cookies.Remove(cookieName);
+            httpContext.Response.Cookies.Remove(cookieName);
             httpContext.Response.Cookies.Add(cookie);
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
             if (context == null) return null;
 
-            var cookie = context.Request.Cookies.Get(CookieName);
+            var cookieName = ContextHelpers.IsRequestAdmin(context) ? AdminCookieName : FrontEndCookieName;
+
+            var cookie = context.Request.Cookies.Get(cookieName);
 
             if (cookie != null)
                 return new CultureSelectorResult { Priority = -1, CultureName = cookie.Value };
