@@ -46,9 +46,11 @@ namespace Orchard.Blogs.Handlers {
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var blogPost = context.ContentItem.As<BlogPostPart>();
-            
-            if (blogPost == null)
+
+            // BlogPart can be null if this is a new Blog Post item.
+            if (blogPost == null || blogPost.BlogPart == null) {
                 return;
+            }
 
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
