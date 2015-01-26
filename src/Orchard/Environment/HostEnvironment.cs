@@ -5,10 +5,6 @@ using System.Web.Hosting;
 
 namespace Orchard.Environment {
     public abstract class HostEnvironment : IHostEnvironment {
-        public bool IsFullTrust {
-            get { return AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted; }
-        }
-
         public string MapPath(string virtualPath) {
             return HostingEnvironment.MapPath(virtualPath);
         }
