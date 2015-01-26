@@ -1,5 +1,4 @@
-﻿@using System
-@using System.Globalization
+﻿@using System.Globalization
 @using Orchard.Alias
 @using Orchard.ContentManagement
 @using Orchard.ContentManagement.Aspects
@@ -11,7 +10,7 @@
 
     if (homePage != null) {
         var localizationService = WorkContext.Resolve<ILocalizationService>();
-        localizableAspects = localizationService.GetLocalizations(homePage);
+        localizableAspects = localizationService.GetLocalizations(homePage).Concat<ILocalizableAspect>(new[] { homePage.As<ILocalizableAspect>() });
     }
 }
 @if (localizableAspects.Any()) {
