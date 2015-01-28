@@ -48,7 +48,7 @@ namespace Orchard.Email.Services {
                 Body = parameters["Body"] as string,
                 Subject = parameters["Subject"] as string,
                 Recipients = parameters["Recipients"] as string,
-                ReplyTo = parameters["ReplyTo"] as string
+                ReplyTo = parameters.ContainsKey("ReplyTo") ? parameters["ReplyTo"] as string : null
             };
 
             if (emailMessage.Recipients.Length == 0) {
@@ -78,7 +78,9 @@ namespace Orchard.Email.Services {
                 }
 
                 if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
-                    mailMessage.ReplyToList.Add(new MailAddress(emailMessage.ReplyTo));
+                    foreach (var recipient in emailMessage.ReplyTo.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                        mailMessage.ReplyToList.Add(new MailAddress(recipient));
+                    }
                 }
 
                 _smtpClientField.Value.Send(mailMessage);
