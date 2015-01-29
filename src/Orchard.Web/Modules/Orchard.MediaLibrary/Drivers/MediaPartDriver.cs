@@ -74,16 +74,18 @@ namespace Orchard.MediaLibrary.Drivers {
                 part.FileName = fileName;
             }
 
-            if (context.Files != null) {
-                var path = Path.Combine(part.FolderPath, part.FileName);
-                var file = context.Files
-                    .FirstOrDefault(f => Path.Combine("Media", f.Path) == path);
-                if (file != null) {
-                    using (var stream = file.GetStream()) {
-                        var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, stream);
-                        part._publicUrl.Value = publicUrl;
-                    }
+            if (context.Files == null) return;
+            var path = Path.Combine(part.FolderPath, part.FileName);
+            var file = context.Files
+                .FirstOrDefault(f => f.Path.StartsWith("\\Media\\") && f.Path.Substring(7) == path);
+            if (file == null) return;
+            using (var stream = file.GetStream()) {
+                var filePath = Path.Combine(part.FolderPath, part.FileName);
+                if (_storageProvider.FileExists(filePath)) {
+                    _storageProvider.DeleteFile(filePath);
                 }
+                var publicUrl = _mediaLibraryService.UploadMediaFile(part.FolderPath, part.FileName, stream);
+                part._publicUrl.Value = publicUrl;
             }
         }
 

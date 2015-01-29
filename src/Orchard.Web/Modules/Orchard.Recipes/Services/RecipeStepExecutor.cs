@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
@@ -34,7 +37,19 @@ namespace Orchard.Recipes.Services {
                 return false;
             }
             _recipeJournal.WriteJournalEntry(executionId, string.Format("Executing step {0}.", nextRecipeStep.Name));
-            var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false };
+            var files = String.IsNullOrWhiteSpace(nextRecipeStep.FilesPath)
+                ? null
+                : Directory
+                    .GetFiles(nextRecipeStep.FilesPath, "*.*", SearchOption.AllDirectories)
+                    .Select(filePath => new FileToImport {
+                        Path = filePath.Substring(nextRecipeStep.FilesPath.Length),
+                        GetStream = () => new FileStream(filePath, FileMode.Open, FileAccess.Read)
+                    }).ToList();
+            var recipeContext = new RecipeContext {
+                RecipeStep = nextRecipeStep,
+                Files = files,
+                Executed = false
+            };
             try {
                 _recipeExecuteEventHandler.RecipeStepExecuting(executionId, recipeContext);
                 foreach (var recipeHandler in _recipeHandlers) {
@@ -44,7 +59,7 @@ namespace Orchard.Recipes.Services {
             }
             catch(Exception exception) {
                 Logger.Error(exception, "Recipe execution {0} was cancelled because a step failed to execute", executionId);
-                while (_recipeStepQueue.Dequeue(executionId) != null) ;
+                while (_recipeStepQueue.Dequeue(executionId) != null) {}
                 _recipeJournal.ExecutionFailed(executionId);
                 var message = T("Recipe execution with id {0} was cancelled because the \"{1}\" step failed to execute. The following exception was thrown: {2}. Refer to the error logs for more information.",
                                 executionId, nextRecipeStep.Name, exception.Message);
@@ -55,7 +70,7 @@ namespace Orchard.Recipes.Services {
 
             if (!recipeContext.Executed) {
                 Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
-                while (_recipeStepQueue.Dequeue(executionId) != null) ;
+                while (_recipeStepQueue.Dequeue(executionId) != null) {}
                 _recipeJournal.ExecutionFailed(executionId);
                 var message = T("Recipe execution with id {0} was cancelled because the recipe handler for step \"{1}\" was not found. Refer to the error logs for more information.",
                                 executionId, nextRecipeStep.Name);

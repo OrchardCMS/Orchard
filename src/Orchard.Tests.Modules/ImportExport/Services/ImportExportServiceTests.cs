@@ -82,7 +82,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
 
         [Test]
         public void ImportSucceedsWhenRecipeContainsImportSteps() {
-            Assert.DoesNotThrow(() => _importExportService.Import(
+            Assert.DoesNotThrow(() => _importExportService.ImportRecipe(
                                                                     @"<Orchard>
                                                                         <Recipe>
                                                                         <Name>MyModuleInstaller</Name>
@@ -93,7 +93,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
 
         [Test]
         public void ImportDoesntFailsWhenRecipeContainsNonImportSteps() {
-            Assert.DoesNotThrow(() => _importExportService.Import(
+            Assert.DoesNotThrow(() => _importExportService.ImportRecipe(
                                                                     @"<Orchard>
                                                                         <Recipe>
                                                                         <Name>MyModuleInstaller</Name>

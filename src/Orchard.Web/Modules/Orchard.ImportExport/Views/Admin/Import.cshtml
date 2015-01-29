@@ -5,10 +5,10 @@
 
     using (Html.BeginFormAntiForgeryPost(Url.Action("Import", new { area = "Orchard.ImportExport" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         @Html.ValidationSummary();
-		<p>@T("Choose a recipe file to import. Please consider {0} or backing up your data first.", 
+		<p>@T("Choose a recipe file or content package to import. Please consider {0} or backing up your data first.", 
 		     @Html.Link(T("exporting").Text, Url.Action("Export", "Admin", new { area = "Orchard.ImportExport" })))</p>
         <fieldset>
-            <label for="RecipeFile">@T("Recipe File:")</label>
+            <label for="RecipeFile">@T("Recipe File or Content Package:")</label>
             <input type="file" id="RecipeFile" size="64" name="RecipeFile" value="Browse..." />
         </fieldset>
         <button type="submit" class="primaryAction">@T("Import")</button>

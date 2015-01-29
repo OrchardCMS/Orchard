@@ -29,16 +29,17 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public string Execute(Recipe recipe) {
+        public string Execute(Recipe recipe, string filesPath = null, string executionId = null) {
             if (recipe == null)
                 return null;
 
-            var executionId = Guid.NewGuid().ToString("n");
+            executionId = executionId ?? Guid.NewGuid().ToString("n");
             
             _recipeJournal.ExecutionStart(executionId);
             _recipeExecuteEventHandler.ExecutionStart(executionId, recipe);
 
             foreach (var recipeStep in recipe.RecipeSteps) {
+                recipeStep.FilesPath = filesPath;
                 _recipeStepQueue.Enqueue(executionId, recipeStep);
             }
             _recipeScheduler.ScheduleWork(executionId);

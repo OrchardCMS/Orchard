@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
+using NuGet;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -13,10 +15,11 @@ using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
-using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
+using ILogger = Orchard.Logging.ILogger;
+using NullLogger = Orchard.Logging.NullLogger;
 using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
@@ -33,6 +36,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IEnumerable<IExportEventHandler> _exportEventHandlers;
         private readonly IDeploymentPackageBuilder _packageBuilder;
         private const string ExportsDirectory = "Exports";
+        private readonly string _recipeQueueFolder = "RecipeQueue" + Path.DirectorySeparatorChar;
 
         public ImportExportService(
             IOrchardServices orchardServices,
@@ -63,9 +67,59 @@ namespace Orchard.ImportExport.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public string Import(string recipeText) {
+        public string Import(Stream recipeOrPackage, string fileName) {
+            var extension = Path.GetExtension(fileName);
+            Debug.Assert(extension != null, T("Extension should not be null").Text);
+            if (extension.Equals(".xml", StringComparison.InvariantCultureIgnoreCase)) {
+                var recipeText = new StreamReader(recipeOrPackage).ReadToEnd();
+                return ImportRecipe(recipeText);
+            }
+            if (extension.Equals(".nupkg", StringComparison.InvariantCultureIgnoreCase)) {
+                return ImportPackage(recipeOrPackage);
+            }
+            throw new ArgumentException(T("Unrecognized file extension. Extension should be xml or nupkg.").Text, "fileName");
+        }
+
+        private string ImportPackage(Stream recipeOrPackage) {
+            var executionId = Guid.NewGuid().ToString("n");
+            // Store the package locally
+            var importPath = Path.Combine(_appDataFolder.MapPath(_recipeQueueFolder), executionId);
+            var packagePath = importPath + ".nupkg";
+            using (var packageStream = _appDataFolder.CreateFile(packagePath)) {
+                recipeOrPackage.Seek(0, SeekOrigin.Begin);
+                recipeOrPackage.CopyTo(packageStream);
+            }
+            // Extract the recipe from the package
+            var package = new ZipPackage(packagePath);
+            var files = package.GetContentFiles().ToList();
+            var recipeFile = files.Find(file => file.Path == "Content\\export.xml");
+            var recipeText = recipeFile.GetStream().ReadToEnd();
+            // Extract all files up-front
+            var filesToImport = files
+                .Where(file => file.Path != "Content\\export.xml")
+                .Select(
+                    file => new FileToImport {
+                        Path = file.Path.Substring(8),
+                        GetStream = file.GetStream
+                    }
+                )
+                .ToList();
+            var filesPath = importPath + ".Files";
+            _appDataFolder.CreateDirectory(filesPath);
+            foreach (var fileToImport in filesToImport) {
+                using (var fileStream = _appDataFolder.CreateFile(Path.Combine(filesPath, fileToImport.Path))) {
+                    fileToImport.GetStream().CopyTo(fileStream);
+                }
+            }
+            // We can delete the package now
+            File.Delete(packagePath);
+            // Finally, start the import
+            return ImportRecipe(recipeText, filesPath, executionId);
+        }
+
+        public string ImportRecipe(string recipeText, string filesPath = null, string executionId = null) {
             var recipe = _recipeParser.ParseRecipe(recipeText);
-            var executionId = _recipeManager.Execute(recipe);
+            executionId = _recipeManager.Execute(recipe, filesPath, executionId);
             if (ShellUpdateRequired(recipe)) {
                 UpdateShell();
             }

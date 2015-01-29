@@ -58,7 +58,7 @@ namespace Orchard.ImportExport.Controllers {
                 return new HttpUnauthorizedResult(T("Invalid recipe").Text);
             }
 
-            _importExportService.Import(content);
+            _importExportService.ImportRecipe(content);
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }

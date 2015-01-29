@@ -50,15 +50,25 @@ namespace Orchard.ImportExport.Controllers {
 
             var recipeFile = Request.Files["RecipeFile"];
             if (recipeFile == null || String.IsNullOrEmpty(recipeFile.FileName)) {
-                ModelState.AddModelError("RecipeFile", T("Please choose a recipe file to import.").Text);
-                Services.Notifier.Error(T("Please choose a recipe file to import."));
+                ModelState.AddModelError("RecipeFile", T("Please choose a recipe file or content package to import.").Text);
+                Services.Notifier.Error(T("Please choose a recipe file or content package to import."));
                 return View(new ImportViewModel());
             }
 
             if (!ModelState.IsValid) return View(new ImportViewModel());
-
-            var executionId = _importExportService.Import(new StreamReader(recipeFile.InputStream).ReadToEnd());
-            Services.Notifier.Information(T("Your recipe has been imported."));
+            string executionId;
+            try {
+                executionId = _importExportService.Import(recipeFile.InputStream, recipeFile.FileName);
+            }
+            catch (OrchardException e) {
+                Services.Notifier.Error(T("Recipe or package uploading and installation failed: {0}", e.Message));
+                return View("ImportFailed");
+            }
+            catch (Exception e) {
+                Services.Notifier.Error(T("Recipe or package uploading and installation failed: {0}", e.Message));
+                return View("ImportFailed");
+            }
+            Services.Notifier.Information(T("Your recipe or package has been imported."));
 
             return RedirectToAction("ImportResult", new {ExecutionId = executionId});
         }

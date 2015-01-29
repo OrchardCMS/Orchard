@@ -102,7 +102,7 @@ namespace Orchard.ImportExport.Services {
                     break;
                 case DeploymentType.Import:
                     var tempExecutionId = executionId;
-                    executionId = _importExportService.Import(recipeText);
+                    executionId = _importExportService.ImportRecipe(recipeText);
                     //executionId is not updated until after export has started, so update recipe filename
                     WriteSubscriptionFile(executionId, recipeText);
                     if (_appDataFolder.FileExists(GetSubscriptionFilePath(tempExecutionId))) {

@@ -2,6 +2,6 @@
 
 namespace Orchard.Recipes.Services {
     public interface IRecipeManager : IDependency {
-        string Execute(Recipe recipe);
+        string Execute(Recipe recipe, string filesPath = null, string executionId = null);
     }
 }

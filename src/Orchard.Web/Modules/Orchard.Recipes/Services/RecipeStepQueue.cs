@@ -25,6 +25,7 @@ namespace Orchard.Recipes.Services {
         public void Enqueue(string executionId, RecipeStep step) {
             var recipeStepElement = new XElement("RecipeStep");
             recipeStepElement.Add(new XElement("Name", step.Name));
+            recipeStepElement.Add(new XElement("FilesPath", step.FilesPath));
             recipeStepElement.Add(step.Step);
 
             if (_appDataFolder.DirectoryExists(Path.Combine(_recipeQueueFolder, executionId))) {
@@ -49,9 +50,13 @@ namespace Orchard.Recipes.Services {
                 var stepPath = Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + stepIndex);
                 // string to xelement
                 var stepElement = XElement.Parse(_appDataFolder.ReadFile(stepPath));
-                var stepName = stepElement.Element("Name").Value;
+                var stepNameElement = stepElement.Element("Name");
+                var stepName = stepNameElement != null ? stepNameElement.Value : null;
+                var filesPathElement = stepElement.Element("FilesPath");
+                var filesPath = filesPathElement != null ? filesPathElement.Value : null;
                 recipeStep = new RecipeStep {
                     Name = stepName,
+                    FilesPath = filesPath,
                     Step = stepElement.Element(stepName)
                 };
                 _appDataFolder.DeleteFile(stepPath);

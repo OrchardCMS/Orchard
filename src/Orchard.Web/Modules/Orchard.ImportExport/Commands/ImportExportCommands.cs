@@ -29,7 +29,9 @@ namespace Orchard.ImportExport.Commands {
                 return;
             }
 
-            _importExportService.Import(File.ReadAllText(Filename));
+            using (var reader = new FileStream(Filename, FileMode.Open, FileAccess.Read)) {
+                _importExportService.Import(reader, Filename);
+            }
 
             Context.Output.WriteLine(T("Import running..."));
         }
