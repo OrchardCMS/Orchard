@@ -92,9 +92,13 @@ namespace Orchard.Modules.Controllers {
                 modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
             }
 
+            // This way we can more or less reliably handle this implicit dependency.
+            var installModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
+
             modules = modules.ToList();
             foreach (ModuleEntry moduleEntry in modules) {
                 moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
+                moduleEntry.CanUninstall = installModules;
 
                 if (_extensionDisplayEventHandler != null) {
                     foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
@@ -103,9 +107,10 @@ namespace Orchard.Modules.Controllers {
                 }
             }
 
+
             return View(new ModulesIndexViewModel {
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
+                InstallModules = installModules,
                 Options = options,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
