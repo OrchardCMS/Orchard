@@ -131,11 +131,6 @@
     <Content Include="Scripts\features.admin.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\features.admin.min.js.map">
-      <DependentUpon>features.admin.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -259,16 +259,6 @@
     <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\plugins\medialibrary\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\plugins\mediapicker\plugin.min.js.map">
-      <DependentUpon>plugin.min.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
   </ItemGroup>
   <ItemGroup>

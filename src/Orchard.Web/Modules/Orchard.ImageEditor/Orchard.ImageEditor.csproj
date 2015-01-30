@@ -126,11 +126,6 @@
     <Content Include="Views\Parts\Image.Editor.Crop.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jcrop\js\jquery.Jcrop.min.js.map">
-      <DependentUpon>jquery.Jcrop.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts\Image.Editor.Resize.cshtml" />
   </ItemGroup>
   <ItemGroup>
