@@ -14,7 +14,7 @@
   "CoffeeScript": {
     "CompileOnBuild": false,
     "CompileOnSave": true,
-    "GenerateSourceMaps": true,
+    "GenerateSourceMaps": false,
     "LintOnBuild": false,
     "LintOnSave": true,
     "LintResultLocation": "Message",
@@ -42,12 +42,15 @@
     "ValidateStarSelector": true,
     "ValidateVendorSpecifics": true,
     "ValidateZeroUnit": true,
-    "ValidationLocation": "Messages"
+    "ValidationLocation": "Messages",
+    "GenerateRtlSourceMaps": true,
+    "RtlCss": false
   },
   "General": {
     "AllMessagesToOutputWindow": false,
     "KeepImportantComments": true,
-    "SvgPreviewPane": true
+    "SvgPreviewPane": true,
+    "ShowWEIgnoreLogs": true
   },
   "Html": {
     "AutoMinify": false,
@@ -77,13 +80,18 @@
     "MakeMinified": true,
     "MinificationMode": "KeepQuotes",
     "OutputDirectory": null,
-    "RunOnBuild": false
+    "RunOnBuild": false,
+    "AttributeQuotesRemovalMode": "KeepQuotes",
+    "CustomAngularDirectiveList": null,
+    "MinifyAngularBindingExpressions": false,
+    "MinifyKnockoutBindingExpressions": false,
+    "ProcessableScriptTypeList": null
   },
   "JavaScript": {
     "AutoMinify": true,
     "BlockCommentCompletion": true,
     "EvalTreatment": "MakeImmediateSafe",
-    "GenerateSourceMaps": true,
+    "GenerateSourceMaps": false,
     "GzipMinifiedFiles": false,
     "LintOnBuild": false,
     "LintOnSave": true,
@@ -138,7 +146,8 @@
     "OutputDirectory": null,
     "OutputStyle": "Expanded",
     "ProcessSourceMapsForEditorEnhancements": true,
-    "ShowPreviewPane": true
+    "ShowPreviewPane": true,
+    "UseRubyRuntime": false
   },
   "Sprite": {
     "CssOutputDirectory": null,
@@ -149,12 +158,13 @@
     "RunOnBuild": false,
     "ScssOutputDirectory": null,
     "UseAbsoluteUrl": false,
-    "UseFullPathForIdentifierName": true
+    "UseFullPathForIdentifierName": true,
+    "Margin": 1
   },
   "SweetJs": {
     "CompileOnBuild": false,
     "CompileOnSave": true,
-    "GenerateSourceMaps": true,
+    "GenerateSourceMaps": false,
     "MinifyInPlace": false,
     "OutputDirectory": null,
     "ProcessSourceMapsForEditorEnhancements": true,
@@ -165,5 +175,11 @@
     "LintOnSave": true,
     "LintResultLocation": "Message",
     "ShowPreviewPane": true
+  },
+  "Handlebars": {
+    "CompileOnBuild": false,
+    "CompileOnSave": true,
+    "MinifyInPlace": false,
+    "OutputDirectory": null
   }
 }
