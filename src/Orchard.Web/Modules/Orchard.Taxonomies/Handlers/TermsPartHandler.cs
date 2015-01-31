@@ -68,7 +68,7 @@ namespace Orchard.Taxonomies.Handlers {
 
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
             part._termParts.Loader(value => {
-                var ids = part.Terms.Select(t => t.TermRecord.Id);
+                var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
                 var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
                 return
