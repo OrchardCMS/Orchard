@@ -10,9 +10,13 @@ using Orchard.Workflows.Models;
 namespace Orchard.Workflows.ImportExport {
     public class WorkflowsRecipeHandler : IRecipeHandler {
         private readonly IRepository<WorkflowDefinitionRecord> _workflowDefinitionRepository;
+        private readonly IRepository<ActivityRecord> _activityRepository;
+        private readonly IRepository<TransitionRecord> _transitionRepository;
 
-        public WorkflowsRecipeHandler(IRepository<WorkflowDefinitionRecord> workflowDefinitionRepository) {
+        public WorkflowsRecipeHandler(IRepository<WorkflowDefinitionRecord> workflowDefinitionRepository, IRepository<ActivityRecord> activityRepository, IRepository<TransitionRecord> transitionRepository) {
             _workflowDefinitionRepository = workflowDefinitionRepository;
+            _activityRepository = activityRepository;
+            _transitionRepository = transitionRepository;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -26,16 +30,12 @@ namespace Orchard.Workflows.ImportExport {
             }
 
             foreach (var workflowDefinitionElement in recipeContext.RecipeStep.Step.Elements()) {
-                var workflowDefinition = new WorkflowDefinitionRecord {
-                    Name = ProbeWorkflowDefinitionName(workflowDefinitionElement.Attribute("Name").Value),
-                    Enabled = Boolean.Parse(workflowDefinitionElement.Attribute("Enabled").Value)
-                };
-                
-                _workflowDefinitionRepository.Create(workflowDefinition);
-
+                var workflowDefinition = GetOrCreateWorkflowDefinition(workflowDefinitionElement.Attribute("Name").Value);
                 var activitiesElement = workflowDefinitionElement.Element("Activities");
                 var transitionsElement = workflowDefinitionElement.Element("Transitions");
                 var activitiesDictionary = new Dictionary<int, ActivityRecord>();
+
+                workflowDefinition.Enabled = Boolean.Parse(workflowDefinitionElement.Attribute("Enabled").Value);
 
                 foreach (var activityElement in activitiesElement.Elements()) {
                     var localId = Int32.Parse(activityElement.Attribute("Id").Value);
@@ -69,22 +69,32 @@ namespace Orchard.Workflows.ImportExport {
             recipeContext.Executed = true;
         }
 
-        private string ProbeWorkflowDefinitionName(string name) {
-            var count = 0;
-            var newName = name;
-            WorkflowDefinitionRecord workflowDefinition;
+        private WorkflowDefinitionRecord GetOrCreateWorkflowDefinition(string name) {
+            var workflowDefinition = _workflowDefinitionRepository.Get(x => x.Name == name);
 
-            do {
-                var localName = newName;
-                workflowDefinition = _workflowDefinitionRepository.Get(x => x.Name == localName);
+            if (workflowDefinition == null) {
+                workflowDefinition = new WorkflowDefinitionRecord {
+                    Name = name
+                };
+                _workflowDefinitionRepository.Create(workflowDefinition);
+            }
+            else {
+                CleanWorkFlow(workflowDefinition);
+            }
 
-                if (workflowDefinition != null) {
-                    newName = string.Format("{0}-{1}", name, ++count);
-                }
+            return workflowDefinition;
+        }
 
-            } while (workflowDefinition != null);
+        private void CleanWorkFlow(WorkflowDefinitionRecord workflowDefinition) {
+            foreach (var activityRecord in workflowDefinition.ActivityRecords) {
+                _activityRepository.Delete(activityRecord);
+            }
+            workflowDefinition.ActivityRecords.Clear();
 
-            return newName;
+            foreach (var transitionRecord in workflowDefinition.TransitionRecords) {
+                _transitionRepository.Delete(transitionRecord);
+            }
+            workflowDefinition.TransitionRecords.Clear();
         }
     }
 }
