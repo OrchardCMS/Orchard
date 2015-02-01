@@ -60,22 +60,26 @@ namespace Orchard.PublishLater.Drivers {
                 );
         }
 
-        protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
-            var model = new PublishLaterViewModel(part) {
-                 Editor = new DateTimeEditor() {
+        private PublishLaterViewModel BuildViewModelFromPart(PublishLaterPart part) {
+            return new PublishLaterViewModel(part) {
+                Editor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = true,
                     Date = !part.IsPublished() ? _dateServices.ConvertToLocalDateString(part.ScheduledPublishUtc.Value, "") : "",
                     Time = !part.IsPublished() ? _dateServices.ConvertToLocalTimeString(part.ScheduledPublishUtc.Value, "") : "",
                 }
-           };
+            };
+        }
+
+        protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
+            var model = BuildViewModelFromPart(part);
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(PublishLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new PublishLaterViewModel(part);
+            var model = BuildViewModelFromPart(part);
 
             updater.TryUpdateModel(model, Prefix, null, null);
             var httpContext = _httpContextAccessor.Current();
