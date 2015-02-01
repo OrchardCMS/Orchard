@@ -53,6 +53,7 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
+            // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
             IEnumerable<LayerPart> activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
