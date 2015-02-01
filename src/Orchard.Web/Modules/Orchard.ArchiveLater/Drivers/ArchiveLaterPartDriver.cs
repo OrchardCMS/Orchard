@@ -50,8 +50,8 @@ namespace Orchard.ArchiveLater.Drivers {
                                              );
         }
 
-        protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
-            var model = new ArchiveLaterViewModel(part) {
+        private ArchiveLaterViewModel BuildViewModelFromPart(ArchiveLaterPart part) {
+            return new ArchiveLaterViewModel(part) {
                 ArchiveLater = part.ScheduledArchiveUtc.Value.HasValue,
                 Editor = new DateTimeEditor() {
                     ShowDate = true,
@@ -60,13 +60,17 @@ namespace Orchard.ArchiveLater.Drivers {
                     Time = _dateServices.ConvertToLocalTimeString(part.ScheduledArchiveUtc.Value, ""),
                 }
             };
+        }
+
+        protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
+            var model = BuildViewModelFromPart(part);
 
             return ContentShape("Parts_ArchiveLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new ArchiveLaterViewModel(part);
+            var model = BuildViewModelFromPart(part);
 
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (model.ArchiveLater) {
