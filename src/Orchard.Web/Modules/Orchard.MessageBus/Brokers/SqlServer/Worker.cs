@@ -72,7 +72,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
 
             }
             catch (Exception e) {
-                Logger.Error("An unexpected error occured while monitoring sql dependencies.", e);
+                Logger.Error(e, "An unexpected error occured while monitoring sql dependencies.");
             }
         }
 
@@ -188,7 +188,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 }
             }
             catch (Exception e) {
-                Logger.Error("Could not retreive Sql Broker messages.", e);
+                Logger.Error(e, "Could not retreive Sql Broker messages.");
                 return Enumerable.Empty<MessageRecord>();
             }
 
