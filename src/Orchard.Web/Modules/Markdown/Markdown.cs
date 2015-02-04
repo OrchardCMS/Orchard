@@ -606,25 +606,25 @@ namespace MarkdownSharp
 
             // Regular expression for the content of a block tag.
             string attr = @"
-            (?>﻿  ﻿  ﻿  ﻿              # optional tag attributes
-              \s﻿  ﻿  ﻿              # starts with whitespace
+            (?>				            # optional tag attributes
+              \s			            # starts with whitespace
               (?>
-                [^>""/]+﻿              # text outside quotes
+                [^>""/]+	            # text outside quotes
               |
-                /+(?!>)﻿  ﻿              # slash not followed by >
+                /+(?!>)		            # slash not followed by >
               |
-                ""[^""]*""﻿  ﻿          # text inside double quotes (tolerate >)
+                ""[^""]*""		        # text inside double quotes (tolerate >)
               |
-                '[^']*'﻿                  # text inside single quotes (tolerate >)
+                '[^']*'	                # text inside single quotes (tolerate >)
               )*
-            )?﻿  
+            )?	
             ";
 
             string content = RepeatString(@"
                 (?>
-                  [^<]+﻿  ﻿  ﻿          # content without tag
+                  [^<]+			        # content without tag
                 |
-                  <\2﻿  ﻿  ﻿          # nested opening tag
+                  <\2			        # nested opening tag
                     " + attr + @"       # attributes
                   (?>
                       />
@@ -632,9 +632,9 @@ namespace MarkdownSharp
                       >", _nestDepth) +   // end of opening tag
                       ".*?" +             // last level nested tag content
             RepeatString(@"
-                      </\2\s*>﻿          # closing nested tag
+                      </\2\s*>	        # closing nested tag
                   )
-                  |﻿  ﻿  ﻿  ﻿  
+                  |				
                   <(?!/\2\s*>           # other tags with a different name
                   )
                 )*", _nestDepth);
@@ -642,11 +642,11 @@ namespace MarkdownSharp
             string content2 = content.Replace(@"\2", @"\3");
 
             // First, look for nested blocks, e.g.:
-            // ﻿  <div>
-            // ﻿  ﻿  <div>
-            // ﻿  ﻿  tags for inner block must be indented.
-            // ﻿  ﻿  </div>
-            // ﻿  </div>
+            // 	<div>
+            // 		<div>
+            // 		tags for inner block must be indented.
+            // 		</div>
+            // 	</div>
             //
             // The outermost tags must start at the left margin for this to match, and
             // the inner nested divs must be indented.
