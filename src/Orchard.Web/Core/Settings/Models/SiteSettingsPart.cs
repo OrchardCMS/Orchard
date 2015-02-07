@@ -44,6 +44,11 @@ namespace Orchard.Core.Settings.Models {
             get { return this.Retrieve(x => x.ResourceDebugMode); }
             set { this.Store(x => x.ResourceDebugMode, value); }
         }
+        
+        public bool UseCdn {
+            get { return this.Retrieve(x => x.UseCdn); }
+            set { this.Store(x=> x.UseCdn, value); }
+        }
 
         public int PageSize {
             get { return this.Retrieve(x => x.PageSize, DefaultPageSize); }
