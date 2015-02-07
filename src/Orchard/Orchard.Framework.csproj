@@ -181,7 +181,7 @@
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
     <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
-    <Compile Include="Data\DoNotMapAttribute.cs" />
+    <Compile Include="Data\DoNotMapAttribute.cs" /> 
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />
