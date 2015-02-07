@@ -180,7 +180,11 @@
     <Compile Include="Data\AbstractSessionInterceptor.cs" />
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
+    <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
+    <Compile Include="Data\DoNotMapAttribute.cs" />
     <Compile Include="Data\FetchRequest.cs" />
+    <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
+    <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
     <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />

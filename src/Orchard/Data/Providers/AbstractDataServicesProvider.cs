@@ -38,6 +38,13 @@ namespace Orchard.Data.Providers {
 
             var config = Fluently.Configure();
 
+            // not working for me.. (BN)
+            //parameters.Configurers.OfType<ISessionConfigurationEventsWithParameters>()
+            //    .Invoke(c => c.Parameters=parameters, Logger);
+
+            foreach (var c in parameters.Configurers.OfType<ISessionConfigurationEventsWithParameters>())
+                c.Parameters = parameters;
+
             parameters.Configurers.Invoke(c => c.Created(config, persistenceModel), Logger);
 
             config = config.Database(database)
