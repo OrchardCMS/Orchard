@@ -181,7 +181,7 @@
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
     <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
-    <Compile Include="Data\DoNotMapAttribute.cs" /> 
+    <Compile Include="Data\DoNotMapAttribute.cs" />
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />
@@ -622,6 +622,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
+    <Compile Include="Utility\NamedReaderWriterLock.cs" />
     <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />

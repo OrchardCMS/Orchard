@@ -13,6 +13,9 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Utility.Extensions;
+using Orchard.Utility;
+using System.Web;
+using Orchard.Mvc;
 
 namespace Orchard.Environment {
     // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter
@@ -25,8 +28,10 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
+        private readonly IHttpContextAccessor _hca;
         private readonly static object _syncLock = new object();
         private readonly static object _shellContextsWriteLock = new object();
+        private readonly NamedReaderWriterLock _shellActivationLock = new NamedReaderWriterLock();
 
         private IEnumerable<ShellContext> _shellContexts;
 
@@ -39,6 +44,7 @@ namespace Orchard.Environment {
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             IExtensionMonitoringCoordinator extensionMonitoringCoordinator,
             ICacheManager cacheManager,
+            IHttpContextAccessor hca,
             IHostLocalRestart hostLocalRestart) {
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
@@ -47,6 +53,7 @@ namespace Orchard.Environment {
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
+            _hca = hca;
             _hostLocalRestart = hostLocalRestart;
 
             _tenantsToRestart = new ContextState<IList<ShellSettings>>("DefaultOrchardHost.TenantsToRestart", () => new List<ShellSettings>());
@@ -230,10 +237,30 @@ namespace Orchard.Environment {
         }
 
         protected virtual void BeginRequest() {
-            // Ensure all shell contexts are loaded, or need to be reloaded if
-            // extensions have changed
-            MonitorExtensions();
-            BuildCurrent();
+            Action ensureInitialized = () => {
+                // Ensure all shell contexts are loaded, or need to be reloaded if
+                // extensions have changed
+                MonitorExtensions();
+                BuildCurrent();
+            };
+
+            ShellSettings currentShellSettings = null;
+
+            var httpContext = _hca.Current();
+            if (httpContext != null) {
+                currentShellSettings = _runningShellTable.Match(httpContext);
+            }
+
+            if (currentShellSettings == null) {
+                ensureInitialized();
+            }
+            else {
+                _shellActivationLock.RunWithReadLock(currentShellSettings.Name, () => {
+                    ensureInitialized();
+                });
+            }
+
+            // StartUpdatedShells can cause a writer shell activation lock so it should run outside the reader lock.
             StartUpdatedShells();
         }
 
@@ -291,19 +318,23 @@ namespace Orchard.Environment {
             }
             // reload the shell as its settings have changed
             else {
-                // dispose previous context
-                shellContext.Shell.Terminate();
+                _shellActivationLock.RunWithWriteLock(settings.Name, () => {
+                    // dispose previous context
+                    shellContext.Shell.Terminate();
 
-                var context = _shellContextFactory.CreateShellContext(settings);
+                    System.Threading.Thread.Sleep(30000);
 
-                // Activate and register modified context.
-                // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
-                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
+                    var context = _shellContextFactory.CreateShellContext(settings);
 
-                shellContext.Dispose();
-                context.Shell.Activate();
+                    // Activate and register modified context.
+                    // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
+                    _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
 
-                _runningShellTable.Update(settings);
+                    shellContext.Dispose();
+                    context.Shell.Activate();
+
+                    _runningShellTable.Update(settings);
+                });
             }
         }
 
