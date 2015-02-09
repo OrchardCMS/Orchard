@@ -63,7 +63,7 @@ namespace Orchard.Redis.MessageBus {
 
             }
             catch (Exception e) {
-                Logger.Error("An error occured while subscribing to " + channel, e);
+                Logger.Error(e, "An error occured while subscribing to " + channel);
             }
         }
 
