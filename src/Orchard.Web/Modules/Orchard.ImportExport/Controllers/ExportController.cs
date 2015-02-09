@@ -58,7 +58,7 @@ namespace Orchard.ImportExport.Controllers {
                 request.DeploymentMetadata.Select(m => m.ToExportStep()).ToList() : new List<string>();
             exportSteps.Add(unpublishStep);
 
-            var recipePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions {
+            var packagePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions {
                 ExportData = exportingItems.Any(),
                 ExportMetadata = request.IncludeMetadata,
                 ExportFiles = request.IncludeFiles,
@@ -66,7 +66,7 @@ namespace Orchard.ImportExport.Controllers {
                 CustomSteps = exportSteps
             });
 
-            return CreateSignedResponse(recipePath);
+            return CreateSignedResponse(packagePath);
         }
 
         [AuthenticateApi]

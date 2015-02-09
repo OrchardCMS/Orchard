@@ -88,6 +88,7 @@ namespace Orchard.ImportExport.Controllers {
                 return new HttpUnauthorizedResult();
 
             string content;
+            // TODO: handle binary packages
             using (var reader = new StreamReader(Request.InputStream)) {
                 content = reader.ReadToEndAsync().Result;
             }

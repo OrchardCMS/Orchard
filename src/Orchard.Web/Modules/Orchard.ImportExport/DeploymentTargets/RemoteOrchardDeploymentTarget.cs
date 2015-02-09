@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -15,12 +17,20 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private Lazy<RemoteOrchardApiClient> Client { get; set; }
         private readonly IClock _clock;
         private readonly UrlHelper _url;
+        private readonly IDeploymentPackageBuilder _deploymentPackageBuilder;
 
-        public OrchardDeploymentTarget(IContentManager contentManager, ISigningService signingService, IClock clock, UrlHelper url) {
+        public OrchardDeploymentTarget(
+            IContentManager contentManager,
+            ISigningService signingService,
+            IClock clock,
+            UrlHelper url,
+            IDeploymentPackageBuilder deploymentPackageBuilder
+            ) {
             _contentManager = contentManager;
             _signingService = signingService;
             _clock = clock;
             _url = url;
+            _deploymentPackageBuilder = deploymentPackageBuilder;
         }
 
         public DeploymentTargetMatch Match(IContent targetConfiguration) {
@@ -32,12 +42,20 @@ namespace Orchard.ImportExport.DeploymentTargets {
             return null;
         }
 
-        public void PushRecipe(string executionId, string recipeText) {
+        public void PushDeploymentFile(string executionId, string deploymentFilePath) {
             var actionUrl = _url.Action("Recipe", "Import", new {
                 area = "Orchard.ImportExport",
                 executionId
             });
-            Client.Value.Post(actionUrl, recipeText, "application/xml");
+            if (Path.GetExtension(deploymentFilePath) == ".xml") {
+                var recipe = File.ReadAllText(deploymentFilePath);
+                Client.Value.Post(actionUrl, recipe, "text/xml");
+            }
+            else {
+                using (var deploymentStream = File.OpenRead(deploymentFilePath)) {
+                    Client.Value.Post(actionUrl, deploymentStream);
+                }
+            }
         }
 
         public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
@@ -60,8 +78,17 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 area = "Orchard.ImportExport"
             });
             var exportedItem = _contentManager.Export(content.ContentItem);
-            // TODO: handle packages
-            Client.Value.Post(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting));
+            if (exportedItem.Files != null && exportedItem.Files.Any()) {
+                var packageStream = _deploymentPackageBuilder.BuildPackage(
+                    "export.nupkg",
+                    exportedItem.Data.Document,
+                    exportedItem.Files.ToList()
+                    );
+                Client.Value.Post(actionUrl, packageStream);
+            }
+            else {
+                Client.Value.Post(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting), "text/xml");
+            }
         }
     }
 }

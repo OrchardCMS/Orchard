@@ -33,40 +33,66 @@ namespace Orchard.ImportExport.DeploymentTargets {
                     if (stream == null) {
                         throw new WebException(T("Deployment API did not return a valid stream.").Text);
                     }
+                    if (!ResponseIsValid(stream,
+                        webClient.ResponseHeaders[_signingService.TimestampHeaderName],
+                        webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
+                        throw new WebException(T("Deployment API response does not contain a valid hash").Text);
+                    }
+                    stream.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(stream)) {
-                        var json = reader.ReadToEnd();
-                        stream.Close();
-                        reader.Close();
-
-                        if (!ResponseIsValid(json,
-                            webClient.ResponseHeaders[_signingService.TimestampHeaderName],
-                            webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                            throw new WebException(T("Deployment API response does not contain a valid hash").Text);
-                        }
-
-                        return json;
+                        return reader.ReadToEnd();
                     }
                 }
             }
         }
 
-        public string Post(string url, string data, string contentType = "application/json") {
+        public WebResponse Post(string url, Stream data) {
             var fullyQualifiedUri = BuildUri(url);
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
             var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
-            using (var webClient = CreateWebClient(_config.UserName, timestamp, signature, requestContentHash)) {
-                webClient.Headers["Content-Type"] = contentType;
-                var result = webClient.UploadString(fullyQualifiedUri.ToString(), "POST", data);
+            var request = CreateWebRequest(fullyQualifiedUri.ToString(), _config.UserName, timestamp, signature, requestContentHash);
+            request.Headers["Content-Type"] = "multipart/form-data";
+            request.Method = "POST";
+            var boundary = "\r\n--------------------------" + Guid.NewGuid().ToString("n");
+            var boundaryBytes = Encoding.UTF8.GetBytes(boundary + "\r\n");
 
-                if (!ResponseIsValid(result,
-                    webClient.ResponseHeaders[_signingService.TimestampHeaderName],
-                    webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                    throw new WebException(T("Deployment API response does not contain a valid hash").Text);
-                }
-                return result;
+            using(var requestStream = request.GetRequestStream()) {
+                requestStream.Write(boundaryBytes, 0, boundaryBytes.Length);
+                var fileHeader = Encoding.UTF8.GetBytes(
+                    "Content-Disposition: form-data; name=\"export\"; filename=\"export.nupkg\"\r\nContent-Type: application/zip");
+                requestStream.Write(fileHeader, 0, fileHeader.Length);
+                data.CopyTo(requestStream);
+                var footerBytes = Encoding.UTF8.GetBytes(boundary + "--\r\n");
+                requestStream.Write(footerBytes, 0, footerBytes.Length);
             }
+            var response = request.GetResponse();
+
+            if (!ResponseIsValid(response.GetResponseStream(),
+                response.Headers[_signingService.TimestampHeaderName],
+                response.Headers[_signingService.ContentHashHeaderName])) {
+                throw new WebException(T("Deployment API response does not contain a valid hash").Text);
+            }
+            return response;
+        }
+
+        public WebResponse Post(string url, string data, string contentType = "application/json") {
+            var fullyQualifiedUri = BuildUri(url);
+            var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
+            var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
+            var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
+
+            var request = CreateWebRequest(fullyQualifiedUri.ToString(), _config.UserName, timestamp, signature, requestContentHash);
+            request.Headers["Content-Type"] = contentType;
+            var response = request.GetResponse();
+
+            if (!ResponseIsValid(response.GetResponseStream(),
+                response.Headers[_signingService.TimestampHeaderName],
+                response.Headers[_signingService.ContentHashHeaderName])) {
+                throw new WebException(T("Deployment API response does not contain a valid hash").Text);
+            }
+            return response;
         }
 
         private Uri BuildUri(string relativeUrl) {
@@ -85,8 +111,19 @@ namespace Orchard.ImportExport.DeploymentTargets {
             return webClient;
         }
 
-        private bool ResponseIsValid(string result, string timestamp, string contentHash) {
-            return (string.IsNullOrWhiteSpace(result) || _signingService.ValidateContent(result, timestamp, _config.PrivateApiKey, contentHash));
+        private WebRequest CreateWebRequest(string url, string username, string timestamp, string signature, string contentHash) {
+            var request = WebRequest.Create(url);
+            request.Headers[_signingService.AuthenticationHeaderName] =
+                username + ":" + HttpUtility.UrlEncode(signature);
+            request.Headers[_signingService.TimestampHeaderName] = timestamp;
+            if (!string.IsNullOrEmpty(contentHash)) {
+                request.Headers[_signingService.ContentHashHeaderName] = HttpUtility.UrlEncode(contentHash);
+            }
+            return request;
+        }
+
+        private bool ResponseIsValid(Stream result, string timestamp, string contentHash) {
+            return (!result.CanRead || _signingService.ValidateContent(result, timestamp, _config.PrivateApiKey, contentHash));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -156,12 +157,15 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
                 return new HttpUnauthorizedResult();
 
-            var recipe = _subscriptionService.GetSubscriptionRecipe(id, executionId);
+            var deploymentFile = _subscriptionService.GetDeploymentFile(id, executionId);
 
-            if (string.IsNullOrEmpty(recipe))
+            if (string.IsNullOrEmpty(deploymentFile))
                 return HttpNotFound();
 
-            return File(Encoding.UTF8.GetBytes(recipe), "text/xml", "subscription.xml");
+            if (Path.GetExtension(deploymentFile) == ".xml") {
+                return File(deploymentFile, "text/xml", "subscription.xml");
+            }
+            return File(deploymentFile, "application/zip", "subscription.nupkg");
         }
 
         public ActionResult GetRecipeJournal(string executionId) {

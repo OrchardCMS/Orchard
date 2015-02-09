@@ -3,7 +3,7 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.ImportExport.Services {
     public interface IDeploymentTarget : IDependency {
-        void PushRecipe(string deploymentExecutionId, string recipeText);
+        void PushDeploymentFile(string deploymentExecutionId, string deploymentFilePath);
         RecipeStatus GetRecipeDeploymentStatus(string deploymentExecutionId);
         void PushContent(IContent content);
     }

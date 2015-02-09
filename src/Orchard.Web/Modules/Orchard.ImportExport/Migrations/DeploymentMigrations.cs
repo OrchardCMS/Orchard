@@ -87,5 +87,11 @@ namespace Orchard.ImportExport.Migrations {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("DeploymentSubscriptionPartRecord", table => table
+                .AddColumn<bool>("IncludeFiles"));
+            return 2;
+        }
     }
 }

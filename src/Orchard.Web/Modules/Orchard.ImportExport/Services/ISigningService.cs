@@ -1,4 +1,6 @@
-﻿namespace Orchard.ImportExport.Services {
+﻿using System.IO;
+
+namespace Orchard.ImportExport.Services {
     public interface ISigningService : IDependency {
         string AuthenticationHeaderName { get; }
         string ContentHashHeaderName { get; }
@@ -10,7 +12,9 @@
 
         string SignContent(string content, string timestamp, string secret);
         string SignContent(byte[] content, string timestamp, string secret);
+        string SignContent(Stream content, string timestamp, string secret);
         bool ValidateContent(string content, string timestamp, string secret, string signature);
         bool ValidateContent(byte[] content, string timestamp, string secret, string signature);
+        bool ValidateContent(Stream content, string timestamp, string secret, string signature);
     }
 }

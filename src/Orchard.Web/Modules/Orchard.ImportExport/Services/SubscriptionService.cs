@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
@@ -58,7 +59,7 @@ namespace Orchard.ImportExport.Services {
             var task = subscription.As<RecurringTaskPart>();
             var executionId = Guid.NewGuid().ToString("n");
             var exportUtc = _clock.UtcNow;
-            var recipeText = GetSubscriptionRecipe(subscriptionId, executionId);
+            var deploymentFile = GetDeploymentFile(subscriptionId, executionId);
 
             switch (subscription.DeploymentType) {
                 case DeploymentType.Export:
@@ -86,7 +87,7 @@ namespace Orchard.ImportExport.Services {
                     var target = _deploymentService.GetDeploymentTarget(subscription.DeploymentConfiguration);
                     if (target != null) {
                         try {
-                            target.PushRecipe(executionId, recipeText);
+                            target.PushDeploymentFile(executionId, deploymentFile);
                             _recipeJournal.ExecutionComplete(executionId);
                             _taskManager.SetTaskCompleted(executionId, RunStatus.Success);
                             subscription.DeployedChangesToUtc = exportUtc;
@@ -102,11 +103,13 @@ namespace Orchard.ImportExport.Services {
                     break;
                 case DeploymentType.Import:
                     var tempExecutionId = executionId;
-                    executionId = _importExportService.ImportRecipe(recipeText);
-                    //executionId is not updated until after export has started, so update recipe filename
-                    WriteSubscriptionFile(executionId, recipeText);
-                    if (_appDataFolder.FileExists(GetSubscriptionFilePath(tempExecutionId))) {
-                        _appDataFolder.DeleteFile(GetSubscriptionFilePath(tempExecutionId));
+                    var type = Path.GetExtension(deploymentFile) == ".xml" ? "text/xml" : "application/zip";
+                    using (var stream = File.OpenRead(deploymentFile)) {
+                        executionId = _importExportService.Import(stream, deploymentFile);
+                    }
+                    var tempPath = GetSubscriptionFilePath(tempExecutionId, type);
+                    if (_appDataFolder.FileExists(tempPath)) {
+                        _appDataFolder.DeleteFile(tempPath);
                     }
                     break;
                 default:
@@ -121,16 +124,21 @@ namespace Orchard.ImportExport.Services {
                 Logger.Error(e, "Failed to clear subscription history after execution of task id {0}", executionId);
             }
 
-            return executionId;
+            return deploymentFile;
         }
 
         public void UpdateRecipeDeployStatus(string executionId) {}
 
-        public string GetSubscriptionRecipe(int subscriptionId, string executionId, bool exportIfNotFound = true) {
+        public string GetDeploymentFile(int subscriptionId, string executionId, bool exportIfNotFound = true) {
             if (!string.IsNullOrEmpty(executionId)) {
-                var path = GetSubscriptionFilePath(executionId);
-                if (_appDataFolder.FileExists(path))
+                var path = GetSubscriptionFilePath(executionId, "text/xml");
+                if (_appDataFolder.FileExists(path)) {
                     return _appDataFolder.MapPath(path);
+                }
+                path = GetSubscriptionFilePath(executionId, "application/zip");
+                if (_appDataFolder.FileExists(path)) {
+                    return _appDataFolder.MapPath(path);
+                }
             }
 
             //existing subscription file could not be found
@@ -163,7 +171,6 @@ namespace Orchard.ImportExport.Services {
                     "Subscription", 
                     subscription.Id.ToString(CultureInfo.InvariantCulture)));
 
-            string recipeText = null;
             switch (subscription.DeploymentType) {
                 case DeploymentType.Export:
                     request.DeploymentMetadata.Add(new DeploymentMetadata("Source", siteName));
@@ -171,8 +178,6 @@ namespace Orchard.ImportExport.Services {
 
                     var exportingItems = _deploymentService.GetContentForExport(request, queuedToTargetId);
                     foreach (var exportingItem in exportingItems) {
-                        if (!exportingItem.Is<DeployablePart>()) continue;
-
                         var itemTarget = _deploymentService
                             .GetDeploymentItemTarget(
                                 exportingItem,
@@ -193,7 +198,7 @@ namespace Orchard.ImportExport.Services {
                         : new List<string>();
                     exportSteps.Add(unpublishStep);
 
-                    var recipePath = _importExportService
+                    var deploymentFilePath = _importExportService
                         .Export(request.ContentTypes, exportingItems, new ExportOptions {
                             ExportData = exportingItems.Any(),
                             ExportMetadata = request.IncludeMetadata,
@@ -201,28 +206,24 @@ namespace Orchard.ImportExport.Services {
                             CustomSteps = exportSteps
                         });
 
-                    recipeText = _appDataFolder.ReadFile(recipePath.FileName);
-                    var destinationPath = PrepareSubscriptionFilePath(executionId);
+                    var destinationPath = PrepareSubscriptionFilePath(executionId,
+                        Path.GetExtension(deploymentFilePath.FileName) == ".xml" ? "text/xml" : "application/zip");
                     if (destinationPath != null) {
-                        _appDataFolder.StoreFile(recipePath.FileName, destinationPath);
-                        _appDataFolder.DeleteFile(recipePath.FileName);
+                        _appDataFolder.StoreFile(deploymentFilePath.FileName, destinationPath);
+                        _appDataFolder.DeleteFile(deploymentFilePath.FileName);
                     }
-                    break;
+                    return _appDataFolder.MapPath(destinationPath);
                 case DeploymentType.Import:
                     request.DeploymentMetadata.Add(
                         new DeploymentMetadata("Source", deploymentName));
                     request.DeploymentMetadata.Add(
                         new DeploymentMetadata("Target", siteName));
                     var source = _deploymentService.GetDeploymentSource(subscription.DeploymentConfiguration);
-                    if (source != null) {
-                        recipeText = source.GetRecipe(request);
-                        WriteSubscriptionFile(executionId, recipeText);
-                    }
-                    break;
+                    if (source == null) return null;
+                    return source.GetDeploymentFile(request);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return recipeText;
         }
 
         private void ClearHistory() {
@@ -238,7 +239,7 @@ namespace Orchard.ImportExport.Services {
             }
         }
 
-        private string PrepareSubscriptionFilePath(string executionId) {
+        private string PrepareSubscriptionFilePath(string executionId, string type) {
             if (string.IsNullOrEmpty(executionId)) return null;
             
 
@@ -246,18 +247,22 @@ namespace Orchard.ImportExport.Services {
                 _appDataFolder.CreateDirectory(_deploymentService.DeploymentStoragePath);
             }
 
-            return GetSubscriptionFilePath(executionId);
+            return GetSubscriptionFilePath(executionId, type);
         }
 
-        private void WriteSubscriptionFile(string executionId, string recipeText) {
-            var path = PrepareSubscriptionFilePath(executionId);
+        private string WriteSubscriptionFile(string executionId, string type, Stream deploymentFile) {
+            var path = PrepareSubscriptionFilePath(executionId, type);
             if (path != null) {
-                _appDataFolder.CreateFile(path, recipeText);
+                using (var file = _appDataFolder.CreateFile(path)) {
+                    deploymentFile.CopyTo(file);
+                }
             }
+            return path;
         }
 
-        private string GetSubscriptionFilePath(string executionId) {
-            var exportFile = string.Format("{0}.xml", executionId);
+        private string GetSubscriptionFilePath(string executionId, string type) {
+            var format = type == "text/xml" ? "{0}.xml" : "{0}.nupkg";
+            var exportFile = string.Format(format, executionId);
             return _appDataFolder.Combine(
                 _deploymentService.DeploymentStoragePath, 
                 exportFile);

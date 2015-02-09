@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Orchard.ContentManagement;
 using Orchard.ImportExport.Models;
 
 namespace Orchard.ImportExport.Services {
     public interface IDeploymentSource : IDependency {
-        string GetRecipe(RecipeRequest request);
+        string GetDeploymentFile(RecipeRequest request);
 
         IList<DeploymentContentType> GetContentTypes();
         IList<DeploymentQuery> GetQueries();
