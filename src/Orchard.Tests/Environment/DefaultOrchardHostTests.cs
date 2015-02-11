@@ -25,6 +25,7 @@ using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 using Orchard.WebApi.Routes;
 using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
+using Orchard.Tasks;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -127,7 +128,7 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubShellSettingsLoader : IShellSettingsManager {
-            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName } };
+            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName, State = TenantState.Running } };
 
             public IEnumerable<ShellSettings> LoadSettings() {
                 return _shellSettings.AsEnumerable();
