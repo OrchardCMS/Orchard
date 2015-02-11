@@ -115,6 +115,7 @@
         <PropertyValue name="AutoFormatOnSemicolon">true</PropertyValue>
         <PropertyValue name="AutoIndentOnTab">false</PropertyValue>
         <PropertyValue name="ColorizeInactiveBlocksDifferently">true</PropertyValue>
+        <PropertyValue name="DisableBrowsingUpToDateCheck">true</PropertyValue>
         <PropertyValue name="DisableErrorReporting">false</PropertyValue>
         <PropertyValue name="EnumerateCommentTasks">false</PropertyValue>
         <PropertyValue name="GroupBrackets">true</PropertyValue>
@@ -122,6 +123,7 @@
         <PropertyValue name="IndentAccessSpecifiers">false</PropertyValue>
         <PropertyValue name="IndentBlockContents">true</PropertyValue>
         <PropertyValue name="IndentBraces">false</PropertyValue>
+        <PropertyValue name="IndentCaseBraces">false</PropertyValue>
         <PropertyValue name="IndentCaseContents">true</PropertyValue>
         <PropertyValue name="IndentCaseLabels">false</PropertyValue>
         <PropertyValue name="IndentGotoLabels">1</PropertyValue>
