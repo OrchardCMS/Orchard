@@ -33,16 +33,16 @@ namespace Orchard.OutputCache.Filters {
         private static readonly ConcurrentDictionary<string, object> _cacheKeyLocks = new ConcurrentDictionary<string, object>();
 
         // Dependencies.
-        protected readonly ICacheManager _cacheManager;
-        protected readonly IOutputCacheStorageProvider _cacheStorageProvider;
-        protected readonly ITagCache _tagCache;
-        protected readonly IDisplayedContentItemHandler _displayedContentItemHandler;
-        protected readonly IWorkContextAccessor _workContextAccessor;
-        protected readonly IThemeManager _themeManager;
-        protected readonly IClock _clock;
-        protected readonly ICacheService _cacheService;
-        protected readonly ISignals _signals;
-        protected readonly ShellSettings _shellSettings;
+        private readonly ICacheManager _cacheManager;
+        private readonly IOutputCacheStorageProvider _cacheStorageProvider;
+        private readonly ITagCache _tagCache;
+        private readonly IDisplayedContentItemHandler _displayedContentItemHandler;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IThemeManager _themeManager;
+        private readonly IClock _clock;
+        private readonly ICacheService _cacheService;
+        private readonly ISignals _signals;
+        private readonly ShellSettings _shellSettings;
         public ILogger Logger { get; set; }
 
         public OutputCacheFilter(
