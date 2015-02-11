@@ -78,13 +78,12 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="xmldiffpatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\XmlDiffPatch\xmldiffpatch.dll</HintPath>
+      <HintPath>..\..\..\..\lib\xmldiffpatch\xmldiffpatch.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
-    <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
     <Content Include="Scripts\audittrail-recyclebin.js" />
     <Content Include="Scripts\audittrail-expando.js" />
