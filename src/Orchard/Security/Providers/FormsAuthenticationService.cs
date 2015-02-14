@@ -125,7 +125,7 @@ namespace Orchard.Security.Providers {
 
             int userId;
             if (!int.TryParse(userDataId, out userId)) {
-                Logger.Fatal("User id not a parsable integer");
+                Logger.Error("User id not a parsable integer");
                 return null;
             }
 
