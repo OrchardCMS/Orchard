@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -104,11 +105,14 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            part.LayoutState = context.Data.Element(part.PartDefinition.Name).El("LayoutState");
-            _layoutManager.Importing(new ImportLayoutContext {
-                Layout = part,
-                Session = new ImportContentContextWrapper(context)
+            context.ImportChildEl(part.PartDefinition.Name, "LayoutState", s => {
+                part.LayoutState = s;
+                _layoutManager.Importing(new ImportLayoutContext {
+                    Layout = part,
+                    Session = new ImportContentContextWrapper(context)
+                });
             });
+         
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 
