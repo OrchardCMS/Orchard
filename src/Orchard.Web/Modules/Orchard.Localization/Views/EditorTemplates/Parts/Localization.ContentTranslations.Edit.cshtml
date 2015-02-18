@@ -28,33 +28,36 @@
         }
 
         @if (Model.ContentItem.ContentItem.Id > 0) {
-            //if (Model.MasterContentItem == null) {
+            if (string.IsNullOrEmpty(Model.SelectedCulture)) {
+                @T("This content currently has no culture associated to it, please select a culture to associate to this piece of content: {0}",
+                    BuildSelectedCultureList(
+                        Html.FieldIdFor(m => m.SelectedCulture),
+                        Html.FieldNameFor(m => m.SelectedCulture),
+                        Model.SiteCultures,
+                        Model.SelectedCulture))
+            }
+            else {
                 @T("This is the <em>{0}</em> variation of the content",
                     Html.Encode(Model.SelectedCulture))
-            @*}
-            else {
-                @T("This is the <em>{0}</em> variation of {1}",
-                    Html.Encode(Model.SelectedCulture),
-                    Html.ItemEditLink(Model.MasterContentItem))
-            }*@
 
-            if (Model.ContentLocalizations.Localizations.Any()) {
-                <dl class="content-localization">
-                    <dt>@T("Other translations:")</dt>
-                    <dd class="content-localizations">
-                        @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
-                            Html.ItemEditLink(c.Culture.Culture, c), "localizations")
-                    </dd>
-                </dl>
+                if (Model.ContentLocalizations.Localizations.Any()) {
+                    <dl class="content-localization">
+                        <dt>@T("Other translations:")</dt>
+                        <dd class="content-localizations">
+                            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) =>
+                                Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+                        </dd>
+                    </dl>
+                }
+
+                if (Model.MissingCultures.Any()) {
+                    var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
+
+                    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new {area = "Orchard.Localization", id = contentItemId}, null)</div>
+                }
+
+                @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
             }
-
-            if (Model.MissingCultures.Any()) {
-                var contentItemId = Model.MasterContentItem != null ? Model.MasterContentItem.Id : Model.ContentItem.Id;
-
-                <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = contentItemId }, null)</div>
-            }
-
-            @Html.Hidden(Html.FieldNameFor(m => m.SelectedCulture), Model.SelectedCulture)
         }
     </div>
 </fieldset>
