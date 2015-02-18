@@ -34,7 +34,10 @@ namespace Orchard.Localization.Selectors {
                 path = context.Request.Path;
             }
 
-            var content = GetByPath(path.TrimStart('/'));
+            var appPath = context.Request.ApplicationPath ?? "/";
+            var requestUrl = (path.StartsWith(appPath) ? path.Substring(appPath.Length) : path).TrimStart('/');
+
+            var content = GetByPath(requestUrl);
             if (content != null) {
                 return new CultureSelectorResult { Priority = -2, CultureName = _localizationService.Value.GetContentCulture(content) };
             }
