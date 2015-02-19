@@ -9,7 +9,7 @@ using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Services {
     public class ElementManager : Component, IElementManager {
-        private readonly Lazy<IEnumerable<IElementHarvester>> _elementHarvesters;
+        private readonly Lazy<IEnumerable<ElementHarvester>> _elementHarvesters;
         private readonly ICacheManager _cacheManager;
         private readonly Lazy<IEnumerable<IElementDriver>> _drivers;
         private readonly Lazy<IEnumerable<ICategoryProvider>> _categoryProviders;
@@ -18,7 +18,7 @@ namespace Orchard.Layouts.Services {
         private readonly IElementEventHandler _elementEventHandler;
 
         public ElementManager(
-            Lazy<IEnumerable<IElementHarvester>> elementHarvesters,
+            Lazy<IEnumerable<ElementHarvester>> elementHarvesters,
             ICacheManager cacheManager,
             Lazy<IEnumerable<IElementDriver>> drivers,
             Lazy<IEnumerable<ICategoryProvider>> categoryProviders,
@@ -84,29 +84,29 @@ namespace Orchard.Layouts.Services {
             return element;
         }
 
-        public ElementDescriptor GetElementDescriptorByType<T>(DescribeElementsContext context) where T : IElement {
+        public ElementDescriptor GetElementDescriptorByType<T>(DescribeElementsContext context) where T : Element {
             return GetElementDescriptorByTypeName(context, typeof(T).FullName);
         }
 
-        public ElementDescriptor GetElementDescriptorByType<T>() where T : IElement {
+        public ElementDescriptor GetElementDescriptorByType<T>() where T : Element {
             return GetElementDescriptorByTypeName(DescribeElementsContext.Empty, typeof(T).FullName);
         }
 
-        public IElement ActivateElement(ElementDescriptor descriptor, ActivateElementArgs args = null) {
-            return _factory.Activate(descriptor, args);
+        public Element ActivateElement(ElementDescriptor descriptor, Action<Element> initialize = null) {
+            return _factory.Activate(descriptor, initialize);
         }
 
-        public T ActivateElement<T>(ElementDescriptor descriptor, ActivateElementArgs args = null) where T : IElement {
-            return (T)ActivateElement(descriptor, args);
+        public T ActivateElement<T>(ElementDescriptor descriptor, Action<T> initialize = null) where T : Element {
+            return _factory.Activate(descriptor, initialize);
         }
 
-        public T ActivateElement<T>() where T : IElement {
+        public T ActivateElement<T>(Action<T> initialize = null) where T : Element {
             var context = DescribeElementsContext.Empty;
             var descriptor = GetElementDescriptorByType<T>(context);
-            return ActivateElement<T>(descriptor);
+            return ActivateElement<T>(descriptor, initialize);
         }
 
-        public IEnumerable<IElementDriver> GetDrivers<TElement>() where TElement : IElement {
+        public IEnumerable<IElementDriver> GetDrivers<TElement>() where TElement : Element {
             return GetDrivers(typeof(TElement));
         }
 
@@ -114,7 +114,7 @@ namespace Orchard.Layouts.Services {
             return descriptor.GetDrivers();
         }
 
-        public IEnumerable<IElementDriver> GetDrivers(IElement element) {
+        public IEnumerable<IElementDriver> GetDrivers(Element element) {
             return GetDrivers(element.GetType());
         }
 
@@ -153,23 +153,23 @@ namespace Orchard.Layouts.Services {
             }));
         }
 
-        public void Exporting(IEnumerable<IElement> elements, ExportLayoutContext context) {
+        public void Exporting(IEnumerable<Element> elements, ExportLayoutContext context) {
             InvokeDriver(elements, (driver, element) => {
                 var exportElementContext = new ExportElementContext {
                     Layout = context.Layout,
                     Element = element
                 };
                 driver.Exporting(exportElementContext);
-                element.ExportableState = new StateDictionary(exportElementContext.ExportableState);
+                element.ExportableData = new ElementDataDictionary(exportElementContext.ExportableData);
             });
         }
 
-        public void Importing(IEnumerable<IElement> elements, ImportLayoutContext context) {
+        public void Importing(IEnumerable<Element> elements, ImportLayoutContext context) {
             InvokeDriver(elements, (driver, element) => {
                 var importElementContext = new ImportElementContext {
                     Layout = context.Layout,
                     Element = element,
-                    ExportableState = element.ExportableState,
+                    ExportableData = element.ExportableData,
                     Session = context.Session
                 };
                 driver.Importing(importElementContext);
@@ -188,7 +188,7 @@ namespace Orchard.Layouts.Services {
             return dictionary;
         }
 
-        private void InvokeDriver(IEnumerable<IElement> elements, Action<IElementDriver, IElement> driverAction) {
+        private void InvokeDriver(IEnumerable<Element> elements, Action<IElementDriver, Element> driverAction) {
             foreach (var element in elements) {
                 var drivers = GetDrivers(element.Descriptor);
                 foreach (var driver in drivers) {

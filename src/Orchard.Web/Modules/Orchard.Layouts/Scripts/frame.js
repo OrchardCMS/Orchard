@@ -3,6 +3,11 @@
         var self = this;
         this.element = element;
         this.frame = element.get(0);
+        this.element.data("frame", this);
+
+        this.frame.triggerEvent = function(eventName, data) {
+            self.element.trigger(eventName, data);
+        };
 
         this.getBody = function () {
             return this.frame.contentWindow.document.body;
@@ -34,8 +39,12 @@
         };
 
         this.autoHeight = function () {
-            this.frame.height = "50px"; // forces the frame height to decrease if the new height is smaller than the previous height.
             var newHeight = this.getBody().scrollHeight;
+
+            if (this.frame.height == newHeight)
+                return;
+
+            this.frame.height = "50px"; // forces the frame height to decrease if the new height is smaller than the previous height.
             this.frame.height = (newHeight) + "px";
         };
 

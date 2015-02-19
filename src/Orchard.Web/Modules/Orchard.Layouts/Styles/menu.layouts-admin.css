@@ -5,3 +5,11 @@
     .navicon-elements:hover {
         background-position: 0 -30px !important;
     }
+
+.navicon-layouts {
+    background-image: url(menu.layouts.png) !important;
+}
+
+    .navicon-layouts:hover {
+        background-position: 0 -30px !important;
+    }

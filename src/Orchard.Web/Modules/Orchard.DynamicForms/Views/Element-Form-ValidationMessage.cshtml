@@ -1,6 +1,0 @@
-﻿@using Orchard.Layouts.Helpers
-@{
-    var forFieldName = (string) Model.ValidationMessageFor;
-    var commonAttributes = (IDictionary<string, object>) TagBuilderExtensions.GetCommonElementAttributes(Model);
-}
-@Html.ValidationMessage(forFieldName, commonAttributes)

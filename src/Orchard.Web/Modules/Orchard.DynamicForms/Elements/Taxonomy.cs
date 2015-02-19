@@ -4,33 +4,33 @@ namespace Orchard.DynamicForms.Elements {
     public class Taxonomy : LabeledFormElement {
         
         public string InputType {
-            get { return State.Get("InputType", "SelectList"); }
-            set { State["InputType"] = value; }
+            get { return this.Retrieve(x => x.InputType, ()=> "SelectList"); }
+            set { this.Store(x => x.InputType, value); }
         }
 
         public int? TaxonomyId {
-            get { return State.Get("TaxonomyId").ToInt32(); }
-            set { State["TaxonomyId"] = value.ToString(); }
+            get { return this.Retrieve(x => x.TaxonomyId); }
+            set { this.Store(x => x.TaxonomyId, value); }
         }
 
         public string SortOrder {
-            get { return State.Get("SortOrder"); }
-            set { State["SortOrder"] = value; }
+            get { return this.Retrieve(x => x.SortOrder); }
+            set { this.Store(x => x.SortOrder, value); }
         }
 
         public string OptionLabel {
-            get { return State.Get("OptionLabel"); }
-            set { State["OptionLabel"] = value; }
+            get { return this.Retrieve(x => x.OptionLabel); }
+            set { this.Store(x => x.OptionLabel, value); }
         }
 
         public string TextExpression {
-            get { return State.Get("TextExpression"); }
-            set { State["TextExpression"] = value; }
+            get { return this.Retrieve(x => x.TextExpression); }
+            set { this.Store(x => x.TextExpression, value); }
         }
 
         public string ValueExpression {
-            get { return State.Get("ValueExpression"); }
-            set { State["ValueExpression"] = value; }
+            get { return this.Retrieve(x => x.ValueExpression); }
+            set { this.Store(x => x.ValueExpression, value); }
         }
     }
 }

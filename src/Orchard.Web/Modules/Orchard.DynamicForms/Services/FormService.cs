@@ -15,7 +15,6 @@ using Orchard.DynamicForms.Helpers;
 using Orchard.DynamicForms.Models;
 using Orchard.DynamicForms.Services.Models;
 using Orchard.DynamicForms.ViewModels;
-using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
@@ -65,7 +64,7 @@ namespace Orchard.DynamicForms.Services {
         }
 
         public Form FindForm(LayoutPart layoutPart, string formName = null) {
-            var elements = _serializer.Deserialize(layoutPart.LayoutState, new DescribeElementsContext { Content = layoutPart });
+            var elements = _serializer.Deserialize(layoutPart.LayoutData, new DescribeElementsContext { Content = layoutPart });
             var forms = elements.Flatten().Where(x => x is Form).Cast<Form>();
             return String.IsNullOrWhiteSpace(formName) ? forms.FirstOrDefault() : forms.FirstOrDefault(x => x.Name == formName);
         }
@@ -255,7 +254,7 @@ namespace Orchard.DynamicForms.Services {
                 ReadElementValues(element, context);
 
                 var value = context.Output[element.Name];
-                var bindingSettings = element.State.GetModel<FormBindingSettings>(null);
+                var bindingSettings = element.Data.GetModel<FormBindingSettings>(null);
 
                 if (bindingSettings != null) {
                     foreach (var partBindingSettings in bindingSettings.Parts) {
@@ -320,7 +319,7 @@ namespace Orchard.DynamicForms.Services {
             foreach (var binding in partBindingSettings.Bindings.Where(x => x.Enabled)) {
                 var localBinding = binding;
                 foreach (var partBinding in partBindings.Where(x => x.Name == localBinding.Name)) {
-                    partBinding.Setter.DynamicInvoke(part, value);
+                    partBinding.Setter.DynamicInvoke(contentItem, part, value);
                 }
             }
         }
@@ -358,7 +357,7 @@ namespace Orchard.DynamicForms.Services {
             foreach (var binding in fieldBindingSettings.Bindings.Where(x => x.Enabled)) {
                 var localBinding = binding;
                 foreach (var fieldBinding in fieldBindings.Where(x => x.Name == localBinding.Name)) {
-                    fieldBinding.Setter.DynamicInvoke(field, value);
+                    fieldBinding.Setter.DynamicInvoke(contentItem, field, value);
                 }
             }
         }

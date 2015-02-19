@@ -8,7 +8,7 @@ namespace Orchard.Layouts.Framework.Drivers {
             EditorResult = new EditorResult();
         }
 
-        public IElement Element { get; set; }
+        public Element Element { get; set; }
         public dynamic ShapeFactory { get; set; }
         public IValueProvider ValueProvider { get; set; }
         public IUpdateModel Updater { get; set; }

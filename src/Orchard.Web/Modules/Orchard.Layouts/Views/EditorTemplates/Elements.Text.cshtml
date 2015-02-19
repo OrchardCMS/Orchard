@@ -1,5 +1,8 @@
 ﻿@model Orchard.Layouts.ViewModels.TextEditorViewModel
-<fieldset>
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
     @Html.LabelFor(m => m.Text, T("Body"))
-    @Display.Body_Editor(EditorFlavor: Model.Flavor, Text: Model.Text)
+    @Display.Body_Editor(EditorFlavor: Model.Flavor, Text: Model.Text, AutoFocus: true)
 </fieldset>

@@ -3,8 +3,9 @@ using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Services {
     public interface IElementFactory : IDependency {
-        IElement Activate(Type elementType);
-        T Activate<T>() where T:IElement;
-        IElement Activate(ElementDescriptor descriptor, ActivateElementArgs args = null);
+        Element Activate(Type elementType, Action<Element> initialize = null);
+        T Activate<T>(Action<T> initialize = null) where T:Element;
+        Element Activate(ElementDescriptor descriptor, Action<Element> initialize = null);
+        T Activate<T>(ElementDescriptor descriptor, Action<T> initialize = null) where T:Element;
     }
 }

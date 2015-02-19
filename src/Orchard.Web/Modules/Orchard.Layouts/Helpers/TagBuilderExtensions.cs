@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Settings;
 
 namespace Orchard.Layouts.Helpers {
     public static class TagBuilderExtensions {
@@ -15,26 +14,24 @@ namespace Orchard.Layouts.Helpers {
         }
 
         public static IDictionary<string, object> GetCommonElementAttributes(dynamic shape) {
-            var element = (IElement)shape.Element;
-            var settings = element.State ?? new StateDictionary();
-            var commonSettings = settings.GetModel<CommonElementSettings>();
-            var id = commonSettings.Id;
-            var cssClass = commonSettings.CssClass;
-            var inlineStyle = commonSettings.InlineStyle;
+            var element = (Element)shape.Element;
+            var htmlId = element.HtmlId;
+            var htmlClass = element.HtmlClass;
+            var htmlStyle = element.HtmlStyle;
             var attributes = new Dictionary<string, object>();
 
-            if (!String.IsNullOrWhiteSpace(id)) {
-                var tokenize = (Func<string>)shape.TokenizeId;
+            if (!String.IsNullOrWhiteSpace(htmlId)) {
+                var tokenize = (Func<string>)shape.TokenizeHtmlId;
                 attributes["id"] = tokenize();
             }
 
-            if (!String.IsNullOrWhiteSpace(inlineStyle)) {
-                var tokenize = (Func<string>)shape.TokenizeInlineStyle;
+            if (!String.IsNullOrWhiteSpace(htmlStyle)) {
+                var tokenize = (Func<string>)shape.TokenizeHtmlStyle;
                 attributes["style"] = Regex.Replace(tokenize(), @"(?:\r\n|[\r\n])", "");
             }
 
-            if (!String.IsNullOrWhiteSpace(cssClass)) {
-                var tokenize = (Func<string>)shape.TokenizeCssClass;
+            if (!String.IsNullOrWhiteSpace(htmlClass)) {
+                var tokenize = (Func<string>)shape.TokenizeHtmlClass;
                 attributes["class"] = tokenize();
             }
 

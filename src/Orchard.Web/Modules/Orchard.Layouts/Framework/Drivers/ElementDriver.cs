@@ -4,7 +4,7 @@ using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Framework.Drivers {
-    public abstract class ElementDriver<TElement> : Component, IElementDriver where TElement: IElement {
+    public abstract class ElementDriver<TElement> : Component, IElementDriver where TElement: Element {
         public virtual int Priority {
             get { return 0; }
         }

@@ -6,15 +6,9 @@
         @Html.Hint(T("Content items of this type will be usable as templates for other layouts."))
     </div>
     <div>
-        @Html.LabelFor(m => m.Flavor, T("Text Flavor"))
-        @Html.EditorFor(m => m.Flavor)
-        @Html.ValidationMessageFor(m => m.Flavor)
-        @Html.Hint(T("This flavor will be used when editing text-like elements (Such as the Text element)."))
-    </div>
-    <div>
-        @Html.LabelFor(m => m.DefaultLayoutState, T("Default Layout State"))
-        @Html.TextAreaFor(m => m.DefaultLayoutState, 25, 100, new { @class = "text large" })
-        @Html.ValidationMessageFor(m => m.DefaultLayoutState)
-        @Html.Hint(T("The default layout state is used when a new content item is created."))
+        @Html.LabelFor(m => m.DefaultLayoutData, T("Default Layout Data"))
+        @Html.TextAreaFor(m => m.DefaultLayoutData, 25, 100, new { @class = "text large" })
+        @Html.ValidationMessageFor(m => m.DefaultLayoutData)
+        @Html.Hint(T("The default layout Data is used when a new content item is created."))
     </div>
 </fieldset>

@@ -553,9 +553,21 @@
     <Content Include="Content\Strobe Media Playback Notice.docx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\lib\console-shim.min.js.map">
+      <DependentUpon>console-shim.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\lib\jstree.min.js.map">
+      <DependentUpon>jstree.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\lib\moment.min.js.map">
+      <DependentUpon>moment.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\lib\MPEG Dash Notice.docx" />
     <Content Include="Styles\cloudmedia-admin-settings.css.map">
       <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
+    </Content>
+    <Content Include="Scripts\lib\underscore.min.js.map">
+      <DependentUpon>underscore.min.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -7,13 +7,13 @@ namespace Orchard.Layouts.Elements {
             get { return "Media"; }
         }
 
-        public override bool HasEditor {
-            get { return true; }
+        public override string ToolboxIcon {
+            get { return "\uf1c5"; }
         }
 
         public int? MediaId {
-            get { return State.Get("MediaId").ToInt32(); }
-            set { State["MediaId"] = value.ToString(); }
+            get { return this.Retrieve(x => x.MediaId); }
+            set { this.Store(x => x.MediaId, value); }
         }
     }
 }

@@ -4,12 +4,12 @@ using Orchard.Layouts.Models;
 namespace Orchard.Layouts.Framework.Drivers {
     public class ImportElementContext {
         public ImportElementContext() {
-            ExportableState = new StateDictionary();
+            ExportableData = new ElementDataDictionary();
         }
 
         public ILayoutAspect Layout { get; set; }
-        public IElement Element { get; set; }
-        public StateDictionary ExportableState { get; set; }
+        public Element Element { get; set; }
+        public ElementDataDictionary ExportableData { get; set; }
         public IContentImportSession Session { get; set; }
     }
 }

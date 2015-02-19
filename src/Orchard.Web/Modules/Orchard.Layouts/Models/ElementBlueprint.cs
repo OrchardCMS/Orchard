@@ -6,6 +6,7 @@ namespace Orchard.Layouts.Models {
         public virtual string BaseElementTypeName { get; set; }
         public virtual string ElementTypeName { get; set; }
         public virtual string ElementDisplayName { get; set; }
+        public virtual string ElementDescription { get; set; }
         public virtual string ElementCategory { get; set; }
 
         [StringLengthMax]

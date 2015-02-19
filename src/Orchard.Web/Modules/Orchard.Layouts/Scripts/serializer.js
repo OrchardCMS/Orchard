@@ -10,7 +10,7 @@
         deserialize: function() {
             var layoutEditor = $(".layout-editor");
             var form = layoutEditor.closest("form");
-            var stateFieldName = layoutEditor.data("state-field-name");
+            var stateFieldName = layoutEditor.data("Data-field-name");
             var stateField = form.find("input[name=\"" + stateFieldName + "\"]");
             return JSON.parse(stateField.val());
         }

@@ -8,7 +8,7 @@
 }
 @Html.ValidationSummary()
 @Html.HiddenFor(m => m.TypeName)
-@Html.HiddenFor(m => m.ElementState)
+@Html.HiddenFor(m => m.ElementData)
 @foreach (var tab in Model.Tabs) {
     var id = String.Format("element-{0}", tab.ToLowerInvariant());
     <div id="@id" class="tab-view">

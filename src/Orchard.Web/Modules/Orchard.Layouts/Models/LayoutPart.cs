@@ -18,9 +18,9 @@ namespace Orchard.Layouts.Models {
             set { this.Store(x => x.SessionKey, value); }
         }
 
-        public string LayoutState {
-            get { return this.Retrieve(x => x.LayoutState, versioned: true); }
-            set { this.Store(x => x.LayoutState, value, versioned: true); }
+        public string LayoutData {
+            get { return RetrieveVersioned<string>("LayoutData") ?? RetrieveVersioned<string>("LayoutState"); } // Temporary code to allow existing sites to still function.
+            set { this.Store(x => x.LayoutData, value, versioned: true); }
         }
 
         public bool IsTemplate {
@@ -30,13 +30,6 @@ namespace Orchard.Layouts.Models {
         public int? TemplateId {
             get { return Retrieve(x => x.TemplateId); }
             set { Store(x => x.TemplateId, value); }
-        }
-
-        public string GetFlavor() {
-            var typePartSettings = Settings.GetModel<LayoutTypePartSettings>();
-            return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
-                       ? typePartSettings.Flavor
-                       : PartDefinition.Settings.GetModel<LayoutPartSettings>().FlavorDefault;
         }
     }
 }

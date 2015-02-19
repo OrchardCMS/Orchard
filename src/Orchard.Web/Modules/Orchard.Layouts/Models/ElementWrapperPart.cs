@@ -7,9 +7,9 @@ namespace Orchard.Layouts.Models {
             get { return TypePartDefinition.Settings.GetModel<ElementWrapperPartSettings>().ElementTypeName; }
         }
 
-        public string ElementState {
-            get { return this.Retrieve(x => x.ElementState, versioned: true, defaultValue: this.Retrieve(x => x.ElementState)); }
-            set { this.Store(x => x.ElementState, value, versioned: true); }
+        public string ElementData {
+            get { return this.Retrieve(x => x.ElementData, versioned: true, defaultValue: this.Retrieve(x => x.ElementData)); }
+            set { this.Store(x => x.ElementData, value, versioned: true); }
         }
     }
 }
