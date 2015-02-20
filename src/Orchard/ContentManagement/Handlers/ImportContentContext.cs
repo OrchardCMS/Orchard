@@ -47,7 +47,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         public void ImportChildEl(string elementName, string childElementName, Action<string> value) {
-            ImportAttribute(elementName, childElementName, value, () => { });
+            ImportChildEl(elementName, childElementName, value, () => { });
         }
 
         public void ImportChildEl(string elementName, string childElementName, Action<string> value, Action empty) {
