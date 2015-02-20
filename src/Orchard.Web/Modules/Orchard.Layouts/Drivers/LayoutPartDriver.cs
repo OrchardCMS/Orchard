@@ -113,7 +113,7 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            context.ImportChildEl(part.PartDefinition.Name, "LayoutState", s => {
+            context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
                 part.LayoutData = s;
                 _layoutManager.Importing(new ImportLayoutContext {
                     Layout = part,
