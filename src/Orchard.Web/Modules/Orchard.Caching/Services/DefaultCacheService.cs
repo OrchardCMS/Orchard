@@ -16,7 +16,7 @@ namespace Orchard.Caching.Services {
             _prefix = shellSettings.Name;
         }
 
-        public object Get<T>(string key) {
+        public object GetObject<T>(string key) {
             return _cacheStorageProvider.Get<T>(BuildFullKey(key));
         }
 

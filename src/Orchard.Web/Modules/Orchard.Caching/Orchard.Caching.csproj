@@ -75,6 +75,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\CachingExtensions.cs" />
     <Compile Include="Services\DefaultCacheService.cs" />
     <Compile Include="Services\DefaultCacheStorageProvider.cs" />
     <Compile Include="Services\ICacheService.cs" />
