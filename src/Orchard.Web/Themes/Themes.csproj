@@ -109,6 +109,7 @@
     <Content Include="TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="TheAdmin\Styles\site.css" />
     <Content Include="TheAdmin\Theme.txt" />
+    <Content Include="SafeMode\Views\Document.cshtml" />
     <Content Include="TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
