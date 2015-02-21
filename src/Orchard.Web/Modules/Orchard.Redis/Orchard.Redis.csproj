@@ -111,6 +111,7 @@
     <Compile Include="Configuration\RedisConnectionProvider.cs" />
     <Compile Include="MessageBus\RedisMessageBusBroker.cs" />
     <Compile Include="OutputCache\RedisOutputCacheStorageProvider.cs" />
+    <Compile Include="OutputCache\RedisTagCache.cs" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
