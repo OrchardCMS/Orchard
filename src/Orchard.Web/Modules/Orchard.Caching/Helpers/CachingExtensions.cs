@@ -1,8 +1,7 @@
 ﻿using System;
-using Orchard.Caching.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Orchard.Caching {
+namespace Orchard.Caching.Services {
     public static class CachingExtensions {
         public static T Get<T>(this ICacheStorageProvider provider, string key) {
             return (T)provider.Get<T>(key);
