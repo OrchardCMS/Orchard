@@ -458,9 +458,11 @@
     <Compile Include="Models\ElementSessionState.cs" />
     <Compile Include="Services\ICurrentControllerAccessor.cs" />
     <Compile Include="Services\IElementEventHandler.cs" />
+    <Compile Include="Services\ILayoutEditorFactory.cs" />
     <Compile Include="Services\ILayoutModelMap.cs" />
     <Compile Include="Services\ILayoutModelMapper.cs" />
     <Compile Include="Services\IObjectStore.cs" />
+    <Compile Include="Services\LayoutEditorFactory.cs" />
     <Compile Include="Services\LayoutModelMapper.cs" />
     <Compile Include="Services\ObjectStore.cs" />
     <Compile Include="Signals.cs" />
