@@ -3,6 +3,8 @@
 @{
     var tagBuilder = TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
 }
-@tagBuilder.StartElement
-@Display(Model.Content)
-@tagBuilder.EndElement
+@if (Model.Content != null) {
+    @tagBuilder.StartElement
+    @Display(Model.Content)
+    @tagBuilder.EndElement
+}

@@ -20,6 +20,12 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void OnDisplaying(ContentPart element, ElementDisplayContext context) {
+            // Content is optional context, so if it's null, we can't render the part element.
+            // This typically only happens when the layout editor is used outside the context of
+            // a content item and still renders the various content part elements as part of the toolbox.
+            if (context.Content == null)
+                return;
+
             var contentItem = context.Content.ContentItem;
             var contentPartName = (string)element.Descriptor.StateBag["ElementTypeName"];
             var contentPart = contentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentPartName);
