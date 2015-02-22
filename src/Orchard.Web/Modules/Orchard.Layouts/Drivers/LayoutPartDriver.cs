@@ -27,12 +27,12 @@ namespace Orchard.Layouts.Drivers {
         private readonly ILayoutModelMapper _mapper;
 
         public LayoutPartDriver(
-            ILayoutSerializer serializer, 
-            IElementDisplay elementDisplay, 
-            IElementManager elementManager, 
+            ILayoutSerializer serializer,
+            IElementDisplay elementDisplay,
+            IElementManager elementManager,
             ILayoutManager layoutManager,
-            Lazy<IContentPartDisplay> contentPartDisplay, 
-            IShapeDisplay shapeDisplay, 
+            Lazy<IContentPartDisplay> contentPartDisplay,
+            IShapeDisplay shapeDisplay,
             ILayoutModelMapper mapper) {
 
             _serializer = serializer;
@@ -65,32 +65,34 @@ namespace Orchard.Layouts.Drivers {
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
                 var viewModel = new LayoutPartViewModel {
-                    Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext { Content = part}).ToJson(),
-                    ConfigurationData = GetConfigurationData(part),
-                    TemplateId = part.TemplateId,
-                    Content = part,
-                    SessionKey = part.SessionKey,
-                    Templates = _layoutManager.GetTemplates().Where(x => x.Id != part.Id).ToArray()
+                    LayoutEditor = new LayoutEditor {
+                        Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext { Content = part }).ToJson(),
+                        ConfigurationData = GetConfigurationData(part),
+                        TemplateId = part.TemplateId,
+                        Content = part,
+                        SessionKey = part.SessionKey,
+                        Templates = _layoutManager.GetTemplates().Where(x => x.Id != part.Id).ToArray()
+                    }
                 };
 
                 if (updater != null) {
                     updater.TryUpdateModel(viewModel, Prefix, null, new[] { "Part", "Templates" });
                     var describeContext = new DescribeElementsContext { Content = part };
-                    var elementInstances = _mapper.ToLayoutModel(viewModel.Data, describeContext).ToArray();
-                    var removedElementInstances = _serializer.Deserialize(viewModel.Trash, describeContext).ToArray();
+                    var elementInstances = _mapper.ToLayoutModel(viewModel.LayoutEditor.Data, describeContext).ToArray();
+                    var removedElementInstances = _serializer.Deserialize(viewModel.LayoutEditor.Trash, describeContext).ToArray();
                     var context = new LayoutSavingContext {
                         Content = part,
                         Updater = updater,
                         Elements = elementInstances,
                         RemovedElements = removedElementInstances
                     };
-                    
+
                     _elementManager.Saving(context);
                     _elementManager.Removing(context);
 
                     part.LayoutData = _serializer.Serialize(elementInstances);
-                    part.TemplateId = viewModel.TemplateId;
-                    part.SessionKey = viewModel.SessionKey;
+                    part.TemplateId = viewModel.LayoutEditor.TemplateId;
+                    part.SessionKey = viewModel.LayoutEditor.SessionKey;
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);
@@ -120,7 +122,7 @@ namespace Orchard.Layouts.Drivers {
                     Session = new ImportContentContextWrapper(context)
                 });
             });
-         
+
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 
@@ -151,7 +153,7 @@ namespace Orchard.Layouts.Drivers {
 
                             // If the element has no editor then the toolbox will add the element straight to to designer when being dragged & dropped,
                             // so we'll want to present the user with a prerendered element.
-                            html = descriptor.EnableEditorDialog ? "" : RenderElement(element, new DescribeElementsContext { Content = part})
+                            html = descriptor.EnableEditorDialog ? "" : RenderElement(element, new DescribeElementsContext { Content = part })
                         };
                     })
                 })

@@ -377,6 +377,7 @@
     <Content Include="Views\LayoutEditor.Template.Properties.cshtml" />
     <Content Include="Views\LayoutEditor.Template.Children.cshtml" />
     <Content Include="Styles\LayoutEditor.css.bundle" />
+    <Content Include="Views\EditorTemplates\LayoutEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -505,6 +506,7 @@
     <Compile Include="ViewModels\EditElementBlueprintViewModel.cs" />
     <Compile Include="ViewModels\ElementWrapperPartViewModel.cs" />
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
+    <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
