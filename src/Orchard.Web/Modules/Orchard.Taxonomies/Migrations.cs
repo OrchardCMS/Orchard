@@ -18,6 +18,8 @@ namespace Orchard.Taxonomies {
                 .Column<int>("Count")
                 .Column<int>("Weight")
                 .Column<bool>("Selectable")
+            ).AlterTable("TermPartRecord", table => table
+                .CreateIndex("IDX_Path", "Path")
             );
 
             SchemaBuilder.CreateTable("TermContentItem", table => table
@@ -67,6 +69,14 @@ namespace Orchard.Taxonomies {
                );
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("TermPartRecord", table => table
+                .CreateIndex("IDX_Path", "Path")
+            );
+
+            return 4;
         }
     }
 }
