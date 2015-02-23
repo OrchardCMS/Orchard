@@ -871,7 +871,6 @@ var LayoutEditor;
 
         // This function will be overwritten by the Content directive.
         this.setHtml = function (html) {
-            html = decodeURIComponent(html.replace(/\+/g, "%20"));
             this.html = html;
             this.htmlUnsafe = html;
         }

@@ -270,7 +270,7 @@ angular
                                         $scope.$root.editElement(receivedElement).then(function (args) {
                                             if (!args.cancel) {
                                                 receivedElement.data = decodeURIComponent(args.element.data);
-                                                receivedElement.setHtml(args.element.html);
+                                                receivedElement.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
                                             }
                                             $timeout(function () {
                                                 if (!!args.cancel)
@@ -634,7 +634,6 @@ angular
 
                 // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
                 $scope.element.setHtml = function (html) {
-                    html = decodeURIComponent(html.replace(/\+/g, "%20"));
                     $scope.element.html = html;
                     $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                 };

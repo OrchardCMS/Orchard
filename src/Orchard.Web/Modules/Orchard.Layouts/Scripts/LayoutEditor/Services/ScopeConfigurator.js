@@ -239,7 +239,7 @@
                                         $scope.$root.editElement(receivedElement).then(function (args) {
                                             if (!args.cancel) {
                                                 receivedElement.data = decodeURIComponent(args.element.data);
-                                                receivedElement.setHtml(args.element.html);
+                                                receivedElement.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
                                             }
                                             $timeout(function () {
                                                 if (!!args.cancel)

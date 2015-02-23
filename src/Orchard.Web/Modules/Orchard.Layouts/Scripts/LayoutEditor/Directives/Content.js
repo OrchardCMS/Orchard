@@ -23,7 +23,6 @@
 
                 // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
                 $scope.element.setHtml = function (html) {
-                    html = decodeURIComponent(html.replace(/\+/g, "%20"));
                     $scope.element.html = html;
                     $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                 };
