@@ -10,6 +10,7 @@ namespace Orchard.ImportExport.ViewModels {
         public string DeploymentDescription { get; set; }
         public bool Metadata { get; set; }
         public bool Data { get; set; }
+        public bool Files { get; set; }
         public bool UsePredefinedQuery { get; set; }
         public string DataImportChoice { get; set; }
         public string FilterChoice { get; set; }

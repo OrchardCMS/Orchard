@@ -73,6 +73,7 @@ namespace Orchard.ImportExport.Drivers {
                 ContentItem = part.ContentItem,
                 Metadata = part.IncludeMetadata,
                 Data = part.IncludeData,
+                Files = part.IncludeFiles,
                 ContentTypes = contentTypes,
                 SelectedContentTypes = part.ContentTypes,
                 CustomSteps = new List<CustomStepEntry>(),
@@ -127,6 +128,7 @@ namespace Orchard.ImportExport.Drivers {
             //}
             part.IncludeMetadata = viewModel.Metadata;
             part.IncludeData = viewModel.Data;
+            part.IncludeFiles = viewModel.Files;
             part.Filter = (FilterOptions) Enum.Parse(typeof (FilterOptions), viewModel.FilterChoice);
             part.VersionHistoryOption = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice);
             part.ContentTypes = viewModel.SelectedContentTypes.ToList();
