@@ -54,7 +54,7 @@ namespace Orchard.Taxonomies {
                    .WithSetting("Stereotype", "MenuItem")
                );
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
