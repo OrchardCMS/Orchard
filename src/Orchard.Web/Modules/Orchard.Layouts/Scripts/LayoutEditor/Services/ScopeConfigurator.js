@@ -42,7 +42,7 @@
                     if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 46) { // Del
                         $scope.delete(element);
                         handled = true;
-                    } else if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 32) { // Space
+                    } else if (!e.ctrlKey && !e.shiftKey && !e.altKey && (e.which == 32 || e.which == 27)) { // Space or Esc
                         $element.find(".layout-panel-action-properties").first().click();
                         handled = true;
                     }

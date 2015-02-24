@@ -2,26 +2,27 @@
 /// <reference path="typings/jqueryui.d.ts" />
 var Orchard;
 (function (Orchard) {
+    var Azure;
     (function (Azure) {
+        var MediaServices;
         (function (MediaServices) {
+            var AssetEdit;
             (function (AssetEdit) {
+                var Video;
                 (function (Video) {
                     $(function () {
                         var treeView = $("#asset-files-treeview");
-
                         treeView.jstree({
                             "core": {
                                 "animation": 0,
                                 "check_callback": true,
-                                "themes": { "stripes": true }
+                                "themes": { "stripes": true },
                             },
                             "plugins": ["state", "wholerow"]
                         });
-
                         $(".expand-all").on("click", function (e) {
                             treeView.jstree('open_all');
                         });
-
                         $(".collapse-all").on("click", function (e) {
                             treeView.jstree('close_all');
                         });
@@ -33,13 +34,9 @@ var Orchard;
                         //    }
                         //});
                     });
-                })(AssetEdit.Video || (AssetEdit.Video = {}));
-                var Video = AssetEdit.Video;
-            })(MediaServices.AssetEdit || (MediaServices.AssetEdit = {}));
-            var AssetEdit = MediaServices.AssetEdit;
-        })(Azure.MediaServices || (Azure.MediaServices = {}));
-        var MediaServices = Azure.MediaServices;
-    })(Orchard.Azure || (Orchard.Azure = {}));
-    var Azure = Orchard.Azure;
+                })(Video = AssetEdit.Video || (AssetEdit.Video = {}));
+            })(AssetEdit = MediaServices.AssetEdit || (MediaServices.AssetEdit = {}));
+        })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
+    })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
 //# sourceMappingURL=cloudmedia-edit-asset-video.js.map

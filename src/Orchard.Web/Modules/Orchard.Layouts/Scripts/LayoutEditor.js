@@ -73,7 +73,7 @@ angular
                     if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 46) { // Del
                         $scope.delete(element);
                         handled = true;
-                    } else if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 32) { // Space
+                    } else if (!e.ctrlKey && !e.shiftKey && !e.altKey && (e.which == 32 || e.which == 27)) { // Space or Esc
                         $element.find(".layout-panel-action-properties").first().click();
                         handled = true;
                     }
@@ -701,6 +701,7 @@ angular
                             at: attrs.orcLayoutPopupAt || "left bottom+4px",
                             of: trigger
                         });
+                        popup.find("input").first().focus();
                     }
                 });
                 popup.click(function (e) {
@@ -708,6 +709,11 @@ angular
                 });
                 parentElement.click(function (e) {
                     popup.hide();
+                });
+                popup.keydown(function (e) {
+                    if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 27) // Esc
+                        popup.hide();
+                    e.stopPropagation();
                 });
             }
         };

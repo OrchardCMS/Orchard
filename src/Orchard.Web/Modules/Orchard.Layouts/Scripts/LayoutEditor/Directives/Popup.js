@@ -15,6 +15,7 @@
                             at: attrs.orcLayoutPopupAt || "left bottom+4px",
                             of: trigger
                         });
+                        popup.find("input").first().focus();
                     }
                 });
                 popup.click(function (e) {
@@ -22,6 +23,11 @@
                 });
                 parentElement.click(function (e) {
                     popup.hide();
+                });
+                popup.keydown(function (e) {
+                    if (!e.ctrlKey && !e.shiftKey && !e.altKey && e.which == 27) // Esc
+                        popup.hide();
+                    e.stopPropagation();
                 });
             }
         };
