@@ -157,7 +157,7 @@ namespace Orchard.ImportExport.Controllers {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ConfigureDeployments, T("Not allowed to configure deployments.")))
                 return new HttpUnauthorizedResult();
 
-            var deploymentFile = _subscriptionService.GetDeploymentFile(id, executionId);
+            var deploymentFile = _subscriptionService.GetDeploymentFile(id, executionId ?? Guid.NewGuid().ToString("n"));
 
             if (string.IsNullOrEmpty(deploymentFile))
                 return HttpNotFound();

@@ -153,6 +153,7 @@ namespace Orchard.ImportExport.Services {
                 ContentTypes = subscription.ContentTypes,
                 IncludeMetadata = subscription.IncludeMetadata,
                 IncludeData = subscription.IncludeData,
+                IncludeFiles = subscription.IncludeFiles,
                 DeployChangesAfterUtc =
                     (subscription.Filter == FilterOptions.ChangesSinceLastImport)
                         ? subscription.DeployedChangesToUtc : null,
@@ -202,6 +203,7 @@ namespace Orchard.ImportExport.Services {
                         .Export(request.ContentTypes, exportingItems, new ExportOptions {
                             ExportData = exportingItems.Any(),
                             ExportMetadata = request.IncludeMetadata,
+                            ExportFiles = request.IncludeFiles,
                             VersionHistoryOptions = request.VersionHistoryOption,
                             CustomSteps = exportSteps
                         });
