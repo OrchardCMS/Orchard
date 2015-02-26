@@ -135,41 +135,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery.textarearesizer.min.js.map">
-      <DependentUpon>jquery.textarearesizer.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Converter.min.js.map">
-      <DependentUpon>Markdown.Converter.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Editor.min.js.map">
-      <DependentUpon>Markdown.Editor.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Markdown.Sanitizer.min.js.map">
-      <DependentUpon>Markdown.Sanitizer.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown-media-library.min.js.map">
-      <DependentUpon>orchard-markdown-media-library.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown-media-picker.min.js.map">
-      <DependentUpon>orchard-markdown-media-picker.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\orchard-markdown.min.js.map">
-      <DependentUpon>orchard-markdown.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Markdown.MarkdownSiteSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>

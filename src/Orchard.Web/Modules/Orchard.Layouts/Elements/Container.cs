@@ -2,10 +2,10 @@
 using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Elements {
-    public abstract class Container : Element, IContainer {
+    public abstract class Container : Element {
         protected Container() {
-            Elements = new List<IElement>();
+            Elements = new List<Element>();
         }
-        public IList<IElement> Elements { get; set; }
+        public IList<Element> Elements { get; set; }
     }
 }

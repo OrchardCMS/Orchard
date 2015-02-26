@@ -35,13 +35,17 @@ namespace Orchard.Tasks {
 
         public void Sweep() {
             foreach(var task in _tasks) {
+                var taskName = task.GetType().FullName;
+
                 try {
+                    Logger.Information("Start processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
                     _transactionManager.RequireNew();
                     task.Sweep();
+                    Logger.Information("Finished processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
                 }
                 catch (Exception e) {
                     _transactionManager.Cancel();
-                    Logger.Error(e, "Error while processing background task on tenant '{0}'.", _shellName);
+                    Logger.Error(e, "Error while processing background task \"{0}\" on tenant \"{1}\".", taskName, _shellName);
                 }
             }
         }

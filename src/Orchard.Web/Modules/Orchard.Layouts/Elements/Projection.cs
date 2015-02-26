@@ -1,59 +1,55 @@
 ﻿using System;
-using System.Globalization;
+using Orchard.ContentManagement;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.Layouts.Elements {
     public class Projection : Element {
 
-        public override bool HasEditor {
-            get { return true; }
-        }
-
         public override string Category {
             get { return "Content"; }
         }
 
         public string QueryLayoutId {
-            get { return State.Get("QueryLayoutId"); }
-            set { State["QueryLayoutId"] = value; }
+            get { return ElementDataHelper.Retrieve(this, x => x.QueryLayoutId); }
+            set { this.Store(x => x.QueryLayoutId, value); }
         }
 
         public int? QueryId {
             get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : QueryLayoutId.Split(new[] { ';' })[0].ToInt32();
+                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[0]);
             }
         }
 
         public int? LayoutId {
             get {
-                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : QueryLayoutId.Split(new[] { ';' })[1].ToInt32();
+                return String.IsNullOrWhiteSpace(QueryLayoutId) ? null : XmlHelper.Parse<int?>(QueryLayoutId.Split(new[] { ';' })[1]);
             }
         }
 
         public int ItemsToDisplay {
-            get { return State.Get("ItemsToDisplay").ToInt32().GetValueOrDefault(); }
-            set { State["ItemsToDisplay"] = value.ToString(CultureInfo.InvariantCulture); }
+            get { return ElementDataHelper.Retrieve(this, x => x.ItemsToDisplay); }
+            set { this.Store(x => x.ItemsToDisplay, value); }
         }
 
         public int Skip {
-            get { return State.Get("Skip").ToInt32().GetValueOrDefault(); }
-            set { State["Skip"] = value.ToString(CultureInfo.InvariantCulture); }
+            get { return ElementDataHelper.Retrieve(this, x => x.Skip); }
+            set { this.Store(x => x.Skip, value); }
         }
 
         public int MaxItems {
-            get { return State.Get("MaxItems").ToInt32().GetValueOrDefault(); }
-            set { State["MaxItems"] = value.ToString(CultureInfo.InvariantCulture); }
+            get { return ElementDataHelper.Retrieve(this, x => x.MaxItems); }
+            set { this.Store(x => x.MaxItems, value); }
         }
 
         public string PagerSuffix {
-            get { return State.Get("PagerSuffix"); }
-            set { State["PagerSuffix"] = value; }
+            get { return ElementDataHelper.Retrieve(this, x => x.PagerSuffix); }
+            set { this.Store(x => x.PagerSuffix, value); }
         }
 
         public bool DisplayPager {
-            get { return State.Get("DisplayPager").ToBoolean().GetValueOrDefault(); }
-            set { State["DisplayPager"] = value.ToString(CultureInfo.InvariantCulture); }
+            get { return ElementDataHelper.Retrieve(this, x => x.DisplayPager); }
+            set { this.Store(x => x.DisplayPager, value); }
         }
     }
 }

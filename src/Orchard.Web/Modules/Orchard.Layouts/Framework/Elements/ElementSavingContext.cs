@@ -5,6 +5,6 @@
             Updater = stub.Updater;
             Elements = stub.Elements;
         }
-        public IElement Element { get; set; }
+        public Element Element { get; set; }
     }
 }

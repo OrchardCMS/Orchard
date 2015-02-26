@@ -299,6 +299,10 @@
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\colorbox\jquery.colorbox.min.js" />
     <Content Include="Scripts\colorbox\jquery.colorbox.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.cookie.min.js">
+      <DependentUpon>jquery.cookie.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.plugin.js" />
     <Content Include="Scripts\jquery.plugin.min.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry-ar.js" />
@@ -327,6 +331,156 @@
     <Content Include="Scripts\timeentry\jquery.timeentry-zh-TW.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.js" />
     <Content Include="Scripts\timeentry\jquery.timeentry.min.js" />
+    <Content Include="Scripts\ui\accordion.js" />
+    <Content Include="Scripts\ui\accordion.min.js">
+      <DependentUpon>accordion.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\autocomplete.js" />
+    <Content Include="Scripts\ui\autocomplete.min.js">
+      <DependentUpon>autocomplete.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\button.js" />
+    <Content Include="Scripts\ui\button.min.js">
+      <DependentUpon>button.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\core.js" />
+    <Content Include="Scripts\ui\core.min.js">
+      <DependentUpon>core.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\datepicker.js" />
+    <Content Include="Scripts\ui\datepicker.min.js">
+      <DependentUpon>datepicker.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\dialog.js" />
+    <Content Include="Scripts\ui\dialog.min.js">
+      <DependentUpon>dialog.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\draggable.js" />
+    <Content Include="Scripts\ui\draggable.min.js">
+      <DependentUpon>draggable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\droppable.js" />
+    <Content Include="Scripts\ui\droppable.min.js">
+      <DependentUpon>droppable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-blind.js" />
+    <Content Include="Scripts\ui\effect-blind.min.js">
+      <DependentUpon>effect-blind.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-bounce.js" />
+    <Content Include="Scripts\ui\effect-bounce.min.js">
+      <DependentUpon>effect-bounce.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-clip.js" />
+    <Content Include="Scripts\ui\effect-clip.min.js">
+      <DependentUpon>effect-clip.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-drop.js" />
+    <Content Include="Scripts\ui\effect-drop.min.js">
+      <DependentUpon>effect-drop.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-explode.js" />
+    <Content Include="Scripts\ui\effect-explode.min.js">
+      <DependentUpon>effect-explode.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-fade.js" />
+    <Content Include="Scripts\ui\effect-fade.min.js">
+      <DependentUpon>effect-fade.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-fold.js" />
+    <Content Include="Scripts\ui\effect-fold.min.js">
+      <DependentUpon>effect-fold.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-highlight.js" />
+    <Content Include="Scripts\ui\effect-highlight.min.js">
+      <DependentUpon>effect-highlight.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-puff.js" />
+    <Content Include="Scripts\ui\effect-puff.min.js">
+      <DependentUpon>effect-puff.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-pulsate.js" />
+    <Content Include="Scripts\ui\effect-pulsate.min.js">
+      <DependentUpon>effect-pulsate.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-scale.js" />
+    <Content Include="Scripts\ui\effect-scale.min.js">
+      <DependentUpon>effect-scale.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-shake.js" />
+    <Content Include="Scripts\ui\effect-shake.min.js">
+      <DependentUpon>effect-shake.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-size.js" />
+    <Content Include="Scripts\ui\effect-size.min.js">
+      <DependentUpon>effect-size.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-slide.js" />
+    <Content Include="Scripts\ui\effect-slide.min.js">
+      <DependentUpon>effect-slide.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect-transfer.js" />
+    <Content Include="Scripts\ui\effect-transfer.min.js">
+      <DependentUpon>effect-transfer.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\effect.js" />
+    <Content Include="Scripts\ui\effect.min.js">
+      <DependentUpon>effect.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\jquery-ui.js" />
+    <Content Include="Scripts\ui\jquery-ui.min.js" />
+    <Content Include="Scripts\ui\menu.js" />
+    <Content Include="Scripts\ui\menu.min.js">
+      <DependentUpon>menu.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\mouse.js" />
+    <Content Include="Scripts\ui\mouse.min.js">
+      <DependentUpon>mouse.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\position.js" />
+    <Content Include="Scripts\ui\position.min.js">
+      <DependentUpon>position.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\progressbar.js" />
+    <Content Include="Scripts\ui\progressbar.min.js">
+      <DependentUpon>progressbar.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\resizable.js" />
+    <Content Include="Scripts\ui\resizable.min.js">
+      <DependentUpon>resizable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\selectable.js" />
+    <Content Include="Scripts\ui\selectable.min.js">
+      <DependentUpon>selectable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\selectmenu.js" />
+    <Content Include="Scripts\ui\selectmenu.min.js">
+      <DependentUpon>selectmenu.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\slider.js" />
+    <Content Include="Scripts\ui\slider.min.js">
+      <DependentUpon>slider.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\sortable.js" />
+    <Content Include="Scripts\ui\sortable.min.js">
+      <DependentUpon>sortable.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\spinner.js" />
+    <Content Include="Scripts\ui\spinner.min.js">
+      <DependentUpon>spinner.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\tabs.js" />
+    <Content Include="Scripts\ui\tabs.min.js">
+      <DependentUpon>tabs.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\tooltip.js" />
+    <Content Include="Scripts\ui\tooltip.min.js">
+      <DependentUpon>tooltip.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\ui\widget.js" />
+    <Content Include="Scripts\ui\widget.min.js">
+      <DependentUpon>widget.js</DependentUpon>
+    </Content>
     <Content Include="Styles\colorbox.css" />
     <Content Include="Styles\jquery-datetime-editor.css" />
     <Content Include="Styles\images\calendar-blue.gif" />
@@ -336,10 +490,6 @@
     <Content Include="Styles\images\colorbox\controls.png" />
     <Content Include="Styles\images\colorbox\loading.gif" />
     <Content Include="Styles\images\colorbox\loading_background.png" />
-    <Content Include="Scripts\jquery-ui-sliderAccess.js" />
-    <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
-    <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.fileupload.min.js">
       <DependentUpon>jquery.fileupload.js</DependentUpon>
@@ -348,74 +498,6 @@
     <Content Include="Scripts\jquery.iframe-transport.min.js">
       <DependentUpon>jquery.iframe-transport.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.ui.accordion.js" />
-    <Content Include="Scripts\jquery.ui.accordion.min.js" />
-    <Content Include="Scripts\jquery.ui.autocomplete.js" />
-    <Content Include="Scripts\jquery.ui.autocomplete.min.js" />
-    <Content Include="Scripts\jquery.ui.button.js" />
-    <Content Include="Scripts\jquery.ui.button.min.js" />
-    <Content Include="Scripts\jquery.ui.core.js" />
-    <Content Include="Scripts\jquery.ui.core.min.js" />
-    <Content Include="Scripts\jquery.ui.datepicker.js" />
-    <Content Include="Scripts\jquery.ui.datepicker.min.js" />
-    <Content Include="Scripts\jquery.ui.dialog.js" />
-    <Content Include="Scripts\jquery.ui.dialog.min.js" />
-    <Content Include="Scripts\jquery.ui.draggable.js" />
-    <Content Include="Scripts\jquery.ui.draggable.min.js" />
-    <Content Include="Scripts\jquery.ui.droppable.js" />
-    <Content Include="Scripts\jquery.ui.droppable.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-blind.js" />
-    <Content Include="Scripts\jquery.ui.effect-blind.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-bounce.js" />
-    <Content Include="Scripts\jquery.ui.effect-bounce.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-clip.js" />
-    <Content Include="Scripts\jquery.ui.effect-clip.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-drop.js" />
-    <Content Include="Scripts\jquery.ui.effect-drop.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-explode.js" />
-    <Content Include="Scripts\jquery.ui.effect-explode.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-fade.js" />
-    <Content Include="Scripts\jquery.ui.effect-fade.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-fold.js" />
-    <Content Include="Scripts\jquery.ui.effect-fold.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-highlight.js" />
-    <Content Include="Scripts\jquery.ui.effect-highlight.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-pulsate.js" />
-    <Content Include="Scripts\jquery.ui.effect-pulsate.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-scale.js" />
-    <Content Include="Scripts\jquery.ui.effect-scale.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-shake.js" />
-    <Content Include="Scripts\jquery.ui.effect-shake.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-slide.js" />
-    <Content Include="Scripts\jquery.ui.effect-slide.min.js" />
-    <Content Include="Scripts\jquery.ui.effect-transfer.js" />
-    <Content Include="Scripts\jquery.ui.effect-transfer.min.js" />
-    <Content Include="Scripts\jquery.ui.effect.js" />
-    <Content Include="Scripts\jquery.ui.effect.min.js" />
-    <Content Include="Scripts\jquery.ui.menu.js" />
-    <Content Include="Scripts\jquery.ui.menu.min.js" />
-    <Content Include="Scripts\jquery.ui.mouse.js" />
-    <Content Include="Scripts\jquery.ui.mouse.min.js" />
-    <Content Include="Scripts\jquery.ui.position.js" />
-    <Content Include="Scripts\jquery.ui.position.min.js" />
-    <Content Include="Scripts\jquery.ui.progressbar.js" />
-    <Content Include="Scripts\jquery.ui.progressbar.min.js" />
-    <Content Include="Scripts\jquery.ui.resizable.js" />
-    <Content Include="Scripts\jquery.ui.resizable.min.js" />
-    <Content Include="Scripts\jquery.ui.selectable.js" />
-    <Content Include="Scripts\jquery.ui.selectable.min.js" />
-    <Content Include="Scripts\jquery.ui.slider.js" />
-    <Content Include="Scripts\jquery.ui.slider.min.js" />
-    <Content Include="Scripts\jquery.ui.sortable.js" />
-    <Content Include="Scripts\jquery.ui.sortable.min.js" />
-    <Content Include="Scripts\jquery.ui.spinner.js" />
-    <Content Include="Scripts\jquery.ui.spinner.min.js" />
-    <Content Include="Scripts\jquery.ui.tabs.js" />
-    <Content Include="Scripts\jquery.ui.tabs.min.js" />
-    <Content Include="Scripts\jquery.ui.tooltip.js" />
-    <Content Include="Scripts\jquery.ui.tooltip.min.js" />
-    <Content Include="Scripts\jquery.ui.widget.js" />
-    <Content Include="Scripts\jquery.ui.widget.min.js" />
     <Content Include="Scripts\jquery.utils.js" />
     <Content Include="Styles\images\spinnerBlue.png" />
     <Content Include="Styles\images\spinnerBlueBig.png" />
@@ -446,12 +528,15 @@
     <Content Include="Styles\images\ui-icons_454545_256x240.png" />
     <Content Include="Styles\images\ui-icons_888888_256x240.png" />
     <Content Include="Styles\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Styles\jquery-ui-1.9.2.custom.css" />
-    <Content Include="Styles\jquery-ui-timepicker-addon.css" />
+    <Content Include="Styles\jquery-ui.css" />
+    <Content Include="Styles\jquery-ui.min.css" />
+    <Content Include="Styles\jquery-ui.structure.css" />
+    <Content Include="Styles\jquery-ui.structure.min.css" />
+    <Content Include="Styles\jquery-ui.theme.css" />
+    <Content Include="Styles\jquery-ui.theme.min.css" />
     <Content Include="Styles\jquery.calendars.picker.css" />
     <Content Include="Styles\jquery.timeentry.css" />
     <Content Include="Styles\ui.calendars.picker.css" />
-    <Content Include="Styles\ui.datepicker.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -481,14 +566,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DatePickerLocalization.cshtml" />
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\TimePickerLocalization.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CalendarsPickerLocalization.cshtml" />
@@ -501,6 +579,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.11.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.cookie.min.js.map">
+      <DependentUpon>jquery.cookie.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

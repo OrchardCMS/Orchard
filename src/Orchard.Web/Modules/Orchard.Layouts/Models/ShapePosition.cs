@@ -1,5 +1,5 @@
 using System;
-using Orchard.Layouts.Helpers;
+using Orchard.ContentManagement;
 
 namespace Orchard.Layouts.Models {
     public class ShapePosition {
@@ -19,7 +19,7 @@ namespace Orchard.Layouts.Models {
                 position.Name = parts[0];
 
             if (parts.Length > 1) {
-                position.Position = parts[1].ToInt32().GetValueOrDefault();
+                position.Position = XmlHelper.Parse<int>(parts[1]);
             }
 
             return position;

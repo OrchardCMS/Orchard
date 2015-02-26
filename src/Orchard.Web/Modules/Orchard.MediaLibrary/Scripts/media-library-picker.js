@@ -5,6 +5,7 @@
         var multiple = element.data("multiple");
         var removeText = element.data("remove-text");
         var removePrompt = element.data("remove-prompt");
+        var removeAllPrompt = element.data("remove-all-prompt");
         var editText = element.data("edit-text");
         var dirtyText = element.data("dirty-text");
         var pipe = element.data("pipe");
@@ -13,6 +14,7 @@
         var promptOnNavigate = element.data("prompt-on-navigate");
         var showSaveWarning = element.data("show-save-warning");
         var addButton = element.find(".button.add");
+        var removeAllButton = element.find(".button.remove");
         var template = 
             '<li><div data-id="{contentItemId}" class="media-library-picker-item"><div class="thumbnail">{thumbnail}<div class="overlay"><h3>{title}</h3></div></div></div><a href="#" data-id="{contentItemId}" class="media-library-picker-remove">' + removeText + '</a>' + pipe + '<a href="{editLink}?ReturnUrl=' + returnUrl + '">' + editText + '</a></li>';
         
@@ -30,6 +32,13 @@
             }
             else {
                 addButton.show();
+            }
+
+            if(itemsCount > 1) {
+                removeAllButton.show();
+            }
+            else {
+                removeAllButton.hide();
             }
         };
 
@@ -96,6 +105,15 @@
                 }
             });
             
+        });
+
+        removeAllButton.click(function (e) {
+            e.preventDefault();
+            if (!confirm(removeAllPrompt)) return false;
+            element.find('.media-library-picker.items ul').children('li').remove();
+            refreshIds();
+            showSaveMsg();
+            return false;
         });
 
         element.on("click",'.media-library-picker-remove', function(e) {

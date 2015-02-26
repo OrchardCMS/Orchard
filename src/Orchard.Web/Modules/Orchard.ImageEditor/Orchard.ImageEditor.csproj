@@ -84,6 +84,7 @@
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Drivers\ImageEditorRotatePartDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -126,15 +127,10 @@
     <Content Include="Views\Parts\Image.Editor.Crop.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jcrop\js\jquery.Jcrop.min.js.map">
-      <DependentUpon>jquery.Jcrop.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts\Image.Editor.Resize.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Image.Editor.ResizeOptions.cshtml" />
+    <Content Include="Views\Parts\Image.Editor.RotateOptions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\Image.Editor.CropOptions.cshtml" />
@@ -153,6 +149,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.Editor.Rotate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\Image.Editor.ResizeOptions.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

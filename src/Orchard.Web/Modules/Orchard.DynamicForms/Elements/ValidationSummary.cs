@@ -3,7 +3,7 @@
 namespace Orchard.DynamicForms.Elements {
     public class ValidationSummary : Element {
         public override string Category {
-            get { return "Form"; }
+            get { return "Forms"; }
         }
 
         public override bool HasEditor {

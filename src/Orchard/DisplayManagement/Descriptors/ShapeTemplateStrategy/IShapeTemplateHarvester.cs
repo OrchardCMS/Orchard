@@ -13,7 +13,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     public class BasicShapeTemplateHarvester : IShapeTemplateHarvester {
 
         public IEnumerable<string> SubPaths() {
-            return new[] { "Views", "Views/Items", "Views/Parts", "Views/Fields" };
+            return new[] { "Views", "Views/Items", "Views/Parts", "Views/Fields", "Views/Elements" };
         }
 
         public IEnumerable<HarvestShapeHit> HarvestShape(HarvestShapeInfo info) {

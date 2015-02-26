@@ -4,57 +4,57 @@ using Orchard.Layouts.Helpers;
 namespace Orchard.DynamicForms.Elements {
     public class Form : Container {
         public override string Category {
-            get { return "Form"; }
+            get { return "Forms"; }
         }
 
         public string Name {
-            get { return State.Get("FormName", "Untitled"); }
-            set { State["FormName"] = value; }
+            get { return this.Retrieve("FormName", () => "Untitled"); }
+            set { this.Store("FormName", value); }
         }
 
         public bool? EnableClientValidation {
-            get { return State.Get("EnableClientValidation").ToBoolean(); }
-            set { State["EnableClientValidation"] = value.ToString(); }
+            get { return this.Retrieve(x => x.EnableClientValidation); }
+            set { this.Store(x => x.EnableClientValidation, value); }
         }
 
         public string Action {
-            get { return State.Get("FormAction"); }
-            set { State["FormAction"] = value; }
+            get { return this.Retrieve<string>("FormAction"); }
+            set { this.Store("FormAction", value); }
         }
 
         public string Method {
-            get { return State.Get("FormMethod"); }
-            set { State["FormMethod"] = value; }
+            get { return this.Retrieve<string>("FormMethod"); }
+            set { this.Store("FormMethod", value); }
         }
 
         public bool? StoreSubmission {
-            get { return State.Get("StoreSubmission").ToBoolean(); }
-            set { State["StoreSubmission"] = value != null ? value.Value.ToString() : null; }
+            get { return this.Retrieve(x => x.StoreSubmission); }
+            set { this.Store(x => x.StoreSubmission, value); }
         }
 
         public bool? CreateContent {
-            get { return State.Get("CreateContent").ToBoolean(); }
-            set { State["CreateContent"] = value != null ? value.Value.ToString() : null; }
+            get { return this.Retrieve(x => x.CreateContent); }
+            set { this.Store(x => x.CreateContent, value); }
         }
 
         public string ContentType {
-            get { return State.Get("CreateContentType"); }
-            set { State["CreateContentType"] = value; }
+            get { return this.Retrieve<string>("CreateContentType"); }
+            set { this.Store("CreateContentType", value); }
         }
 
         public string Publication {
-            get { return State.Get("Publication"); }
-            set { State["Publication"] = value; }
+            get { return this.Retrieve(x => x.Publication); }
+            set { this.Store(x => x.Publication, value); }
         }
 
         public string Notification {
-            get { return State.Get("Notification"); }
-            set { State["Notification"] = value; }
+            get { return this.Retrieve(x => x.Notification); }
+            set { this.Store(x => x.Notification, value); }
         }
 
         public string RedirectUrl {
-            get { return State.Get("RedirectUrl"); }
-            set { State["RedirectUrl"] = value; }
+            get { return this.Retrieve(x => x.RedirectUrl); }
+            set { this.Store(x => x.RedirectUrl, value); }
         }
     }
 }

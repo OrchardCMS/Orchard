@@ -3,7 +3,7 @@
 namespace Orchard.DynamicForms.Elements {
     public class TextField : LabeledFormElement {
         public TextFieldValidationSettings ValidationSettings {
-            get { return State.GetModel<TextFieldValidationSettings>(""); }
+            get { return Data.GetModel<TextFieldValidationSettings>(""); }
         }
     }
 }

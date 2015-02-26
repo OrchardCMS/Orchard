@@ -1,5 +1,8 @@
 ﻿@model Orchard.Layouts.ViewModels.ParagraphEditorViewModel
-<fieldset>
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
     @Html.LabelFor(m => m.Text, T("Body"))
-    @Html.TextAreaFor(m => m.Text, new { @class = "text large", rows = 10 })
+    @Html.TextAreaFor(m => m.Text, new { @class = "text large", rows = 10, autofocus = "autofocus" })
 </fieldset>

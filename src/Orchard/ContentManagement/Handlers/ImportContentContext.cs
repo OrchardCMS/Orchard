@@ -34,12 +34,36 @@ namespace Orchard.ContentManagement.Handlers {
             return null;
         }
 
+        public string ChildEl(string elementName, string childElementName) {
+            var element = Data.Element(elementName);
+            return element == null ? null : element.El(childElementName);
+        }
+
         public void ImportAttribute(string elementName, string attributeName, Action<string> value) {
             ImportAttribute(elementName, attributeName, value, () => { });
         }
 
         public void ImportAttribute(string elementName, string attributeName, Action<string> value, Action empty) {
             var importedText = Attribute(elementName, attributeName);
+            if (importedText != null) {
+                try {
+                    value(importedText);
+                }
+                catch {
+                    empty();
+                }
+            }
+            else {
+                empty();
+            }
+        }
+
+        public void ImportChildEl(string elementName, string childElementName, Action<string> value) {
+            ImportChildEl(elementName, childElementName, value, () => { });
+        }
+
+        public void ImportChildEl(string elementName, string childElementName, Action<string> value, Action empty) {
+            var importedText = ChildEl(elementName, childElementName);
             if (importedText != null) {
                 try {
                     value(importedText);
@@ -61,7 +85,6 @@ namespace Orchard.ContentManagement.Handlers {
             return Session.Get(id, versionOptions, contentTypeHint);
         }
     }
-
     public class FileToImport {
         public string Path { get; set; }
         public Func<Stream> GetStream { get; set; }

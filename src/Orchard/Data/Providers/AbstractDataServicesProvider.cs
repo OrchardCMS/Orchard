@@ -38,11 +38,15 @@ namespace Orchard.Data.Providers {
 
             var config = Fluently.Configure();
 
+            foreach (var c in parameters.Configurers.OfType<ISessionConfigurationEventsWithParameters>()) {
+                c.Parameters = parameters;
+            }
+
             parameters.Configurers.Invoke(c => c.Created(config, persistenceModel), Logger);
 
             config = config.Database(database)
                            .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                           .ExposeConfiguration(cfg => { 
+                           .ExposeConfiguration(cfg => {
                                cfg
                                     .SetProperty(NHibernate.Cfg.Environment.FormatSql, Boolean.FalseString)
                                     .SetProperty(NHibernate.Cfg.Environment.GenerateStatistics, Boolean.FalseString)
@@ -58,16 +62,16 @@ namespace Orchard.Data.Providers {
                                     .SetProperty(NHibernate.Cfg.Environment.BatchSize, "256")
                                     ;
 
-                               cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] {new OrchardLoadEventListener()};
+                               cfg.EventListeners.LoadEventListeners = new ILoadEventListener[] { new OrchardLoadEventListener() };
                                cfg.EventListeners.PostLoadEventListeners = new IPostLoadEventListener[0];
                                cfg.EventListeners.PreLoadEventListeners = new IPreLoadEventListener[0];
-                               
+
                                // don't enable PrepareSql by default as it breaks on SqlCe
                                // this can be done per driver by overriding AlterConfiguration
                                AlterConfiguration(cfg);
 
                                parameters.Configurers.Invoke(c => c.Building(cfg), Logger);
-                               
+
                            })
                            ;
 
@@ -77,11 +81,11 @@ namespace Orchard.Data.Providers {
         }
 
         protected virtual void AlterConfiguration(Configuration config) {
-            
+
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(ICollection<RecordBlueprint> recordDescriptors) {
-            if(recordDescriptors == null) {
+            if (recordDescriptors == null) {
                 throw new ArgumentNullException("recordDescriptors");
             }
 
@@ -109,7 +113,7 @@ namespace Orchard.Data.Providers {
             public TypeSource(IEnumerable<RecordBlueprint> recordDescriptors) { _recordDescriptors = recordDescriptors; }
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
-            
+
             public void LogSource(IDiagnosticLogger logger) {
                 throw new NotImplementedException();
             }
@@ -128,8 +132,7 @@ namespace Orchard.Data.Providers {
                 if (@event.InstanceToLoad != null) {
                     entityPersister = source.GetEntityPersister(null, @event.InstanceToLoad);
                     @event.EntityClassName = @event.InstanceToLoad.GetType().FullName;
-                }
-                else
+                } else
                     entityPersister = source.Factory.GetEntityPersister(@event.EntityClassName);
                 if (entityPersister == null)
                     throw new HibernateException("Unable to locate persister: " + @event.EntityClassName);
@@ -154,11 +157,9 @@ namespace Orchard.Data.Providers {
 
                 if (loadType.IsNakedEntityReturned) {
                     @event.Result = Load(@event, entityPersister, keyToLoad, loadType);
-                }
-                else if (@event.LockMode == LockMode.None) {
+                } else if (@event.LockMode == LockMode.None) {
                     @event.Result = ProxyOrLoad(@event, entityPersister, keyToLoad, loadType);
-                }
-                else {
+                } else {
                     @event.Result = LockAndLoad(@event, entityPersister, keyToLoad, loadType, source);
                 }
             }

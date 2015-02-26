@@ -43,6 +43,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -182,7 +183,11 @@
     <Compile Include="Data\AbstractSessionInterceptor.cs" />
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
+    <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
+    <Compile Include="Data\DoNotMapAttribute.cs" /> 
     <Compile Include="Data\FetchRequest.cs" />
+    <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
+    <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\Migration\Interpreters\MySqlCommandInterpreter.cs" />
     <Compile Include="Data\Providers\MySqlStatementProvider.cs" />
     <Compile Include="Data\Providers\SqlCeStatementProvider.cs" />
@@ -227,6 +232,8 @@
     <Compile Include="Environment\AutofacUtil\ConfigurationSettingsReaderConstants.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Configuration\AppConfigurationAccessor.cs" />
+    <Compile Include="Environment\Configuration\IAppConfigurationAccessor.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />
     <Compile Include="Environment\Extensions\DefaultCriticalErrorProvider.cs" />
     <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />

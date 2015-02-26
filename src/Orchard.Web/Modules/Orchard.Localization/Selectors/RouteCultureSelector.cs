@@ -17,7 +17,7 @@ namespace Orchard.Localization.Selectors {
             if (routeCulture != null && !string.IsNullOrWhiteSpace(routeCulture.ToString())) {
                 try {
                     var culture = CultureInfo.GetCultureInfo(routeCulture.ToString());
-                    return new CultureSelectorResult {Priority = -4, CultureName = culture.Name};
+                    return new CultureSelectorResult {Priority = -3, CultureName = culture.Name};
                 }
                 catch {}
             }

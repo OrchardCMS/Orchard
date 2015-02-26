@@ -27,12 +27,12 @@ namespace Orchard.DynamicForms.Drivers {
             if (contentTypeDefinition == null)
                 return null;
 
-            var viewModel = new FormBindingSettings {
-                AvailableBindings = _bindingManager.DescribeBindingsFor(contentTypeDefinition).ToArray()
-            };
+            var viewModel = element.Data.GetModel<FormBindingSettings>() ?? new FormBindingSettings();
+            viewModel.AvailableBindings = _bindingManager.DescribeBindingsFor(contentTypeDefinition).ToArray();
 
             if (context.Updater != null) {
                 context.Updater.TryUpdateModel(viewModel, null, null, new[] {"AvailableBindings"});
+                viewModel.Store(element.Data);
             }
 
             var bindingsEditor = context.ShapeFactory.EditorTemplate(TemplateName: "FormBindings", Model: viewModel);

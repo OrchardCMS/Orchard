@@ -30,7 +30,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
         private static int lastMessageId = 0;
         private bool _stopped;
 
-        private Dictionary<string, List<Action<string, string>>> _handlers = new Dictionary<string,List<Action<string,string>>>();
+        private Dictionary<string, List<Action<string, string>>> _handlers = new Dictionary<string, List<Action<string, string>>>();
 
         public Worker(ShellSettings shellSettings, IHostNameProvider hostNameProvider) {
             _hostNameProvider = hostNameProvider;
@@ -60,7 +60,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 // load and process existing messages
                 using (var connection = new SqlConnection(_shellSettings.DataConnectionString)) {
                     connection.Open();
-                    
+
                     var command = CreateCommand(connection);
                     messages = GetMessages(command);
                 }
@@ -72,7 +72,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
 
             }
             catch (Exception e) {
-                Logger.Error("An unexpected error occured while monitoring sql dependencies.", e);
+                Logger.Error(e, "An unexpected error occured while monitoring sql dependencies.");
             }
         }
 
@@ -86,7 +86,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 connection.Open();
 
                 using (var command = CreateCommand(connection)) {
-                    
+
                     // create a sql depdendency on the table we are monitoring
                     _dependency = new SqlDependency(command);
 
@@ -101,6 +101,10 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
 
         private void ProcessMessages(IEnumerable<MessageRecord> messages) {
 
+            if (!messages.Any()) {
+                return;
+            }
+
             // if this is the first time it's executed we just need to get the highest Id
             if (lastMessageId == 0) {
                 lastMessageId = messages.Max(x => x.Id);
@@ -109,7 +113,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
 
             // process the messages synchronously and in order of publication
             foreach (var message in messages.OrderBy(x => x.Id)) {
-                
+
                 // save the latest message id so that next time the table is monitored
                 // we get notified for new messages
                 lastMessageId = message.Id;
@@ -145,16 +149,16 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
             GetHandlersForChannel(channel).Add(handler);
         }
 
-            private List<Action<string, string>> GetHandlersForChannel(string channel) {
-                List<Action<string, string>> channelHandlers;
-                
-                if(!_handlers.TryGetValue(channel, out channelHandlers)) {
-                    channelHandlers = new List<Action<string,string>>();
-                    _handlers.Add(channel, channelHandlers);
-                }
+        private List<Action<string, string>> GetHandlersForChannel(string channel) {
+            List<Action<string, string>> channelHandlers;
 
-                return channelHandlers;
+            if (!_handlers.TryGetValue(channel, out channelHandlers)) {
+                channelHandlers = new List<Action<string, string>>();
+                _handlers.Add(channel, channelHandlers);
             }
+
+            return channelHandlers;
+        }
 
         public SqlCommand CreateCommand(SqlConnection connection) {
             SqlCommand command = new SqlCommand(commandText, connection);
@@ -188,13 +192,13 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 }
             }
             catch (Exception e) {
-                Logger.Error("Could not retreive Sql Broker messages.", e);
+                Logger.Error(e, "Could not retreive Sql Broker messages.");
                 return Enumerable.Empty<MessageRecord>();
             }
 
             return result;
         }
 
-        
+
     }
 }

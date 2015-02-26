@@ -6,7 +6,7 @@ namespace Orchard.DynamicForms.Bindings {
     public class BodyPartBindings : Component, IBindingProvider {
         public void Describe(BindingDescribeContext context) {
             context.For<BodyPart>()
-                .Binding("Text", (part, s) => part.Text = s);
+                .Binding("Text", (contentItem, part, s) => part.Text = s);
         }
     }
 }

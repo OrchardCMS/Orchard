@@ -159,20 +159,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\orchard-lists-admin.min.js.map">
-      <DependentUpon>orchard-lists-admin.js</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\SelectType.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\nprogress.min.js.map">
-      <DependentUpon>nprogress.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Dialog.CloseButton.cshtml" />
@@ -182,11 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Breadcrumbs.ContentItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\common-admin.min.js.map">
-      <DependentUpon>common-admin.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BreadcrumbItem.cshtml" />

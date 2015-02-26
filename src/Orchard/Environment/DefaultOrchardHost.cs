@@ -26,6 +26,7 @@ namespace Orchard.Environment {
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly static object _syncLock = new object();
+        private readonly static object _shellContextsWriteLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
 
@@ -128,7 +129,9 @@ namespace Orchard.Environment {
             Logger.Information("Start creation of shells");
 
             // is there any tenant right now ?
-            var allSettings = _shellSettingsManager.LoadSettings().ToArray();
+            var allSettings = _shellSettingsManager.LoadSettings()
+                .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized)
+                .ToArray();
 
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
@@ -158,10 +161,12 @@ namespace Orchard.Environment {
             Logger.Debug("Activating context for tenant {0}", context.Settings.Name);
             context.Shell.Activate();
 
-            _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
-                            .Where(c => c.Settings.Name != context.Settings.Name)
-                            .Concat(new[] { context })
-                            .ToArray();
+            lock (_shellContextsWriteLock) {
+                _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
+                                .Where(c => c.Settings.Name != context.Settings.Name)
+                                .Concat(new[] { context })
+                                .ToArray();
+            }
 
             _runningShellTable.Add(context.Settings);
         }
@@ -291,7 +296,7 @@ namespace Orchard.Environment {
 
                 var context = _shellContextFactory.CreateShellContext(settings);
 
-                // Sctivate and register modified context.
+                // Activate and register modified context.
                 // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
                 _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
 

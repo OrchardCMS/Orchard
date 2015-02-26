@@ -2,7 +2,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
-    public class Grid : Container, IGrid {
+    public class Grid : Container {
         public const int GridSize = 12;
 
         public override string Category {
@@ -13,8 +13,12 @@ namespace Orchard.Layouts.Elements {
             get { return T("Grid"); }
         }
 
-        public override bool HasEditor {
+        public override bool IsSystemElement {
             get { return true; }
+        }
+
+        public override bool HasEditor {
+            get { return false; }
         }
     }
 }

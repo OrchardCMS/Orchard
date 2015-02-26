@@ -143,7 +143,7 @@ namespace Orchard.ContentManagement {
             }
             else if (options.VersionNumber != 0) {
                 // short-circuit if item held in session
-                if (session.RecallVersionNumber(id, options.VersionRecordId, out contentItem)) {
+                if (session.RecallVersionNumber(id, options.VersionNumber, out contentItem)) {
                     return contentItem;
                 }
 

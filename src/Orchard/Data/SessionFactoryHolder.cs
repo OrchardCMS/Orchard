@@ -84,9 +84,6 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory() {
             Logger.Debug("Building session factory");
 
-            if (!_hostEnvironment.IsFullTrust)
-                NHibernate.Cfg.Environment.UseReflectionOptimizer = false;
-
             Configuration config = GetConfiguration();
             var result = config.BuildSessionFactory();
             Logger.Debug("Done building session factory");

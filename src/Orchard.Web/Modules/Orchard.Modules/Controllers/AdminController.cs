@@ -92,9 +92,13 @@ namespace Orchard.Modules.Controllers {
                 modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
             }
 
+            // This way we can more or less reliably handle this implicit dependency.
+            var installModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
+
             modules = modules.ToList();
             foreach (ModuleEntry moduleEntry in modules) {
                 moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
+                moduleEntry.CanUninstall = installModules;
 
                 if (_extensionDisplayEventHandler != null) {
                     foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
@@ -103,9 +107,10 @@ namespace Orchard.Modules.Controllers {
                 }
             }
 
+
             return View(new ModulesIndexViewModel {
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
+                InstallModules = installModules,
                 Options = options,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
@@ -117,7 +122,7 @@ namespace Orchard.Modules.Controllers {
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType))
-                .Where(extensionDescriptor => extensionDescriptor.Id != "Orchard.Setup" && ModuleIsAllowed(extensionDescriptor))
+                .Where(extensionDescriptor => ModuleIsAllowed(extensionDescriptor))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
                 .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
@@ -126,7 +131,7 @@ namespace Orchard.Modules.Controllers {
             if (_recipeHarvester != null) {
                 viewModel.Modules = modules.Select(x => new ModuleRecipesViewModel {
                     Module = x,
-                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).ToList()
+                    Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
                 })
                 .Where(x => x.Recipes.Any());
             }
@@ -148,7 +153,7 @@ namespace Orchard.Modules.Controllers {
                 return HttpNotFound();
             }
 
-            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => x.Name == name);
+            Recipe recipe = _recipeHarvester.HarvestRecipes(module.Descriptor.Id).FirstOrDefault(x => !x.IsSetupRecipe && x.Name == name);
 
             if (recipe == null) {
                 return HttpNotFound();

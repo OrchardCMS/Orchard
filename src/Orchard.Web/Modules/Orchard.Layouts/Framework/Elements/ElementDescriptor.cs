@@ -7,10 +7,11 @@ using Orchard.Localization;
 
 namespace Orchard.Layouts.Framework.Elements {
     public class ElementDescriptor {
-        public ElementDescriptor(Type elementType, string typeName, LocalizedString displayText, string category) {
+        public ElementDescriptor(Type elementType, string typeName, LocalizedString displayText, LocalizedString description, string category) {
             ElementType = elementType;
             TypeName = typeName;
             DisplayText = displayText;
+            Description = description;
             Category = category;
             GetDrivers = Enumerable.Empty<IElementDriver>;
             CreatingDisplay = context => { };
@@ -21,6 +22,8 @@ namespace Orchard.Layouts.Framework.Elements {
         }
 
         public LocalizedString DisplayText { get; set; }
+        public LocalizedString Description { get; set; }
+        public string ToolboxIcon { get; set; }
         public string Category { get; set; }
         public Type ElementType { get; set; }
         public string TypeName { get; set; }

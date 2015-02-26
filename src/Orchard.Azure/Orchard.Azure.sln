@@ -1,16 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
-	ProjectSection(SolutionItems) = preProject
-		..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj = ..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{84650275-884D-4CBB-9CC0-67553996E211}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules.Deprecated", "Modules.Deprecated", "{B6092A92-1071-4C30-AD55-8E8D46BC2F14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchard", "Orchard", "{F2AB7512-139A-420F-AE3A-9ED22CA52CE1}"
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Orchard.Azure.CloudService", "Orchard.Azure.CloudService\Orchard.Azure.CloudService.ccproj", "{03C5327D-4E8E-45A7-ACD1-E18E7CAA3C4A}"
 EndProject
@@ -135,10 +136,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Taxonomies", "..\Orchard.Web\Modules\Orchard.Taxonomies\Orchard.Taxonomies.csproj", "{E649EA64-D213-461B-87F7-D67035801443}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure", "..\Orchard.Web\Modules\Orchard.Azure\Orchard.Azure.csproj", "{CBC7993C-57D8-4A6C-992C-19E849DFE71D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules.Deprecated", "Modules.Deprecated", "{B6092A92-1071-4C30-AD55-8E8D46BC2F14}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchard", "Orchard", "{F2AB7512-139A-420F-AE3A-9ED22CA52CE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Caching", "..\Orchard.Web\Modules\Orchard.Caching\Orchard.Caching.csproj", "{7528BF74-25C7-4ABE-883A-443B4EEC4776}"
 EndProject

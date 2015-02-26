@@ -401,6 +401,7 @@ namespace Orchard.Core.Shapes {
             }
             var defaultSettings = new RequireSettings {
                 DebugMode = debugMode,
+                CdnMode = site.UseCdn,
                 Culture = _workContext.Value.CurrentCulture,
             };
             var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);

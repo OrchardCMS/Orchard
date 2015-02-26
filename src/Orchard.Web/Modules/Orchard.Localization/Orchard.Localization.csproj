@@ -69,6 +69,7 @@
     <Compile Include="Controllers\AdminCultureSelectorController.cs" />
     <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
+    <Compile Include="Providers\ContentLocalizationTokens.cs" />
     <Compile Include="Selectors\ContentCultureSelector.cs" />
     <Compile Include="Selectors\RouteCultureSelector.cs" />
     <Compile Include="Selectors\BrowserCultureSelector.cs" />
@@ -141,6 +142,10 @@
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

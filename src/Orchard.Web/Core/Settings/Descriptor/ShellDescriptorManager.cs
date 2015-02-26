@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Environment.Extensions.Models;
-using Orchard.Localization;
 using Orchard.Logging;
-using System.Linq;
 
 namespace Orchard.Core.Settings.Descriptor {
     public class ShellDescriptorManager : Component, IShellDescriptorManager {

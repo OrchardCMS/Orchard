@@ -32,10 +32,7 @@ else {
             @Html.LabelFor(m => m.CommentText, T("Comment"))
             @Html.TextAreaFor(m => m.CommentText, new { rows = 10, cols = 30, @class = "comment-text" })
         </li>
-        <li>
-            @Html.HiddenFor(m => m.CommentedOn)
-            @Html.HiddenFor(m => m.RepliedOn)
-
-        </li>
     </ol>
+    @Html.HiddenFor(m => m.CommentedOn)
+    @Html.HiddenFor(m => m.RepliedOn)
 </fieldset>

@@ -24,8 +24,8 @@ namespace Orchard.Layouts.Drivers {
             return ContentShape("Parts_ElementWrapper", () => {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
-                var state = ElementStateHelper.Deserialize(part.ElementState);
-                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state});
+                var data = ElementDataHelper.Deserialize(part.ElementData);
+                var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
                 var elementShape = _elementDisplay.DisplayElement(element, part, displayType);
                 
                 return shapeHelper.Parts_ElementWrapper(ElementShape: elementShape);
@@ -40,8 +40,9 @@ namespace Orchard.Layouts.Drivers {
             return ContentShape("Parts_ElementWrapper_Edit", () => {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
-                var state = ElementStateHelper.Deserialize(part.ElementState);
-                var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
+                var data = ElementDataHelper.Deserialize(part.ElementData);
+                var dataClosure = data;
+                var element = _elementManager.ActivateElement(descriptor, e => e.Data = dataClosure);
                 var context = (ElementEditorContext)CreateEditorContext(describeContext.Content, element, updater, shapeHelper);
                 var editorResult = updater != null ? _elementManager.UpdateEditor(context) : _elementManager.BuildEditor(context);
                 var viewModel = new ElementWrapperPartViewModel {
@@ -52,10 +53,10 @@ namespace Orchard.Layouts.Drivers {
                     ElementEditors = editorResult.Editors,
                 };
 
-                state = element.State;
+                data = element.Data;
 
                 if (updater != null) {
-                    part.ElementState = state.Serialize();
+                    part.ElementData = data.Serialize();
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.ElementWrapper", Model: viewModel, Prefix: Prefix);
@@ -68,7 +69,7 @@ namespace Orchard.Layouts.Drivers {
             };
         }
 
-        private ElementEditorContext CreateEditorContext(IContent content, IElement element, IUpdateModel updater, dynamic shapeFactory) {
+        private ElementEditorContext CreateEditorContext(IContent content, Element element, IUpdateModel updater, dynamic shapeFactory) {
             var context = new ElementEditorContext {
                 Content = content,
                 Element = element,

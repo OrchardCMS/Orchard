@@ -38,11 +38,12 @@ namespace Orchard.Layouts.Services {
             return blueprints.Length;
         }
 
-        public ElementBlueprint CreateBlueprint(IElement baseElement, string elementTypeName, string elementDisplayName, string elementCategory) {
+        public ElementBlueprint CreateBlueprint(Element baseElement, string elementTypeName, string elementDisplayName, string elementDescription, string elementCategory) {
             var blueprint = new ElementBlueprint {
                 BaseElementTypeName = baseElement.Descriptor.TypeName,
                 ElementTypeName = elementTypeName,
                 ElementDisplayName = elementDisplayName,
+                ElementDescription = elementDescription,
                 ElementCategory = elementCategory
             };
 

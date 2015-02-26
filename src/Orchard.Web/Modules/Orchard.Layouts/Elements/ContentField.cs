@@ -9,5 +9,9 @@ namespace Orchard.Layouts.Elements {
         public override bool IsSystemElement {
             get { return true; }
         }
+
+        public override bool HasEditor {
+            get { return false; }
+        }
     }
 }

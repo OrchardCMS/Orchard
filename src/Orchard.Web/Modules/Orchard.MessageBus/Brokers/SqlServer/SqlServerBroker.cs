@@ -63,7 +63,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                         _initialized = true;
                     }
                     catch (Exception e) {
-                        Logger.Error("The application doesn't have the permission to request notifications.", e);
+                        Logger.Error(e, "The application doesn't have the permission to request notifications.");
                     }
                 }
 
@@ -82,7 +82,7 @@ namespace Orchard.MessageBus.Brokers.SqlServer {
                 }
             }
             catch(Exception e) {
-                Logger.Error("An error occured while creating a Worker.", e);
+                Logger.Error(e, "An error occured while creating a Worker.");
             }
         }
 

@@ -1,4 +1,6 @@
-﻿@using Orchard.Layouts.Models
+﻿@using Orchard.Layouts.Helpers
+@using Orchard.Layouts.Models
+@using Orchard.Utility.Extensions
 @model Orchard.Layouts.ViewModels.EditElementViewModel
 @{
     Style.Include("element-editor.css");
@@ -7,26 +9,26 @@
     Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
 
     var command = (string)ViewBag.Command;
-    var titleFormat = (string) ViewBag.TitleFormat;
-    
+    var titleFormat = (string)ViewBag.TitleFormat;
+
 }
 @Html.ValidationSummary()
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { session = Model.SessionKey, area = "Orchard.Layouts" }))) {
     @Html.HiddenFor(m => m.TypeName)
-    @Html.HiddenFor(m => m.ElementState)
+    @Html.HiddenFor(m => m.ElementData)
     foreach (var tab in Model.Tabs) {
         var id = String.Format("element-{0}", tab.ToLowerInvariant());
         <div id="@id" class="tab-view">
             @foreach (var editor in Model.EditorResult.Editors) {
-                var position = ShapePosition.Parse((String) editor.Metadata.Position);
+                var position = ShapePosition.Parse((String)editor.Metadata.Position);
                 if (position.Name == tab) {
                     @Display(editor)
                 }
             }
         </div>
-     }
+    }
 }
-@if (Model.Submitted == true) {
+@if (Model.Submitted) {
     using (Script.Foot()) {
         <script type="text/javascript">
             jQuery(function () {
@@ -34,8 +36,13 @@
                     command: "@command",
                     element: {
                         typeName: "@Model.TypeName",
-                        state: "@Url.Encode(Model.ElementState)"
-                    }
+                        typeLabel: "@Model.DisplayText.Text",
+                        typeClass: "@Model.DisplayText.Text.HtmlClassify()",
+                        data: "@Url.Encode(Model.ElementData)",
+                        html: "@Url.Encode(Model.ElementHtml)",
+                        isTemplated: false
+                    },
+                    elementEditorModel: @Html.Raw(Model.ElementEditorModel.ToJson())
                 });
             });
         </script>
@@ -44,7 +51,7 @@
 <div class="dialog-settings">
     <div class="title">@T(titleFormat, Model.DisplayText)</div>
     <div class="buttons">
-        <a href="#" class="button save">@T("Save")</a>
-        <a href="#" class="button cancel">@T("Cancel")</a>
+        <a href="#" class="button save" data-command="save">@T("Save")</a>
+        <a href="#" class="button cancel" data-command="cancel">@T("Cancel")</a>
     </div>
 </div>

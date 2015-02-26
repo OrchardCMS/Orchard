@@ -110,6 +110,7 @@
     <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Models\PackagingEntry.cs" />
+    <Compile Include="Services\PackageUninstallHandler.cs" />
     <Compile Include="Services\PackageUpdateManager.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />

@@ -10,7 +10,10 @@ namespace Orchard.Layouts {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .AddImageSet("layouts")
-                .Add(T("Elements"), "8.5", menu => menu.Action("Index", "BlueprintAdmin", new { area = "Orchard.Layouts" }));
+                .Add(T("Layouts"), "8.5", layouts => layouts
+                    .Action("List", "Admin", new {id = "Layout", area = "Contents"})
+                    .LinkToFirstChild(false)
+                    .Add(T("Elements"), "1", elements => elements.Action("Index", "BlueprintAdmin", new {area = "Orchard.Layouts"})));
         }
     }
 }

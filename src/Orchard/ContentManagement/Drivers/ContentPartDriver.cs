@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Xml.Linq;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
@@ -19,14 +21,14 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
-            
-            if(part == null) {
+
+            if (part == null) {
                 return null;
             }
 
             DriverResult result = Display(part, context.DisplayType, context.New);
-            
-            if(result != null ) {
+
+            if (result != null) {
                 result.ContentPart = part;
             }
 
@@ -35,13 +37,13 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            
+
             if (part == null) {
                 return null;
             }
 
             DriverResult result = Editor(part, context.New);
-            
+
             if (result != null) {
                 result.ContentPart = part;
             }
@@ -51,7 +53,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            
+
             if (part == null) {
                 return null;
             }
@@ -59,9 +61,9 @@ namespace Orchard.ContentManagement.Drivers {
             // checking if the editor needs to be updated (e.g. if it was not hidden)
             var editor = Editor(part, context.New) as ContentShapeResult;
 
-            if(editor != null) {
+            if (editor != null) {
                 ShapeDescriptor descriptor;
-                if(context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         Content = part.ContentItem,
                         ContentType = part.ContentItem.ContentType,
@@ -72,7 +74,7 @@ namespace Orchard.ContentManagement.Drivers {
 
                     var location = descriptor.Placement(placementContext).Location;
 
-                    if(String.IsNullOrEmpty(location) || location == "-") {
+                    if (String.IsNullOrEmpty(location) || location == "-") {
                         return editor;
                     }
 
@@ -118,16 +120,72 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
-        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) {}
+        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { }
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
-        protected virtual void Importing(TContent part, ImportContentContext context) {}
-        protected virtual void Imported(TContent part, ImportContentContext context) {}
-        protected virtual void Exporting(TContent part, ExportContentContext context) {}
-        protected virtual void Exported(TContent part, ExportContentContext context) {}
+        protected virtual void Importing(TContent part, ImportContentContext context) { }
+        protected virtual void Imported(TContent part, ImportContentContext context) { }
+        protected virtual void Exporting(TContent part, ExportContentContext context) { }
+        protected virtual void Exported(TContent part, ExportContentContext context) { }
+
+        /// <summary>
+        /// Import a content part's previously exported (through the <see cref="ExportInfoset"/> method) infoset data. Note that you can
+        /// only import data this way that isn't also stored in records (since only the infoset will be populated but not the part record).
+        /// </summary>
+        /// <param name="part">The content part used for import.</param>
+        /// <param name="context">The context object of the import operation.</param>
+        protected static void ImportInfoset(TContent part, ImportContentContext context) {
+            if (!part.Has<InfosetPart>()) {
+                return;
+            }
+
+            Action<XElement, bool> importInfoset = (element, versioned) => {
+                if (element == null) {
+                    return;
+                }
+
+                foreach (var attribute in element.Attributes()) {
+                    part.Store(attribute.Name.ToString(), attribute.Value, versioned);
+                }
+            };
+
+            importInfoset(context.Data.Element(GetInfosetXmlElementName(part, true)), true);
+            importInfoset(context.Data.Element(GetInfosetXmlElementName(part, false)), false);
+        }
+
+        /// <summary>
+        /// Export a content part's data that is stored in the infoset.
+        /// </summary>
+        /// <param name="part">The content part used for export.</param>
+        /// <param name="context">The context object of the export operation.</param>
+        protected static void ExportInfoset(TContent part, ExportContentContext context) {
+            var infosetPart = part.As<InfosetPart>();
+
+            if (infosetPart == null) {
+                return;
+            }
+
+            Action<XElement, bool> exportInfoset = (element, versioned) => {
+                if (element == null) {
+                    return;
+                }
+
+                var elementName = GetInfosetXmlElementName(part, versioned);
+                foreach (var attribute in element.Attributes()) {
+                    context.Element(elementName).SetAttributeValue(attribute.Name, attribute.Value);
+                }
+            };
+
+            exportInfoset(infosetPart.VersionInfoset.Element.Element(part.PartDefinition.Name), true);
+            exportInfoset(infosetPart.Infoset.Element.Element(part.PartDefinition.Name), false);
+        }
+
+        private static string GetInfosetXmlElementName(TContent part, bool versioned) {
+            return part.PartDefinition.Name + "-" + (versioned ? "VersionInfoset" : "Infoset");
+        }
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
@@ -145,12 +203,12 @@ namespace Orchard.ContentManagement.Drivers {
         private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
             return new ContentShapeResult(shapeType, Prefix, ctx => {
                 var shape = shapeBuilder(ctx);
-                                                                 
-                if(shape == null) {
+
+                if (shape == null) {
                     return null;
                 }
 
-                return AddAlternates(shape, ctx);;
+                return AddAlternates(shape, ctx); ;
             });
         }
 
@@ -166,10 +224,10 @@ namespace Orchard.ContentManagement.Drivers {
 
             // [ShapeType]__[Id] e.g. Parts/Common.Metadata-42
             metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.Id.ToString(CultureInfo.InvariantCulture));
-            
+
             // [ShapeType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost
             metadata.Alternates.Add(shapeType + "__" + ctx.ContentItem.ContentType);
-            
+
             return shape;
         }
 

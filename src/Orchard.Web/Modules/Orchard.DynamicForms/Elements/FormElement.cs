@@ -11,19 +11,15 @@ namespace Orchard.DynamicForms.Elements {
         }
 
         public override string Category {
-            get { return "Form"; }
-        }
-
-        public override bool HasEditor {
-            get { return true; }
+            get { return "Forms"; }
         }
 
         public virtual string Name {
-            get { return State.Get("InputName"); }
+            get { return this.Retrieve<string>("InputName"); }
         }
 
         public string Value {
-            get { return State.Get("Value"); }
+            get { return this.Retrieve(x => x.Value); }
         }
 
         /// <summary>
@@ -40,8 +36,8 @@ namespace Orchard.DynamicForms.Elements {
         public string PostedValue { get; set; }
 
         public string FormBindingContentType {
-            get { return State.Get("FormBindingContentType"); }
-            set { State["FormBindingContentType"] = value; }
+            get { return this.Retrieve(x => x.FormBindingContentType); }
+            set { this.Store(x => x.FormBindingContentType, value); }
         }
 
         public Form Form {

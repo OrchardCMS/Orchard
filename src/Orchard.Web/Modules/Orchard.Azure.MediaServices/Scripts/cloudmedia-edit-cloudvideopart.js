@@ -2,22 +2,23 @@
 /// <reference path="typings/jqueryui.d.ts" />
 var Orchard;
 (function (Orchard) {
+    var Azure;
     (function (Azure) {
+        var MediaServices;
         (function (MediaServices) {
+            var CloudVideoEdit;
             (function (CloudVideoEdit) {
                 function hasCorsSupport() {
                     return 'withCredentials' in new XMLHttpRequest();
                 }
-
                 $(function () {
                     var corsSupported = hasCorsSupport();
-
                     if (corsSupported) {
                         CloudVideoEdit.initializeUploadDirect();
-                    } else {
+                    }
+                    else {
                         CloudVideoEdit.initializeUploadProxied();
                     }
-
                     var localStorage = window["localStorage"];
                     var isCreating = $("#tabs").data("cloudvideo-iscreating");
                     $("#tabs").tabs({
@@ -28,11 +29,8 @@ var Orchard;
                         active: !isCreating && localStorage && localStorage.getItem ? localStorage.getItem("selectedCloudVideoTab") : null
                     }).show();
                 });
-            })(MediaServices.CloudVideoEdit || (MediaServices.CloudVideoEdit = {}));
-            var CloudVideoEdit = MediaServices.CloudVideoEdit;
-        })(Azure.MediaServices || (Azure.MediaServices = {}));
-        var MediaServices = Azure.MediaServices;
-    })(Orchard.Azure || (Orchard.Azure = {}));
-    var Azure = Orchard.Azure;
+            })(CloudVideoEdit = MediaServices.CloudVideoEdit || (MediaServices.CloudVideoEdit = {}));
+        })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
+    })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
 //# sourceMappingURL=cloudmedia-edit-cloudvideopart.js.map

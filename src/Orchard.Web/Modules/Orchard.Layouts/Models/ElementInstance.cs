@@ -4,10 +4,10 @@
 //namespace Orchard.Layouts.Models {
 //    public class ElementInstance {
 
-//        public ElementInstance(string id, ElementDescriptor elementDescriptor, int index = 0, IDictionary<string, string> state = null) {
+//        public ElementInstance(string id, ElementDescriptor elementDescriptor, int index = 0, IDictionary<string, string> Data = null) {
 //            Id = id;
 //            ElementDescriptor = elementDescriptor;
-//            State = state ?? new Dictionary<string, string>();
+//            Data = Data ?? new Dictionary<string, string>();
 //            Children = new List<ElementInstance>();
 //            Index = index;
 //        }
@@ -18,7 +18,7 @@
 //        public ElementInstance Parent { get; set; }
 //        public IList<ElementInstance> Children { get; set; }
 //        public int Index { get; set; }
-//        public IDictionary<string, string> State { get; set; }
+//        public IDictionary<string, string> Data { get; set; }
 //        public bool IsTemplated { get; set; }
 //    }
 //}

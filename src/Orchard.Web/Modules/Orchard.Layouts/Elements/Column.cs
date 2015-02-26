@@ -1,10 +1,9 @@
-using System.Globalization;
 using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
-    public class Column : Container, IColumn {
+    public class Column : Container {
         
         public override string Category {
             get { return "Layout"; }
@@ -19,21 +18,21 @@ namespace Orchard.Layouts.Elements {
         }
 
         public override bool HasEditor {
-            get { return true; }
+            get { return false; }
         }
 
-        public int? ColumnSpan {
-            get { return State.Get("ColumnSpan").ToInt32() ?? 0; }
-            set { State["ColumnSpan"] = value != null ? value.Value.ToString(CultureInfo.InvariantCulture) : null; }
+        public int? Width {
+            get { return  this.Retrieve<int?>("Width") ?? this.Retrieve<int?>("ColumnSpan") ?? 0; } // Falling back on "ColumnSpan" for backward compatibility.
+            set { this.Store(x => x.Width, value); }
         }
 
-        public int? ColumnOffset {
-            get { return State.Get("ColumnOffset").ToInt32() ?? 0; }
-            set { State["ColumnOffset"] = value != null ? value.Value.ToString(CultureInfo.InvariantCulture) : null; }
+        public int? Offset {
+            get { return this.Retrieve<int?>("Offset") ?? this.Retrieve<int?>("ColumnOffset") ?? 0; } // Falling back on "ColumnOffset" for backward compatibility.
+            set { this.Store(x => x.Offset, value); }
         }
 
-        public int CurrentSpanSize {
-            get { return ColumnSpan.GetValueOrDefault() + ColumnOffset.GetValueOrDefault(); }
+        public int Size {
+            get { return Width.GetValueOrDefault() + Offset.GetValueOrDefault(); }
         }
     }
 }

@@ -80,6 +80,11 @@ namespace Orchard.Tokens.Tests {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
+                
+                public bool UseCdn {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
 
                 public int PageSize {
                     get { throw new NotImplementedException(); }

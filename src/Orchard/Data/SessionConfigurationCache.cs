@@ -71,9 +71,6 @@ namespace Orchard.Data {
         }
 
         private void StoreConfiguration(ConfigurationCache cache) {
-            if (!_hostEnvironment.IsFullTrust)
-                return;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             try {
@@ -93,9 +90,6 @@ namespace Orchard.Data {
         }
 
         private ConfigurationCache ReadConfiguration(string hash) {
-            if (!_hostEnvironment.IsFullTrust)
-                return null;
-
             var pathName = GetPathName(_shellSettings.Name);
 
             if (!_appDataFolder.FileExists(pathName))

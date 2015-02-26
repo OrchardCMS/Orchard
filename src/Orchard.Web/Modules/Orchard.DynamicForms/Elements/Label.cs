@@ -4,7 +4,7 @@ using Orchard.Layouts.Helpers;
 namespace Orchard.DynamicForms.Elements {
     public class Label : Element {
         public override string Category {
-            get { return "Form"; }
+            get { return "Forms"; }
         }
 
         public override bool HasEditor {
@@ -12,13 +12,13 @@ namespace Orchard.DynamicForms.Elements {
         }
 
         public string Text {
-            get { return State.Get("LabelText"); }
-            set { State["LabelText"] = value; }
+            get { return this.Retrieve<string>("LabelText"); }
+            set { this.Store("LabelText", value); }
         }
 
         public string For {
-            get { return State.Get("LabelFor"); }
-            set { State["LabelFor"] = value; }
+            get { return this.Retrieve<string>("LabelFor"); }
+            set { this.Store("LabelFor", value); }
         }
     }
 }

@@ -5,7 +5,7 @@ using Orchard.Forms.Services;
 using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Framework.Drivers {
-    public abstract class FormsElementDriver<TElement> : ElementDriver<TElement>, IFormProvider where TElement : IElement {
+    public abstract class FormsElementDriver<TElement> : ElementDriver<TElement>, IFormProvider where TElement : Element {
         private readonly IFormManager _formManager;
 
         protected FormsElementDriver(IFormManager formManager) {

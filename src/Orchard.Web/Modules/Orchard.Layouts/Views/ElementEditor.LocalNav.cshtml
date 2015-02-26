@@ -2,7 +2,7 @@
     var tabs = (IList<string>)Model.Tabs;
     var index = 0;
 }
-@if (tabs.Any()) {
+@if (tabs.Count > 1) {
     <ul class="localmenu localmenu-element-admin">
     @foreach (var tab in tabs) {
         var id = String.Format("#element-{0}", tab.ToLowerInvariant());

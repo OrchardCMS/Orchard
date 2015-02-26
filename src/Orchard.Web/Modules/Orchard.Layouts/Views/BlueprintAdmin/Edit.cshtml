@@ -1,6 +1,6 @@
 ﻿@model Orchard.Layouts.ViewModels.EditElementBlueprintViewModel
 @{
-    Layout.Title = T("Edit Blueprint based on {0}", Model.BaseElement.DisplayText);
+    Layout.Title = T("Edit Element based on {0}", Model.BaseElement.DisplayText);
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.Partial("ElementBlueprintEditor", Model, ViewData)

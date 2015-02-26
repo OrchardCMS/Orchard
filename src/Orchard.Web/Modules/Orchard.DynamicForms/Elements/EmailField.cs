@@ -3,7 +3,7 @@
 namespace Orchard.DynamicForms.Elements {
     public class EmailField : LabeledFormElement {
         public EmailFieldValidationSettings ValidationSettings {
-            get { return State.GetModel<EmailFieldValidationSettings>(""); }
+            get { return Data.GetModel<EmailFieldValidationSettings>(""); }
         }
     }
 }

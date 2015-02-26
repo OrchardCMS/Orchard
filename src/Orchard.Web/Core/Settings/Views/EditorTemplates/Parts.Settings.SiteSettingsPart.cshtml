@@ -59,6 +59,11 @@
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
     </div>
     <div>
+        @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
+        @Html.CheckBoxFor(m => m.UseCdn)
+	    <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version")</span>
+    </div>
+    <div>
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text small" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>

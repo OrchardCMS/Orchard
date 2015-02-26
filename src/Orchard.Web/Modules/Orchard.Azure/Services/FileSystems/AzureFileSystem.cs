@@ -33,6 +33,13 @@ namespace Orchard.Azure.Services.FileSystems {
             protected set;
         }
 
+        public CloudStorageAccount StorageAccount {
+            get {
+                EnsureInitialized();
+                return _storageAccount;
+            }
+        }
+
         public CloudBlobClient BlobClient {
             get {
                 EnsureInitialized();

@@ -7,19 +7,13 @@ using Orchard.Layouts.Helpers;
 namespace Orchard.Layouts {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("ObjectStoreEntry", table => table
-                .Column<int>("Id", c => c.PrimaryKey().Identity())
-                .Column<string>("EntryKey", c => c.WithLength(64))
-                .Column<string>("Data", c => c.Unlimited())
-                .Column<int>("UserId")
-                .Column<DateTime>("CreatedUtc")
-                .Column<DateTime>("LastModifiedUtc"));
 
             SchemaBuilder.CreateTable("ElementBlueprint", table => table
                 .Column<int>("Id", c => c.PrimaryKey().Identity())
                 .Column<string>("BaseElementTypeName", c => c.WithLength(256))
                 .Column<string>("ElementTypeName", c => c.WithLength(256))
                 .Column<string>("ElementDisplayName", c => c.WithLength(256))
+                .Column<string>("ElementDescription", c => c.WithLength(2048))
                 .Column<string>("ElementCategory", c => c.WithLength(256))
                 .Column<string>("BaseElementState", c => c.Unlimited()));
 
@@ -40,7 +34,6 @@ namespace Orchard.Layouts {
                     .WithSetting("LayoutTypePartSettings.IsTemplate", "True"))
                 .DisplayedAs("Layout")
                 .Listable()
-                .Creatable()
                 .Draftable());
 
             ContentDefinitionManager.AlterTypeDefinition("LayoutWidget", type => type
@@ -73,14 +66,7 @@ namespace Orchard.Layouts {
         }
 
         public int UpdateFrom1() {
-            SchemaBuilder.CreateTable("ObjectStoreEntry", table => table
-                .Column<int>("Id", c => c.PrimaryKey().Identity())
-                .Column<string>("EntryKey", c => c.WithLength(64))
-                .Column<string>("Data", c => c.Unlimited())
-                .Column<int>("UserId")
-                .Column<DateTime>("CreatedUtc")
-                .Column<DateTime>("LastModifiedUtc"));
-
+            SchemaBuilder.AlterTable("ElementBlueprint", table => table.AddColumn<string>("ElementDescription", c => c.WithLength(2048)));
             return 2;
         }
 

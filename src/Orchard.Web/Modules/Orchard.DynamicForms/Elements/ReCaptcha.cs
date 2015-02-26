@@ -3,7 +3,7 @@
 namespace Orchard.DynamicForms.Elements {
     public class ReCaptcha : FormElement {
         public ReCaptchaValidationSettings ValidationSettings {
-            get { return State.GetModel<ReCaptchaValidationSettings>(""); }
+            get { return Data.GetModel<ReCaptchaValidationSettings>(""); }
         }
     }
 }
