@@ -40,8 +40,8 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var data = JsonConvert.SerializeObject(request);
             var response = Client.Value.Post(actionUrl, data);
             var deploymentId = Guid.NewGuid().ToString("n");
-            var filename = deploymentId + response.Headers["content-type"] == "text/xml"
-                ? ".xml" : ".nupkg";
+            var filename = deploymentId
+                + (response.Headers["content-type"] == "text/xml" ? ".xml" : ".nupkg");
             var path = _appDataFolder.Combine("Deployments", filename);
             using (var file = _appDataFolder.CreateFile(path)) {
                 response.GetResponseStream().CopyTo(file);
