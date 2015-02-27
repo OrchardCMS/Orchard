@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
+using Orchard.Data;
+using Orchard.Email.Models;
 using Orchard.Email.Services;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -10,15 +13,20 @@ namespace Orchard.Email.Controllers {
     [Admin]
     public class EmailAdminController : Controller {
         private readonly ISmtpChannel _smtpChannel;
+        private readonly IOrchardServices _orchardServices;
+        private readonly ITransactionManager _transactionManager;
 
-        public EmailAdminController(ISmtpChannel smtpChannel) {
+        public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices, ITransactionManager transactionManager) {
             _smtpChannel = smtpChannel;
+            _orchardServices = orchardServices;
+            _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public ActionResult TestMailSettings(string to, string subject, string body, string replyTo, string bcc, string cc) {
+        [HttpPost]
+        public ActionResult TestSettings(TestSmtpSettings testSettings) {
             ILogger logger = null;
             try {
                 var fakeLogger = new FakeLogger();
@@ -27,18 +35,37 @@ namespace Orchard.Email.Controllers {
                     logger = smtpChannelComponent.Logger;
                     smtpChannelComponent.Logger = fakeLogger;
                 }
-                _smtpChannel.Process(new Dictionary<string, object> {
-                    {"Recipients", to},
-                    {"Subject", subject},
-                    {"Body", body},
-                    {"ReplyTo",replyTo},
-                    {"Bcc", bcc},
-                    {"CC",cc}
-                });
-                if (!string.IsNullOrEmpty(fakeLogger.Message)) {
+
+                // Temporarily update settings so that the test will actually use the specified host, port, etc.
+                var smtpSettings = _orchardServices.WorkContext.CurrentSite.As<SmtpSettingsPart>();
+
+                smtpSettings.Address = testSettings.From;
+                smtpSettings.Host = testSettings.Host;
+                smtpSettings.Port = testSettings.Port;
+                smtpSettings.EnableSsl = testSettings.EnableSsl;
+                smtpSettings.RequireCredentials = testSettings.RequireCredentials;
+                smtpSettings.UserName = testSettings.UserName;
+                smtpSettings.Password = testSettings.Password;
+
+                if (!smtpSettings.IsValid()) {
+                    fakeLogger.Error("Invalid settings.");
+                }
+                else {
+                    _smtpChannel.Process(new Dictionary<string, object> {
+                        {"Recipients", testSettings.To},
+                        {"Subject", testSettings.Subject},
+                        {"Body", testSettings.Body},
+                        {"ReplyTo", testSettings.ReplyTo},
+                        {"Bcc", testSettings.Bcc},
+                        {"CC", testSettings.Cc}
+                    });
+                }
+
+                if (!String.IsNullOrEmpty(fakeLogger.Message)) {
                     return Json(new { error = fakeLogger.Message });
                 }
-                return Json(new {status = T("Message sent").Text});
+
+                return Json(new {status = T("Message sent.").Text});
             }
             catch (Exception e) {
                 return Json(new {error = e.Message});
@@ -48,6 +75,9 @@ namespace Orchard.Email.Controllers {
                 if (smtpChannelComponent != null) {
                     smtpChannelComponent.Logger = logger;
                 }
+
+                // Undo the temporarily changed smtp settings.
+                _transactionManager.Cancel();
             }
         }
 
@@ -61,6 +91,22 @@ namespace Orchard.Email.Controllers {
             public void Log(LogLevel level, Exception exception, string format, params object[] args) {
                 Message = exception == null ? format : exception.Message;
             }
+        }
+
+        public class TestSmtpSettings {
+            public string From { get; set; }
+            public string ReplyTo { get; set; }
+            public string Host { get; set; }
+            public int Port { get; set; }
+            public bool EnableSsl { get; set; }
+            public bool RequireCredentials { get; set; }
+            public string UserName { get; set; }
+            public string Password { get; set; }
+            public string To { get; set; }
+            public string Cc { get; set; }
+            public string Bcc { get; set; }
+            public string Subject { get; set; }
+            public string Body { get; set; }
         }
     }
 }
