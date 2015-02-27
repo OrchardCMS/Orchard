@@ -4,17 +4,29 @@
 @{
     var element = (Query)Model.Element;
     var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("ol"), Model);
+    var index = 0;
 }
 @if (element.ShowLabel) {
     <label>@Html.Raw(element.Label)</label>
 }
 @tagBuilder.StartElement
 @foreach (var option in Model.Options) {
+    var inputTagBuilder = new OrchardTagBuilder("input");
+    inputTagBuilder.Attributes["type"] = "checkbox";
+    inputTagBuilder.Attributes["name"] = element.Name;
+    inputTagBuilder.Attributes["value"] = option.Value;
+    if (element.ValidationSettings.Required == true && index == 0) {
+        inputTagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+    }
     <li>
         <label>
-            <input type="checkbox" name="@element.Name" value="@option.Value" />
+            @Html.Raw(inputTagBuilder.ToString(TagRenderMode.SelfClosing))
             @option.Text
         </label>
     </li>
+    ++index;
 }
 @tagBuilder.EndElement
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(element.Name)
+}
