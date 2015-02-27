@@ -10,8 +10,6 @@ namespace Orchard.DynamicForms.Bindings {
             T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
-
         public void Describe(BindingDescribeContext context) {
             context.For<BooleanField>()
                 .Binding("Value", (contentItem, field, s) => field.Value = IsTrueish(s));
