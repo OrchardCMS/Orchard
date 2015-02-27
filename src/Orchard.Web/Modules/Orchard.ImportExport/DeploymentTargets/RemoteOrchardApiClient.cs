@@ -72,7 +72,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
             var request = CreateWebRequest(fullyQualifiedUri.ToString(), _config.UserName, timestamp, signature, requestContentHash);
-            request.Headers["Content-Type"] = "multipart/form-data";
+            request.ContentType = "multipart/form-data";
             request.Method = "POST";
             var boundary = "\r\n--------------------------" + Guid.NewGuid().ToString("n");
             var boundaryBytes = Encoding.UTF8.GetBytes(boundary + "\r\n");
@@ -124,8 +124,13 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
             var request = CreateWebRequest(fullyQualifiedUri.ToString(), _config.UserName, timestamp, signature, requestContentHash);
-            request.Headers["Content-Type"] = contentType;
+            request.Method = "POST";
+            request.ContentType = contentType;
+            var dataBytes = Encoding.UTF8.GetBytes(data);
+            request.GetRequestStream().Write(dataBytes, 0, dataBytes.Length);
             var response = request.GetResponse();
+            // Skip response validation if it's empty
+            if (response.ContentLength == 0) return response;
             return response;
         }
 

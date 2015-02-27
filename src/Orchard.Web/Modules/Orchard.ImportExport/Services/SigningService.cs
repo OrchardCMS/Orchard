@@ -83,6 +83,7 @@ namespace Orchard.ImportExport.Services {
         }
 
         public bool ValidateContent(Stream content, string timestamp, string secret, string signature) {
+            if (timestamp == null) return false;
             var datedStream = new CompositeStream(Encoding.UTF8.GetBytes(timestamp), content);
             return IsDateValidated(timestamp) && IsAuthenticated(secret, datedStream, signature);
         }
