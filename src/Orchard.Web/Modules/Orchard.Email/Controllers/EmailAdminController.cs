@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.Email.Models;
 using Orchard.Email.Services;
 using Orchard.Localization;
@@ -14,12 +13,10 @@ namespace Orchard.Email.Controllers {
     public class EmailAdminController : Controller {
         private readonly ISmtpChannel _smtpChannel;
         private readonly IOrchardServices _orchardServices;
-        private readonly ITransactionManager _transactionManager;
 
-        public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices, ITransactionManager transactionManager) {
+        public EmailAdminController(ISmtpChannel smtpChannel, IOrchardServices orchardServices) {
             _smtpChannel = smtpChannel;
             _orchardServices = orchardServices;
-            _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -77,7 +74,7 @@ namespace Orchard.Email.Controllers {
                 }
 
                 // Undo the temporarily changed smtp settings.
-                _transactionManager.Cancel();
+                _orchardServices.TransactionManager.Cancel();
             }
         }
 
