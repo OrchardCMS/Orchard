@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
+using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.Localization;
@@ -14,11 +14,18 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private readonly RemoteOrchardDeploymentPart _config;
         private readonly ISigningService _signingService;
         private readonly IClock _clock;
+        private readonly IAppDataFolder _appData;
 
-        public RemoteOrchardApiClient(RemoteOrchardDeploymentPart config, ISigningService signingService, IClock clock) {
+        public RemoteOrchardApiClient(
+            RemoteOrchardDeploymentPart config,
+            ISigningService signingService,
+            IClock clock,
+            IAppDataFolder appData
+            ) {
             _config = config;
             _signingService = signingService;
             _clock = clock;
+            _appData = appData;
             T = NullLocalizer.Instance;
         }
 
@@ -34,20 +41,31 @@ namespace Orchard.ImportExport.DeploymentTargets {
                     if (stream == null) {
                         throw new WebException(T("Deployment API did not return a valid stream.").Text);
                     }
-                    if (!ResponseIsValid(stream,
-                        webClient.ResponseHeaders[_signingService.TimestampHeaderName],
-                        webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
-                        throw new WebException(T("Deployment API response does not contain a valid hash").Text);
-                    }
-                    stream.Seek(0, SeekOrigin.Begin);
-                    using (var reader = new StreamReader(stream)) {
-                        return reader.ReadToEnd();
+                    // Response stream doesn't support seeking, need to copy it locally to a temp file.
+                    var tempPath = Path.Combine("temp", Guid.NewGuid().ToString("n"));
+                    using (var tempStream = _appData.CreateFile(tempPath)) {
+                        try {
+                            stream.CopyTo(tempStream);
+                            tempStream.Seek(0, SeekOrigin.Begin);
+                            if (!ResponseIsValid(tempStream,
+                                webClient.ResponseHeaders[_signingService.TimestampHeaderName],
+                                webClient.ResponseHeaders[_signingService.ContentHashHeaderName])) {
+                                throw new WebException(T("Deployment API response does not contain a valid hash").Text);
+                            }
+                            tempStream.Seek(0, SeekOrigin.Begin);
+                            using (var reader = new StreamReader(tempStream)) {
+                                return reader.ReadToEnd();
+                            }
+                        }
+                        finally {
+                            _appData.DeleteFile(tempPath);
+                        }
                     }
                 }
             }
         }
 
-        public WebResponse Post(string url, Stream data) {
+        public void PostStream(string url, Stream data) {
             var fullyQualifiedUri = BuildUri(url);
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
             var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
@@ -68,17 +86,38 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 var footerBytes = Encoding.UTF8.GetBytes(boundary + "--\r\n");
                 requestStream.Write(footerBytes, 0, footerBytes.Length);
             }
-            var response = request.GetResponse();
 
-            if (!ResponseIsValid(response.GetResponseStream(),
-                response.Headers[_signingService.TimestampHeaderName],
-                response.Headers[_signingService.ContentHashHeaderName])) {
-                throw new WebException(T("Deployment API response does not contain a valid hash").Text);
-            }
-            return response;
+            request.GetResponse();
         }
 
-        public WebResponse Post(string url, string data, string contentType = "application/json") {
+        public string PostForFile(string url, string data, string targetFilePath, string contentType = "application/json") {
+            var response = GetPostResponse(url, data, contentType);
+            var deploymentId = Guid.NewGuid().ToString("n");
+            var filename = deploymentId + (response.Headers["content-type"] == "text/xml" ? ".xml" : ".nupkg");
+            var path = _appData.Combine(targetFilePath, filename);
+            using (var file = _appData.CreateFile(path)) {
+                try {
+                    response.GetResponseStream().CopyTo(file);
+                    file.Seek(0, SeekOrigin.Begin);
+                    if (!ResponseIsValid(file,
+                        response.Headers[_signingService.TimestampHeaderName],
+                        response.Headers[_signingService.ContentHashHeaderName])) {
+                        throw new WebException(T("Deployment API response does not contain a valid hash").Text);
+                    }
+                    return _appData.MapPath(path);
+                }
+                catch(Exception) {
+                    _appData.DeleteFile(path);
+                    throw;
+                }
+            }
+        }
+
+        public void Post(string url, string data, string contentType = "application/json") {
+            GetPostResponse(url, data, contentType);
+        }
+
+        private WebResponse GetPostResponse(string url, string data, string contentType) {
             var fullyQualifiedUri = BuildUri(url);
             var timestamp = _clock.UtcNow.ToString(_signingService.TimestampFormat);
             var signature = _signingService.SignRequest("POST", timestamp, fullyQualifiedUri.AbsolutePath, _config.PrivateApiKey);
@@ -90,15 +129,8 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var dataBytes = Encoding.UTF8.GetBytes(data);
             request.GetRequestStream().Write(dataBytes, 0, dataBytes.Length);
             var response = request.GetResponse();
-
             // Skip response validation if it's empty
             if (response.ContentLength == 0) return response;
-            // Otherwise check contents and timestamp against signature from headers.
-            if (!ResponseIsValid(response.GetResponseStream(),
-                response.Headers[_signingService.TimestampHeaderName],
-                response.Headers[_signingService.ContentHashHeaderName])) {
-                throw new WebException(T("Deployment API response does not contain a valid hash").Text);
-            }
             return response;
         }
 

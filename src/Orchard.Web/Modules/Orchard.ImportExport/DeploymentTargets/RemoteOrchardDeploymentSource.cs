@@ -29,7 +29,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             if (!sourceConfiguration.Is<RemoteOrchardDeploymentPart>()) return null;
             
             DeploymentPart = sourceConfiguration.As<RemoteOrchardDeploymentPart>();
-            Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock));
+            Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock, _appDataFolder));
             return new DeploymentSourceMatch {DeploymentSource = this, Priority = 0};
         }
 
@@ -38,15 +38,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 area = "Orchard.ImportExport"
             });
             var data = JsonConvert.SerializeObject(request);
-            var response = Client.Value.Post(actionUrl, data);
-            var deploymentId = Guid.NewGuid().ToString("n");
-            var filename = deploymentId
-                + (response.Headers["content-type"] == "text/xml" ? ".xml" : ".nupkg");
-            var path = _appDataFolder.Combine("Deployments", filename);
-            using (var file = _appDataFolder.CreateFile(path)) {
-                response.GetResponseStream().CopyTo(file);
-            }
-            return path;
+            return Client.Value.PostForFile(actionUrl, data, "Deployments");
         }
 
         public IList<DeploymentContentType> GetContentTypes() {
