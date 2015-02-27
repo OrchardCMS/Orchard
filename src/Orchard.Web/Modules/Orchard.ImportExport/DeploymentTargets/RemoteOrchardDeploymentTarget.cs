@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
 using Orchard.Recipes.Models;
@@ -18,25 +19,28 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private readonly IClock _clock;
         private readonly UrlHelper _url;
         private readonly IDeploymentPackageBuilder _deploymentPackageBuilder;
+        private readonly IAppDataFolder _appData;
 
         public OrchardDeploymentTarget(
             IContentManager contentManager,
             ISigningService signingService,
             IClock clock,
             UrlHelper url,
-            IDeploymentPackageBuilder deploymentPackageBuilder
+            IDeploymentPackageBuilder deploymentPackageBuilder,
+            IAppDataFolder appData
             ) {
             _contentManager = contentManager;
             _signingService = signingService;
             _clock = clock;
             _url = url;
             _deploymentPackageBuilder = deploymentPackageBuilder;
+            _appData = appData;
         }
 
         public DeploymentTargetMatch Match(IContent targetConfiguration) {
             if (targetConfiguration.Is<RemoteOrchardDeploymentPart>()) {
                 DeploymentPart = targetConfiguration.As<RemoteOrchardDeploymentPart>();
-                Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock));
+                Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock, _appData));
                 return new DeploymentTargetMatch {DeploymentTarget = this, Priority = 0};
             }
             return null;
@@ -53,7 +57,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             }
             else {
                 using (var deploymentStream = File.OpenRead(deploymentFilePath)) {
-                    Client.Value.Post(actionUrl, deploymentStream);
+                    Client.Value.PostStream(actionUrl, deploymentStream);
                 }
             }
         }
@@ -84,10 +88,10 @@ namespace Orchard.ImportExport.DeploymentTargets {
                     exportedItem.Data.Document,
                     exportedItem.Files.ToList()
                     );
-                Client.Value.Post(actionUrl, packageStream);
+                Client.Value.PostStream(actionUrl, packageStream);
             }
             else {
-                Client.Value.Post(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting), "text/xml");
+                Client.Value.PostForFile(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting), "text/xml");
             }
         }
     }
