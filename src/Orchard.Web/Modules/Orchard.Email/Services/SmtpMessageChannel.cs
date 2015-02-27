@@ -45,10 +45,12 @@ namespace Orchard.Email.Services {
             }
 
             var emailMessage = new EmailMessage {
-                Body = parameters["Body"] as string,
-                Subject = parameters["Subject"] as string,
-                Recipients = parameters["Recipients"] as string,
-                ReplyTo = parameters.ContainsKey("ReplyTo") ? parameters["ReplyTo"] as string : null
+                Body = Read(parameters, "Body"),
+                Subject = Read(parameters, "Subject"),
+                Recipients = Read(parameters, "Recipients"),
+                ReplyTo = Read(parameters, "ReplyTo"),
+                Bcc = Read(parameters, "Bcc"),
+                CC = Read(parameters, "CC")
             };
 
             if (emailMessage.Recipients.Length == 0) {
@@ -112,6 +114,10 @@ namespace Orchard.Email.Services {
             smtpClient.EnableSsl = _smtpSettings.EnableSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
+        }
+
+        private string Read(IDictionary<string, object> dictionary, string key) {
+            return dictionary.ContainsKey(key) ? dictionary[key] as string : null;
         }
     }
 }
