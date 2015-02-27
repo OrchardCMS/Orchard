@@ -37,15 +37,18 @@
             this.children = children;
             _(this.children).each(function (child) {
                 child.parent = self;
-
-                var getEditorObject = child.getEditorObject;
-                child.getEditorObject = function () {
-                    var dto = getEditorObject();
-                    return $.extend(dto, {
-                        FormBindingContentType: self.formBindingContentType
-                    });
-                };
+                self.linkChild(child);
             });
+        };
+
+        this.linkChild = function(element) {
+            var getEditorObject = element.getEditorObject;
+            element.getEditorObject = function () {
+                var dto = getEditorObject();
+                return $.extend(dto, {
+                    FormBindingContentType: self.formBindingContentType
+                });
+            };
         };
 
         this.setChildren(children);
