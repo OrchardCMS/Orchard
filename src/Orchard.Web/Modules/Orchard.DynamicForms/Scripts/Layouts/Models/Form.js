@@ -18,7 +18,7 @@
         this.toObject = function () {
             var result = this.elementToObject();
             result.name = this.name;
-            result.formBindingContentType = formBindingContentType;
+            result.formBindingContentType = this.formBindingContentType;
             result.children = this.childrenToObject();
 
             return result;

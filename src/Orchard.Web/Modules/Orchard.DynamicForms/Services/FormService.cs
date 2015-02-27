@@ -230,7 +230,7 @@ namespace Orchard.DynamicForms.Services {
         }
 
         public ContentItem CreateContentItem(Form form, IValueProvider valueProvider) {
-            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.ContentType);
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(form.FormBindingContentType);
 
             if (contentTypeDefinition == null)
                 return null;

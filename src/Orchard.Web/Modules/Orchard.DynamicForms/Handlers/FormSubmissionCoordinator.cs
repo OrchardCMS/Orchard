@@ -47,7 +47,7 @@ namespace Orchard.DynamicForms.Handlers {
 
             // Create content item.
             var contentItem = default(ContentItem);
-            if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.ContentType)) {
+            if (form.CreateContent == true && !String.IsNullOrWhiteSpace(form.FormBindingContentType)) {
                 contentItem = formService.CreateContentItem(form, context.ValueProvider);
             }
 

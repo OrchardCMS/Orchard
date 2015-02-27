@@ -81,8 +81,8 @@ namespace Orchard.DynamicForms.Drivers {
                         Value: "true",
                         Description: T("Check this to create a content item based using the submitted values. You will have to select a Content Type here and bind the form fields to the various parts and fields of the selected Content Type.")),
                     _ContentType: shape.SelectList(
-                        Id: "CreateContentType",
-                        Name: "CreateContentType",
+                        Id: "FormBindingContentType",
+                        Name: "FormBindingContentType",
                         Title: "Content Type",
                         Description: T("The Content Type to use when storing the submitted form values as a content item. Note that if you change the content type, you will have to update the form field bindings."),
                         EnabledBy: "CreateContent"),
@@ -143,7 +143,7 @@ namespace Orchard.DynamicForms.Drivers {
 
             // Assign the binding content type to each element within the form element.
             foreach (var child in element.Elements.Flatten().Where(x => x is FormElement).Cast<FormElement>()) {
-                child.FormBindingContentType = element.CreateContent == true ? element.ContentType : default(string);
+                child.FormBindingContentType = element.CreateContent == true ? element.FormBindingContentType : default(string);
             }
         }
 

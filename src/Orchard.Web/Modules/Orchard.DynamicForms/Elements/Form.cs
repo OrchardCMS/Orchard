@@ -37,9 +37,9 @@ namespace Orchard.DynamicForms.Elements {
             set { this.Store(x => x.CreateContent, value); }
         }
 
-        public string ContentType {
-            get { return this.Retrieve<string>("CreateContentType"); }
-            set { this.Store("CreateContentType", value); }
+        public string FormBindingContentType {
+            get { return this.Retrieve(x => x.FormBindingContentType); }
+            set { this.Store(x => x.FormBindingContentType, value); }
         }
 
         public string Publication {
