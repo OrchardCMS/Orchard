@@ -104,7 +104,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                         response.Headers[_signingService.ContentHashHeaderName])) {
                         throw new WebException(T("Deployment API response does not contain a valid hash").Text);
                     }
-                    return path;
+                    return _appData.MapPath(path);
                 }
                 catch(Exception) {
                     _appData.DeleteFile(path);
