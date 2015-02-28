@@ -639,7 +639,7 @@ angular
                     $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                 };
 
-                $scope.element.setHtml($scope.element.html);
+                $scope.element.setHtml(decodeURIComponent($scope.element.html.replace(/\+/g, "%20")));
             },
             templateUrl: environment.templateUrl("Content"),
             replace: true,

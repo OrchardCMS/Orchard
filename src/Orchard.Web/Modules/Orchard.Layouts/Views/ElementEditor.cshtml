@@ -10,7 +10,6 @@
 
     var command = (string)ViewBag.Command;
     var titleFormat = (string)ViewBag.TitleFormat;
-
 }
 @Html.ValidationSummary()
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { session = Model.SessionKey, area = "Orchard.Layouts" }))) {
