@@ -50,4 +50,3 @@
     };
     updateUploadProgressLabel();
 })(jQuery);
-//# sourceMappingURL=cloudmedia-metadata-cloudvideopart.js.map

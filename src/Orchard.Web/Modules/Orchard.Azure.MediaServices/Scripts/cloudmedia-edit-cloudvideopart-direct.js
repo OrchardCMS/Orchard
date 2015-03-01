@@ -319,4 +319,3 @@ var Orchard;
         })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
     })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
-//# sourceMappingURL=cloudmedia-edit-cloudvideopart-direct.js.map
