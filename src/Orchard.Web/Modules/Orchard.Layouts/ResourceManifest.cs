@@ -9,7 +9,9 @@ namespace Orchard.Layouts {
             manifest.DefineScript("AngularSanitize").SetUrl("Lib/angular-sanitize.js").SetDependencies("Angular");
             manifest.DefineScript("AngularResource").SetUrl("Lib/angular-resource.js").SetDependencies("Angular");
             manifest.DefineScript("Layouts.Models").SetUrl("Models.min.js", "Models.js").SetDependencies("jQuery", "Underscore");
-            manifest.DefineScript("Layouts.LayoutEditor").SetUrl("LayoutEditor.min.js", "LayoutEditor.js").SetDependencies("Layouts.Models", "AngularResource", "AngularSanitize", "Angular", "jQuery", "Underscore");
+            
+            // For some reason the minified version doesn't work and causes AngularJS to complain about some directive not being found, so we're only registering the debug version of LayoutEditor.js.
+            manifest.DefineScript("Layouts.LayoutEditor").SetUrl(/*"LayoutEditor.min.js",*/ "LayoutEditor.js").SetDependencies("Layouts.Models", "AngularResource", "AngularSanitize", "Angular", "jQuery", "Underscore");
         }
     }
 }
