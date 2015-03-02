@@ -81,6 +81,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Drivers\UserPartPasswordDriver.cs" />
     <Compile Include="Forms\SignInUserForm.cs" />
     <Compile Include="Forms\VerifyUserUnicityForm.cs" />
     <Compile Include="Forms\CreateUserForm.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
+    <Compile Include="ViewModels\UserEditPasswordViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
@@ -156,6 +158,7 @@
     <Content Include="Views\Account\RegistrationPending.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Create.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\User.EditPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\RequestLostPassword.cshtml" />
@@ -186,7 +189,9 @@
   <ItemGroup>
     <Content Include="Views\Template.User.Wrapper.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
