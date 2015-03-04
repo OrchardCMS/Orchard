@@ -919,7 +919,7 @@ var LayoutEditor;
             value.contentType,
             value.contentTypeLabel,
             value.contentTypeClass,
-            value.html,
+            decodeURIComponent(value.html.replace(/\+/g, "%20")),
             value.hasEditor);
 
         return result;
