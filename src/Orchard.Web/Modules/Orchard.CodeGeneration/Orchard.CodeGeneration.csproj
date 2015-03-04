@@ -81,7 +81,7 @@
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config">
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

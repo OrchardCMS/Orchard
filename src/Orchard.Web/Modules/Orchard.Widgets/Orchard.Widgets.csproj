@@ -166,7 +166,7 @@
     <Content Include="Views\Widget.DeleteButton.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\ChooseWidget.cshtml" />

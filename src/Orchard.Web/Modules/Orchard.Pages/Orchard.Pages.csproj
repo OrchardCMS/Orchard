@@ -82,7 +82,7 @@
   <ItemGroup>
     <Content Include="Styles\menu.page-admin.css" />
     <Content Include="Styles\images\menu.page.png" />
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config" />
