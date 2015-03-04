@@ -113,6 +113,8 @@
     <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
+    <Compile Include="Containers\ListViews\CondensedListView.cs" />
+    <Compile Include="Containers\ListViews\DefaultListView.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\OrderByDirection.cs" />

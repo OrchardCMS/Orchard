@@ -64,7 +64,7 @@ namespace Orchard.Core.Containers.Handlers {
                         ? part.Record.AdminListViewName
                         : !String.IsNullOrWhiteSpace(part.ContainerSettings.AdminListViewName)
                             ? part.ContainerSettings.AdminListViewName
-                            : providers.First().Name;
+                            : providers.Any() ? providers.First().Name : null;
 
                     return _listViewService.GetProvider(listViewProviderName) ?? _listViewService.GetDefaultProvider();
                 });

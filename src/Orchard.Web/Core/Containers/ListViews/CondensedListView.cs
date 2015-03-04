@@ -2,7 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.Core.Containers.Services;
 
-namespace Orchard.Lists.ListViews {
+namespace Orchard.Core.Containers.ListViews {
     public class CondensedListView : ListViewProviderBase {
         private readonly IContentManager _contentManager;
         public CondensedListView(IContentManager contentManager) {
