@@ -9,7 +9,6 @@ using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Containers.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
