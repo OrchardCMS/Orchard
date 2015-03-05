@@ -75,7 +75,7 @@ namespace Orchard.Widgets.Services {
 
         public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
             return _contentManager
-                .Query<WidgetPart>()
+                .Query<WidgetPart, WidgetPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
                 .List();

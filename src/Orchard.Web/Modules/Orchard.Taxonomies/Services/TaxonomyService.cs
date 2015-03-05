@@ -59,11 +59,24 @@ namespace Orchard.Taxonomies.Services {
             }
 
             // include the record in the query to optimize the query plan
-            return _contentManager
                 .Query<TaxonomyPart, TaxonomyPartRecord>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
-                .Slice(1)
+                .List()
+                .FirstOrDefault();
+        }
+
+        public TaxonomyPart GetTaxonomyBySlug(string slug) {
+            if (String.IsNullOrWhiteSpace(slug)) {
+                throw new ArgumentNullException("slug");
+            }
+
+            return _contentManager
+                .Query<TaxonomyPart, TaxonomyPartRecord>()
+                .Join<TitlePartRecord>()
+                .Join<AutoroutePartRecord>()
+                .Where(r => r.DisplayAlias == slug)
+                .List()
                 .FirstOrDefault();
         }
 
@@ -77,9 +90,9 @@ namespace Orchard.Taxonomies.Services {
                     .WithPart("TermPart")
                     .WithPart("TitlePart")
                     .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
-                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Taxonomy and Title\",\"Pattern\":\"{Content.Container.Path}/{Content.Slug}\",\"Description\":\"my-taxonomy/my-term/sub-term\"}]")
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]")
                         .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("CommonPart")
                     .DisplayedAs(taxonomy.Name + " Term")
@@ -109,30 +122,8 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart NewTerm(TaxonomyPart taxonomy) {
-            return NewTerm(taxonomy, null);
-        }
-
-        public TermPart NewTerm(TaxonomyPart taxonomy, IContent parent) {
-            if (taxonomy == null) {
-                throw new ArgumentNullException("taxonomy");
-            }
-
-            if (parent != null) {
-                var parentAsTaxonomy = parent.As<TaxonomyPart>();
-                if (parentAsTaxonomy != null && parentAsTaxonomy != taxonomy) {
-                    throw new ArgumentException("The parent of a term can't be a different taxonomy", "parent");
-                }
-
-                var parentAsTerm = parent.As<TermPart>();
-                if (parentAsTerm != null && parentAsTerm.TaxonomyId != taxonomy.Id) {
-                    throw new ArgumentException("The parent of a term can't be a from a different taxonomy", "parent");
-                }
-            }
-
             var term = _contentManager.New<TermPart>(taxonomy.TermTypeName);
-            term.Container = parent == null ? taxonomy : parent;
             term.TaxonomyId = taxonomy.Id;
-            ProcessPath(term);
 
             return term;
         }
@@ -145,10 +136,25 @@ namespace Orchard.Taxonomies.Services {
             return TermPart.Sort(result);
         }
 
+        public TermPart GetTermByPath(string path) {
+            return _contentManager.Query<TermPart, TermPartRecord>()
+                .Join<AutoroutePartRecord>()
+                .Where(rr => rr.DisplayAlias == path)
+                .List()
+                .FirstOrDefault();
+        }
+
+        public IEnumerable<TermPart> GetAllTerms() {
+            var result = _contentManager
+                .Query<TermPart, TermPartRecord>()
+                .List();
+            return TermPart.Sort(result);
+        }
+
         public TermPart GetTerm(int id) {
             return _contentManager
                 .Query<TermPart, TermPartRecord>()
-                .Where(x => x.Id == id).Slice(1).FirstOrDefault();
+                .Where(x => x.Id == id).List().FirstOrDefault();
         }
 
         public IEnumerable<TermPart> GetTermsForContentItem(int contentItemId, string field = null, VersionOptions versionOptions = null) {
@@ -165,7 +171,7 @@ namespace Orchard.Taxonomies.Services {
                 .Where(t => t.TaxonomyId == taxonomyId)
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
-                .Slice(1)
+                .List()
                 .FirstOrDefault();
         }
 
@@ -274,6 +280,20 @@ namespace Orchard.Taxonomies.Services {
 
         public IEnumerable<TermPart> GetParents(TermPart term) {
             return term.Path.Split(new [] {'/'}, StringSplitOptions.RemoveEmptyEntries).Select(id => GetTerm(int.Parse(id)));
+        }
+
+        public IEnumerable<string> GetSlugs() {
+            return _contentManager
+                .Query<TaxonomyPart, TaxonomyPartRecord>()
+                .List()
+                .Select(t => t.Slug);
+        }
+
+        public IEnumerable<string> GetTermPaths() {
+            return _contentManager
+                .Query<TermPart, TermPartRecord>()
+                .List()
+                .Select(t => t.Slug);
         }
 
         public void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm) {

@@ -73,6 +73,8 @@ namespace Orchard.MediaLibrary.Services {
 
             var query = contentManager.Query<MediaPart>(versionOptions);
 
+            query = query.Join<MediaPartRecord>();
+
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
             }
@@ -111,6 +113,8 @@ namespace Orchard.MediaLibrary.Services {
                         .Join<MediaPartRecord>();
                     break;
             }
+
+            query = query.Join<MediaPartRecord>();
 
             return query;
         }

@@ -33,31 +33,24 @@ namespace Orchard.ContentTypes.Extensions {
             return builder.WithSetting("ContentTypeSettings.Placement." + placementType, String.Empty);
         }
 
-        /// <summary>
-        /// Defines a custom placement
-        /// </summary>
-        public static ContentTypeDefinitionBuilder Placement(this ContentTypeDefinitionBuilder builder, PlacementType placementType, string shapeType, string differentiator, string zone, string position) {
-            var serializer = new JavaScriptSerializer();
-            var placementSettings = GetPlacement(builder.Build(), placementType).ToList();
-
-            placementSettings = placementSettings.Where(x => x.ShapeType != shapeType && x.Differentiator != differentiator).ToList();
-
-            placementSettings.Add(new PlacementSettings {
-                ShapeType = shapeType,
-                Differentiator = differentiator,
-                Zone = zone,
-                Position = position
-            });
-
-            var placement = serializer.Serialize(placementSettings.ToArray());
-
+        /// <summary>
+        /// Defines a custom placement
+        /// </summary>
+        public static ContentTypeDefinitionBuilder Placement(this ContentTypeDefinitionBuilder builder, PlacementType placementType, string shapeType, string differentiator, string zone, string position) {
+            var placement = AddPlacement(builder.Build(), placementType, shapeType, differentiator, zone, position);
             return builder.WithSetting("ContentTypeSettings.Placement." + placementType, placement);
         }
 
-        /// <summary>
-        /// Adds a placement the string representation of a placement
-        /// </summary>
-        public static ContentTypeDefinition Placement(this ContentTypeDefinition builder, PlacementType placementType, string shapeType, string differentiator, string zone, string position) {
+        /// <summary>
+        /// Adds a placement the string representation of a placement
+        /// </summary>
+        public static ContentTypeDefinition Placement(this ContentTypeDefinition builder, PlacementType placementType, string shapeType, string differentiator, string zone, string position) {
+            var placement = AddPlacement(builder, placementType, shapeType, differentiator, zone, position);
+            builder.Settings["ContentTypeSettings.Placement." + placementType] = placement;
+            return builder;
+        }
+
+        private static string AddPlacement(ContentTypeDefinition builder, PlacementType placementType, string shapeType, string differentiator, string zone, string position) {
             var serializer = new JavaScriptSerializer();
             var placementSettings = GetPlacement(builder, placementType).ToList();
 
@@ -71,10 +64,8 @@ namespace Orchard.ContentTypes.Extensions {
             });
 
             var placement = serializer.Serialize(placementSettings.ToArray());
-            builder.Settings["ContentTypeSettings.Placement." + placementType] = placement;
-            return builder;
+            return placement;
         }
-
         /// <summary>
         /// Adds a placement the string representation of a placement
         /// </summary>
@@ -91,8 +82,6 @@ namespace Orchard.ContentTypes.Extensions {
             currentSettings.TryGetValue("ContentTypeSettings.Placement." + placementType, out placement);
 
             return String.IsNullOrEmpty(placement) ? new PlacementSettings[0] : serializer.Deserialize<PlacementSettings[]>(placement);
-
         }
-
     }
 }
