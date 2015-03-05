@@ -120,6 +120,8 @@ namespace Orchard.Core.Contents.Controllers {
             model.Options.Cultures = _cultureManager.ListCultures();
 
             var maxPagedCount = _siteService.GetSiteSettings().MaxPagedCount;
+            if (maxPagedCount > 0 && pager.PageSize > maxPagedCount)
+                pager.PageSize = maxPagedCount;
             var pagerShape = Shape.Pager(pager).TotalItemCount(maxPagedCount > 0 ? maxPagedCount : query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
