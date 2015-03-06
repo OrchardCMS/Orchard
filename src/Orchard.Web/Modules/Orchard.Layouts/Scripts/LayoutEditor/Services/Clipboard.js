@@ -20,11 +20,13 @@
 
     angular
         .module("LayoutEditor")
-        .factory("clipboard", function() {
-            return {
-                setData: LayoutEditor.Clipboard.setData,
-                getData: LayoutEditor.Clipboard.getData,
-                disable: LayoutEditor.Clipboard.disable
-            };
-        });
+        .factory("clipboard", [
+            function() {
+                return {
+                    setData: LayoutEditor.Clipboard.setData,
+                    getData: LayoutEditor.Clipboard.getData,
+                    disable: LayoutEditor.Clipboard.disable
+                };
+            }
+        ]);
 })(LayoutEditor || (LayoutEditor = {}));

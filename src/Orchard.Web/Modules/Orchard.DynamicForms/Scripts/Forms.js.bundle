@@ -4,7 +4,7 @@
     <!--Determines if the bundle file should be automatically optimized after creation/update.-->
     <minify>true</minify>
     <!--Determine whether to generate/re-generate this bundle on building the solution.-->
-    <runOnBuild>false</runOnBuild>
+    <runOnBuild>true</runOnBuild>
     <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
     <outputDirectory />
   </settings>
