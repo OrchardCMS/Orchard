@@ -26,7 +26,7 @@ namespace Orchard.AuditTrail.Services {
         private readonly ISiteService _siteService;
         private readonly ISignals _signals;
         private readonly IShapeFactory _shapeFactory;
-        private readonly IClientAddressAccessor _clientAddressAccessor;
+        private readonly IClientHostAddressAccessor _clientHostAddressAccessor;
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
@@ -38,7 +38,7 @@ namespace Orchard.AuditTrail.Services {
             ISiteService siteService,
             ISignals signals,
             IShapeFactory shapeFactory, 
-            IClientAddressAccessor clientAddressAccessor) {
+            IClientHostAddressAccessor clientHostAddressAccessor) {
 
             _auditTrailRepository = auditTrailRepository;
             _providers = providers;
@@ -49,7 +49,7 @@ namespace Orchard.AuditTrail.Services {
             _siteService = siteService;
             _signals = signals;
             _shapeFactory = shapeFactory;
-            _clientAddressAccessor = clientAddressAccessor;
+            _clientHostAddressAccessor = clientHostAddressAccessor;
         }
 
         public IPageOfItems<AuditTrailEventRecord> GetRecords(
@@ -244,7 +244,7 @@ namespace Orchard.AuditTrail.Services {
             if (!settings.EnableClientIpAddressLogging)
                 return null;
 
-            return _clientAddressAccessor.GetClientAddress();
+            return _clientHostAddressAccessor.GetClientAddress();
         }
 
         private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor) {

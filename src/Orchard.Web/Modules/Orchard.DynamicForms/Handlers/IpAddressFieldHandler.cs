@@ -4,10 +4,10 @@ using Orchard.Services;
 
 namespace Orchard.DynamicForms.Handlers {
     public class IpAddressFieldHandler : FormElementEventHandlerBase {
-        private readonly IClientAddressAccessor _clientAddressAccessor;
+        private readonly IClientHostAddressAccessor _clientHostAddressAccessor;
 
-        public IpAddressFieldHandler(IClientAddressAccessor clientAddressAccessor) {
-            _clientAddressAccessor = clientAddressAccessor;
+        public IpAddressFieldHandler(IClientHostAddressAccessor clientHostAddressAccessor) {
+            _clientHostAddressAccessor = clientHostAddressAccessor;
         }
 
         public override void GetElementValue(FormElement element, ReadElementValuesContext context) {
@@ -17,7 +17,7 @@ namespace Orchard.DynamicForms.Handlers {
                 return;
 
             var key = ipAddressField.Name;
-            context.Output[key] = _clientAddressAccessor.GetClientAddress();
+            context.Output[key] = _clientHostAddressAccessor.GetClientAddress();
         }
     }
 }
