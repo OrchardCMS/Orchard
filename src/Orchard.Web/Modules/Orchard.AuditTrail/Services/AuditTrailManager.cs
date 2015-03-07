@@ -26,7 +26,7 @@ namespace Orchard.AuditTrail.Services {
         private readonly ISiteService _siteService;
         private readonly ISignals _signals;
         private readonly IShapeFactory _shapeFactory;
-        private readonly IClientIpAddressProvider _clientIpAddressProvider;
+        private readonly IClientHostAddressAccessor _clientHostAddressAccessor;
 
         public AuditTrailManager(
             IRepository<AuditTrailEventRecord> auditTrailRepository,
@@ -38,7 +38,7 @@ namespace Orchard.AuditTrail.Services {
             ISiteService siteService,
             ISignals signals,
             IShapeFactory shapeFactory, 
-            IClientIpAddressProvider clientIpAddressProvider) {
+            IClientHostAddressAccessor clientHostAddressAccessor) {
 
             _auditTrailRepository = auditTrailRepository;
             _providers = providers;
@@ -49,7 +49,7 @@ namespace Orchard.AuditTrail.Services {
             _siteService = siteService;
             _signals = signals;
             _shapeFactory = shapeFactory;
-            _clientIpAddressProvider = clientIpAddressProvider;
+            _clientHostAddressAccessor = clientHostAddressAccessor;
         }
 
         public IPageOfItems<AuditTrailEventRecord> GetRecords(
@@ -155,7 +155,7 @@ namespace Orchard.AuditTrail.Services {
                 EventFilterKey = context.EventFilterKey,
                 EventFilterData = context.EventFilterData,
                 Comment = context.Comment,
-                ClientIpAddress = GetClientIpAddress()
+                ClientIpAddress = GetClientAddress()
             };
 
             _auditTrailRepository.Create(record);
@@ -238,13 +238,13 @@ namespace Orchard.AuditTrail.Services {
             return Enumerable.Empty<AuditTrailEventSetting>();
         }
 
-        private string GetClientIpAddress() {
+        private string GetClientAddress() {
             var settings = _siteService.GetSiteSettings().As<AuditTrailSettingsPart>();
 
             if (!settings.EnableClientIpAddressLogging)
                 return null;
 
-            return _clientIpAddressProvider.GetClientIpAddress();
+            return _clientHostAddressAccessor.GetClientAddress();
         }
 
         private bool IsEventEnabled(AuditTrailEventDescriptor eventDescriptor) {

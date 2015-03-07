@@ -118,10 +118,6 @@
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
       <Name>Orchard.AntiSpam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.AuditTrail\Orchard.AuditTrail.csproj">
-      <Project>{3dd574cd-9c5d-4a45-85e1-ebba64c22b5f}</Project>
-      <Name>Orchard.AuditTrail</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
       <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>

@@ -351,7 +351,9 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Services\Clock.cs" />
+    <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />
+    <Compile Include="Services\IClientHostAddressAccessor.cs" />
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />

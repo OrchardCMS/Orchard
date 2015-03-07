@@ -1,13 +1,13 @@
-using Orchard.AuditTrail.Services;
 using Orchard.DynamicForms.Elements;
 using Orchard.DynamicForms.Services;
+using Orchard.Services;
 
 namespace Orchard.DynamicForms.Handlers {
     public class IpAddressFieldHandler : FormElementEventHandlerBase {
-        private readonly IClientIpAddressProvider _clientIpAddressProvider;
+        private readonly IClientHostAddressAccessor _clientHostAddressAccessor;
 
-        public IpAddressFieldHandler(IClientIpAddressProvider clientIpAddressProvider) {
-            _clientIpAddressProvider = clientIpAddressProvider;
+        public IpAddressFieldHandler(IClientHostAddressAccessor clientHostAddressAccessor) {
+            _clientHostAddressAccessor = clientHostAddressAccessor;
         }
 
         public override void GetElementValue(FormElement element, ReadElementValuesContext context) {
@@ -17,7 +17,7 @@ namespace Orchard.DynamicForms.Handlers {
                 return;
 
             var key = ipAddressField.Name;
-            context.Output[key] = _clientIpAddressProvider.GetClientIpAddress();
+            context.Output[key] = _clientHostAddressAccessor.GetClientAddress();
         }
     }
 }
