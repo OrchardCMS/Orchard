@@ -15,3 +15,8 @@ Features:
 		Description: Provides User based Workflow Activites.
 		Category: Workflows
 		Dependencies: Orchard.Workflows
+	Orchard.Users.PasswordEditor:
+		Name: User Password Editor
+		Description: Adds the ability for admins to edit users' passwords.
+		Category: Security
+		Dependencies: Orchard.Users

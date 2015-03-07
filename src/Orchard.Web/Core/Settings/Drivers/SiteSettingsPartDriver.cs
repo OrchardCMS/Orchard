@@ -115,8 +115,6 @@ namespace Orchard.Core.Settings.Drivers {
 
         protected override void Exporting(SiteSettingsPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("SupportedCultures", string.Join(";", _cultureManager.ListCultures()));
-
-            base.Exporting(part, context);
         }
 
         protected override void Importing(SiteSettingsPart part, ContentManagement.Handlers.ImportContentContext context) {
@@ -126,8 +124,6 @@ namespace Orchard.Core.Settings.Drivers {
                     _cultureManager.AddCulture(culture);
                 }
             }
-
-            base.Importing(part, context);
         }
     }
 }

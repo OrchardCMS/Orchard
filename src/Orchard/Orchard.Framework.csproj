@@ -44,6 +44,7 @@
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -184,7 +185,7 @@
     <Compile Include="Data\Bags\SArray.cs" />
     <Compile Include="Data\Conventions\UtcDateTimeConvention.cs" />
     <Compile Include="Data\DefaultSessionConfigurationEvents.cs" />
-    <Compile Include="Data\DoNotMapAttribute.cs" /> 
+    <Compile Include="Data\DoNotMapAttribute.cs" />
     <Compile Include="Data\FetchRequest.cs" />
     <Compile Include="Data\SessionConfigurationEventsWithParameters.cs" />
     <Compile Include="Data\ISessionConfigurationEventsWithParameters.cs" />

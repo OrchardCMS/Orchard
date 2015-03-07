@@ -14,6 +14,7 @@
                             return;
                         $scope.element.data = decodeURIComponent(args.element.data);
                         $scope.element.name = args.elementEditorModel.name;
+                        $scope.element.formBindingContentType = args.elementEditorModel.formBindingContentType;
                         $scope.$apply();
                     });
                 };
@@ -42,7 +43,7 @@ var LayoutEditor;
         this.toObject = function () {
             var result = this.elementToObject();
             result.name = this.name;
-            result.formBindingContentType = formBindingContentType;
+            result.formBindingContentType = this.formBindingContentType;
             result.children = this.childrenToObject();
 
             return result;
@@ -61,15 +62,18 @@ var LayoutEditor;
             this.children = children;
             _(this.children).each(function (child) {
                 child.parent = self;
-
-                var getEditorObject = child.getEditorObject;
-                child.getEditorObject = function () {
-                    var dto = getEditorObject();
-                    return $.extend(dto, {
-                        FormBindingContentType: self.formBindingContentType
-                    });
-                };
+                self.linkChild(child);
             });
+        };
+
+        this.linkChild = function(element) {
+            var getEditorObject = element.getEditorObject;
+            element.getEditorObject = function () {
+                var dto = getEditorObject();
+                return $.extend(dto, {
+                    FormBindingContentType: self.formBindingContentType
+                });
+            };
         };
 
         this.setChildren(children);

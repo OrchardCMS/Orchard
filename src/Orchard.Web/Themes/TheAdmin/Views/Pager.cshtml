@@ -17,7 +17,7 @@
         routeData.Remove("id");
     }
 
-    var totalPageCount = (int)Math.Ceiling((double)Model.TotalItemCount / Model.PageSize);
+    var totalPageCount = Model.PageSize > 0 ? (int)Math.Ceiling((double)Model.TotalItemCount / Model.PageSize) : 1;
 
     Model.Metadata.Type = "Pager_Links";
     IHtmlString pagerLinks = Display(Model);
@@ -32,8 +32,14 @@
     }
 
     var pageSizes = new List<int?> { 10, 50, 100 };
+    var maxPageSize = WorkContext.CurrentSite.MaxPageSize;
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
-    if (!pageSizes.Contains(defaultPageSize)) {
+    if (maxPageSize > 0 && defaultPageSize > maxPageSize) {
+        defaultPageSize = maxPageSize;
+        pageSizes.RemoveAll(x => x > maxPageSize);
+    }
+    
+    if (defaultPageSize > 0 && !pageSizes.Contains(defaultPageSize)) {
         pageSizes.Add(defaultPageSize);
     }
 }
@@ -46,7 +52,14 @@
 
                 @pageSizeTag.StartElement
 
-                    @{ routeData["pageSize"] = 0; }
+                @{
+                    var pageId = String.IsNullOrEmpty(Model.PagerId) ? "page" : Model.PagerId;
+                    var nPage = Math.Max(1, Convert.ToInt32(routeData[pageId]));
+                    var firstItem = (nPage - 1)*Model.PageSize + 1;
+
+                    routeData["pageSize"] = 0;
+                    routeData[pageId] = 1;
+                }
 
                     @if ((int)Model.PageSize == 0) {
                         <li class="selected"><span>@T("All").ToString()</span></li>
@@ -57,6 +70,8 @@
                     @foreach (int size in pageSizes.OrderBy(p => p)) {
                         routeData["pageSize"] = size;
 
+                        routeData[pageId] = size > 0 ? Math.Ceiling((double) firstItem/size) : 1;
+                        
                         if ((int)Model.PageSize == size) {
                             <li class="selected"><span>@size.ToString()</span></li>
                         } else {

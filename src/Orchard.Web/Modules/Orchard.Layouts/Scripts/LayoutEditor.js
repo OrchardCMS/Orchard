@@ -264,8 +264,9 @@ angular
                                     // Should ideally call LayoutEditor.Container.addChild() instead, but since this handler
                                     // is run *before* the ui-sortable directive's handler, if we try to add the child to the
                                     // array that handler will get an exception when trying to do the same.
+                                    // Because of this, we need to invoke "setParent" so that specific container types can perform element speficic initialization.
                                     receivedElement.setEditor(element.editor);
-                                    receivedElement.parent = element;
+                                    receivedElement.setParent(element);
                                     if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
                                         $scope.$root.editElement(receivedElement).then(function (args) {
                                             if (!args.cancel) {
@@ -638,7 +639,7 @@ angular
                     $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                 };
 
-                $scope.element.setHtml($scope.element.html);
+                $scope.element.setHtml(decodeURIComponent($scope.element.html.replace(/\+/g, "%20")));
             },
             templateUrl: environment.templateUrl("Content"),
             replace: true,

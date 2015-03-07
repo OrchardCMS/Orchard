@@ -17,8 +17,8 @@ namespace Orchard.DynamicForms.Drivers {
                 var form = shape.Fieldset(
                     Id: "Form",
                     _ButtonText: shape.Textbox(
-                        Id: "ButtonText",
-                        Name: "ButtonText",
+                        Id: "Text",
+                        Name: "Text",
                         Title: "Text",
                         Value: "Submit",
                         Classes: new[] { "text", "medium" },

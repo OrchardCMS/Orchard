@@ -196,12 +196,14 @@ namespace Orchard.UI.Resources {
             var resource = (from p in ResourceProviders
                             from r in p.GetResources(type)
                             where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
-                            orderby r.Value.Version descending
+                            let version = r.Value.Version != null ? new Version(r.Value.Version) : null
+                            orderby version descending
                             select r.Value).FirstOrDefault();
             if (resource == null && _dynamicManifest != null) {
                 resource = (from r in _dynamicManifest.GetResources(type)
                             where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
-                            orderby r.Value.Version descending
+                            let version = r.Value.Version != null ? new Version(r.Value.Version) : null
+                            orderby version descending
                             select r.Value).FirstOrDefault();
             }
             if (resolveInlineDefinitions && resource == null) {

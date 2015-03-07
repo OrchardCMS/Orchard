@@ -197,7 +197,7 @@
   <ItemGroup>
     <Content Include="Styles\images\menu.importexport.png" />
     <Content Include="Styles\menu.importexport-admin.css" />
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">

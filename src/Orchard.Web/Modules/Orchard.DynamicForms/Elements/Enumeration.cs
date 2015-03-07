@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Orchard.DynamicForms.Validators.Settings;
 using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
@@ -20,6 +21,10 @@ namespace Orchard.DynamicForms.Elements {
         public string InputType {
             get { return this.Retrieve(x => x.InputType, () => "SelectList"); }
             set { this.Store(x => x.InputType, value); }
+        }
+
+        public EnumerationValidationSettings ValidationSettings {
+            get { return Data.GetModel<EnumerationValidationSettings>(""); }
         }
 
         private IEnumerable<SelectListItem> GetOptions() {

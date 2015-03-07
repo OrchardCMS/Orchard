@@ -5,7 +5,7 @@ using Orchard.DynamicForms.Services.Models;
 using Orchard.Localization;
 
 namespace Orchard.DynamicForms.ValidationRules {
-    public class Mandatory : ValidationRule {        
+    public class Mandatory : ValidationRule {
         public override void Validate(ValidateInputContext context) {
             if (String.IsNullOrWhiteSpace(context.AttemptedValue)) {
                 var message = GetValidationMessage(context);

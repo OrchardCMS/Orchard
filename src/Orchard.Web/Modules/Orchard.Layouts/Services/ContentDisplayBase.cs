@@ -95,7 +95,7 @@ namespace Orchard.Layouts.Services {
             // Adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit.
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
             BindPlacement(context, null, stereotype);
 
             return context;
@@ -121,7 +121,7 @@ namespace Orchard.Layouts.Services {
                         Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
+                        Path = GetPath()
                     };
 
                     // define which location should be used if none placement is hit
@@ -139,6 +139,13 @@ namespace Orchard.Layouts.Services {
                     Source = String.Empty
                 };
             };
+        }
+
+        /// <summary>
+        /// Gets the current app-relative path, i.e. ~/my-blog/foo.
+        /// </summary>
+        private string GetPath() {
+            return VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path));
         }
     }
 }

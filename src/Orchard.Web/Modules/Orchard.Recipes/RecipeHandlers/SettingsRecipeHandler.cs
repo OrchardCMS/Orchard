@@ -76,7 +76,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
                 var property = sitePart.GetType().GetProperty(attributeName);
                 if (property == null) {
-                    return;
+                    continue;
                 }
 
                 var propertyType = property.PropertyType;
