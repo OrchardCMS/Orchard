@@ -15,10 +15,10 @@
         <legend>@T("Choose the type of subscription:")</legend>
         <div>
             @Html.RadioButtonFor(m => m.SelectedDeploymentType, "Export", new { id = "DeploymentTypeExport", Checked = "Checked" })
-            <label for="@Html.FieldIdFor(m => m.SelectedDeploymentType)" class="forcheckbox">@T("Export content out to a deployment target")</label>
+            <label for="DeploymentTypeExport" class="forcheckbox">@T("Export content out to a deployment target")</label>
             <br />
             @Html.RadioButtonFor(m => m.SelectedDeploymentType, "Import", new { id = "DeploymentTypeImport" })
-            <label for="@Html.FieldIdFor(m => m.SelectedDeploymentType)" class="forcheckbox">@T("Import content from a deployment source")</label>
+            <label for="DeploymentTypeImport" class="forcheckbox">@T("Import content from a deployment source")</label>
         </div>
         <div id="subscription-deployment-target">
             <p>@T("Deployment target")</p>

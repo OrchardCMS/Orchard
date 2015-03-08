@@ -64,10 +64,10 @@
     <div>
         <p>@T("Version History")</p>
         @Html.RadioButtonFor(m => m.DataImportChoice, "Published", new { id = "Published", Checked = "Checked" })
-        <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Published Versions")</label>
+        <label for="Published" class="forcheckbox">@T("Only Published Versions")</label>
         <br />
         @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new { id = "Draft" })
-        <label for="@Html.FieldIdFor(m => m.DataImportChoice)" class="forcheckbox">@T("Only Drafts")</label>
+        <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
     </div>
 </fieldset>
 @if (Model.CustomSteps.Any())
