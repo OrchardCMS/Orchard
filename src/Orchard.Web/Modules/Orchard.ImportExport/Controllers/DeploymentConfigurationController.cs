@@ -92,7 +92,7 @@ namespace Orchard.ImportExport.Controllers {
             try {
                 var deploymentTarget = _deploymentService.GetDeploymentTarget(Services.ContentManager.Get(id));
                 if (deploymentTarget != null) {
-                    deploymentTarget.PushDeploymentFile(Guid.NewGuid().ToString("n"), @"<Orchard><Recipe></Recipe></Orchard>");
+                    deploymentTarget.PushRecipe(Guid.NewGuid().ToString("n"), @"<Orchard><Recipe></Recipe></Orchard>");
                     Services.Notifier.Add(NotifyType.Information, T("Successfully tested deployment to remote target."));
                 }
             }

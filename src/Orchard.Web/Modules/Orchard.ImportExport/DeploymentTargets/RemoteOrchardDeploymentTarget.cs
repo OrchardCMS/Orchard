@@ -62,6 +62,14 @@ namespace Orchard.ImportExport.DeploymentTargets {
             }
         }
 
+        public void PushRecipe(string executionId, string recipeText) {
+            var actionUrl = _url.Action("Recipe", "Import", new {
+                area = "Orchard.ImportExport",
+                executionId
+            });
+            Client.Value.Post(actionUrl, recipeText, "text/xml");
+        }
+
         public RecipeStatus GetRecipeDeploymentStatus(string executionId) {
             var actionUrl = _url.Action("RecipeJournal", "Import", new {
                 area = "Orchard.ImportExport",
