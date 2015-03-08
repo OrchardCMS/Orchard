@@ -55,12 +55,16 @@ namespace Orchard.Email.Activities {
             var subject = activityContext.GetState<string>("Subject");
             var recipients = activityContext.GetState<string>("Recipients");
             var replyTo = activityContext.GetState<string>("ReplyTo");
+            var bcc = activityContext.GetState<string>("Bcc");
+            var cc = activityContext.GetState<string>("CC");
 
             var parameters = new Dictionary<string, object> {
                 {"Subject", subject},
                 {"Body", body},
                 {"Recipients", recipients},
-                {"ReplyTo", replyTo}
+                {"ReplyTo", replyTo},
+                {"Bcc", bcc},
+                {"CC", cc}
             };
 
             var queued = activityContext.GetState<bool>("Queued");

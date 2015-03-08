@@ -23,7 +23,7 @@ namespace Orchard.Caching.Services {
         }
 
         public void Put<T>(string key, T value, TimeSpan validFor) {
-            _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow).ToOffset(validFor)));
+            _cache.Set(key, value, GetCacheItemPolicy(new DateTimeOffset(_clock.UtcNow.Add(validFor))));
         }
 
         public void Remove(string key) {

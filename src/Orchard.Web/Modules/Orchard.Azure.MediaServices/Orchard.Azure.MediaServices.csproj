@@ -558,30 +558,14 @@
       <DependentUpon>cloudmedia-admin-settings.css</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\cloudmedia-admin-common.js.map" />
-    <Content Include="Scripts\cloudmedia-admin-job.js.map" />
-    <Content Include="Scripts\cloudmedia-admin-settings.js.map" />
-    <Content Include="Scripts\cloudmedia-autorefresh.js.map" />
-    <Content Include="Scripts\cloudmedia-edit-asset-video.js.map" />
-    <Content Include="Scripts\cloudmedia-edit-asset.js.map" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-direct.js.map" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart-proxied.js.map" />
-    <Content Include="Scripts\cloudmedia-edit-cloudvideopart.js.map" />
-    <Content Include="Scripts\cloudmedia-metadata-cloudvideopart.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-data.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-alt.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-dash.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-html5.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors-smp.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-injectors.js.map" />
-    <Content Include="Scripts\cloudmedia-videoplayer-main.js.map" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

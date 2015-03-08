@@ -72,8 +72,6 @@
     <Compile Include="Forms\ListFilterForm.cs" />
     <Compile Include="Handlers\ContainerPartHandler.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
-    <Compile Include="ListViews\CondensedListView.cs" />
-    <Compile Include="ListViews\DefaultListView.cs" />
     <Compile Include="Services\IFilterProvider.cs" />
     <Compile Include="Projections\ListFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

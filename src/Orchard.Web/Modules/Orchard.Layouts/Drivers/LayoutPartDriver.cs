@@ -7,6 +7,7 @@ using Orchard.DisplayManagement;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 using Orchard.Layouts.ViewModels;
@@ -84,6 +85,7 @@ namespace Orchard.Layouts.Drivers {
                     part.LayoutData = _serializer.Serialize(elementInstances);
                     part.TemplateId = viewModel.LayoutEditor.TemplateId;
                     part.SessionKey = viewModel.LayoutEditor.SessionKey;
+                    viewModel.LayoutEditor.Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext {Content = part}).ToJson();
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);

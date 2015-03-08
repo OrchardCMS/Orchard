@@ -141,7 +141,7 @@
     <Content Include="Images\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\_references.js" />
     <Content Include="Styles\LayoutEditor.css">
       <DependentUpon>LayoutEditor.css.bundle</DependentUpon>
     </Content>

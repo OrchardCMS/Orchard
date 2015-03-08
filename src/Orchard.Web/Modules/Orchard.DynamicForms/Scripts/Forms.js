@@ -1,27 +1,30 @@
 ﻿angular
     .module("LayoutEditor")
-    .directive("orcLayoutForm", function ($compile, scopeConfigurator, environment) {
-        return {
-            restrict: "E",
-            scope: { element: "=" },
-            controller: function ($scope, $element) {
-                scopeConfigurator.configureForElement($scope, $element);
-                scopeConfigurator.configureForContainer($scope, $element);
-                $scope.sortableOptions["axis"] = "y";
-                $scope.edit = function () {
-                    $scope.$root.editElement($scope.element).then(function (args) {
-                        if (args.cancel)
-                            return;
-                        $scope.element.data = decodeURIComponent(args.element.data);
-                        $scope.element.name = args.elementEditorModel.name;
-                        $scope.$apply();
-                    });
-                };
-            },
-            templateUrl: environment.templateUrl("Form"),
-            replace: true
-        };
-    });
+    .directive("orcLayoutForm", ["$compile", "scopeConfigurator", "environment",
+        function ($compile, scopeConfigurator, environment) {
+            return {
+                restrict: "E",
+                scope: { element: "=" },
+                controller: function ($scope, $element) {
+                    scopeConfigurator.configureForElement($scope, $element);
+                    scopeConfigurator.configureForContainer($scope, $element);
+                    $scope.sortableOptions["axis"] = "y";
+                    $scope.edit = function () {
+                        $scope.$root.editElement($scope.element).then(function (args) {
+                            if (args.cancel)
+                                return;
+                            $scope.element.data = decodeURIComponent(args.element.data);
+                            $scope.element.name = args.elementEditorModel.name;
+                            $scope.element.formBindingContentType = args.elementEditorModel.formBindingContentType;
+                            $scope.$apply();
+                        });
+                    };
+                },
+                templateUrl: environment.templateUrl("Form"),
+                replace: true
+            };
+        }
+    ]);
 var LayoutEditor;
 (function ($, LayoutEditor) {
 
@@ -42,7 +45,7 @@ var LayoutEditor;
         this.toObject = function () {
             var result = this.elementToObject();
             result.name = this.name;
-            result.formBindingContentType = formBindingContentType;
+            result.formBindingContentType = this.formBindingContentType;
             result.children = this.childrenToObject();
 
             return result;
@@ -61,15 +64,18 @@ var LayoutEditor;
             this.children = children;
             _(this.children).each(function (child) {
                 child.parent = self;
-
-                var getEditorObject = child.getEditorObject;
-                child.getEditorObject = function () {
-                    var dto = getEditorObject();
-                    return $.extend(dto, {
-                        FormBindingContentType: self.formBindingContentType
-                    });
-                };
+                self.linkChild(child);
             });
+        };
+
+        this.linkChild = function(element) {
+            var getEditorObject = element.getEditorObject;
+            element.getEditorObject = function () {
+                var dto = getEditorObject();
+                return $.extend(dto, {
+                    FormBindingContentType: self.formBindingContentType
+                });
+            };
         };
 
         this.setChildren(children);

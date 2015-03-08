@@ -9,6 +9,7 @@ namespace Orchard.Layouts {
             manifest.DefineScript("AngularSanitize").SetUrl("Lib/angular-sanitize.js").SetDependencies("Angular");
             manifest.DefineScript("AngularResource").SetUrl("Lib/angular-resource.js").SetDependencies("Angular");
             manifest.DefineScript("Layouts.Models").SetUrl("Models.min.js", "Models.js").SetDependencies("jQuery", "Underscore");
+
             manifest.DefineScript("Layouts.LayoutEditor").SetUrl("LayoutEditor.min.js", "LayoutEditor.js").SetDependencies("Layouts.Models", "AngularResource", "AngularSanitize", "Angular", "jQuery", "Underscore");
         }
     }

@@ -1,4 +1,5 @@
-﻿using Orchard.Layouts.Helpers;
+﻿using Orchard.DynamicForms.Validators.Settings;
+using Orchard.Layouts.Helpers;
 
 namespace Orchard.DynamicForms.Elements {
     public class Taxonomy : LabeledFormElement {
@@ -31,6 +32,10 @@ namespace Orchard.DynamicForms.Elements {
         public string ValueExpression {
             get { return this.Retrieve(x => x.ValueExpression); }
             set { this.Store(x => x.ValueExpression, value); }
+        }
+
+        public EnumerationValidationSettings ValidationSettings {
+            get { return Data.GetModel<EnumerationValidationSettings>(""); }
         }
     }
 }

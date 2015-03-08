@@ -104,7 +104,7 @@ namespace Orchard.Layouts.Controllers {
             var contentType = sessionState.ContentType;
             var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
-            var data = ElementDataHelper.Deserialize(model.ElementData).Combine(Request.Form.ToDictionary());
+            var data = Request.Form.ToDictionary();
             var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
             var context = CreateEditorContext(session, describeContext.Content, element, elementData: data, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);
@@ -190,7 +190,7 @@ namespace Orchard.Layouts.Controllers {
             var contentType = sessionState.ContentType;
             var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
-            var data = ElementDataHelper.Deserialize(model.ElementData).Combine(Request.Form.ToDictionary());
+            var data = Request.Form.ToDictionary();
             var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
             var context = CreateEditorContext(session, describeContext.Content, element, data, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);

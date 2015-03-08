@@ -3,11 +3,11 @@
     <legend>@T("Schedule Details"):</legend>
     <br />
     <div>
-        @Html.RadioButtonFor(m => m.IsActive, "false", new { @class = "scheduleisactiveradio" })
-        <label for="@Html.FieldIdFor(m => m.IsActive)" class="forcheckbox">@T("Run on demand")</label>
+        @Html.RadioButtonFor(m => m.IsActive, "false", new { @class = "scheduleisactiveradio", id="scheduleDetailsOnDemand" })
+        <label for="scheduleDetailsOnDemand" class="forcheckbox">@T("Run on demand")</label>
         <br />
-        @Html.RadioButtonFor(m => m.IsActive, "true", new { @class = "scheduleisactiveradio" })
-        <label for="@Html.FieldIdFor(m => m.IsActive)" class="forcheckbox">@T("Create schedule")</label>
+        @Html.RadioButtonFor(m => m.IsActive, "true", new { @class = "scheduleisactiveradio", id="scheduleDetailsCreateSchedule" })
+        <label for="scheduleDetailsCreateSchedule" class="forcheckbox">@T("Create schedule")</label>
     </div>
     <div class="recurring-task-schedule-detail">
         <div>

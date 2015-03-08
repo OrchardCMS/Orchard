@@ -9,13 +9,13 @@ namespace Orchard.DynamicForms.Services {
         protected override void ToElement(Form element, JToken node) {
             base.ToElement(element, node);
             element.Name = (string)node["name"];
-            element.ContentType = (string)node["formBindingContentType"];
+            element.FormBindingContentType = (string)node["formBindingContentType"];
         }
 
         public override void FromElement(Form element, DescribeElementsContext describeContext, JToken node) {
             base.FromElement(element, describeContext, node);
             node["name"] = element.Name;
-            node["formBindingContentType"] = element.ContentType;
+            node["formBindingContentType"] = element.FormBindingContentType;
             node["hasEditor"] = element.HasEditor;
             node["contentType"] = element.Descriptor.TypeName;
             node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;

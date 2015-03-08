@@ -146,7 +146,7 @@
     <Content Include="Views\EditorTemplates\Parts\CreateTag.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Web.config" />

@@ -30,11 +30,12 @@ namespace Orchard.DynamicForms.Drivers {
             _tokenizer = tokenizer;
         }
 
-        protected override IEnumerable<string> FormNames {
-            get {
-                yield return "AutoLabel";
-                yield return "QueryForm";
-            }
+        protected override EditorResult OnBuildEditor(Query element, ElementEditorContext context) {
+            var autoLabelEditor = BuildForm(context, "AutoLabel");
+            var enumerationEditor = BuildForm(context, "QueryForm");
+            var checkBoxValidation = BuildForm(context, "QueryValidation", "Validation:10");
+
+            return Editor(context, autoLabelEditor, enumerationEditor, checkBoxValidation);
         }
 
         protected override void DescribeForm(DescribeContext context) {
@@ -87,6 +88,32 @@ namespace Orchard.DynamicForms.Drivers {
 
                 return form;
             });
+
+            context.Form("QueryValidation", factory => {
+                var shape = (dynamic)factory;
+                var form = shape.Fieldset(
+                    Id: "QueryValidation",
+                    _IsRequired: shape.Checkbox(
+                        Id: "Required",
+                        Name: "Required",
+                        Title: "Required",
+                        Value: "true",
+                        Description: T("Tick this checkbox to make at least one option required.")),
+                    _CustomValidationMessage: shape.Textbox(
+                        Id: "CustomValidationMessage",
+                        Name: "CustomValidationMessage",
+                        Title: "Custom Validation Message",
+                        Classes: new[] { "text", "large", "tokenized" },
+                        Description: T("Optionally provide a custom validation message.")),
+                    _ShowValidationMessage: shape.Checkbox(
+                        Id: "ShowValidationMessage",
+                        Name: "ShowValidationMessage",
+                        Title: "Show Validation Message",
+                        Value: "true",
+                        Description: T("Autogenerate a validation message when a validation error occurs for the current field. Alternatively, to control the placement of the validation message you can use the ValidationMessage element instead.")));
+
+                return form;
+            });
         }
 
         protected override void OnDisplaying(Query element, ElementDisplayContext context) {
@@ -96,8 +123,8 @@ namespace Orchard.DynamicForms.Drivers {
             var displayType = context.DisplayType;
 
             context.ElementShape.Options = GetOptions(element, queryId).ToArray();
-            context.ElementShape.Metadata.Alternates.Add(String.Format("Element__{0}__{1}__{2}", category, typeName, element.InputType));
-            context.ElementShape.Metadata.Alternates.Add(String.Format("Element_{0}__{1}__{2}__{3}", displayType, category, typeName, element.InputType));
+            context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, element.InputType));
+            context.ElementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, element.InputType));
         }
 
         private IEnumerable<SelectListItem> GetOptions(Query element, int? queryId) {

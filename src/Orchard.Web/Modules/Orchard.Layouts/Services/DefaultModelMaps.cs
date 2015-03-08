@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Web.Mvc;
+using Newtonsoft.Json.Linq;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -63,10 +64,12 @@ namespace Orchard.Layouts.Services {
     public class ContentModelMap : ILayoutModelMap {
         private readonly IShapeDisplay _shapeDisplay;
         private readonly IElementDisplay _elementDisplay;
+        private readonly UrlHelper _urlHelper;
 
-        public ContentModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay) {
+        public ContentModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay, UrlHelper urlHelper) {
             _shapeDisplay = shapeDisplay;
             _elementDisplay = elementDisplay;
+            _urlHelper = urlHelper;
         }
 
         public string LayoutElementType { get { return "Content"; } }
@@ -106,7 +109,7 @@ namespace Orchard.Layouts.Services {
             node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
             node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
             node["contentTypeDescription"] = element.Descriptor.Description.Text;
-            node["html"] = _shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design"));
+            node["html"] = _urlHelper.Encode(_shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design")));
         }
     }
 }

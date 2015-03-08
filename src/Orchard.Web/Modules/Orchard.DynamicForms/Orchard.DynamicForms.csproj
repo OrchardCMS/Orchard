@@ -118,10 +118,6 @@
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
       <Name>Orchard.AntiSpam</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.AuditTrail\Orchard.AuditTrail.csproj">
-      <Project>{3dd574cd-9c5d-4a45-85e1-ebba64c22b5f}</Project>
-      <Name>Orchard.AuditTrail</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
       <Project>{3787dde5-e5c8-4841-bda7-dcb325388064}</Project>
       <Name>Orchard.Fields</Name>
@@ -210,15 +206,20 @@
     <Compile Include="Services\ValidationRuleFactory.cs" />
     <Compile Include="Services\IValidationRule.cs" />
     <Compile Include="Tokens\FormTokens.cs" />
+    <Compile Include="ValidationRules\OptionRequired.cs" />
     <Compile Include="ValidationRules\Mandatory.cs" />
     <Compile Include="ValidationRules\Compare.cs" />
     <Compile Include="ValidationRules\EmailAddress.cs" />
     <Compile Include="ValidationRules\RegularExpression.cs" />
     <Compile Include="ValidationRules\StringLength.cs" />
+    <Compile Include="Validators\QueryValidator.cs" />
+    <Compile Include="Validators\TaxonomyValidator.cs" />
+    <Compile Include="Validators\EnumerationValidator.cs" />
     <Compile Include="Validators\CheckBoxValidator.cs" />
     <Compile Include="ValidationRules\Required.cs" />
     <Compile Include="Services\ValidationRule.cs" />
     <Compile Include="Validators\EmailFieldValidator.cs" />
+    <Compile Include="Validators\Settings\EnumerationValidationSettings.cs" />
     <Compile Include="Validators\Settings\CheckBoxValidationSettings.cs" />
     <Compile Include="Validators\Settings\EmailFieldValidationSettings.cs" />
     <Compile Include="Validators\Settings\PasswordFieldValidationSettings.cs" />
@@ -466,6 +467,42 @@
     <Content Include="Scripts\Forms.min.js.map">
       <DependentUpon>Forms.min.js</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Enumeration-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Taxonomy-SelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-CheckList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-MultiSelectList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-RadioList.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Query-SelectList.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

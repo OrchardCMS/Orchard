@@ -100,6 +100,13 @@ var LayoutEditor;
             }
         };
 
+        this.setParent = function(parentElement) {
+            this.parent = parentElement;
+
+            if (!!this.parent.linkChild)
+                this.parent.linkChild(this);
+        };
+
         this.setIsTemplated = function (value) {
             this.isTemplated = value;
             if (!!this.children && _.isArray(this.children)) {
@@ -912,7 +919,7 @@ var LayoutEditor;
             value.contentType,
             value.contentTypeLabel,
             value.contentTypeClass,
-            value.html,
+            decodeURIComponent(value.html.replace(/\+/g, "%20")),
             value.hasEditor);
 
         return result;

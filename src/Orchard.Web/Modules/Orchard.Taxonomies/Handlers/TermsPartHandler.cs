@@ -9,6 +9,9 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.State;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
 
 namespace Orchard.Taxonomies.Handlers {
     public class TermsPartHandler : ContentHandler {
@@ -19,14 +22,17 @@ namespace Orchard.Taxonomies.Handlers {
             IContentDefinitionManager contentDefinitionManager,
             IRepository<TermsPartRecord> repository,
             ITaxonomyService taxonomyService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IProcessingEngine processingEngine,
+            ShellSettings shellSettings,
+            IShellDescriptorManager shellDescriptorManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
 
             Filters.Add(StorageFilter.For(repository));
-            OnPublished<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
-            OnUnpublished<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
-            OnRemoved<TermsPart>((context, part) => RecalculateCount(taxonomyService, part));
+            OnPublished<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
+            OnUnpublished<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
+            OnRemoved<TermsPart>((context, part) => RecalculateCount(processingEngine, shellSettings, shellDescriptorManager, part));
 
             // Tells how to load the field terms on demand, when a content item it loaded or when it has been created
             OnInitialized<TermsPart>((context, part) => InitializerTermsLoader(part));
@@ -68,7 +74,7 @@ namespace Orchard.Taxonomies.Handlers {
 
             part._termParts = new LazyField<IEnumerable<TermContentItemPart>>();
             part._termParts.Loader(value => {
-                var ids = part.Terms.Select(t => t.TermRecord.Id);
+                var ids = part.Terms.Select(t => t.TermRecord.Id).Distinct();
                 var terms = _contentManager.GetMany<TermPart>(ids, VersionOptions.Published, queryHint)
                     .ToDictionary(t => t.Id, t => t);
                 return
@@ -82,20 +88,11 @@ namespace Orchard.Taxonomies.Handlers {
             });
         }
 
-        // Retrieve the number of associated content items, for the whole hierarchy
-        private static void RecalculateCount(ITaxonomyService taxonomyService, TermsPart part) {
-            foreach (var term in part.Terms) {
-                var termPart = taxonomyService.GetTerm(term.TermRecord.Id);
-                while (termPart != null) {
-                    termPart.Count = (int)taxonomyService.GetContentItemsCount(termPart);
+        
+        // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
+        private void RecalculateCount(IProcessingEngine processingEngine, ShellSettings shellSettings, IShellDescriptorManager shellDescriptorManager, TermsPart part) {
+            processingEngine.AddTask(shellSettings, shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termsPartId", part.ContentItem.Id } });
 
-                    // compute count for the hierarchy too
-                    if (termPart.Container != null) {
-                        var parentTerm = termPart.Container.As<TermPart>();
-                        termPart = parentTerm;
-                    }
-                }
-            }
         }
 
         protected override void Activating(ActivatingContentContext context) {

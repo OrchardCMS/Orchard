@@ -102,4 +102,3 @@ var Orchard;
         })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
     })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
-//# sourceMappingURL=cloudmedia-videoplayer-injectors-html5.js.map
