@@ -23,6 +23,6 @@
         }
     };
 
-    LayoutEditor.DecodeLayoutGraph = decodeGraph;
+    LayoutEditor.decodeLayoutGraph = decodeGraph;
 
 })(LayoutEditor || (LayoutEditor = {}));

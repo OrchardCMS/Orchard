@@ -40,7 +40,7 @@
                 var editorConfig = @Html.Raw(Model.ConfigurationData);
                 var editorCanvasData = @Html.Raw(Model.Data);
 
-                LayoutEditor.DecodeLayoutGraph(editorCanvasData);
+                LayoutEditor.decodeLayoutGraph(editorCanvasData);
                 window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
             })(jQuery);
         </script>

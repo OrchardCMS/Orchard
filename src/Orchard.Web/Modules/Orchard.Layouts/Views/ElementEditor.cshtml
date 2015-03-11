@@ -45,8 +45,8 @@
                     elementEditorModel: @Html.Raw(Model.ElementEditorModel.ToJson())
                 };
 
-                LayoutEditor.DecodeLayoutGraph(payload.element);
-                LayoutEditor.DecodeLayoutGraph(payload.elementEditorModel);
+                LayoutEditor.decodeLayoutGraph(payload.element);
+                LayoutEditor.decodeLayoutGraph(payload.elementEditorModel);
                 window.parent.currentDialog.trigger("command", payload);
             });
         </script>
