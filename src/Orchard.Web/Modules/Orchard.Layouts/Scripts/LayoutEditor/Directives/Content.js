@@ -14,8 +14,8 @@
                                     if (args.cancel)
                                         return;
 
-                                    $scope.element.data = decodeURIComponent(args.element.data);
-                                    $scope.element.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.setHtml(args.element.html);
                                 });
                             });
                         };
@@ -29,7 +29,7 @@
                             $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                         };
 
-                        $scope.element.setHtml(decodeURIComponent($scope.element.html.replace(/\+/g, "%20")));
+                        $scope.element.setHtml($scope.element.html);
                     }
                 ],
                 templateUrl: environment.templateUrl("Content"),

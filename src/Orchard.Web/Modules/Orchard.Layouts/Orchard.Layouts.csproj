@@ -133,7 +133,7 @@
     <Content Include="Scripts\Models\Grid.js" />
     <Content Include="Scripts\Models\Helpers.js" />
     <Content Include="Scripts\Models\Row.js" />
-    <Content Include="Scripts\serializer.js" />
+    <Content Include="Scripts\LayoutDecoder.js" />
     <Content Include="Scripts\dialog.js" />
     <Content Include="Scripts\designer.canvas.js" />
     <Content Include="Data\Canvas.json" />

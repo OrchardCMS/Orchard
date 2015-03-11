@@ -273,8 +273,8 @@ angular
                                         if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
-                                                    receivedElement.data = decodeURIComponent(args.element.data);
-                                                    receivedElement.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                                    receivedElement.data = args.element.data;
+                                                    receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {
                                                     if (!!args.cancel)
@@ -644,8 +644,8 @@ angular
                                     if (args.cancel)
                                         return;
 
-                                    $scope.element.data = decodeURIComponent(args.element.data);
-                                    $scope.element.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.setHtml(args.element.html);
                                 });
                             });
                         };
@@ -659,7 +659,7 @@ angular
                             $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
                         };
 
-                        $scope.element.setHtml(decodeURIComponent($scope.element.html.replace(/\+/g, "%20")));
+                        $scope.element.setHtml($scope.element.html);
                     }
                 ],
                 templateUrl: environment.templateUrl("Content"),

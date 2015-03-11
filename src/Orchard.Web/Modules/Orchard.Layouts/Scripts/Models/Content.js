@@ -57,7 +57,7 @@
             value.contentType,
             value.contentTypeLabel,
             value.contentTypeClass,
-            decodeURIComponent(value.html.replace(/\+/g, "%20")),
+            value.html,
             value.hasEditor);
 
         return result;
