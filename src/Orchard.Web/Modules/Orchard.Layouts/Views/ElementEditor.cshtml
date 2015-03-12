@@ -5,6 +5,7 @@
 @{
     Style.Include("element-editor.css");
     Script.Require("jQuery");
+    Script.Include("LayoutDecoder.js");
     Script.Include("element-editor.js");
     Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
 
@@ -31,7 +32,7 @@
     using (Script.Foot()) {
         <script type="text/javascript">
             jQuery(function () {
-                window.parent.currentDialog.trigger("command", {
+                var payload = {
                     command: "@command",
                     element: {
                         typeName: "@Model.TypeName",
@@ -42,7 +43,11 @@
                         isTemplated: false
                     },
                     elementEditorModel: @Html.Raw(Model.ElementEditorModel.ToJson())
-                });
+                };
+
+                LayoutEditor.decodeLayoutGraph(payload.element);
+                LayoutEditor.decodeLayoutGraph(payload.elementEditorModel);
+                window.parent.currentDialog.trigger("command", payload);
             });
         </script>
     }

@@ -273,8 +273,8 @@ angular
                                         if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
-                                                    receivedElement.data = decodeURIComponent(args.element.data);
-                                                    receivedElement.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                                    receivedElement.data = args.element.data;
+                                                    receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {
                                                     if (!!args.cancel)
@@ -357,144 +357,146 @@ angular
             return {
                 restrict: "E",
                 scope: {},
-                controller: function ($scope, $element, $attrs, $compile, clipboard) {
-                    if (!!$attrs.model)
-                        $scope.element = eval($attrs.model);
-                    else
-                        throw new Error("The 'model' attribute must evaluate to a LayoutEditor.Editor object.");
+                controller: ["$scope", "$element", "$attrs", "$compile", "clipboard",
+                    function ($scope, $element, $attrs, $compile, clipboard) {
+                        if (!!$attrs.model)
+                            $scope.element = eval($attrs.model);
+                        else
+                            throw new Error("The 'model' attribute must evaluate to a LayoutEditor.Editor object.");
 
-                    $scope.click = function (canvas, e) {
-                        if (!canvas.editor.isDragging)
-                            canvas.setIsFocused();
-                        e.stopPropagation();
-                    };
-
-                    $scope.getClasses = function (canvas) {
-                        var result = ["layout-element", "layout-container", "layout-canvas"];
-
-                        if (canvas.getIsActive())
-                            result.push("layout-element-active");
-                        if (canvas.getIsFocused())
-                            result.push("layout-element-focused");
-                        if (canvas.getIsSelected())
-                            result.push("layout-element-selected");
-                        if (canvas.getIsDropTarget())
-                            result.push("layout-element-droptarget");
-                        if (canvas.isTemplated)
-                            result.push("layout-element-templated");
-
-                        return result;
-                    };
-
-                    // An unfortunate side-effect of the next hack on line 54 is that the created elements aren't added to the DOM yet, so we can't use it to get to the parent ".layout-desiger" element.
-                    // Work around: access that element directly (which efectively turns multiple layout editors on a single page impossible). 
-                    // //var layoutDesignerHost = $element.closest(".layout-designer").data("layout-designer-host");
-                    var layoutDesignerHost = $(".layout-designer").data("layout-designer-host");
-
-                    $scope.$root.layoutDesignerHost = layoutDesignerHost;
-
-                    layoutDesignerHost.element.on("replacecanvas", function (e, args) {
-                        var editor = $scope.element;
-                        var canvasData = {
-                            data: args.canvas.data,
-                            htmlId: args.canvas.htmlId,
-                            htmlClass: args.canvas.htmlClass,
-                            htmlStyle: args.canvas.htmlStyle,
-                            isTemplated: args.canvas.isTemplated,
-                            children: args.canvas.children
+                        $scope.click = function (canvas, e) {
+                            if (!canvas.editor.isDragging)
+                                canvas.setIsFocused();
+                            e.stopPropagation();
                         };
 
-                        // HACK: Instead of simply updating the $scope.element with a new instance, we need to replace the entire orc-layout-editor markup
-                        // in order for angular to rebind starting with the Canvas element. Otherwise, for some reason, it will rebind starting with the first child of Canvas.
-                        // You can see this happening when setting a breakpoint in ScopeConfigurator where containers are initialized with drag & drop: on page load, the first element
-                        // is a Canvas (good), but after having selected another template, the first element is (typically) a Grid (bad).
-                        // Simply recompiling the orc-layout-editor directive will cause the entire thing to be generated, which works just fine as well (even though not is nice as simply leveraging model binding).
-                        layoutDesignerHost.editor = window.layoutEditor = new LayoutEditor.Editor(editor.config, canvasData);
-                        var template = "<orc-layout-editor" + " model='window.layoutEditor' />";
-                        var html = $compile(template)($scope);
-                        $(".layout-editor-holder").html(html);
-                    });
+                        $scope.getClasses = function (canvas) {
+                            var result = ["layout-element", "layout-container", "layout-canvas"];
 
-                    $scope.$root.editElement = function (element) {
-                        var host = $scope.$root.layoutDesignerHost;
-                        return host.editElement(element);
-                    };
+                            if (canvas.getIsActive())
+                                result.push("layout-element-active");
+                            if (canvas.getIsFocused())
+                                result.push("layout-element-focused");
+                            if (canvas.getIsSelected())
+                                result.push("layout-element-selected");
+                            if (canvas.getIsDropTarget())
+                                result.push("layout-element-droptarget");
+                            if (canvas.isTemplated)
+                                result.push("layout-element-templated");
 
-                    $scope.$root.addElement = function (contentType) {
-                        var host = $scope.$root.layoutDesignerHost;
-                        return host.addElement(contentType);
-                    };
+                            return result;
+                        };
 
-                    $scope.toggleInlineEditing = function () {
-                        if (!$scope.element.inlineEditingIsActive) {
-                            $scope.element.inlineEditingIsActive = true;
-                            $element.find(".layout-toolbar-container").show();
-                            var selector = "#layout-editor-" + $scope.$id + " .layout-content-h-t-m-l .layout-content-markup[data-templated=false]";
-                            var firstContentEditorId = $(selector).first().attr("id");
-                            tinymce.init({
-                                selector: selector,
-                                theme: "modern",
-                                schema: "html5",
-                                plugins: [
-                                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-                                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                                    "insertdatetime media nonbreaking table contextmenu directionality",
-                                    "emoticons template paste textcolor colorpicker textpattern",
-                                    "fullscreen autoresize"
-                                ],
-                                toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | link unlink charmap | code fullscreen close",
-                                convert_urls: false,
-                                valid_elements: "*[*]",
-                                // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
-                                extended_valid_elements: "script[type|defer|src|language]",
-                                statusbar: false,
-                                skin: "orchardlightgray",
-                                inline: true,
-                                fixed_toolbar_container: "#layout-editor-" + $scope.$id + " .layout-toolbar-container",
-                                init_instance_callback: function (editor) {
-                                    if (editor.id == firstContentEditorId)
-                                        tinymce.execCommand("mceFocus", false, editor.id);
-                                }
-                            });
-                        }
-                        else {
-                            tinymce.remove("#layout-editor-" + $scope.$id + " .layout-content-markup");
-                            $element.find(".layout-toolbar-container").hide();
-                            $scope.element.inlineEditingIsActive = false;
-                        }
-                    };
+                        // An unfortunate side-effect of the next hack on line 54 is that the created elements aren't added to the DOM yet, so we can't use it to get to the parent ".layout-desiger" element.
+                        // Work around: access that element directly (which efectively turns multiple layout editors on a single page impossible). 
+                        // //var layoutDesignerHost = $element.closest(".layout-designer").data("layout-designer-host");
+                        var layoutDesignerHost = $(".layout-designer").data("layout-designer-host");
 
-                    $(document).on("cut copy paste", function (e) {
-                        // The real clipboard is supported, so disable the peudo clipboard.
-                        clipboard.disable();
-                        var focusedElement = $scope.element.focusedElement;
-                        if (!!focusedElement) {
-                            $scope.$apply(function () {
-                                switch (e.type) {
-                                    case "copy":
-                                        focusedElement.copy(e.originalEvent.clipboardData);
-                                        break;
-                                    case "cut":
-                                        focusedElement.cut(e.originalEvent.clipboardData);
-                                        break;
-                                    case "paste":
-                                        focusedElement.paste(e.originalEvent.clipboardData);
-                                        break;
-                                }
-                            });
+                        $scope.$root.layoutDesignerHost = layoutDesignerHost;
 
-                            // HACK: Workaround because of how Angular treats the DOM when elements are shifted around - input focus is sometimes lost.
-                            window.setTimeout(function () {
-                                $scope.$apply(function () {
-                                    if (!!$scope.element.focusedElement)
-                                        $scope.element.focusedElement.setIsFocused();
+                        layoutDesignerHost.element.on("replacecanvas", function (e, args) {
+                            var editor = $scope.element;
+                            var canvasData = {
+                                data: args.canvas.data,
+                                htmlId: args.canvas.htmlId,
+                                htmlClass: args.canvas.htmlClass,
+                                htmlStyle: args.canvas.htmlStyle,
+                                isTemplated: args.canvas.isTemplated,
+                                children: args.canvas.children
+                            };
+
+                            // HACK: Instead of simply updating the $scope.element with a new instance, we need to replace the entire orc-layout-editor markup
+                            // in order for angular to rebind starting with the Canvas element. Otherwise, for some reason, it will rebind starting with the first child of Canvas.
+                            // You can see this happening when setting a breakpoint in ScopeConfigurator where containers are initialized with drag & drop: on page load, the first element
+                            // is a Canvas (good), but after having selected another template, the first element is (typically) a Grid (bad).
+                            // Simply recompiling the orc-layout-editor directive will cause the entire thing to be generated, which works just fine as well (even though not is nice as simply leveraging model binding).
+                            layoutDesignerHost.editor = window.layoutEditor = new LayoutEditor.Editor(editor.config, canvasData);
+                            var template = "<orc-layout-editor" + " model='window.layoutEditor' />";
+                            var html = $compile(template)($scope);
+                            $(".layout-editor-holder").html(html);
+                        });
+
+                        $scope.$root.editElement = function (element) {
+                            var host = $scope.$root.layoutDesignerHost;
+                            return host.editElement(element);
+                        };
+
+                        $scope.$root.addElement = function (contentType) {
+                            var host = $scope.$root.layoutDesignerHost;
+                            return host.addElement(contentType);
+                        };
+
+                        $scope.toggleInlineEditing = function () {
+                            if (!$scope.element.inlineEditingIsActive) {
+                                $scope.element.inlineEditingIsActive = true;
+                                $element.find(".layout-toolbar-container").show();
+                                var selector = "#layout-editor-" + $scope.$id + " .layout-content-h-t-m-l .layout-content-markup[data-templated=false]";
+                                var firstContentEditorId = $(selector).first().attr("id");
+                                tinymce.init({
+                                    selector: selector,
+                                    theme: "modern",
+                                    schema: "html5",
+                                    plugins: [
+                                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                                        "insertdatetime media nonbreaking table contextmenu directionality",
+                                        "emoticons template paste textcolor colorpicker textpattern",
+                                        "fullscreen autoresize"
+                                    ],
+                                    toolbar: "undo redo cut copy paste | bold italic | bullist numlist outdent indent formatselect | alignleft aligncenter alignright alignjustify ltr rtl | link unlink charmap | code fullscreen close",
+                                    convert_urls: false,
+                                    valid_elements: "*[*]",
+                                    // Shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
+                                    extended_valid_elements: "script[type|defer|src|language]",
+                                    statusbar: false,
+                                    skin: "orchardlightgray",
+                                    inline: true,
+                                    fixed_toolbar_container: "#layout-editor-" + $scope.$id + " .layout-toolbar-container",
+                                    init_instance_callback: function (editor) {
+                                        if (editor.id == firstContentEditorId)
+                                            tinymce.execCommand("mceFocus", false, editor.id);
+                                    }
                                 });
-                            }, 100);
+                            }
+                            else {
+                                tinymce.remove("#layout-editor-" + $scope.$id + " .layout-content-markup");
+                                $element.find(".layout-toolbar-container").hide();
+                                $scope.element.inlineEditingIsActive = false;
+                            }
+                        };
 
-                            e.preventDefault();
-                        }
-                    });
-                },
+                        $(document).on("cut copy paste", function (e) {
+                            // The real clipboard is supported, so disable the peudo clipboard.
+                            clipboard.disable();
+                            var focusedElement = $scope.element.focusedElement;
+                            if (!!focusedElement) {
+                                $scope.$apply(function () {
+                                    switch (e.type) {
+                                        case "copy":
+                                            focusedElement.copy(e.originalEvent.clipboardData);
+                                            break;
+                                        case "cut":
+                                            focusedElement.cut(e.originalEvent.clipboardData);
+                                            break;
+                                        case "paste":
+                                            focusedElement.paste(e.originalEvent.clipboardData);
+                                            break;
+                                    }
+                                });
+
+                                // HACK: Workaround because of how Angular treats the DOM when elements are shifted around - input focus is sometimes lost.
+                                window.setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        if (!!$scope.element.focusedElement)
+                                            $scope.element.focusedElement.setIsFocused();
+                                    });
+                                }, 100);
+
+                                e.preventDefault();
+                            }
+                        });
+                    }
+                ],
                 templateUrl: environment.templateUrl("Editor"),
                 replace: true,
                 link: function (scope, element) {
@@ -531,11 +533,13 @@ angular
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element, $attrs) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    scopeConfigurator.configureForContainer($scope, $element);
-                    $scope.sortableOptions["axis"] = "y";
-                },
+                controller: ["$scope", "$element", "$attrs",
+                    function ($scope, $element, $attrs) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "y";
+                    }
+                ],
                 templateUrl: environment.templateUrl("Canvas"),
                 replace: true
             };
@@ -563,11 +567,13 @@ angular
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    scopeConfigurator.configureForContainer($scope, $element);
-                    $scope.sortableOptions["axis"] = "y";
-                },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "y";
+                    }
+                ],
                 templateUrl: environment.templateUrl("Column"),
                 replace: true,
                 link: function (scope, element, attrs) {
@@ -629,31 +635,33 @@ angular
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    $scope.edit = function () {
-                        $scope.$root.editElement($scope.element).then(function (args) {
-                            $scope.$apply(function () {
-                                if (args.cancel)
-                                    return;
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).then(function (args) {
+                                $scope.$apply(function () {
+                                    if (args.cancel)
+                                        return;
 
-                                $scope.element.data = decodeURIComponent(args.element.data);
-                                $scope.element.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.setHtml(args.element.html);
+                                });
                             });
-                        });
-                    };
-                    $scope.updateContent = function (e) {
-                        $scope.element.setHtml(e.target.innerHTML);
-                    };
+                        };
+                        $scope.updateContent = function (e) {
+                            $scope.element.setHtml(e.target.innerHTML);
+                        };
 
-                    // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
-                    $scope.element.setHtml = function (html) {
-                        $scope.element.html = html;
-                        $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
-                    };
+                        // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
+                        $scope.element.setHtml = function (html) {
+                            $scope.element.html = html;
+                            $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
+                        };
 
-                    $scope.element.setHtml(decodeURIComponent($scope.element.html.replace(/\+/g, "%20")));
-                },
+                        $scope.element.setHtml($scope.element.html);
+                    }
+                ],
                 templateUrl: environment.templateUrl("Content"),
                 replace: true,
                 link: function (scope, element) {
@@ -675,11 +683,13 @@ angular
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    scopeConfigurator.configureForContainer($scope, $element);
-                    $scope.sortableOptions["axis"] = "y";
-                },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "y";
+                    }
+                ],
                 templateUrl: environment.templateUrl("Grid"),
                 replace: true
             };
@@ -692,12 +702,14 @@ angular
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    scopeConfigurator.configureForContainer($scope, $element);
-                    $scope.sortableOptions["axis"] = "x";
-                    $scope.sortableOptions["ui-floating"] = true;
-                },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "x";
+                        $scope.sortableOptions["ui-floating"] = true;
+                    }
+                ],
                 templateUrl: environment.templateUrl("Row"),
                 replace: true
             };
@@ -745,165 +757,167 @@ angular
         function ($compile, environment) {
             return {
                 restrict: "E",
-                controller: function ($scope, $element) {
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
 
-                    $scope.resetElements = function () {
+                        $scope.resetElements = function () {
 
-                        $scope.gridElements = [
-                            LayoutEditor.Grid.from({
-                                toolboxIcon: "\uf00a",
-                                toolboxLabel: "Grid",
-                                toolboxDescription: "Empty grid.",
-                                children: []
-                            })
-                        ];
-
-                        $scope.rowElements = [
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (1 column)",
-                                toolboxDescription: "Row with 1 column.",
-                                children: LayoutEditor.Column.times(1)
-                            }),
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (2 columns)",
-                                toolboxDescription: "Row with 2 columns.",
-                                children: LayoutEditor.Column.times(2)
-                            }),
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (3 columns)",
-                                toolboxDescription: "Row with 3 columns.",
-                                children: LayoutEditor.Column.times(3)
-                            }),
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (4 columns)",
-                                toolboxDescription: "Row with 4 columns.",
-                                children: LayoutEditor.Column.times(4)
-                            }),
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (6 columns)",
-                                toolboxDescription: "Row with 6 columns.",
-                                children: LayoutEditor.Column.times(6)
-                            }),
-                            LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (12 columns)",
-                                toolboxDescription: "Row with 12 columns.",
-                                children: LayoutEditor.Column.times(12)
-                            }), LayoutEditor.Row.from({
-                                toolboxIcon: "\uf0c9",
-                                toolboxLabel: "Row (empty)",
-                                toolboxDescription: "Empty row.",
-                                children: []
-                            })
-                        ];
-
-                        $scope.columnElements = [
-                            LayoutEditor.Column.from({
-                                toolboxIcon: "\uf0db",
-                                toolboxLabel: "Column",
-                                toolboxDescription: "Empty column.",
-                                width: 1,
-                                offset: 0,
-                                children: []
-                            })
-                        ];
-
-                        $scope.contentElementCategories = _($scope.element.config.categories).map(function (category) {
-                            return {
-                                name: category.name,
-                                elements: _(category.contentTypes).map(function (contentType) {
-                                    var type = contentType.type;
-                                    var factory = LayoutEditor.factories[type] || LayoutEditor.factories["Content"];
-                                    var item = {
-                                        isTemplated: false,
-                                        contentType: contentType.id,
-                                        contentTypeLabel: contentType.label,
-                                        contentTypeClass: contentType.typeClass,
-                                        data: null,
-                                        hasEditor: contentType.hasEditor,
-                                        html: contentType.html
-                                    };
-                                    var element = factory(item);
-                                    element.toolboxIcon = contentType.icon || "\uf1c9";
-                                    element.toolboxLabel = contentType.label;
-                                    element.toolboxDescription = contentType.description;
-                                    return element;
+                            $scope.gridElements = [
+                                LayoutEditor.Grid.from({
+                                    toolboxIcon: "\uf00a",
+                                    toolboxLabel: "Grid",
+                                    toolboxDescription: "Empty grid.",
+                                    children: []
                                 })
-                            };
-                        });
+                            ];
 
-                    };
+                            $scope.rowElements = [
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (1 column)",
+                                    toolboxDescription: "Row with 1 column.",
+                                    children: LayoutEditor.Column.times(1)
+                                }),
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (2 columns)",
+                                    toolboxDescription: "Row with 2 columns.",
+                                    children: LayoutEditor.Column.times(2)
+                                }),
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (3 columns)",
+                                    toolboxDescription: "Row with 3 columns.",
+                                    children: LayoutEditor.Column.times(3)
+                                }),
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (4 columns)",
+                                    toolboxDescription: "Row with 4 columns.",
+                                    children: LayoutEditor.Column.times(4)
+                                }),
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (6 columns)",
+                                    toolboxDescription: "Row with 6 columns.",
+                                    children: LayoutEditor.Column.times(6)
+                                }),
+                                LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (12 columns)",
+                                    toolboxDescription: "Row with 12 columns.",
+                                    children: LayoutEditor.Column.times(12)
+                                }), LayoutEditor.Row.from({
+                                    toolboxIcon: "\uf0c9",
+                                    toolboxLabel: "Row (empty)",
+                                    toolboxDescription: "Empty row.",
+                                    children: []
+                                })
+                            ];
 
-                    $scope.resetElements();
+                            $scope.columnElements = [
+                                LayoutEditor.Column.from({
+                                    toolboxIcon: "\uf0db",
+                                    toolboxLabel: "Column",
+                                    toolboxDescription: "Empty column.",
+                                    width: 1,
+                                    offset: 0,
+                                    children: []
+                                })
+                            ];
 
-                    $scope.getSortableOptions = function (type) {
-                        var editorId = $element.closest(".layout-editor").attr("id");
-                        var parentClasses;
-                        var placeholderClasses;
-                        var floating = false;
+                            $scope.contentElementCategories = _($scope.element.config.categories).map(function (category) {
+                                return {
+                                    name: category.name,
+                                    elements: _(category.contentTypes).map(function (contentType) {
+                                        var type = contentType.type;
+                                        var factory = LayoutEditor.factories[type] || LayoutEditor.factories["Content"];
+                                        var item = {
+                                            isTemplated: false,
+                                            contentType: contentType.id,
+                                            contentTypeLabel: contentType.label,
+                                            contentTypeClass: contentType.typeClass,
+                                            data: null,
+                                            hasEditor: contentType.hasEditor,
+                                            html: contentType.html
+                                        };
+                                        var element = factory(item);
+                                        element.toolboxIcon = contentType.icon || "\uf1c9";
+                                        element.toolboxLabel = contentType.label;
+                                        element.toolboxDescription = contentType.description;
+                                        return element;
+                                    })
+                                };
+                            });
 
-                        switch (type) {
-                            case "Grid":
-                                parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
-                                placeholderClasses = "layout-element layout-container layout-grid ui-sortable-placeholder";
-                                break;
-                            case "Row":
-                                parentClasses = [".layout-grid"];
-                                placeholderClasses = "layout-element layout-container layout-row row ui-sortable-placeholder";
-                                break;
-                            case "Column":
-                                parentClasses = [".layout-row:not(.layout-row-full)"];
-                                placeholderClasses = "layout-element layout-container layout-column ui-sortable-placeholder";
-                                floating = true; // To ensure a smooth horizontal-list reordering. https://github.com/angular-ui/ui-sortable#floating
-                                break;
-                            case "Content":
-                                parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
-                                placeholderClasses = "layout-element layout-content ui-sortable-placeholder";
-                                break;
-                        }
+                        };
 
-                        return {
-                            cursor: "move",
-                            connectWith: _(parentClasses).map(function (e) { return "#" + editorId + " " + e + ":not(.layout-container-sealed) > .layout-element-wrapper > .layout-children"; }).join(", "),
-                            placeholder: placeholderClasses,
-                            "ui-floating": floating,
-                            create: function (e, ui) {
-                                e.target.isToolbox = true; // Will indicate to connected sortables that dropped items were sent from toolbox.
-                            },
-                            start: function (e, ui) {
-                                $scope.$apply(function () {
-                                    $scope.element.isDragging = true;
-                                });
-                            },
-                            stop: function (e, ui) {
-                                $scope.$apply(function () {
-                                    $scope.element.isDragging = false;
-                                    $scope.resetElements();
-                                });
-                            },
-                            over: function (e, ui) {
-                                $scope.$apply(function () {
-                                    $scope.element.canvas.setIsDropTarget(false);
-                                });
-                            },
-                        }
-                    };
+                        $scope.resetElements();
 
-                    var layoutIsCollapsedCookieName = "layoutToolboxCategory_Layout_IsCollapsed";
-                    $scope.layoutIsCollapsed = $.cookie(layoutIsCollapsedCookieName) === "true";
+                        $scope.getSortableOptions = function (type) {
+                            var editorId = $element.closest(".layout-editor").attr("id");
+                            var parentClasses;
+                            var placeholderClasses;
+                            var floating = false;
 
-                    $scope.toggleLayoutIsCollapsed = function (e) {
-                        $scope.layoutIsCollapsed = !$scope.layoutIsCollapsed;
-                        $.cookie(layoutIsCollapsedCookieName, $scope.layoutIsCollapsed, { expires: 365 }); // Remember collapsed state for a year.
-                        e.preventDefault();
-                        e.stopPropagation();
-                    };
-                },
+                            switch (type) {
+                                case "Grid":
+                                    parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
+                                    placeholderClasses = "layout-element layout-container layout-grid ui-sortable-placeholder";
+                                    break;
+                                case "Row":
+                                    parentClasses = [".layout-grid"];
+                                    placeholderClasses = "layout-element layout-container layout-row row ui-sortable-placeholder";
+                                    break;
+                                case "Column":
+                                    parentClasses = [".layout-row:not(.layout-row-full)"];
+                                    placeholderClasses = "layout-element layout-container layout-column ui-sortable-placeholder";
+                                    floating = true; // To ensure a smooth horizontal-list reordering. https://github.com/angular-ui/ui-sortable#floating
+                                    break;
+                                case "Content":
+                                    parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
+                                    placeholderClasses = "layout-element layout-content ui-sortable-placeholder";
+                                    break;
+                            }
+
+                            return {
+                                cursor: "move",
+                                connectWith: _(parentClasses).map(function (e) { return "#" + editorId + " " + e + ":not(.layout-container-sealed) > .layout-element-wrapper > .layout-children"; }).join(", "),
+                                placeholder: placeholderClasses,
+                                "ui-floating": floating,
+                                create: function (e, ui) {
+                                    e.target.isToolbox = true; // Will indicate to connected sortables that dropped items were sent from toolbox.
+                                },
+                                start: function (e, ui) {
+                                    $scope.$apply(function () {
+                                        $scope.element.isDragging = true;
+                                    });
+                                },
+                                stop: function (e, ui) {
+                                    $scope.$apply(function () {
+                                        $scope.element.isDragging = false;
+                                        $scope.resetElements();
+                                    });
+                                },
+                                over: function (e, ui) {
+                                    $scope.$apply(function () {
+                                        $scope.element.canvas.setIsDropTarget(false);
+                                    });
+                                },
+                            }
+                        };
+
+                        var layoutIsCollapsedCookieName = "layoutToolboxCategory_Layout_IsCollapsed";
+                        $scope.layoutIsCollapsed = $.cookie(layoutIsCollapsedCookieName) === "true";
+
+                        $scope.toggleLayoutIsCollapsed = function (e) {
+                            $scope.layoutIsCollapsed = !$scope.layoutIsCollapsed;
+                            $.cookie(layoutIsCollapsedCookieName, $scope.layoutIsCollapsed, { expires: 365 }); // Remember collapsed state for a year.
+                            e.preventDefault();
+                            e.stopPropagation();
+                        };
+                    }
+                ],
                 templateUrl: environment.templateUrl("Toolbox"),
                 replace: true
             };
@@ -916,16 +930,18 @@ angular
             return {
                 restrict: "E",
                 scope: { category: "=" },
-                controller: function ($scope, $element) {
-                    var isCollapsedCookieName = "layoutToolboxCategory_" + $scope.category.name + "_IsCollapsed";
-                    $scope.isCollapsed = $.cookie(isCollapsedCookieName) === "true";
-                    $scope.toggleIsCollapsed = function (e) {
-                        $scope.isCollapsed = !$scope.isCollapsed;
-                        $.cookie(isCollapsedCookieName, $scope.isCollapsed, { expires: 365 }); // Remember collapsed state for a year.
-                        e.preventDefault();
-                        e.stopPropagation();
-                    };
-                },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        var isCollapsedCookieName = "layoutToolboxCategory_" + $scope.category.name + "_IsCollapsed";
+                        $scope.isCollapsed = $.cookie(isCollapsedCookieName) === "true";
+                        $scope.toggleIsCollapsed = function (e) {
+                            $scope.isCollapsed = !$scope.isCollapsed;
+                            $.cookie(isCollapsedCookieName, $scope.isCollapsed, { expires: 365 }); // Remember collapsed state for a year.
+                            e.preventDefault();
+                            e.stopPropagation();
+                        };
+                    }
+                ],
                 templateUrl: environment.templateUrl("ToolboxGroup"),
                 replace: true
             };

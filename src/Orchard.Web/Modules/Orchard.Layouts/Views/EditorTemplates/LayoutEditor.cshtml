@@ -21,7 +21,7 @@
     Style.Include("dialog.css");
     Script.Include("dialog.js");
     Script.Include("frame.js");
-    Script.Include("serializer.js");
+    Script.Include("LayoutDecoder.js");
 
     // The actual layout editor.
     Style.Include("LayoutEditor.css", "LayoutEditor.min.css");
@@ -39,6 +39,8 @@
             (function() {
                 var editorConfig = @Html.Raw(Model.ConfigurationData);
                 var editorCanvasData = @Html.Raw(Model.Data);
+
+                LayoutEditor.decodeLayoutGraph(editorCanvasData);
                 window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
             })(jQuery);
         </script>

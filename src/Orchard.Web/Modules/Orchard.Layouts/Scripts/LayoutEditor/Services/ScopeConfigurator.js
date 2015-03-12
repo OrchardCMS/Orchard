@@ -240,8 +240,8 @@
                                         if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
-                                                    receivedElement.data = decodeURIComponent(args.element.data);
-                                                    receivedElement.setHtml(decodeURIComponent(args.element.html.replace(/\+/g, "%20")));
+                                                    receivedElement.data = args.element.data;
+                                                    receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {
                                                     if (!!args.cancel)

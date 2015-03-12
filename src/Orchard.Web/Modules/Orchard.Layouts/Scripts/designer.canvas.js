@@ -38,7 +38,7 @@
                         elements: [
                             {
                                 typeName: data.element.typeName,
-                                data: data.element.data ? decodeURIComponent(data.element.data) : null
+                                data: data.element.data
                             }
                         ]
                     }
@@ -53,7 +53,7 @@
         this.refreshElement = function (elementUI, elementData) {
             // Serialize the element UI into an object graph.
             var graph = {};
-            var data = elementData ? decodeURIComponent(elementData) : null;
+            var data = elementData;
             var stateFormValues = data ? $.deserialize(data) : null;
             var formData = $.extend({}, stateFormValues);
             window.Orchard.Layouts.Serializer.serialize(graph, elementUI);

@@ -5,11 +5,13 @@
             return {
                 restrict: "E",
                 scope: { element: "=" },
-                controller: function ($scope, $element) {
-                    scopeConfigurator.configureForElement($scope, $element);
-                    scopeConfigurator.configureForContainer($scope, $element);
-                    $scope.sortableOptions["axis"] = "y";
-                },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "y";
+                    }
+                ],
                 templateUrl: environment.templateUrl("Column"),
                 replace: true,
                 link: function (scope, element, attrs) {
