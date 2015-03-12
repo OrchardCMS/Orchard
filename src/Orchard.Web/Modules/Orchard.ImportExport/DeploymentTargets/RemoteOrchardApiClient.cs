@@ -72,19 +72,21 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var requestContentHash = _signingService.SignContent(data, timestamp, _config.PrivateApiKey);
 
             var request = CreateWebRequest(fullyQualifiedUri.ToString(), _config.UserName, timestamp, signature, requestContentHash);
-            request.ContentType = "multipart/form-data";
+            var boundary = "--------------------------" + Guid.NewGuid().ToString("n");
+            request.ContentType = "multipart/form-data, boundary=" + boundary;
             request.Method = "POST";
-            var boundary = "\r\n--------------------------" + Guid.NewGuid().ToString("n");
-            var boundaryBytes = Encoding.UTF8.GetBytes(boundary + "\r\n");
+            var headerBytes = Encoding.UTF8.GetBytes(
+                "--" + boundary + "\r\n" +
+                "Content-Disposition: form-data; name=\"export\"; filename=\"export.nupkg\"\r\n" +
+                "Content-Type: application/zip\r\n\r\n");
+            var boundaryBytes = Encoding.ASCII.GetBytes("\r\n--" + boundary + "\r\n");
+            var length = headerBytes.Length + data.Length + boundaryBytes.Length;
+            request.ContentLength = length;
 
             using(var requestStream = request.GetRequestStream()) {
-                requestStream.Write(boundaryBytes, 0, boundaryBytes.Length);
-                var fileHeader = Encoding.UTF8.GetBytes(
-                    "Content-Disposition: form-data; name=\"export\"; filename=\"export.nupkg\"\r\nContent-Type: application/zip");
-                requestStream.Write(fileHeader, 0, fileHeader.Length);
+                requestStream.Write(headerBytes, 0, headerBytes.Length);
                 data.CopyTo(requestStream);
-                var footerBytes = Encoding.UTF8.GetBytes(boundary + "--\r\n");
-                requestStream.Write(footerBytes, 0, footerBytes.Length);
+                requestStream.Write(boundaryBytes, 0, boundaryBytes.Length);
             }
 
             request.GetResponse();
