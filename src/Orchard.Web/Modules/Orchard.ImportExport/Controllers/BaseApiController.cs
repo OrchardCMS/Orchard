@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -50,6 +51,19 @@ namespace Orchard.ImportExport.Controllers {
 
         protected bool ValidateContent(string content, NameValueCollection headers) {
             if (string.IsNullOrWhiteSpace(content)) return true;
+
+            var timestamp = GetHttpRequestHeader(headers, _signingService.TimestampHeaderName);
+            var contentHash = HttpUtility.UrlDecode(GetHttpRequestHeader(headers, _signingService.ContentHashHeaderName));
+
+            var user = _authenticationService.GetAuthenticatedUser();
+            if (user != null && user.Is<DeploymentUserPart>()) {
+                return _signingService.ValidateContent(content, timestamp, user.As<DeploymentUserPart>().PrivateApiKey, contentHash);
+            }
+            return false;
+        }
+
+        protected bool ValidateContent(Stream content, NameValueCollection headers) {
+            if (content == null) return true;
 
             var timestamp = GetHttpRequestHeader(headers, _signingService.TimestampHeaderName);
             var contentHash = HttpUtility.UrlDecode(GetHttpRequestHeader(headers, _signingService.ContentHashHeaderName));

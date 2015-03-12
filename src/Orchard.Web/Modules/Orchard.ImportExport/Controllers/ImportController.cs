@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -6,6 +7,7 @@ using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
+using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Security;
 using Orchard.ImportExport.Services;
@@ -21,11 +23,13 @@ namespace Orchard.ImportExport.Controllers {
     public class ImportController : BaseApiController {
         private readonly IImportExportService _importExportService;
         private readonly IRecipeJournal _recipeJournal;
+        private readonly IAppDataFolder _appData;
 
         public ImportController(
             IOrchardServices services,
             IImportExportService importExportService,
             IRecipeJournal recipeJournal,
+            IAppDataFolder appData,
             ISigningService signingService,
             IAuthenticationService authenticationService,
             IClock clock
@@ -33,6 +37,7 @@ namespace Orchard.ImportExport.Controllers {
 
             _importExportService = importExportService;
             _recipeJournal = recipeJournal;
+            _appData = appData;
             Services = services;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -58,7 +63,7 @@ namespace Orchard.ImportExport.Controllers {
                 return new HttpUnauthorizedResult(T("Invalid recipe").Text);
             }
 
-            _importExportService.ImportRecipe(content);
+            _importExportService.ImportRecipe(content, null, executionId);
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
@@ -83,25 +88,32 @@ namespace Orchard.ImportExport.Controllers {
         [AuthenticateApi]
         [HttpPost]
         [ValidateAntiForgeryTokenOrchard(false)]
-        public ActionResult Content() {
+        public ActionResult Content(string executionId = null) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return new HttpUnauthorizedResult();
 
-            string content;
-            // TODO: handle binary packages
-            using (var reader = new StreamReader(Request.InputStream)) {
-                content = reader.ReadToEndAsync().Result;
+            executionId = executionId ?? Guid.NewGuid().ToString("n");
+            var files = Request.Files;
+            if (files.Count > 0) {
+                var file = files[0];
+                if (!_appData.DirectoryExists("Deployments")) {
+                    _appData.CreateDirectory("Deployments");
+                }
+                var packagePath = _appData.Combine("Deployments", executionId + ".nupkg");
+                using (var packageWriteStream = _appData.CreateFile(packagePath)) {
+                    file.InputStream.CopyTo(packageWriteStream);
+                }
+                using (var packageStream = _appData.OpenFile(packagePath)) {
+                    if (!ValidateContent(packageStream, Request.Headers)) {
+                        return new HttpUnauthorizedResult();
+                    }
+                    packageStream.Seek(0, SeekOrigin.Begin);
+                    _importExportService.Import(packageStream, executionId + ".nupkg");
+                }
             }
-
-            if (!ValidateContent(content, Request.Headers)) {
-                return new HttpUnauthorizedResult();
+            else {
+                return Recipe(executionId);
             }
-
-            var contentXml = XElement.Parse(content);
-            var importSession = new ImportContentSession(Services.ContentManager);
-            importSession.Set(contentXml.Attribute("Id").Value, contentXml.Name.LocalName);
-            var importContext = new ImportContentContext(contentXml, null, importSession);
-            Services.ContentManager.Import(importContext);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }

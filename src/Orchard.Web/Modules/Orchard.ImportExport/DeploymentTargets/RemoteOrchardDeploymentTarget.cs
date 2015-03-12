@@ -47,15 +47,19 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public void PushDeploymentFile(string executionId, string deploymentFilePath) {
-            var actionUrl = _url.Action("Recipe", "Import", new {
-                area = "Orchard.ImportExport",
-                executionId
-            });
             if (Path.GetExtension(deploymentFilePath) == ".xml") {
+                var actionUrl = _url.Action("Recipe", "Import", new {
+                    area = "Orchard.ImportExport",
+                    executionId
+                });
                 var recipe = File.ReadAllText(deploymentFilePath);
                 Client.Value.Post(actionUrl, recipe, "text/xml");
             }
             else {
+                var actionUrl = _url.Action("Content", "Import", new {
+                    area = "Orchard.ImportExport",
+                    executionId
+                });
                 using (var deploymentStream = File.OpenRead(deploymentFilePath)) {
                     Client.Value.PostStream(actionUrl, deploymentStream);
                 }
