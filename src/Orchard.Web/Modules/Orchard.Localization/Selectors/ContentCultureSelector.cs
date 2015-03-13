@@ -31,7 +31,7 @@ namespace Orchard.Localization.Selectors {
                 if (context.Request.UrlReferrer != null)
                     path = context.Request.UrlReferrer.AbsolutePath;
                 else
-                    path = context.Request.Path;
+                    return null;
             }
             else {
                 path = context.Request.Path;
