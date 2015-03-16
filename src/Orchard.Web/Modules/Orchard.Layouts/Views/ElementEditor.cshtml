@@ -5,6 +5,7 @@
 @{
     Style.Include("element-editor.css");
     Script.Require("jQuery");
+    Script.Include("jquery.deserialize.js");
     Script.Include("LayoutDecoder.js");
     Script.Include("element-editor.js");
     Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
@@ -38,7 +39,7 @@
                         typeName: "@Model.TypeName",
                         typeLabel: "@Model.DisplayText.Text",
                         typeClass: "@Model.DisplayText.Text.HtmlClassify()",
-                        data: "@Url.Encode(Model.ElementData)",
+                        data: LayoutEditor.decode("@Url.Encode(Model.ElementData)"),
                         html: "@Url.Encode(Model.ElementHtml)",
                         isTemplated: false
                     },
