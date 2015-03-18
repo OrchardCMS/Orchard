@@ -1,4 +1,6 @@
-﻿/*
+/// <vs AfterBuild='scripts' />
+
+/*
  * This gulpfile enables compilation of the TypeScript files in this project. The TypeScript 
  * project properties have been removed, and this glupfile created instead, to remove the requirement 
  * on Visual Studio and TypeScript for compiling/building Orchard while still allowing TypeScript 
@@ -14,21 +16,22 @@
  * locally on your dev machine, while you have the need to edit and compile the TypeScript files in
  * this project.
  * 
- * NOTE: Optionally you can use this gulpfile with the Task Runner Explorer extension in Visual Studio
- * if you want a more integrated/automated workflow.
+ * NOTE: If you install the Task Runner Explorer extension in Visual Studio the "typescript" task in this
+ * gulpfile will execute automatically on build for a more integrated/automated workflow. That's the 
+ * purpose of the <vs> comment element at the top.
  */
 
 var gulp = require("gulp"),
     ts = require("gulp-typescript");
 
-gulp.task("default", ["scripts"]);
+gulp.task("default", ["typescript"]);
 
 var project = ts.createProject({
     declarationFiles: false,
     noExternalResolve: true
 });
 
-gulp.task("scripts", function() {
+gulp.task("typescript", function () {
     var result = gulp
         .src([
             "Scripts/*.ts",
