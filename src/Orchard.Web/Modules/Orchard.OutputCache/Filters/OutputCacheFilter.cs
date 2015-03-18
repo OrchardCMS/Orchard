@@ -19,7 +19,6 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
-using Orchard.OutputCache.ViewModels;
 using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -78,7 +77,7 @@ namespace Orchard.OutputCache.Filters {
         private string _cacheKey;
         private string _invariantCacheKey;
         private bool _transformRedirect;
-        private Func<ControllerContext, string> _completeResponseFunc;
+        private bool _isCachingRequest;
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
 
@@ -166,17 +165,12 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
+            var response = filterContext.HttpContext.Response;
+            var captureStream = response.Filter as CaptureStream;
+            if (!_isCachingRequest || captureStream == null)
+                return;
 
             try {
-
-                string renderedOutput = null;
-                if (_completeResponseFunc != null) {
-                    renderedOutput = _completeResponseFunc(filterContext);
-                }
-
-                if (renderedOutput == null) {
-                    return;
-                }
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
@@ -203,42 +197,47 @@ namespace Orchard.OutputCache.Filters {
                 // Include each content item ID as tags for the cache entry.
                 var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
-                var response = filterContext.HttpContext.Response;
-                var cacheItem = new CacheItem() {
-                    CachedOnUtc = _now,
-                    Duration = cacheDuration,
-                    GraceTime = cacheGraceTime,
-                    Output = renderedOutput,
-                    ContentType = response.ContentType,
-                    QueryString = filterContext.HttpContext.Request.Url.Query,
-                    CacheKey = _cacheKey,
-                    InvariantCacheKey = _invariantCacheKey,
-                    Url = filterContext.HttpContext.Request.Url.AbsolutePath,
-                    Tenant = _shellSettings.Name,
-                    StatusCode = response.StatusCode,
-                    Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
-                };
+                captureStream.Captured += (content) => {
+                    try {
+                        var cacheItem = new CacheItem() {
+                            CachedOnUtc = _now,
+                            Duration = cacheDuration,
+                            GraceTime = cacheGraceTime,
+                            Output = content,
+                            ContentType = response.ContentType,
+                            QueryString = filterContext.HttpContext.Request.Url.Query,
+                            CacheKey = _cacheKey,
+                            InvariantCacheKey = _invariantCacheKey,
+                            Url = filterContext.HttpContext.Request.Url.AbsolutePath,
+                            Tenant = _shellSettings.Name,
+                            StatusCode = response.StatusCode,
+                            Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                        };
 
-                // Write the rendered item to the cache.
-                _cacheStorageProvider.Remove(_cacheKey);
-                _cacheStorageProvider.Set(_cacheKey, cacheItem);
+                        // Write the rendered item to the cache.
+                        _cacheStorageProvider.Remove(_cacheKey);
+                        _cacheStorageProvider.Set(_cacheKey, cacheItem);
 
-                Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
+                        Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
 
-                // Also add the item tags to the tag cache.
-                foreach (var tag in cacheItem.Tags) {
-                    _tagCache.Tag(tag, _cacheKey);
-                }
-            }
-            finally {
-                // Always release the cache key lock when the request ends.
-                if (_cacheKey != null) {
-                    object cacheKeyLock;
-                    if (_cacheKeyLocks.TryGetValue(_cacheKey, out cacheKeyLock) && Monitor.IsEntered(cacheKeyLock)) {
-                        Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
-                        Monitor.Exit(cacheKeyLock);
+                        // Also add the item tags to the tag cache.
+                        foreach (var tag in cacheItem.Tags) {
+                            _tagCache.Tag(tag, _cacheKey);
+                        }
                     }
-                }
+                    finally {
+                        // Always release the cache key lock when the request ends.
+                        ReleaseCacheKeyLock();
+                    }
+                };
+            }
+            catch {
+                // If an exception is caught, it means we were never able to attach the Captured
+                // event handler to the CaptureStream instance, because attaching that handler is
+                // the very last statement in the try block. Hence we can't assume that event
+                // handler to release the cache key lock, and we should do it here.
+                ReleaseCacheKeyLock();
+                throw;
             }
         }
 
@@ -464,17 +463,8 @@ namespace Orchard.OutputCache.Filters {
             ApplyCacheControl(response);
 
             // Intercept the rendered response output.
-            var originalWriter = response.Output;
-            var cachingWriter = new StringWriterWithEncoding(originalWriter.Encoding, originalWriter.FormatProvider);
-            _completeResponseFunc = (ctx) => {
-                ctx.HttpContext.Response.Output = originalWriter;
-                string capturedText = cachingWriter.ToString();
-                cachingWriter.Dispose();
-                ctx.HttpContext.Response.Write(capturedText);
-                return capturedText;
-            };
-
-            response.Output = cachingWriter;
+            response.Filter = new CaptureStream(response.Filter);
+            _isCachingRequest = true;
         }
 
         private void ApplyCacheControl(HttpResponseBase response) {
@@ -514,6 +504,16 @@ namespace Orchard.OutputCache.Filters {
 
             foreach (var varyRequestHeader in CacheSettings.VaryByRequestHeaders) {
                 response.Cache.VaryByHeaders[varyRequestHeader] = true;
+            }
+        }
+
+        private void ReleaseCacheKeyLock() {
+            if (_cacheKey != null) {
+                object cacheKeyLock;
+                if (_cacheKeyLocks.TryGetValue(_cacheKey, out cacheKeyLock) && Monitor.IsEntered(cacheKeyLock)) {
+                    Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
+                    Monitor.Exit(cacheKeyLock);
+                }
             }
         }
 
