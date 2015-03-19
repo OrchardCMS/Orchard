@@ -33,14 +33,14 @@
             if (!element.isTemplated) {
                 var elementType = element.contentType;
                 var elementData = element.data;
-                var elementEditorData = element.getEditorObject();
+                var elementEditorData = $.param(element.getEditorObject());
                 var dialog = new window.Orchard.Layouts.Dialog(".dialog-template." + self.settings.editorDialogName);
 
                 dialog.show();
                 dialog.load(self.settings.endpoints.edit, {
                     typeName: elementType,
                     elementData: elementData,
-                    elementEditorData: $.param(elementEditorData),
+                    elementEditorData: elementEditorData,
                     __RequestVerificationToken: self.settings.antiForgeryToken
                 }, "post");
 

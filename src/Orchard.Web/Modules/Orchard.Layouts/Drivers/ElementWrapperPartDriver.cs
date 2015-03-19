@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
@@ -14,10 +16,12 @@ namespace Orchard.Layouts.Drivers {
     public class ElementWrapperPartDriver : ContentPartDriver<ElementWrapperPart> {
         private readonly IElementManager _elementManager;
         private readonly IElementDisplay _elementDisplay;
+        private readonly IElementSerializer _serializer;
 
-        public ElementWrapperPartDriver(IElementManager elementManager, IElementDisplay elementDisplay) {
+        public ElementWrapperPartDriver(IElementManager elementManager, IElementDisplay elementDisplay, IElementSerializer serializer) {
             _elementManager = elementManager;
             _elementDisplay = elementDisplay;
+            _serializer = serializer;
         }
 
         protected override DriverResult Display(ElementWrapperPart part, string displayType, dynamic shapeHelper) {
@@ -61,6 +65,32 @@ namespace Orchard.Layouts.Drivers {
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.ElementWrapper", Model: viewModel, Prefix: Prefix);
             });
+        }
+
+        protected override void Exporting(ElementWrapperPart part, ExportContentContext context) {
+            var describeContext = CreateDescribeContext(part);
+            var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
+            var data = ElementDataHelper.Deserialize(part.ElementData);
+            var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
+
+            _elementManager.Exporting(new[] { element }, new ExportLayoutContext());
+            var exportableData = _serializer.Serialize(element);
+
+            context.Element(part.PartDefinition.Name).SetValue(exportableData);
+        }
+
+        protected override void Importing(ElementWrapperPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+
+            if (root == null)
+                return;
+
+            var exportedData = root.Value;
+            var describeContext = CreateDescribeContext(part);
+            var element = _serializer.Deserialize(exportedData, describeContext);
+
+            _elementManager.Importing(new[]{element}, new ImportLayoutContext { Session = new ImportContentContextWrapper(context)});
+            part.ElementData = element.Data.Serialize();
         }
 
         private static DescribeElementsContext CreateDescribeContext(IContent part) {

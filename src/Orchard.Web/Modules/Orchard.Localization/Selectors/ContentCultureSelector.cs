@@ -28,7 +28,10 @@ namespace Orchard.Localization.Selectors {
             // Attempt to determine culture by previous route if by POST
             string path;
             if (context.Request.HttpMethod.Equals(HttpVerbs.Post.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                path = context.Request.UrlReferrer.AbsolutePath;
+                if (context.Request.UrlReferrer != null)
+                    path = context.Request.UrlReferrer.AbsolutePath;
+                else
+                    return null;
             }
             else {
                 path = context.Request.Path;

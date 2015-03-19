@@ -40,7 +40,7 @@ namespace Orchard.Layouts.Providers {
         public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
             var currentThemeName = _siteThemeService.Value.GetCurrentThemeName();
             var shapeTable = _shapeTableLocator.Value.Lookup(currentThemeName);
-            var shapeDescriptors = shapeTable.Descriptors.Where(x => x.Key.EndsWith(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase)).ToDictionary(x => x.Key, x => x.Value);
+            var shapeDescriptors = shapeTable.Bindings.Where(x => !String.Equals(x.Key, "Elements_Snippet", StringComparison.OrdinalIgnoreCase) && x.Key.EndsWith(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase)).ToDictionary(x => x.Key, x => x.Value.ShapeDescriptor);
             var elementType = typeof (Snippet);
             var snippetElement = _elementFactory.Value.Activate(elementType);
 

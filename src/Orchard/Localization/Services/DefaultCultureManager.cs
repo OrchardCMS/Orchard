@@ -60,21 +60,7 @@ namespace Orchard.Localization.Services {
         }
 
         public string GetCurrentCulture(HttpContextBase requestContext) {
-            var requestCulture = _cultureSelectors
-                .Select(x => x.GetCulture(requestContext))
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
-
-            if ( !requestCulture.Any() )
-                return String.Empty;
-
-            foreach (var culture in requestCulture) {
-                if (!String.IsNullOrEmpty(culture.CultureName)) {
-                    return culture.CultureName;
-                }
-            }
-
-            return String.Empty;
+            return _workContextAccessor.GetContext().CurrentCulture;
         }
 
         public CultureRecord GetCultureById(int id) {

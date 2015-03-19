@@ -230,7 +230,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Style__" + fileName);
                     }
@@ -240,7 +240,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Script__" + fileName);
                     }
@@ -250,7 +250,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Resource__" + fileName);
                     }
