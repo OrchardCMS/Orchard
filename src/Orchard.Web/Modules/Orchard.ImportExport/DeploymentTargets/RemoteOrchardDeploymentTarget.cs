@@ -56,7 +56,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 Client.Value.Post(actionUrl, recipe, "text/xml");
             }
             else {
-                var actionUrl = _url.Action("Content", "Import", new {
+                var actionUrl = _url.Action("DeployContent", "Import", new {
                     area = "Orchard.ImportExport",
                     executionId
                 });
@@ -90,7 +90,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
         }
 
         public void PushContent(IContent content) {
-            var actionUrl = _url.Action("Content", "Import", new {
+            var actionUrl = _url.Action("DeployContent", "Import", new {
                 area = "Orchard.ImportExport"
             });
             var exportedItem = _contentManager.Export(content.ContentItem);

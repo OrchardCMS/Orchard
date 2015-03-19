@@ -3,9 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using System.Xml.Linq;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Permissions;
@@ -88,7 +85,7 @@ namespace Orchard.ImportExport.Controllers {
         [AuthenticateApi]
         [HttpPost]
         [ValidateAntiForgeryTokenOrchard(false)]
-        public ActionResult Content(string executionId = null) {
+        public ActionResult DeployContent(string executionId = null) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ImportFromDeploymentSources, T("Not allowed to import")))
                 return new HttpUnauthorizedResult();
 
