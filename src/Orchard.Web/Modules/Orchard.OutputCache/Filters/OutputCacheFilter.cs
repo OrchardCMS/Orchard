@@ -197,7 +197,7 @@ namespace Orchard.OutputCache.Filters {
 
                 // Capture the response output using a custom filter stream.
                 var response = filterContext.HttpContext.Response;
-                var captureStream = new CaptureStream(response.Filter);
+                var captureStream = new CaptureStream(response.Filter, response.Output.Encoding);
                 response.Filter = captureStream;
                 captureStream.Captured += (content) => {
                     try {

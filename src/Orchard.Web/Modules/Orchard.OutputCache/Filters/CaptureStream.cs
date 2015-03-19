@@ -7,12 +7,14 @@ using System.Web;
 
 namespace Orchard.OutputCache.Filters {
     public class CaptureStream : Stream {
-        public CaptureStream(Stream innerStream) {
+        public CaptureStream(Stream innerStream, Encoding encoding) {
             _innerStream = innerStream;
+            _encoding = encoding;
             _captureStream = new MemoryStream();
         }
 
         private readonly Stream _innerStream;
+        private readonly Encoding _encoding;
         private readonly MemoryStream _captureStream;
 
         public override bool CanRead {
@@ -50,7 +52,7 @@ namespace Orchard.OutputCache.Filters {
 
         public override void Flush() {
             if (_captureStream.Length > 0) {
-                OnCaptured(_captureStream);
+                OnCaptured();
                 _captureStream.SetLength(0);
             }
 
@@ -68,8 +70,8 @@ namespace Orchard.OutputCache.Filters {
 
         public event Action<string> Captured;
 
-        protected virtual void OnCaptured(MemoryStream ms) {
-            string content = HttpContext.Current.Response.ContentEncoding.GetString(ms.ToArray());
+        protected virtual void OnCaptured() {
+            var content = _encoding.GetString(_captureStream.ToArray());
             Captured(content);
         }
     }
