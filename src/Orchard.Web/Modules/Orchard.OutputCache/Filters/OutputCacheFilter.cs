@@ -197,15 +197,15 @@ namespace Orchard.OutputCache.Filters {
 
                 // Capture the response output using a custom filter stream.
                 var response = filterContext.HttpContext.Response;
-                var captureStream = new CaptureStream(response.Filter, response.Output.Encoding);
+                var captureStream = new CaptureStream(response.Filter);
                 response.Filter = captureStream;
-                captureStream.Captured += (content) => {
+                captureStream.Captured += (output) => {
                     try {
                         var cacheItem = new CacheItem() {
                             CachedOnUtc = _now,
                             Duration = cacheDuration,
                             GraceTime = cacheGraceTime,
-                            Output = content,
+                            Output = output,
                             ContentType = response.ContentType,
                             QueryString = filterContext.HttpContext.Request.Url.Query,
                             CacheKey = _cacheKey,
@@ -439,7 +439,6 @@ namespace Orchard.OutputCache.Filters {
 
         private void ServeCachedItem(ActionExecutingContext filterContext, CacheItem cacheItem) {
             var response = filterContext.HttpContext.Response;
-            var output = cacheItem.Output;
 
             // Adds some caching information to the output if requested.
             if (CacheSettings.DebugMode) {
@@ -448,10 +447,7 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // Shorcut action execution.
-            filterContext.Result = new ContentResult {
-                Content = output,
-                ContentType = cacheItem.ContentType
-            };
+            filterContext.Result = new FileContentResult(cacheItem.Output, cacheItem.ContentType);
 
             response.StatusCode = cacheItem.StatusCode;
 
