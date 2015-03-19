@@ -165,10 +165,13 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            if (!_isCachingRequest)
-                return;
+
+            var captureHandlerIsAttached = false;
 
             try {
+
+                if (!_isCachingRequest)
+                    return;
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
@@ -232,14 +235,15 @@ namespace Orchard.OutputCache.Filters {
                         ReleaseCacheKeyLock();
                     }
                 };
+
+                captureHandlerIsAttached = true;
             }
-            catch {
-                // If an exception is caught, it means we were never able to attach the Captured
-                // event handler to the CaptureStream instance, because attaching that handler is
-                // the very last statement in the try block. Hence we can't assume that event
-                // handler to release the cache key lock, and we should do it here.
-                ReleaseCacheKeyLock();
-                throw;
+            finally {
+                // If the response filter stream capture handler was attached then we'll trust
+                // it to release the cache key lock at some point in the future when the stream
+                // is flushed; otherwise we'll make sure we'll release it here.
+                if (!captureHandlerIsAttached)
+                    ReleaseCacheKeyLock();
             }
         }
 
