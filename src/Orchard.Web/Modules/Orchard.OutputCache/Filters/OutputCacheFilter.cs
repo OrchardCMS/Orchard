@@ -165,9 +165,7 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            var response = filterContext.HttpContext.Response;
-            var captureStream = response.Filter as CaptureStream;
-            if (!_isCachingRequest || captureStream == null)
+            if (!_isCachingRequest)
                 return;
 
             try {
@@ -197,6 +195,10 @@ namespace Orchard.OutputCache.Filters {
                 // Include each content item ID as tags for the cache entry.
                 var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
+                // Capture the response output using a custom filter stream.
+                var response = filterContext.HttpContext.Response;
+                var captureStream = new CaptureStream(response.Filter);
+                response.Filter = captureStream;
                 captureStream.Captured += (content) => {
                     try {
                         var cacheItem = new CacheItem() {
@@ -462,8 +464,7 @@ namespace Orchard.OutputCache.Filters {
 
             ApplyCacheControl(response);
 
-            // Intercept the rendered response output.
-            response.Filter = new CaptureStream(response.Filter);
+            // Remember that we should intercept the rendered response output.
             _isCachingRequest = true;
         }
 
@@ -565,18 +566,5 @@ namespace Orchard.OutputCache.Filters {
 
     public class ViewDataContainer : IViewDataContainer {
         public ViewDataDictionary ViewData { get; set; }
-    }
-
-    public sealed class StringWriterWithEncoding : StringWriter {
-        private readonly Encoding encoding;
-
-        public StringWriterWithEncoding(Encoding encoding, IFormatProvider formatProvider)
-            : base(formatProvider) {
-            this.encoding = encoding;
-        }
-
-        public override Encoding Encoding {
-            get { return encoding; }
-        }
     }
 }
