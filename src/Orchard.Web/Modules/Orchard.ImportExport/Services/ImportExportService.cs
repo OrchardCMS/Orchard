@@ -118,6 +118,15 @@ namespace Orchard.ImportExport.Services {
         }
 
         public string ImportRecipe(string recipeText, string filesPath = null, string executionId = null) {
+            if (executionId == null) {
+                executionId = Guid.NewGuid().ToString("n");
+            }
+            if (filesPath == null) {
+                filesPath = Path.Combine(_appDataFolder.MapPath(_recipeQueueFolder), executionId) + ".Files";
+                if (!_appDataFolder.DirectoryExists(filesPath)) {
+                    _appDataFolder.CreateDirectory(filesPath);
+                }
+            }
             var recipe = _recipeParser.ParseRecipe(recipeText);
             executionId = _recipeManager.Execute(recipe, filesPath, executionId);
             if (ShellUpdateRequired(recipe)) {
@@ -238,7 +247,7 @@ namespace Orchard.ImportExport.Services {
                         .ToList();
 
                 if (!simpleAttributes.Any()) continue;
-                
+
                 if (exportedElement == null) {
                     exportedElement = new XElement(contentPart.PartDefinition.Name);
                     exportedElements.Add(exportedElement);
@@ -252,11 +261,11 @@ namespace Orchard.ImportExport.Services {
 
         private IEnumerable<XAttribute> ExportSettingsPartAttributes(ContentPart sitePart) {
             return sitePart.GetType().GetProperties()
-                .Select(property => new {property, type = property.PropertyType})
+                .Select(property => new { property, type = property.PropertyType })
                 .Where(propertyAndType =>
-                    (propertyAndType.type == typeof (string)
-                     || propertyAndType.type == typeof (bool)
-                     || propertyAndType.type == typeof (int))
+                    (propertyAndType.type == typeof(string)
+                     || propertyAndType.type == typeof(bool)
+                     || propertyAndType.type == typeof(int))
                     && (propertyAndType.property.GetSetMethod() != null))
                 .Select(propertyNameAndValue => new {
                     name = propertyNameAndValue.property.Name,
@@ -298,8 +307,8 @@ namespace Orchard.ImportExport.Services {
         }
 
         private static VersionOptions GetContentExportVersionOptions(VersionHistoryOptions versionHistoryOptions) {
-            return versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft) 
-                ? VersionOptions.Draft 
+            return versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft)
+                ? VersionOptions.Draft
                 : VersionOptions.Published;
         }
 

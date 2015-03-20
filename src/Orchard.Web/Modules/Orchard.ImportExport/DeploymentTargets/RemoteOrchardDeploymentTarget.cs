@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -12,7 +11,7 @@ using Orchard.Services;
 
 namespace Orchard.ImportExport.DeploymentTargets {
     public class OrchardDeploymentTarget : IDeploymentTarget, IDeploymentTargetProvider {
-        private readonly IContentManager _contentManager;
+        private readonly IImportExportService _importExportService;
         private readonly ISigningService _signingService;
         private RemoteOrchardDeploymentPart DeploymentPart { get; set; }
         private Lazy<RemoteOrchardApiClient> Client { get; set; }
@@ -22,14 +21,14 @@ namespace Orchard.ImportExport.DeploymentTargets {
         private readonly IAppDataFolder _appData;
 
         public OrchardDeploymentTarget(
-            IContentManager contentManager,
+            IImportExportService importExportService,
             ISigningService signingService,
             IClock clock,
             UrlHelper url,
             IDeploymentPackageBuilder deploymentPackageBuilder,
             IAppDataFolder appData
             ) {
-            _contentManager = contentManager;
+            _importExportService = importExportService;
             _signingService = signingService;
             _clock = clock;
             _url = url;
@@ -41,7 +40,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             if (targetConfiguration.Is<RemoteOrchardDeploymentPart>()) {
                 DeploymentPart = targetConfiguration.As<RemoteOrchardDeploymentPart>();
                 Client = new Lazy<RemoteOrchardApiClient>(() => new RemoteOrchardApiClient(DeploymentPart, _signingService, _clock, _appData));
-                return new DeploymentTargetMatch {DeploymentTarget = this, Priority = 0};
+                return new DeploymentTargetMatch { DeploymentTarget = this, Priority = 0 };
             }
             return null;
         }
@@ -93,18 +92,24 @@ namespace Orchard.ImportExport.DeploymentTargets {
             var actionUrl = _url.Action("DeployContent", "Import", new {
                 area = "Orchard.ImportExport"
             });
-            var exportedItem = _contentManager.Export(content.ContentItem);
-            if (exportedItem.Files != null && exportedItem.Files.Any()) {
-                var packageStream = _deploymentPackageBuilder.BuildPackage(
-                    "export.nupkg",
-                    exportedItem.Data.Document,
-                    exportedItem.Files.ToList()
-                    );
-                Client.Value.PostStream(actionUrl, packageStream);
+            var exportedFilePathResult = _importExportService.Export(
+                new[] { content.ContentItem.ContentType },
+                new[] { content.ContentItem },
+                new ExportOptions {
+                    ExportData = true,
+                    VersionHistoryOptions = VersionHistoryOptions.Published
+                });
+            var exportFilePath = exportedFilePathResult.FileName;
+            if (Path.GetExtension(exportedFilePathResult.FileName) == ".nupkg") {
+                using (var packageStream = File.OpenRead(exportFilePath)) {
+                    Client.Value.PostStream(actionUrl, packageStream);
+                }
             }
             else {
-                Client.Value.PostForFile(actionUrl, exportedItem.Data.ToString(SaveOptions.DisableFormatting), "text/xml");
+                var recipeText = File.ReadAllText(exportFilePath);
+                Client.Value.Post(actionUrl, recipeText, "text/xml");
             }
+            File.Delete(exportFilePath);
         }
     }
 }
