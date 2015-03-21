@@ -181,6 +181,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var requestContext = _workContextAccessor.GetContext().Resolve<RequestContext>();
             var routeData = requestContext.RouteData;
 
+            routeData.DataTokens["IWorkContextAccessor"] = _workContextAccessor;
+
             if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
                 routeData.Values.Add("controller", controller.GetType().Name.ToLower().Replace("controller", ""));
 
