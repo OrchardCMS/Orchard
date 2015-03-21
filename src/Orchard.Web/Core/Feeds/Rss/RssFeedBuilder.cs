@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Core.Feeds.Rss {
-    [UsedImplicitly]
     public class RssFeedBuilder : IFeedBuilderProvider, IFeedBuilder {
         public FeedBuilderMatch Match(FeedContext context) {
             if (context.Format == "rss") {

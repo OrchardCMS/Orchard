@@ -3,7 +3,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
-using JetBrains.Annotations;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -18,7 +17,6 @@ using System.Web.Helpers;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Users.Services {
-    [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private const string PBKDF2 = "PBKDF2";
         private const string DefaultHashAlgorithm = PBKDF2;

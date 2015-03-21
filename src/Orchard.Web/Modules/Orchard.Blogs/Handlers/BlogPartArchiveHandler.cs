@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
@@ -10,7 +9,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
-    [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IWorkContextAccessor _workContextAccessor;

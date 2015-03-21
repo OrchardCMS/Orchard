@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Settings;
@@ -27,7 +26,7 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         public IOrchardServices Services { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        protected virtual ISite CurrentSite { get; private set; }
 
         public Localizer T { get; set; }
 
