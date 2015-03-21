@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -134,7 +133,6 @@ namespace Orchard.Core.Tests.Common.Providers {
             }
         }
 
-        [UsedImplicitly]
         class TestHandler : ContentHandler {
             public TestHandler() {
                 Filters.Add(new ActivatingFilter<CommonPart>("test-item"));

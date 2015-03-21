@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Rules.Models;
@@ -8,7 +7,6 @@ using Orchard.Rules.Services;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Rules.Handlers {
-    [UsedImplicitly]
     public class ScheduledActionTaskHandler : IScheduledTaskHandler {
         private readonly IRulesManager _rulesManager;
 

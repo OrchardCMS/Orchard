@@ -1,11 +1,9 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Roles.Models;
 
 namespace Orchard.Roles.Handlers {
-    [UsedImplicitly]
     public class UserRolesPartHandler : ContentHandler {
         private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
 
