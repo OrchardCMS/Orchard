@@ -334,7 +334,7 @@ namespace Orchard.OutputCache.Filters {
             
             // Vary by action parameters.
             foreach (var p in filterContext.ActionParameters)
-                result.Add(p.Key, p.Value);
+                result.Add("PARAM:" + p.Key, p.Value);
 
             // Vary by theme.
             result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
