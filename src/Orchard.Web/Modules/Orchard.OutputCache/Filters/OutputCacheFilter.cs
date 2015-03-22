@@ -83,6 +83,13 @@ namespace Orchard.OutputCache.Filters {
 
             Logger.Debug("Incoming request for URL '{0}'.", filterContext.RequestContext.HttpContext.Request.RawUrl);
 
+            // This filter is not reentrant (multiple executions within the same request are
+            // not supported) so child actions are ignored completely.
+            if (filterContext.IsChildAction) {
+                Logger.Debug("Request for URL '{0}' ignored because it's a child action.", filterContext.RequestContext.HttpContext.Request.RawUrl);
+                return;
+            }
+
             _now = _clock.UtcNow;
             _workContext = _workContextAccessor.GetContext();
             _cacheKey = ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext));
@@ -170,7 +177,9 @@ namespace Orchard.OutputCache.Filters {
 
             try {
 
-                if (!_isCachingRequest)
+                // This filter is not reentrant (multiple executions within the same request are
+                // not supported) so child actions are ignored completely.
+                if (filterContext.IsChildAction || !_isCachingRequest)
                     return;
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
@@ -269,12 +278,6 @@ namespace Orchard.OutputCache.Filters {
             // Don't cache admin section requests.
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
                 Logger.Debug("Request for item '{0}' ignored because it's in admin section.", _cacheKey);
-                return false;
-            }
-
-            // Ignore child actions, e.g. HomeController is using RenderAction()
-            if (filterContext.IsChildAction) {
-                Logger.Debug("Request for item '{0}' ignored because it's a child action.", _cacheKey);
                 return false;
             }
 

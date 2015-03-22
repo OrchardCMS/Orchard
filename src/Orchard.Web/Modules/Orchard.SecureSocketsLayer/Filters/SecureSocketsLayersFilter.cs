@@ -27,7 +27,7 @@ namespace Orchard.SecureSocketsLayer.Filters {
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             var settings = _sslService.GetSettings();
 
-            if (!settings.Enabled) {
+            if (filterContext.IsChildAction || !settings.Enabled) {
                 return;
             }
 
