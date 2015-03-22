@@ -86,7 +86,7 @@ namespace Orchard.OutputCache.Filters {
             // This filter is not reentrant (multiple executions within the same request are
             // not supported) so child actions are ignored completely.
             if (filterContext.IsChildAction) {
-                Logger.Debug("Request for URL '{0}' ignored because it's a child action.", filterContext.RequestContext.HttpContext.Request.RawUrl);
+                Logger.Debug("Action '{0}' ignored because it's a child action.", filterContext.ActionDescriptor.ActionName);
                 return;
             }
 
