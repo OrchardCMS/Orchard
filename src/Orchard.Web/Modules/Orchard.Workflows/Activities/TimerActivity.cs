@@ -6,6 +6,7 @@ using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Workflows.Models;
@@ -15,9 +16,11 @@ namespace Orchard.Workflows.Activities {
     [OrchardFeature("Orchard.Workflows.Timer")]
     public class TimerActivity : Event {
         private readonly IClock _clock;
+        private readonly IDateLocalizationServices _dateServices;
 
-        public TimerActivity(IClock clock) {
+        public TimerActivity(IClock clock, IDateLocalizationServices dateServices) {
             _clock = clock;
+            _dateServices = dateServices;
             T = NullLocalizer.Instance;
         }
 
@@ -57,7 +60,11 @@ namespace Orchard.Workflows.Activities {
             DateTime started;
 
             if (!workflowContext.HasStateFor(activityContext.Record, "StartedUtc")) {
-                workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started = _clock.UtcNow);
+                var dateString = activityContext.GetState<string>("Date");
+                var date = _dateServices.ConvertFromLocalizedString(dateString);
+                started = date ?? _clock.UtcNow;
+
+                workflowContext.SetStateFor(activityContext.Record, "StartedUtc", started);
             }
             else {
                 started = workflowContext.GetStateFor<DateTime>(activityContext.Record, "StartedUtc");
@@ -71,7 +78,6 @@ namespace Orchard.Workflows.Activities {
 
         public static DateTime When(DateTime started, int amount, string type) {
             try {
-
                 var when = started;
 
                 switch (type) {
