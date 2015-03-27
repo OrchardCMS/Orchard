@@ -102,3 +102,7 @@
   border: 2px dashed #648721 !important;
   background-color: rgba(100, 135, 33, 0.16);
 }
+.layout-editor .media-thumbnail img {
+  max-width: 100%;
+  max-height: 100%;
+}

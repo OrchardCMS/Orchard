@@ -279,7 +279,6 @@
     <Content Include="Views\BlueprintAdmin\Create.cshtml" />
     <Content Include="Views\ElementBlueprintEditor.cshtml" />
     <Content Include="Views\BlueprintAdmin\Properties.cshtml" />
-    <Content Include="Views\Media.Design.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Paragraph.cshtml" />
     <Content Include="Views\Elements\Paragraph.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
