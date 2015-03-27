@@ -99,7 +99,6 @@
     <Compile Include="Drivers\RecurringTaskPartDriver.cs" />
     <Compile Include="Drivers\RemoteOrchardDeploymentPartDriver.cs" />
     <Compile Include="Handlers\DeployableItemTargetPartHandler.cs" />
-    <Compile Include="Handlers\DeployablePartHandler.cs" />
     <Compile Include="Handlers\DeploymentMetadataExportEventHandler.cs" />
     <Compile Include="Handlers\DeploymentSubscriptionPartHandler.cs" />
     <Compile Include="Handlers\DeploymentUserPartHandler.cs" />
@@ -107,12 +106,10 @@
     <Compile Include="Handlers\RecurringTaskPartHandler.cs" />
     <Compile Include="Handlers\RemoteOrchardDeploymentPartHandler.cs" />
     <Compile Include="Handlers\SubscriptionTaskHandler.cs" />
-    <Compile Include="Handlers\UnpublishedExportEventHandler.cs" />
     <Compile Include="Menus\DeploymentAdminMenu.cs" />
     <Compile Include="Menus\ImportExportAdminMenu.cs" />
     <Compile Include="Migrations\DeploymentMigrations.cs" />
     <Compile Include="Models\DeployableItemTargetPart.cs" />
-    <Compile Include="Models\DeployablePart.cs" />
     <Compile Include="Models\DeploymentAction.cs" />
     <Compile Include="Models\DeploymentContentType.cs" />
     <Compile Include="Models\DeploymentMetadata.cs" />
@@ -128,7 +125,6 @@
     <Compile Include="Permissions\ImportExportPermissions.cs" />
     <Compile Include="Permissions\DeploymentPermissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecipeHandlers\UnpublishedRecipeHandler.cs" />
     <Compile Include="Routes\DeploymentApiRoutes.cs" />
     <Compile Include="Security\ApiIdentity.cs" />
     <Compile Include="Security\ApiPrincipal.cs" />

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Core.Common.Models;
 using Orchard.ImportExport.Models;
 
 namespace Orchard.ImportExport.ViewModels
 {
     public class DeployablePartViewModel {
-        public DeployablePart Part { get; set; }
+        public CommonPart Part { get; set; }
         public List<DeployablePartTargetSummary> Targets { get; set; } 
     }
 

@@ -51,12 +51,8 @@ namespace Orchard.ImportExport.Controllers {
 
             var exportingItems = _deploymentService.GetContentForExport(request);
 
-            var unpublishStep = UnpublishedExportEventHandler.StepName +
-                (request.DeployChangesAfterUtc.HasValue ? ":" + request.DeployChangesAfterUtc.Value.ToString("u") : string.Empty);
-
             var exportSteps = request.DeploymentMetadata != null ?
                 request.DeploymentMetadata.Select(m => m.ToExportStep()).ToList() : new List<string>();
-            exportSteps.Add(unpublishStep);
 
             var packagePath = _importExportService.Export(request.ContentTypes, exportingItems, new ExportOptions {
                 ExportData = exportingItems.Any(),

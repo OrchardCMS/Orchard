@@ -188,16 +188,9 @@ namespace Orchard.ImportExport.Services {
                         }
                     }
 
-                    var unpublishStep =
-                        UnpublishedExportEventHandler.StepName +
-                        (request.DeployChangesAfterUtc.HasValue
-                            ? ":" + request.DeployChangesAfterUtc.Value.ToString("u")
-                            : string.Empty);
-
                     var exportSteps = request.DeploymentMetadata != null
                         ? request.DeploymentMetadata.Select(m => m.ToExportStep()).ToList()
                         : new List<string>();
-                    exportSteps.Add(unpublishStep);
 
                     var deploymentFilePath = _importExportService
                         .Export(request.ContentTypes, exportingItems, new ExportOptions {

@@ -1,7 +1,6 @@
 ﻿using System;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Title.Models;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
@@ -69,10 +68,6 @@ namespace Orchard.ImportExport.Migrations {
                 .WithPart(typeof (CommonPart).Name)
                 .WithPart(typeof (IdentityPart).Name)
                 .WithSetting("Stereotype", "DeploymentConfiguration"));
-
-            ContentDefinitionManager.AlterPartDefinition(typeof(DeployablePart).Name, p => p
-                .Attachable()
-                .WithDescription("Adds the ability to deploy the content to a remote target."));
 
             ContentDefinitionManager.AlterTypeDefinition("DeployableItemTarget", cfg => cfg
                 .WithPart(typeof (DeployableItemTargetPart).Name)
