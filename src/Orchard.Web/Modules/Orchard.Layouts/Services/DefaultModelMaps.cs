@@ -109,7 +109,7 @@ namespace Orchard.Layouts.Services {
             node["contentTypeLabel"] = element.Descriptor.DisplayText.Text;
             node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
             node["contentTypeDescription"] = element.Descriptor.Description.Text;
-            node["html"] = _urlHelper.Encode(_shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design")));
+            node["html"] = _shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design"));
         }
     }
 }
