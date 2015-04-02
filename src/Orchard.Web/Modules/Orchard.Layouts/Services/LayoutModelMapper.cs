@@ -59,7 +59,7 @@ namespace Orchard.Layouts.Services {
         }
 
         public ILayoutModelMap GetMapFor(Element element) {
-            return _maps.Value.Single(x => x.CanMap(element));
+            return SelectMap(x => x.CanMap(element));
         }
 
         private Element ParseEditorNode(JToken node, Container parent, int index, DescribeElementsContext describeContext) {
@@ -77,13 +77,17 @@ namespace Orchard.Layouts.Services {
 
         private Element LoadElement(JToken node, Container parent, int index, DescribeElementsContext describeContext) {
             var type = (string)node["type"];
-            var map = _maps.Value.Single(x => x.LayoutElementType == type);
+            var map = SelectMap(x => x.LayoutElementType == type);
             var element = map.ToElement(_elementManager, describeContext, node);
 
             element.Container = parent;
             element.Index = index;
 
             return element;
+        }
+
+        private ILayoutModelMap SelectMap(Func<ILayoutModelMap, bool> predicate) {
+            return _maps.Value.OrderByDescending(x => x.Priority).FirstOrDefault(predicate);
         }
     }
 }

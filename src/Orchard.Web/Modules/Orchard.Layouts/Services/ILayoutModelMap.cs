@@ -3,6 +3,7 @@ using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Services {
     public interface ILayoutModelMap : IDependency {
+        int Priority { get; }
         string LayoutElementType { get; }
         bool CanMap(Element element);
         Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node);

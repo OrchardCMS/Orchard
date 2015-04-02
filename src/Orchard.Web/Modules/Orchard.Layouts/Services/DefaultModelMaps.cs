@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -8,7 +7,11 @@ using Orchard.Layouts.Helpers;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Services {
-    public abstract class LayoutModelMapBase<T> : ILayoutModelMap where T:Element {
+    public abstract class LayoutModelMapBase<T> : ILayoutModelMap where T : Element {
+        public int Priority {
+            get { return 10; }
+        }
+
         public virtual string LayoutElementType { get { return typeof(T).Name; } }
 
         public virtual bool CanMap(Element element) {
@@ -43,9 +46,9 @@ namespace Orchard.Layouts.Services {
         }
     }
 
-    public class CanvasModelMap : LayoutModelMapBase<Canvas> {}
-    public class GridModelMap : LayoutModelMapBase<Grid> {}
-    public class RowModelMap : LayoutModelMapBase<Row> {}
+    public class CanvasModelMap : LayoutModelMapBase<Canvas> { }
+    public class GridModelMap : LayoutModelMapBase<Grid> { }
+    public class RowModelMap : LayoutModelMapBase<Row> { }
 
     public class ColumnModelMap : LayoutModelMapBase<Column> {
         protected override void ToElement(Column element, JToken node) {
@@ -64,20 +67,22 @@ namespace Orchard.Layouts.Services {
     public class ContentModelMap : ILayoutModelMap {
         private readonly IShapeDisplay _shapeDisplay;
         private readonly IElementDisplay _elementDisplay;
-        private readonly UrlHelper _urlHelper;
 
-        public ContentModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay, UrlHelper urlHelper) {
+        public ContentModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay) {
             _shapeDisplay = shapeDisplay;
             _elementDisplay = elementDisplay;
-            _urlHelper = urlHelper;
         }
 
-        public string LayoutElementType { get { return "Content"; } }
-        public bool CanMap(Element element) {
+        public virtual int Priority {
+            get { return 0; }
+        }
+
+        public virtual string LayoutElementType { get { return "Content"; } }
+        public virtual bool CanMap(Element element) {
             return !(element is Container);
         }
 
-        public Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
+        public virtual Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
             var elementTypeName = (string)node["contentType"];
             var descriptor = elementManager.GetElementDescriptorByTypeName(describeContext, elementTypeName);
             var element = elementManager.ActivateElement(descriptor);
@@ -87,13 +92,6 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
-
-            // To support inline editing, we need to tell the element to update its content.
-            var contentElement = element as IContentElement;
-            if (contentElement != null) {
-                var html = (string)node["html"];
-                contentElement.Content = html;
-            }
 
             return element;
         }
@@ -110,6 +108,34 @@ namespace Orchard.Layouts.Services {
             node["contentTypeClass"] = element.DisplayText.Text.HtmlClassify();
             node["contentTypeDescription"] = element.Descriptor.Description.Text;
             node["html"] = _shapeDisplay.Display(_elementDisplay.DisplayElement(element, content: describeContext.Content, displayType: "Design"));
+        }
+    }
+
+    public class HtmlModelMap : ContentModelMap {
+        public HtmlModelMap(IShapeDisplay shapeDisplay, IElementDisplay elementDisplay)
+            : base(shapeDisplay, elementDisplay) {
+        }
+
+        public override int Priority {
+            get { return 1; }
+        }
+
+        public override string LayoutElementType {
+            get { return "Html"; }
+        }
+
+        public override bool CanMap(Element element) {
+            return element is Html;
+        }
+
+        public override Element ToElement(IElementManager elementManager, DescribeElementsContext describeContext, JToken node) {
+            var html = (string)node["html"];
+            var element = (Html)base.ToElement(elementManager, describeContext, node);
+
+            // To support inline editing, we need to update the element's content.
+            element.Content = html;
+
+            return element;
         }
     }
 }

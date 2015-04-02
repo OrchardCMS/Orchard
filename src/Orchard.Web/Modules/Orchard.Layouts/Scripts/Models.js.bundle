@@ -19,5 +19,6 @@
         <file>Models/Row.js</file>
         <file>Models/Column.js</file>
         <file>Models/Content.js</file>
+        <file>Models/Html.js</file>
     </files>
 </bundle>

@@ -1,8 +1,8 @@
 ﻿var LayoutEditor;
-(function (LayoutEditor) {
+(function ($, LayoutEditor) {
 
-    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
+        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -22,7 +22,7 @@
 
         this.toObject = function () {
             return {
-                "type": "Content"
+                "type": "Html"
             };
         };
 
@@ -36,11 +36,19 @@
             return result;
         };
 
+        var getEditorObject = this.getEditorObject;
+        this.getEditorObject = function () {
+            var dto = getEditorObject();
+            return $.extend(dto, {
+                Content: this.html
+            });
+        }
+
         this.setHtml(html);
     };
 
-    LayoutEditor.Content.from = function (value) {
-        var result = new LayoutEditor.Content(
+    LayoutEditor.Html.from = function (value) {
+        var result = new LayoutEditor.Html(
             value.data,
             value.htmlId,
             value.htmlClass,
@@ -55,4 +63,6 @@
         return result;
     };
 
-})(LayoutEditor || (LayoutEditor = {}));
+    LayoutEditor.registerFactory("Html", function(value) { return LayoutEditor.Html.from(value); });
+
+})(jQuery, LayoutEditor || (LayoutEditor = {}));

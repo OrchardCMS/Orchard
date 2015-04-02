@@ -63,42 +63,6 @@
             return deferred.promise();
         };
 
-        //this.addElement = function (contentType) {
-        //    var elementType = contentType.id;
-        //    var deferred = new $.Deferred();
-        //    var dialog = new window.Orchard.Layouts.Dialog(".dialog-template." + self.settings.editorDialogName);
-
-        //    if (contentType.hasEditor) {
-        //        var url = self.settings.endpoints.add + "&typeName=" + elementType;
-
-        //        dialog.show();
-        //        dialog.load(url);
-
-        //        dialog.element.on("command", function(e, args) {
-        //            if (args.command == "add" || args.command == "save") {
-        //                deferred.resolve(args);
-        //                dialog.close();
-        //            }
-        //        });
-        //    } else {
-        //        var url = self.settings.endpoints.addDirect;
-
-        //        $.ajax(url, {
-        //            data: {
-        //                typeName: elementType,
-        //                __RequestVerificationToken: self.settings.antiForgeryToken
-        //            },
-        //            type: "POST"
-        //        }).then(function(response) {
-        //            deferred.resolve({
-        //                element: response
-        //            });
-        //        });
-        //    }
-
-        //    return deferred.promise();
-        //};
-
         var serializeCanvas = function () {
             var layoutData = self.editor.canvas.toObject();
             return JSON.stringify(layoutData, null, "\t");
