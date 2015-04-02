@@ -25,7 +25,7 @@ namespace Orchard.MediaLibrary.MediaFileName {
         }
 
         public override IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel) {
-            var settings = builder.Current.Settings;
+            if (builder.Current.Settings.ContainsKey("Stereotype") && builder.Current.Settings["Stereotype"] == "Media") {
             if (settings.ContainsKey("Stereotype") && settings["Stereotype"] == "Media") {
                 var model = new MediaFileNameEditorSettings();
                 if (updateModel.TryUpdateModel(model, "MediaFileNameEditorSettings", null, null)) {
