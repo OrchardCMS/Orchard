@@ -7,7 +7,7 @@ OrchardVersion: 1.9
 Description: An implementation of widgets for Orchard.
 FeatureDescription: An implementation of widgets.
 Category: Widget
-Dependencies: Orchard.Scripting, Orchard.Themes
+Dependencies: Orchard.Scripting, Orchard.Themes, Orchard.Layouts
 Features:
     Orchard.Widgets.PageLayerHinting:
         Name: Page Layer Hinting

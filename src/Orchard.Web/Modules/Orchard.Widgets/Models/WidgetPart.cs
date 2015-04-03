@@ -66,10 +66,16 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
-        /// The available page zones.
+        /// The available theme zones.
         /// </summary>
         [HiddenInput(DisplayValue = false)]
-        public IEnumerable<string> AvailableZones { get; set; }
+        public IEnumerable<string> AvailableThemeZones { get; set; }
+
+        /// <summary>
+        /// The available layout zones.
+        /// </summary>
+        [HiddenInput(DisplayValue = false)]
+        public IEnumerable<string> AvailableLayoutZones { get; set; }
 
         /// <summary>
         /// The available layers.

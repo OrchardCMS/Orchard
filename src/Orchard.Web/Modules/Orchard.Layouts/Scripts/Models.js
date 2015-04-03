@@ -726,13 +726,13 @@ var LayoutEditor;
 })(LayoutEditor || (LayoutEditor = {}));
 var LayoutEditor;
 (function (LayoutEditor) {
-
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, children) {
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.width = width;
         this.offset = offset;
+        this.zoneName = zoneName;
 
         var _hasPendingChange = false;
         var _origWidth = 0;
@@ -740,7 +740,7 @@ var LayoutEditor;
 
         this.beginChange = function () {
             if (!!_hasPendingChange)
-                throw new Error("Column already has a pending change.")
+                throw new Error("Column already has a pending change.");
             _hasPendingChange = true;
             _origWidth = this.width;
             _origOffset = this.offset;
@@ -748,7 +748,7 @@ var LayoutEditor;
 
         this.commitChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             _origWidth = 0;
             _origOffset = 0;
             _hasPendingChange = false;
@@ -756,7 +756,7 @@ var LayoutEditor;
 
         this.rollbackChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             this.width = _origWidth;
             this.offset = _origOffset;
             _origWidth = 0;
@@ -782,7 +782,7 @@ var LayoutEditor;
                 offset: 0,
                 children: []
             });
-            
+
             this.width = this.width - newColumnWidth;
             this.parent.insertChild(newColumn, this);
             newColumn.setIsFocused();
@@ -824,6 +824,7 @@ var LayoutEditor;
             var result = this.elementToObject();
             result.width = this.width;
             result.offset = this.offset;
+            result.zoneName = this.zoneName;
             result.children = this.childrenToObject();
             return result;
         };
@@ -838,6 +839,7 @@ var LayoutEditor;
             value.isTemplated,
             value.width,
             value.offset,
+            value.zoneName,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -854,11 +856,11 @@ var LayoutEditor;
                 isTemplated: false,
                 width: 12 / value,
                 offset: 0,
+                zoneName: null,
                 children: []
             });
         });
     };
-
 })(LayoutEditor || (LayoutEditor = {}));
 var LayoutEditor;
 (function (LayoutEditor) {

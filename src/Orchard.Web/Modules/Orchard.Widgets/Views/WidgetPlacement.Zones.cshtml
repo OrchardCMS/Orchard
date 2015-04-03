@@ -8,15 +8,16 @@
     IEnumerable<string> zones = Model.Zones;
     var returnUrl = Request.RawUrl;
 }
+<h2>@Model.Title</h2>
 <ol>
     @foreach (string zone in zones) {
-        int count = widgets.Where(w => w.Zone == zone).Count();
+        var count = widgets.Count(w => w.Zone == zone);
         MvcHtmlString classAttr = null;
         if (count == 0) {
             classAttr = new MvcHtmlString("class=\"widgets-none\"");
         }
         <li @classAttr>
-            <h2>@zone</h2>
+            <h3>@zone</h3>
             <div class="widgets-actions">
                 @Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })
             </div>
@@ -69,41 +70,3 @@
             </li>
     }
 </ol>
-
-@*
-@{
-    Script.Require("ShapesBase");
-    ContentPart contentPart = Model.ContentPart;
-}
-@if (contentPart.HasPublished()) {
-    @Html.ItemDisplayLink(T("View").Text, (ContentItem)Model.ContentPart.ContentItem)
-    @T(" | ")
-
-    if (contentPart.HasDraft()) {
-        if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-            @Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-            @T(" | ")
-
-            @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
-            @T(" | ")
-        }
-    }
-
-    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-        @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-        @T(" | ")
-    }
-}
-else {
-    if (contentPart.HasDraft()) {
-        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { area = "Contents", id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
-        @T(" | ")
-    }
-
-    if (Authorizer.Authorize(Permissions.PublishContent, contentPart)) {
-        @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnsafeUrl" })
-        @T(" | ")
-    }
-}
-
-*@
