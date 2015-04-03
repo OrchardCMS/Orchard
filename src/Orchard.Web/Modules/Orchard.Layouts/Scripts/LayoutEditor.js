@@ -270,7 +270,7 @@ angular
                                         // Because of this, we need to invoke "setParent" so that specific container types can perform element speficic initialization.
                                         receivedElement.setEditor(element.editor);
                                         receivedElement.setParent(element);
-                                        if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
+                                        if (!!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
