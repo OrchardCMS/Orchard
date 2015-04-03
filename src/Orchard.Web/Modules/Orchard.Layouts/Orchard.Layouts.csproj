@@ -99,6 +99,7 @@
     <Content Include="Scripts\LayoutEditor.min.js">
       <DependentUpon>LayoutEditor.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\LayoutEditor\Directives\Html.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Editor.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Canvas.js" />
     <Content Include="Scripts\LayoutEditor\Directives\Child.js" />
@@ -130,6 +131,7 @@
     <Content Include="Scripts\Models\Container.js" />
     <Content Include="Scripts\Models\Content.js" />
     <Content Include="Scripts\Models\Element.js" />
+    <Content Include="Scripts\Models\Html.js" />
     <Content Include="Scripts\Models\Grid.js" />
     <Content Include="Scripts\Models\Helpers.js" />
     <Content Include="Scripts\Models\Row.js" />
@@ -279,7 +281,6 @@
     <Content Include="Views\BlueprintAdmin\Create.cshtml" />
     <Content Include="Views\ElementBlueprintEditor.cshtml" />
     <Content Include="Views\BlueprintAdmin\Properties.cshtml" />
-    <Content Include="Views\Media.Design.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Paragraph.cshtml" />
     <Content Include="Views\Elements\Paragraph.cshtml" />
     <Content Include="Views\EditorTemplates\Elements.Image.cshtml" />
@@ -420,6 +421,7 @@
     <Compile Include="Drivers\CanvasElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Elements\Canvas.cs" />
+    <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
@@ -438,8 +440,6 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
-    <Compile Include="Framework\Elements\ContentElement.cs" />
-    <Compile Include="Framework\Elements\IContentElement.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
@@ -461,9 +461,11 @@
     <Compile Include="Services\ILayoutEditorFactory.cs" />
     <Compile Include="Services\ILayoutModelMap.cs" />
     <Compile Include="Services\ILayoutModelMapper.cs" />
+    <Compile Include="Services\IElementSerializer.cs" />
     <Compile Include="Services\IObjectStore.cs" />
     <Compile Include="Services\LayoutEditorFactory.cs" />
     <Compile Include="Services\LayoutModelMapper.cs" />
+    <Compile Include="Services\ElementSerializer.cs" />
     <Compile Include="Services\ObjectStore.cs" />
     <Compile Include="Signals.cs" />
     <Compile Include="Tokens\ElementTokens.cs" />
@@ -610,6 +612,9 @@
   <ItemGroup>
     <Content Include="Scripts\LayoutEditor.js.bundle" />
     <Content Include="Scripts\Models.js.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

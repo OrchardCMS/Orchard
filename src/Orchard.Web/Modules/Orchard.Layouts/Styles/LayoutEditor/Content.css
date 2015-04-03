@@ -469,3 +469,10 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
   max-width: 100%;
   height: auto;
 }
+.layout-editor .img-responsive,
+.layout-editor .img-responsive img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}

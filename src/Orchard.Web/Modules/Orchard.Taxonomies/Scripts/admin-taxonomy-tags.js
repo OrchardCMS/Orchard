@@ -159,9 +159,9 @@
             tagsChanged: onTagsChanged,
             caseSensitive: false,
             minLength: 0
-        }).data("tagit");
+        }).data("uiTagit");
 
-        $tagit.input.autocomplete().data("autocomplete")._renderItem = renderAutocompleteItem;
+        $tagit.input.autocomplete().data("uiAutocomplete")._renderItem = renderAutocompleteItem;
 
     });
 

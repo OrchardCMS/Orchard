@@ -49,10 +49,12 @@ namespace Orchard.Scripting.CSharp.Activities {
             object outcome = null;
 
             // Start the script with the new token syntax.
-            script = "// #{ }" + System.Environment.NewLine + script; 
+            script = "// #{ }" + System.Environment.NewLine + script;
+
+            if (workflowContext.Content != null)
+                _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
 
             _csharpService.SetParameter("Services", _orchardServices);
-            _csharpService.SetParameter("ContentItem", (dynamic)workflowContext.Content.ContentItem);
             _csharpService.SetParameter("WorkContext", _workContextAccessor.GetContext());
             _csharpService.SetParameter("Workflow", workflowContext);
             _csharpService.SetFunction("T", (Func<string, string>)(x => T(x).Text));

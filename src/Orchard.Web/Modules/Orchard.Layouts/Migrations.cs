@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
@@ -40,6 +39,7 @@ namespace Orchard.Layouts {
                 .WithPart("CommonPart", p => p
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
+                .WithPart("IdentityPart")
                 .WithPart("WidgetPart")
                 .WithPart("LayoutPart")
                 .WithSetting("Stereotype", "Widget")
@@ -76,6 +76,7 @@ namespace Orchard.Layouts {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("WidgetPart")
+                .WithPart("IdentityPart")
                 .WithPart("ElementWrapperPart", p => p
                     .WithSetting("ElementWrapperPartSettings.ElementTypeName", elementTypeName))
                 .WithSetting("Stereotype", "Widget")

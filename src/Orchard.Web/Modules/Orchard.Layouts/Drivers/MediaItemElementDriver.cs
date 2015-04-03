@@ -41,7 +41,7 @@ namespace Orchard.Layouts.Drivers {
 
         protected override void OnDisplaying(MediaItem element, ElementDisplayContext context) {
             var contentItemIds = RemoveCurrentContentItemId(element.MediaItemIds, context.Content.Id);
-            var displayType = context.DisplayType != "Design" ? element.DisplayType : "Design";
+            var displayType = context.DisplayType != "Design" ? element.DisplayType : "Thumbnail";
             var contentItems = GetContentItems(contentItemIds).ToArray();
             var contentItemShapes = contentItems.Select(x => _contentManager.BuildDisplay(x, displayType)).ToArray();
 

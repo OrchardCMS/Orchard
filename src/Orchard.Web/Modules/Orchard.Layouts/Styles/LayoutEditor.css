@@ -122,6 +122,10 @@
   border: 2px dashed #648721 !important;
   background-color: rgba(100, 135, 33, 0.16);
 }
+.layout-editor .media-thumbnail img {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 .layout-editor .layout-container > .layout-element-wrapper > .layout-container-children-placeholder {
   display: none;
@@ -671,6 +675,13 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
 }
 .layout-editor .layout-content.layout-content-image > .layout-element-wrapper > .layout-content-markup > img,
 .layout-editor .layout-content.layout-content-vector-image > .layout-element-wrapper > .layout-content-markup > img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+.layout-editor .img-responsive,
+.layout-editor .img-responsive img {
   display: block;
   width: 100%;
   max-width: 100%;

@@ -1,4 +1,3 @@
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {

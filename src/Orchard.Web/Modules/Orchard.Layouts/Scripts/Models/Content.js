@@ -36,14 +36,6 @@
             return result;
         };
 
-        var getEditorObject = this.getEditorObject;
-        this.getEditorObject = function () {
-            var dto = getEditorObject();
-            return $.extend(dto, {
-                Content: this.html
-            });
-        }
-
         this.setHtml(html);
     };
 
