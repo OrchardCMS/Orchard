@@ -15,7 +15,7 @@
     padding: 10px;
 }
 
-#widgets-layers-control label, #widgets-zones h2, #widgets-assistance h3 {
+#widgets-layers-control label, #widgets-zones h3, #widgets-assistance h3 {
     font-size: 1.077em;
     padding: 2px 2px;
 }
@@ -63,12 +63,11 @@
     #widgets-zones-orphans-container p {
         margin-bottom: 10px;
     }
-/* The number seems slightly meaningless. Leaving it out for now. * /
-#widgets-zones ol {
-list-style:decimal inside;
-}
-*/
-.widgets-listed ol {
+
+#main .widgets-listed h2 {
+    margin: 0.1em 0 0.6em;
+    font-size: 1.1em;
+    font-weight: normal;
 }
 
 #widgets-orphans ul {
@@ -100,11 +99,11 @@ list-style:decimal inside;
     border-color: #487328;
 }
 
-#widgets-available h2 {
+#widgets-available h3 {
     font-size: 1.231em;
 }
 
-.widgets-listed h2, .widgets-listed li li, #widgets-layer-visibility li {
+.widgets-listed h3, .widgets-listed li li, #widgets-layer-visibility li {
     color: #333;
 }
 

@@ -4,7 +4,7 @@ using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
     public class Column : Container {
-        
+
         public override string Category {
             get { return "Layout"; }
         }
@@ -22,7 +22,7 @@ namespace Orchard.Layouts.Elements {
         }
 
         public int? Width {
-            get { return  this.Retrieve<int?>("Width") ?? this.Retrieve<int?>("ColumnSpan") ?? 0; } // Falling back on "ColumnSpan" for backward compatibility.
+            get { return this.Retrieve<int?>("Width") ?? this.Retrieve<int?>("ColumnSpan") ?? 0; } // Falling back on "ColumnSpan" for backward compatibility.
             set { this.Store(x => x.Width, value); }
         }
 
@@ -33,6 +33,11 @@ namespace Orchard.Layouts.Elements {
 
         public int Size {
             get { return Width.GetValueOrDefault() + Offset.GetValueOrDefault(); }
+        }
+
+        public string ZoneName {
+            get { return this.Retrieve(x => x.ZoneName); }
+            set { this.Store(x => x.ZoneName, value); }
         }
     }
 }

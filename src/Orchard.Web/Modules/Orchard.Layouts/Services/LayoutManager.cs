@@ -60,6 +60,21 @@ namespace Orchard.Layouts.Services {
             context.Layout.LayoutData = _serializer.Serialize(elementTree);
         }
 
+        public IEnumerable<string> GetZones() {
+            var layouts = GetTemplates().ToList();
+            var zoneNames  = new HashSet<string>();
+
+            foreach (var layoutPart in layouts) {
+                var elements = LoadElements(layoutPart).Flatten();
+                var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
+
+                foreach (var column in columns)
+                    zoneNames.Add(column.ZoneName);
+            }
+
+            return zoneNames;
+        }
+
         public dynamic RenderLayout(string data, string displayType = null, IContent content = null) {
             var elements = _serializer.Deserialize(data, new DescribeElementsContext { Content = content });
             var layoutRoot = _elementDisplay.DisplayElements(elements, content, displayType);

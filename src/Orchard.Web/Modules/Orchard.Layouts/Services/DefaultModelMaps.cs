@@ -55,12 +55,14 @@ namespace Orchard.Layouts.Services {
             base.ToElement(element, node);
             element.Width = (int?)node["width"];
             element.Offset = (int?)node["offset"];
+            element.ZoneName = (string) node["zoneName"];
         }
 
         public override void FromElement(Column element, DescribeElementsContext describeContext, JToken node) {
             base.FromElement(element, describeContext, node);
             node["width"] = element.Width;
             node["offset"] = element.Offset;
+            node["zoneName"] = element.ZoneName;
         }
     }
 

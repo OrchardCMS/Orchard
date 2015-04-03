@@ -42,7 +42,6 @@ namespace Orchard.Layouts.Framework.Display {
             var drivers = element.Descriptor.GetDrivers();
             var elementShapeArguments = CreateArguments(element, content);
             var elementShape = (dynamic)_shapeFactory.Create("Element", elementShapeArguments, () => new ZoneHolding(() => _shapeFactory.Create("ElementZone")));
-            
 
             elementShape.Metadata.DisplayType = displayType;
             elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}", typeName));

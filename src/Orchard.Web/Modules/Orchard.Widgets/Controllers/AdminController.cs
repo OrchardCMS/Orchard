@@ -18,6 +18,7 @@ using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
+using Orchard.Layouts.Services;
 using Orchard.Localization.Services;
 
 namespace Orchard.Widgets.Controllers {
@@ -29,6 +30,7 @@ namespace Orchard.Widgets.Controllers {
         private readonly ISiteThemeService _siteThemeService;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly ICultureManager _cultureManager;
+        private readonly ILayoutManager _layoutManager;
 
         public AdminController(
             IOrchardServices services,
@@ -36,13 +38,15 @@ namespace Orchard.Widgets.Controllers {
             IShapeFactory shapeFactory,
             ISiteThemeService siteThemeService,
             IVirtualPathProvider virtualPathProvider,
-            ICultureManager cultureManager) {
+            ICultureManager cultureManager, 
+            ILayoutManager layoutManager) {
 
             Services = services;
             _widgetsService = widgetsService;
             _siteThemeService = siteThemeService;
             _virtualPathProvider = virtualPathProvider;
             _cultureManager = cultureManager;
+            _layoutManager = layoutManager;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -55,20 +59,20 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId, string culture) {
-            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
+            var currentTheme = _siteThemeService.GetSiteTheme();
             if (currentTheme == null) {
                 Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
                 return RedirectToAction("Index", "Admin", new { area = "Dashboard" });
             }
 
-            IEnumerable<LayerPart> layers = _widgetsService.GetLayers().ToList();
+            var layers = _widgetsService.GetLayers().ToList();
 
             if (!layers.Any()) {
                 Services.Notifier.Error(T("There are no widget layers defined. A layer will need to be added in order to add widgets to any part of the site."));
                 return RedirectToAction("AddLayer");
             }
 
-            LayerPart currentLayer = layerId == null
+            var currentLayer = layerId == null
                 ? layers.FirstOrDefault()
                 : layers.FirstOrDefault(layer => layer.Id == layerId);
 
@@ -77,12 +81,11 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            IEnumerable<string> allZones = _widgetsService.GetZones();
-            IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
-
-            string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
-            string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
-
+            var allZones = _widgetsService.GetZones();
+            var currentThemesZones = _widgetsService.GetZones(currentTheme);
+            var layoutZones = _layoutManager.GetZones().ToList();
+            var zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
+            var zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
             var widgets = _widgetsService.GetWidgets();
 
             if (!String.IsNullOrWhiteSpace(culture)) {
@@ -101,7 +104,8 @@ namespace Orchard.Widgets.Controllers {
                 .CurrentCulture(culture)
                 .Layers(layers)
                 .Widgets(widgets)
-                .Zones(currentThemesZones)
+                .ThemeZones(currentThemesZones)
+                .LayoutZones(layoutZones)
                 .Cultures(_cultureManager.ListCultures())
                 .OrphanZones(allZones.Except(currentThemesZones))
                 .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
