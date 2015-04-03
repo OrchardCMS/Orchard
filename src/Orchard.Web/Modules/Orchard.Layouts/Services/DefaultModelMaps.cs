@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -44,6 +45,18 @@ namespace Orchard.Layouts.Services {
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
         }
+
+        protected bool? ParseBoolean(string value) {
+            if (String.IsNullOrWhiteSpace(value))
+                return null;
+
+            bool result;
+
+            if (Boolean.TryParse(value, out result))
+                return result;
+
+            return null;
+        }
     }
 
     public class CanvasModelMap : LayoutModelMapBase<Canvas> { }
@@ -56,6 +69,7 @@ namespace Orchard.Layouts.Services {
             element.Width = (int?)node["width"];
             element.Offset = (int?)node["offset"];
             element.ZoneName = (string) node["zoneName"];
+            element.Collapsible = ParseBoolean(node["collapsible"].Value<string>());
         }
 
         public override void FromElement(Column element, DescribeElementsContext describeContext, JToken node) {
@@ -63,6 +77,7 @@ namespace Orchard.Layouts.Services {
             node["width"] = element.Width;
             node["offset"] = element.Offset;
             node["zoneName"] = element.ZoneName;
+            node["collapsible"] = element.Collapsible;
         }
     }
 

@@ -1,12 +1,13 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, children) {
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.width = width;
         this.offset = offset;
         this.zoneName = zoneName;
+        this.collapsible = collapsible;
 
         var _hasPendingChange = false;
         var _origWidth = 0;
@@ -99,6 +100,7 @@
             result.width = this.width;
             result.offset = this.offset;
             result.zoneName = this.zoneName;
+            result.collapsible = this.collapsible;
             result.children = this.childrenToObject();
             return result;
         };
@@ -114,6 +116,7 @@
             value.width,
             value.offset,
             value.zoneName,
+            value.collapsible,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -131,6 +134,7 @@
                 width: 12 / value,
                 offset: 0,
                 zoneName: null,
+                collapsible: null,
                 children: []
             });
         });
