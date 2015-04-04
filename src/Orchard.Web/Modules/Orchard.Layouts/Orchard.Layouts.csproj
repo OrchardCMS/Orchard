@@ -424,6 +424,7 @@
     <Compile Include="Elements\ContentElement.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
+    <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
     <Compile Include="Framework\Drivers\IContentImportSession.cs" />
     <Compile Include="Framework\Drivers\ExportElementContext.cs" />
@@ -560,7 +561,7 @@
     <Compile Include="Services\ILayoutSerializer.cs" />
     <Compile Include="Helpers\ElementDataHelper.cs" />
     <Compile Include="Models\ElementInstance.cs" />
-    <Compile Include="Framework\Display\ElementDisplayContext.cs" />
+    <Compile Include="Framework\Display\ElementDisplayingContext.cs" />
     <Compile Include="Elements\Column.cs" />
     <Compile Include="Services\LayoutSerializer.cs" />
     <Compile Include="Providers\SnippetElementHarvester.cs" />

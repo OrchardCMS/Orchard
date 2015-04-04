@@ -1,10 +1,8 @@
 ﻿@using Orchard.DisplayManagement.Shapes
-@using Orchard.Layouts.Elements
 @using Orchard.Layouts.Helpers
 @{
-    var element = (Column) Model.Element;
-    var columnSpan = element.Width;
-    var columnOffset = element.Offset;
+    var columnSpan = (int?)Model.Width;
+    var columnOffset = (int?)Model.Offset;
     var columnOffsetCss = columnOffset > 0 ? "offset-" + columnOffset : default(string);
     var tagBuilder = TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
     
@@ -12,6 +10,8 @@
     tagBuilder.AddCssClass(String.Concat("span-", columnSpan));
     tagBuilder.AddCssClass(columnOffsetCss);
 }
-@tagBuilder.StartElement
-@DisplayChildren(Model)
-@tagBuilder.EndElement
+@if (!Model.Collapsed) {
+    @tagBuilder.StartElement
+    @DisplayChildren(Model)
+    @tagBuilder.EndElement
+}

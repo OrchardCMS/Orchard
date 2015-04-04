@@ -25,9 +25,7 @@ namespace Orchard.Layouts.Framework.Display {
             Element element,
             IContent content,
             string displayType = null,
-            IUpdateModel updater = null,
-            string renderEventName = null,
-            string renderEventArgs = null) {
+            IUpdateModel updater = null) {
 
             var createShapeContext = new ElementCreatingDisplayShapeContext {
                 Element = element,
@@ -39,7 +37,7 @@ namespace Orchard.Layouts.Framework.Display {
 
             var typeName = element.GetType().Name;
             var category = element.Category.ToSafeName();
-            var drivers = element.Descriptor.GetDrivers();
+            var drivers = element.Descriptor.GetDrivers().ToList();
             var elementShapeArguments = CreateArguments(element, content);
             var elementShape = (dynamic)_shapeFactory.Create("Element", elementShapeArguments, () => new ZoneHolding(() => _shapeFactory.Create("ElementZone")));
 
@@ -49,19 +47,19 @@ namespace Orchard.Layouts.Framework.Display {
             elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}__{1}", typeName, category));
             elementShape.Metadata.Alternates.Add(String.Format("Elements_{0}_{1}__{2}", typeName, displayType, category));
 
-            var displayContext = new ElementDisplayContext {
+            var displayingContext = new ElementDisplayingContext {
                 Element = element,
                 ElementShape = elementShape,
                 DisplayType = displayType,
                 Content = content,
-                Updater = updater,
-                RenderEventName = renderEventName,
-                RenderEventArgs = renderEventArgs
+                Updater = updater
             };
 
-            _elementEventHandlerHandler.Displaying(displayContext);
-            InvokeDrivers(drivers, driver => driver.Displaying(displayContext));
-            element.Descriptor.Display(displayContext);
+            _elementEventHandlerHandler.Displaying(displayingContext);
+            InvokeDrivers(drivers, driver => driver.Displaying(displayingContext));
+
+            if (element.Descriptor.Displaying != null)
+                element.Descriptor.Displaying(displayingContext);
 
             var container = element as Container;
 
@@ -75,14 +73,28 @@ namespace Orchard.Layouts.Framework.Display {
                 }
             }
 
+            var displayedContext = new ElementDisplayedContext {
+                Element = element,
+                ElementShape = elementShape,
+                DisplayType = displayType,
+                Content = content,
+                Updater = updater
+            };
+
+            _elementEventHandlerHandler.Displayed(displayedContext);
+            InvokeDrivers(drivers, driver => driver.Displayed(displayedContext));
+
+            if (element.Descriptor.Displayed != null)
+                element.Descriptor.Displayed(displayedContext);
+
             return elementShape;
         }
 
-        public dynamic DisplayElements(IEnumerable<Element> elements, IContent content, string displayType = null, IUpdateModel updater = null, string renderEventName = null, string renderEventArgs = null) {
+        public dynamic DisplayElements(IEnumerable<Element> elements, IContent content, string displayType = null, IUpdateModel updater = null) {
             var layoutRoot = (dynamic)_shapeFactory.Create("LayoutRoot");
 
             foreach (var element in elements) {
-                var elementShape = DisplayElement(element, content, displayType, updater, renderEventName, renderEventArgs);
+                var elementShape = DisplayElement(element, content, displayType, updater);
                 layoutRoot.Add(elementShape);
             }
 
