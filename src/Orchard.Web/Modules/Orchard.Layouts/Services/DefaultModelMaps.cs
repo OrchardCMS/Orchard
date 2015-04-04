@@ -46,7 +46,11 @@ namespace Orchard.Layouts.Services {
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
         }
 
-        protected bool? ParseBoolean(string value) {
+        protected bool? ReadBoolean(JToken node) {
+            if (node == null)
+                return null;
+
+            var value = node.Value<string>();
             if (String.IsNullOrWhiteSpace(value))
                 return null;
 
@@ -69,7 +73,7 @@ namespace Orchard.Layouts.Services {
             element.Width = (int?)node["width"];
             element.Offset = (int?)node["offset"];
             element.ZoneName = (string) node["zoneName"];
-            element.Collapsible = ParseBoolean(node["collapsible"].Value<string>());
+            element.Collapsible = ReadBoolean(node["collapsible"]);
         }
 
         public override void FromElement(Column element, DescribeElementsContext describeContext, JToken node) {
