@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -16,12 +17,23 @@ namespace Orchard.Layouts.Services {
         private readonly ILayoutSerializer _serializer;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
 
-        public LayoutManager(IContentManager contentManager, ILayoutSerializer serializer, IElementDisplay elementDisplay, IElementManager elementManager) {
+        public LayoutManager(
+            IContentManager contentManager, 
+            ILayoutSerializer serializer, 
+            IElementDisplay elementDisplay, 
+            IElementManager elementManager, 
+            ICacheManager cacheManager, 
+            ISignals signals) {
+
             _contentManager = contentManager;
             _serializer = serializer;
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
+            _cacheManager = cacheManager;
+            _signals = signals;
         }
 
         public IEnumerable<LayoutPart> GetTemplates() {
@@ -29,6 +41,16 @@ namespace Orchard.Layouts.Services {
                                          from typePartDefinition in typeDefinition.Parts
                                          let settings = typePartDefinition.Settings.GetModel<LayoutTypePartSettings>()
                                          where settings.IsTemplate
+                                         select typeDefinition.Name;
+
+            var templateTypeNames = templateTypeNamesQuery.ToArray();
+            return _contentManager.Query<LayoutPart>(templateTypeNames).List();
+        }
+
+        public IEnumerable<LayoutPart> GetLayouts() {
+            var templateTypeNamesQuery = from typeDefinition in _contentManager.GetContentTypeDefinitions()
+                                         from typePartDefinition in typeDefinition.Parts
+                                         where typePartDefinition.PartDefinition.Name == "LayoutPart"
                                          select typeDefinition.Name;
 
             var templateTypeNames = templateTypeNamesQuery.ToArray();
@@ -61,18 +83,21 @@ namespace Orchard.Layouts.Services {
         }
 
         public IEnumerable<string> GetZones() {
-            var layouts = GetTemplates().ToList();
-            var zoneNames  = new HashSet<string>();
+            return _cacheManager.Get("LayoutZones", context => {
+                var layouts = GetLayouts().ToList();
+                var zoneNames = new HashSet<string>();
 
-            foreach (var layoutPart in layouts) {
-                var elements = LoadElements(layoutPart).Flatten();
-                var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
+                foreach (var layoutPart in layouts) {
+                    var elements = LoadElements(layoutPart).Flatten();
+                    var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
 
-                foreach (var column in columns)
-                    zoneNames.Add(column.ZoneName);
-            }
+                    foreach (var column in columns)
+                        zoneNames.Add(column.ZoneName);
+                }
 
-            return zoneNames;
+                context.Monitor(_signals.When(Signals.LayoutZones));
+                return zoneNames;
+            });
         }
 
         public dynamic RenderLayout(string data, string displayType = null, IContent content = null) {

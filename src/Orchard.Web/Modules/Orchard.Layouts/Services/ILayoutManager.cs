@@ -6,7 +6,16 @@ using Orchard.Layouts.Models;
 
 namespace Orchard.Layouts.Services {
     public interface ILayoutManager : IDependency {
+        /// <summary>
+        /// Returns all content items with a LayoutPart whose IsTemplate setting is set to true.
+        /// </summary>
         IEnumerable<LayoutPart> GetTemplates();
+
+        /// <summary>
+        /// Returns all content items with a LayoutPart.
+        /// </summary>
+        IEnumerable<LayoutPart> GetLayouts();
+
         LayoutPart GetLayout(int id);
         IEnumerable<Element> LoadElements(ILayoutAspect layout);
 
