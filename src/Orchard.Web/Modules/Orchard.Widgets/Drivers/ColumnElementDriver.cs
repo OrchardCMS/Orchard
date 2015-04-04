@@ -23,7 +23,11 @@ namespace Orchard.Widgets.Drivers {
             _widgetsService = widgetsService;
         }
 
-        protected override void OnDisplaying(Column element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Column element, ElementDisplayingContext context) {
+            RenderWidgets(element, context);
+        }
+
+        private void RenderWidgets(Column element, ElementDisplayingContext context) {
             var zoneName = element.ZoneName;
 
             if (String.IsNullOrWhiteSpace(zoneName))

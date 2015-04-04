@@ -53,7 +53,7 @@ namespace Orchard.Layouts.Drivers {
             }
         }
 
-        protected override void OnDisplaying(Projection element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Projection element, ElementDisplayingContext context) {
             var queryId = element.QueryId;
             var layoutId = element.LayoutId;
 

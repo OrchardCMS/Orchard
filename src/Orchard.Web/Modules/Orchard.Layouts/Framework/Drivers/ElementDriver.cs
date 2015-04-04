@@ -17,8 +17,12 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnUpdateEditor((TElement)context.Element, context);
         }
 
-        public void Displaying(ElementDisplayContext context) {
+        public void Displaying(ElementDisplayingContext context) {
             OnDisplaying((TElement) context.Element, context);
+        }
+
+        public void Displayed(ElementDisplayedContext context) {
+            OnDisplayed((TElement)context.Element, context);
         }
 
         public void LayoutSaving(ElementSavingContext context) {
@@ -45,7 +49,10 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnBuildEditor(element, context);
         }
 
-        protected virtual void OnDisplaying(TElement element, ElementDisplayContext context) {
+        protected virtual void OnDisplaying(TElement element, ElementDisplayingContext context) {
+        }
+
+        protected virtual void OnDisplayed(TElement element, ElementDisplayedContext context) {
         }
 
         protected virtual void OnLayoutSaving(TElement element, ElementSavingContext context) {
