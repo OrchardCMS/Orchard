@@ -57,58 +57,13 @@ namespace Orchard.Widgets.Drivers {
         }
 
         private void RenderWidgets(Column element, ElementDisplayingContext context) {
-            var zoneName = element.ZoneName;
-
-            if (String.IsNullOrWhiteSpace(zoneName))
+            if (String.IsNullOrWhiteSpace(element.ZoneName))
                 return;
 
-            var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
-            var activeLayerIds = new List<int>();
-
-            foreach (var activeLayer in activeLayers) {
-                try {
-                    if (_ruleManager.Matches(activeLayer.LayerRule)) {
-                        activeLayerIds.Add(activeLayer.ContentItem.Id);
-                    }
-                }
-                catch (Exception e) {
-                    Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
-                }
-            }
-
-            var widgetParts = _widgetsService.GetWidgets(layerIds: activeLayerIds.ToArray()).Where(x => x.Zone == zoneName);
-            var defaultCulture = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
-            var currentCulture = _orchardServices.WorkContext.CurrentCulture;
-
-            foreach (var widgetPart in widgetParts) {
-                var commonPart = widgetPart.As<ICommonPart>();
-                if (commonPart == null || commonPart.Container == null) {
-                    Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
-                    continue;
-                }
-
-                // Ignore widget for different cultures,
-                var localizablePart = widgetPart.As<ILocalizableAspect>();
-                if (localizablePart != null) {
-                    // If localized culture is null then show if current culture is the default
-                    // this allows a user to show a content item for the default culture only.
-                    if (localizablePart.Culture == null && defaultCulture != currentCulture) {
-                        continue;
-                    }
-
-                    // If culture is set, show only if current culture is the same.
-                    if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
-                        continue;
-                    }
-                }
-
-                // Check permissions.
-                if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
-                    continue;
-                }
-
+            var widgets = GetActiveWidgets().Where(x => x.Zone == element.ZoneName);
+            
+            foreach (var widgetPart in widgets) {
                 var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
-
                 context.ElementShape.Add(widgetShape, widgetPart.Position);
             }
         }
@@ -117,6 +72,70 @@ namespace Orchard.Widgets.Drivers {
             foreach (var zone in zones) {
                 set.Add(zone);
             }
+        }
+
+        /// <summary>
+        /// Gets all widgets for all active layers, optimized for being executed multiple times during a single HTTP request.
+        /// </summary>
+        private IEnumerable<WidgetPart> GetActiveWidgets() {
+            const string cacheKey = "ActiveWidgets";
+            var widgets = (IList<WidgetPart>)_orchardServices.WorkContext.HttpContext.Items[cacheKey];
+
+            if (widgets == null) {
+                widgets = new List<WidgetPart>();
+
+                var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
+                var activeLayerIds = new List<int>();
+
+                foreach (var activeLayer in activeLayers) {
+                    try {
+                        if (_ruleManager.Matches(activeLayer.LayerRule)) {
+                            activeLayerIds.Add(activeLayer.ContentItem.Id);
+                        }
+                    }
+                    catch (Exception e) {
+                        Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
+                    }
+                }
+
+                var widgetParts = _widgetsService.GetWidgets(layerIds: activeLayerIds.ToArray());
+                var defaultCulture = _orchardServices.WorkContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
+                var currentCulture = _orchardServices.WorkContext.CurrentCulture;
+
+                foreach (var widgetPart in widgetParts) {
+                    var commonPart = widgetPart.As<ICommonPart>();
+                    if (commonPart == null || commonPart.Container == null) {
+                        Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
+                        continue;
+                    }
+
+                    // Ignore widget for different cultures.
+                    var localizablePart = widgetPart.As<ILocalizableAspect>();
+                    if (localizablePart != null) {
+                        // If localized culture is null then show if current culture is the default
+                        // this allows a user to show a content item for the default culture only.
+                        if (localizablePart.Culture == null && defaultCulture != currentCulture) {
+                            continue;
+                        }
+
+                        // If culture is set, show only if current culture is the same.
+                        if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
+                            continue;
+                        }
+                    }
+
+                    // Check permissions.
+                    if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
+                        continue;
+                    }
+
+                    widgets.Add(widgetPart);
+                }
+
+                _orchardServices.WorkContext.HttpContext.Items[cacheKey] = widgets;
+            }
+
+            return widgets;
         }
     }
 }
