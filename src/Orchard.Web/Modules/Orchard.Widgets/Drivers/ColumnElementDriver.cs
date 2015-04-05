@@ -4,10 +4,11 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Settings.Models;
-using Orchard.Core.Shapes;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
+using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Helpers;
 using Orchard.Logging;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
@@ -24,8 +25,35 @@ namespace Orchard.Widgets.Drivers {
             _widgetsService = widgetsService;
         }
 
+        protected override void OnLayoutSaving(Column element, ElementSavingContext context) {
+            ValidateZoneName(element, context);
+        }
+
         protected override void OnDisplaying(Column element, ElementDisplayingContext context) {
             RenderWidgets(element, context);
+        }
+
+        private void ValidateZoneName(Column element, ElementSavingContext context) {
+            if (String.IsNullOrWhiteSpace(element.ZoneName))
+                return; // Nothing to validate.
+
+            if (element.IsTemplated)
+                return; // No need to validate templated columns.
+
+            var blacklist = new HashSet<string>();
+
+            // Add theme zones to the blacklist.
+            var themeZones = _widgetsService.GetZones();
+            Add(blacklist, themeZones);
+
+            // Add any zones from the current layout (except the zone name of the current column) to the blacklist.
+            var siblingColumns = context.Elements.Flatten().Where(x => x is Column && x != element).Cast<Column>().ToList();
+            var siblingZones = siblingColumns.Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).Select(x => x.ZoneName);
+            Add(blacklist, siblingZones);
+
+            // Check if the specified zone is blacklisted.
+            if (blacklist.Contains(element.ZoneName))
+                context.Updater.AddModelError("ZoneName", T("The zone name '{0}' is already in use.", element.ZoneName));
         }
 
         private void RenderWidgets(Column element, ElementDisplayingContext context) {
@@ -59,22 +87,22 @@ namespace Orchard.Widgets.Drivers {
                     continue;
                 }
 
-                // ignore widget for different cultures
+                // Ignore widget for different cultures,
                 var localizablePart = widgetPart.As<ILocalizableAspect>();
                 if (localizablePart != null) {
-                    // if localized culture is null then show if current culture is the default
-                    // this allows a user to show a content item for the default culture only
+                    // If localized culture is null then show if current culture is the default
+                    // this allows a user to show a content item for the default culture only.
                     if (localizablePart.Culture == null && defaultCulture != currentCulture) {
                         continue;
                     }
 
-                    // if culture is set, show only if current culture is the same
+                    // If culture is set, show only if current culture is the same.
                     if (localizablePart.Culture != null && localizablePart.Culture != currentCulture) {
                         continue;
                     }
                 }
 
-                // check permissions
+                // Check permissions.
                 if (!_orchardServices.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, widgetPart)) {
                     continue;
                 }
@@ -82,6 +110,12 @@ namespace Orchard.Widgets.Drivers {
                 var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
 
                 context.ElementShape.Add(widgetShape, widgetPart.Position);
+            }
+        }
+
+        private static void Add(ISet<string> set, IEnumerable<string> zones) {
+            foreach (var zone in zones) {
+                set.Add(zone);
             }
         }
     }
