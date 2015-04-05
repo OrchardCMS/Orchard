@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
+using Orchard.Core.Shapes;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
@@ -65,10 +66,11 @@ namespace Orchard.Layouts.Framework.Display {
 
             if (container != null) {
                 if (container.Elements.Any()) {
+                    var childIndex = 0;
                     foreach (var child in container.Elements) {
                         var childShape = DisplayElement(child, content, displayType: displayType, updater: updater);
                         childShape.Parent = elementShape;
-                        elementShape.Add(childShape);
+                        elementShape.Add(childShape, childIndex++.ToString());
                     }
                 }
             }
@@ -92,10 +94,11 @@ namespace Orchard.Layouts.Framework.Display {
 
         public dynamic DisplayElements(IEnumerable<Element> elements, IContent content, string displayType = null, IUpdateModel updater = null) {
             var layoutRoot = (dynamic)_shapeFactory.Create("LayoutRoot");
+            var index = 0;
 
             foreach (var element in elements) {
                 var elementShape = DisplayElement(element, content, displayType, updater);
-                layoutRoot.Add(elementShape);
+                layoutRoot.Add(elementShape, index++.ToString());
             }
 
             return layoutRoot;
