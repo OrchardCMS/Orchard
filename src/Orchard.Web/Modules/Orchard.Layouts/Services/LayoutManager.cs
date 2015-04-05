@@ -10,6 +10,7 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Settings;
+using Orchard.Validation;
 
 namespace Orchard.Layouts.Services {
     public class LayoutManager : ILayoutManager {
@@ -84,19 +85,32 @@ namespace Orchard.Layouts.Services {
 
         public IEnumerable<string> GetZones() {
             return _cacheManager.Get("LayoutZones", context => {
-                var layouts = GetLayouts().ToList();
-                var zoneNames = new HashSet<string>();
+                context.Monitor(_signals.When(Signals.LayoutZones));
+                return GetZones(GetLayouts());
+            });
+        }
 
-                foreach (var layoutPart in layouts) {
-                    var elements = LoadElements(layoutPart).Flatten();
-                    var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
+        public IEnumerable<string> GetZones(ILayoutAspect layout) {
+            Argument.ThrowIfNull(layout, "layout");
 
-                    foreach (var column in columns)
-                        zoneNames.Add(column.ZoneName);
+            var key = String.Format("LayoutZones-{0}", layout.Id);
+            return _cacheManager.Get(key, context => {
+                context.Monitor(_signals.When(Signals.LayoutZones));
+
+                var layouts = new List<ILayoutAspect>();
+                var currentTemplate = layout.TemplateId != null ? GetLayout(layout.TemplateId.Value) : default(LayoutPart);
+
+                // Add the layout itself to the chain of layouts to harvest zones from.
+                layouts.Add(layout);
+
+                // Walk up the chain of templates and collect each one for zone harvesting.
+                while (currentTemplate != null) {
+                    layouts.Add(currentTemplate);
+                    currentTemplate = currentTemplate.TemplateId != null ? GetLayout(currentTemplate.TemplateId.Value) : default(LayoutPart);
                 }
 
-                context.Monitor(_signals.When(Signals.LayoutZones));
-                return zoneNames;
+                // Harvest the zones from the chain of layouts.
+                return GetZones(layouts);
             });
         }
 
@@ -198,6 +212,20 @@ namespace Orchard.Layouts.Services {
                     }
                 }
             }
+        }
+
+        private IEnumerable<string> GetZones(IEnumerable<ILayoutAspect> layouts) {
+            var zoneNames = new HashSet<string>();
+
+            foreach (var layoutPart in layouts) {
+                var elements = LoadElements(layoutPart).Flatten();
+                var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
+
+                foreach (var column in columns)
+                    zoneNames.Add(column.ZoneName);
+            }
+
+            return zoneNames.OrderBy(x => x);
         }
     }
 }
