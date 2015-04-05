@@ -1,4 +1,5 @@
-﻿@using Orchard.DisplayManagement.Shapes
+﻿@using Orchard.Core.Shapes
+@using Orchard.DisplayManagement.Shapes
 @using Orchard.Layouts.Helpers
 @{
     var columnSpan = (int?)Model.Width;
@@ -12,6 +13,8 @@
 }
 @if (!Model.Collapsed) {
     @tagBuilder.StartElement
-    @DisplayChildren(Model)
+    foreach (var item in CoreShapes.Order(Model)) {
+        @Display(item)
+    }
     @tagBuilder.EndElement
 }

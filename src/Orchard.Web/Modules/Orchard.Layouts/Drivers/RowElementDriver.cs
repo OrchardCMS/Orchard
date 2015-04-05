@@ -20,11 +20,11 @@ namespace Orchard.Layouts.Drivers {
                 if (column.Collapsible == true && IsEmpty(columnShape)) {
                     columnShape.Collapsed = true;
 
+                    // Get the first non-collapsed sibling column so we can increase its width with the width of the current column being collapsed.
                     var sibling = GetNonCollapsedSibling(columnShapes, columnIndex);
                     if (sibling != null) {
                         // Increase the width of the sibling by the width of the current column.
                         sibling.Width += columnShape.Width;
-                        //sibling.Width += GetAvailableWidth(columnShapes.Skip(columnIndex));
                     }
                     else {
                         // The row has only one column, which is collapsed, so we hide the row entirely.
@@ -39,10 +39,6 @@ namespace Orchard.Layouts.Drivers {
         private dynamic GetNonCollapsedSibling(IList<dynamic> columnShapes, int index) {
             var siblings = index == 0 ? columnShapes : columnShapes.Reverse();
             return siblings.FirstOrDefault(x => x.Collapsed == false);
-        }
-
-        private int GetAvailableWidth(IEnumerable<dynamic> columnShapes) {
-            return columnShapes.Where(x => IsEmpty(x)).Sum(x => (int) x.Width);
         }
 
         private static bool IsEmpty(dynamic shape) {
