@@ -1,7 +1,8 @@
-﻿using Orchard.Layouts.Helpers;
+﻿using Orchard.Layouts.Framework.Elements;
+using Orchard.Layouts.Helpers;
 
-namespace Orchard.Layouts.Framework.Elements {
-    public abstract class ContentElement : Element, IContentElement {
+namespace Orchard.Layouts.Elements {
+    public abstract class ContentElement : Element {
         public override string Category {
             get { return "Content"; }
         }

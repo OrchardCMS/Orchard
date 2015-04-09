@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Web.Mvc;
-using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -17,11 +15,21 @@ namespace Orchard.Layouts.Drivers {
         private readonly IElementManager _elementManager;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementSerializer _serializer;
+        private readonly ICultureAccessor _cultureAccessor;
+        private readonly IWorkContextAccessor _wca;
 
-        public ElementWrapperPartDriver(IElementManager elementManager, IElementDisplay elementDisplay, IElementSerializer serializer) {
+        public ElementWrapperPartDriver(
+            IElementManager elementManager, 
+            IElementDisplay elementDisplay, 
+            IElementSerializer serializer, 
+            ICultureAccessor cultureAccessor, 
+            IWorkContextAccessor wca) {
+
             _elementManager = elementManager;
             _elementDisplay = elementDisplay;
             _serializer = serializer;
+            _cultureAccessor = cultureAccessor;
+            _wca = wca;
         }
 
         protected override DriverResult Display(ElementWrapperPart part, string displayType, dynamic shapeHelper) {
@@ -44,11 +52,11 @@ namespace Orchard.Layouts.Drivers {
             return ContentShape("Parts_ElementWrapper_Edit", () => {
                 var describeContext = CreateDescribeContext(part);
                 var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, part.ElementTypeName);
-                var data = ElementDataHelper.Deserialize(part.ElementData);
+                var data = ElementDataHelper.Deserialize(part.ElementData).Combine(_wca.GetContext().HttpContext.Request.Form.ToDictionary());
                 var dataClosure = data;
                 var element = _elementManager.ActivateElement(descriptor, e => e.Data = dataClosure);
-                var context = (ElementEditorContext)CreateEditorContext(describeContext.Content, element, updater, shapeHelper);
-                var editorResult = updater != null ? _elementManager.UpdateEditor(context) : _elementManager.BuildEditor(context);
+                var context = CreateEditorContext(describeContext.Content, element, data, updater, shapeHelper);
+                var editorResult = (EditorResult)(updater != null ? _elementManager.UpdateEditor(context) : _elementManager.BuildEditor(context));
                 var viewModel = new ElementWrapperPartViewModel {
                     Tabs = editorResult.CollectTabs().ToArray(),
                     ElementTypeName = part.ElementTypeName,
@@ -57,7 +65,7 @@ namespace Orchard.Layouts.Drivers {
                     ElementEditors = editorResult.Editors,
                 };
 
-                data = element.Data;
+                data = context.ElementData;
 
                 if (updater != null) {
                     part.ElementData = data.Serialize();
@@ -99,12 +107,13 @@ namespace Orchard.Layouts.Drivers {
             };
         }
 
-        private ElementEditorContext CreateEditorContext(IContent content, Element element, IUpdateModel updater, dynamic shapeFactory) {
+        private ElementEditorContext CreateEditorContext(IContent content, Element element, ElementDataDictionary elementData, IUpdateModel updater, dynamic shapeFactory) {
             var context = new ElementEditorContext {
                 Content = content,
                 Element = element,
                 Updater = updater,
-                ValueProvider = updater != null ? ((Controller)updater).ValueProvider : null,
+                ValueProvider = elementData.ToValueProvider(_cultureAccessor.CurrentCulture),
+                ElementData = elementData,
                 ShapeFactory = shapeFactory,
                 Prefix = Prefix
             };

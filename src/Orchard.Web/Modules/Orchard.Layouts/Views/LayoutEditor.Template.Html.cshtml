@@ -7,5 +7,5 @@
         <li class="layout-panel-item layout-panel-action" title="@T("Move {{element.contentTypeLabel.toLowerCase()}} up (Ctrl+Up)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}"><i class="fa fa-chevron-up"></i></li>
         <li class="layout-panel-item layout-panel-action" title="@T("Move {{element.contentTypeLabel.toLowerCase()}} down (Ctrl+Down)")" ng-click="element.moveDown()" ng-class="{disabled: !element.canMoveDown()}"><i class="fa fa-chevron-down"></i></li>
     </ul>
-    <div id="layout-content-markup-{{::$id}}" class="layout-content-markup" ng-bind-html="element.htmlUnsafe" data-templated="{{element.isTemplated}}"></div>
+    <div id="layout-content-markup-{{::$id}}" class="layout-content-markup" ng-bind-html="element.htmlUnsafe" ng-blur="updateContent($event)" data-templated="{{element.isTemplated}}"></div>
 </div>

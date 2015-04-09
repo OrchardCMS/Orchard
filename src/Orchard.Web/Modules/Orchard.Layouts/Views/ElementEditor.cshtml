@@ -40,7 +40,7 @@
                         typeLabel: "@Model.DisplayText.Text",
                         typeClass: "@Model.DisplayText.Text.HtmlClassify()",
                         data: LayoutEditor.decode("@Url.Encode(Model.ElementData)"),
-                        html: "@Url.Encode(Model.ElementHtml)",
+                        html: LayoutEditor.decode("@Url.Encode(Model.ElementHtml)"),
                         isTemplated: false
                     },
                     elementEditorModel: @Html.Raw(Model.ElementEditorModel.ToJson())

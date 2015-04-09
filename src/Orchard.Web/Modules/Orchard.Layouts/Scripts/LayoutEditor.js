@@ -270,7 +270,7 @@ angular
                                         // Because of this, we need to invoke "setParent" so that specific container types can perform element speficic initialization.
                                         receivedElement.setEditor(element.editor);
                                         receivedElement.setParent(element);
-                                        if (receivedElement.type == "Content" && !!receivedElement.hasEditor) {
+                                        if (!!receivedElement.hasEditor) {
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
@@ -430,7 +430,7 @@ angular
                             if (!$scope.element.inlineEditingIsActive) {
                                 $scope.element.inlineEditingIsActive = true;
                                 $element.find(".layout-toolbar-container").show();
-                                var selector = "#layout-editor-" + $scope.$id + " .layout-content-h-t-m-l .layout-content-markup[data-templated=false]";
+                                var selector = "#layout-editor-" + $scope.$id + " .layout-html .layout-content-markup[data-templated=false]";
                                 var firstContentEditorId = $(selector).first().attr("id");
                                 tinymce.init({
                                     selector: selector,
@@ -649,6 +649,42 @@ angular
                                 });
                             });
                         };
+
+                        // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
+                        $scope.element.setHtml = function (html) {
+                            $scope.element.html = html;
+                            $scope.element.htmlUnsafe = $sce.trustAsHtml(html);
+                        };
+
+                        $scope.element.setHtml($scope.element.html);
+                    }
+                ],
+                templateUrl: environment.templateUrl("Content"),
+                replace: true
+            };
+        }
+    ]);
+angular
+    .module("LayoutEditor")
+    .directive("orcLayoutHtml", ["$sce", "scopeConfigurator", "environment",
+        function ($sce, scopeConfigurator, environment) {
+            return {
+                restrict: "E",
+                scope: { element: "=" },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).then(function (args) {
+                                $scope.$apply(function () {
+                                    if (args.cancel)
+                                        return;
+
+                                    $scope.element.data = args.element.data;
+                                    $scope.element.setHtml(args.element.html);
+                                });
+                            });
+                        };
                         $scope.updateContent = function (e) {
                             $scope.element.setHtml(e.target.innerHTML);
                         };
@@ -662,7 +698,7 @@ angular
                         $scope.element.setHtml($scope.element.html);
                     }
                 ],
-                templateUrl: environment.templateUrl("Content"),
+                templateUrl: environment.templateUrl("Html"),
                 replace: true,
                 link: function (scope, element) {
                     // Mouse down events must not be intercepted by drag and drop while inline editing is active,
