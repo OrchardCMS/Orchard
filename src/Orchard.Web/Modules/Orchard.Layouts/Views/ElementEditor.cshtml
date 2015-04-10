@@ -43,11 +43,9 @@
                         html: LayoutEditor.decode("@Url.Encode(Model.ElementHtml)"),
                         isTemplated: false
                     },
-                    elementEditorModel: @Html.Raw(Model.ElementEditorModel.ToJson())
+                    elementEditorModel: LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ElementEditorModel.ToJson()))")
                 };
 
-                LayoutEditor.decodeLayoutGraph(payload.element);
-                LayoutEditor.decodeLayoutGraph(payload.elementEditorModel);
                 window.parent.currentDialog.trigger("command", payload);
             });
         </script>
