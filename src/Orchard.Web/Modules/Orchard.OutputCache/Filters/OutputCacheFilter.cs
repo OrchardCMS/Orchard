@@ -482,9 +482,8 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.SetMaxAge(maxAge);
             }
 
-            response.DisableUserCache();
-
             // Keeping this example for later usage.
+            // response.DisableUserCache();
             // response.DisableKernelCache();
             // response.Cache.SetOmitVaryStar(true);
 
