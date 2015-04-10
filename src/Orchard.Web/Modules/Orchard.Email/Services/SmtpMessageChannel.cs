@@ -113,10 +113,6 @@ namespace Orchard.Email.Services {
                         : new MailAddress(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
                 }
 
-                foreach (var recipient in ParseRecipients(emailMessage.Recipients)) {
-                    mailMessage.To.Add(new MailAddress(recipient));
-                }
-
                 if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
                     foreach (var recipient in ParseRecipients(emailMessage.ReplyTo)) {
                         mailMessage.ReplyToList.Add(new MailAddress(recipient));

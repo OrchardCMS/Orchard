@@ -1,19 +1,24 @@
 ﻿var LayoutEditor;
-(function (LayoutEditor) {
+(function ($, LayoutEditor) {
 
     var decode = function(value) {
         return !!value ? decodeURIComponent(value.replace(/\+/g, "%20")) : null;
     };
 
     var decodeGraph = function (graph) {
-        var propertiesToDecode = ["data", "html"];
 
-        for (var i = 0; i < propertiesToDecode.length; i++) {
-            var prop = propertiesToDecode[i];
-            var propVal = graph[prop];
+        if (!!graph.html) {
+            graph.html = decode(graph.html);
+        }
 
-            if(!!propVal)
-                graph[prop] = decode(propVal);
+        if (!!graph.data) {
+            var items = $.deserialize(graph.data);
+
+            for (var i = 0; i < items.length; i++) {
+                items[i] = decode(items[i]);
+            }
+
+            graph.data = $.param(items);
         }
 
         if (!!graph.children) {
@@ -23,6 +28,7 @@
         }
     };
 
+    LayoutEditor.decode = decode;
     LayoutEditor.decodeLayoutGraph = decodeGraph;
 
-})(LayoutEditor || (LayoutEditor = {}));
+})(jQuery, LayoutEditor || (LayoutEditor = {}));

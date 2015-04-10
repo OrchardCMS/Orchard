@@ -78,7 +78,7 @@
                             if (!$scope.element.inlineEditingIsActive) {
                                 $scope.element.inlineEditingIsActive = true;
                                 $element.find(".layout-toolbar-container").show();
-                                var selector = "#layout-editor-" + $scope.$id + " .layout-content-h-t-m-l .layout-content-markup[data-templated=false]";
+                                var selector = "#layout-editor-" + $scope.$id + " .layout-html .layout-content-markup[data-templated=false]";
                                 var firstContentEditorId = $(selector).first().attr("id");
                                 tinymce.init({
                                     selector: selector,

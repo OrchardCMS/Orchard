@@ -16,5 +16,6 @@ namespace Orchard.Layouts.Framework.Drivers {
         public string Prefix { get; set; }
         public EditorResult EditorResult { get; set; }
         public string Session { get; set; }
+        public ElementDataDictionary ElementData { get; set; }
     }
 }

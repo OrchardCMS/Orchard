@@ -18,6 +18,7 @@
         <file>LayoutEditor/Directives/Child.js</file>
         <file>LayoutEditor/Directives/Column.js</file>
         <file>LayoutEditor/Directives/Content.js</file>
+        <file>LayoutEditor/Directives/Html.js</file>
         <file>LayoutEditor/Directives/Grid.js</file>
         <file>LayoutEditor/Directives/Row.js</file>
         <file>LayoutEditor/Directives/Popup.js</file>

@@ -10,7 +10,7 @@ Features:
     Orchard.Layouts:
         Name: Layouts
         Description: Provides tools to create layouts.
-        Dependencies: Common, Orchard.jQuery, Orchard.Forms, Orchard.Tokens, TinyMCE
+        Dependencies: Common, Orchard.jQuery, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, TinyMCE
         Category: Layout
     Orchard.Layouts.Snippets:
         Name: Layout Snippets
@@ -29,6 +29,6 @@ Features:
         Dependencies: Orchard.Layouts, Orchard.Projections
     Orchard.Layouts.Tokens:
         Name: Element Tokens
-        Description: Provides an element token provider, enabling elements to be rendered using a token.
+        Description: Provides an element token provider that enables elements to be rendered using a token and enables tokens to be used inside of various elements such as Html, Text and Paragraph.
         Category: Layout
         Dependencies: Orchard.Layouts, Orchard.Tokens

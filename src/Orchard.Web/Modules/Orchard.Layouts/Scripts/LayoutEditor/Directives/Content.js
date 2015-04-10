@@ -19,9 +19,6 @@
                                 });
                             });
                         };
-                        $scope.updateContent = function (e) {
-                            $scope.element.setHtml(e.target.innerHTML);
-                        };
 
                         // Overwrite the setHtml function so that we can use the $sce service to trust the html (and not have the html binding strip certain tags).
                         $scope.element.setHtml = function (html) {
@@ -33,16 +30,7 @@
                     }
                 ],
                 templateUrl: environment.templateUrl("Content"),
-                replace: true,
-                link: function (scope, element) {
-                    // Mouse down events must not be intercepted by drag and drop while inline editing is active,
-                    // otherwise clicks in inline editors will have no effect.
-                    element.find(".layout-content-markup").mousedown(function (e) {
-                        if (scope.element.editor.inlineEditingIsActive) {
-                            e.stopPropagation();
-                        }
-                    });
-                }
+                replace: true
             };
         }
     ]);

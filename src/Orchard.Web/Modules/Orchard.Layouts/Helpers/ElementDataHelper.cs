@@ -52,7 +52,7 @@ namespace Orchard.Layouts.Helpers {
 
             foreach (var item in items) {
                 var pair = item.Split(new[] { '=' });
-                var key = pair[0];
+                var key = HttpUtility.UrlDecode(pair[0]);
                 var value = HttpUtility.UrlDecode(pair[1]);
 
                 if (!dictionary.ContainsKey(key) && !_elementDataBlackList.Contains(key))

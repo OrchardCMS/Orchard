@@ -35,7 +35,8 @@ namespace Orchard.Layouts.Providers {
 
             return contentParts.Select(contentPart => {
 
-                var partDescription = contentPart.Settings.TryGetModel<ContentPartSettings>().Description;
+                var partSettings = contentPart.Settings.TryGetModel<ContentPartSettings>();
+                var partDescription = partSettings != null ? partSettings.Description : null;
                 var description = T(!String.IsNullOrWhiteSpace(partDescription) ? partDescription : contentPart.Name);
                 return new ElementDescriptor(elementType, contentPart.Name, T(contentPart.Name.CamelFriendly()), description, contentPartElement.Category) {
                     Display = displayContext => Displaying(displayContext),

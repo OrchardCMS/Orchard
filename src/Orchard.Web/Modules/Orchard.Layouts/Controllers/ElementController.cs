@@ -106,7 +106,7 @@ namespace Orchard.Layouts.Controllers {
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
             var data = Request.Form.ToDictionary();
             var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
-            var context = CreateEditorContext(session, describeContext.Content, element, elementData: data, updater: this);
+            var context = CreateEditorContext(session, describeContext.Content, element, postedElementData: data, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
                 SessionKey = session,
@@ -159,13 +159,12 @@ namespace Orchard.Layouts.Controllers {
             var contentId = sessionState.ContentId;
             var contentType = sessionState.ContentType;
             var typeName = sessionState.TypeName;
-            var elementData = sessionState.ElementData;
-            var elementEditorData = sessionState.ElementEditorData;
+            var elementData = ElementDataHelper.Deserialize(sessionState.ElementData);
             var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, typeName);
-            var data = ElementDataHelper.Deserialize(elementData).Combine(ElementDataHelper.Deserialize(elementEditorData));
+            var data = elementData.Combine(ElementDataHelper.Deserialize(sessionState.ElementEditorData));
             var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
-            var context = CreateEditorContext(session, describeContext.Content, element, elementData: data);
+            var context = CreateEditorContext(session, describeContext.Content, element, postedElementData: data, elementData: elementData);
             var editorResult = _elementManager.BuildEditor(context);
 
             var viewModel = new EditElementViewModel {
@@ -190,9 +189,10 @@ namespace Orchard.Layouts.Controllers {
             var contentType = sessionState.ContentType;
             var describeContext = CreateDescribeContext(contentId, contentType);
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, model.TypeName);
+            var elementData = ElementDataHelper.Deserialize(sessionState.ElementData);
             var data = Request.Form.ToDictionary();
             var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
-            var context = CreateEditorContext(session, describeContext.Content, element, data, updater: this);
+            var context = CreateEditorContext(session, describeContext.Content, element, postedElementData: data, elementData: elementData, updater: this);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementViewModel {
                 Layout = describeContext.Content.As<ILayoutAspect>(),
@@ -225,15 +225,17 @@ namespace Orchard.Layouts.Controllers {
             IContent content,
             Element element,
             ElementDataDictionary elementData = null,
+            ElementDataDictionary postedElementData = null,
             IUpdateModel updater = null) {
 
-            elementData = elementData ?? new ElementDataDictionary();
+            postedElementData = postedElementData ?? new ElementDataDictionary();
             var context = new ElementEditorContext {
                 Session = session,
                 Content = content,
                 Element = element,
                 Updater = updater,
-                ValueProvider = elementData.ToValueProvider(_cultureAccessor.CurrentCulture),
+                ElementData = elementData ?? new ElementDataDictionary(),
+                ValueProvider = postedElementData.ToValueProvider(_cultureAccessor.CurrentCulture),
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;
