@@ -15,6 +15,8 @@ namespace Orchard.ImportExport.Migrations {
                 .ContentPartRecord()
                 .Column<bool>("IncludeMetadata")
                 .Column<bool>("IncludeData")
+                .Column<bool>("IncludeFiles")
+                .Column<bool>("DeployAsDrafts")
                 .Column<string>("VersionHistoryOption")
                 .Column<string>("ContentTypes", col => col.Unlimited())
                 .Column<string>("QueryIdentity")
@@ -80,13 +82,19 @@ namespace Orchard.ImportExport.Migrations {
             SchemaBuilder.AlterTable("RemoteOrchardDeploymentPartRecord", table => table
                 .AddColumn<string>("PrivateApiKey", c => c.Unlimited()));
 
-            return 1;
+            return 3;
         }
 
         public int UpdateFrom1() {
             SchemaBuilder.AlterTable("DeploymentSubscriptionPartRecord", table => table
                 .AddColumn<bool>("IncludeFiles"));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("DeploymentSubscriptionPartRecord", table => table
+                .AddColumn<bool>("DeployAsDrafts"));
+            return 3;
         }
     }
 }

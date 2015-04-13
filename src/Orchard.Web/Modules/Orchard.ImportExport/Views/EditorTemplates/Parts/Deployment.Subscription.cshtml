@@ -79,6 +79,10 @@
         @Html.RadioButtonFor(m => m.DataImportChoice, "Draft", new { id = "Draft" })
         <label for="Draft" class="forcheckbox">@T("Only Drafts")</label>
     </div>
+    <div>
+        @Html.EditorFor(m => m.DeployAsDraft)
+        <label for="@Html.FieldIdFor(m => m.DeployAsDraft)" class="forcheckbox">@T("Deploy all draftable items as drafts")</label>
+    </div>
 </fieldset>
 @if (Model.CustomSteps.Any())
 {

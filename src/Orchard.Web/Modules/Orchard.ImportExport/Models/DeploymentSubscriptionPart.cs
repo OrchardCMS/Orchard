@@ -14,6 +14,7 @@ namespace Orchard.ImportExport.Models {
         public virtual bool IncludeMetadata { get; set; }
         public virtual bool IncludeData { get; set; }
         public virtual bool IncludeFiles { get; set; }
+        public virtual bool DeployAsDrafts { get; set; }
         public virtual VersionHistoryOptions VersionHistoryOption { get; set; }
         public virtual FilterOptions Filter { get; set; }
         public virtual string DeploymentType { get; set; }
@@ -60,6 +61,11 @@ namespace Orchard.ImportExport.Models {
         public bool IncludeFiles {
             get { return Record.IncludeFiles; }
             set { Record.IncludeFiles = value; }
+        }
+
+        public bool DeployAsDrafts {
+            get { return Record.DeployAsDrafts; }
+            set { Record.DeployAsDrafts = value; }
         }
 
         public VersionHistoryOptions VersionHistoryOption {

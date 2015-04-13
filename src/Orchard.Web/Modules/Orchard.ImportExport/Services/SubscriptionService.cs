@@ -6,7 +6,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
-using Orchard.ImportExport.Handlers;
 using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -154,6 +153,7 @@ namespace Orchard.ImportExport.Services {
                 IncludeMetadata = subscription.IncludeMetadata,
                 IncludeData = subscription.IncludeData,
                 IncludeFiles = subscription.IncludeFiles,
+                DeployAsDrafts = subscription.DeployAsDrafts,
                 DeployChangesAfterUtc =
                     (subscription.Filter == FilterOptions.ChangesSinceLastImport)
                         ? subscription.DeployedChangesToUtc : null,
@@ -197,6 +197,7 @@ namespace Orchard.ImportExport.Services {
                             ExportData = exportingItems.Any(),
                             ExportMetadata = request.IncludeMetadata,
                             ExportFiles = request.IncludeFiles,
+                            ExportAsDraft = request.DeployAsDrafts,
                             VersionHistoryOptions = request.VersionHistoryOption,
                             CustomSteps = exportSteps
                         });
@@ -243,16 +244,6 @@ namespace Orchard.ImportExport.Services {
             }
 
             return GetSubscriptionFilePath(executionId, type);
-        }
-
-        private string WriteSubscriptionFile(string executionId, string type, Stream deploymentFile) {
-            var path = PrepareSubscriptionFilePath(executionId, type);
-            if (path != null) {
-                using (var file = _appDataFolder.CreateFile(path)) {
-                    deploymentFile.CopyTo(file);
-                }
-            }
-            return path;
         }
 
         private string GetSubscriptionFilePath(string executionId, string type) {

@@ -6,6 +6,7 @@ namespace Orchard.ImportExport.Models {
         public bool IncludeMetadata { get; set; }
         public bool IncludeData { get; set; }
         public bool IncludeFiles { get; set; }
+        public bool DeployAsDrafts { get; set; }
         public string QueryIdentity { get; set; }
         public VersionHistoryOptions VersionHistoryOption { get; set; }
         public DateTime? DeployChangesAfterUtc { get; set; }

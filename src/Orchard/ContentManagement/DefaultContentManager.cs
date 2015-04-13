@@ -707,7 +707,8 @@ namespace Orchard.ContentManagement {
 
             var status = element.Attribute("Status");
 
-            var item = context.Session.Get(identity, VersionOptions.Latest, XmlConvert.DecodeName(element.Name.LocalName));
+            var versionRequired = (status != null && status.Value == "Draft") ? VersionOptions.DraftRequired : VersionOptions.Latest;
+            var item = context.Session.Get(identity, versionRequired, XmlConvert.DecodeName(element.Name.LocalName));
             if (item == null) {
                 item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {

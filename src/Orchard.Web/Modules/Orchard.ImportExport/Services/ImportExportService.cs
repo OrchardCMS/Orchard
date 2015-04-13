@@ -11,6 +11,7 @@ using NuGet;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
@@ -285,13 +286,19 @@ namespace Orchard.ImportExport.Services {
 
             var itemList = contentItems.ToList();
 
-            foreach (var contentItemElement in contentTypes
-                .Select(type => itemList
-                    .Where(i => i.ContentType == type))
-                .SelectMany(items => items
+            foreach (var typeName in contentTypes) {
+                var isTypeDraftable = _contentDefinitionManager.GetTypeDefinition(typeName)
+                    .Settings.GetModel<ContentTypeSettings>().Draftable;
+                foreach (var contentItemElement in itemList
+                        .Where(i => i.ContentType == typeName)
                     .Select(contentItemElement => ExportContentItem(contentItemElement, context).Data)
-                    .Where(contentItemElement => contentItemElement != null))) {
-                data.Add(contentItemElement);
+                        .Where(contentItemElement => contentItemElement != null)
+                    ) {
+                    if (context.ExportOptions.ExportAsDraft && isTypeDraftable) {
+                        contentItemElement.Attr("Status", "Draft");
+                    }
+                    data.Add(contentItemElement);
+                }
             }
 
             return data;

@@ -74,6 +74,7 @@ namespace Orchard.ImportExport.Drivers {
                 Metadata = part.IncludeMetadata,
                 Data = part.IncludeData,
                 Files = part.IncludeFiles,
+                DeployAsDraft = part.DeployAsDrafts,
                 ContentTypes = contentTypes,
                 SelectedContentTypes = part.ContentTypes,
                 CustomSteps = new List<CustomStepEntry>(),
@@ -118,17 +119,10 @@ namespace Orchard.ImportExport.Drivers {
 
             if (!updater.TryUpdateModel(viewModel, Prefix, null, null)) return Editor(part, shapeHelper);
             
-            //TODO:For now cannot edit target. to be added back in.
-            //var source = part.ContentItem.ContentManager.Get(viewModel.DeploymentConfigurationId);
-            //if (source != null) {
-            //    part.DeploymentConfiguration = source;
-            //}
-            //else {
-            //    updater.AddModelError("DeploymentConfigurationId", T("Subscription could not be saved as no target was provided."));
-            //}
             part.IncludeMetadata = viewModel.Metadata;
             part.IncludeData = viewModel.Data;
             part.IncludeFiles = viewModel.Files;
+            part.DeployAsDrafts = viewModel.DeployAsDraft;
             part.Filter = (FilterOptions) Enum.Parse(typeof (FilterOptions), viewModel.FilterChoice);
             part.VersionHistoryOption = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice);
             part.ContentTypes = viewModel.SelectedContentTypes.ToList();
