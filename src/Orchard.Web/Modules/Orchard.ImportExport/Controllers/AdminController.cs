@@ -113,6 +113,7 @@ namespace Orchard.ImportExport.Controllers {
                 ExportMetadata = viewModel.Metadata,
                 ExportSiteSettings = viewModel.SiteSettings,
                 ExportFiles = viewModel.Files,
+                ExportAsDraft = viewModel.ExportAsDraft,
                 CustomSteps = customSteps
             };
 

@@ -8,6 +8,7 @@ namespace Orchard.ImportExport.ViewModels {
         public virtual bool Data { get; set; }
         public virtual bool Files { get; set; }
         public virtual string DataImportChoice { get; set; }
+        public bool ExportAsDraft { get; set; }
         public virtual bool SiteSettings { get; set; }
     }
 
