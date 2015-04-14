@@ -15,16 +15,10 @@ namespace Orchard.Taxonomies.Services {
             _taxonomyService = taxonomyService;
         }
         
-        public void Process(int termsPartId) {
-            var termsPart = _contentManager.Get<TermsPart>(termsPartId);
+        public void Process(params int[] termPartRecordIds) {
 
-            if (termsPart == null) {
-                return;
-            }
-
-            // Retrieve the number of associated content items, for the whole hierarchy
-            foreach (var term in termsPart.Terms) {
-                var termPart = _taxonomyService.GetTerm(term.TermRecord.Id);
+            foreach (var id in termPartRecordIds) {
+                var termPart = _taxonomyService.GetTerm(id);
                 while (termPart != null) {
                     termPart.Count = (int)_taxonomyService.GetContentItemsCount(termPart);
 
