@@ -7,6 +7,9 @@ namespace Orchard.Users.Models {
         public const string EmailPattern = 
             @"^(?![\.@])(""([^""\r\\]|\\[""\r\\])*""|([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)"
             + @"@([a-z0-9][\w-]*\.)+[a-z]{2,}$";
+        
+        public const int MaxUserNameLength = 255;
+        public const int MaxEmailLength = 255;
 
         public string UserName {
             get { return Retrieve(x => x.UserName); }

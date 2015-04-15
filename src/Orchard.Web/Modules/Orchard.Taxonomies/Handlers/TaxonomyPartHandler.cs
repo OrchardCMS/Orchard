@@ -3,7 +3,6 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Title.Models;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Services;
-using JetBrains.Annotations;
 using Orchard.Taxonomies.Models;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
@@ -11,7 +10,6 @@ using Orchard.Taxonomies.Settings;
 using System;
 
 namespace Orchard.Taxonomies.Handlers {
-    [UsedImplicitly]
     public class TaxonomyPartHandler : ContentHandler {
         public TaxonomyPartHandler(
             IRepository<TaxonomyPartRecord> repository, 

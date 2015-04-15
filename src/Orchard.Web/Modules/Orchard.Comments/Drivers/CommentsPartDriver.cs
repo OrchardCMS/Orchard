@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
@@ -9,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;

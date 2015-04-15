@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
@@ -6,7 +5,6 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents.Security {
-    [UsedImplicitly]
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }

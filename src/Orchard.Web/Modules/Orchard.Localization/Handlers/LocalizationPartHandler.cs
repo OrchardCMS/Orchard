@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -7,7 +6,6 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
 namespace Orchard.Localization.Handlers {
-    [UsedImplicitly]
     public class LocalizationPartHandler : ContentHandler {
         private readonly ICultureManager _cultureManager;
         private readonly IContentManager _contentManager;
