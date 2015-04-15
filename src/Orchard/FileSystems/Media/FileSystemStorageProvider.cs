@@ -338,16 +338,16 @@ namespace Orchard.FileSystems.Media {
 
             inputStream.Position = 0; // We need to read from the beginning of the stream, even if it isn't at it's beginning.
 
-            var outputStream = file.OpenWrite();
-            var buffer = new byte[8192];
-            for (;;) {
+            using (var outputStream = file.OpenWrite()) {
+                var buffer = new byte[8192];
+                for (; ; ) {
 
-                var length = inputStream.Read(buffer, 0, buffer.Length);
-                if (length <= 0)
-                    break;
-                outputStream.Write(buffer, 0, length);
+                    var length = inputStream.Read(buffer, 0, buffer.Length);
+                    if (length <= 0)
+                        break;
+                    outputStream.Write(buffer, 0, length);
+                }
             }
-            outputStream.Dispose();
 
             inputStream.Position = 0; // Rolling back the stream so external readers will have it easier.
         }
