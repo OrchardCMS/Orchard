@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
@@ -26,8 +28,16 @@ namespace Orchard.ImportExport.Drivers {
         //GET
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
             var targets = _deploymentService.GetDeploymentTargetConfigurations();
+            var id = part.ContentItem.Id;
+            // Don't show deployment info for a new item
+            if (id == 0) return null;
+            var contentManager = part.ContentItem.ContentManager;
+            var hasDraft = contentManager.Get(id, VersionOptions.Draft) != null;
+            var hasPublished = contentManager.Get(id, VersionOptions.Published) != null;
             var model = new DeployablePartViewModel {
                 Part = part,
+                HasDraftVersion = hasDraft,
+                HasPublishedVersion = hasPublished,
                 Targets = targets.Select(t => CreateTargetSummary(part, t)).ToList()
             };
 

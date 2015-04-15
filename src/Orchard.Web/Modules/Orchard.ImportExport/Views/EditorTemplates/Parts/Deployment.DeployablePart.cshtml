@@ -27,10 +27,19 @@
                 @target.Status
             </td>
             <td style="text-align: right">
-
-                @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
-                <text>|</text>
-                @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
+                @if (Model.HasDraftVersion) {
+                    @Html.ActionLink(T("Deploy draft").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
+                    <text>|</text>
+                    @Html.ActionLink(T("Queue draft").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Draft", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
+                    if (Model.HasPublishedVersion) {
+                        <text>|</text>
+                    }
+                }
+                @if (Model.HasPublishedVersion) {
+                    @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new {id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Published", area = "Orchard.ImportExport"}, null)
+                    <text>|</text>
+                    @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Published", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
+                }
             </td>
         </tr>
     }

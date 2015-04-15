@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
@@ -62,12 +63,14 @@ namespace Orchard.ImportExport.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult DeployContent(int id, int targetId, string returnUrl = null) {
+        public ActionResult DeployContent(int id, int targetId, string returnUrl = null, string version = "Published") {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to deploy content."))) {
                 return new HttpUnauthorizedResult();
             }
+            if (version != "Draft" && version != "Published") return HttpNotFound();
 
-            var content = Services.ContentManager.Get(id);
+            var content = Services.ContentManager.Get(id, version == "Draft" ? VersionOptions.Draft : VersionOptions.Published);
+
             var target = Services.ContentManager.Get(targetId);
 
             if (content == null || target == null) {
@@ -83,12 +86,14 @@ namespace Orchard.ImportExport.Controllers {
             return Index(null);
         }
 
-        public ActionResult QueueContent(int id, int targetId, string returnUrl = null) {
+        public ActionResult QueueContent(int id, int targetId, string returnUrl = null, string version = "Published") {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to deploy content."))) {
                 return new HttpUnauthorizedResult();
             }
+            if (version != "Draft" && version != "Published") return HttpNotFound();
 
-            var content = Services.ContentManager.Get(id);
+            var content = Services.ContentManager.Get(id, version == "Draft" ? VersionOptions.Draft : VersionOptions.Published);
+
             var target = Services.ContentManager.Get(targetId);
 
             if (content == null || target == null) {
