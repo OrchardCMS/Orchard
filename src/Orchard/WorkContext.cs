@@ -24,7 +24,7 @@ namespace Orchard {
         /// <returns>True if the dependency could be resolved, false otherwise</returns>
         public abstract bool TryResolve<T>(out T service);
 
-		public abstract T GetState<T>(string name);
+        public abstract T GetState<T>(string name);
         public abstract void SetState<T>(string name, T value);
 
         /// <summary>

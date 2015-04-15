@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using Autofac;
 using Moq;
 using Orchard.Localization.Services;
@@ -28,15 +25,18 @@ namespace Orchard.Tests.Localization {
 
     internal class StubWorkContext : WorkContext {
 
-        private string _cultureName;
-        private string _calendarName;
-        private TimeZoneInfo _timeZone;
+        public StubWorkContext() {
+        }
 
         public StubWorkContext(string cultureName, string calendarName, TimeZoneInfo timeZone) {
-            _cultureName = cultureName;
-            _calendarName = calendarName;
-            _timeZone = timeZone;
+            CultureName = cultureName;
+            CalendarName = calendarName;
+            TimeZone = timeZone;
         }
+
+        public string CultureName { get; set; }
+        public string CalendarName { get; set; }
+        public TimeZoneInfo TimeZone { get; set; }
 
         public override T Resolve<T>() {
             throw new NotImplementedException();
@@ -47,9 +47,9 @@ namespace Orchard.Tests.Localization {
         }
 
         public override T GetState<T>(string name) {
-            if (name == "CurrentCulture") return (T)((object)_cultureName);
-            if (name == "CurrentCalendar") return (T)((object)_calendarName);
-            if (name == "CurrentTimeZone") return (T)((object)_timeZone);
+            if (name == "CurrentCulture") return (T)((object)CultureName);
+            if (name == "CurrentCalendar") return (T)((object)CalendarName);
+            if (name == "CurrentTimeZone") return (T)((object)TimeZone);
             throw new NotImplementedException(String.Format("Property '{0}' is not implemented.", name));
         }
 
@@ -60,17 +60,17 @@ namespace Orchard.Tests.Localization {
 
     internal class StubWorkContextAccessor : IWorkContextAccessor {
 
-        private WorkContext _workContext;
+        private readonly WorkContext _workContext;
 
         public StubWorkContextAccessor(WorkContext workContext) {
             _workContext = workContext;
         }
 
-        public WorkContext GetContext(System.Web.HttpContextBase httpContext) {
+        public WorkContext GetContext(HttpContextBase httpContext) {
             throw new NotImplementedException();
         }
 
-        public IWorkContextScope CreateWorkContextScope(System.Web.HttpContextBase httpContext) {
+        public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
             throw new NotImplementedException();
         }
 
