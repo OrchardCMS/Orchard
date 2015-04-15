@@ -336,6 +336,8 @@ namespace Orchard.FileSystems.Media {
             // The CreateFile method will map the still relative path
             var file = CreateFile(path);
 
+            inputStream.Position = 0; // We need to read from the beginning of the stream, even if it isn't at it's beginning.
+
             var outputStream = file.OpenWrite();
             var buffer = new byte[8192];
             for (;;) {
@@ -346,6 +348,8 @@ namespace Orchard.FileSystems.Media {
                 outputStream.Write(buffer, 0, length);
             }
             outputStream.Dispose();
+
+            inputStream.Position = 0; // Rolling back the stream so external readers will have it easier.
         }
 
         /// <summary>
