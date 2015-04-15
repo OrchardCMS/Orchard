@@ -68,7 +68,7 @@ namespace Orchard.Environment.State {
 
         private void Execute(Entry entry) {
             // Force reloading extensions if there were extensions installed
-            // See http://orchard.codeplex.com/workitem/17465
+            // See https://github.com/OrchardCMS/Orchard/issues/1294
             if (entry.MessageName == "IRecipeSchedulerEventHandler.ExecuteWork") {
                 var ctx = _orchardHost().GetShellContext(entry.ShellSettings);
             }

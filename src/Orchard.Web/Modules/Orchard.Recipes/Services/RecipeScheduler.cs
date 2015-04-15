@@ -41,7 +41,7 @@ namespace Orchard.Recipes.Services {
             if (scheduleMore)
                 ScheduleWork(executionId);
             else
-                // https://orchard.codeplex.com/workitem/19844
+                // https://github.com/OrchardCMS/Orchard/issues/3672
                 // Because recipes execute in their own workcontext, we need to restart the shell, as signaling a cache won't work across workcontexts.
                 _events.Changed(_shellDescriptorManager.GetShellDescriptor(), _shellSettings.Name);
         }
