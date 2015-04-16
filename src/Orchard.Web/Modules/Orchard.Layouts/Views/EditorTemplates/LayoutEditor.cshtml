@@ -43,10 +43,9 @@
                     }
             });
             (function() {
-                var editorConfig = @Html.Raw(Model.ConfigurationData);
-                var editorCanvasData = @Html.Raw(Model.Data);
+                var editorConfig = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ConfigurationData))"));
+                var editorCanvasData = JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.Data))"));
 
-                LayoutEditor.decodeLayoutGraph(editorCanvasData);
                 window.layoutEditor = new LayoutEditor.Editor(editorConfig, editorCanvasData);
             })(jQuery);
         </script>

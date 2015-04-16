@@ -13,14 +13,14 @@ namespace Orchard.Layouts.Services {
     // Consider combining this class with DefaultContentDisplay to reuse shared code, for example by inheriting from a common base class.
     public abstract class ContentDisplayBase : Component {
         private readonly IShapeFactory _shapeFactory;
-        private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         protected ContentDisplayBase(
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
@@ -109,9 +109,9 @@ namespace Orchard.Layouts.Services {
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
                 var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
-                var theme = workContext.CurrentTheme;
-                var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
-                var request = _requestContext.HttpContext.Request;
+                var shapeTable = workContext.HttpContext != null
+                    ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
+                    : _shapeTableLocator.Value.Lookup(null);
 
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
