@@ -28,3 +28,6 @@
 }
 
 @Html.Raw(tagBuilder.ToString(TagRenderMode.Normal))
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(element.Name)
+}
