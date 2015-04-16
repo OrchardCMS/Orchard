@@ -19,7 +19,6 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.OutputCache.Models;
 using Orchard.OutputCache.Services;
-using Orchard.OutputCache.ViewModels;
 using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -78,11 +77,18 @@ namespace Orchard.OutputCache.Filters {
         private string _cacheKey;
         private string _invariantCacheKey;
         private bool _transformRedirect;
-        private Func<ControllerContext, string> _completeResponseFunc;
+        private bool _isCachingRequest;
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
 
             Logger.Debug("Incoming request for URL '{0}'.", filterContext.RequestContext.HttpContext.Request.RawUrl);
+
+            // This filter is not reentrant (multiple executions within the same request are
+            // not supported) so child actions are ignored completely.
+            if (filterContext.IsChildAction) {
+                Logger.Debug("Action '{0}' ignored because it's a child action.", filterContext.ActionDescriptor.ActionName);
+                return;
+            }
 
             _now = _clock.UtcNow;
             _workContext = _workContextAccessor.GetContext();
@@ -167,16 +173,14 @@ namespace Orchard.OutputCache.Filters {
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
 
+            var captureHandlerIsAttached = false;
+
             try {
 
-                string renderedOutput = null;
-                if (_completeResponseFunc != null) {
-                    renderedOutput = _completeResponseFunc(filterContext);
-                }
-
-                if (renderedOutput == null) {
+                // This filter is not reentrant (multiple executions within the same request are
+                // not supported) so child actions are ignored completely.
+                if (filterContext.IsChildAction || !_isCachingRequest)
                     return;
-                }
 
                 Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
@@ -203,42 +207,52 @@ namespace Orchard.OutputCache.Filters {
                 // Include each content item ID as tags for the cache entry.
                 var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
+                // Capture the response output using a custom filter stream.
                 var response = filterContext.HttpContext.Response;
-                var cacheItem = new CacheItem() {
-                    CachedOnUtc = _now,
-                    Duration = cacheDuration,
-                    GraceTime = cacheGraceTime,
-                    Output = renderedOutput,
-                    ContentType = response.ContentType,
-                    QueryString = filterContext.HttpContext.Request.Url.Query,
-                    CacheKey = _cacheKey,
-                    InvariantCacheKey = _invariantCacheKey,
-                    Url = filterContext.HttpContext.Request.Url.AbsolutePath,
-                    Tenant = _shellSettings.Name,
-                    StatusCode = response.StatusCode,
-                    Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                var captureStream = new CaptureStream(response.Filter);
+                response.Filter = captureStream;
+                captureStream.Captured += (output) => {
+                    try {
+                        var cacheItem = new CacheItem() {
+                            CachedOnUtc = _now,
+                            Duration = cacheDuration,
+                            GraceTime = cacheGraceTime,
+                            Output = output,
+                            ContentType = response.ContentType,
+                            QueryString = filterContext.HttpContext.Request.Url.Query,
+                            CacheKey = _cacheKey,
+                            InvariantCacheKey = _invariantCacheKey,
+                            Url = filterContext.HttpContext.Request.Url.AbsolutePath,
+                            Tenant = _shellSettings.Name,
+                            StatusCode = response.StatusCode,
+                            Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                        };
+
+                        // Write the rendered item to the cache.
+                        _cacheStorageProvider.Remove(_cacheKey);
+                        _cacheStorageProvider.Set(_cacheKey, cacheItem);
+
+                        Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
+
+                        // Also add the item tags to the tag cache.
+                        foreach (var tag in cacheItem.Tags) {
+                            _tagCache.Tag(tag, _cacheKey);
+                        }
+                    }
+                    finally {
+                        // Always release the cache key lock when the request ends.
+                        ReleaseCacheKeyLock();
+                    }
                 };
 
-                // Write the rendered item to the cache.
-                _cacheStorageProvider.Remove(_cacheKey);
-                _cacheStorageProvider.Set(_cacheKey, cacheItem);
-
-                Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
-
-                // Also add the item tags to the tag cache.
-                foreach (var tag in cacheItem.Tags) {
-                    _tagCache.Tag(tag, _cacheKey);
-                }
+                captureHandlerIsAttached = true;
             }
             finally {
-                // Always release the cache key lock when the request ends.
-                if (_cacheKey != null) {
-                    object cacheKeyLock;
-                    if (_cacheKeyLocks.TryGetValue(_cacheKey, out cacheKeyLock) && Monitor.IsEntered(cacheKeyLock)) {
-                        Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
-                        Monitor.Exit(cacheKeyLock);
-                    }
-                }
+                // If the response filter stream capture handler was attached then we'll trust
+                // it to release the cache key lock at some point in the future when the stream
+                // is flushed; otherwise we'll make sure we'll release it here.
+                if (!captureHandlerIsAttached)
+                    ReleaseCacheKeyLock();
             }
         }
 
@@ -264,12 +278,6 @@ namespace Orchard.OutputCache.Filters {
             // Don't cache admin section requests.
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
                 Logger.Debug("Request for item '{0}' ignored because it's in admin section.", _cacheKey);
-                return false;
-            }
-
-            // Ignore child actions, e.g. HomeController is using RenderAction()
-            if (filterContext.IsChildAction) {
-                Logger.Debug("Request for item '{0}' ignored because it's a child action.", _cacheKey);
                 return false;
             }
 
@@ -329,7 +337,7 @@ namespace Orchard.OutputCache.Filters {
             
             // Vary by action parameters.
             foreach (var p in filterContext.ActionParameters)
-                result.Add(p.Key, p.Value);
+                result.Add("PARAM:" + p.Key, p.Value);
 
             // Vary by theme.
             result.Add("theme", _themeManager.GetRequestTheme(filterContext.RequestContext).Id.ToLowerInvariant());
@@ -438,7 +446,6 @@ namespace Orchard.OutputCache.Filters {
 
         private void ServeCachedItem(ActionExecutingContext filterContext, CacheItem cacheItem) {
             var response = filterContext.HttpContext.Response;
-            var output = cacheItem.Output;
 
             // Adds some caching information to the output if requested.
             if (CacheSettings.DebugMode) {
@@ -447,10 +454,7 @@ namespace Orchard.OutputCache.Filters {
             }
 
             // Shorcut action execution.
-            filterContext.Result = new ContentResult {
-                Content = output,
-                ContentType = cacheItem.ContentType
-            };
+            filterContext.Result = new FileContentResult(cacheItem.Output, cacheItem.ContentType);
 
             response.StatusCode = cacheItem.StatusCode;
 
@@ -463,18 +467,8 @@ namespace Orchard.OutputCache.Filters {
 
             ApplyCacheControl(response);
 
-            // Intercept the rendered response output.
-            var originalWriter = response.Output;
-            var cachingWriter = new StringWriterWithEncoding(originalWriter.Encoding, originalWriter.FormatProvider);
-            _completeResponseFunc = (ctx) => {
-                ctx.HttpContext.Response.Output = originalWriter;
-                string capturedText = cachingWriter.ToString();
-                cachingWriter.Dispose();
-                ctx.HttpContext.Response.Write(capturedText);
-                return capturedText;
-            };
-
-            response.Output = cachingWriter;
+            // Remember that we should intercept the rendered response output.
+            _isCachingRequest = true;
         }
 
         private void ApplyCacheControl(HttpResponseBase response) {
@@ -488,9 +482,8 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.SetMaxAge(maxAge);
             }
 
-            response.DisableUserCache();
-
             // Keeping this example for later usage.
+            // response.DisableUserCache();
             // response.DisableKernelCache();
             // response.Cache.SetOmitVaryStar(true);
 
@@ -514,6 +507,16 @@ namespace Orchard.OutputCache.Filters {
 
             foreach (var varyRequestHeader in CacheSettings.VaryByRequestHeaders) {
                 response.Cache.VaryByHeaders[varyRequestHeader] = true;
+            }
+        }
+
+        private void ReleaseCacheKeyLock() {
+            if (_cacheKey != null) {
+                object cacheKeyLock;
+                if (_cacheKeyLocks.TryGetValue(_cacheKey, out cacheKeyLock) && Monitor.IsEntered(cacheKeyLock)) {
+                    Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
+                    Monitor.Exit(cacheKeyLock);
+                }
             }
         }
 
@@ -565,18 +568,5 @@ namespace Orchard.OutputCache.Filters {
 
     public class ViewDataContainer : IViewDataContainer {
         public ViewDataDictionary ViewData { get; set; }
-    }
-
-    public sealed class StringWriterWithEncoding : StringWriter {
-        private readonly Encoding encoding;
-
-        public StringWriterWithEncoding(Encoding encoding, IFormatProvider formatProvider)
-            : base(formatProvider) {
-            this.encoding = encoding;
-        }
-
-        public override Encoding Encoding {
-            get { return encoding; }
-        }
     }
 }
