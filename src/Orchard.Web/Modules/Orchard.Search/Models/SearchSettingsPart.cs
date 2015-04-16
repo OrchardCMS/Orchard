@@ -1,11 +1,18 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.Search.Helpers;
 
 namespace Orchard.Search.Models {
     public class SearchSettingsPart : ContentPart {
-        public string[] SearchedFields {
-            get { return (Retrieve<string>("SearchedFields") ?? "").Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);  }
-            set { Store("SearchedFields", String.Join(", ", value));  }
+        public IDictionary<string, string[]> SearchFields {
+            get {
+                var data = Retrieve<string>("SearchFields") ?? "Search:body,title";
+                return SearchSettingsHelper.DeserializeSearchFields(data);
+            }
+            set {
+                var data = SearchSettingsHelper.SerializeSearchFields(value);
+                Store("SearchFields", data);
+            }
         }
 
         public bool FilterCulture {
