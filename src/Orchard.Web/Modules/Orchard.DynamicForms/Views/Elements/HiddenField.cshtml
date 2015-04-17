@@ -1,9 +1,8 @@
-﻿@using Orchard.DisplayManagement.Shapes
-@using Orchard.DynamicForms.Elements
+﻿@using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
     var element = (HiddenField) Model.Element;
-    var tagBuilder = TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("input"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["type"] = "hidden";
@@ -11,4 +10,4 @@
     tagBuilder.Attributes["name"] = element.Name;
 }
 
-@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

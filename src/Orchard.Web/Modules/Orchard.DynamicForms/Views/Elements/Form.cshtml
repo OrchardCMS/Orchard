@@ -1,5 +1,4 @@
 ﻿@using Orchard.ContentManagement
-@using Orchard.DisplayManagement.Shapes
 @using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
@@ -8,7 +7,7 @@
 @{
     var contentItem = (ContentItem) Model.ContentItem;
     var element = (Form) Model.Element;
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
     var formName = element.Name;
     var formAction = String.IsNullOrWhiteSpace(element.Action) ? Url.Action("Submit", "Form", new { area = "Orchard.DynamicForms"}) : element.Action;
     var formMethod = !String.IsNullOrWhiteSpace(element.Method) ? element.Method : "POST";

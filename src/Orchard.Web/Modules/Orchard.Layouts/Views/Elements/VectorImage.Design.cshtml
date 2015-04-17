@@ -1,11 +1,10 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.DisplayManagement.Shapes
 @using Orchard.Layouts.Elements
-@using Orchard.Layouts.Helpers
 @using Orchard.MediaLibrary.Models
 @{
+    var tagBuilder = new OrchardTagBuilder("img");
     var element = (VectorImage)Model.Element;
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
     var vectorImagePart = (VectorImagePart)Model.VectorImagePart;
     var mediaPart = vectorImagePart != null ? vectorImagePart.As<MediaPart>() : default(MediaPart);
 
@@ -25,4 +24,4 @@
         tagBuilder.Attributes["height"] = element.Height.ToString();
     }
 }
-@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

@@ -274,7 +274,9 @@ angular
                                             $scope.$root.editElement(receivedElement).then(function (args) {
                                                 if (!args.cancel) {
                                                     receivedElement.data = args.element.data;
-                                                    receivedElement.setHtml(args.element.html);
+
+                                                    if (receivedElement.setHtml)
+                                                        receivedElement.setHtml(args.element.html);
                                                 }
                                                 $timeout(function () {
                                                     if (!!args.cancel)

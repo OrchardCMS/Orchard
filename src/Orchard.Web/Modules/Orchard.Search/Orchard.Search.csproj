@@ -74,6 +74,7 @@
     <Compile Include="Drivers\SearchFormPartDriver.cs" />
     <Compile Include="Drivers\AdminSearchSettingsPartDriver.cs" />
     <Compile Include="Handlers\AdminSearchSettingsPartHandler.cs" />
+    <Compile Include="Helpers\SearchSettingsHelper.cs" />
     <Compile Include="Models\SearchFormPart.cs" />
     <Compile Include="Models\AdminSearchSettingsPart.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -108,6 +109,7 @@
     <Content Include="Recipes\Search.recipe.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\orchard-search-settings.js" />
     <Content Include="Styles\orchard-search-admin.css" />
     <Content Include="Styles\orchard-search-search.css" />
   </ItemGroup>
@@ -152,6 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\AdminSearch.SiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
