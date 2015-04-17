@@ -1,9 +1,8 @@
-﻿@using Orchard.DisplayManagement.Shapes
-@using Orchard.DynamicForms.Elements
+﻿@using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
     var element = (TextArea)Model.Element;
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("textarea"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "textarea");
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["name"] = element.Name;
@@ -27,7 +26,7 @@
     <label for="@element.HtmlId">@element.Label</label>
 }
 
-@Html.Raw(tagBuilder.ToString(TagRenderMode.Normal))
+@tagBuilder.ToHtmlString(TagRenderMode.Normal)
 @if (element.ValidationSettings.ShowValidationMessage == true) {
     @Html.ValidationMessage(element.Name)
 }

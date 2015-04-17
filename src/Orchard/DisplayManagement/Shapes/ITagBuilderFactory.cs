@@ -12,6 +12,9 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public IHtmlString StartElement { get { return new HtmlString(ToString(TagRenderMode.StartTag)); } }
         public IHtmlString EndElement { get { return new HtmlString(ToString(TagRenderMode.EndTag)); } }
+        public IHtmlString ToHtmlString(TagRenderMode renderMode = TagRenderMode.Normal) {
+            return new HtmlString(ToString(renderMode));
+        }
     }
 
     public class TagBuilderFactory : ITagBuilderFactory {

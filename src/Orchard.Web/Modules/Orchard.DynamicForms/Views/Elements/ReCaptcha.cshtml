@@ -1,8 +1,7 @@
-﻿@using Orchard.DisplayManagement.Shapes
-@using Orchard.DynamicForms.Elements
+﻿@using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("div"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model);
     var element = (ReCaptcha)Model.Element;
     var publicKey = (string)Model.PublicKey;
 }
