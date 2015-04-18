@@ -1,50 +1,52 @@
 ﻿@using Orchard.Search.ViewModels
 @model SearchSettingsViewModel
 @{
-    Script.Require("jQuery");
-    Script.Include("orchard-search-settings.js");
+    Style.Include("orchard-search-admin.css");
 }
 <fieldset>
     <legend>@T("Search")</legend>
-    <div>
-        <label>@T("Indexes")</label>
-
+    <div class="form-group">
+        <label>@T("Default Index")</label>
         @if (Model.Entries != null && Model.Entries.Any()) {
             if (String.IsNullOrWhiteSpace(Model.SelectedIndex)) {
                 Model.Entries.Insert(0, new IndexSettingsEntry { Index = "" });
             }
-
             <select id="selectIndex" name="@Html.NameFor(m => m.SelectedIndex)">
                 @foreach (var modelEntry in Model.Entries) {
                     @Html.SelectOption(Model.SelectedIndex, modelEntry.Index, modelEntry.Index)
                 }
             </select>
-            <span class="hint">@T("Select which index to use in search queries.")</span>
+            @Html.Hint(T("Select which index to use by default in search queries."))
 
             <label>@T("Fields")</label>
-            <ul class="search-fields" data-selected-index="@Model.SelectedIndex">
-                @{var entryIndex = 0;}
-                @foreach (var modelEntry in Model.Entries) {
-                    @Html.HiddenFor(m => m.Entries[entryIndex].Index)
-                    <li data-index="@modelEntry.Index">
-                        @if (modelEntry.Fields != null && modelEntry.Fields.Any()) {
+            <ul class="search-indexes group">
+                @{
+                    var indexes = Model.Entries.Select(x => x.Index);
+                    var entryIndex = 0;
+                    foreach (var index in indexes) {
+                        var fieldEntries = Model.Entries.Single(x => x.Index == index).Fields;
+                        var entryIndexClosure = entryIndex;
+                        @Html.HiddenFor(m => m.Entries[entryIndex].Index)
+                        <li>
+                            <h3>@index</h3>
                             <ul>
-                                @{ var fieldIndex = 0;}
-                                @foreach (var fieldEntry in Model.Entries[entryIndex].Fields) {
+                                @{ var fieldIndex = 0; }
+                                @foreach (var fieldEntry in fieldEntries) {
+                                    var fieldIndexClosure = fieldIndex;
                                     <li>
                                         @Html.EditorFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)
                                         @Html.HiddenFor(m => m.Entries[entryIndex].Fields[fieldIndex].Field)
-                                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndex].Fields[fieldIndex].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
+                                        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndexClosure].Fields[fieldIndexClosure].Selected)">@Model.Entries[entryIndex].Fields[fieldIndex].Field</label>
                                     </li>
                                     fieldIndex++;
                                 }
                             </ul>
-                        }
-                    </li>
+                        </li>
                         entryIndex++;
+                    }
                 }
             </ul>
-            <span class="hint">@T("Check any property which should be used for search queries.")</span>
+            <span class="hint">@T("Check any field for each index which should be used for search queries.")</span>
 
         }
         else {

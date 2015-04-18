@@ -33,7 +33,11 @@ namespace Orchard.Search.Helpers {
         }
 
         public static string[] GetSearchFields(this SearchSettingsPart part) {
-            return part.SearchFields.ContainsKey(part.SearchIndex) ? part.SearchFields[part.SearchIndex] : new string[0];
+            return GetSearchFields(part, part.SearchIndex);
+        }
+
+        public static string[] GetSearchFields(this SearchSettingsPart part, string index) {
+            return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
         }
     }
 }
