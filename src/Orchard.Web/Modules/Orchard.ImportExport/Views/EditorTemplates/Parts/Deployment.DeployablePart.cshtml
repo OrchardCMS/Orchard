@@ -27,7 +27,7 @@
                 @target.Status
             </td>
             <td style="text-align: right">
-                @if (Model.HasDraftVersion) {
+                @if (Model.IsDraftable) {
                     @Html.ActionLink(T("Deploy draft").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
                     <text>|</text>
                     @Html.ActionLink(T("Queue draft").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Draft", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)

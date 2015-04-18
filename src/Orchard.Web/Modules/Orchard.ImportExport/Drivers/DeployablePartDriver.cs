@@ -4,6 +4,7 @@ using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Extensions;
 using Orchard.ImportExport.Models;
 using Orchard.ImportExport.Services;
@@ -32,11 +33,12 @@ namespace Orchard.ImportExport.Drivers {
             // Don't show deployment info for a new item
             if (id == 0) return null;
             var contentManager = part.ContentItem.ContentManager;
-            var hasDraft = contentManager.Get(id, VersionOptions.Draft) != null;
+            var typeDefinition = part.ContentItem.TypeDefinition;
+            var isDraftable =  typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
             var hasPublished = contentManager.Get(id, VersionOptions.Published) != null;
             var model = new DeployablePartViewModel {
                 Part = part,
-                HasDraftVersion = hasDraft,
+                IsDraftable = isDraftable,
                 HasPublishedVersion = hasPublished,
                 Targets = targets.Select(t => CreateTargetSummary(part, t)).ToList()
             };

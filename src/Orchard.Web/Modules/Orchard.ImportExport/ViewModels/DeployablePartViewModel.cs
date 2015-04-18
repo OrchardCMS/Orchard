@@ -7,7 +7,7 @@ namespace Orchard.ImportExport.ViewModels
 {
     public class DeployablePartViewModel {
         public CommonPart Part { get; set; }
-        public bool HasDraftVersion { get; set; }
+        public bool IsDraftable { get; set; }
         public bool HasPublishedVersion { get; set; }
         public List<DeployablePartTargetSummary> Targets { get; set; } 
     }
