@@ -89,13 +89,12 @@ namespace Orchard.ImportExport.Controllers {
             return Index(null);
         }
 
-        public ActionResult QueueContent(int id, int targetId, string returnUrl = null, string version = "Published") {
+        public ActionResult QueueContent(int id, int targetId, string returnUrl = null) {
             if (!Services.Authorizer.Authorize(DeploymentPermissions.ExportToDeploymentTargets, T("Not allowed to deploy content."))) {
                 return new HttpUnauthorizedResult();
             }
-            if (version != "Draft" && version != "Published") return HttpNotFound();
 
-            var content = Services.ContentManager.Get(id, version == "Draft" ? VersionOptions.Draft : VersionOptions.Published);
+            var content = Services.ContentManager.Get(id, VersionOptions.Latest);
 
             var target = Services.ContentManager.Get(targetId);
 
