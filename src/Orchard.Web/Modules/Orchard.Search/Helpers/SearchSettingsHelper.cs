@@ -28,14 +28,6 @@ namespace Orchard.Search.Helpers {
             return data;
         }
 
-        public static string[] GetSearchFields(this AdminSearchSettingsPart part) {
-            return part.SearchFields.ContainsKey(part.SearchIndex) ? part.SearchFields[part.SearchIndex] : new string[0];
-        }
-
-        public static string[] GetSearchFields(this SearchSettingsPart part) {
-            return GetSearchFields(part, part.SearchIndex);
-        }
-
         public static string[] GetSearchFields(this SearchSettingsPart part, string index) {
             return part.SearchFields.ContainsKey(index) ? part.SearchFields[index] : new string[0];
         }
