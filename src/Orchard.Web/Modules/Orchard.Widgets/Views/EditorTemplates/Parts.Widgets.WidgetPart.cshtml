@@ -1,15 +1,8 @@
 ﻿@model Orchard.Widgets.Models.WidgetPart
-@{
-    var themeZonesGroup = Model.AvailableLayoutZones.Any() ? new SelectListGroup { Name = T("Theme Zones").Text } : default(SelectListGroup);
-    var layoutZonesGroup = Model.AvailableLayoutZones.Any() ? new SelectListGroup { Name = T("Layout Zones").Text } : default(SelectListGroup); ;
-    var themeZoneOptions = Model.AvailableThemeZones.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Zone, Group = themeZonesGroup}).ToList();
-    var layoutZoneOptions = Model.AvailableLayoutZones.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.Zone, Group = layoutZonesGroup}).ToList();
-    var zoneOptions = themeZoneOptions.Concat(layoutZoneOptions);
-}
 <h2>@Model.TypeDefinition.DisplayName</h2>
 <fieldset>
     @Html.LabelFor(widget => widget.Zone, T("Zone"))
-    @Html.DropDownListFor(widget => widget.Zone, zoneOptions)
+    @Html.DropDownListFor(widget => widget.Zone, new SelectList(Model.AvailableZones))
     <span class="hint">@T("The Zone in the Layout where the Widget will be rendered.")</span>
 </fieldset>
 <fieldset>
@@ -19,7 +12,7 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Position, T("Position"))
-    @Html.TextBoxFor(widget => widget.Position, new { @class = "text small" })
+    @Html.TextBoxFor(widget => widget.Position, new { @class = "text small"})
     <span class="hint">@T("The position of the Widget inside the Zone.")</span>
 </fieldset>
 <fieldset>
