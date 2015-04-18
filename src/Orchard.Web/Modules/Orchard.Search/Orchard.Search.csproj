@@ -88,8 +88,9 @@
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Settings\ContentPickerFieldEditorEvents.cs" />
     <Compile Include="Settings\ContentPickerFieldSettings.cs" />
+    <Compile Include="ViewModels\AdminSearchSettingsViewModel.cs" />
     <Compile Include="ViewModels\SearchFormViewModel.cs" />
-    <Compile Include="ViewModels\SearchSettingsViewModel.cs" />
+    <Compile Include="ViewModels\SearchSettingsIndexViewModel.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -114,7 +115,7 @@
     <Content Include="Styles\orchard-search-search.css" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.Index.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Search.SearchForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.Fields.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
