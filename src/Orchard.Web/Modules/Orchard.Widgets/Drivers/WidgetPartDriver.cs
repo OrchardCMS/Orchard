@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Layouts.Services;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -13,12 +12,10 @@ namespace Orchard.Widgets.Drivers {
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;
-        private readonly ILayoutManager _layoutManager;
 
-        public WidgetPartDriver(IWidgetsService widgetsService, IContentManager contentManager, ILayoutManager layoutManager) {
+        public WidgetPartDriver(IWidgetsService widgetsService, IContentManager contentManager) {
             _widgetsService = widgetsService;
             _contentManager = contentManager;
-            _layoutManager = layoutManager;
 
             T = NullLocalizer.Instance;
         }
@@ -30,8 +27,7 @@ namespace Orchard.Widgets.Drivers {
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, dynamic shapeHelper) {
-            widgetPart.AvailableThemeZones = _widgetsService.GetZones();
-            widgetPart.AvailableLayoutZones = _layoutManager.GetZones();
+            widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
             var results = new List<DriverResult> {
