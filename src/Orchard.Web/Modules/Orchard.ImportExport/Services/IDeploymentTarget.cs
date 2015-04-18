@@ -6,7 +6,7 @@ namespace Orchard.ImportExport.Services {
         void PushDeploymentFile(string deploymentExecutionId, string deploymentFilePath);
         void PushRecipe(string deploymentExecutionId, string recipeText);
         RecipeStatus GetRecipeDeploymentStatus(string deploymentExecutionId);
-        void PushContent(IContent content);
+        void PushContent(IContent content, bool deployAsDraft = false);
     }
 
     public interface IDeploymentTargetProvider : IDependency {

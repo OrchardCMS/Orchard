@@ -70,6 +70,9 @@ namespace Orchard.ImportExport.Controllers {
             if (version != "Draft" && version != "Published") return HttpNotFound();
 
             var content = Services.ContentManager.Get(id, version == "Draft" ? VersionOptions.Draft : VersionOptions.Published);
+            if (version == "Draft" && content == null) {
+                content = Services.ContentManager.Get(id, VersionOptions.Latest);
+            }
 
             var target = Services.ContentManager.Get(targetId);
 
@@ -77,7 +80,7 @@ namespace Orchard.ImportExport.Controllers {
                 return HttpNotFound();
             }
 
-            _deploymentService.DeployContentToTarget(content, target);
+            _deploymentService.DeployContentToTarget(content, target, version == "Draft");
 
             if (!string.IsNullOrEmpty(returnUrl)) {
                 return new RedirectResult(returnUrl);

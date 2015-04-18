@@ -140,13 +140,13 @@ namespace Orchard.ImportExport.Services {
             }
         }
 
-        public void DeployContentToTarget(IContent content, IContent targetConfiguration) {
+        public void DeployContentToTarget(IContent content, IContent targetConfiguration, bool deployAsDraft = false) {
             var deploymentTarget = GetDeploymentTarget(targetConfiguration);
             if (deploymentTarget == null) return;
             
             var itemTarget = GetDeploymentItemTarget(content, targetConfiguration);
             try {
-                deploymentTarget.PushContent(content);
+                deploymentTarget.PushContent(content, deployAsDraft);
                 itemTarget.DeploymentStatus = DeploymentStatus.Successful;
             }
             catch (Exception ex) {

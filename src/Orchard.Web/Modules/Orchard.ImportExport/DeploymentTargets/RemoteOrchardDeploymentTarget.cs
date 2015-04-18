@@ -88,7 +88,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
             return RecipeStatus.Unknown;
         }
 
-        public void PushContent(IContent content) {
+        public void PushContent(IContent content, bool deployAsDraft = false) {
             var actionUrl = _url.Action("DeployContent", "Import", new {
                 area = "Orchard.ImportExport"
             });
@@ -97,6 +97,7 @@ namespace Orchard.ImportExport.DeploymentTargets {
                 new[] { content.ContentItem },
                 new ExportOptions {
                     ExportData = true,
+                    ExportAsDraft = deployAsDraft,
                     VersionHistoryOptions = VersionHistoryOptions.Published
                 });
             var exportFilePath = exportedFilePathResult.FileName;
