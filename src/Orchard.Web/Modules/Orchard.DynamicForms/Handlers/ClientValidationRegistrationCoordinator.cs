@@ -45,6 +45,7 @@ namespace Orchard.DynamicForms.Handlers {
             context.ElementShape.ClientValidationAttributes = registrationContext.ClientAttributes;
         }
 
+        void IElementEventHandler.CreatingDisplay(ElementCreatingDisplayShapeContext context) { }
         void IElementEventHandler.Displayed(ElementDisplayedContext context) {}
         void IFormElementEventHandler.GetElementValue(FormElement element, ReadElementValuesContext context) { }
         void IElementEventHandler.Creating(ElementCreatingContext context) {}

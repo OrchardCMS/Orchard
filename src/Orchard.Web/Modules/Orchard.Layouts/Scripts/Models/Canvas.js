@@ -1,8 +1,8 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.toObject = function () {
@@ -19,6 +19,7 @@
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
     };
 

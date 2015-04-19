@@ -1,0 +1,12 @@
+﻿@using Orchard.Layouts.ViewModels
+<li class="layout-panel-item layout-panel-action layout-panel-action-properties layout-popup-trigger" title="@T("Edit {0} rule", Model.ElementTypeName)">
+    <i class="fa fa-codepen"></i>
+    <ul class="layout-popup layout-popup-edit wide" orc-layout-popup>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("Rule:")<br/>
+                <textarea rows="3" cols="25" ng-model="element.rule"></textarea>
+            </label>
+        </li>
+    </ul>
+</li>

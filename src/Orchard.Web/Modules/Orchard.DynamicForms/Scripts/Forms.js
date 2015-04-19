@@ -30,8 +30,8 @@
 var LayoutEditor;
 (function ($, LayoutEditor) {
 
-    LayoutEditor.Form = function (data, htmlId, htmlClass, htmlStyle, isTemplated, name, formBindingContentType, contentType, contentTypeLabel, contentTypeClass, hasEditor, children) {
-        LayoutEditor.Element.call(this, "Form", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Form = function (data, htmlId, htmlClass, htmlStyle, isTemplated, name, formBindingContentType, contentType, contentTypeLabel, contentTypeClass, hasEditor, rule, children) {
+        LayoutEditor.Element.call(this, "Form", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         var self = this;
@@ -96,6 +96,7 @@ var LayoutEditor;
             value.contentTypeLabel,
             value.contentTypeClass,
             value.hasEditor,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
     };
 

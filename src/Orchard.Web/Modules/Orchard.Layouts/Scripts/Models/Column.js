@@ -1,7 +1,7 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, children) {
-        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, rule, children) {
+        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.width = width;
@@ -117,6 +117,7 @@
             value.offset,
             value.zoneName,
             value.collapsible,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;

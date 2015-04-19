@@ -1,7 +1,7 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated) {
+    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated, rule) {
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
@@ -11,6 +11,7 @@
         this.htmlClass = htmlClass;
         this.htmlStyle = htmlStyle;
         this.isTemplated = isTemplated;
+        this.rule = rule;
 
         this.editor = null;
         this.parent = null;
@@ -146,7 +147,8 @@
                 htmlId: this.htmlId,
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
-                isTemplated: this.isTemplated
+                isTemplated: this.isTemplated,
+                rule: this.rule
             };
         };
 

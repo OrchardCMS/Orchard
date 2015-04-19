@@ -76,7 +76,7 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated) {
+    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated, rule) {
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
@@ -86,6 +86,7 @@ var LayoutEditor;
         this.htmlClass = htmlClass;
         this.htmlStyle = htmlStyle;
         this.isTemplated = isTemplated;
+        this.rule = rule;
 
         this.editor = null;
         this.parent = null;
@@ -221,7 +222,8 @@ var LayoutEditor;
                 htmlId: this.htmlId,
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
-                isTemplated: this.isTemplated
+                isTemplated: this.isTemplated,
+                rule: this.rule
             };
         };
 
@@ -387,8 +389,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.toObject = function () {
@@ -405,6 +407,7 @@ var LayoutEditor;
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
     };
 
@@ -413,8 +416,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Row"], children);
 
         this.toObject = function () {
@@ -431,6 +434,7 @@ var LayoutEditor;
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -442,8 +446,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Row = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Row", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Row = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Row", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Column"], children);
 
         var _self = this;
@@ -716,6 +720,7 @@ var LayoutEditor;
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -726,8 +731,8 @@ var LayoutEditor;
 })(LayoutEditor || (LayoutEditor = {}));
 var LayoutEditor;
 (function (LayoutEditor) {
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, children) {
-        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, rule, children) {
+        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.width = width;
@@ -843,6 +848,7 @@ var LayoutEditor;
             value.offset,
             value.zoneName,
             value.collapsible,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -869,8 +875,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -918,7 +924,8 @@ var LayoutEditor;
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };
@@ -927,8 +934,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function ($, LayoutEditor) {
 
-    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -985,7 +992,8 @@ var LayoutEditor;
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };

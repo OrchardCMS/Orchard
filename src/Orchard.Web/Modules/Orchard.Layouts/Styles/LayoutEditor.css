@@ -757,6 +757,10 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
   cursor: default;
   white-space: nowrap;
   line-height: normal;
+  width: 300px;
+}
+.layout-editor .layout-popup.wide {
+  width: 600px;
 }
 .layout-editor .layout-popup .layout-popup-flex {
   display: flex;
@@ -778,6 +782,10 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
 .layout-editor .layout-popup .layout-popup-action:hover {
   background-color: #f3f4f5;
   cursor: pointer;
+}
+.layout-editor .layout-popup .layout-popup-input input,
+.layout-editor .layout-popup .layout-popup-input textarea {
+  width: 100%;
 }
 .layout-editor .layout-popup .layout-popup-input > label {
   display: block;
