@@ -762,7 +762,7 @@ table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th {
   cursor: default;
   white-space: nowrap;
   line-height: normal;
-  width: 300px;
+  min-width: 300px;
 }
 .layout-editor .layout-popup.wide {
   width: 600px;

@@ -640,9 +640,6 @@
     <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\LayoutEditor.Template.Rule.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>

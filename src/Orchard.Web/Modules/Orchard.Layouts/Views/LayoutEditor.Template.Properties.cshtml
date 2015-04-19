@@ -22,6 +22,12 @@
                 <textarea rows="3" cols="25" ng-model="element.htmlStyle"></textarea>
             </label>
         </li>
+        <li class="layout-popup-item layout-popup-input">
+            <label>
+                @T("Visibility Rule:")<br />
+                <textarea rows="3" cols="25" ng-model="element.rule"></textarea>
+            </label>
+        </li>
         @if (Model.Items != null) {
             foreach (LayoutEditorPropertiesItem item in Model.Items) {
                 var type = !String.IsNullOrEmpty(item.Type) ? item.Type : "text";
