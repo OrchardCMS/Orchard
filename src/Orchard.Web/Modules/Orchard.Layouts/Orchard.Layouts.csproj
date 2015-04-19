@@ -425,10 +425,13 @@
     <Compile Include="Controllers\BlueprintAdminController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
+    <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
+    <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Shape.cs" />
+    <Compile Include="Elements\UIElement.cs" />
     <Compile Include="Filters\TokensFilter.cs" />
     <Compile Include="Framework\Display\ElementDisplayedContext.cs" />
     <Compile Include="Framework\Drivers\ImportContentContextWrapper.cs" />
@@ -626,6 +629,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Rule.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Notifications.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Notifications.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
