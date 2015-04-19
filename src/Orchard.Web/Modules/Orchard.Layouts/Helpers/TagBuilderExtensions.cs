@@ -6,6 +6,13 @@ using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Helpers {
     public static class TagBuilderExtensions {
+
+        /// <summary>
+        /// Creates an <see cref="OrchardTagBuilder"/> and adds the ID, Class and Style attributes from the shape.Element property.
+        /// </summary>
+        public static OrchardTagBuilder CreateElementTagBuilder(dynamic shape, string tag = "div") {
+            return AddCommonElementAttributes(new OrchardTagBuilder(tag), shape);
+        }
         
         public static OrchardTagBuilder AddCommonElementAttributes(this OrchardTagBuilder tagBuilder, dynamic shape) {
             var attributes = GetCommonElementAttributes(shape);

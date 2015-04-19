@@ -7,10 +7,10 @@ using Orchard.Environment.Extensions;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Search.Helpers;
 using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
@@ -45,7 +45,7 @@ namespace Orchard.Search.Controllers {
                 searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
                                                   Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>().FilterCulture,
                                                   searchSettingsPart.SearchIndex,
-                                                  searchSettingsPart.SearchedFields,
+                                                  searchSettingsPart.GetSearchFields(),
                                                   searchHit => searchHit);
             }
             catch (Exception exception) {

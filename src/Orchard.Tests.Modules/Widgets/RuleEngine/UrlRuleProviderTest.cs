@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc;
@@ -17,7 +18,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            _shellSettings = new ShellSettings {RequestUrlPrefix = string.Empty};
+            _shellSettings = new ShellSettings { RequestUrlPrefix = String.Empty };
             builder.RegisterType<UrlRuleProvider>().As<IRuleProvider>();
             builder.RegisterInstance(_shellSettings);
             _stubContextAccessor = new StubHttpContextAccessor();
@@ -28,15 +29,15 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForHomePageMatchesHomePagePath() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/");
-            var context = new RuleContext {FunctionName = "url", Arguments = new[] {"~/"}};
+            _stubContextAccessor.Set(new StubHttpContext("~/"));
+            var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
         }
 
         [Test]
         public void UrlForAboutPageMatchesAboutPagePath() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/about");
+            _stubContextAccessor.Set(new StubHttpContext("~/about"));
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
@@ -44,7 +45,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForBlogWithEndingWildcardMatchesBlogPostPageInSaidBlog() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/my-blog/my-blog-post");
+            _stubContextAccessor.Set(new StubHttpContext("~/my-blog/my-blog-post"));
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/my-blog/*" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
@@ -52,7 +53,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForHomePageDoesNotMatchAboutPagePath() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/about");
+            _stubContextAccessor.Set(new StubHttpContext("~/about"));
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.False);
@@ -60,7 +61,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForAboutPageMatchesDifferentCasedAboutPagePath() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/About");
+            _stubContextAccessor.Set(new StubHttpContext("~/About"));
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
@@ -68,7 +69,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForAboutPageWithEndingSlashMatchesAboutPagePath() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/About/");
+            _stubContextAccessor.Set(new StubHttpContext("~/About/"));
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);
@@ -76,7 +77,7 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
 
         [Test]
         public void UrlForHomePageMatchesHomePagePathWithUrlPrefix() {
-            _stubContextAccessor.StubContext = new StubHttpContext("~/site1");
+            _stubContextAccessor.Set(new StubHttpContext("~/site1"));
             _shellSettings.RequestUrlPrefix = "site1";
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/" } };
             _urlRuleProvider.Process(context);

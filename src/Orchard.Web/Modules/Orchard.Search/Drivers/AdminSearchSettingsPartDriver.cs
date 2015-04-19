@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
@@ -28,20 +27,18 @@ namespace Orchard.Search.Drivers {
 
         protected override DriverResult Editor(AdminSearchSettingsPart part, dynamic shapeHelper) {
             return Editor(part, null, shapeHelper);
-            
+
         }
 
         protected override DriverResult Editor(AdminSearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_AdminSearch_SiteSettings", () => {
                 var model = new SearchSettingsViewModel();
-                String[] searchedFields = part.SearchedFields;
+                var searchFields = part.SearchFields;
 
                 if (updater != null) {
-                    // submitting: rebuild model from form data
                     if (updater.TryUpdateModel(model, Prefix, null, null)) {
-                        // update part if successful
                         part.SearchIndex = model.SelectedIndex;
-                        part.SearchedFields = model.Entries.First(e => e.Index == model.SelectedIndex).Fields.Where(e => e.Selected).Select(e => e.Field).ToArray();
+                        part.SearchFields = model.Entries.ToDictionary(x => x.Index, x => x.Fields.Where(e => e.Selected).Select(e => e.Field).ToArray());
                         part.FilterCulture = model.FilterCulture;
                     }
                 }
@@ -55,7 +52,7 @@ namespace Orchard.Search.Drivers {
                             Fields = new List<SearchSettingsEntry>()
                         };
                         foreach (var field in _indexManager.GetSearchIndexProvider().GetFields(x)) {
-                            indexSettings.Fields.Add(new SearchSettingsEntry {Field = field, Selected = (x == part.SearchIndex && searchedFields.Contains(field))});
+                            indexSettings.Fields.Add(new SearchSettingsEntry { Field = field, Selected = (searchFields.ContainsKey(x) && searchFields[x].Contains(field)) });
                         }
 
                         return indexSettings;
@@ -67,18 +64,18 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Exporting(AdminSearchSettingsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchedFields", string.Join(",", part.SearchedFields)));
+            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", part.Retrieve<string>("SearchFields")));
         }
 
         protected override void Importing(AdminSearchSettingsPart part, ImportContentContext context) {
             var xElement = context.Data.Element(part.PartDefinition.Name);
             if (xElement == null) return;
-            
-            var searchedFields = xElement.Attribute("SearchedFields");
-            if (searchedFields != null) {
-                searchedFields.Remove();
 
-                part.SearchedFields = searchedFields.Value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries); 
+            var searchFields = xElement.Attribute("SearchFields");
+            if (searchFields != null) {
+                searchFields.Remove();
+
+                part.Store("SearchFields", searchFields.Value);
             }
         }
     }

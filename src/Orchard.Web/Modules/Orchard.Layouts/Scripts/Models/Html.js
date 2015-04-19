@@ -9,6 +9,7 @@
         this.contentTypeClass = contentTypeClass;
         this.html = html;
         this.hasEditor = hasEditor;
+        this.isContainable = true;
 
         this.getInnerText = function () {
             return $($.parseHTML("<div>" + this.html + "</div>")).text();
