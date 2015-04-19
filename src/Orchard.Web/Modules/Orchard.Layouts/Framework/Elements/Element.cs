@@ -41,6 +41,7 @@ namespace Orchard.Layouts.Framework.Elements {
         public string HtmlId { get; set; }
         public string HtmlClass { get; set; }
         public string HtmlStyle { get; set; }
+        public string Rule { get; set; }
         public ElementDataDictionary ExportableData { get; set; }
         public ElementDescriptor Descriptor { get; set; }
         public ElementDataDictionary Data { get; set; }

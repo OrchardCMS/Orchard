@@ -413,6 +413,10 @@
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -441,6 +445,7 @@
     <Compile Include="Framework\Display\ElementCreatingDisplayShapeContext.cs" />
     <Compile Include="Framework\Drivers\ImportElementContext.cs" />
     <Compile Include="Framework\Drivers\ImportLayoutContext.cs" />
+    <Compile Include="Handlers\ElementRuleCoordinator.cs" />
     <Compile Include="Handlers\ElementDriversCoordinator.cs" />
     <Compile Include="Helpers\DictionaryExtensions.cs" />
     <Compile Include="Helpers\EditorResultExtensions.cs" />
@@ -616,6 +621,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Html.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\LayoutEditor.Template.Rule.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -36,6 +36,7 @@ namespace Orchard.Layouts.Services {
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
             node["isTemplated"] = element.IsTemplated;
+            node["rule"] = element.Rule;
         }
 
         protected virtual void ToElement(T element, JToken node) {
@@ -44,6 +45,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
+            element.Rule = (string) node["rule"];
         }
 
         protected bool? ReadBoolean(JToken node) {
@@ -113,6 +115,7 @@ namespace Orchard.Layouts.Services {
             element.HtmlClass = (string)node["htmlClass"];
             element.HtmlStyle = (string)node["htmlStyle"];
             element.IsTemplated = (bool)(node["isTemplated"] ?? false);
+            element.Rule = (string) node["rule"];
 
             return element;
         }
@@ -122,6 +125,7 @@ namespace Orchard.Layouts.Services {
             node["htmlId"] = element.HtmlId;
             node["htmlClass"] = element.HtmlClass;
             node["htmlStyle"] = element.HtmlStyle;
+            node["rule"] = element.Rule;
             node["isTemplated"] = element.IsTemplated;
             node["hasEditor"] = element.HasEditor;
             node["contentType"] = element.Descriptor.TypeName;

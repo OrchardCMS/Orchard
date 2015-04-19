@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.Core.Shapes;
 using Orchard.DisplayManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Drivers;
@@ -34,7 +33,11 @@ namespace Orchard.Layouts.Framework.Display {
                 Content = content,
             };
 
+            _elementEventHandlerHandler.CreatingDisplay(createShapeContext);
             element.Descriptor.CreatingDisplay(createShapeContext);
+
+            if (createShapeContext.Cancel)
+                return null;
 
             var typeName = element.GetType().Name;
             var category = element.Category.ToSafeName();
@@ -69,8 +72,10 @@ namespace Orchard.Layouts.Framework.Display {
                     var childIndex = 0;
                     foreach (var child in container.Elements) {
                         var childShape = DisplayElement(child, content, displayType: displayType, updater: updater);
-                        childShape.Parent = elementShape;
-                        elementShape.Add(childShape, childIndex++.ToString());
+                        if (childShape != null) {
+                            childShape.Parent = elementShape;
+                            elementShape.Add(childShape, childIndex++.ToString());
+                        }
                     }
                 }
             }
