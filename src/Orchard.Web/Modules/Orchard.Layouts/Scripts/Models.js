@@ -16,6 +16,7 @@
         factories[type] = factory;
     };
 
+    registerFactory("Canvas", function (value) { return LayoutEditor.Canvas.from(value); });
     registerFactory("Grid", function(value) { return LayoutEditor.Grid.from(value); });
     registerFactory("Row", function(value) { return LayoutEditor.Row.from(value); });
     registerFactory("Column", function(value) { return LayoutEditor.Column.from(value); });
@@ -401,7 +402,7 @@ var LayoutEditor;
     };
 
     LayoutEditor.Canvas.from = function (value) {
-        return new LayoutEditor.Canvas(
+        var result = new LayoutEditor.Canvas(
             value.data,
             value.htmlId,
             value.htmlClass,
@@ -409,6 +410,12 @@ var LayoutEditor;
             value.isTemplated,
             value.rule,
             LayoutEditor.childrenFrom(value.children));
+
+        result.toolboxIcon = value.toolboxIcon;
+        result.toolboxLabel = value.toolboxLabel;
+        result.toolboxDescription = value.toolboxDescription;
+
+        return result;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
