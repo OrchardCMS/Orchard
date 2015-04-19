@@ -6,6 +6,7 @@ namespace Orchard.Layouts.Framework.Drivers {
         int Priority { get; }
         EditorResult BuildEditor(ElementEditorContext context);
         EditorResult UpdateEditor(ElementEditorContext context);
+        void CreatingDisplay(ElementCreatingDisplayShapeContext context);
         void Displaying(ElementDisplayingContext context);
         void Displayed(ElementDisplayedContext context);
         void LayoutSaving(ElementSavingContext context);
