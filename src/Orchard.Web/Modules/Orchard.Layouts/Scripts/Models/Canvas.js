@@ -13,7 +13,7 @@
     };
 
     LayoutEditor.Canvas.from = function (value) {
-        return new LayoutEditor.Canvas(
+        var result = new LayoutEditor.Canvas(
             value.data,
             value.htmlId,
             value.htmlClass,
@@ -21,6 +21,12 @@
             value.isTemplated,
             value.rule,
             LayoutEditor.childrenFrom(value.children));
+
+        result.toolboxIcon = value.toolboxIcon;
+        result.toolboxLabel = value.toolboxLabel;
+        result.toolboxDescription = value.toolboxDescription;
+
+        return result;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
