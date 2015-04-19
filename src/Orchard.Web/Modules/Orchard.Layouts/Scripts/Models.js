@@ -144,9 +144,9 @@ var LayoutEditor;
 
         this.setIsFocused = function () {
             if (!this.editor)
-            	return;
-            if (this.isTemplated)
-            	return;
+                return;
+            if (this.isTemplated && this.isTemplatedContainer != true)
+                return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
 
@@ -393,6 +393,7 @@ var LayoutEditor;
     LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
         LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
+        this.isTemplatedContainer = true;
 
         this.toObject = function () {
             var result = this.elementToObject();
@@ -741,7 +742,7 @@ var LayoutEditor;
     LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-
+        this.isTemplatedContainer = true;
         this.width = width;
         this.offset = offset;
         this.collapsible = collapsible;
