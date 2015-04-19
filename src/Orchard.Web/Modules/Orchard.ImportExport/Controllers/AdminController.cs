@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ImportExport.Permissions;
 using Orchard.ImportExport.Services;
@@ -122,6 +122,33 @@ namespace Orchard.ImportExport.Controllers {
                 exportOptions.VersionHistoryOptions = (VersionHistoryOptions) Enum.Parse(typeof (VersionHistoryOptions), viewModel.DataImportChoice, true);
             }
             return _importExportService.Export(contentTypesToExport, exportOptions);
+        }
+
+        public ActionResult ItemRecipe(int id, string version = "Published") {
+            if (!Services.Authorizer.Authorize(ImportExportPermissions.Export, T("Not allowed to export content."))) {
+                return new HttpUnauthorizedResult();
+            }
+            if (version != "Draft" && version != "Published") return HttpNotFound();
+
+            var versionOptions = version == "Draft" ? VersionOptions.Draft : VersionOptions.Published;
+            var content = Services.ContentManager.Get(id, versionOptions);
+            if (version == "Draft" && content == null) {
+                content = Services.ContentManager.Get(id, VersionOptions.Latest);
+            }
+            if (content == null) {
+                return HttpNotFound();
+            }
+
+            var exportOptions = new ExportOptions {
+                ExportMetadata = false,
+                ExportData = true,
+                ExportSiteSettings = false,
+                ExportFiles = true,
+                VersionHistoryOptions = versionOptions == VersionOptions.Draft ? VersionHistoryOptions.Draft : VersionHistoryOptions.Published,
+                ExportAsDraft = version == "Draft"
+            };
+
+            return _importExportService.Export(new[] {content.ContentType}, new[] {content}, exportOptions);
         }
     }
 }

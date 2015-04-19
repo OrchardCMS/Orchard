@@ -4,41 +4,49 @@
 
 <fieldset>
     @Html.Label(T("Deployment Summary").Text)
-</fieldset>
-<table class="items">
-    <thead>
-        <tr>
-            <th scope="col">@T("Target")</th>
-            <th scope="col">@T("Last deployed")</th>
-            <th scope="col">@T("Status of last deploy")</th>
-            <th scope="col" class="actions">&nbsp;</th>
-        </tr>
-    </thead>
-    @foreach (var target in Model.Targets)
-    { 
-        <tr>
-            <td>
-                @target.Target
-            </td>
-            <td>
-                @(target.LastDeploy.HasValue ? Display.DateTime(DateTimeUtc: target.LastDeploy.Value, CustomFormat: null) : string.Empty) 
-            </td>
-            <td>
-                @target.Status
-            </td>
-            <td style="text-align: right">
-                @if (Model.IsDraftable) {
-                    @Html.ActionLink(T("Deploy draft").ToString(), "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
-                    if (Model.HasPublishedVersion) {
-                        <text>|</text>
+    <table class="items">
+        <thead>
+            <tr>
+                <th scope="col">@T("Target")</th>
+                <th scope="col">@T("Last deployed")</th>
+                <th scope="col">@T("Status of last deploy")</th>
+                <th scope="col" class="actions">&nbsp;</th>
+            </tr>
+        </thead>
+        @foreach (var target in Model.Targets) {
+            <tr>
+                <td>
+                    @target.Target
+                </td>
+                <td>
+                    @(target.LastDeploy.HasValue ? Display.DateTime(DateTimeUtc: target.LastDeploy.Value, CustomFormat: null) : string.Empty)
+                </td>
+                <td>
+                    @target.Status
+                </td>
+                <td style="text-align: right">
+                    @if (Model.IsDraftable) {
+                        @Html.ActionLink(T("Deploy draft").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
+                        if (Model.HasPublishedVersion) {
+                            <text>|</text>
+                        }
                     }
-                }
-                @if (Model.HasPublishedVersion) {
-                    @Html.ActionLink(T("Deploy").ToString(), "DeployContent", "Deployment", new {id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Published", area = "Orchard.ImportExport"}, null)
-                    <text>|</text>
-                    @Html.ActionLink(T("Queue").ToString(), "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Published", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
-                }
-            </td>
-        </tr>
+                    @if (Model.HasPublishedVersion) {
+                        @Html.ActionLink(T("Deploy").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Published", area = "Orchard.ImportExport" }, null)
+                        <text>|</text>
+                        @Html.ActionLink(T("Queue").Text, "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Published", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    @if (Model.IsDraftable) {
+        @Html.ActionLink(T("Download draft recipe").Text, "ItemRecipe", "Admin", new { id = Model.Part.Id, version = "Draft", area = "Orchard.ImportExport" }, null)
+        if (Model.HasPublishedVersion) {
+            <text>|</text>
+        }
     }
-</table>
+    @if (Model.HasPublishedVersion) {
+        @Html.ActionLink(T("Download recipe").Text, "ItemRecipe", "Admin", new { id = Model.Part.Id, version = "Published", area = "Orchard.ImportExport" }, null)
+    }
+</fieldset>
