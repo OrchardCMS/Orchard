@@ -74,7 +74,6 @@ namespace Orchard.Layouts.Services {
             base.ToElement(element, node);
             element.Width = (int?)node["width"];
             element.Offset = (int?)node["offset"];
-            element.ZoneName = (string) node["zoneName"];
             element.Collapsible = ReadBoolean(node["collapsible"]);
         }
 
@@ -82,7 +81,6 @@ namespace Orchard.Layouts.Services {
             base.FromElement(element, describeContext, node);
             node["width"] = element.Width;
             node["offset"] = element.Offset;
-            node["zoneName"] = element.ZoneName;
             node["collapsible"] = element.Collapsible;
         }
     }

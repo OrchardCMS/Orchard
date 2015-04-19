@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.Layouts.Elements;
 using Orchard.Layouts.Framework.Display;
@@ -10,7 +9,6 @@ using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Settings;
-using Orchard.Validation;
 
 namespace Orchard.Layouts.Services {
     public class LayoutManager : ILayoutManager {
@@ -18,23 +16,17 @@ namespace Orchard.Layouts.Services {
         private readonly ILayoutSerializer _serializer;
         private readonly IElementDisplay _elementDisplay;
         private readonly IElementManager _elementManager;
-        private readonly ICacheManager _cacheManager;
-        private readonly ISignals _signals;
 
         public LayoutManager(
-            IContentManager contentManager, 
-            ILayoutSerializer serializer, 
-            IElementDisplay elementDisplay, 
-            IElementManager elementManager, 
-            ICacheManager cacheManager, 
-            ISignals signals) {
+            IContentManager contentManager,
+            ILayoutSerializer serializer,
+            IElementDisplay elementDisplay,
+            IElementManager elementManager) {
 
             _contentManager = contentManager;
             _serializer = serializer;
             _elementDisplay = elementDisplay;
             _elementManager = elementManager;
-            _cacheManager = cacheManager;
-            _signals = signals;
         }
 
         public IEnumerable<LayoutPart> GetTemplates() {
@@ -83,37 +75,6 @@ namespace Orchard.Layouts.Services {
             context.Layout.LayoutData = _serializer.Serialize(elementTree);
         }
 
-        public IEnumerable<string> GetZones() {
-            return _cacheManager.Get("LayoutZones", context => {
-                context.Monitor(_signals.When(Signals.LayoutZones));
-                return GetZones(GetLayouts());
-            });
-        }
-
-        public IEnumerable<string> GetZones(ILayoutAspect layout) {
-            Argument.ThrowIfNull(layout, "layout");
-
-            var key = String.Format("LayoutZones-{0}", layout.Id);
-            return _cacheManager.Get(key, context => {
-                context.Monitor(_signals.When(Signals.LayoutZones));
-
-                var layouts = new List<ILayoutAspect>();
-                var currentTemplate = layout.TemplateId != null ? GetLayout(layout.TemplateId.Value) : default(LayoutPart);
-
-                // Add the layout itself to the chain of layouts to harvest zones from.
-                layouts.Add(layout);
-
-                // Walk up the chain of templates and collect each one for zone harvesting.
-                while (currentTemplate != null) {
-                    layouts.Add(currentTemplate);
-                    currentTemplate = currentTemplate.TemplateId != null ? GetLayout(currentTemplate.TemplateId.Value) : default(LayoutPart);
-                }
-
-                // Harvest the zones from the chain of layouts.
-                return GetZones(layouts);
-            });
-        }
-
         public dynamic RenderLayout(string data, string displayType = null, IContent content = null) {
             var elements = _serializer.Deserialize(data, new DescribeElementsContext { Content = content });
             var layoutRoot = _elementDisplay.DisplayElements(elements, content, displayType);
@@ -138,7 +99,7 @@ namespace Orchard.Layouts.Services {
             var nonTemplatedElements = ExtractNonTemplatedElements(layout).ToList();
 
             foreach (var element in nonTemplatedElements) {
-                
+
                 // Move the element to the template and try to maintain its index.
                 var column = element.Container as Column;
                 var indexInTemplate = templateColumns.Any() ? 0 : -1;
@@ -212,20 +173,6 @@ namespace Orchard.Layouts.Services {
                     }
                 }
             }
-        }
-
-        private IEnumerable<string> GetZones(IEnumerable<ILayoutAspect> layouts) {
-            var zoneNames = new HashSet<string>();
-
-            foreach (var layoutPart in layouts) {
-                var elements = LoadElements(layoutPart).Flatten();
-                var columns = elements.Where(x => x is Column).Cast<Column>().Where(x => !String.IsNullOrWhiteSpace(x.ZoneName)).ToList();
-
-                foreach (var column in columns)
-                    zoneNames.Add(column.ZoneName);
-            }
-
-            return zoneNames.OrderBy(x => x);
         }
     }
 }

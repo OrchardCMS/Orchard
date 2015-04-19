@@ -1,12 +1,11 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, zoneName, collapsible, rule, children) {
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.width = width;
         this.offset = offset;
-        this.zoneName = zoneName;
         this.collapsible = collapsible;
 
         var _hasPendingChange = false;
@@ -99,7 +98,6 @@
             var result = this.elementToObject();
             result.width = this.width;
             result.offset = this.offset;
-            result.zoneName = this.zoneName;
             result.collapsible = this.collapsible;
             result.children = this.childrenToObject();
             return result;
@@ -115,7 +113,6 @@
             value.isTemplated,
             value.width,
             value.offset,
-            value.zoneName,
             value.collapsible,
             value.rule,
             LayoutEditor.childrenFrom(value.children));
@@ -134,7 +131,6 @@
                 isTemplated: false,
                 width: 12 / value,
                 offset: 0,
-                zoneName: null,
                 collapsible: null,
                 children: []
             });
