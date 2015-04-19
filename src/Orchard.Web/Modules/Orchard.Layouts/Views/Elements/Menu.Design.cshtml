@@ -1,7 +1,11 @@
-﻿<div class="layout-menu-element">
-    <ul class="menu-items">
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
+﻿@{
+    var menu = Model.Menu;
+}
+<div class="layout-menu-element layout-placeholder">
+    <ul>
+        <li class="menu-icon"><span class="fa fa-square"></span></li>
+        @foreach (var item in menu.Items) {
+            <li>@item.Text</li>
+        }
     </ul>
 </div>
