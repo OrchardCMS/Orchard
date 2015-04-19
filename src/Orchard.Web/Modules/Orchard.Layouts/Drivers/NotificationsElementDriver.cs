@@ -24,6 +24,9 @@ namespace Orchard.Layouts.Drivers {
                 return;
 
             var httpContext = _httpContextAccessor.Current();
+            if (httpContext == null)
+                return;
+
             var messageEntries = httpContext.Items[NotifyFilter.TempDataMessages] as IList<NotifyEntry> ?? new List<NotifyEntry>();
 
             context.Cancel = !messageEntries.Any();
