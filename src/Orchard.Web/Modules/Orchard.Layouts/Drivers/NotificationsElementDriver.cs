@@ -20,6 +20,9 @@ namespace Orchard.Layouts.Drivers {
         public dynamic New { get; set; }
 
         protected override void OnCreatingDisplay(Notifications element, ElementCreatingDisplayShapeContext context) {
+            if (context.DisplayType == "Design")
+                return;
+
             var httpContext = _httpContextAccessor.Current();
             var messageEntries = httpContext.Items[NotifyFilter.TempDataMessages] as IList<NotifyEntry> ?? new List<NotifyEntry>();
 
