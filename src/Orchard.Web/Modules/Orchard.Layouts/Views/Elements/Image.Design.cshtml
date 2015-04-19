@@ -15,4 +15,4 @@
         tagBuilder.Attributes["alt"] = T("Image not found").Text;
     }
 }
-@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

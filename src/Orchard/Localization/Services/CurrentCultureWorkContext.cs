@@ -29,9 +29,9 @@ namespace Orchard.Localization.Services {
                 .Select(c => c.GetCulture(httpContext))
                 .Where(c => c != null)
                 .OrderByDescending(c => c.Priority)
-                .FirstOrDefault(c => !string.IsNullOrEmpty(c.CultureName));
+                .FirstOrDefault(c => !String.IsNullOrEmpty(c.CultureName));
 
-            return culture == null ? string.Empty : culture.CultureName;
+            return culture == null ? String.Empty : culture.CultureName;
         }
     }
 }

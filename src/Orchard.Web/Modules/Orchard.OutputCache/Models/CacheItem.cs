@@ -6,7 +6,7 @@ namespace Orchard.OutputCache.Models {
         public DateTime CachedOnUtc { get; set; }
         public int Duration { get; set; }
         public int GraceTime { get; set; }
-        public string Output { get; set; }
+        public byte[] Output { get; set; }
         public string ContentType { get; set; }
         public string QueryString { get; set; }
         public string CacheKey { get; set; }

@@ -1,11 +1,10 @@
 ﻿@using Orchard.ContentManagement
-@using Orchard.DisplayManagement.Shapes
 @using Orchard.Layouts.Elements
 @using Orchard.Layouts.Helpers
 @using Orchard.MediaLibrary.Models
 @{
     var element = (VectorImage)Model.Element;
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("img"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "img");
     var vectorImagePart = (VectorImagePart)Model.VectorImagePart;
     var mediaPart = vectorImagePart != null ? vectorImagePart.As<MediaPart>() : default(MediaPart);
 
@@ -27,4 +26,4 @@
 
     tagBuilder.AddCssClass("layout-content-vector");
 }
-@Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)

@@ -3,7 +3,7 @@
 @using Orchard.Layouts.Helpers
 @{
     var element = (Enumeration)Model.Element;
-    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("ol"), Model);
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
     var index = 0;
 }
 @if (element.ShowLabel) {
@@ -20,7 +20,7 @@
     }
     <li>   
         <label>
-            @Html.Raw(inputTagBuilder.ToString(TagRenderMode.SelfClosing))
+            @inputTagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
             @option.Text
         </label>
     </li>
