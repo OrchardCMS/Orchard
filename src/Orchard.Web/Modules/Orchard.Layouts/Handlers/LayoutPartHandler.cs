@@ -33,7 +33,6 @@ namespace Orchard.Layouts.Handlers {
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
-            OnPublished<LayoutPart>(InvalidateLayoutZones);
             OnIndexing<LayoutPart>(IndexLayout);
         }
 
@@ -48,10 +47,6 @@ namespace Orchard.Layouts.Handlers {
 
         private void UpdateTemplateClients(PublishContentContext context, LayoutPart part) {
             UpdateTemplateClients(part);
-        }
-
-        private void InvalidateLayoutZones(PublishContentContext context, LayoutPart part) {
-            _signals.Trigger(Signals.LayoutZones);
         }
 
         /// <summary>

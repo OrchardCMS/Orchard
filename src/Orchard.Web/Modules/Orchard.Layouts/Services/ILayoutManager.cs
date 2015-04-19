@@ -55,15 +55,5 @@ namespace Orchard.Layouts.Services {
         IEnumerable<Element> CreateDefaultLayout();
         void Exporting(ExportLayoutContext context);
         void Importing(ImportLayoutContext context);
-
-        /// <summary>
-        /// Collects all zones as defined in all layouts in the system.
-        /// </summary>
-        IEnumerable<string> GetZones();
-
-        /// <summary>
-        /// Recursively collects all zones of the specified layout and of its selected template, if any.
-        /// </summary>
-        IEnumerable<string> GetZones(ILayoutAspect layout);
     }
 }

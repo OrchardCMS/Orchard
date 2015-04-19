@@ -34,11 +34,6 @@ namespace Orchard.Layouts.Elements {
             get { return Width.GetValueOrDefault() + Offset.GetValueOrDefault(); }
         }
 
-        public string ZoneName {
-            get { return this.Retrieve(x => x.ZoneName); }
-            set { this.Store(x => x.ZoneName, value); }
-        }
-
         public bool? Collapsible {
             get { return this.Retrieve(x => x.Collapsible); }
             set { this.Store(x => x.Collapsible, value); }
