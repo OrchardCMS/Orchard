@@ -41,7 +41,7 @@
   background-color: #f3f4f5;
   cursor: pointer;
 }
-.layout-editor .layout-popup .layout-popup-input input,
+.layout-editor .layout-popup .layout-popup-input input[type='text'],
 .layout-editor .layout-popup .layout-popup-input textarea {
   width: 100%;
 }
