@@ -72,6 +72,7 @@ namespace Orchard.Layouts.Framework.Display {
                     var childIndex = 0;
                     foreach (var child in container.Elements) {
                         var childShape = DisplayElement(child, content, displayType: displayType, updater: updater);
+
                         if (childShape != null) {
                             childShape.Parent = elementShape;
                             elementShape.Add(childShape, childIndex++.ToString());
