@@ -186,6 +186,12 @@
     <Content Include="Styles\LayoutEditor\Element.min.css">
       <DependentUpon>Element.css</DependentUpon>
     </Content>
+    <Content Include="Styles\LayoutEditor\Menu.css">
+      <DependentUpon>Menu.less</DependentUpon>
+    </Content>
+    <Content Include="Styles\LayoutEditor\Menu.min.css">
+      <DependentUpon>Menu.css</DependentUpon>
+    </Content>
     <Content Include="Styles\LayoutEditor\Popup.css">
       <DependentUpon>Popup.less</DependentUpon>
     </Content>
@@ -659,6 +665,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\LayoutEditor\Menu.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

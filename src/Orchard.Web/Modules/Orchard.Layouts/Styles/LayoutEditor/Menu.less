@@ -1,0 +1,36 @@
+﻿.layout-editor {
+    .layout-content {
+        min-height: 1em;
+
+        > .layout-element-wrapper {
+            .layout-content-markup {
+                .layout-menu-element,
+                .layout-breadcrumbs-element {
+
+                    ul {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+
+                        li {
+                            float: left;
+                            margin-right: 1em;
+
+                            &.menu-icon {
+                                margin-right: 4px;
+                            }
+                        }
+
+                        &:after {
+                            content: ".";
+                            display: block;
+                            height: 0;
+                            clear: both;
+                            visibility: hidden;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
