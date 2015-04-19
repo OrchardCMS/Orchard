@@ -27,6 +27,9 @@ namespace Orchard.Layouts.Framework.Display {
             string displayType = null,
             IUpdateModel updater = null) {
 
+            var typeName = element.GetType().Name;
+            var category = element.Category.ToSafeName();
+            var drivers = element.Descriptor.GetDrivers().ToList();
             var createShapeContext = new ElementCreatingDisplayShapeContext {
                 Element = element,
                 DisplayType = displayType,
@@ -34,14 +37,13 @@ namespace Orchard.Layouts.Framework.Display {
             };
 
             _elementEventHandlerHandler.CreatingDisplay(createShapeContext);
-            element.Descriptor.CreatingDisplay(createShapeContext);
+            InvokeDrivers(drivers, driver => driver.CreatingDisplay(createShapeContext));
+            if (element.Descriptor.CreatingDisplay != null)
+                element.Descriptor.CreatingDisplay(createShapeContext);
 
             if (createShapeContext.Cancel)
                 return null;
 
-            var typeName = element.GetType().Name;
-            var category = element.Category.ToSafeName();
-            var drivers = element.Descriptor.GetDrivers().ToList();
             var elementShapeArguments = CreateArguments(element, content);
             var elementShape = (dynamic)_shapeFactory.Create("Element", elementShapeArguments, () => new ZoneHolding(() => _shapeFactory.Create("ElementZone")));
 
