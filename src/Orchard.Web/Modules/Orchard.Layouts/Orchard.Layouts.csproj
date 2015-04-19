@@ -423,10 +423,14 @@
     <Compile Include="Controllers\BlueprintAdminController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Drivers\CanvasElementDriver.cs" />
+    <Compile Include="Drivers\BreadcrumbsElementDriver.cs" />
+    <Compile Include="Drivers\MenuElementDriver.cs" />
     <Compile Include="Drivers\NotificationsElementDriver.cs" />
     <Compile Include="Drivers\ShapeElementDriver.cs" />
     <Compile Include="Elements\Canvas.cs" />
     <Compile Include="Elements\ContentElement.cs" />
+    <Compile Include="Elements\Breadcrumbs.cs" />
+    <Compile Include="Elements\Menu.cs" />
     <Compile Include="Elements\Notifications.cs" />
     <Compile Include="Elements\Shape.cs" />
     <Compile Include="Elements\UIElement.cs" />
@@ -521,6 +525,8 @@
     <Compile Include="ViewModels\HtmlEditorViewModel.cs" />
     <Compile Include="ViewModels\LayoutEditor.cs" />
     <Compile Include="ViewModels\LayoutEditorPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\BreadcrumbsEditorViewModel.cs" />
+    <Compile Include="ViewModels\MenuEditorViewModel.cs" />
     <Compile Include="ViewModels\VectorImageEditorViewModel.cs" />
     <Compile Include="ViewModels\ImageEditorViewModel.cs" />
     <Compile Include="ViewModels\MarkdownEditorViewModel.cs" />
@@ -633,6 +639,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Notifications.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Menu.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Breadcrumbs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Breadcrumbs.Design.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
