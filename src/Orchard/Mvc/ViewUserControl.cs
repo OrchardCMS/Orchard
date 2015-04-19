@@ -69,24 +69,6 @@ namespace Orchard.Mvc {
         public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
             var metaEntry = new MetaEntry(name, content, httpEquiv, charset);
             SetMeta(metaEntry);
-
-            if (!String.IsNullOrEmpty(name)) {
-                metaEntry.Name = name;
-            }
-
-            if (!String.IsNullOrEmpty(content)) {
-                metaEntry.Content = content;
-            }
-
-            if (!String.IsNullOrEmpty(httpEquiv)) {
-                metaEntry.HttpEquiv = httpEquiv;
-            }
-
-            if (!String.IsNullOrEmpty(charset)) {
-                metaEntry.Charset = charset;
-            }
-
-            SetMeta(metaEntry);
         }
 
         public virtual void SetMeta(MetaEntry meta) {
