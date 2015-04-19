@@ -32,3 +32,8 @@ Features:
         Description: Provides an element token provider that enables elements to be rendered using a token and enables tokens to be used inside of various elements such as Html, Text and Paragraph.
         Category: Layout
         Dependencies: Orchard.Layouts, Orchard.Tokens
+    Orchard.Layouts.UI:
+        Name: UI Elements
+        Description: Adds UI elements to the system, such as Notifications and Menu.
+        Category: Layout
+        Dependencies: Orchard.Layouts
