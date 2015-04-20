@@ -3,7 +3,6 @@
     LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-        this.isTemplatedContainer = true;
         this.width = width;
         this.offset = offset;
         this.collapsible = collapsible;
@@ -11,6 +10,10 @@
         var _hasPendingChange = false;
         var _origWidth = 0;
         var _origOffset = 0;
+
+        this.allowSealedFocus = function () {
+            return this.children.length === 0;
+        }
 
         this.beginChange = function () {
             if (!!_hasPendingChange)

@@ -4,13 +4,16 @@
     LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
         LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-        this.isTemplatedContainer = true;
 
         this.toObject = function () {
             var result = this.elementToObject();
             result.children = this.childrenToObject();
             return result;
         };
+
+        this.allowSealedFocus = function() {
+            return this.children.length === 0;
+        }
     };
 
     LayoutEditor.Canvas.from = function (value) {

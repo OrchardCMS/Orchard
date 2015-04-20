@@ -142,10 +142,14 @@ var LayoutEditor;
             return this.editor.focusedElement === this;
         };
 
+        this.allowSealedFocus = function() {
+            return false;
+        };
+
         this.setIsFocused = function () {
             if (!this.editor)
                 return;
-            if (this.isTemplated && this.isTemplatedContainer != true)
+            if (this.isTemplated && !this.allowSealedFocus())
                 return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
@@ -393,13 +397,16 @@ var LayoutEditor;
     LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
         LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-        this.isTemplatedContainer = true;
 
         this.toObject = function () {
             var result = this.elementToObject();
             result.children = this.childrenToObject();
             return result;
         };
+
+        this.allowSealedFocus = function() {
+            return this.children.length === 0;
+        }
     };
 
     LayoutEditor.Canvas.from = function (value) {
@@ -742,7 +749,6 @@ var LayoutEditor;
     LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
         LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-        this.isTemplatedContainer = true;
         this.width = width;
         this.offset = offset;
         this.collapsible = collapsible;
@@ -750,6 +756,10 @@ var LayoutEditor;
         var _hasPendingChange = false;
         var _origWidth = 0;
         var _origOffset = 0;
+
+        this.allowSealedFocus = function () {
+            return this.children.length === 0;
+        }
 
         this.beginChange = function () {
             if (!!_hasPendingChange)
