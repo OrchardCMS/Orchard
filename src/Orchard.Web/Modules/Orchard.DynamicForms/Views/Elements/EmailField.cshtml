@@ -9,7 +9,7 @@
     tagBuilder.Attributes["type"] = "email";
     tagBuilder.Attributes["value"] = Model.TokenizedValue;
     tagBuilder.Attributes["name"] = element.Name;
-    tagBuilder.AddClientValidationAttributes(Model.ClientValidationAttributes);
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (!ViewData.ModelState.IsValidField(element.Name)) {
         tagBuilder.AddCssClass("input-validation-error");
