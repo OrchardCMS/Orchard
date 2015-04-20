@@ -66,10 +66,14 @@
             return this.editor.focusedElement === this;
         };
 
+        this.allowSealedFocus = function() {
+            return false;
+        };
+
         this.setIsFocused = function () {
             if (!this.editor)
                 return;
-            if (this.isTemplated && this.isTemplatedContainer != true)
+            if (this.isTemplated && !this.allowSealedFocus())
                 return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
