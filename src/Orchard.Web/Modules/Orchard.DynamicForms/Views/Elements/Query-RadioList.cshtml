@@ -3,7 +3,7 @@
 @using Orchard.Layouts.Helpers
 @{
     var element = (Query)Model.Element;
-    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "ol");
     var index = 0;
 }
 @if (element.ShowLabel) {
