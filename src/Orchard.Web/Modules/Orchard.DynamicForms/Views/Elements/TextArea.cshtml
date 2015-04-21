@@ -1,8 +1,9 @@
-﻿@using Orchard.DynamicForms.Elements
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
     var element = (TextArea)Model.Element;
-    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "textarea");
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "textarea");
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["name"] = element.Name;
