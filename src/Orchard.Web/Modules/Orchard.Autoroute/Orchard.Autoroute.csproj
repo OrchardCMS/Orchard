@@ -107,6 +107,7 @@
     <Compile Include="Services\IPathResolutionService.cs" />
     <Compile Include="Services\IRouteEvents.cs" />
     <Compile Include="Settings\AutorouteSettingsEvents.cs" />
+    <Compile Include="Settings\DefaultPattern.cs" />
     <Compile Include="Settings\RoutePattern.cs" />
     <Compile Include="Drivers\AutoroutePartDriver.cs" />
     <Compile Include="Handlers\AutoroutePartHandler.cs" />
