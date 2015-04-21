@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Media.Models;
 
 namespace Orchard.Media.Handlers {
-    [UsedImplicitly]
     public class MediaSettingsPartHandler : ContentHandler {
         public MediaSettingsPartHandler(IRepository<MediaSettingsPartRecord> repository) {
             T = NullLocalizer.Instance;

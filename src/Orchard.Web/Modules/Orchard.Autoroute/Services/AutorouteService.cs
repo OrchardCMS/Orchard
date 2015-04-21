@@ -11,6 +11,10 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tokens;
+using Orchard.Localization.Services;
+using Orchard.Mvc;
+using System.Web;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Autoroute.Services {
     public class AutorouteService : IAutorouteService {
@@ -20,6 +24,8 @@ namespace Orchard.Autoroute.Services {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentManager _contentManager;
         private readonly IRouteEvents _routeEvents;
+        private readonly ICultureManager _cultureManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AliasSource = "Autoroute:View";
 
         public AutorouteService(
@@ -27,15 +33,19 @@ namespace Orchard.Autoroute.Services {
             ITokenizer tokenizer,
             IContentDefinitionManager contentDefinitionManager,
             IContentManager contentManager,
-            IRouteEvents routeEvents) {
-                _aliasService = aliasService;
-                _tokenizer = tokenizer;
-                _contentDefinitionManager = contentDefinitionManager;
+            IRouteEvents routeEvents,
+            ICultureManager cultureManager,
+            IHttpContextAccessor httpContextAccessor) {
+            _aliasService = aliasService;
+            _tokenizer = tokenizer;
+            _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _routeEvents = routeEvents;
+            _cultureManager = cultureManager;
+            _httpContextAccessor = httpContextAccessor;
 
             Logger = NullLogger.Instance;
-                T = NullLocalizer.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
@@ -47,10 +57,28 @@ namespace Orchard.Autoroute.Services {
                 throw new ArgumentNullException("part");
             }
 
-            string pattern = GetDefaultPattern(part.ContentItem.ContentType).Pattern;
-            
+            var itemCulture = _cultureManager.GetSiteCulture();
+
+            //if we are editing an existing content item
+            if (part.Record.Id != 0) {
+                ContentItem contentItem = _contentManager.Get(part.Record.ContentItemRecord.Id);
+                var aspect = contentItem.As<ILocalizableAspect>();
+
+                if (aspect != null) {
+                    itemCulture = aspect.Culture;
+                }
+            }
+
+            //if we are creating from a form post we use the form value for culture
+            HttpContextBase context = _httpContextAccessor.Current();
+            if (context.Request.Form["Localization.SelectedCulture"] != null) {
+                itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+            }
+
+            string pattern = GetDefaultPattern(part.ContentItem.ContentType, itemCulture).Pattern;
+
             // String.Empty forces pattern based generation. "/" forces homepage
-            if(part.UseCustomPattern 
+            if (part.UseCustomPattern
                 && (!String.IsNullOrWhiteSpace(part.CustomPattern) || String.Equals(part.CustomPattern, "/"))) {
                 pattern = part.CustomPattern;
             }
@@ -59,7 +87,7 @@ namespace Orchard.Autoroute.Services {
             var path = _tokenizer.Replace(pattern, BuildTokenContext(part.ContentItem), new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
 
             // removing trailing slashes in case the container is empty, and tokens are base on it (e.g. home page)
-            while(path.StartsWith("/")) {
+            while (path.StartsWith("/")) {
                 path = path.Substring(1);
             }
 
@@ -90,7 +118,8 @@ namespace Orchard.Autoroute.Services {
             var routePattern = new RoutePattern {
                 Description = description,
                 Name = name,
-                Pattern = pattern
+                Pattern = pattern,
+                Culture = _cultureManager.GetSiteCulture()
             };
 
             var patterns = settings.Patterns;
@@ -99,7 +128,7 @@ namespace Orchard.Autoroute.Services {
 
             // define which pattern is the default
             if (makeDefault || settings.Patterns.Count == 1) {
-                settings.DefaultPatternIndex = settings.Patterns.IndexOf(routePattern);
+                settings.DefaultPatterns = new List<DefaultPattern> { new DefaultPattern { PatternIndex = "0", Culture = settings.Patterns[0].Culture } };
             }
 
             _contentDefinitionManager.AlterTypeDefinition(contentType, builder => builder.WithPart("AutoroutePart", settings.Build));
@@ -110,15 +139,16 @@ namespace Orchard.Autoroute.Services {
             return settings.Patterns;
         }
 
-        public RoutePattern GetDefaultPattern(string contentType) {
+        public RoutePattern GetDefaultPattern(string contentType, string culture) {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
 
-            // return a default pattern if none is defined
-            if(settings.DefaultPatternIndex < settings.Patterns.Count) {
-                return settings.Patterns.ElementAt(settings.DefaultPatternIndex);    
+            // return a default pattern if set
+            if (settings.Patterns.Any(x => x.Culture == culture)) {
+                return settings.Patterns.Where(x => x.Culture == culture).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == culture).FirstOrDefault().PatternIndex));
             }
 
-            return new RoutePattern {Name = "Title", Description = "my-title", Pattern = "{Content.Slug}"};
+            // return a default pattern if none is defined
+            return new RoutePattern { Name = "Title", Description = "my-title", Pattern = "{Content.Slug}", Culture = culture };
         }
 
         public void RemoveAliases(AutoroutePart part) {
@@ -127,11 +157,11 @@ namespace Orchard.Autoroute.Services {
 
         private SettingsDictionary GetTypePartSettings(string contentType) {
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
-            
+
             if (contentDefinition == null) {
                 throw new OrchardException(T("Unknown content type: {0}", contentType));
             }
-            
+
             return contentDefinition.Parts.First(x => x.PartDefinition.Name == "AutoroutePart").Settings;
         }
 

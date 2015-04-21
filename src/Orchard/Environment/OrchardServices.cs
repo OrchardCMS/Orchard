@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -7,7 +6,6 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Environment {
-    [UsedImplicitly]
     public class OrchardServices : IOrchardServices {
         private readonly Lazy<IShapeFactory> _shapeFactory;
         private readonly IWorkContextAccessor _workContextAccessor;

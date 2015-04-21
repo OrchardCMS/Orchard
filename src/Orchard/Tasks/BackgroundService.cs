@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
@@ -12,7 +11,6 @@ namespace Orchard.Tasks {
         void Sweep();
     }
 
-    [UsedImplicitly]
     public class BackgroundService : IBackgroundService {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;

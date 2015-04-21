@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
 
 namespace Orchard.Security {
-    [UsedImplicitly]
     public class SecurityFilter : FilterProvider, IExceptionFilter, IAuthorizationFilter {
         private readonly IAuthorizer _authorizer;
 

@@ -9,10 +9,11 @@ using Autofac.Features.Metadata;
 using Orchard.WebApi.Extensions;
 
 namespace Orchard.WebApi {
-    public class DefaultOrchardWebApiHttpHttpControllerActivator : IHttpControllerActivator {
+    public class DefaultOrchardWebApiHttpControllerActivator : IHttpControllerActivator {
         private readonly HttpConfiguration _configuration;
 
-        public DefaultOrchardWebApiHttpHttpControllerActivator(HttpConfiguration configuration) : base() {
+        public DefaultOrchardWebApiHttpControllerActivator(HttpConfiguration configuration)
+            : base() {
             _configuration = configuration;
         }
 
