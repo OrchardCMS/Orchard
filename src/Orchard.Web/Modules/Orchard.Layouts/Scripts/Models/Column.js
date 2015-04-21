@@ -13,7 +13,7 @@
 
         this.allowSealedFocus = function () {
             return this.children.length === 0;
-        }
+        };
 
         this.beginChange = function () {
             if (!!_hasPendingChange)
