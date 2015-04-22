@@ -9,7 +9,7 @@
         <label>@T("Default Index")</label>
         @if (Model.AvailableIndexes.Any()) {
             @Html.LabelFor(m => m.SelectedIndex, T("Index"))
-            @Html.DropDownListFor(m => m.SelectedIndex, indexOptions)
+            @Html.DropDownListFor(m => m.SelectedIndex, indexOptions, "")
             @Html.Hint(T("Select which index to use by default in search queries."))
         }
         else {
