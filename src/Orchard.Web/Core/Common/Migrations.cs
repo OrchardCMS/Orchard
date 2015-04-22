@@ -15,14 +15,14 @@ namespace Orchard.Core.Common {
         }
 
         public int Create() {
-            SchemaBuilder.CreateTable("BodyPartRecord", 
+            SchemaBuilder.CreateTable("BodyPartRecord",
                 table => table
                     .ContentPartVersionRecord()
                     .Column<string>("Text", column => column.Unlimited())
                     .Column<string>("Format")
                 );
 
-            SchemaBuilder.CreateTable("CommonPartRecord", 
+            SchemaBuilder.CreateTable("CommonPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<int>("OwnerId")
@@ -31,8 +31,8 @@ namespace Orchard.Core.Common {
                     .Column<DateTime>("ModifiedUtc")
                     .Column<int>("Container_id")
                 );
-            
-            SchemaBuilder.CreateTable("CommonPartVersionRecord", 
+
+            SchemaBuilder.CreateTable("CommonPartVersionRecord",
                 table => table
                     .ContentPartVersionRecord()
                     .Column<DateTime>("CreatedUtc")
@@ -99,13 +99,17 @@ namespace Orchard.Core.Common {
 
             foreach (var existingIdentityPart in existingIdentityParts) {
                 var updateIdentityPartRecord = _identityPartRepository.Get(existingIdentityPart.Id);
-                
+
                 updateIdentityPartRecord.Identifier = existingIdentityPart.Identifier;
-                
+
                 _identityPartRepository.Update(updateIdentityPartRecord);
             }
 
             return 4;
+        }
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("CommonPartVersionRecord", table => table.AddColumn<string>("ModifiedBy", command => command.Nullable()));
+            return 5;
         }
     }
 }

@@ -54,6 +54,15 @@ namespace Orchard.Core.Common.Models {
                     PartVersionRecord.CreatedUtc = value;
             }
         }
+        public string VersionModifiedBy {
+            get {
+                return PartVersionRecord == null ? null : PartVersionRecord.ModifiedBy;
+            }
+            set {
+                if (PartVersionRecord != null)
+                    PartVersionRecord.ModifiedBy = value;
+            }
+        }
 
         public DateTime? VersionPublishedUtc {
             get {
