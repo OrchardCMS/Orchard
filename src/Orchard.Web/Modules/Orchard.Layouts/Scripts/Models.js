@@ -16,6 +16,7 @@
         factories[type] = factory;
     };
 
+    registerFactory("Canvas", function (value) { return LayoutEditor.Canvas.from(value); });
     registerFactory("Grid", function(value) { return LayoutEditor.Grid.from(value); });
     registerFactory("Row", function(value) { return LayoutEditor.Row.from(value); });
     registerFactory("Column", function(value) { return LayoutEditor.Column.from(value); });
@@ -76,7 +77,7 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated) {
+    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated, rule) {
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
@@ -86,6 +87,7 @@ var LayoutEditor;
         this.htmlClass = htmlClass;
         this.htmlStyle = htmlStyle;
         this.isTemplated = isTemplated;
+        this.rule = rule;
 
         this.editor = null;
         this.parent = null;
@@ -140,11 +142,15 @@ var LayoutEditor;
             return this.editor.focusedElement === this;
         };
 
+        this.allowSealedFocus = function() {
+            return false;
+        };
+
         this.setIsFocused = function () {
             if (!this.editor)
-            	return;
-            if (this.isTemplated)
-            	return;
+                return;
+            if (this.isTemplated && !this.allowSealedFocus())
+                return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
 
@@ -221,7 +227,8 @@ var LayoutEditor;
                 htmlId: this.htmlId,
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
-                isTemplated: this.isTemplated
+                isTemplated: this.isTemplated,
+                rule: this.rule
             };
         };
 
@@ -387,8 +394,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         this.toObject = function () {
@@ -396,16 +403,27 @@ var LayoutEditor;
             result.children = this.childrenToObject();
             return result;
         };
+
+        this.allowSealedFocus = function() {
+            return this.children.length === 0;
+        };
     };
 
     LayoutEditor.Canvas.from = function (value) {
-        return new LayoutEditor.Canvas(
+        var result = new LayoutEditor.Canvas(
             value.data,
             value.htmlId,
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
+
+        result.toolboxIcon = value.toolboxIcon;
+        result.toolboxLabel = value.toolboxLabel;
+        result.toolboxDescription = value.toolboxDescription;
+
+        return result;
     };
 
 })(LayoutEditor || (LayoutEditor = {}));
@@ -413,8 +431,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Row"], children);
 
         this.toObject = function () {
@@ -431,6 +449,7 @@ var LayoutEditor;
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -442,8 +461,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Row = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Row", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Row = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Row", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Column"], children);
 
         var _self = this;
@@ -716,6 +735,7 @@ var LayoutEditor;
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -726,21 +746,24 @@ var LayoutEditor;
 })(LayoutEditor || (LayoutEditor = {}));
 var LayoutEditor;
 (function (LayoutEditor) {
-
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, children) {
-        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
+        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-
         this.width = width;
         this.offset = offset;
+        this.collapsible = collapsible;
 
         var _hasPendingChange = false;
         var _origWidth = 0;
         var _origOffset = 0;
 
+        this.allowSealedFocus = function () {
+            return this.children.length === 0;
+        };
+
         this.beginChange = function () {
             if (!!_hasPendingChange)
-                throw new Error("Column already has a pending change.")
+                throw new Error("Column already has a pending change.");
             _hasPendingChange = true;
             _origWidth = this.width;
             _origOffset = this.offset;
@@ -748,7 +771,7 @@ var LayoutEditor;
 
         this.commitChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             _origWidth = 0;
             _origOffset = 0;
             _hasPendingChange = false;
@@ -756,7 +779,7 @@ var LayoutEditor;
 
         this.rollbackChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             this.width = _origWidth;
             this.offset = _origOffset;
             _origWidth = 0;
@@ -782,7 +805,7 @@ var LayoutEditor;
                 offset: 0,
                 children: []
             });
-            
+
             this.width = this.width - newColumnWidth;
             this.parent.insertChild(newColumn, this);
             newColumn.setIsFocused();
@@ -824,6 +847,7 @@ var LayoutEditor;
             var result = this.elementToObject();
             result.width = this.width;
             result.offset = this.offset;
+            result.collapsible = this.collapsible;
             result.children = this.childrenToObject();
             return result;
         };
@@ -838,6 +862,8 @@ var LayoutEditor;
             value.isTemplated,
             value.width,
             value.offset,
+            value.collapsible,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -854,17 +880,17 @@ var LayoutEditor;
                 isTemplated: false,
                 width: 12 / value,
                 offset: 0,
+                collapsible: null,
                 children: []
             });
         });
     };
-
 })(LayoutEditor || (LayoutEditor = {}));
 var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Content = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Content", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -912,7 +938,8 @@ var LayoutEditor;
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };
@@ -921,8 +948,8 @@ var LayoutEditor;
 var LayoutEditor;
 (function ($, LayoutEditor) {
 
-    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
@@ -979,7 +1006,8 @@ var LayoutEditor;
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };

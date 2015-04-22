@@ -22,7 +22,7 @@ namespace Orchard.Layouts.Services {
                 return null;
 
             var token = JToken.Parse(data);
-            var element = ParseNode(node: token, parent: null, index: 0, describeContext: describeContext); 
+            var element = ParseNode(node: token, parent: null, index: 0, describeContext: describeContext);
 
             return element;
         }
@@ -43,7 +43,8 @@ namespace Orchard.Layouts.Services {
                 isTemplated = element.IsTemplated,
                 htmlId = element.HtmlId,
                 htmlClass = element.HtmlClass,
-                htmlStyle = element.HtmlStyle
+                htmlStyle = element.HtmlStyle,
+                rule = element.Rule
             };
             return dto;
         }
@@ -54,10 +55,11 @@ namespace Orchard.Layouts.Services {
             if (String.IsNullOrWhiteSpace(elementTypeName))
                 return null;
 
-            var data = (string) node["data"];
-            var htmlId = (string) node["htmlId"];
+            var data = (string)node["data"];
+            var htmlId = (string)node["htmlId"];
             var htmlClass = (string)node["htmlClass"];
             var htmlStyle = (string)node["htmlStyle"];
+            var rule = (string)node["rule"];
             var elementData = ElementDataHelper.Deserialize(data);
             var exportableData = ElementDataHelper.Deserialize((string)node["exportableData"]);
             var childNodes = node["elements"];
@@ -68,19 +70,20 @@ namespace Orchard.Layouts.Services {
 
             var element = _elementFactory.Activate(elementDescriptor, e => {
                 e.Container = parent;
-                    e.Index = index; 
-                    e.Data = elementData;
-                    e.ExportableData = exportableData;
-                    e.HtmlId = htmlId;
-                    e.HtmlClass = htmlClass;
-                    e.HtmlStyle = htmlStyle;
+                e.Index = index;
+                e.Data = elementData;
+                e.ExportableData = exportableData;
+                e.HtmlId = htmlId;
+                e.HtmlClass = htmlClass;
+                e.HtmlStyle = htmlStyle;
+                e.Rule = rule;
             });
 
             var container = element as Container;
 
             if (container != null)
-                container.Elements = childNodes != null 
-                    ? childNodes.Select((x, i) => ParseNode(x, container, i, describeContext)).Where(x => x != null).ToList() 
+                container.Elements = childNodes != null
+                    ? childNodes.Select((x, i) => ParseNode(x, container, i, describeContext)).Where(x => x != null).ToList()
                     : new List<Element>();
 
             element.IsTemplated = node.Value<bool>("isTemplated");

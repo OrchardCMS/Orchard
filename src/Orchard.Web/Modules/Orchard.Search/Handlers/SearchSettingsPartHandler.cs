@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Search.Models;
 using Orchard.ContentManagement.Handlers;
