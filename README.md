@@ -17,11 +17,11 @@ output of the Orchard project is three-fold:
 * A set of re-usable components that makes it easy to build such applications 
 * A vibrant community to help define these applications and extensions
 In the near term, the Orchard project is focused on delivering a .NET-based CMS application that will allow users 
-to rapidly create content-driven Websites, and an extensibility framework that will allow developers and customizers to provide additional functionality through modules and themes.  You can learn more about the project on the [url:Orchard Project Website|http://www.orchardproject.net].
+to rapidly create content-driven Websites, and an extensibility framework that will allow developers and customizers to provide additional functionality through modules and themes.  You can learn more about the project on the [Orchard Project Website](http://www.orchardproject.net).
 
 ## Project Status
 Orchard is currently in version 1.8.1. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
-Our 1.8.1 release is available from our Downloads page, and is easy to [url: Install Orchard using the Web Platform Installer | http://www.orchardproject.net/docs/Installing-Orchard.ashx]. We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
+Our 1.8.1 release is available from our Downloads page, and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
 * [Feature roadmap](http://www.orchardproject.net/docs/feature-roadmap.ashx)
