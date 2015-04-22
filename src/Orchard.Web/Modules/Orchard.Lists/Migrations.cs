@@ -13,8 +13,8 @@ namespace Orchard.Lists {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-list\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]")));
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-list\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0")));
             return 4;
         }
 
@@ -34,6 +34,16 @@ namespace Orchard.Lists {
                 .Creatable(false));
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterTypeDefinition("List", type => type
+                .WithPart("AutoroutePart", builder => builder
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-list\",\"Culture\":\"en-US\"}]")
+                    .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+                );
+
+            return 5;
         }
     }
 }

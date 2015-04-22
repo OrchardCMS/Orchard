@@ -36,8 +36,8 @@ namespace Orchard.Taxonomies {
                 .WithPart("AutoroutePart", builder => builder
                 .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                 .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\",\"Culture\":\"en-US\"}]")
-                .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\"}]")
+                .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
             );
 
             SchemaBuilder.CreateTable("TermsPartRecord", table => table
@@ -77,6 +77,16 @@ namespace Orchard.Taxonomies {
             );
 
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterTypeDefinition("Taxonomy", cfg => cfg
+                .WithPart("AutoroutePart", builder => builder
+                .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-taxonomy\",\"Culture\":\"en-US\"}]")
+                .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+            );
+
+            return 5;
         }
     }
 }

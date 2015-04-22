@@ -20,10 +20,10 @@ namespace Orchard.DynamicForms {
                  .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"en-US\"}]")
-                    .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]")
+                    .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                 .WithPart("LayoutPart", p => p
-                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", 
+                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData",
                     "{" +
                         "\"elements\": [{" +
                             "\"typeName\": \"Orchard.DynamicForms.Elements.Form\"," +
@@ -57,6 +57,16 @@ namespace Orchard.DynamicForms {
                 .WithSetting("Stereotype", "Widget")
                 .DisplayedAs("Form Widget"));
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Form", type => type
+                 .WithPart("AutoroutePart", builder => builder
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"en-US\"}]")
+                    .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+                 );
+
+            return 2;
         }
     }
 }
