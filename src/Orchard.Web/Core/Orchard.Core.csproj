@@ -292,7 +292,7 @@
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
     <Content Include="Common\Views\Parts.Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
-    <Content Include="Common\Views\CommonMetadataOwner.cshtml" />
+    <Content Include="Common\Views\CommonMetadataLastModified.cshtml" />
     <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
