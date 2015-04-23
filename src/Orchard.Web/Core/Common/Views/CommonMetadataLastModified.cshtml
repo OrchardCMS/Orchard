@@ -7,7 +7,15 @@
 @using Orchard.Core.Common.Models;
 @{
     CommonPart commonPart = Model.ContentPart;
-    string lastModifiedBy = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().VersionModifiedBy;
+    string displayUser = null;
+    if (commonPart.As<CommonPart>() != null) {
+        if (!string.IsNullOrWhiteSpace(commonPart.As<CommonPart>().VersionModifiedBy)) {
+            displayUser = commonPart.As<CommonPart>().VersionModifiedBy;
+        }
+        else if (commonPart.As<CommonPart>().Owner != null) {
+            displayUser = commonPart.As<CommonPart>().Owner.UserName;
+        }
+    }
 }
 
-@T("By {0}", lastModifiedBy ?? T("unknown").ToString())
+@T("By {0}", displayUser ?? T("unknown").ToString())
