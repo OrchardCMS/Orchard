@@ -38,6 +38,7 @@ namespace Orchard.Core.Common {
                     .Column<DateTime>("CreatedUtc")
                     .Column<DateTime>("PublishedUtc")
                     .Column<DateTime>("ModifiedUtc")
+                    .Column<string>("ModifiedBy")
                 );
 
             SchemaBuilder.CreateTable("IdentityPartRecord",
@@ -58,7 +59,7 @@ namespace Orchard.Core.Common {
                 .Attachable()
                 .WithDescription("Automatically generates a unique identity for the content item, which is required in import/export scenarios where one content item references another."));
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {

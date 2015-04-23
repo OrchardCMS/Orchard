@@ -138,6 +138,7 @@ namespace Orchard.Core.Tests.Common.Providers {
                 Filters.Add(new ActivatingFilter<CommonPart>("test-item"));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>("test-item"));
                 Filters.Add(new ActivatingFilter<TestUser>("User"));
+                Filters.Add(new ActivatingFilter<AlternateTestUser>("AlternateUser"));
             }
         }
 
@@ -145,6 +146,11 @@ namespace Orchard.Core.Tests.Common.Providers {
             public new int Id { get { return 6655321; } }
             public string UserName { get { return "x"; } }
             public string Email { get { return "y"; } }
+        }
+        class AlternateTestUser : ContentPart, IUser {
+            public new int Id { get { return 6655322; } }
+            public string UserName { get { return "y"; } }
+            public string Email { get { return "x"; } }
         }
 
         [Test]
@@ -359,13 +365,21 @@ namespace Orchard.Core.Tests.Common.Providers {
         public void EditingShouldSetModifiedUtc() {
             var contentManager = _container.Resolve<IContentManager>();
 
+            var user = contentManager.New<IUser>("User");
+            _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
+
             var createUtc = _clock.UtcNow;
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             contentManager.Publish(item.ContentItem);
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.VersionModifiedBy, Is.EqualTo(user.UserName));
             Assert.That(item.PublishedUtc, Is.EqualTo(createUtc));
+
+            // Switch user
+            var secondUser = contentManager.New<IUser>("AlternateUser");
+            _authn.Setup(x => x.GetAuthenticatedUser()).Returns(secondUser);
 
             _clock.Advance(TimeSpan.FromMinutes(1));
             var editUtc = _clock.UtcNow;
@@ -377,6 +391,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             Assert.That(item.ModifiedUtc, Is.EqualTo(editUtc));
             Assert.That(item.PublishedUtc, Is.EqualTo(createUtc));
             Assert.That(updater.ModelErrors.Count, Is.EqualTo(0));
+            Assert.That(item.VersionModifiedBy, Is.EqualTo(secondUser.UserName));
         }
 
         [Test]
