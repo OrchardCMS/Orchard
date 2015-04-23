@@ -74,7 +74,7 @@ namespace Orchard.Search.Drivers {
         }
 
         protected override void Exporting(SearchSettingsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).Add(new XAttribute("SearchFields", part.Retrieve<string>("SearchFields")));
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SearchFields", part.Retrieve<string>("SearchFields"));
         }
 
         protected override void Importing(SearchSettingsPart part, ImportContentContext context) {
