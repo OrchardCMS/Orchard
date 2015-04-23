@@ -176,7 +176,7 @@ namespace Orchard.Core.Common.Handlers {
         }
         private string GetUserName() {
             var user = _authenticationService.GetAuthenticatedUser();
-            return (user == null) ? string.Empty : user.UserName;
+            return user == null ? string.Empty : user.UserName;
         }
     }
 }
