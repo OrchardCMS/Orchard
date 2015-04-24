@@ -133,7 +133,7 @@ namespace Orchard.Email.Services {
             }
 
             var smtpClient = new SmtpClient {
-                UseDefaultCredentials = !_smtpSettings.RequireCredentials,
+                UseDefaultCredentials = _smtpSettings.RequireCredentials && _smtpSettings.UseDefaultCredentials
             };
 
             if (!smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(_smtpSettings.UserName)) {
