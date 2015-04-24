@@ -7,8 +7,12 @@
 
     var children = New.List(Items: Model.Items);
     children.Classes.Add("comments");
+
+    Model.Classes.Add("comment");
+    Model.Classes.Add("comment-"+comment.Id);
+    var tag = Tag(Model, "article");
 }
-<article class="comment comment-@comment.Id">
+@tag.StartElement
     <header>
         <h4>
             <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
@@ -22,6 +26,4 @@
     @Display.CommentText(ContentPart: Model.ContentPart, ContentItem: Model.ContentItem)
 
     @Display(children)
-</article>
-
-
+@tag.EndElement

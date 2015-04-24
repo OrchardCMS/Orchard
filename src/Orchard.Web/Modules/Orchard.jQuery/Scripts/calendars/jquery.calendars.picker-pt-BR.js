@@ -2,8 +2,8 @@
    Brazilian Portuguese localisation for calendars datepicker for jQuery.
    Written by Leonildo Costa Silva (leocsilva@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['pt-BR'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['pt-BR'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&lt;Anterior', prevStatus: 'Mostra o mês anterior', 
 		prevJumpText: '&lt;&lt;', prevJumpStatus: 'Mostra o ano anterior', 
 		nextText: 'Próximo&gt;', nextStatus: 'Mostra o próximo mês', 
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, d \'de\' M \'de\' yyyy', defaultStatus: 'Selecione um dia',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['pt-BR']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['pt-BR']);
 })(jQuery);

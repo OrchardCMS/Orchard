@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -11,7 +10,6 @@ using Orchard.Core.Common.Models;
 
 namespace Orchard.Widgets.Services {
 
-    [UsedImplicitly]
     public class WidgetsService : IWidgetsService {
         private readonly IFeatureManager _featureManager;
         private readonly IExtensionManager _extensionManager;
@@ -50,13 +48,15 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<WidgetPart> GetWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
+                .ForVersion(VersionOptions.Latest)
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .List();
         }
 
         public IEnumerable<WidgetPart> GetOrphanedWidgets() {
             return _contentManager
-                .Query<WidgetPart, WidgetPartRecord>()
+                .Query<WidgetPart>()
+                .ForVersion(VersionOptions.Latest)
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .Where<CommonPartRecord>(x => x.Container == null)
                 .List();
@@ -64,7 +64,8 @@ namespace Orchard.Widgets.Services {
 
         public IEnumerable<WidgetPart> GetWidgets(int layerId) {
             return _contentManager
-                .Query<WidgetPart, WidgetPartRecord>()
+                .Query<WidgetPart>()
+                .ForVersion(VersionOptions.Latest)
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .Where<CommonPartRecord>(x => x.Container.Id == layerId)
                 .List();
@@ -72,7 +73,7 @@ namespace Orchard.Widgets.Services {
 
         public IEnumerable<WidgetPart> GetWidgets(int[] layerIds) {
             return _contentManager
-                .Query<WidgetPart>()
+                .Query<WidgetPart, WidgetPartRecord>()
                 .WithQueryHints(new QueryHints().ExpandParts<CommonPart>())
                 .Where<CommonPartRecord>(x => layerIds.Contains(x.Container.Id))
                 .List();
@@ -144,6 +145,7 @@ namespace Orchard.Widgets.Services {
         public WidgetPart GetWidget(int widgetId) {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
+                .ForVersion(VersionOptions.Latest)
                 .Where(widget => widget.Id == widgetId)
                 .List()
                 .FirstOrDefault();
@@ -153,6 +155,7 @@ namespace Orchard.Widgets.Services {
             LayerPart layerPart = GetLayer(layerId);
 
             WidgetPart widgetPart = _contentManager.Create<WidgetPart>(widgetType,
+                VersionOptions.Draft,
                 widget => {
                     widget.Title = title;
                     widget.Position = position;

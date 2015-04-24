@@ -1,0 +1,8 @@
+﻿@{
+	var contentId = (int)Model.ContentPart.Id;
+}
+@if (contentId > 0) {
+	<fieldset class="audit-trail-link">
+		@Html.ActionLink(T("View Audit Trail").Text, "Index", "Admin", new { content = contentId, area = "Orchard.AuditTrail" }, null)
+	</fieldset>
+}

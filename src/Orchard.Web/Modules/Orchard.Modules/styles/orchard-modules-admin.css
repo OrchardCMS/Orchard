@@ -18,21 +18,13 @@ html.dyn #main ul.features button { display:none; }
     height:6em;
     margin:0 .5% 1% .5%;
     position:relative;
-    width:31.95%;
+    width:32.2%;
 }
-.features.summary-view .feature:nth-child(3n+1),
-.features.summary-view .feature:nth-child(3n+2),
-.features.summary-view .feature:nth-child(3n) {
-    width:32.3%;
+
+.features.summary-view .missingDependencies{
+    line-height:1em;
 }
-.features.summary-view .feature:nth-child(3n+1) {
-    margin-left:0;
-}
-.features.summary-view .feature:nth-child(3n+2) {
-}
-.features.summary-view .feature:nth-child(3n) {
-    margin-right:0;
-}
+
 
 .features.detail-view .feature {
     padding:.25em 0;
@@ -169,4 +161,66 @@ h2.recentlyInstalledModule {padding:0 0 0 40px;}
 }
 .orchard-modules .bulk-actions-wrapper.visible {
     display: inline;
+}
+
+
+/* RTL */
+
+.dir-rtl #main .features h3 { padding:0 0 0 3em; }
+
+.dir-rtl .features.summary-view .feature {
+    float:right;
+}
+.dir-rtl .features.summary-view .feature:nth-child(3n+1) {
+    margin-left:inherit;
+    margin-right:0;
+}
+.dir-rtl .features.summary-view .feature:nth-child(3n) {
+    margin-left:inherit;
+    margin-right:0;
+}
+
+.dir-rtl #main .features.detail-view .feature {
+    padding-right: inherit;
+    padding-left:5.5em;
+}
+.dir-rtl #main .features.detail-view h3 {
+    padding-right: inherit;
+    padding-left:0;
+}
+
+.dir-rtl #main .features.detail-view .description {
+    margin:0 .5ex 1em 0;
+}
+.dir-rtl .features .dependencies li {
+    margin-left:inherit;
+    margin-right:.5em;
+}
+.dir-rtl .features .missingdependencies li {
+    margin-left:inherit;
+    margin-right:.5em;
+}
+.dir-rtl .features .feature .actions {
+    right: inherit;
+    left:.4em;
+}
+.dir-rtl .features.detail-view .feature .actions {
+    right: inherit;
+    left:-3.5em;
+}
+.dir-rtl .features .feature .actions form.inline.link,
+.dir-rtl .features .feature .actions a {
+    margin-left:inherit;
+    margin-right:.5em;
+}
+
+/***Recently installed RTL **/
+.dir-rtl h2.recentlyInstalledModule {padding:0 40px 0 0;}
+
+.dir-rtl .search-actions {
+    float: left;
+}
+
+.dir-rtl .manage {
+    float: left;
 }

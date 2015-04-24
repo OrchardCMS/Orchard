@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement
+@{
+    Style.Include("audittrail-disabledcontent.css");
+    Script.Require("ShapesBase");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("audittrail-disabledcontent.js").AtFoot();
+
+    var contentItem = (ContentItem)Model.ContentItem;
+    Layout.Title = T("{0} - {1} (version {2})", contentItem.ContentType, Html.ItemDisplayText(contentItem), contentItem.Version);
+}
+<div class="disabled-content-wrapper">
+    @Display(Model)
+    <div class="disabled-content-overlay"></div>
+</div>

@@ -2,8 +2,8 @@
    Icelandic localisation for calendars datepicker for jQuery.
    Written by Haukur H. Thorsson (haukur@eskill.is). */
 (function($) {
-	$.calendars.picker.regional['is'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['is'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c; Fyrri', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'N&aelig;sti &#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['is']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['is']);
 })(jQuery);

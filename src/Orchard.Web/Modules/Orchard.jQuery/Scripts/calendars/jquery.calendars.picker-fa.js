@@ -2,8 +2,8 @@
    Farsi/Persian localisation for calendars datepicker for jQuery.
    Javad Mowlanezhad -- jmowla@gmail.com. */
 (function($) {
-	$.calendars.picker.regional['fa'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['fa'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;قبلي', prevStatus: 'نمايش ماه قبل',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'بعدي&#x3e;', nextStatus: 'نمايش ماه بعد',
@@ -17,5 +17,5 @@
 		dayStatus: 'انتخاب D, M d', defaultStatus: 'انتخاب تاريخ',
 		isRTL: true
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['fa']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['fa']);
 })(jQuery);

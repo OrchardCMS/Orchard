@@ -2,8 +2,8 @@
    Khmer initialisation for calendars datepicker for jQuery.
    Written by Sovichet Tep (sovichet.tep@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['km'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['km'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'ថយ​ក្រោយ', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'ទៅ​មុខ', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD d MM', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['km']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['km']);
 })(jQuery);

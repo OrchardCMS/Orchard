@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Security;
 
 namespace Orchard.Core.Navigation.Drivers {
-    [UsedImplicitly]
     public class MenuItemPartDriver : ContentPartDriver<MenuItemPart> {
         private readonly IAuthorizationService _authorizationService;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -17,7 +15,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Editor(MenuItemPart part, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
                 return null;
 
             return ContentShape("Parts_MenuItem_Edit",
@@ -26,7 +24,7 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override DriverResult Editor(MenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
                 return null;
 
             if (updater != null) {

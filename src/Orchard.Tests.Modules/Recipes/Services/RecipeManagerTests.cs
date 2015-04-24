@@ -119,6 +119,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             Assert.That(sampleRecipe.Description, Is.EqualTo("a sample Orchard recipe describing a cms"));
             Assert.That(sampleRecipe.Author, Is.EqualTo("orchard"));
             Assert.That(sampleRecipe.Version, Is.EqualTo("1.1"));
+            Assert.That(sampleRecipe.IsSetupRecipe, Is.True);
             Assert.That(sampleRecipe.WebSite, Is.EqualTo("http://orchardproject.net"));
             Assert.That(sampleRecipe.Tags, Is.EqualTo("tag1, tag2"));
         }

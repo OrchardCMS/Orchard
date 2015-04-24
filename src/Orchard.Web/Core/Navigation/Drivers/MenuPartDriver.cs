@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -10,7 +10,6 @@ using Orchard.UI.Navigation;
 using Orchard.Utility;
 
 namespace Orchard.Core.Navigation.Drivers {
-    [UsedImplicitly]
     public class MenuPartDriver : ContentPartDriver<MenuPart> {
         private readonly IAuthorizationService _authorizationService;
         private readonly INavigationManager _navigationManager;
@@ -38,14 +37,16 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
+            var allowedMenus = _menuService.GetMenus().Where(menu => _authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu)).ToList();
+
+            if (!allowedMenus.Any())
                 return null;
 
             return ContentShape("Parts_Navigation_Menu_Edit", () => {
                 var model = new MenuPartViewModel {
                     CurrentMenuId = part.Menu == null ? -1 : part.Menu.Id,
                     ContentItem = part.ContentItem,
-                    Menus = _menuService.GetMenus(),
+                    Menus = allowedMenus,
                     OnMenu = part.Menu != null,
                     MenuText = part.MenuText
                 };
@@ -55,13 +56,13 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
-                return null;
-
             var model = new MenuPartViewModel();
 
             if(updater.TryUpdateModel(model, Prefix, null, null)) {
                 var menu = model.OnMenu ? _orchardServices.ContentManager.Get(model.CurrentMenuId) : null;
+
+                if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, _orchardServices.WorkContext.CurrentUser, menu))
+                    return null;
 
                 part.MenuText = model.MenuText;
                 part.Menu = menu;

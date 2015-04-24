@@ -2,7 +2,7 @@
    Spanish/Argentina localisation for Gregorian/Julian calendars for jQuery.
    Written by Esteban Acosta Villafane (esteban.acosta@globant.com) of Globant (http://www.globant.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['es-AR'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['es-AR'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['es-AR'] =
-			$.calendars.calendars.gregorian.prototype.regional['es-AR'];
+		$.calendars.calendars.julian.prototype.regionalOptions['es-AR'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['es-AR'];
 	}
 })(jQuery);

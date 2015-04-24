@@ -1,0 +1,10 @@
+﻿section.audittrail-settings-eventsummary table.audittrail-events {
+    width: auto;
+    margin: 0;
+}
+
+section.audittrail-settings-eventsummary tbody.audittrail-category tr th {
+    background-color: #ebebeb;
+    font-size: 1.1em;
+    font-weight: bold;
+}

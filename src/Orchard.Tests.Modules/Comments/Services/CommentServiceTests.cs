@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -35,6 +34,8 @@ using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
 using Orchard.Tests.Utility;
+using Orchard.Messaging.Services;
+using Orchard.Users.Services;
 
 namespace Orchard.Tests.Modules.Comments.Services {
     [TestFixture]
@@ -67,7 +68,11 @@ namespace Orchard.Tests.Modules.Comments.Services {
             builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
             builder.RegisterType<ProcessingEngineStub>().As<IProcessingEngine>();
             builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
 
+            builder.RegisterInstance(new Mock<IShapeTableLocator>().Object);
+            builder.RegisterInstance(new Mock<IShapeDisplay>().Object);
+            builder.RegisterInstance(new Mock<IMessageService>().Object);
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterInstance(new Mock<IPageClassBuilder>().Object); 
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
@@ -182,7 +187,6 @@ namespace Orchard.Tests.Modules.Comments.Services {
         }
     }
 
-    [UsedImplicitly]
     public class CommentedItemHandler : ContentHandler {
         public CommentedItemHandler() {
             Filters.Add(new ActivatingFilter<CommentedItem>("commentedItem"));

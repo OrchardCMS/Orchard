@@ -13,7 +13,6 @@ namespace Orchard.Tags.Services {
     [OrchardFeature("Orchard.Tags.TagCloud")]
     public class TagCloudService : ITagCloudService {
         private readonly IRepository<ContentTagRecord> _contentTagRepository;
-        private readonly IRepository<AutoroutePartRecord> _autorouteRepository;
         private readonly IContentManager _contentManager;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
@@ -21,13 +20,11 @@ namespace Orchard.Tags.Services {
 
         public TagCloudService(
             IRepository<ContentTagRecord> contentTagRepository,
-            IRepository<AutoroutePartRecord> autorouteRepository,
             IContentManager contentManager,
             ICacheManager cacheManager,
             ISignals signals) {
 
             _contentTagRepository = contentTagRepository;
-            _autorouteRepository = autorouteRepository;
             _contentManager = contentManager;
             _cacheManager = cacheManager;
             _signals = signals;
@@ -54,11 +51,12 @@ namespace Orchard.Tags.Services {
                             slug = "";
                         }
 
-                        var containerId = _autorouteRepository.Table
-                            .Where(c => c.DisplayAlias == slug)
-                            .Select(x => x.Id)
-                            .ToList() // don't try to optimize with slicing  as there should be only one result
-                            .FirstOrDefault();
+                        var containerId = _contentManager
+                                          .Query<AutoroutePart, AutoroutePartRecord>(VersionOptions.Published)
+                                          .Where(a => a.DisplayAlias == slug)
+                                          .List() // don't try to optimize with slicing  as there should be only one result
+                                          .Select(x => x.ContentItem.Id)
+                                          .FirstOrDefault();
 
                         if (containerId == 0) {
                             return new List<TagCount>();

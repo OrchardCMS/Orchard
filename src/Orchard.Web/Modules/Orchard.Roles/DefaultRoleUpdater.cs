@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
@@ -8,7 +7,6 @@ using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles {
-    [UsedImplicitly]
     public class DefaultRoleUpdater : IFeatureEventHandler {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
@@ -25,10 +23,10 @@ namespace Orchard.Roles {
         public ILogger Logger { get; set; }
 
         void IFeatureEventHandler.Installing(Feature feature) {
-            AddDefaultRolesForFeature(feature);
         }
 
         void IFeatureEventHandler.Installed(Feature feature) {
+            AddDefaultRolesForFeature(feature);
         }
 
         void IFeatureEventHandler.Enabling(Feature feature) {

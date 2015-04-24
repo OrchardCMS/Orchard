@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentPicker.Models;
@@ -11,7 +10,6 @@ using Orchard.Localization;
 using Orchard.Security;
 
 namespace Orchard.ContentPicker.Drivers {
-    [UsedImplicitly]
     public class ContentMenuItemPartDriver : ContentPartDriver<ContentMenuItemPart> {
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationService _authorizationService;
@@ -43,7 +41,7 @@ namespace Orchard.ContentPicker.Drivers {
 
         protected override DriverResult Editor(ContentMenuItemPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMenus, currentUser, part))
                 return null;
 
             var model = new ContentMenuItemEditViewModel();

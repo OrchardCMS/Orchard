@@ -284,11 +284,14 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null)
                 return HttpNotFound();
 
+            var typePartNames = new HashSet<string>(typeViewModel.Parts.Select(tvm => tvm.PartDefinition.Name));
+
             var viewModel = new AddPartsViewModel {
                 Type = typeViewModel,
                 PartSelections = _contentDefinitionService.GetParts(false/*metadataPartsOnly*/)
-                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
-                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName, PartDescription = cpd.Description})
+                    .Where(cpd => !typePartNames.Contains(cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
+                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName, PartDescription = cpd.Description })
+                    .ToList()
             };
 
             return View(viewModel);
@@ -386,6 +389,9 @@ namespace Orchard.ContentTypes.Controllers {
         public ActionResult CreatePartPOST(CreatePartViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
+
+            if (_contentDefinitionManager.GetPartDefinition(viewModel.Name) != null)
+                ModelState.AddModelError("Name", T("Cannot add part named '{0}'. It already exists.", viewModel.Name).ToString());
 
             if (!ModelState.IsValid)
                 return View(viewModel);
@@ -618,8 +624,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return HttpNotFound();
             }
 
-            field.DisplayName = viewModel.DisplayName;
-            _contentDefinitionManager.StorePartDefinition(partViewModel._Definition);
+            _contentDefinitionService.AlterField(partViewModel, viewModel);
 
             Services.Notifier.Information(T("Display name changed to {0}.", viewModel.DisplayName));
 

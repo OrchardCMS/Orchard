@@ -2,7 +2,7 @@
    Albanian localisation for Gregorian/Julian calendars for jQuery.
    Written by Flakron Bytyqi (flakron@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['sq'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['sq'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Janar','Shkurt','Mars','Prill','Maj','Qershor',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['sq'] =
-			$.calendars.calendars.gregorian.prototype.regional['sq'];
+		$.calendars.calendars.julian.prototype.regionalOptions['sq'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['sq'];
 	}
 })(jQuery);

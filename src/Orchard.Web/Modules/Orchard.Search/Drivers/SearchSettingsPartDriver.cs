@@ -73,9 +73,11 @@ namespace Orchard.Search.Drivers {
             if (xElement == null) return;
             
             var searchedFields = xElement.Attribute("SearchedFields");
-            searchedFields.Remove();
+            if (searchedFields != null) {
+                searchedFields.Remove();
 
-            part.SearchedFields = searchedFields.Value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                part.SearchedFields = searchedFields.Value.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries); 
+            }
         }
     }
 }

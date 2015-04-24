@@ -1,0 +1,24 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    display: flex;
+    margin-top: 1em;
+    font-size: @font-size;
+    align-items: flex-start;
+
+    > .layout-canvas-wrapper {
+        flex-grow: 1;
+        background-color: @gray-bg;
+        border: 1px solid @gray-border;
+
+        > .layout-toolbar-container {
+            display: none;
+            margin: @container-padding @container-padding 0;
+            min-height: 71px;
+
+            > .mce-panel {
+                width: 100% !important;
+            }
+        }
+    }
+}

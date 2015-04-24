@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Alias</RootNamespace>
     <AssemblyName>Orchard.Alias</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -76,7 +76,9 @@
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
+    <Compile Include="Implementation\Updater\AliasHolderUpdater.cs" />
     <Compile Include="Implementation\Updater\AliasUpdateCursor.cs" />
+    <Compile Include="Implementation\Updater\AliasUpdaterBackgroundTask.cs" />
     <Compile Include="Implementation\Updater\IAliasUpdateCursor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -102,7 +104,7 @@
     <Compile Include="Implementation\Holder\IAliasHolder.cs" />
     <Compile Include="Implementation\Map\AliasMap.cs" />
     <Compile Include="Implementation\Storage\AliasStorage.cs" />
-    <Compile Include="Implementation\Updater\AliasUpdater.cs" />
+    <Compile Include="Implementation\Updater\AliasHolderUpdaterTask.cs" />
     <Compile Include="Implementation\Utils.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Records\ActionRecord.cs" />

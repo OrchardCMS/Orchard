@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement.Handlers;
@@ -6,7 +5,6 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 
 namespace Orchard.Comments.Handlers {
-    [UsedImplicitly]
     public class CommentPartHandler : ContentHandler {
         public CommentPartHandler(
             IRepository<CommentPartRecord> commentsRepository,

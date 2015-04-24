@@ -2,7 +2,7 @@
    Turkish localisation for Gregorian/Julian calendars for jQuery.
    Written by Izzet Emre Erkan (kara@karalamalar.net). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['tr'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['tr'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['tr'] =
-			$.calendars.calendars.gregorian.prototype.regional['tr'];
+		$.calendars.calendars.julian.prototype.regionalOptions['tr'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['tr'];
 	}
 })(jQuery);

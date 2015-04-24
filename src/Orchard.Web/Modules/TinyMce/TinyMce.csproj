@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TinyMce</RootNamespace>
     <AssemblyName>TinyMce</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -34,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -48,6 +48,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
@@ -63,104 +64,173 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Scripts\langs\en.js" />
+    <Content Include="Scripts\langs\ar.js" />
+    <Content Include="Scripts\langs\ar_SA.js" />
+    <Content Include="Scripts\langs\az.js" />
+    <Content Include="Scripts\langs\be.js" />
+    <Content Include="Scripts\langs\bg_BG.js" />
+    <Content Include="Scripts\langs\bn_BD.js" />
+    <Content Include="Scripts\langs\bs.js" />
+    <Content Include="Scripts\langs\ca.js" />
+    <Content Include="Scripts\langs\cs.js" />
+    <Content Include="Scripts\langs\cy.js" />
+    <Content Include="Scripts\langs\da.js" />
+    <Content Include="Scripts\langs\de.js" />
+    <Content Include="Scripts\langs\de_AT.js" />
+    <Content Include="Scripts\langs\dv.js" />
+    <Content Include="Scripts\langs\el.js" />
+    <Content Include="Scripts\langs\en_CA.js" />
+    <Content Include="Scripts\langs\en_GB.js" />
+    <Content Include="Scripts\langs\es.js" />
+    <Content Include="Scripts\langs\et.js" />
+    <Content Include="Scripts\langs\eu.js" />
+    <Content Include="Scripts\langs\fa.js" />
+    <Content Include="Scripts\langs\fi.js" />
+    <Content Include="Scripts\langs\fo.js" />
+    <Content Include="Scripts\langs\fr_FR.js" />
+    <Content Include="Scripts\langs\gd.js" />
+    <Content Include="Scripts\langs\gl.js" />
+    <Content Include="Scripts\langs\he_IL.js" />
+    <Content Include="Scripts\langs\hr.js" />
+    <Content Include="Scripts\langs\hu_HU.js" />
+    <Content Include="Scripts\langs\hy.js" />
+    <Content Include="Scripts\langs\id.js" />
+    <Content Include="Scripts\langs\is_IS.js" />
+    <Content Include="Scripts\langs\it.js" />
+    <Content Include="Scripts\langs\ja.js" />
+    <Content Include="Scripts\langs\ka_GE.js" />
+    <Content Include="Scripts\langs\kk.js" />
+    <Content Include="Scripts\langs\km_KH.js" />
+    <Content Include="Scripts\langs\ko_KR.js" />
+    <Content Include="Scripts\langs\lb.js" />
+    <Content Include="Scripts\langs\lt.js" />
+    <Content Include="Scripts\langs\lv.js" />
+    <Content Include="Scripts\langs\ml.js" />
+    <Content Include="Scripts\langs\ml_IN.js" />
+    <Content Include="Scripts\langs\mn_MN.js" />
+    <Content Include="Scripts\langs\nb_NO.js" />
+    <Content Include="Scripts\langs\nl.js" />
+    <Content Include="Scripts\langs\pl.js" />
+    <Content Include="Scripts\langs\pt_BR.js" />
+    <Content Include="Scripts\langs\pt_PT.js" />
+    <Content Include="Scripts\langs\ro.js" />
+    <Content Include="Scripts\langs\ru.js" />
+    <Content Include="Scripts\langs\si_LK.js" />
+    <Content Include="Scripts\langs\sk.js" />
+    <Content Include="Scripts\langs\sl_SI.js" />
+    <Content Include="Scripts\langs\sr.js" />
+    <Content Include="Scripts\langs\sv_SE.js" />
+    <Content Include="Scripts\langs\ta.js" />
+    <Content Include="Scripts\langs\ta_IN.js" />
+    <Content Include="Scripts\langs\tg.js" />
+    <Content Include="Scripts\langs\th_TH.js" />
+    <Content Include="Scripts\langs\tr_TR.js" />
+    <Content Include="Scripts\langs\tt.js" />
+    <Content Include="Scripts\langs\ug.js" />
+    <Content Include="Scripts\langs\uk.js" />
+    <Content Include="Scripts\langs\uk_UA.js" />
+    <Content Include="Scripts\langs\vi.js" />
+    <Content Include="Scripts\langs\vi_VN.js" />
+    <Content Include="Scripts\langs\zh_CN.js" />
+    <Content Include="Scripts\langs\zh_TW.js" />
     <Content Include="Scripts\license.txt" />
     <Content Include="Scripts\orchard-tinymce.js" />
-    <Content Include="Scripts\plugins\autoresize\editor_plugin.js" />
-    <Content Include="Scripts\plugins\autoresize\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\medialibrary\editor_plugin.js" />
-    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.min.js">
-      <DependentUpon>editor_plugin_src.js</DependentUpon>
+    <Content Include="Scripts\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\plugins\colorpicker\plugin.min.js" />
+    <Content Include="Scripts\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\plugins\example\dialog.html" />
+    <Content Include="Scripts\plugins\example\plugin.min.js" />
+    <Content Include="Scripts\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\plugins\importcss\plugin.min.js" />
+    <Content Include="Scripts\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.js" />
+    <Content Include="Scripts\plugins\medialibrary\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\plugins\medialibrary\img\picture_add.png" />
-    <Content Include="Scripts\plugins\fullscreen\editor_plugin.js" />
-    <Content Include="Scripts\plugins\fullscreen\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\fullscreen\fullscreen.htm" />
-    <Content Include="Scripts\plugins\inlinepopups\editor_plugin.js" />
-    <Content Include="Scripts\plugins\inlinepopups\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\alert.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\button.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\buttons.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\confirm.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\corners.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\horizontal.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\img\vertical.gif" />
-    <Content Include="Scripts\plugins\inlinepopups\skins\clearlooks2\window.css" />
-    <Content Include="Scripts\plugins\inlinepopups\template.htm" />
-    <Content Include="Scripts\plugins\mediapicker\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\mediapicker\editor_plugin.js" />
-    <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
-    <Content Include="Scripts\themes\advanced\about.htm" />
-    <Content Include="Scripts\themes\advanced\anchor.htm" />
-    <Content Include="Scripts\themes\advanced\charmap.htm" />
-    <Content Include="Scripts\themes\advanced\color_picker.htm" />
-    <Content Include="Scripts\themes\advanced\editor_template.js" />
-    <Content Include="Scripts\themes\advanced\editor_template_src.js" />
-    <Content Include="Scripts\themes\advanced\image.htm" />
-    <Content Include="Scripts\themes\advanced\img\colorpicker.jpg" />
-    <Content Include="Scripts\themes\advanced\img\flash.gif" />
-    <Content Include="Scripts\themes\advanced\img\icons.gif" />
-    <Content Include="Scripts\themes\advanced\img\iframe.gif" />
-    <Content Include="Scripts\themes\advanced\img\pagebreak.gif" />
-    <Content Include="Scripts\themes\advanced\img\quicktime.gif" />
-    <Content Include="Scripts\themes\advanced\img\realmedia.gif" />
-    <Content Include="Scripts\themes\advanced\img\shockwave.gif" />
-    <Content Include="Scripts\themes\advanced\img\trans.gif" />
-    <Content Include="Scripts\themes\advanced\img\video.gif" />
-    <Content Include="Scripts\themes\advanced\img\windowsmedia.gif" />
-    <Content Include="Scripts\themes\advanced\js\about.js" />
-    <Content Include="Scripts\themes\advanced\js\anchor.js" />
-    <Content Include="Scripts\themes\advanced\js\charmap.js" />
-    <Content Include="Scripts\themes\advanced\js\color_picker.js" />
-    <Content Include="Scripts\themes\advanced\js\image.js" />
-    <Content Include="Scripts\themes\advanced\js\link.js" />
-    <Content Include="Scripts\themes\advanced\js\source_editor.js" />
-    <Content Include="Scripts\themes\advanced\langs\en.js" />
-    <Content Include="Scripts\themes\advanced\langs\en_dlg.js" />
-    <Content Include="Scripts\themes\advanced\link.htm" />
-    <Content Include="Scripts\themes\advanced\shortcuts.htm" />
-    <Content Include="Scripts\themes\advanced\skins\default\content.css" />
-    <Content Include="Scripts\themes\advanced\skins\default\dialog.css" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\buttons.png" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\items.gif" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\menu_arrow.gif" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\menu_check.gif" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\progress.gif" />
-    <Content Include="Scripts\themes\advanced\skins\default\img\tabs.gif" />
-    <Content Include="Scripts\themes\advanced\skins\default\ui.css" />
-    <Content Include="Scripts\themes\advanced\skins\highcontrast\content.css" />
-    <Content Include="Scripts\themes\advanced\skins\highcontrast\dialog.css" />
-    <Content Include="Scripts\themes\advanced\skins\highcontrast\ui.css" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\content.css" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\dialog.css" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\img\button_bg.png" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\img\button_bg_black.png" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\img\button_bg_silver.png" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\ui.css" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\ui_black.css" />
-    <Content Include="Scripts\themes\advanced\skins\o2k7\ui_silver.css" />
-    <Content Include="Scripts\themes\advanced\source_editor.htm" />
-    <Content Include="Scripts\themes\simple\editor_template.js" />
-    <Content Include="Scripts\themes\simple\editor_template_src.js" />
-    <Content Include="Scripts\themes\simple\img\icons.gif" />
-    <Content Include="Scripts\themes\simple\langs\en.js" />
-    <Content Include="Scripts\themes\simple\skins\default\content.css" />
-    <Content Include="Scripts\themes\simple\skins\default\ui.css" />
-    <Content Include="Scripts\themes\simple\skins\o2k7\content.css" />
-    <Content Include="Scripts\themes\simple\skins\o2k7\img\button_bg.png" />
-    <Content Include="Scripts\themes\simple\skins\o2k7\ui.css" />
-    <Content Include="Scripts\tiny_mce.js" />
-    <Content Include="Scripts\tiny_mce_popup.js" />
-    <Content Include="Scripts\tiny_mce_src.js" />
-    <Content Include="Scripts\utils\editable_selects.js" />
-    <Content Include="Scripts\utils\form_utils.js" />
-    <Content Include="Scripts\utils\mctabs.js" />
-    <Content Include="Scripts\utils\validate.js" />
+    <Content Include="Scripts\plugins\mediapicker\plugin.js" />
+    <Content Include="Scripts\plugins\mediapicker\plugin.min.js">
+      <DependentUpon>plugin.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\plugins\textpattern\plugin.min.js" />
+    <Content Include="Scripts\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\skins\orchardlightgray\content.inline.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\content.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\skins\orchardlightgray\img\anchor.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\loader.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\object.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\img\trans.gif" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\skins\lightgray\content.inline.min.css" />
+    <Content Include="Scripts\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\skins\orchardlightgray\skin.min.css" />
+    <Content Include="Scripts\themes\modern\theme.min.js" />
+    <Content Include="Scripts\tinymce.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TinyMceShapeDisplayEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Body-Html.Editor.cshtml" />
@@ -172,25 +242,39 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\plugins\searchreplace\css\searchreplace.css" />
-    <Content Include="Scripts\plugins\searchreplace\editor_plugin.js" />
-    <Content Include="Scripts\plugins\searchreplace\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\searchreplace\js\searchreplace.js" />
-    <Content Include="Scripts\plugins\searchreplace\langs\en_dlg.js" />
-    <Content Include="Scripts\plugins\searchreplace\searchreplace.htm" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\plugins\medialibrary\editor_plugin_src.min.js.map">
-      <DependentUpon>editor_plugin_src.js</DependentUpon>
-    </Content>
+    <Content Include="Scripts\langs\readme.md" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Scripts\skins\lightgray\fonts\tinymce.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce-small.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\skins\orchardlightgray\fonts\tinymce.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

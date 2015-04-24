@@ -143,7 +143,7 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-strong {font-weight:600;}
+strong {font-weight:bold;}
 .smallText {font-size:1em; line-height:1.4em;}
 
 hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
@@ -212,7 +212,7 @@ form.link button:hover, button.link:hover {
 ol.decimal {list-style:decimal inside; margin:12px 0;}
 ul.disc {list-style:disc inside; margin:12px 0;}
 
-/* Header - Branding and Login  
+/* Header - Branding, Login and Culture Selection
 ***************************************************************/
 #header {
     height:50px;
@@ -225,6 +225,10 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     width: 240px;
     height:50px;
     float:left;
+}
+#culture-selection {
+    float: right;
+    margin: 10px 20px 0 0;
 }
 #header #app {
     float:left;
@@ -365,6 +369,26 @@ ul.disc {list-style:disc inside; margin:12px 0;}
     padding: 0;
 }
 ul.menuItems {margin:6px 0 0 0;}
+
+.admin-menu-filter {
+    background: #2b2b2b url('./images/menu-filter.png') no-repeat 8px 6px;
+    border: 1px solid #404040;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    -ms-box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    box-shadow: 0 0 1px rgba(64, 64, 64, 1) inset, 1px 1px 1px rgba(54, 54, 65, 1);
+    padding: 3px 0 3px 26px;
+    width: 180px;
+    display: none;
+}
+
+.admin-menu-filter input#adminfilter {
+    border: none;
+    color: #8a8a8a;
+    width: 95%;
+    background: #2b2b2b;
+}
 
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
@@ -526,14 +550,14 @@ span.message {
     color:#fff;
 }
 .info { 
-    background: url(images/info.gif) no-repeat 5px 5px #fff;
+    background: url(images/info.gif) no-repeat 6px 6px #fff;
     border:1px solid #e4e8ee;  /* blue */
-    padding-left:26px;
+    padding:4px 4px 4px 26px;
 }
 .error { 
-    background: url(images/error.gif) no-repeat 5px 5px #fff;
+    background: url(images/error.gif) no-repeat 6px 6px #fff;
     border:1px solid #e5cece;  /* red */
-    padding-left:26px;
+    padding-left:4px 4px 4px 26px;
 }
 .message-Information, .notifications {
     background:#e6f1c9; /* green */
@@ -598,6 +622,9 @@ legend span {
     display:inline;
 }
 label.bulk-order {
+    text-transform:lowercase;
+}
+label.bulk-culture {
     text-transform:lowercase;
 }
 label span {
@@ -1072,11 +1099,15 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     margin-left:0;
     margin-right:2em;
     width:350px;
+    direction: ltr;
 }
 .permalink input.text:focus {
     background:#FFF;
     border-color:#666d51;
     border-style:solid;
+}
+.is-url {
+    direction: ltr !important;
 }
 /* Routable and Containers (Core) */
 .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
@@ -1221,5 +1252,327 @@ fieldset.delete-button {
     html, body, #layout-content {
         background: white;
         height: auto;
+    }
+}
+
+
+
+/* RTL Reset
+***************************************************************/
+
+html.dir-rtl {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;  
+    color:#333;
+}
+
+/* Tables still need 'cellspacing="0"' in the markup */
+.dir-rtl caption, .dir-rtl th, .dir-rtl td { text-align: right; }
+
+/* end: reset */
+
+/* RTL General
+***************************************************************/
+
+.dir-rtl #layout-content {
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top right;
+}
+.dir-rtl #layout-main {
+    float:left;
+    margin-left:inherit;
+    margin-right:-240px;
+}
+.dir-rtl #main {
+    margin-left:20px;
+    margin-right:260px;
+}
+.dir-rtl #menu {
+    float:right;
+}
+    .dir-rtl #menu .menu-admin a {
+        background-position: right 2px !important;
+    }
+
+.dir-rtl #footer {
+    background: url(images/vinesBackgroundBottom.gif) no-repeat bottom right;
+}
+
+/* Header - Branding, Login and Culture Selection
+***************************************************************/
+.dir-rtl #branding {
+    float:right;
+}
+.dir-rtl #culture-selection {
+    float: left;
+    margin: 10px 0 0 20px ;
+}
+.dir-rtl #header #app {
+    float:right;
+}
+.dir-rtl #header #app a {
+    margin:-11px 14px 0 0;
+}
+.dir-rtl #site a, .dir-rtl #site a:visited, .dir-rtl #site a:active {
+    float:right;
+}
+.dir-rtl #page-title {
+    padding:14px 260px 0 0;
+}
+.dir-rtl #login {
+    float:left;
+    margin:14px 0 0 20px;
+}
+
+.dir-rtl .manage,
+.dir-rtl .manage a.button {
+    float: left;
+}
+
+
+/* RTL Navigation
+***************************************************************/
+.dir-rtl #menu .expando-glyph-container .expando-glyph {
+    left:inherit;
+    right:160px;
+}
+.dir-rtl #menu .menu-admin li h3 {
+    padding:0 10px 0 0;
+}
+.dir-rtl #menu .menu-admin li h3 a,
+.dir-rtl #menu .menu-admin li h3 span { /* only the h3 gets an icon by default */
+    padding:0 20px 0 0;
+}
+.dir-rtl #menu .menu-admin ul a, .dir-rtl #menu .menu-admin ul a:link, .dir-rtl #menu .menu-admin ul a:visited {
+    padding:4px 20px 6px 0;
+}
+
+.dir-rtl .admin-menu-filter {
+    padding: 3px 26px 3px 0;
+}
+
+/* RTL Tabs
+***************************************************************/
+.dir-rtl .localmenu li.first {
+    margin-right:16px;
+}
+.dir-rtl .expando-glyph {
+    right:-20px;
+}
+.dir-rtl .expando-glyph-container {
+    float: right;
+}
+
+/* RTL Confirmations, Messages and the like
+***************************************************************/
+.dir-rtl span.message {
+    margin:4px 4px 4px 0;
+}
+.dir-rtl .info { 
+    padding:4px 26px 4px 4px;
+}
+.dir-rtl .error { 
+    padding:4px 26px 4px 4px;
+}
+
+/* RTL Forms
+***************************************************************/
+.dir-rtl .bulk-actions {
+    margin:0 0 0 4px;
+}
+
+.dir-rtl input.check-box, .dir-rtl input[type=checkbox] {
+    margin-left:inherit;
+    margin-right:0;
+}
+
+.dir-rtl .cancel {
+    margin:0 .93em 0 0;
+}
+.dir-rtl .manage {
+    float:left;
+}
+.dir-rtl .actions {
+    clear:left;
+    text-align:left;
+}
+.dir-rtl .actions .construct {
+    float:right;
+}
+.dir-rtl .actions .destruct {
+    float:left;
+}
+.dir-rtl .manage a.button {
+    float:left;
+    margin-left:inherit;
+    margin-right:4px;
+}
+
+.content-ltr textarea,
+.content-ltr input {
+    direction: ltr;
+}
+
+.content-rtl textarea,
+.content-rtl input {
+    direction: rtl;
+}
+
+
+/* RTL (Items) Tables
+***************************************************************/
+
+.dir-rtl table.items thead, .dir-rtl table.items th {
+    text-align:right;
+}
+.dir-rtl table.items th.actions {
+    text-align:left;
+}
+
+.dir-rtl table.items td .add {
+    float: left;
+}
+
+/* RTL Content item lists
+----------------------------------------------------------*/
+.dir-rtl .contentItems li {
+    padding:0 .8em .8em 1.4em;
+}
+.dir-rtl .contentItems.bulk-items li {
+    padding-left:inherit;
+}
+.dir-rtl #main .contentItems li .actions {
+    padding:0 .1em .1em 0;
+}
+.dir-rtl #main .contentItems li .actions .ibutton {
+    margin-right:inherit;
+    margin-left:6px;
+}
+.dir-rtl #main .contentItems li .actions .destruct .ibutton {
+    margin-left:0;
+    margin-right:8px;
+}
+
+.dir-rtl .contentItems .summary {
+    padding:1.2em .5em .5em .4em;
+}
+.dir-rtl .contentItems .properties {
+    float:right;
+}
+.dir-rtl .contentItems.bulk-items .metadata, .dir-rtl .contentItems.bulk-items .primary {
+    margin:.7em 2em .7em 0;
+}
+.dir-rtl .contentItems .properties li {
+    float:right;
+}
+.dir-rtl .contentItems .properties .icon {
+    margin:0 -.2em -.2em .2em;
+}
+.dir-rtl .contentItems .related {
+    text-align:left;
+}
+
+/* RTL Pager
+***************************************************************/
+
+.dir-rtl .page-size-options {
+    float: right;
+    padding-right: inherit;
+    padding-left: 40px;
+    margin-left: inherit;
+    margin-right: auto;
+}
+.dir-rtl .pager li {
+    float: right;
+    margin:0 0 0 6px;
+    }
+
+/* RTL Core Modules
+***************************************************************/
+/* Routable */
+.dir-rtl .permalink input.text {
+    margin-right:0;
+}
+/* Routable and Containers (Core) */
+.dir-rtl .with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:inherit;
+    margin-right:10px;
+}
+.dir-rtl fieldset.publish-button, fieldset.delete-button, .dir-rtl fieldset.save-button { 
+    float:right;
+}
+.dir-rtl fieldset.save-button {
+    clear:right;
+}
+.dir-rtl fieldset.publish-button {
+    margin: 0 0 0 12px ;
+}
+.dir-rtl fieldset.delete-button {
+    margin: 0 12px 0 0;
+}
+
+.content-rtl .permalink input.text {
+    direction: rtl;
+}
+
+/* Dashboard */
+
+.dir-rtl .dashboard .help-item 
+{
+    float: right;
+    margin: 0 0 55px 55px;
+}
+
+.dir-rtl .dashboard .help-item h2.gallery
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.friends
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.start
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.docs
+{
+    padding-left: inherit;
+    padding-right: 38px;
+}
+
+.dir-rtl .dashboard .help-item h2.contribute
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+.dir-rtl .dashboard .help-item h2.advisory
+{
+    padding-left: inherit;
+    padding-right: 40px;
+}
+
+/* RTL Fields
+***************************************************************/
+.dir-rtl #orchard-version 
+{
+    float:left;
+    right:inherit;
+    left:16px;
+}
+
+/* RTL Print
+***************************************************************/
+@media print {
+    .dir-rtl #main, .dir-rtl #page-title {
+        margin-left: inherit;
+        margin-right: 20px;
+        padding-left: inherit;
+        padding-right: 20px;
     }
 }

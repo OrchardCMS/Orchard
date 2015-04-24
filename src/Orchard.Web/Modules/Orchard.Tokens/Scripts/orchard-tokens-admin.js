@@ -25,15 +25,27 @@
     }
 });
 
-jQuery(function ($) {
+jQuery.fn.extend({
+    tokenized : function () {
+        return $(this).each(function () {
+            var _this = $(this);
 
-    // provide autocomplete behavior to tokenized inputs
-    // tokensUrl is initialized from the view
-    $.get(tokensUrl, function (data) {
-        $('.tokenized')
-            .autocomplete({
+            // add an icon to tokenized inputs
+            _this.wrap('<span class="token-wrapper"></span>');
+            var popup = $('<div><span class="tokenized-popup">&nbsp;</span></div>')
+            _this.parent().prepend(popup);
+
+            // show the full list of tokens when the icon is clicked
+            popup.children('.tokenized-popup').click(function () {
+                var input = $(this).parent().next();
+                // pass empty string as value to search for, displaying all results
+                input.autocomplete("search", "");
+                input.focus();
+            });
+
+            $(this).autocomplete({
                 minLength: 0,
-                source: data,
+                source: $.tokens,
                 select: function (event, ui) {
                     $(this).insertAtCaret(ui.item.value);
                     return false;
@@ -50,18 +62,18 @@ jQuery(function ($) {
                         .appendTo(ul);
                 };
             });
-    });
+        });
+    },
+});
 
-    // add an icon to tokenized inputs
-    $('.tokenized').wrap('<span class="token-wrapper"></span>');
+$(function() {
 
-    $('.token-wrapper').prepend('<div><span class="tokenized-popup">&nbsp;</span></div>');
+    $.tokens = {};
 
-    // show the full list of tokens when the icon is clicked
-    $('.tokenized-popup').click(function () {
-        var input = $(this).parent().next();
-        // pass empty string as value to search for, displaying all results
-        input.autocomplete("search", "");
-        input.focus();
+    // provide autocomplete behavior to tokenized inputs
+    // tokensUrl is initialized from the view
+    $.get(tokensUrl, function (data) {
+        $.tokens = data;
+        $('.tokenized').tokenized();
     });
 });

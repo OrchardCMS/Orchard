@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+    <settings>
+        <!--Determines if the bundle file should be automatically optimized after creation/update.-->
+        <minify>true</minify>
+        <!--Determin whether to generate/re-generate this bundle on building the solution.-->
+        <runOnBuild>true</runOnBuild>
+        <!--Specifies a custom subfolder to save files to. By default, compiled output will be placed in the same folder and nested under the original file.-->
+        <outputDirectory />
+    </settings>
+    <!--The order of the <file> elements determines the order of the files in the bundle.-->
+    <files>
+        <file>LayoutEditor/Module.js</file>
+        <file>LayoutEditor/Services/Clipboard.js</file>
+        <file>LayoutEditor/Services/ScopeConfigurator.js</file>
+        <file>LayoutEditor/Directives/Editor.js</file>
+        <file>LayoutEditor/Directives/Canvas.js</file>
+        <file>LayoutEditor/Directives/Child.js</file>
+        <file>LayoutEditor/Directives/Column.js</file>
+        <file>LayoutEditor/Directives/Content.js</file>
+        <file>LayoutEditor/Directives/Html.js</file>
+        <file>LayoutEditor/Directives/Grid.js</file>
+        <file>LayoutEditor/Directives/Row.js</file>
+        <file>LayoutEditor/Directives/Popup.js</file>
+        <file>LayoutEditor/Directives/Toolbox.js</file>
+        <file>LayoutEditor/Directives/ToolboxGroup.js</file>
+    </files>
+</bundle>

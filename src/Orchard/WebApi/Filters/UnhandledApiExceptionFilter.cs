@@ -1,4 +1,5 @@
-﻿using System.Web.Http.Filters;
+﻿using System.Threading.Tasks;
+using System.Web.Http.Filters;
 using Orchard.Logging;
 
 namespace Orchard.WebApi.Filters {
@@ -10,7 +11,10 @@ namespace Orchard.WebApi.Filters {
         public ILogger Logger { get; set; }
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext) {
-            Logger.Error(actionExecutedContext.Exception, "Unexpected API exception");
+            if (actionExecutedContext.Exception is TaskCanceledException)
+                Logger.Warning(actionExecutedContext.Exception, "A pending API operation was canceled by the client.");
+            else
+                Logger.Error(actionExecutedContext.Exception, "An unhandled exception was thrown in an API operation.");
         }
     }
 }

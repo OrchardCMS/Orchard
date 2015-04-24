@@ -2,7 +2,7 @@
    Montenegrin localisation for Gregorian/Julian calendars for jQuery.
    By Miloš Milošević - fleka d.o.o. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['me-ME'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['me-ME'] = {
 		name: 'Gregorijanski',
 		epochs: ['pne', 'ne'],
 		monthNames: ['Januar','Februar','Mart','April','Maj','Jun',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['me-ME'] =
-			$.calendars.calendars.gregorian.prototype.regional['me-ME'];
+		$.calendars.calendars.julian.prototype.regionalOptions['me-ME'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['me-ME'];
 	}
 })(jQuery);

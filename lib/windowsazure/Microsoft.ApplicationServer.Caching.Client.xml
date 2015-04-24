@@ -4,139 +4,133 @@
     <name>Microsoft.ApplicationServer.Caching.Client</name>
   </assembly>
   <members>
-    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs"><summary>Internal.</summary></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs"></member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs.ExceptionObject">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:System.Exception" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs.HasSucceeded">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs.OperationContext">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:Microsoft.ApplicationServer.Caching.CacheOperationContext" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationCompletedEventArgs.OperationType">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:Microsoft.ApplicationServer.Caching.CacheOperationType" />.</returns>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationContext"><summary>Internal.</summary></member>
-    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationStartedEventArgs"><summary>Internal.</summary></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationContext"></member>
+    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationStartedEventArgs"></member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationStartedEventArgs.OperationContext">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:System.Object" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.CacheOperationStartedEventArgs.OperationType">
-      <summary>Internal.</summary>
       <returns>Returns <see cref="T:Microsoft.ApplicationServer.Caching.CacheOperationType" />.</returns>
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationType"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Unknown">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Get">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Put">
-      <summary>Internal.</summary>
-    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.CacheOperationType"></member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Add">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.BulkGet">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Remove">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ResetObjectTimeout">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetIfNewer">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetAndLock">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.PutAndUnlock">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Unlock">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.LockedRemove">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetCacheItem">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.CreateRegion">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.RemoveRegion">
-      <summary>Internal.</summary>
-    </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ClearRegion">
-      <summary>Internal.</summary>
+      <summary />
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.AsyncGet">
-      <summary>Internal.</summary>
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.BulkGet">
+      <summary />
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ClearCache">
-      <summary>Internal.</summary>
+      <summary />
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Increment">
-      <summary>Internal.</summary>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ClearRegion">
+      <summary />
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Concatenate">
-      <summary>Internal.</summary>
+      <summary />
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ContainsKey">
-      <summary>Internal.</summary>
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.CreateRegion">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Get">
+      <summary />
     </member>
     <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetAllKeys">
-      <summary>Internal.</summary>
+      <summary />
     </member>
-    <member name="T:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheBulkGetLatencyBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheBulkGetLatencyCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheGetLatencyBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheGetLatencyCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCachePutLatencyBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCachePutLatencyCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageNetworkLatencyBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageNetworkLatencyCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.CounterCategoryHelp"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.CounterCategoryName"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetAndLock">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetCacheItem">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.GetIfNewer">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Increment">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.LockedRemove">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Put">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.PutAndUnlock">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Remove">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.RemoveRegion">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.ResetObjectTimeout">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Unknown">
+      <summary />
+    </member>
+    <member name="F:Microsoft.ApplicationServer.Caching.CacheOperationType.Unlock">
+      <summary />
+    </member>
+    <member name="T:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheBulkGetLatencyBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheBulkGetLatencyCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheGetLatencyBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCacheGetLatencyCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCachePutLatencyBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageCachePutLatencyCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageNetworkLatencyBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.AverageNetworkLatencyCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.CounterCategoryHelp"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.CounterCategoryName"></member>
     <member name="M:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.Dispose">
       <summary>Internal.</summary>
     </member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.FailureExceptionRate"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.IncomingDataRateCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.NetworkExceptionRate"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.OutgoingDataRateCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheFullBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheFullCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheHitsBaseCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheHitsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.RequestPerSecondCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.RetryExceptionRateCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.ServerResponseDroppedCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TimeoutExceptionRateCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalConnectionRequestsFailedCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalConnectionsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalFailureExceptionsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalItemsInLocalCacheCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalLocalCacheHitsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalNetworkExceptionsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalNotificationsReceivedCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalOutstandingRequestsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalReadsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalRequestsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalRetryExceptionsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalTimeoutExceptionsCounterName"><summary>Internal.</summary></member>
-    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalWritesCounterName"><summary>Internal.</summary></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.FailureExceptionRate"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.IncomingDataRateCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.NetworkExceptionRate"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.OutgoingDataRateCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheFullBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheFullCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheHitsBaseCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.PercentageLocalCacheHitsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.RequestPerSecondCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.RetryExceptionRateCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.ServerResponseDroppedCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TimeoutExceptionRateCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalConnectionRequestsFailedCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalConnectionsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalFailureExceptionsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalItemsInLocalCacheCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalLocalCacheHitsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalNetworkExceptionsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalNotificationsReceivedCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalOutstandingRequestsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalReadsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalRequestsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalRetryExceptionsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalTimeoutExceptionsCounterName"></member>
+    <member name="F:Microsoft.ApplicationServer.Caching.ClientPerformanceCounters.TotalWritesCounterName"></member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCache">
       <summary>The object that is used by cache-enabled applications for storing and retrieving objects from the cache. An instance of this object is referred to as the cache client.</summary>
     </member>
@@ -155,20 +149,20 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object)">
       <summary>Adds an object to the cache.</summary>
       <returns>A  <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds an object to the cache. This method enables associating tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="tags">An array of <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheTag" /> objects to associate with the cached object.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds an object to a region in the cache. This method enables association of tags with objects in the cache. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="tags">An array of <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheTag" /> objects to associate with the cached object.</param>
       <param name="region">The name of the region to save the object in.</param>
@@ -176,21 +170,21 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.String)">
       <summary>Adds an object to a region in the cache. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="region">The name of the region to save the object in.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.TimeSpan)">
       <summary>Adds an object to the cache. This method provides the ability to specify when the object should be expired.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="timeout">The amount of time the object should reside in the cache before expiration.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds an object to the cache. This method enables associating tags with the cached object and specifying when the object should be expired. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="tags">An array of <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheTag" /> objects to associate with the cached object.</param>
@@ -198,7 +192,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds an object to a region in the cache. This method enables associating tags with the cached object and specifying when the object should be expired. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="tags">An array of <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheTag" /> objects to associate with the cached object.</param>
@@ -207,7 +201,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Add(System.String,System.Object,System.TimeSpan,System.String)">
       <summary>Adds an object to a region in the cache. This method provides the ability to specify when the object should be expired. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" />object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">A unique value that is used to store and retrieve the object from the cache.</param>
+      <param name="key">A unique value that is used to store and retrieve the object from the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object saved to the cache.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="region">The name of the region to save the object.</param>
@@ -288,7 +282,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.CreateRegion(System.String)">
       <summary>Creates a region. Not supported in Windows Azure Shared Caching.</summary>
       <returns>Returns a<see cref="T:System.Boolean" /> value..</returns>
-      <param name="region">The name of the region that is created.</param>
+      <param name="region">The name of the region that is created. Region names must be less than 65 KB.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Decrement(System.String,System.Int64,System.Int64)">
       <summary>Decrements a long value stored in the cache.</summary>
@@ -455,20 +449,20 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object)">
       <summary>Adds or replaces an object in the cache.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion)">
       <summary>Adds or replaces an object in the cache if it is at the specified version.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds or replaces an object in the cache if it is at the specified version. Associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="tags">A list of tags to associate with the object.</param>
@@ -476,7 +470,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds or replaces an object in the specified region if it is at the specified version. Associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="tags">A list of tags to associate with the object.</param>
@@ -485,7 +479,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.String)">
       <summary>Adds or replaces an object in the specified region if it is at the specified version. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="region">The name of the region the object resides in.</param>
@@ -493,7 +487,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.TimeSpan)">
       <summary>Adds or replaces an object in the cache if it is at the specified version. Specifies the timeout value of the cached object.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
@@ -501,7 +495,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds or replaces an object in the cache if it is at the specified version. Specifies the timeout value and associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
@@ -510,7 +504,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds or replaces an object in the specified region if it is at the specified version. Specifies the timeout value and associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
@@ -520,7 +514,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,Microsoft.ApplicationServer.Caching.DataCacheItemVersion,System.TimeSpan,System.String)">
       <summary>Adds or replaces an object in the specified region if it is at the specified version. Specifies the timeout value of the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="oldVersion">The <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the cached object that is to be replaced.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
@@ -529,14 +523,14 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds or replaces an object in the cache. Associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the key value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="tags">A list of tags to associate with the object.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds or replaces an object in the specified region. Associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="tags">A list of tags to associate with the object.</param>
       <param name="region">The name of the region the object resides in.</param>
@@ -544,21 +538,21 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.String)">
       <summary>Adds or replaces an object in the specified region. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="region">The name of the region the object resides in.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.TimeSpan)">
       <summary>Adds or replaces an object in the cache. Specifies the timeout value of the cached object.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache.</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag})">
       <summary>Adds or replaces an object in the cache. Specifies the timeout value and associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the cache</param>
+      <param name="key">The unique value that is used to identify the object in the cache. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="tags">A list of tags to associate with the object.</param>
@@ -566,7 +560,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.TimeSpan,System.Collections.Generic.IEnumerable{Microsoft.ApplicationServer.Caching.DataCacheTag},System.String)">
       <summary>Adds or replaces an object in the specified region. Specifies the timeout value and associates tags with the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">The unique value that is used to identify the object in the region.</param>
+      <param name="key">The unique value that is used to identify the object in the region. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="tags">A list of tags to associate with the object.</param>
@@ -575,7 +569,7 @@
     <member name="M:Microsoft.ApplicationServer.Caching.DataCache.Put(System.String,System.Object,System.TimeSpan,System.String)">
       <summary>Adds or replaces an object in the specified region. Specifies the timeout value of the cached object. This overload is not supported in Windows Azure Shared Caching.</summary>
       <returns>A <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheItemVersion" /> object that represents the version of the object saved to the cache under the <paramref name="key" /> value.</returns>
-      <param name="key">Adds or replaces an object in the specified region. Specifies the timeout value of the cached object.</param>
+      <param name="key">Adds or replaces an object in the specified region. Specifies the timeout value of the cached object. Key names must be less than 65 KB.</param>
       <param name="value">The object to add or replace.</param>
       <param name="timeout">The amount of time that the object should reside in the cache before expiration.</param>
       <param name="region">The name of the region the object resides in.</param>
@@ -729,16 +723,16 @@
       <param name="region">The name of the region where the object resides.</param>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheAutoDiscoverProperty">
-      <summary>Specifies whether automatic discovery is enabled for the role that hosts Windows Azure Caching.</summary>
+      <summary>Specifies whether automatic discovery is enabled for the role or endpoint that hosts Windows Azure Caching.</summary>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheAutoDiscoverProperty.#ctor(System.Boolean)">
       <summary>Creates a new DataCacheAutoDiscoverProperty object.</summary>
       <param name="enable">A value of true enables automatic discovery.</param>
     </member>
     <member name="M:Microsoft.ApplicationServer.Caching.DataCacheAutoDiscoverProperty.#ctor(System.Boolean,System.String)">
-      <summary>Creates a new DataCacheAutoDiscoverProperty object; specifies the web or worker role that hosts Caching.</summary>
+      <summary>Creates a new DataCacheAutoDiscoverProperty object; specifies the web role, worker role or endpoint that hosts Caching.</summary>
       <param name="enable">A value of true enables automatic discovery.</param>
-      <param name="identifier">The name of the web or worker role that hosts Caching in the cloud service deployment.</param>
+      <param name="identifier">The name of the web role, worker role or endpoint that hosts Caching in the cloud service deployment.</param>
     </member>
     <member name="T:Microsoft.ApplicationServer.Caching.DataCacheBulkNotificationCallback">
       <summary>Specifies a callback which is called with a list of cache operations. Not supported in Windows Azure Shared Caching.</summary>
@@ -779,7 +773,7 @@
       <param name="clientName">The name of the cache client. If the application configuration file specifies multiple named dataCacheClient sections, this parameter can be used to specify which dataCacheClient section to use.</param>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.DataCacheFactoryConfiguration.AutoDiscoverProperty">
-      <summary>Specifies whether automatic discovery is enabled for the role that hosts Windows Azure Caching.</summary>
+      <summary>Specifies whether automatic discovery is enabled for the role or endpoint that hosts Windows Azure Caching.</summary>
       <returns>Returns <see cref="T:Microsoft.ApplicationServer.Caching.DataCacheAutoDiscoverProperty" />.</returns>
     </member>
     <member name="P:Microsoft.ApplicationServer.Caching.DataCacheFactoryConfiguration.CacheReadyRetryPolicy">

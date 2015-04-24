@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 
 namespace Orchard.Workflows.Forms {
-    public class ScheduleForms : IFormProvider {
+    [OrchardFeature("Orchard.Workflows.Timer")]
+    public class TimerForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public ScheduleForms(IShapeFactory shapeFactory) {
+        public TimerForms(IShapeFactory shapeFactory) {
             Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
@@ -22,7 +24,8 @@ namespace Orchard.Workflows.Forms {
                         _Amount: Shape.Textbox(
                             Id: "Amount", Name: "Amount",
                             Title: T("Amount"),
-                            Classes: new[] { "text small" }),
+                            Description: T("Amount of time units to add."),
+                            Classes: new[] { "text small tokenized" }),
                         _Type: Shape.SelectList(
                             Id: "Unity", Name: "Unity",
                             Title: T("Amount type"))
@@ -30,8 +33,12 @@ namespace Orchard.Workflows.Forms {
                             .Add(new SelectListItem { Value = "Hour", Text = T("Hours").Text })
                             .Add(new SelectListItem { Value = "Day", Text = T("Days").Text })
                             .Add(new SelectListItem { Value = "Week", Text = T("Weeks").Text })
-                            .Add(new SelectListItem { Value = "Month", Text = T("Months").Text })
-                        );
+                            .Add(new SelectListItem { Value = "Month", Text = T("Months").Text }),
+                        _Date: Shape.Textbox(
+                            Id: "Date", Name: "Date",
+                            Title: T("Date"),
+                            Description: T("Optional. Starting date/time to calculate difference from. Leave blank to use current date/time."),
+                            Classes: new[] {"text medium tokenized"}));
 
                     return form;
                 }

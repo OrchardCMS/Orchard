@@ -2,7 +2,7 @@
    Algerian (and Tunisian) Arabic localisation for Gregorian/Julian calendars for jQuery.
    Mohamed Cherif BOUCHELAGHEM -- cherifbouchelaghem@yahoo.fr */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar-DZ'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar-DZ'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان',
@@ -16,7 +16,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar-DZ'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar-DZ'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar-DZ'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar-DZ'];
 	}
 })(jQuery);

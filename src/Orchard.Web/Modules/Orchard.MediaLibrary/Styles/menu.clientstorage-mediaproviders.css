@@ -9,3 +9,10 @@
     color: black;
     padding-right: 5px;
 }
+
+/* RTL */
+
+.dir-rtl .navicon-my-computer:before {
+    padding-right: inherit;
+    padding-left: 5px;
+}

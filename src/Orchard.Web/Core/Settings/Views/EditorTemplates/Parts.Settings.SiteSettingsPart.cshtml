@@ -16,7 +16,7 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium" })
+        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text medium is-url" })
         <span class="hint">@T("Enter the fully qualified base URL of the web site.")</span>
         <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
@@ -59,6 +59,11 @@
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
     </div>
     <div>
+        @Html.LabelFor(m => m.UseCdn, T("Use CDN"))
+        @Html.CheckBoxFor(m => m.UseCdn)
+	    <span class="hint">@T("Determines whether the defined CDN value is used for scripts and stylesheets, or their local version")</span>
+    </div>
+    <div>
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text small" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
@@ -68,6 +73,11 @@
         <label for="MaxPageSize">@T("Maximum number of items per page")</label>
         @Html.TextBoxFor(m => m.MaxPageSize, new {@class = "text small"})
         <span class="hint">@T("Determines the maximum number of items that are shown per page. Leave 0 for unlimited.")</span>
+    </div>
+    <div>
+        <label for="MaxPagedCount">@T("Last index of items in pages")</label>
+        @Html.TextBoxFor(m => m.MaxPagedCount, new { @class = "text small" })
+        <span class="hint">@T("Determines the last element of the database that can be displayed. Leave 0 for unlimited.")</span>
     </div>
 }
 </fieldset>

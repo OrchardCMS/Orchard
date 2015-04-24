@@ -1,0 +1,9 @@
+﻿@model Orchard.MediaLibrary.MediaFileName.MediaFileNameEditorViewModel
+@{
+    var MediaFileName = Model;
+}
+<fieldset>
+    @Html.LabelFor(m => MediaFileName.FileName, T("File Name"))
+    @Html.TextBoxFor(m => MediaFileName.FileName, new { @class = "text large" })
+    @Html.ValidationMessageFor(m => MediaFileName.FileName)
+</fieldset>

@@ -11,11 +11,22 @@ using Orchard.Core.Containers.ViewModels;
 
 namespace Orchard.Core.Containers.Settings {
     public class ContainerPartSettings {
+        public const bool ItemsShownDefaultDefault = true;
         public const int PageSizeDefaultDefault = 10;
         public const bool PaginatedDefaultDefault = true;
 
+        private bool? _itemsShownDefault;
         private int? _pageSizeDefault;
         private bool? _paginiatedDefault;
+
+        public bool ItemsShownDefault {
+            get {
+                return _itemsShownDefault != null
+                         ? (bool)_itemsShownDefault
+                         : ItemsShownDefaultDefault;
+            }
+            set { _itemsShownDefault = value; }
+        }
 
         public int PageSizeDefault {
             get {
@@ -37,6 +48,7 @@ namespace Orchard.Core.Containers.Settings {
     }
 
     public class ContainerTypePartSettings {
+        public bool? ItemsShownDefault { get; set; }
         public int? PageSizeDefault { get; set; }
         public bool? PaginatedDefault { get; set; }
         public string RestrictedItemContentTypes { get; set; }
@@ -62,6 +74,9 @@ namespace Orchard.Core.Containers.Settings {
 
             var model = definition.Settings.GetModel<ContainerTypePartSettings>();
             var partModel = definition.PartDefinition.Settings.GetModel<ContainerPartSettings>();
+            
+            if (model.ItemsShownDefault == null)
+                model.ItemsShownDefault = partModel.ItemsShownDefault;
 
             if (model.PageSizeDefault == null)
                 model.PageSizeDefault = partModel.PageSizeDefault;
@@ -70,6 +85,7 @@ namespace Orchard.Core.Containers.Settings {
                 model.PaginatedDefault = partModel.PaginatedDefault;
 
             var viewModel = new ContainerTypePartSettingsViewModel {
+                ItemsShownDefault = model.ItemsShownDefault,
                 PageSizeDefault = model.PageSizeDefault,
                 PaginatedDefault = model.PaginatedDefault,
                 RestrictedItemContentTypes = _contentDefinitionManager.ParseContentTypeDefinitions(model.RestrictedItemContentTypes).Select(x => x.Name).ToList(),
@@ -99,6 +115,7 @@ namespace Orchard.Core.Containers.Settings {
                 AvailableItemContentTypes = _containerService.GetContainableTypes().ToList()
             };
             updateModel.TryUpdateModel(viewModel, "ContainerTypePartSettingsViewModel", null, new[] { "AvailableItemContentTypes" });
+            builder.WithSetting("ContainerTypePartSettings.ItemsShownDefault", viewModel.ItemsShownDefault.ToString());
             builder.WithSetting("ContainerTypePartSettings.PageSizeDefault", viewModel.PageSizeDefault.ToString());
             builder.WithSetting("ContainerTypePartSettings.PaginatedDefault", viewModel.PaginatedDefault.ToString());
             builder.WithSetting("ContainerTypePartSettings.RestrictedItemContentTypes", viewModel.RestrictedItemContentTypes != null ? string.Join(",", viewModel.RestrictedItemContentTypes) : "");
@@ -114,6 +131,7 @@ namespace Orchard.Core.Containers.Settings {
 
             var model = new ContainerPartSettings();
             updateModel.TryUpdateModel(model, "ContainerPartSettings", null, null);
+            builder.WithSetting("ContainerPartSettings.ItemsShownDefault", model.ItemsShownDefault.ToString());
             builder.WithSetting("ContainerPartSettings.PageSizeDefault", model.PageSizeDefault.ToString());
             builder.WithSetting("ContainerPartSettings.PaginatedDefault", model.PaginatedDefault.ToString());
             yield return DefinitionTemplate(model);

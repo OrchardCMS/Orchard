@@ -137,28 +137,25 @@
             var _this = $(this);
             var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
 
-            var hide = true;
-
-
             _controllees.each(function () {
                 var _controllee = $(this);
-                var hidden = _controllee.attr("data-defaultstate") == "hidden";
-                var _controlleeIsHidden = _controllee.is(":hidden");
 
-                if (_this.is(":checked") || _this.is(":selected")) {
-                    hide = hidden;
-                }
-                else {
-                    hide = !hidden;
-                }
+                var hiddenByDefault = _controllee.attr("data-defaultstate") == "hidden";
+                var checkedOrSelected = _this.is(":checked") || _this.is(":selected");
 
-                if (!hide) {
-                    if (_controlleeIsHidden) {
+                if (checkedOrSelected) {
+                    if (!hiddenByDefault) {
                         _controllee.hide().show(); // <- unhook this when the following comment applies
+                        // _controllees.slideUp(200); // <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
+                    } else {
+                        _controllee.hide();
                     }
-                } else if (!_controlleeIsHidden) {
-                    // _controllees.slideUp(200); // <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
-                    _controllee.hide()
+                } else {
+                    if (!hiddenByDefault) {
+                        _controllee.hide();
+                    } else {
+                        _controllee.show();
+                    }
                 }
             });
 
@@ -175,26 +172,16 @@
                 return;
             }
             controller.data("isControlling", 1);
-            if (!controller.is(":checked") && !controller.is(":selected")) {
-                $("[data-controllerid=" + controller.attr("id") + "]").hide();
-            }
             if (controller.is(":checkbox")) {
-                controller.click($(this).toggleWhatYouControl);
+                controller.click($(this).toggleWhatYouControl).each($(this).toggleWhatYouControl);
             } else if (controller.is(":radio")) {
                 $("[name=" + controller.attr("name") + "]").click(function () { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
             }
             else if (controller.is("option")) {
                 controller.parent().change(function () {
                     controller.toggleWhatYouControl();
-                });
+                }).each($(this).toggleWhatYouControl);
             }
-
-            // if data-defaultstate is 'hidden' hide it by default
-            var hidden = $(this).attr("data-defaultstate") == "hidden";
-            if (hidden) {
-                $(this).hide();
-            }
-
         });
     });
     // inline form link buttons (form.inline.link button) swapped out for a link that submits said form
@@ -223,7 +210,7 @@
     $(function () {
         var magicToken = $("input[name=__RequestVerificationToken]").first();
         if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
-        $("body").on("click", "a[itemprop~=UnsafeUrl]", function() {
+        $("body").on("click", "a[itemprop~=UnsafeUrl], a[data-unsafe-url]", function() {
             var _this = $(this);
             var hrefParts = _this.attr("href").split("?");
             var form = $("<form action=\"" + hrefParts[0] + "\" method=\"POST\" />");
@@ -238,6 +225,14 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
+
+            var unsafeUrlPrompt = _this.data("unsafe-url");
+
+            if (unsafeUrlPrompt && unsafeUrlPrompt.length > 0) {
+                if (!confirm(unsafeUrlPrompt)) {
+                    return false;
+                }
+            }
 
             if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
                 if (!confirm(confirmRemoveMessage)) {

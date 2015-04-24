@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -12,7 +11,6 @@ using Orchard.Localization;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class TextFieldDriver : ContentFieldDriver<TextField> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
@@ -49,7 +47,8 @@ namespace Orchard.Core.Common.Drivers {
                     var viewModel = new TextFieldDriverViewModel {
                         Field = field,
                         Text = field.Value,
-                        Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>()
+                        Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
+                        ContentItem = part.ContentItem
                     };
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: viewModel, Prefix: GetPrefix(field, part));
@@ -61,7 +60,8 @@ namespace Orchard.Core.Common.Drivers {
             var viewModel = new TextFieldDriverViewModel {
                 Field = field,
                 Text = field.Value,
-                Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>()
+                Settings = field.PartFieldDefinition.Settings.GetModel<TextFieldSettings>(),
+                ContentItem = part.ContentItem
             };
 
             if(updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {

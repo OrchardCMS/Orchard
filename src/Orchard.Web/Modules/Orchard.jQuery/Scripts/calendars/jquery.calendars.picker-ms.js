@@ -2,8 +2,8 @@
    Malaysian localisation for calendars datepicker for jQuery.
    Written by Mohd Nawawi Mohamad Jamili (nawawi@ronggeng.net). */
 (function($) {
-	$.calendars.picker.regional['ms'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['ms'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Sebelum', prevStatus: 'Tunjukkan bulan lepas',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'Tunjukkan tahun lepas',
 		nextText: 'Selepas&#x3e;', nextStatus: 'Tunjukkan bulan depan',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, d MM', defaultStatus: 'Sila pilih tarikh',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['ms']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['ms']);
 })(jQuery);

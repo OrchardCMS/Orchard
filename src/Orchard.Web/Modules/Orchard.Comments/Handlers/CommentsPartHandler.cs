@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
@@ -8,7 +7,6 @@ using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Handlers {
-    [UsedImplicitly]
     public class CommentsPartHandler : ContentHandler {
         public CommentsPartHandler(
             IContentManager contentManager,

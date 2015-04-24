@@ -1,0 +1,22 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (EmailField)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.AddCommonElementAttributes(new OrchardTagBuilder("input"), Model);
+
+    tagBuilder.AddCssClass("text design");
+    tagBuilder.Attributes["type"] = "email";
+    tagBuilder.Attributes["value"] = element.Value;
+    tagBuilder.Attributes["name"] = element.Name;
+}
+
+@if (element.ShowLabel) {
+    <div>
+        <label for="@element.HtmlId">@element.Label</label>
+        @Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+    </div>
+}
+else {
+    @Html.Raw(tagBuilder.ToString(TagRenderMode.SelfClosing))
+}

@@ -2,8 +2,8 @@
    Polish localisation for calendars datepicker for jQuery.
    Written by Jacek Wysocki (jacek.wysocki@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['pl'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['pl'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Poprzedni', prevStatus: 'Pokaż poprzedni miesiąc',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Następny&#x3e;', nextStatus: 'Pokaż następny miesiąc',
@@ -17,5 +17,5 @@
 		dayStatus: '\'Wybierz\' DD, M d', defaultStatus: 'Wybierz datę',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['pl']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['pl']);
 })(jQuery);

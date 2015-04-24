@@ -2,7 +2,7 @@
    Македонски MK localisation for Gregorian/Julian calendars for jQuery.
    Hajan Selmani (hajan [at] live [dot] com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['mk'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['mk'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Јануари','Февруари','Март','Април','Мај','Јуни',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['mk'] =
-			$.calendars.calendars.gregorian.prototype.regional['mk'];
+		$.calendars.calendars.julian.prototype.regionalOptions['mk'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['mk'];
 	}
 })(jQuery);

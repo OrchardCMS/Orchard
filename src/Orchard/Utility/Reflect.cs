@@ -105,7 +105,7 @@ namespace Orchard.Utility {
                     }
 
                     AddNames(callExpression.Object, nb);
-                    nb.Append("[" + GetArguments(callExpression.Arguments).Aggregate((a, b) => a + b) + "]");
+                    nb.Append("[" + string.Join("", GetArguments(callExpression.Arguments)) + "]");
                     break;
 
                 case ExpressionType.Parameter:

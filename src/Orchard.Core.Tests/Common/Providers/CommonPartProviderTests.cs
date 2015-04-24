@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -68,6 +67,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
 
             builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
+            builder.RegisterInstance(new Orchard.Environment.Work<IEnumerable<IShapeTableEventHandler>>(resolve => _container.Resolve<IEnumerable<IShapeTableEventHandler>>())).AsSelf();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
@@ -133,7 +133,6 @@ namespace Orchard.Core.Tests.Common.Providers {
             }
         }
 
-        [UsedImplicitly]
         class TestHandler : ContentHandler {
             public TestHandler() {
                 Filters.Add(new ActivatingFilter<CommonPart>("test-item"));

@@ -81,9 +81,9 @@ namespace Orchard.Autoroute.Drivers {
             var previous = part.DisplayAlias;
             if (updater != null && updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                 
-                // remove any trailing slash in the permalink
-                while(!string.IsNullOrEmpty(viewModel.CurrentUrl) && viewModel.CurrentUrl.StartsWith("/")) {
-                    viewModel.CurrentUrl = viewModel.CurrentUrl.Substring(1);
+                // remove any leading slash in the permalink
+                if (viewModel.CurrentUrl != null) {
+                    viewModel.CurrentUrl = viewModel.CurrentUrl.TrimStart('/');
                 }
 
                 part.DisplayAlias = viewModel.CurrentUrl;

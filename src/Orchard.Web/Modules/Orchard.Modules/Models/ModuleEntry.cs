@@ -32,5 +32,10 @@ namespace Orchard.Modules.Models {
         /// List of module notifications.
         /// </summary>
         public List<string> Notifications { get; set; }
+
+        /// <summary>
+        /// Indicates whether the module can be uninstalled by the user.
+        /// </summary>
+        public bool CanUninstall { get; set; }
     }
 }

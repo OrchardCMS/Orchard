@@ -5,6 +5,8 @@ using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
+using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Packaging.Models;
 
@@ -13,15 +15,24 @@ namespace Orchard.Packaging.Services {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
-        private readonly IPackageInstaller _packageExpander;
+        private readonly IPackageInstaller _packageInstaller;
+        private readonly IShellStateManager _shellStateManager;
+        private readonly IFeatureManager _featureManager;
+        private readonly IPackageUninstallHandler _packageUninstallHandler;
 
         public PackageManager(
             IExtensionManager extensionManager,
             IPackageBuilder packageBuilder,
-            IPackageInstaller packageExpander) {
+            IPackageInstaller packageInstaller,
+            IShellStateManager shellStateManager,
+            IFeatureManager featureManager,
+            IPackageUninstallHandler packageUninstallHandler) {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
-            _packageExpander = packageExpander;
+            _packageInstaller = packageInstaller;
+            _shellStateManager = shellStateManager;
+            _featureManager = featureManager;
+            _packageUninstallHandler = packageUninstallHandler;
 
             T = NullLocalizer.Instance;
         }
@@ -61,15 +72,38 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageInfo Install(IPackage package, string location, string applicationPath) {
-            return DoInstall(() => _packageExpander.Install(package, location, applicationPath));
+            return DoInstall(() => _packageInstaller.Install(package, location, applicationPath));
         }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
-            return DoInstall(() => _packageExpander.Install(packageId, version, location, applicationPath));
+            return DoInstall(() => _packageInstaller.Install(packageId, version, location, applicationPath));
         }
 
         public void Uninstall(string packageId, string applicationPath) {
-            _packageExpander.Uninstall(packageId, applicationPath);
+            var extensionToUninstall = _extensionManager.AvailableExtensions()
+                .FirstOrDefault(extension => PackageBuilder.BuildPackageId(extension.Id, extension.ExtensionType) == packageId);
+
+            if (extensionToUninstall == null) {
+                throw new OrchardException(T("There is no extension that has the package ID \"{0}\".", packageId));
+            }
+
+            var featureIdsToUninstall = extensionToUninstall.Features.Select(feature => feature.Id);
+            var shellState = _shellStateManager.GetShellState();
+            var featureStates = shellState.Features.Where(featureState => featureIdsToUninstall.Contains(featureState.Name));
+
+            // This means that no feature from this extension wasn enabled yet, can be uninstalled directly.
+            if (!featureStates.Any()) {
+                _packageUninstallHandler.QueuePackageUninstall(packageId);
+            }
+            else {
+                _featureManager.DisableFeatures(extensionToUninstall.Features.Select(feature => feature.Id), true);
+
+                // Installed state can't be deduced from the shell state changes like for enabled state, so have to
+                // set that explicitly.
+                foreach (var featureState in featureStates) {
+                    _shellStateManager.UpdateInstalledState(featureState, Environment.State.Models.ShellFeatureState.State.Falling);
+                }
+            }
         }
 
         #endregion

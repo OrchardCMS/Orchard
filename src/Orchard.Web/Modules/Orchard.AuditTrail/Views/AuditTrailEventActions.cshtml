@@ -1,0 +1,5 @@
+﻿@using Orchard.AuditTrail.Models
+@{
+    var record = (AuditTrailEventRecord)Model.Record;
+}
+@Html.ActionLink(T("Details").Text, "Detail", "Admin", new { id = record.Id, area = "Orchard.AuditTrail" }, null)

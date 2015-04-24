@@ -8,6 +8,8 @@ namespace Orchard.Core.Shapes {
             manifest.DefineStyle("Shapes").SetUrl("site.css"); // todo: missing
             manifest.DefineStyle("ShapesSpecial").SetUrl("special.css");
 
+            manifest.DefineScript("Html5Shiv").SetUrl("html5.js");
+
             manifest.DefineScript("Switchable").SetUrl("jquery.switchable.js")
                 .SetDependencies("jQuery")
                 .SetDependencies("ShapesBase");

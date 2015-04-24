@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -12,24 +11,26 @@ using Orchard.Tags.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tags.Services {
-    [UsedImplicitly]
     public class TagService : ITagService {
         private readonly IRepository<TagRecord> _tagRepository;
         private readonly IRepository<ContentTagRecord> _contentTagRepository;
         private readonly INotifier _notifier;
         private readonly IAuthorizationService _authorizationService;
         private readonly IOrchardServices _orchardServices;
+        private readonly ISessionFactoryHolder _sessionFactoryHolder;
 
         public TagService(IRepository<TagRecord> tagRepository,
                           IRepository<ContentTagRecord> contentTagRepository,
                           INotifier notifier,
                           IAuthorizationService authorizationService,
-                          IOrchardServices orchardServices) {
+                          IOrchardServices orchardServices,
+                          ISessionFactoryHolder sessionFactoryHolder) {
             _tagRepository = tagRepository;
             _contentTagRepository = contentTagRepository;
             _notifier = notifier;
             _authorizationService = authorizationService;
             _orchardServices = orchardServices;
+            _sessionFactoryHolder = sessionFactoryHolder;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -207,6 +208,11 @@ namespace Orchard.Tags.Services {
             }
 
             contentItem.As<TagsPart>().CurrentTags = tagNamesForContentItem;
+
+            var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
+
+            if (sessionFactory != null)
+                sessionFactory.EvictCollection("Orchard.Tags.Models.TagsPartRecord.Tags", contentItem.As<TagsPart>().Record.Id);
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Taxonomies</RootNamespace>
     <AssemblyName>Orchard.Taxonomies</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
@@ -99,7 +99,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Fields\TaxonomyField.cs" />
     <Compile Include="Services\ITaxonomyService.cs" />
+    <Compile Include="Services\ITermCountProcessor.cs" />
     <Compile Include="Services\TaxonomyService.cs" />
+    <Compile Include="Services\TermCountProcessor.cs" />
     <Compile Include="Settings\TermPartEditorEvents.cs" />
     <Compile Include="Settings\TaxonomyFieldEditorEvents.cs" />
     <Compile Include="Settings\TermPartSettings.cs" />
@@ -163,7 +165,7 @@
     <Content Include="Views\TermAdmin\SelectTerm.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

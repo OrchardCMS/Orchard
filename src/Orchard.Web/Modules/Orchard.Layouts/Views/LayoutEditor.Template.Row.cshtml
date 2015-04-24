@@ -1,0 +1,15 @@
+﻿@using Orchard.Layouts.ViewModels;
+<div class="layout-element-wrapper" ng-class="{'layout-container-empty': getShowChildrenPlaceholder()}">
+    <ul class="layout-panel layout-panel-main">
+        <li class="layout-panel-item layout-panel-label">Row</li>
+        @Display(New.LayoutEditor_Template_Properties(ElementTypeName: "row"))
+        <li class="layout-panel-item layout-panel-action" title="@T("Delete row (Del)")" ng-click="delete(element)"><i class="fa fa-remove"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move row up (Ctrl+Up)")" ng-click="element.moveUp()" ng-class="{disabled: !element.canMoveUp()}"><i class="fa fa-chevron-up"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Move row down (Ctrl+Down)")" ng-click="element.moveDown()" ng-class="{disabled: !element.canMoveDown()}"><i class="fa fa-chevron-down"></i></li>
+        <li class="layout-panel-item layout-panel-action" title="@T("Distribute columns evenly")" ng-click="element.evenColumns()" ng-class="{disabled: element.children.length == 0}"><i class="fa fa-columns"></i></li>
+    </ul>
+    <div class="layout-container-children-placeholder">
+        @T("Drag a column element from the toolbox and drop it here to add a column.")
+    </div>
+    @Display(New.LayoutEditor_Template_Children())
+</div>

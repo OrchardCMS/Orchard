@@ -1,0 +1,14 @@
+﻿@using Orchard.Layouts.Models
+@model Orchard.Layouts.ViewModels.ElementWrapperPartViewModel
+
+@foreach (var tab in Model.Tabs) {
+    <h2>@T("Element {0}", tab)</h2>
+    <section>
+        @foreach (var editor in Model.ElementEditorResult.Editors) {
+            var position = ShapePosition.Parse((String)editor.Metadata.Position);
+            if (position.Name == tab) {
+                @Display(editor)
+            }
+        }
+    </section>
+}

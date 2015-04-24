@@ -4,6 +4,7 @@
     Layout.Title = T("Add New Tenant").ToString();
 
     Script.Require("jQuery").AtFoot();
+    Script.Include(Url.Content("~/Themes/TheAdmin/Scripts/admin.js")).AtFoot();
     Script.Include("multi-tenancy.admin.js").AtFoot();
 }
 
@@ -44,7 +45,7 @@
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseConnectionString">@T("Connection string")</label>
                     @Html.EditorFor(svm => svm.DatabaseConnectionString)
-                    <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
+                    <span class="hint">@T("Example:") @T("Data Source=sqlServerName;Initial Catalog=dbName;User ID=userName;Password=password")</span>
                 </span>
                 <span data-controllerid="sqlDatabaseOption">
                     <label for="DatabaseTablePrefix">@T("Database Table Prefix")</label>
@@ -54,9 +55,9 @@
         </div>
     </fieldset>
     
-    <fieldset>
+    <fieldset class="available-extensions">
+        <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
         <div>
-            <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
             <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
             
             <ol>
@@ -81,9 +82,9 @@
         </div>  
     </fieldset>
     
-    <fieldset>
+   <fieldset class="available-extensions">
+        <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
         <div>
-            <label for="@Html.FieldIdFor(m => m.Modules)">@T("Available Modules")</label>
             <span class="hint">@T("Select the Modules which should be available for this tenant. If none is selected, they will all be available.")</span>
 
             <ol>

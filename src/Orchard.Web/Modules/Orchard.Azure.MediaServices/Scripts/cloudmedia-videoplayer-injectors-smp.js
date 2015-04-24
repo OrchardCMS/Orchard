@@ -1,4 +1,4 @@
-﻿/// <reference path="typings/jquery.d.ts" />
+/// <reference path="typings/jquery.d.ts" />
 /// <reference path="typings/underscore.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -8,12 +8,15 @@ var __extends = this.__extends || function (d, b) {
 };
 var Orchard;
 (function (Orchard) {
+    var Azure;
     (function (Azure) {
+        var MediaServices;
         (function (MediaServices) {
+            var VideoPlayer;
             (function (VideoPlayer) {
+                var Injectors;
                 (function (Injectors) {
                     Injectors.instances = new Array();
-
                     var SmpInjector = (function (_super) {
                         __extends(SmpInjector, _super);
                         function SmpInjector(container, playerWidth, playerHeight, autoPlay, assetData, applyMediaQueries, debugToConsole, nextInjector, contentBaseUrl) {
@@ -26,19 +29,15 @@ var Orchard;
                             var browserHasFlash = swfobject.hasFlashPlayerVersion(this.flashVersion);
                             var hasDynamicAssets = _(this.filteredAssets().DynamicVideoAssets).any();
                             var result = browserHasFlash && hasDynamicAssets;
-
                             this.debug("Browser has required Flash version: {0}", browserHasFlash);
                             this.debug("Item has at least one dynamic video asset: {0}", hasDynamicAssets);
-
                             this.debug("isSupported() returns {0}.", result);
                             return result;
                         };
-
                         SmpInjector.prototype.inject = function () {
                             var _this = this;
                             var firstDynamicAsset = _(this.filteredAssets().DynamicVideoAssets).first();
                             var firstThumbnailAsset = _(this.filteredAssets().ThumbnailAssets).first();
-
                             var flashvars = {
                                 src: firstDynamicAsset.SmoothStreamingUrl,
                                 plugin_AdaptiveStreamingPlugin: encodeURIComponent(this.contentBaseUrl + "MSAdaptiveStreamingPlugin.swf"),
@@ -49,28 +48,22 @@ var Orchard;
                                 poster: firstThumbnailAsset ? encodeURIComponent(firstThumbnailAsset.MainFileUrl) : null,
                                 javascriptCallbackFunction: "Orchard.Azure.MediaServices.VideoPlayer.Injectors.onSmpBridgeCreated"
                             };
-
                             var params = {
                                 allowFullScreen: "true",
                                 allowScriptAccess: "always",
                                 wmode: "direct"
                             };
-
                             var attributes = {
                                 id: this.innerElementId
                             };
-
                             $("<div>").attr("id", this.innerElementId).appendTo(this.container);
                             this.debug("Injecting player into element '{0}'.", this.container.id);
-
                             swfobject.embedSWF(this.contentBaseUrl + "StrobeMediaPlayback.swf", this.innerElementId, this.playerWidth.toString(), this.playerHeight.toString(), this.flashVersion, this.contentBaseUrl + "expressInstall.swf", flashvars, params, attributes, function (e) {
                                 if (!e.success)
                                     _this.fault();
                             });
-
                             Injectors.instances[this.innerElementId] = this;
                         };
-
                         SmpInjector.prototype.onMediaPlayerStateChange = function (state) {
                             if (state == "playbackError") {
                                 this.debug("Playback error detected; cleaning up container and faulting this injector.");
@@ -78,18 +71,16 @@ var Orchard;
                                 this.fault();
                             }
                         };
-
                         SmpInjector.prototype.debug = function (message) {
                             var args = [];
-                            for (var _i = 0; _i < (arguments.length - 1); _i++) {
-                                args[_i] = arguments[_i + 1];
+                            for (var _i = 1; _i < arguments.length; _i++) {
+                                args[_i - 1] = arguments[_i];
                             }
                             _super.prototype.debug.call(this, "SmpInjector: " + message, args);
                         };
                         return SmpInjector;
-                    })(Orchard.Azure.MediaServices.VideoPlayer.Injectors.Injector);
+                    })(Injectors.Injector);
                     Injectors.SmpInjector = SmpInjector;
-
                     function onSmpBridgeCreated(playerElementId) {
                         var player = document.getElementById(playerElementId);
                         if (player) {
@@ -97,13 +88,8 @@ var Orchard;
                         }
                     }
                     Injectors.onSmpBridgeCreated = onSmpBridgeCreated;
-                })(VideoPlayer.Injectors || (VideoPlayer.Injectors = {}));
-                var Injectors = VideoPlayer.Injectors;
-            })(MediaServices.VideoPlayer || (MediaServices.VideoPlayer = {}));
-            var VideoPlayer = MediaServices.VideoPlayer;
-        })(Azure.MediaServices || (Azure.MediaServices = {}));
-        var MediaServices = Azure.MediaServices;
-    })(Orchard.Azure || (Orchard.Azure = {}));
-    var Azure = Orchard.Azure;
+                })(Injectors = VideoPlayer.Injectors || (VideoPlayer.Injectors = {}));
+            })(VideoPlayer = MediaServices.VideoPlayer || (MediaServices.VideoPlayer = {}));
+        })(MediaServices = Azure.MediaServices || (Azure.MediaServices = {}));
+    })(Azure = Orchard.Azure || (Orchard.Azure = {}));
 })(Orchard || (Orchard = {}));
-//# sourceMappingURL=cloudmedia-videoplayer-injectors-smp.js.map

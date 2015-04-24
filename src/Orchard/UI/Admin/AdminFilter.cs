@@ -20,11 +20,11 @@ namespace Orchard.UI.Admin {
 
         public void OnAuthorization(AuthorizationContext filterContext) {
             if (IsAdmin(filterContext)) {
+                Apply(filterContext.RequestContext);
+
                 if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel, T("Can't access the admin"))) {
                     filterContext.Result = new HttpUnauthorizedResult();
                 }
-
-                Apply(filterContext.RequestContext);
             }
         }
 

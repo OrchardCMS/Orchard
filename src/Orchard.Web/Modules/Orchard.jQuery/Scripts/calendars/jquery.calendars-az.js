@@ -2,7 +2,7 @@
    Azerbaijani localisation for Gregorian/Julian calendars for jQuery.
    Written by Jamil Najafov (necefov33@gmail.com). */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['az'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['az'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Yanvar','Fevral','Mart','Aprel','May','İyun',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['az'] =
-			$.calendars.calendars.gregorian.prototype.regional['az'];
+		$.calendars.calendars.julian.prototype.regionalOptions['az'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['az'];
 	}
 })(jQuery);

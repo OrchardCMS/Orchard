@@ -2,8 +2,8 @@
    Dutch localisation for calendars datepicker for jQuery.
    Written by Mathias Bynens <http://mathiasbynens.be/>. */
 (function($) {
-	$.calendars.picker.regional['nl'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['nl'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '←', prevStatus: 'Bekijk de vorige maand',
 		prevJumpText: '«', nextJumpStatus: 'Bekijk het vorige jaar',
 		nextText: '→', nextStatus: 'Bekijk de volgende maand',
@@ -17,5 +17,5 @@
 		dayStatus: 'dd-mm-yyyy', defaultStatus: 'Kies een datum',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['nl']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['nl']);
 })(jQuery);

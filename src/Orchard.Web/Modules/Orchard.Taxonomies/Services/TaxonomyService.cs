@@ -50,7 +50,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomy(int id) {
-            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart>()).As<TaxonomyPart>();
+            return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
@@ -58,8 +58,8 @@ namespace Orchard.Taxonomies.Services {
                 throw new ArgumentNullException("name");
             }
 
-            return _contentManager
-                .Query<TaxonomyPart>()
+            // include the record in the query to optimize the query plan
+            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
                 .List()
@@ -122,8 +122,30 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart NewTerm(TaxonomyPart taxonomy) {
+            return NewTerm(taxonomy, null);
+        }
+
+        public TermPart NewTerm(TaxonomyPart taxonomy, IContent parent) {
+            if (taxonomy == null) {
+                throw new ArgumentNullException("taxonomy");
+            }
+
+            if (parent != null) {
+                var parentAsTaxonomy = parent.As<TaxonomyPart>();
+                if (parentAsTaxonomy != null && parentAsTaxonomy != taxonomy) {
+                    throw new ArgumentException("The parent of a term can't be a different taxonomy", "parent");
+                }
+
+                var parentAsTerm = parent.As<TermPart>();
+                if (parentAsTerm != null && parentAsTerm.TaxonomyId != taxonomy.Id) {
+                    throw new ArgumentException("The parent of a term can't be a from a different taxonomy", "parent");
+                }
+            }
+
             var term = _contentManager.New<TermPart>(taxonomy.TermTypeName);
+            term.Container = parent ?? taxonomy;
             term.TaxonomyId = taxonomy.Id;
+            ProcessPath(term);
 
             return term;
         }
