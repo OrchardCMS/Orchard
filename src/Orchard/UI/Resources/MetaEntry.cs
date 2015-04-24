@@ -13,23 +13,19 @@ namespace Orchard.UI.Resources {
 
         public MetaEntry(string name = null, string content = null, string httpEquiv = null, string charset = null)
         {
-            if (!String.IsNullOrEmpty(name))
-            {
+            if (!String.IsNullOrEmpty(name)) {
                 Name = name;
             }
 
-            if (!String.IsNullOrEmpty(content))
-            {
+            if (!String.IsNullOrEmpty(content)) {
                 Content = content;
             }
 
-            if (!String.IsNullOrEmpty(httpEquiv))
-            {
+            if (!String.IsNullOrEmpty(httpEquiv)) {
                 HttpEquiv = httpEquiv;
             }
 
-            if (!String.IsNullOrEmpty(charset))
-            {
+            if (!String.IsNullOrEmpty(charset)) {
                 Charset = charset;
             }
 
