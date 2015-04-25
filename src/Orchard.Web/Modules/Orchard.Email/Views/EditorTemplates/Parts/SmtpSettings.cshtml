@@ -37,30 +37,33 @@
     </div>
 
     <div data-controllerid="@Html.FieldIdFor(m => m.RequireCredentials)">
+
         <div>
-            @Html.RadioButtonFor(m => m.UseDefaultCredentials, false)
-            <label for="@Html.FieldIdFor(m => m.UseDefaultCredentials)" class="forcheckbox">@T("Specify username/password")</label>
+            @Html.RadioButtonFor(m => m.UseDefaultCredentials, false, new { id = "customCredentialsOption", name = "UseDefaultCredentials" })
+            <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
             @Html.ValidationMessage("UseDefaultCredentials", "*")
         </div>
         <div>
-            <div>
-                <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
-                @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
-                @Html.ValidationMessage("UserName", "*")
-                <span class="hint">@T("The username for authentication.")</span>
-            </div>
-            <div>
-                <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
-                @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
-                @Html.ValidationMessage("Password", "*")
-                <span class="hint">@T("The password for authentication.")</span>
+            <div class="options">
+                <span data-controllerid="customCredentialsOption">
+                    <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "text" })
+                    @Html.ValidationMessage("UserName", "*")
+                    <span class="hint">@T("The username for authentication.")</span>
+                </span>
+                <span data-controllerid="customCredentialsOption">
+                    <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
+                    @Html.TextBoxFor(m => m.Password, new { type = "password", @class = "text medium" })
+                    @Html.ValidationMessage("Password", "*")
+                    <span class="hint">@T("The password for authentication.")</span>
+                </span>
             </div>
         </div>
         <div>
-            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "smtpUseDefaultCredentials" })
-            <label for="smtpUseDefaultCredentials" class="forcheckbox">@T("Use Windows authentication")</label>
-            @Html.ValidationMessage("UseCustomCredentials", "*")
-            <span class="hint">@T("When this option is checked, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
+            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
+            <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
+            @Html.ValidationMessage("UseDefaultCredentials", "*")
+            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
         </div>
     </div>
 </fieldset>
