@@ -130,15 +130,15 @@ namespace Orchard.DynamicForms.Drivers {
 
         protected override void OnDisplaying(Form element, ElementDisplayingContext context) {
             var controller = _currentControllerAccessor.CurrentController;
-            var values = controller.FetchPostedValues(element);
-            var modelState = controller.FetchModelState(element);
+            var modelState = controller != null ? controller.FetchModelState(element) : default(ModelStateDictionary);
 
             if (modelState != null && !modelState.IsValid) {
                 // Read any posted values from the previous request.
+                var values = controller.FetchPostedValues(element);
                 _formService.ReadElementValues(element, new NameValueCollectionValueProvider(values, _cultureAccessor.CurrentCulture));
 
                 // Add any model validation errors from the previous request.
-                controller.ApplyAnyModelErrors(element, modelState);   
+                controller.ApplyAnyModelErrors(element, modelState);
             }
 
             // Assign the binding content type to each element within the form element.
