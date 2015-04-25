@@ -63,7 +63,7 @@ namespace Orchard.Alias.Implementation.Storage {
                 r => r.Area == areaName && r.Controller == controllerName && r.Action == actionName,
                 o => o.Asc(r => r.Id), 0, 1).FirstOrDefault();
             aliasRecord.Action = aliasRecord.Action ?? new ActionRecord { Area = areaName, Controller = controllerName, Action = actionName };
-            
+
             aliasRecord.RouteValues = values.ToString();
             aliasRecord.Source = source;
             if (aliasRecord.Action.Id == 0 || aliasRecord.Id == 0) {
@@ -106,7 +106,7 @@ namespace Orchard.Alias.Implementation.Storage {
 
             foreach (var aliasRecord in _aliasRepository.Fetch(filter)) {
                 _aliasRepository.Delete(aliasRecord);
-                // Bulk updates might go wrong if we don't flush
+                // Bulk updates might go wrong if we don't flush.
                 _aliasRepository.Flush();
                 var dict = ToDictionary(aliasRecord);
                 _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3 });
@@ -114,7 +114,7 @@ namespace Orchard.Alias.Implementation.Storage {
         }
 
         public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List() {
-            return List((Expression<Func<AliasRecord, bool>>) null);
+            return List((Expression<Func<AliasRecord, bool>>)null);
         }
 
         public IEnumerable<Tuple<string, string, IDictionary<string, string>, string, int>> List(Expression<Func<AliasRecord, bool>> predicate) {
