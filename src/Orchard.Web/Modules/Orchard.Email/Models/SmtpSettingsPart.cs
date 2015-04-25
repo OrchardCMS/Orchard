@@ -41,8 +41,7 @@ namespace Orchard.Email.Models {
             set { this.Store(x => x.RequireCredentials, value); }
         }
 
-        public bool UseDefaultCredentials
-        {
+        public bool UseDefaultCredentials {
             get { return this.Retrieve(x => x.UseDefaultCredentials); }
             set { this.Store(x => x.UseDefaultCredentials, value); }
         }
