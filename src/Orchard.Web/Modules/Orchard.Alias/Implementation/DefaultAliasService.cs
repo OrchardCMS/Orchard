@@ -124,7 +124,7 @@ namespace Orchard.Alias.Implementation {
             return _aliasStorage.List(sourceStartsWith).Select(item => Tuple.Create(item.Item1, item.Item3.ToRouteValueDictionary(), item.Item4));
         }
 
-        public IEnumerable<VirtualPathData> LookupVirtualPaths(RouteValueDictionary routeValues,HttpContextBase httpContext) {
+        public IEnumerable<VirtualPathData> LookupVirtualPaths(RouteValueDictionary routeValues, HttpContextBase httpContext) {
             return Utils.LookupVirtualPaths(httpContext, _routeDescriptors.Value, routeValues);
         }
 
