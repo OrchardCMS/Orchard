@@ -7,8 +7,8 @@ namespace Orchard.Core.Common.Utilities {
         private Func<T, T> _setter;
 
         public T Value {
-            get {return GetValue();}
-            set {SetValue(value);}
+            get { return GetValue(); }
+            set { SetValue(value); }
         }
 
         public void Loader(Func<T> loader) {
@@ -22,7 +22,7 @@ namespace Orchard.Core.Common.Utilities {
         private T GetValue() {
             if (_loader != null) {
                 _value = _loader();
-                _loader = null;                
+                _loader = null;
             }
             return _value;
         }
