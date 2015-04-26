@@ -1,6 +1,7 @@
 using System;
 
 namespace Orchard.Core.Common.Utilities {
+    [Obsolete("Use Orchard.ContentManagement.Utilities.LazyField instead.")]
     public class LazyField<T> {
         private T _value;
         private Func<T> _loader;
