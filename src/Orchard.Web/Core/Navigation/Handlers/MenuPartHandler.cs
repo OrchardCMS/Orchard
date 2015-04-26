@@ -35,7 +35,7 @@ namespace Orchard.Core.Navigation.Handlers {
                 return menu;
             });
 
-            menuPart.MenuField.Loader(ctx =>
+            menuPart.MenuField.Loader(() =>
                 _contentManager.Get(menuPart.Record.MenuId, menuPart.IsPublished() ? VersionOptions.Published : VersionOptions.Latest)
             );
         }
@@ -46,7 +46,7 @@ namespace Orchard.Core.Navigation.Handlers {
             if (part != null) {
                 string stereotype;
                 if (context.ContentItem.TypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "MenuItem") {
-                    context.Metadata.DisplayText = part.MenuText;    
+                    context.Metadata.DisplayText = part.MenuText;
                 }
             }
         }

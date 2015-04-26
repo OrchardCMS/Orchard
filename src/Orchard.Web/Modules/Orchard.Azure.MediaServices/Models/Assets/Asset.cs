@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Orchard.Azure.MediaServices.Models.Records;
 using Orchard.ContentManagement.FieldStorage;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure.MediaServices.Models.Assets {

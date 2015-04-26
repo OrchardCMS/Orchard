@@ -22,13 +22,13 @@ namespace Orchard.Comments.Handlers {
             });
 
             OnLoading<CommentsPart>((context, comments) => {
-                comments.CommentsField.Loader(list =>
+                comments.CommentsField.Loader(() =>
                     commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
                     .Where(x => x.Status == CommentStatus.Approved)
                     .OrderBy(x => x.Position)
                     .List().ToList());
 
-                comments.PendingCommentsField.Loader(list => 
+                comments.PendingCommentsField.Loader(() => 
                     commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
                     .Where(x => x.Status == CommentStatus.Pending)
                     .List().ToList());
