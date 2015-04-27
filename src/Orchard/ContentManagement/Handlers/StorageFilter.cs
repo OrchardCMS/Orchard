@@ -30,8 +30,7 @@ namespace Orchard.ContentManagement.Handlers {
             return _repository.Get(versionRecord.ContentItemRecord.Id);
         }
 
-        protected virtual TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null)
-        {
+        protected virtual TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record = null) {
             if (record == null) {
                 record = new TRecord();
             }
