@@ -22,8 +22,8 @@ namespace Orchard.Workflows.ImportExport {
         }
 
         public void Exported(dynamic context) {
-
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("Workflows")) {
+            var customSteps = (IEnumerable<string>) context.ExportOptions.CustomSteps;
+            if (customSteps == null || !customSteps.Contains("Workflows")) {
                 return;
             }
 
