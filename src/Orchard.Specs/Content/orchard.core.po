@@ -1,5 +1,5 @@
 # Orchard resource strings - fr-FR
-# Copyright (c) 2010 Outercurve Foundation
+# Copyright (c) 2010 .NET Foundation
 # All rights reserved
 # This file is distributed under the BSD license
 
