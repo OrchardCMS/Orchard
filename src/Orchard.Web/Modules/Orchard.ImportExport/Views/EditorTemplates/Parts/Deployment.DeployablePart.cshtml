@@ -17,7 +17,7 @@
         @foreach (var target in Model.Targets) {
             <tr>
                 <td>
-                    @target.Target
+                    @Html.ItemEditLinkWithReturnUrl(target.TargetName, target.Target)
                 </td>
                 <td>
                     @(target.LastDeploy.HasValue ? Display.DateTime(DateTimeUtc: target.LastDeploy.Value, CustomFormat: null) : string.Empty)
@@ -30,15 +30,15 @@
                 </td>
                 <td style="text-align: right">
                     @if (Model.IsDraftable) {
-                        @Html.ActionLink(T("Deploy draft").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
+                        @Html.ActionLink(T("Deploy draft").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.Target.Id, returnUrl = Request.RawUrl, version = "Draft", area = "Orchard.ImportExport" }, null)
                         if (Model.HasPublishedVersion) {
                             <text>|</text>
                         }
                     }
                     @if (Model.HasPublishedVersion) {
-                        @Html.ActionLink(T("Deploy").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, returnUrl = Request.RawUrl, version = "Published", area = "Orchard.ImportExport" }, null)
+                        @Html.ActionLink(T("Deploy").Text, "DeployContent", "Deployment", new { id = Model.Part.Id, targetId = target.Target.Id, returnUrl = Request.RawUrl, version = "Published", area = "Orchard.ImportExport" }, null)
                         <text>|</text>
-                        @Html.ActionLink(T("Queue").Text, "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.TargetId, version = "Published", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
+                        @Html.ActionLink(T("Queue").Text, "QueueContent", "Deployment", new { id = Model.Part.Id, targetId = target.Target.Id, version = "Published", returnUrl = Request.RawUrl, area = "Orchard.ImportExport" }, null)
                     }
                 </td>
             </tr>

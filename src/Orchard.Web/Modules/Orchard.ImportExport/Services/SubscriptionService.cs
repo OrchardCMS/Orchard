@@ -208,6 +208,17 @@ namespace Orchard.ImportExport.Services {
                         _appDataFolder.StoreFile(deploymentFilePath.FileName, destinationPath);
                         _appDataFolder.DeleteFile(deploymentFilePath.FileName);
                     }
+
+                    // Record successful export to recipe in deployment history.
+                    foreach (var exportingItem in exportingItems) {
+                        exportingItem.AddDeploymentHistoryEntry(new ItemDeploymentEntry {
+                            DeploymentCompletedUtc = DateTime.UtcNow,
+                            Status = DeploymentStatus.Successful,
+                            TargetId = subscription.DeploymentConfiguration.Id,
+                            Description = T("Deployed in batch.").Text
+                        });
+                    }
+
                     return _appDataFolder.MapPath(destinationPath);
                 case DeploymentType.Import:
                     request.DeploymentMetadata.Add(

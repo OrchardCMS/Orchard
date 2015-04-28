@@ -71,8 +71,8 @@ namespace Orchard.ImportExport.Drivers {
             var itemTarget = _deploymentService.GetDeploymentItemTarget(part, target, false);
 
             var summary = new DeployablePartTargetSummary {
-                TargetId = target.Id,
-                Target = targetName,
+                Target = target,
+                TargetName = targetName,
                 LastDeploy = deploymentEntry != null
                     ? deploymentEntry.DeploymentCompletedUtc
                     : itemTarget != null && itemTarget.DeployedUtc.HasValue
