@@ -17,5 +17,6 @@ namespace Orchard.ImportExport.ViewModels
         public int TargetId { get; set; }
         public DateTime? LastDeploy { get; set; }
         public DeploymentStatus Status { get; set; }
+        public string Description { get; set; }
     }
 }

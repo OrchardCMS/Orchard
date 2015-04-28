@@ -102,8 +102,7 @@ namespace Orchard.ImportExport.Controllers {
                 return HttpNotFound();
             }
 
-            var itemTarget = _deploymentService.GetDeploymentItemTarget(content, target);
-            itemTarget.DeploymentStatus = DeploymentStatus.Queued;
+            _deploymentService.QueueContentForDeployment(content, target);
 
             if (!string.IsNullOrEmpty(returnUrl)) {
                 return new RedirectResult(returnUrl);

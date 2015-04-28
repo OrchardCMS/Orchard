@@ -148,13 +148,49 @@ namespace Orchard.ImportExport.Services {
             try {
                 deploymentTarget.PushContent(content, deployAsDraft);
                 itemTarget.DeploymentStatus = DeploymentStatus.Successful;
+                content.AddDeploymentHistoryEntry(new ItemDeploymentEntry {
+                    DeploymentCompletedUtc = DateTime.UtcNow,
+                    TargetId = targetConfiguration.Id,
+                    Status = DeploymentStatus.Successful,
+                    Description = deployAsDraft
+                        ? T("Deployed as single draft item.").Text
+                        : T("Deployed as single item.").Text
+                });
             }
             catch (Exception ex) {
                 Logger.Error(ex, "Error deploying content item {0}", content.Id);
                 itemTarget.DeploymentStatus = DeploymentStatus.Failed;
+                content.AddDeploymentHistoryEntry(new ItemDeploymentEntry {
+                    DeploymentCompletedUtc = DateTime.UtcNow,
+                    TargetId = targetConfiguration.Id,
+                    Status = DeploymentStatus.Failed,
+                    Description = T("Single item deployment failed with \"{0}\".", ex.Message).Text
+                });
             }
 
             itemTarget.DeployedUtc = _clock.UtcNow;
+        }
+
+        public void QueueContentForDeployment(IContent content, IContent targetConfiguration) {
+            try {
+                var itemTarget = GetDeploymentItemTarget(content, targetConfiguration);
+                itemTarget.DeploymentStatus = DeploymentStatus.Queued;
+                content.AddDeploymentHistoryEntry(new ItemDeploymentEntry {
+                    DeploymentCompletedUtc = DateTime.UtcNow,
+                    TargetId = targetConfiguration.Id,
+                    Status = DeploymentStatus.Queued,
+                    Description = T("Queued as single item.").Text
+                });
+            }
+            catch (Exception e) {
+                content.AddDeploymentHistoryEntry(new ItemDeploymentEntry {
+                    DeploymentCompletedUtc = DateTime.UtcNow,
+                    TargetId = targetConfiguration.Id,
+                    Status = DeploymentStatus.Failed,
+                    Description = T("Single item queueing failed with \"{0}\".", e.Message).Text
+                });
+                throw;
+            }
         }
 
         public List<ContentItem> GetContentForExport(RecipeRequest request, int? queuedToTargetId = null) {

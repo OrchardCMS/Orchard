@@ -118,6 +118,7 @@
     <Compile Include="Models\DeploymentType.cs" />
     <Compile Include="Models\DeploymentUserPart.cs" />
     <Compile Include="Models\ExportOptions.cs" />
+    <Compile Include="Models\ItemDeploymentEntry.cs" />
     <Compile Include="Models\RecipeRequest.cs" />
     <Compile Include="Models\RecurringTaskPart.cs" />
     <Compile Include="Models\RemoteOrchardDeploymentPart.cs" />
@@ -136,12 +137,14 @@
     <Compile Include="Services\IDeploymentTarget.cs" />
     <Compile Include="Services\IExportEventHandler.cs" />
     <Compile Include="Services\IImportExportService.cs" />
+    <Compile Include="Services\IItemDeploymentHistory.cs" />
     <Compile Include="Services\ImportExportService.cs" />
     <Compile Include="Services\IRecipeSerializer.cs" />
     <Compile Include="Services\IRecurringScheduledTaskManager.cs" />
     <Compile Include="Services\ISigningService.cs" />
     <Compile Include="Services\ISubscriptionService.cs" />
     <Compile Include="Services\DeploymentPackageBuilder.cs" />
+    <Compile Include="Services\ItemDeploymentHistory.cs" />
     <Compile Include="Services\RecipeSerializer.cs" />
     <Compile Include="Services\RecurringScheduledTaskManager.cs" />
     <Compile Include="Services\SigningService.cs" />

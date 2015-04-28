@@ -10,6 +10,7 @@
                 <th scope="col">@T("Target")</th>
                 <th scope="col">@T("Last deployed")</th>
                 <th scope="col">@T("Status of last deploy")</th>
+                <th scope="col">@T("Description")</th>
                 <th scope="col" class="actions">&nbsp;</th>
             </tr>
         </thead>
@@ -23,6 +24,9 @@
                 </td>
                 <td>
                     @target.Status
+                </td>
+                <td>
+                    @target.Description
                 </td>
                 <td style="text-align: right">
                     @if (Model.IsDraftable) {

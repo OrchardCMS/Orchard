@@ -16,6 +16,7 @@ namespace Orchard.ImportExport.Services {
         DeployableItemTargetPart GetDeploymentItemTarget(IContent deployableContent, IContent targetConfiguration, bool createIfNotFound = true);
         void DeployContent(DeployableItemTargetPart deployableContent);
         void DeployContentToTarget(IContent content, IContent targetConfiguration, bool deployAsDraft = false);
+        void QueueContentForDeployment(IContent content, IContent targetConfiguration);
 
         List<ContentItem> GetContentForExport(RecipeRequest request, int? queuedToTargetId = null);
         void UpdateDeployableContentStatus(string executionId, DeploymentStatus status);

@@ -36,11 +36,18 @@ namespace Orchard.ImportExport.Drivers {
             var typeDefinition = part.ContentItem.TypeDefinition;
             var isDraftable =  typeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
             var hasPublished = contentManager.Get(id, VersionOptions.Published) != null;
+            var itemDeploymentHistory = part.ContentItem.GetDeploymentHistory()
+                .GroupBy(entry => entry.TargetId)
+                .Select(group => group.OrderByDescending(entry => entry.DeploymentCompletedUtc).FirstOrDefault())
+                .ToDictionary(entry => entry.TargetId, entry => entry);
+
             var model = new DeployablePartViewModel {
                 Part = part,
                 IsDraftable = isDraftable,
                 HasPublishedVersion = hasPublished,
-                Targets = targets.Select(t => CreateTargetSummary(part, t)).ToList()
+                Targets = targets.Select(t =>
+                    CreateTargetSummary(part, t, itemDeploymentHistory.ContainsKey(t.Id) ? itemDeploymentHistory[t.Id] : null))
+                    .ToList()
             };
 
             return ContentShape("Parts_DeployablePart_Edit",
@@ -59,15 +66,24 @@ namespace Orchard.ImportExport.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        private DeployablePartTargetSummary CreateTargetSummary(CommonPart part, IContent target) {
+        private DeployablePartTargetSummary CreateTargetSummary(CommonPart part, IContent target, ItemDeploymentEntry deploymentEntry) {
             var targetName = Services.ContentManager.GetItemMetadata(target).DisplayText;
             var itemTarget = _deploymentService.GetDeploymentItemTarget(part, target, false);
 
             var summary = new DeployablePartTargetSummary {
                 TargetId = target.Id,
                 Target = targetName,
-                LastDeploy = itemTarget != null && itemTarget.DeployedUtc.HasValue ? itemTarget.DeployedUtc : null,
-                Status = itemTarget != null ? itemTarget.DeploymentStatus : DeploymentStatus.Unknown
+                LastDeploy = deploymentEntry != null
+                    ? deploymentEntry.DeploymentCompletedUtc
+                    : itemTarget != null && itemTarget.DeployedUtc.HasValue
+                        ? itemTarget.DeployedUtc
+                        : null,
+                Status = deploymentEntry != null
+                    ? deploymentEntry.Status
+                    : itemTarget != null
+                        ? itemTarget.DeploymentStatus
+                        : DeploymentStatus.Unknown,
+                Description = deploymentEntry != null ? deploymentEntry.Description : ""
             };
 
             return summary;
