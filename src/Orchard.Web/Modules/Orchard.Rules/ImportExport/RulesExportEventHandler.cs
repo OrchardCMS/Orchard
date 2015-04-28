@@ -22,8 +22,8 @@ namespace Orchard.Rules.ImportExport {
         }
 
         public void Exported(dynamic context) {
-
-            if (!((IEnumerable<string>)context.ExportOptions.CustomSteps).Contains("Rules")) {
+            var customSteps = (IEnumerable<string>) context.ExportOptions.CustomSteps;
+            if (customSteps == null || !customSteps.Contains("Rules")) {
                 return;
             }
 
