@@ -21,5 +21,6 @@
         <file>/Styles/LayoutEditor/Content.css</file>
         <file>/Styles/LayoutEditor/Toolbox.css</file>
         <file>/Styles/LayoutEditor/Popup.css</file>
+        <file>/Styles/LayoutEditor/Menu.css</file>
     </files>
 </bundle>

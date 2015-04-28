@@ -43,7 +43,7 @@
                         html: LayoutEditor.decode("@Url.Encode(Model.ElementHtml)"),
                         isTemplated: false
                     },
-                    elementEditorModel: LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ElementEditorModel.ToJson()))")
+                    elementEditorModel: JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ElementEditorModel.ToJson()))"))
                 };
 
                 window.parent.currentDialog.trigger("command", payload);

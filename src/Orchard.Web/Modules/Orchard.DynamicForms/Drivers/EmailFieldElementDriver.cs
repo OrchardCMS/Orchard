@@ -75,7 +75,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(EmailField element, ElementDisplayContext context) {
+        protected override void OnDisplaying(EmailField element, ElementDisplayingContext context) {
             context.ElementShape.TokenizedValue = _tokenizer.Replace(element.RuntimeValue, null);
         }
     }

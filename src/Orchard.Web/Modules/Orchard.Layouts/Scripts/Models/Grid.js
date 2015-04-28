@@ -1,8 +1,8 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, children) {
-        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Grid = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
+        LayoutEditor.Element.call(this, "Grid", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Row"], children);
 
         this.toObject = function () {
@@ -19,6 +19,7 @@
             value.htmlClass,
             value.htmlStyle,
             value.isTemplated,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;

@@ -1,14 +1,15 @@
 ﻿var LayoutEditor;
 (function ($, LayoutEditor) {
 
-    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor) {
-        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Html = function (data, htmlId, htmlClass, htmlStyle, isTemplated, contentType, contentTypeLabel, contentTypeClass, html, hasEditor, rule) {
+        LayoutEditor.Element.call(this, "Html", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
 
         this.contentType = contentType;
         this.contentTypeLabel = contentTypeLabel;
         this.contentTypeClass = contentTypeClass;
         this.html = html;
         this.hasEditor = hasEditor;
+        this.isContainable = true;
 
         this.getInnerText = function () {
             return $($.parseHTML("<div>" + this.html + "</div>")).text();
@@ -58,7 +59,8 @@
             value.contentTypeLabel,
             value.contentTypeClass,
             value.html,
-            value.hasEditor);
+            value.hasEditor,
+            value.rule);
 
         return result;
     };

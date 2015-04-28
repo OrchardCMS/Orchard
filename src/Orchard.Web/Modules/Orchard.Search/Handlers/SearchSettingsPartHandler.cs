@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Search.Models;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Search.Handlers {
     public class SearchSettingsPartHandler : ContentHandler {

@@ -54,6 +54,7 @@
             var baseUrl = $(self).data("base-url");
             var partName = $(self).data("part-name");
             var fieldName = $(self).data("field-name");
+            var types = $(self).data("types");
             
             var refreshIds = function() {
                 var id = $("[name='" + selectedItemsFieldname + "']");
@@ -90,7 +91,8 @@
                     },
                     baseUrl: baseUrl,
                     part: partName,
-                    field: fieldName
+                    field: fieldName,
+                    types: types
                 });
             });
 

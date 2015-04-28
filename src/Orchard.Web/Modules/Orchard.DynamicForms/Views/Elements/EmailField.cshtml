@@ -1,14 +1,15 @@
-﻿@using Orchard.DynamicForms.Elements
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
     var element = (EmailField)Model.Element;
-    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
 
     tagBuilder.AddCssClass("text");
     tagBuilder.Attributes["type"] = "email";
     tagBuilder.Attributes["value"] = Model.TokenizedValue;
     tagBuilder.Attributes["name"] = element.Name;
-    tagBuilder.AddClientValidationAttributes(Model.ClientValidationAttributes);
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
 
     if (!ViewData.ModelState.IsValidField(element.Name)) {
         tagBuilder.AddCssClass("input-validation-error");

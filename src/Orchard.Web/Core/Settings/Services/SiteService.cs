@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Orchard.Caching;
 using Orchard.Core.Settings.Models;
-using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Settings;
 
@@ -16,10 +14,7 @@ namespace Orchard.Core.Settings.Services {
             ICacheManager cacheManager) {
             _contentManager = contentManager;
             _cacheManager = cacheManager;
-            Logger = NullLogger.Instance;
         }
-
-        public ILogger Logger { get; set; }
 
         public ISite GetSiteSettings() {
             var siteId = _cacheManager.Get("SiteId", ctx => {
@@ -28,12 +23,7 @@ namespace Orchard.Core.Settings.Services {
                     .FirstOrDefault();
 
                 if (site == null) {
-                    site = _contentManager.Create<SiteSettingsPart>("Site", item => {
-                        item.SiteSalt = Guid.NewGuid().ToString("N");
-                        item.SiteName = "My Orchard Project Application";
-                        item.PageTitleSeparator = " - ";
-                        item.SiteTimeZone = TimeZoneInfo.Local.Id;
-                    }).ContentItem;
+                    site = _contentManager.Create<SiteSettingsPart>("Site").ContentItem;
                 }
 
                 return site.Id;
