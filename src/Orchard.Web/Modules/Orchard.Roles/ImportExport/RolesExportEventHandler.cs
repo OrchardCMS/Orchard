@@ -21,8 +21,8 @@ namespace Orchard.Roles.ImportExport {
         public void Exporting(dynamic context) {}
 
         public void Exported(dynamic context) {
-
-            if (!((IEnumerable<string>) context.ExportOptions.CustomSteps).Contains("Roles")) {
+            var customSteps = ((IEnumerable<string>) context.ExportOptions.CustomSteps);
+            if (customSteps == null || !customSteps.Contains("Roles")) {
                 return;
             }
 
