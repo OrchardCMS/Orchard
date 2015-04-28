@@ -2,6 +2,7 @@
 @using Orchard.Utility.Extensions;
 
 @{
+    Script.Require("AutorouteBrowser");
     Style.Require("AutorouteSettings");
     int patternCount = 0;
     int patternCultureCount = 0;
@@ -21,31 +22,49 @@
         <span class="hint">@T("This option will cause the Url to automatically be regenerated when you edit existing content and publish it again, otherwise it will always keep the old route, or you have to perform bulk update in the Autoroute admin.")</span>
     </div>
 </fieldset>
-@foreach (var culture in Model.SiteCultures) {
-    <fieldset>
-        <label>@T("Patterns") @culture :</label>
-        <table class="items autoroute-settings-patterns">
-            <tr>
-                <th class="autoroute-settings-default">@T("Default")</th>
-                <th class="autoroute-settings-name">@T("Name")<span class="hint">@T("Name of the pattern")</span></th>
-                <th class="autoroute-settings-pat">@T("Pattern")<span class="hint">@T("The definition of the pattern")</span></th>
-                <th class="autoroute-settings-desc">@T("Description")<span class="hint">@T("The description of the pattern, displayed in the editor")</span></th>
-                <th class="autoroute-settings-actions">&nbsp;</th>
-            </tr>
-            @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
-                <tr>
-                    <td>@Html.RadioButtonFor(m => m.DefaultPatterns[cultureCount].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[cultureCount].PatternIndex ? new { @checked = "checked" } : null)</td>
-                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
-                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
-                    <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
-                    <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
-                </tr>
-                if (Model.Patterns[patternCount].Name != null) { patternCultureCount++; } else { patternCultureCount = 0; }
-                patternCount++;
+<fieldset>
+    <h4>@T("Patterns") :</h4>
+</fieldset>
+<fieldset>
+    <div id="local-navigation">
+        <ul class="autoroute-cultures localmenu group">
+            @{
+                int i = 0;
             }
-            <tr></tr>
-        </table>
-    </fieldset>
-            cultureCount++;
-}
+            @foreach (var culture in Model.SiteCultures) {
+                var cssClass = i == 0 ? "selected first" : i == Model.SiteCultures.Count - 1 ? "last" : "middle";
+                <li class="@cssClass"><a class="culture" href="#cat-@culture">@culture</a></li>
+                i++;
+            }
+        </ul>
+    </div>
+    <div id="content">
+        @foreach (var culture in Model.SiteCultures) {
+            <fieldset id="cat-@culture" class="items" style="@(cultureCount == 0 ? "display:block;" : "display:none;" )">
+                <table class="autoroute-settings-patterns">
+                    <tr>
+                        <th class="autoroute-settings-default">@T("Default")</th>
+                        <th class="autoroute-settings-name">@T("Name")<span class="hint">@T("Name of the pattern")</span></th>
+                        <th class="autoroute-settings-pat">@T("Pattern")<span class="hint">@T("The definition of the pattern")</span></th>
+                        <th class="autoroute-settings-desc">@T("Description")<span class="hint">@T("The description of the pattern, displayed in the editor")</span></th>
+                        <th class="autoroute-settings-actions">&nbsp;</th>
+                    </tr>
+                    @for (int index = 0; index < Model.Patterns.Where(x => x.Culture == culture).Count(); index++) {
+                        <tr>
+                            <td>@Html.RadioButtonFor(m => m.DefaultPatterns[cultureCount].Culture, culture + "|" + patternCultureCount, patternCultureCount.ToString() == Model.DefaultPatterns[cultureCount].PatternIndex ? new { @checked = "checked" } : null)</td>
+                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Name, new { @class = "text" })</td>
+                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Pattern, new { @class = "tokenized text" })</td>
+                            <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
+                            <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
+                        </tr>
+                        if (Model.Patterns[patternCount].Name != null) { patternCultureCount++; } else { patternCultureCount = 0; }
+                        patternCount++;
+                    }
+                    <tr></tr>
+                </table>
+            </fieldset>
+                    cultureCount++;
+        }
+    </div>
+</fieldset>
 @Display.TokenHint()

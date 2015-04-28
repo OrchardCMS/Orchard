@@ -26,7 +26,7 @@ namespace Orchard.Autoroute.Settings {
         public bool AllowCustomPattern { get; set; }
         public bool AutomaticAdjustmentOnEdit { get; set; }
         public bool? IsDefault { get; set; }
-        public IEnumerable<string> SiteCultures { get; set; }
+        public List<string> SiteCultures { get; set; }
         public string DefaultSiteCulture { get; set; }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace Orchard.Autoroute.Settings {
             var settings = definition.Settings.GetModel<AutorouteSettings>();
 
             //get cultures
-            settings.SiteCultures = _cultureManager.ListCultures();
+            settings.SiteCultures = _cultureManager.ListCultures().ToList();
             //get default site culture
             settings.DefaultSiteCulture = _cultureManager.GetSiteCulture();
 
@@ -81,7 +81,7 @@ namespace Orchard.Autoroute.Settings {
             };
 
             //get cultures
-            settings.SiteCultures = _cultureManager.ListCultures();
+            settings.SiteCultures = _cultureManager.ListCultures().ToList();
 
             if (updateModel.TryUpdateModel(settings, "AutorouteSettings", null, null)) {
                 // remove empty patterns

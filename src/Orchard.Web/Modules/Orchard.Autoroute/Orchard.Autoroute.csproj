@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\autoroute-browser.js" />
     <Content Include="Styles\orchard-autoroute-settings.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
