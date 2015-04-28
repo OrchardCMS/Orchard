@@ -43,7 +43,13 @@
             <label for="customCredentialsOption" class="forcheckbox">@T("Specify username/password")</label>
             @Html.ValidationMessage("UseDefaultCredentials", "*")
         </div>
+
         <div>
+            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
+            <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
+            @Html.ValidationMessage("UseDefaultCredentials", "*")
+            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
+        </div><div>
             <div class="options">
                 <span data-controllerid="customCredentialsOption">
                     <label for="@Html.FieldIdFor(m => m.UserName)">@T("User name")</label>
@@ -58,12 +64,6 @@
                     <span class="hint">@T("The password for authentication.")</span>
                 </span>
             </div>
-        </div>
-        <div>
-            @Html.RadioButtonFor(m => m.UseDefaultCredentials, true, new { id = "defaultCredentialsOptions", name = "UseDefaultCredentials" })
-            <label for="defaultCredentialsOptions" class="forcheckbox">@T("Use Windows authentication")</label>
-            @Html.ValidationMessage("UseDefaultCredentials", "*")
-            <span class="hint">@T("When this option is selected, the aplication pool or host-process identity is used to authenticate with the mail server. ")</span>
         </div>
     </div>
 </fieldset>
