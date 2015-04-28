@@ -468,6 +468,9 @@
     <Compile Include="Helpers\PrefixHelper.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="ImportExport\ElementsExportStep.cs" />
+    <Compile Include="ImportExport\ElementsExportHandler.cs" />
+    <Compile Include="ImportExport\ElementsImportHandler.cs" />
     <Compile Include="Providers\BlueprintElementHarvester.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\CurrentControllerAccessor.cs" />
