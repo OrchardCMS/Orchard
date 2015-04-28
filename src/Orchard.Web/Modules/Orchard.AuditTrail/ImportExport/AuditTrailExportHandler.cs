@@ -19,8 +19,8 @@ namespace Orchard.AuditTrail.ImportExport {
         }
 
         public void Exported(ExportContext context) {
-
-            if (!context.ExportOptions.CustomSteps.Contains("AuditTrail")) {
+            var customSteps = context.ExportOptions.CustomSteps;
+            if (customSteps == null || !customSteps.Contains("AuditTrail")) {
                 return;
             }
 
