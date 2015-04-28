@@ -178,9 +178,10 @@
                 $("[name='" + controller.attr("name") + "']").click(function () { $("[name='" + $(this).attr("name") + "']").each($(this).toggleWhatYouControl); });
             }
             else if (controller.is("option")) {
-                controller.parent().change(function () {
+                controller.parent().change(function() {
                     controller.toggleWhatYouControl();
-                }).each($(this).toggleWhatYouControl);
+                });
+                controller.each($(this).toggleWhatYouControl);
             }
         });
     });
