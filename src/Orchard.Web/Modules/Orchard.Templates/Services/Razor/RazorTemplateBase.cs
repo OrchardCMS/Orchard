@@ -23,6 +23,7 @@ namespace Orchard.Templates.Compilation.Razor {
     public abstract class RazorTemplateBase<T> : Mvc.ViewEngines.Razor.WebViewPage<T>, IRazorTemplateBase<T> {
         public WebPageContext WebPageContext { get; set; }
         public virtual void Render(TextWriter writer) {
+            InitHelpers();
             PushContext(WebPageContext, writer);
             OutputStack.Push(writer);
             Execute();
