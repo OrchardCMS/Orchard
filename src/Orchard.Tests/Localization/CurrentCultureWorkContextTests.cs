@@ -15,7 +15,7 @@ namespace Orchard.Tests.Localization {
         public void Init() {
             var builder = new ContainerBuilder();
             _workContext = new StubWorkContext();
-            builder.RegisterInstance(new StubCultureSelector("or-CH")).As<ICultureSelector>();
+            builder.RegisterInstance(new StubCultureSelector("fr-CA")).As<ICultureSelector>();
             builder.RegisterInstance(new StubHttpContext("~/"));
             builder.RegisterInstance(_workContext);
             builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
@@ -27,7 +27,7 @@ namespace Orchard.Tests.Localization {
         [Test]
         public void CultureManagerReturnsCultureFromSelectors() {
             var actualCulture = _currentCultureStateProvider.Get<string>("CurrentCulture")(_workContext);
-            var expectedCulture = "or-CH";
+            var expectedCulture = "fr-CA";
             Assert.That(actualCulture, Is.EqualTo(expectedCulture));
         }
     }
