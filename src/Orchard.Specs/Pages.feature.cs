@@ -89,8 +89,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Super Duper"});
             table1.AddRow(new string[] {
                         "LayoutPart.LayoutEditor.Data",
-                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
-                            "This+is+super.\"} ] }"});
+                        @"{ ""type"": ""Content"", ""data"": ""TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super"", ""isTemplated"": false, ""contentType"": ""Orchard.Layouts.Elements.Text"", ""contentTypeLabel"": ""Text"", ""contentTypeClass"": ""text"", ""html"": ""This is super"", ""hasEditor"": true }"});
 #line 14
         testRunner.And("I fill in", ((string)(null)), table1, "And ");
 #line 18
@@ -112,8 +111,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Super Duper"});
             table2.AddRow(new string[] {
                         "LayoutPart.LayoutEditor.Data",
-                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
-                            "This+is+super+number+two.\"} ] }"});
+                        @"{ ""type"": ""Content"", ""data"": ""TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two"", ""isTemplated"": false, ""contentType"": ""Orchard.Layouts.Elements.Text"", ""contentTypeLabel"": ""Text"", ""contentTypeClass"": ""text"", ""html"": ""This is super number two"", ""hasEditor"": true }"});
 #line 25
         testRunner.And("I fill in", ((string)(null)), table2, "And ");
 #line 29
@@ -134,25 +132,21 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Another"});
             table3.AddRow(new string[] {
-                        "LayoutPart.LayoutEditor.Data",
-                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
-                            "This+is+the+draft+of+a+new+homepage.\"} ] }"});
-            table3.AddRow(new string[] {
                         "Autoroute.PromoteToHomePage",
                         "true"});
 #line 36
         testRunner.And("I fill in", ((string)(null)), table3, "And ");
-#line 41
+#line 40
         testRunner.And("I hit \"Publish Now\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 42
+#line 41
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 43
+#line 42
     testRunner.Then("I should see \"<h1>Another</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 44
+#line 43
     testRunner.When("I go to \"another\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 45
+#line 44
     testRunner.Then("the status should be 404 \"Not Found\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 48
+#line 47
     testRunner.When("I go to \"Admin/Contents/Create/Page\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -162,19 +156,15 @@ this.ScenarioSetup(scenarioInfo);
                         "Title.Title",
                         "Drafty"});
             table4.AddRow(new string[] {
-                        "LayoutPart.LayoutEditor.Data",
-                        "{ \"elements\": [ { \"typeName\": \"Orchard.Layouts.Elements.Text\", \"state\": \"Content=" +
-                            "This+is+the+draft+of+a+new+homepage.\"} ] }"});
-            table4.AddRow(new string[] {
                         "Autoroute.PromoteToHomePage",
                         "true"});
-#line 49
+#line 48
         testRunner.And("I fill in", ((string)(null)), table4, "And ");
-#line 54
+#line 52
         testRunner.And("I hit \"Save\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 55
+#line 53
         testRunner.And("I go to \"/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 56
+#line 54
     testRunner.Then("I should see \"<h1>Another</h1>\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
