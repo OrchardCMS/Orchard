@@ -117,6 +117,10 @@
                 this.editor.dropTargetElement = null;
         };
 
+        this.canDelete = function () {
+            return !!this.parent;
+        };
+
         this.delete = function () {
             if (!!this.parent)
                 this.parent.deleteChild(this);
