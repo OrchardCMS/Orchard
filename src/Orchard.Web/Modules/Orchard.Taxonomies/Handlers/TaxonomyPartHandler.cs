@@ -42,7 +42,7 @@ namespace Orchard.Taxonomies.Handlers {
                 }
             });
 
-            OnLoading<TaxonomyPart>( (context, part) => part.TermsField.Loader(x => taxonomyService.GetTerms(part.Id)));
+            OnLoading<TaxonomyPart>( (context, part) => part.TermsField.Loader(() => taxonomyService.GetTerms(part.Id)));
 
             OnUpdating<TitlePart>((context, part) => {
                 // if altering the title of a taxonomy, save the name

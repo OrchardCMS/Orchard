@@ -42,10 +42,10 @@ namespace Orchard.Localization.Handlers {
         }
 
         protected void LazyLoadHandlers(LocalizationPart localizationPart) {
-            localizationPart.CultureField.Loader(ctx => 
+            localizationPart.CultureField.Loader(() => 
                 _cultureManager.GetCultureById(localizationPart.Record.CultureId));
 
-            localizationPart.MasterContentItemField.Loader(ctx =>
+            localizationPart.MasterContentItemField.Loader(() =>
                 _contentManager.Get(localizationPart.Record.MasterContentItemId, VersionOptions.AllVersions));
         }
     }

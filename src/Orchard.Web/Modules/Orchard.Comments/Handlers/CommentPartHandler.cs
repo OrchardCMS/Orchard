@@ -16,11 +16,11 @@ namespace Orchard.Comments.Handlers {
 
             OnLoading<CommentPart>((context, comment) => {
                 comment.CommentedOnContentItemField.Loader(
-                    item => contentManager.Get(comment.CommentedOn)
+                    () => contentManager.Get(comment.CommentedOn)
                 );
 
                 comment.CommentedOnContentItemMetadataField.Loader(
-                    item => contentManager.GetItemMetadata(comment.CommentedOnContentItem)
+                    () => contentManager.GetItemMetadata(comment.CommentedOnContentItem)
                 );
             });
 
