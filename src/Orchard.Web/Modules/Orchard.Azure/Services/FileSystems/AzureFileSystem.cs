@@ -56,7 +56,7 @@ namespace Orchard.Azure.Services.FileSystems {
             _publicHostName = publicHostName;
         }
 
-        private void EnsureInitialized() {
+        protected void EnsureInitialized() {
             if (_storageAccount != null) {
                 return;
             }
