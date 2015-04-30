@@ -17,13 +17,14 @@ namespace Orchard.DynamicForms {
                     .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false")
                     .WithSetting("DateEditorSettings.ShowDateEditor", "false"))
                 .WithPart("TitlePart")
-                 .WithPart("AutoroutePart", builder => builder
+                .WithPart("MenuPart")
+                .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
                     .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]")
                     .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                 .WithPart("LayoutPart", p => p
-                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData", 
+                    .WithSetting("LayoutTypePartSettings.DefaultLayoutData",
                     "{" +
                         "\"elements\": [{" +
                             "\"typeName\": \"Orchard.DynamicForms.Elements.Form\"," +
