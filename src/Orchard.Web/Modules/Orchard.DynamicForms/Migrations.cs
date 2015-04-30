@@ -26,13 +26,20 @@ namespace Orchard.DynamicForms {
                 .WithPart("LayoutPart", p => p
                     .WithSetting("LayoutTypePartSettings.DefaultLayoutData",
                     "{" +
-                        "\"elements\": [{" +
-                            "\"typeName\": \"Orchard.DynamicForms.Elements.Form\"," +
-                            "\"elements\": [{" +
-                                "\"typeName\": \"Orchard.DynamicForms.Elements.Button\"," +
-                                "\"state\": \"ButtonText=Submit\"" +
-                            "}]" +
-                        "}]" +
+                    "   \"elements\":[" +
+                    "   {" +
+                    "      \"typeName\":\"Orchard.Layouts.Elements.Canvas\"," +
+                    "      \"elements\":[" +
+                    "      {" +
+                    "         \"typeName\":\"Orchard.DynamicForms.Elements.Form\"," +
+                    "         \"data\":\"TypeName=Orchard.DynamicForms.Elements.Form&amp;FormName=Untitled&amp;FormAction=&amp;FormMethod=POST&amp;EnableClientValidation=true&amp;StoreSubmission=true&amp;FormBindingContentType=&amp;Publication=Draft&amp;Notification=&amp;RedirectUrl=\"," +
+                    "         \"elements\":[" +
+                    "         {" +
+                    "            \"typeName\":\"Orchard.DynamicForms.Elements.Button\"," +
+                    "            \"data\":\"TypeName=Orchard.DynamicForms.Elements.Button&amp;InputName=&amp;FormBindingContentType=&amp;Text=Submit\"" +
+                    "         }]" +
+                    "      }]" +
+                    "   }]" +
                     "}"))
                 .DisplayedAs("Form")
                 .Listable()
