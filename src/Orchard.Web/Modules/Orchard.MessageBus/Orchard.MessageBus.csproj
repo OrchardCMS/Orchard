@@ -89,10 +89,7 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Brokers\SqlServer\SqlServerBroker.cs" />
     <Compile Include="Brokers\SqlServer\Worker.cs" />

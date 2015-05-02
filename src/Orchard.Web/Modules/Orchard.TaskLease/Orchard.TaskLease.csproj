@@ -87,7 +87,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
-    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
