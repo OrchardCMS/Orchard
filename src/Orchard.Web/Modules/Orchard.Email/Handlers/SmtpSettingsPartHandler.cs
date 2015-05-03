@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Email.Models;
 using Orchard.ContentManagement.Handlers;
@@ -10,7 +9,6 @@ using Orchard.Security;
 using System.Configuration;
 
 namespace Orchard.Email.Handlers {
-    [UsedImplicitly]
     public class SmtpSettingsPartHandler : ContentHandler {
         private readonly IEncryptionService _encryptionService;
 
