@@ -31,8 +31,8 @@
             <a href="@Url.Action("Index", "Admin", new { folderPath = Model.FolderPath})" class="button">@T("Close")</a>
         </div>
         
-        @T("Media Folders") @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
-
+        @Html.ActionLink(T("Media Library").ToString(), "Index", "Admin", new { area = "Orchard.MediaLibrary" }, null)
+        @foreach (var folder in Model.FolderPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)) {<text> &gt; </text>@folder}
         
     </div>
 
