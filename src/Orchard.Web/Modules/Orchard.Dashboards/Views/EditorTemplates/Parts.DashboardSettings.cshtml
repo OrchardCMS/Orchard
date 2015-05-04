@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement
+@model Orchard.Dashboards.ViewModels.DashboardSiteSettingsViewModel
+@{
+    Layout.Title = T("Dashboard Settings").ToString();
+}
+<section>
+    <div class="form-group">
+        @Display.ContentPicker_Edit(
+            DisplayName: T("Default Dashboard").Text,
+            SelectedItemsFieldName: Html.FieldNameFor(m => m.SelectedDashboardId),
+            ContentItems: Model.SelectedDashboard != null ? new[] { Model.SelectedDashboard } : Enumerable.Empty<ContentItem>(),
+            Hint: T("Select the content item to use as the dashboard.").Text)
+    </div>
+</section>
