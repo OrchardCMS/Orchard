@@ -277,6 +277,7 @@
     <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
+    <Compile Include="Stubs\StubToken.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />
     <Compile Include="Stubs\StubExtensionManager.cs" />
     <Compile Include="Stubs\StubReportsCoordinator.cs" />

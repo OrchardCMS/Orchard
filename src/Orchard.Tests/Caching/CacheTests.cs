@@ -2,6 +2,7 @@
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Caching {
     [TestFixture]
@@ -76,6 +77,23 @@ namespace Orchard.Tests.Caching {
 
             Assert.That(c1.CacheManager.GetCache<string, string>(),
                 Is.Not.SameAs(c2.CacheManager.GetCache<string, string>()));
+        }
+
+        [Test]
+        public void CacheManagerShouldAllowChildScopeTokens() {
+            var token1 = new StubToken();
+            var token2 = new StubToken();
+
+            var result = _cacheManager.Get("testItem", ctx => {
+
+                var v = _cacheManager.Get("testItem1", ctx2 => {
+                    ctx2.Monitor(token1);
+                    return "testResult";
+                });
+                ctx.Monitor(token2);
+                return v + "1";
+            });
+            Assert.That(result, Is.EqualTo("testResult1"));
         }
 
         class ComponentOne {
