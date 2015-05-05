@@ -49,6 +49,9 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId) {
+            if (!IsAuthorizedToManageWidgets())
+                return new HttpUnauthorizedResult();
+            
             ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             if (currentTheme == null) {
                 Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));
@@ -92,12 +95,11 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexWidgetPOST(int widgetId, string returnUrl, int? layerId, string moveUp, string moveDown, string moveHere, string moveOut) {
-            if (!string.IsNullOrWhiteSpace(moveOut))
-                return DeleteWidget(widgetId, returnUrl);
-
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
+            if (!string.IsNullOrWhiteSpace(moveOut))
+                return DeleteWidget(widgetId, returnUrl);
             if (!string.IsNullOrWhiteSpace(moveUp))
                 _widgetsService.MoveWidgetUp(widgetId);
             else if (!string.IsNullOrWhiteSpace(moveDown))
