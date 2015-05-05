@@ -121,6 +121,18 @@ namespace Orchard.Mvc.Html {
                 metadata.EditorRouteValues.Merge(additionalRouteValues ?? new {}));
         }
 
+
+     public static string ItemCreateUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null)
+        {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.CreateRouteValues == null)
+                return null;
+
+            return urlHelper.Action(
+                Convert.ToString(metadata.CreateRouteValues["action"]),
+                metadata.CreateRouteValues.Merge(additionalRouteValues ?? new { }));
+        }
+
         public static string ItemAdminUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             return metadata.AdminRouteValues == null ? null : urlHelper.RouteUrl(metadata.AdminRouteValues.Merge(additionalRouteValues ?? new { }));
