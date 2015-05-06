@@ -62,7 +62,7 @@ namespace Orchard.Recipes.Services {
                 _appDataFolder.DeleteFile(stepPath);
             }
 
-            if (stepIndex < 1) {
+            if (stepIndex < 0) {
                 _appDataFolder.DeleteFile(Path.Combine(_recipeQueueFolder, executionId));
             }
 

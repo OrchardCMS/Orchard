@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.8
+OrchardVersion: 1.9
 # Category: Layout
 # Description: Provides tools to create layouts.
 Features:

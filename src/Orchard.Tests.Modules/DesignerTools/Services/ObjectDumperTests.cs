@@ -48,7 +48,9 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         private static void ComparareJsonObject(JObject expectedResult, string json) {
             var objectDumperJson = JToken.Parse("{" + json + "}");
 
-            Assert.IsTrue(JToken.DeepEquals(expectedResult, objectDumperJson));
+            string message = String.Format("expected: {0} \r\nresult:{1}", expectedResult.ToString(Formatting.Indented), objectDumperJson.ToString(Formatting.Indented));
+
+            Assert.IsTrue(JToken.DeepEquals(expectedResult, objectDumperJson), message);
         }
 
         [Test]

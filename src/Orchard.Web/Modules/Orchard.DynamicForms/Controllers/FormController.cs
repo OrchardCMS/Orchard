@@ -30,10 +30,11 @@ namespace Orchard.DynamicForms.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
+        [HttpPost]
         public ActionResult Submit(int contentId, string formName) {
             var layoutPart = _layoutManager.GetLayout(contentId);
             var form = _formService.FindForm(layoutPart, formName);
-            var urlReferrer = HttpContext.Request.UrlReferrer != null ? HttpContext.Request.UrlReferrer.ToString() : "~/";
+            var urlReferrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "~/";
 
             if (form == null) {
                 Logger.Warning("The specified form \"{0}\" could not be found.", formName);
@@ -43,6 +44,9 @@ namespace Orchard.DynamicForms.Controllers {
 
             var values = _formService.SubmitForm(form, ValueProvider, ModelState, this);
             this.TransferFormSubmission(form, values);
+
+            if (!ModelState.IsValid)
+                return Redirect(urlReferrer);
 
             if(Response.IsRequestBeingRedirected)
                 return new EmptyResult();
