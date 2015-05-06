@@ -265,6 +265,7 @@ namespace Orchard.Workflows.Controllers {
             var activitiesIndex = new Dictionary<string, ActivityRecord>();
 
             workflowDefinitionRecord.ActivityRecords.Clear();
+            workflowDefinitionRecord.WorkflowRecords.Clear();
 
             foreach (var activity in state.Activities) {
                 ActivityRecord activityRecord;
