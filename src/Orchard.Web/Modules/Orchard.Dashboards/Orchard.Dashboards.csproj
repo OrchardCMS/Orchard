@@ -68,7 +68,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Placement.info" />
-    <Content Include="Styles\Dashboard.css" />
+    <Content Include="Styles\bootstrap.css" />
+    <Content Include="Styles\bootstrap.min.css">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\dashboard.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -77,6 +81,9 @@
     <Content Include="Views\EditorTemplates\Parts.DashboardSettings.cshtml" />
     <Content Include="Views\StaticDashboard.cshtml" />
     <Content Include="Views\Content.Dashboard.cshtml" />
+    <Content Include="Views\Elements\Grid.Dashboard.cshtml" />
+    <Content Include="Views\Elements\Column.Dashboard.cshtml" />
+    <Content Include="Views\Parts\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -88,6 +95,11 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Layouts\Orchard.Layouts.csproj">
+      <Project>{6bd8b2fa-f2e3-4ac8-a4c3-2925a653889a}</Project>
+      <Name>Orchard.Layouts</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
