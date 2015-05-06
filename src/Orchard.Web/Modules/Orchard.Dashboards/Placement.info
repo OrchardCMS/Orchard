@@ -1,3 +1,9 @@
 ﻿<Placement>
     <Place Parts_DashboardSettings="Content:0" />
+    <Match DisplayType="Dashboard">
+        <Place 
+            Parts_Common_Body="Content:0"
+            Parts_Common_Body_Summary="-"
+            Parts_Layout="Content:1" />
+    </Match>
 </Placement>

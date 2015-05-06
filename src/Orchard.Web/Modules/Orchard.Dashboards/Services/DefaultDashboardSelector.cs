@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Dashboards.Models;
 
 namespace Orchard.Dashboards.Services {
@@ -9,10 +8,18 @@ namespace Orchard.Dashboards.Services {
             _services = services;
         }
 
-        public DashboardSelectorResult GetDashboard() {
+        public DashboardDescriptor GetDashboardDescriptor() {
             var settings = _services.WorkContext.CurrentSite.As<DashboardSiteSettingsPart>();
             var dashboardId = settings.DefaultDashboardId;
             var dashboard = dashboardId != null ? _services.ContentManager.Get(dashboardId.Value) : default(ContentItem);
+            var descriptor = new DashboardDescriptor { Priority = -10 };
+
+            if (dashboard == null)
+                descriptor.DashboardFactory = shapeFactory => shapeFactory.StaticDashboard();
+            else
+                descriptor.DashboardFactory = shapeFactory => _services.ContentManager.BuildDisplay(dashboard, displayType: "Dashboard");
+
+            return descriptor;
         }
     }
 }

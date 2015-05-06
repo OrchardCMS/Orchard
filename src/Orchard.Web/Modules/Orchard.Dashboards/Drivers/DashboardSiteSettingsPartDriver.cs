@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Dashboards.Models;
 using Orchard.Dashboards.ViewModels;
 
-namespace Orchard.Dashboards.Elements {
+namespace Orchard.Dashboards.Drivers {
     public class DashboardSiteSettingsPartDriver : ContentPartDriver<DashboardSiteSettingsPart> {
         private readonly IContentManager _contentManager;
 
@@ -20,7 +20,7 @@ namespace Orchard.Dashboards.Elements {
         protected override DriverResult Editor(DashboardSiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_DashboardSettings", () => {
                 var viewModel = new DashboardSiteSettingsViewModel {
-                    SelectedDashboardId = part.DefaultDashboardId.ToString(),
+                    SelectedDashboardId = part.DefaultDashboardId.ToString()
                 };
 
                 if (updater != null) {
