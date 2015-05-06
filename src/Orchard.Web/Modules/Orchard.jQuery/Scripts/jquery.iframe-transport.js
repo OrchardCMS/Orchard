@@ -1,5 +1,5 @@
 /*
- * jQuery Iframe Transport Plugin 1.8.2
+ * jQuery Iframe Transport Plugin 1.9.0
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2011, Sebastian Tschan
