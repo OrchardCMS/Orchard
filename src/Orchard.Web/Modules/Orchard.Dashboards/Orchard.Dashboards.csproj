@@ -69,9 +69,7 @@
   <ItemGroup>
     <None Include="Placement.info" />
     <Content Include="Styles\bootstrap.css" />
-    <Content Include="Styles\bootstrap.min.css">
-      <DependentUpon>bootstrap.css</DependentUpon>
-    </Content>
+    <Content Include="Styles\bootstrap.min.css" />
     <Content Include="Styles\dashboard.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -83,7 +81,7 @@
     <Content Include="Views\Content.Dashboard.cshtml" />
     <Content Include="Views\Elements\Grid.Dashboard.cshtml" />
     <Content Include="Views\Elements\Column.Dashboard.cshtml" />
-    <Content Include="Views\Parts\Layout.cshtml" />
+    <Content Include="Views\Parts\Layout.Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -108,6 +106,7 @@
     <Compile Include="Handlers\DashboardSiteSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Services\IDashboardService.cs" />
+    <Compile Include="Shapes\LayoutPartShape.cs" />
     <Compile Include="ViewModels\DashboardSiteSettingsViewModel.cs" />
     <Compile Include="Models\DashboardSiteSettingsPart.cs" />
     <Compile Include="Routes.cs" />
