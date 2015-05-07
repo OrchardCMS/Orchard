@@ -9,7 +9,7 @@ namespace Orchard.FileSystems.AppData {
     /// Expected to work on physical filesystem, but decouples core system from web hosting apis
     /// </summary>
     public interface IAppDataFolder : IVolatileProvider {
-        IEnumerable<string> ListFiles(string path);
+        IEnumerable<string> ListFiles(string path, bool includeSubdirectories = false);
         IEnumerable<string> ListDirectories(string path);
 
         string Combine(params string[] paths);

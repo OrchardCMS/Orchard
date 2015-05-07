@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
+using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Events;
@@ -14,13 +15,16 @@ namespace Orchard.Recipes.Services {
         private readonly IRecipeJournal _recipeJournal;
         private readonly IEnumerable<IRecipeHandler> _recipeHandlers;
         private readonly IRecipeExecuteEventHandler _recipeExecuteEventHandler;
+        private readonly IAppDataFolder _appData;
 
         public RecipeStepExecutor(IRecipeStepQueue recipeStepQueue, IRecipeJournal recipeJournal, 
-            IEnumerable<IRecipeHandler> recipeHandlers, IRecipeExecuteEventHandler recipeExecuteEventHandler) {
+            IEnumerable<IRecipeHandler> recipeHandlers, IRecipeExecuteEventHandler recipeExecuteEventHandler,
+            IAppDataFolder appData) {
             _recipeStepQueue = recipeStepQueue;
             _recipeJournal = recipeJournal;
             _recipeHandlers = recipeHandlers;
             _recipeExecuteEventHandler = recipeExecuteEventHandler;
+            _appData = appData;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -39,11 +43,11 @@ namespace Orchard.Recipes.Services {
             _recipeJournal.WriteJournalEntry(executionId, string.Format("Executing step {0}.", nextRecipeStep.Name));
             var files = String.IsNullOrWhiteSpace(nextRecipeStep.FilesPath)
                 ? null
-                : Directory
-                    .GetFiles(nextRecipeStep.FilesPath, "*.*", SearchOption.AllDirectories)
+                : _appData
+                    .ListFiles(nextRecipeStep.FilesPath, true)
                     .Select(filePath => new FileToImport {
                         Path = filePath.Substring(nextRecipeStep.FilesPath.Length),
-                        GetStream = () => new FileStream(filePath, FileMode.Open, FileAccess.Read)
+                        GetStream = () => _appData.OpenFile(filePath)
                     }).ToList();
             var recipeContext = new RecipeContext {
                 RecipeStep = nextRecipeStep,

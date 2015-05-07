@@ -20,10 +20,11 @@ namespace Orchard.Tests.Stubs {
             get { return _fileSystem; }
         }
 
-        public IEnumerable<string> ListFiles(string path) {
+        public IEnumerable<string> ListFiles(string path, bool includeSubdirectories = false) {
             var entry = _fileSystem.GetDirectoryEntry(path);
-            if (entry == null)
-                throw new ArgumentException();
+            if (entry == null) {
+                return new string[] { };
+            }
 
             return entry.Entries.Where(e => e is StubFileSystem.FileEntry).Select(e => Combine(path, e.Name));
         }
@@ -106,7 +107,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public string MapPath(string path) {
-            throw new NotImplementedException();
+            return path;
         }
 
         public string GetVirtualPath(string path) {

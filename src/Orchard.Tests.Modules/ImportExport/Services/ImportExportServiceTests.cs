@@ -67,9 +67,9 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<ContentDefinitionWriter>().As<IContentDefinitionWriter>();
             builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();
-            builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterType<DeploymentPackageBuilder>().As<IDeploymentPackageBuilder>();
             builder.RegisterInstance(new Mock<ISettingsFormatter>().Object);
             builder.RegisterInstance(new Mock<IRecipeExecuteEventHandler>().Object);
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);

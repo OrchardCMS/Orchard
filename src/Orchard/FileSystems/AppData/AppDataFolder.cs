@@ -41,12 +41,12 @@ namespace Orchard.FileSystems.AppData {
             try {
                 if (isDirectory)
                     Directory.Delete(destinationFileName);
-                else 
+                else
                     File.Delete(destinationFileName);
             }
-            catch {
-                // We land here if the file is in use, for example. Let's move on.
-            }
+            // We land here if the file is in use, for example. Let's move on.
+            catch (IOException) {}
+            catch (UnauthorizedAccessException) {}
 
             if (isDirectory && Directory.Exists(destinationFileName)) {
                 Logger.Warning("Could not delete recipe execution folder {0} under \"App_Data\" folder", destinationFileName);
@@ -68,9 +68,9 @@ namespace Orchard.FileSystems.AppData {
                     // If successful, we are done...
                     return;
                 }
-                catch {
-                    // We need to try with another extension
-                }
+                // We need to try with another extension
+                catch (IOException) {}
+                catch (UnauthorizedAccessException) {}
             }
 
             // Try again with the original filename. This should throw the same exception
@@ -119,7 +119,7 @@ namespace Orchard.FileSystems.AppData {
         public Stream CreateFile(string path) {
             var filePath = CombineToPhysicalPath(path);
             var folderPath = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(folderPath))
+            if (folderPath != null && !Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
             return File.Create(filePath);
         }
@@ -142,7 +142,7 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public void DeleteFile(string path) {
-            Logger.Information("Deleting file \"{0}\" from \"App_Data\" folder", path);
+            Logger.Information("Deleting \"{0}\" from \"App_Data\" folder", path);
             MakeDestinationFileNameAvailable(CombineToPhysicalPath(path));
         }
 
@@ -158,15 +158,17 @@ namespace Orchard.FileSystems.AppData {
             return Directory.Exists(CombineToPhysicalPath(path));
         }
 
-        public IEnumerable<string> ListFiles(string path) {
+        public IEnumerable<string> ListFiles(string path, bool includeSubdirectories = false) {
             var directoryPath = CombineToPhysicalPath(path);
             if (!Directory.Exists(directoryPath))
                 return Enumerable.Empty<string>();
 
-            var files = Directory.GetFiles(directoryPath);
+            var files = includeSubdirectories
+                ? Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories)
+                : Directory.GetFiles(directoryPath);
 
             return files.Select(file => {
-                var fileName = Path.GetFileName(file);
+                var fileName = file.Substring(directoryPath.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 return Combine(path, fileName);
             });
         }
