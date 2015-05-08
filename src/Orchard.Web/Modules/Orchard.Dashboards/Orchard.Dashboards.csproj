@@ -76,12 +76,16 @@
     <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
-    <Content Include="Views\EditorTemplates\Parts.DashboardSettings.cshtml" />
     <Content Include="Views\StaticDashboard.cshtml" />
     <Content Include="Views\Content.Dashboard.cshtml" />
     <Content Include="Views\Elements\Grid.Dashboard.cshtml" />
     <Content Include="Views\Elements\Column.Dashboard.cshtml" />
     <Content Include="Views\Parts\Layout.Dashboard.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Dashboard\List.cshtml">
+      <SubType>
+      </SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -101,10 +105,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Drivers\DashboardSiteSettingsPartDriver.cs" />
     <Compile Include="Handlers\DashboardSiteSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Shapes\LayoutPartShape.cs" />
     <Compile Include="ViewModels\DashboardSiteSettingsViewModel.cs" />

@@ -8,7 +8,7 @@
     var contentItem = (ContentItem)Model.ContentItem;
     var title = Html.ItemDisplayText(contentItem);
 
-    Layout.Title = title;
+    Layout.Title = HttpUtility.HtmlDecode(title.ToString());
 }
 <article class="content-item dashboard">
     @Display(Model.Content)

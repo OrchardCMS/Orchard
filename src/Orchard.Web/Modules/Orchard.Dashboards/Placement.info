@@ -1,5 +1,4 @@
 ﻿<Placement>
-    <Place Parts_DashboardSettings="Content:0" />
     <Match DisplayType="Dashboard">
         <Place 
             Parts_Common_Body="Content:0"

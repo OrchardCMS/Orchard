@@ -17,8 +17,38 @@ namespace Orchard.Dashboards {
                     "Admin",
                     new RouteValueDictionary {
                         {"area", "Orchard.Dashboards"},
-                        {"controller", "Admin"},
+                        {"controller", "Dashboard"},
+                        {"action", "Display"}
+                    },
+                    new RouteValueDictionary(),
+                    new RouteValueDictionary {
+                        {"area", "Orchard.Dashboards"}
+                    },
+                    new MvcRouteHandler())
+            };
+
+            yield return new RouteDescriptor {
+                Route = new Route(
+                    "Admin/Dashboards/Settings",
+                    new RouteValueDictionary {
+                        {"area", "Orchard.Dashboards"},
+                        {"controller", "Settings"},
                         {"action", "Index"}
+                    },
+                    new RouteValueDictionary(),
+                    new RouteValueDictionary {
+                        {"area", "Orchard.Dashboards"}
+                    },
+                    new MvcRouteHandler())
+            };
+
+            yield return new RouteDescriptor {
+                Route = new Route(
+                    "Admin/Dashboards/List",
+                    new RouteValueDictionary {
+                        {"area", "Orchard.Dashboards"},
+                        {"controller", "Dashboard"},
+                        {"action", "List"}
                     },
                     new RouteValueDictionary(),
                     new RouteValueDictionary {
