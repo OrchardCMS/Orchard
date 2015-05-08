@@ -29,7 +29,7 @@
 </fieldset>
 <fieldset>
     <p>@T("Choose the types to include in the subscription:")</p>
-    @Html.ListBox("SelectedContentTypes", Model.ContentTypes.Select(c => new SelectListItem { Text = c.DisplayName, Value = c.Name, Selected = Model.SelectedContentTypes.Contains(c.Name) }), new { @class = "multiselect", style = "width: 480px;height: 200px;" })
+    @Html.ListBox("SelectedContentTypes", Model.ContentTypes.OrderBy(c => c.DisplayName).Select(c => new SelectListItem { Text = c.DisplayName, Value = c.Name, Selected = Model.SelectedContentTypes.Contains(c.Name) }), new { @class = "multiselect", style = "width: 480px;height: 200px;" })
 </fieldset>
 <fieldset>
     <div class="subscription-filter-options">
