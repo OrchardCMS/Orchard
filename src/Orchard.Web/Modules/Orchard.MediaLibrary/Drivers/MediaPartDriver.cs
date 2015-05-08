@@ -75,9 +75,9 @@ namespace Orchard.MediaLibrary.Drivers {
             }
 
             if (context.Files == null) return;
-            var path = Path.Combine(part.FolderPath, part.FileName);
+            var path = Path.Combine(part.FolderPath, part.FileName).Replace(Path.DirectorySeparatorChar, '/');
             var file = context.Files
-                .FirstOrDefault(f => f.Path.StartsWith("\\Media\\") && f.Path.Substring(7) == path);
+                .FirstOrDefault(f => f.Path.StartsWith("/Media/") && f.Path.Substring(7) == path);
             if (file == null) return;
             using (var stream = file.GetStream()) {
                 var filePath = Path.Combine(part.FolderPath, part.FileName);
