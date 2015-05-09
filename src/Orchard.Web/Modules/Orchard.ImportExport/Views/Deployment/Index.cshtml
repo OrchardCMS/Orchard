@@ -78,7 +78,7 @@
                         </td>
                     }
                     <td>
-                        @(entry.RunStarted.HasValue ? Display.DateTime(DateTimeUtc: entry.RunStarted.Value, CustomFormat: null) : string.Empty)    
+                        @(entry.RunStarted.HasValue ? Display.DateTime(DateTimeUtc: entry.RunStarted.Value, CustomFormat: null) : string.Empty)
                     </td>
                     <td>
                         @entry.RecipeStatus
@@ -86,13 +86,13 @@
                     <td>
                         @if (entry.SubscriptionId.HasValue)
                         {
-                            @Html.ActionLink(T("Edit Subscription").ToString(), "Edit", "Subscription", new { id = entry.SubscriptionId, executionId = entry.ExecutionId }, null) 
-                            <text>|</text>                                                                                                                                  
+                            @Html.ActionLink(T("Edit Deployment").ToString(), "Edit", "Subscription", new { id = entry.SubscriptionId, executionId = entry.ExecutionId }, null) 
+                            <text>|</text>
                         }
                         @if (entry.RecipeFileAvailable)
                         {
-                            @Html.ActionLink(T("Download Recipe").ToString(), "DownloadRecipe", new { executionId = entry.ExecutionId }, null)     
-                            <text>|</text>                                                                                                                                   
+                            @Html.ActionLink(T("Download Recipe").ToString(), "DownloadRecipe", new { executionId = entry.ExecutionId }, null)
+                            <text>|</text>
                         }
                         <a class="show-messages" data-executionid="@entry.ExecutionId">@T("Messages")</a>
                     </td>
@@ -105,7 +105,7 @@
             else
             {
                 <tr>
-                    <td colspan="5">@T("No history is available for this subscription")
+                    <td colspan="5">@T("No history is available for this deployment.")
                     </td>
                 </tr>
             }

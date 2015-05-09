@@ -2,11 +2,6 @@
 @using Orchard.ImportExport.Permissions
 
 @{
-    var pageSizes = new List<int?> { 10, 50, 100 };
-    var defaultPageSize = WorkContext.CurrentSite.PageSize;
-    if (!pageSizes.Contains(defaultPageSize)) {
-        pageSizes.Add(defaultPageSize);
-    }
     var items = (IEnumerable<IContent>)Model.ContentItems;
     
     Layout.Title = T("Deployment Sources and Targets");
@@ -18,17 +13,6 @@
     @Html.ValidationSummary()
     <fieldset>
         <p>@T("Configure deployment locations to push content out or pull content in from")</p>
-    </fieldset>
-    <fieldset class="bulk-actions">
-        <input type="hidden" name="Page" value="1" />
-        <label for="pageSize">@T("Show:")</label>
-        <select id="pageSize" name="PageSize">
-            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach (var size in pageSizes.OrderBy(p => p)) {
-                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-            }
-        </select>
-        <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
     <div class="manage">
         @Html.ActionLink(T("Configure a new deployment source / target").ToString(), "Create", new { area = "Orchard.ImportExport", controller = "DeploymentConfiguration", ReturnUrl = Context.Request.RawUrl }, new { @class = "button primaryAction" })
