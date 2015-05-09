@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
@@ -100,7 +101,7 @@ namespace Orchard.ImportExport.Services {
                 .Where(file => file.Path != "Content\\export.xml")
                 .Select(
                     file => new FileToImport {
-                        Path = file.Path.Substring(8),
+                        Path = HttpUtility.UrlDecode(file.Path.Substring(8)),
                         GetStream = file.GetStream
                     }
                 )
