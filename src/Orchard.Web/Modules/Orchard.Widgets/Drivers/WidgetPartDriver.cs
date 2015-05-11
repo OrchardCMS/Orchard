@@ -7,6 +7,7 @@ using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
+using System.Linq;
 
 namespace Orchard.Widgets.Drivers {
 
@@ -14,10 +15,13 @@ namespace Orchard.Widgets.Drivers {
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _services;
 
-        public WidgetPartDriver(IWidgetsService widgetsService, IContentManager contentManager) {
+        public WidgetPartDriver(IWidgetsService widgetsService, IContentManager contentManager, IOrchardServices services)
+        {
             _widgetsService = widgetsService;
             _contentManager = contentManager;
+            _services = services;
 
             T = NullLocalizer.Instance;
         }
@@ -30,7 +34,7 @@ namespace Orchard.Widgets.Drivers {
 
         protected override DriverResult Editor(WidgetPart widgetPart, dynamic shapeHelper) {
             widgetPart.AvailableZones = _widgetsService.GetZones();
-            widgetPart.AvailableLayers = _widgetsService.GetLayers();
+            widgetPart.AvailableLayers = _widgetsService.GetLayers().OrderBy(l => l.Name);
 
             var results = new List<DriverResult> {
                 ContentShape("Parts_Widgets_WidgetPart",
@@ -38,8 +42,13 @@ namespace Orchard.Widgets.Drivers {
             };
 
             if (widgetPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
+            {
+                if (_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, widgetPart))
+                {
+                    results.Add(ContentShape("Widget_DeleteButton",
+                        deleteButton => deleteButton));
+                }
+            }
 
             return Combined(results.ToArray());
         }

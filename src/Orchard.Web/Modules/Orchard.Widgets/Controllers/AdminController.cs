@@ -99,7 +99,7 @@ namespace Orchard.Widgets.Controllers {
                 .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
                 .CurrentCulture(culture)
-                .Layers(layers)
+                .Layers(layers.OrderBy(l => l.Name))
                 .Widgets(widgets)
                 .Zones(currentThemesZones)
                 .Cultures(_cultureManager.ListCultures())
@@ -110,20 +110,58 @@ namespace Orchard.Widgets.Controllers {
             return View(viewModel);
         }
 
+        private bool CheckWidgetChangeLayerPermissions(int layerIdFrom, int layerIdTo)
+        {
+            var layerFromPart = _widgetsService.GetLayer(layerIdFrom);
+            var layerToPart = _widgetsService.GetLayer(layerIdTo);
+
+            return Services.Authorizer.Authorize(Permissions.ChangeWidgetsPositionAndLayer, T("Not authorized to change widgets position and layer")) &&
+                Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerFromPart, T("Cannot move widget. You do not have appropriate source layer access rights")) &&
+                Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerToPart, T("Cannot move widget. You do not have appropriate target layer access rights"));
+        }
+
+        private bool IsAuthorizedToChangeWidgetsPositionAndLayer()
+        {
+            return Services.Authorizer.Authorize(Permissions.ChangeWidgetsPositionAndLayer, T("Not authorized to change widgets position and layer"));
+        }
+
         [HttpPost, ActionName("Index")]
         public ActionResult IndexWidgetPOST(int widgetId, string returnUrl, int? layerId, string moveUp, string moveDown, string moveHere, string moveOut) {
-            if (!string.IsNullOrWhiteSpace(moveOut))
-                return DeleteWidget(widgetId, returnUrl);
-
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
-            if (!string.IsNullOrWhiteSpace(moveUp))
-                _widgetsService.MoveWidgetUp(widgetId);
+            var widget = _widgetsService.GetWidget(widgetId);
+
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widget))
+            {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(moveOut))
+            {
+                return DeleteWidget(widgetId, returnUrl);
+            }
+            else if (!string.IsNullOrWhiteSpace(moveUp))
+            {
+                if (IsAuthorizedToChangeWidgetsPositionAndLayer())
+                {
+                    _widgetsService.MoveWidgetUp(widgetId);
+                }
+            }
             else if (!string.IsNullOrWhiteSpace(moveDown))
-                _widgetsService.MoveWidgetDown(widgetId);
+            {
+                if (IsAuthorizedToChangeWidgetsPositionAndLayer())
+                {
+                    _widgetsService.MoveWidgetDown(widgetId);
+                }
+            }
             else if (!string.IsNullOrWhiteSpace(moveHere))
-                _widgetsService.MoveWidgetToLayer(widgetId, layerId);
+            {
+                if (CheckWidgetChangeLayerPermissions(widget.LayerId, layerId.Value))
+                {
+                    _widgetsService.MoveWidgetToLayer(widgetId, layerId);
+                }
+            }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -132,6 +170,13 @@ namespace Orchard.Widgets.Controllers {
             return Services.Authorizer.Authorize(Permissions.ManageWidgets, T("Not authorized to manage widgets."));
         }
 
+        private bool HasWidgetTypePublishContentPermission(string widgetType)
+        {
+            WidgetPart widgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
+            if (widgetPart != null)
+                return Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, widgetPart);
+            return false;
+        }
 
         public ActionResult ChooseWidget(int layerId, string zone, string returnUrl) {
             if (!IsAuthorizedToManageWidgets())
@@ -158,7 +203,7 @@ namespace Orchard.Widgets.Controllers {
             var viewModel = Shape.ViewModel()
                 .CurrentLayer(currentLayer)
                 .Zone(zone)
-                .WidgetTypes(_widgetsService.GetWidgetTypes())
+                .WidgetTypes(_widgetsService.GetWidgetTypes().Where(t => HasWidgetTypePublishContentPermission(t.Item1)))
                 .ReturnUrl(returnUrl);
 
             return View(viewModel);
@@ -169,9 +214,20 @@ namespace Orchard.Widgets.Controllers {
                 return new HttpUnauthorizedResult();
 
             WidgetPart widgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
+            LayerPart layerPart = _widgetsService.GetLayer(layerId);
             if (widgetPart == null)
                 return HttpNotFound();
             try {
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, widgetPart, T("Cannot add widget")))
+                {
+                    return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+                }
+
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart, T("Cannot add widget. Insufficient layer permissions")))
+                {
+                    return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+                }
+
                 int widgetPosition = _widgetsService.GetWidgets().Count(widget => widget.Zone == widgetPart.Zone) + 1;
                 widgetPart.Position = widgetPosition.ToString(CultureInfo.InvariantCulture);
                 widgetPart.Zone = zone;
@@ -206,6 +262,19 @@ namespace Orchard.Widgets.Controllers {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
+            WidgetPart virtualWidgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
+            LayerPart layerPart = _widgetsService.GetLayer(layerId);
+
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, virtualWidgetPart, T("Cannot add widget")))
+            {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            }
+
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart, T("Cannot add widget. Insufficient layer permissions")))
+            {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            }
+
             var widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
             if (widgetPart == null)
                 return HttpNotFound();
@@ -239,6 +308,11 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, layerPart, T("Cannot add layer")))
+            {
+                return RedirectToAction("Index");
+            }
+
             var model = Services.ContentManager.BuildEditor(layerPart);
 
             // only messing with the hints if they're given
@@ -256,6 +330,12 @@ namespace Orchard.Widgets.Controllers {
         public ActionResult AddLayerPOST() {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
+
+            var virtualLayer = Services.ContentManager.New<LayerPart>("Layer");
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, virtualLayer, T("Cannot add layer")))
+            {
+                return RedirectToAction("Index");
+            }
 
             LayerPart layerPart = _widgetsService.CreateLayer("", "", "");
             if (layerPart == null)
@@ -280,6 +360,11 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart, T("Cannot edit layer")))
+            {
+                return RedirectToAction("Index");
+            }
+
             var model = Services.ContentManager.BuildEditor(layerPart);
             return View(model);
         }
@@ -293,6 +378,11 @@ namespace Orchard.Widgets.Controllers {
             LayerPart layerPart = _widgetsService.GetLayer(id);
             if (layerPart == null)
                 return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, layerPart.ContentItem, T("Cannot edit layer")))
+            {
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            }
 
             var model = Services.ContentManager.UpdateEditor(layerPart, this);
 
@@ -313,6 +403,21 @@ namespace Orchard.Widgets.Controllers {
                 return new HttpUnauthorizedResult();
 
             try {
+                LayerPart layerPart = _widgetsService.GetLayer(id);
+                if (layerPart == null)
+                    return HttpNotFound();
+
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, layerPart.ContentItem, T("Cannot delete layer")))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+
+                if (_widgetsService.GetWidgets(id).Any())
+                {
+                    Services.Notifier.Error(T("Cannot delete layer with attached widgets! Please move widgets to another layer or remove them."));
+                    return RedirectToAction("Index", "Admin");
+                }
+
                 _widgetsService.DeleteLayer(id);
                 Services.Notifier.Information(T("Layer was successfully deleted"));
             } catch (Exception exception) {
@@ -334,6 +439,11 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
             try {
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widgetPart, T("Cannot edit widget")))
+                {
+                    return RedirectToAction("Index");
+                }
+
                 var model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);
             }
@@ -375,10 +485,23 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
             try {
+                var oldLayerId = widgetPart.LayerId;
+                var oldPosition = widgetPart.Position;
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widgetPart, T("Cannot edit widget")))
+                {
+                    return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+                }
+
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {
+                    Services.TransactionManager.Cancel();
+                    return View(model);
+                }
+                else if ((oldLayerId != layerId && !CheckWidgetChangeLayerPermissions(oldLayerId, layerId)) ||
+                       (oldPosition != widgetPart.Position && !IsAuthorizedToChangeWidgetsPositionAndLayer()))
+                {
                     Services.TransactionManager.Cancel();
                     return View(model);
                 }
@@ -409,6 +532,16 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
             try {
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, widgetPart, T("Cannot delete widget")))
+                {
+                    return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+                }
+
+                if (!Services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, widgetPart.LayerPart, T("Cannot delete widget. Insufficient layer permissions")))
+                {
+                    return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+                }
+
                 _widgetsService.DeleteWidget(widgetPart.Id);
                 Services.Notifier.Information(T("Widget was successfully deleted"));
             }
