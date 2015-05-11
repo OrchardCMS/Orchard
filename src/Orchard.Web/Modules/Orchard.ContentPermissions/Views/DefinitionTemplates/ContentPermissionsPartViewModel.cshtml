@@ -8,6 +8,13 @@
 
 <fieldset>
     <div>
+        @Html.CheckBoxFor(m => m.ApplyDefaults)
+        <label for="@Html.FieldIdFor(m => m.ApplyDefaults)" class="forcheckbox">@T("Apply this permissions if content item access control is not enabled")</label>
+        @Html.ValidationMessageFor(m => m.ApplyDefaults)
+    </div>
+</fieldset>
+<fieldset>
+    <div>
         <table class="content-permissions">
             <tr>
                 <th class="role"><h3>@T("Role")</h3></th>

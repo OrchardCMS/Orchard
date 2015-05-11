@@ -9,9 +9,11 @@ using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Security;
 using Orchard.ContentPermissions.ViewModels;
+using System;
 
 namespace Orchard.ContentPermissions.Settings {
     public class ContentPermissionsPartSettings {
+        public string ApplyDefaults { get; set; }
         public string View { get; set; }
         public string ViewOwn { get; set; }
         public string Publish { get; set; }
@@ -24,6 +26,14 @@ namespace Orchard.ContentPermissions.Settings {
         public string PreviewOwn { get; set; }
 
         public string DisplayedRoles { get; set; }
+
+        public bool ApplyDefaultsEnabled
+        {
+            get
+            {
+                return String.IsNullOrWhiteSpace(ApplyDefaults) ? false : Boolean.Parse(ApplyDefaults);
+            }
+        }
     }
 
     public class ViewPermissionsSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -72,6 +82,7 @@ namespace Orchard.ContentPermissions.Settings {
             }
 
             var model = new ContentPermissionsPartViewModel {
+                ApplyDefaults = settings.ApplyDefaultsEnabled,
                 ViewRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.View),
                 ViewOwnRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.ViewOwn),
                 PublishRoles = ContentPermissionsPartViewModel.ExtractRoleEntries(allRoles, settings.Publish),
@@ -168,6 +179,8 @@ namespace Orchard.ContentPermissions.Settings {
             }
 
             builder.WithSetting("ContentPermissionsPartSettings.DisplayedRoles", ContentPermissionsPartViewModel.SerializePermissions(model.AllRoles));
+
+            builder.WithSetting("ContentPermissionsPartSettings.ApplyDefaults", model.ApplyDefaults.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
             // disable permissions the current user doesn't have
             model.ViewRoles = model.ViewRoles.Select(x => new RoleEntry { Role = x.Role, Checked = x.Checked, Enabled = _authorizer.Authorize(Core.Contents.Permissions.ViewContent) }).ToList();
