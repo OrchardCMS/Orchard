@@ -41,7 +41,7 @@ namespace Orchard.Layouts.Providers {
                         EnableEditorDialog = false,
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
-                        Display = displayContext => Displaying(displayContext, baseElement),
+                        Displaying = displayContext => Displaying(displayContext, baseElement),
                         StateBag = new Dictionary<string, object> {
                             {"Blueprint", true},
                             {"ElementTypeName", baseElement.Descriptor.TypeName}
@@ -62,7 +62,7 @@ namespace Orchard.Layouts.Providers {
             context.Element.Data = bluePrintState;
         }
 
-        private void Displaying(ElementDisplayContext context, Element element) {
+        private void Displaying(ElementDisplayingContext context, Element element) {
             var drivers = _elementManager.Value.GetDrivers(element);
 
             foreach (var driver in drivers) {

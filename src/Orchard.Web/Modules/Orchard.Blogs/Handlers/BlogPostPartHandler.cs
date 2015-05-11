@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
@@ -8,7 +7,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Handlers {
-    [UsedImplicitly]
     public class BlogPostPartHandler : ContentHandler {
         private readonly IBlogService _blogService;
 

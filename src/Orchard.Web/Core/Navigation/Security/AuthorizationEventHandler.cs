@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Security;
 
 namespace  Orchard.Core.Navigation.Security {
-    [UsedImplicitly]
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
         private readonly IContentManager _contentManager;
 

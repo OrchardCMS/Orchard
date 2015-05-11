@@ -44,7 +44,8 @@
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <NoWarn>0436</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -988,7 +989,6 @@
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
-    <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
   </ItemGroup>
   <ItemGroup>

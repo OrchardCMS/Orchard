@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
@@ -21,7 +20,6 @@ namespace Orchard.Indexing.Services {
     /// This class is synchronized using a lock file as both command line and web workers can potentially use it,
     /// and singleton locks would not be shared accross those two.
     /// </remarks>
-    [UsedImplicitly]
     public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider
     {
         private readonly IRepository<IndexingTaskRecord> _taskRepository;

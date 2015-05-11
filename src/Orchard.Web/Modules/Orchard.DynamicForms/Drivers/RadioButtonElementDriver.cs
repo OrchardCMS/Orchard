@@ -39,7 +39,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(RadioButton element, ElementDisplayContext context) {
+        protected override void OnDisplaying(RadioButton element, ElementDisplayingContext context) {
             context.ElementShape.TokenizedValue = _tokenizer.Replace(element.Value, null);
         }
     }

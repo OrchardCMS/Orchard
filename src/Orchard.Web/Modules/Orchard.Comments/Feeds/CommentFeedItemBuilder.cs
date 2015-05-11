@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
@@ -12,7 +11,6 @@ using Orchard.Localization;
 using Orchard.Services;
 
 namespace Orchard.Comments.Feeds {
-    [UsedImplicitly]
     public class CommentFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
 
