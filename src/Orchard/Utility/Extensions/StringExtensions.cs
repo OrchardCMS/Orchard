@@ -192,6 +192,34 @@ namespace Orchard.Utility.Extensions {
         }
 
         /// <summary>
+        /// Generates a valid Html name.
+        /// </summary>
+        /// <remarks>
+        /// Uses a white list set of chars.
+        /// </remarks>
+        public static string ToHtmlName(this string name) {
+            if (String.IsNullOrWhiteSpace(name))
+                return String.Empty;
+
+            name = RemoveDiacritics(name);
+            name = name.Strip(c =>
+                c != '-'
+                && c != '_'
+                && !c.IsLetter()
+                && !Char.IsDigit(c)
+                );
+
+            name = name.Trim();
+
+            // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
+            while (name.Length > 0 && !IsLetter(name[0])) {
+                name = name.Substring(1);
+            }
+
+            return name;
+        }
+
+        /// <summary>
         /// Whether the char is a letter between A and Z or not
         /// </summary>
         public static bool IsLetter(this char c) {
