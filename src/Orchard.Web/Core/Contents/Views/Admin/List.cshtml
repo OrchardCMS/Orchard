@@ -16,8 +16,10 @@
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
+
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
+        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
