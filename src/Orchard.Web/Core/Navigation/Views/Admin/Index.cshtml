@@ -135,7 +135,7 @@
 @using (Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
-    var leaveConfirmation = "@T("Some items where not saved.")";
+    var leaveConfirmation = '@HttpUtility.JavaScriptStringEncode(T("Some items where not saved.").Text)';
 
     $('#menuId').change(function () {
         $(this).parents('form').submit();

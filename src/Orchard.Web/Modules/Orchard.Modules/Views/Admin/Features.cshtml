@@ -144,7 +144,7 @@
     using (Script.Foot()) {
         <script type="text/javascript">
         //<![CDATA[
-            var confirmDisableMessage = '@T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?")';
+            var confirmDisableMessage = '@HttpUtility.JavaScriptStringEncode(T("Disabling this feature will also disable the following dependent features. Are you sure you want to continue?").Text)';
         //]]>
         </script>
     }
