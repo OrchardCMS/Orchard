@@ -20,18 +20,7 @@ namespace Orchard.Indexing {
                     .Column<int>("ContentItemRecord_id")
                 );
 
-            SchemaBuilder.CreateTable("IndexTaskBatchRecord",
-                table => table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<int>("BatchStartIndex")
-                    .Column<string>("ContentType")
-                )
-            .AlterTable("IndexTaskBatchRecord",
-                table =>
-                    table.CreateIndex("IDX_ContentType", "ContentType")
-                );
-
-            return 3;
+            return 2;
         }
 
         public int UpdateFrom1() {
@@ -45,22 +34,6 @@ namespace Orchard.Indexing {
             }
 
             return 2;
-        }
-
-        public int UpdateFrom2() {
-
-            SchemaBuilder.CreateTable("IndexTaskBatchRecord",
-                table => table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<int>("BatchStartIndex")
-                    .Column<string>("ContentType")
-                )
-            .AlterTable("IndexTaskBatchRecord",
-                table =>
-                    table.CreateIndex("IDX_ContentType", "ContentType")
-                );
-
-            return 3;
         }
     }
 }

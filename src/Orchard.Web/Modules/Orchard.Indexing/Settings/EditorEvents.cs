@@ -1,22 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.Indexing.Services;
+using Orchard.Tasks.Indexing;
 
 namespace Orchard.Indexing.Settings {
     public class EditorEvents : ContentDefinitionEditorEventsBase {
-        private readonly IIndexTaskBatchManagementService _indexTaskBatchManagementService;
+        private readonly IIndexingTaskManager _indexingTaskManager;
+        private readonly IContentManager _contentManager;
+
+        private const int PageSize = 50;
+
+        public EditorEvents(IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
+            _indexingTaskManager = indexingTaskManager;
+            _contentManager = contentManager;
+        }
 
         private string _contentTypeName;
         private bool _tasksCreated;
-
-        public EditorEvents(IIndexTaskBatchManagementService indexTaskBatchManagementService) {
-            _indexTaskBatchManagementService = indexTaskBatchManagementService;
-        }
 
         public override IEnumerable<TemplateViewModel> TypeEditor(ContentTypeDefinition definition) {
             var model = definition.Settings.GetModel<TypeIndexing>();
@@ -37,12 +41,12 @@ namespace Orchard.Indexing.Settings {
                 // if a an index is added, all existing content items need to be re-indexed
                 CreateIndexingTasks();
             }
-
+            
             yield return DefinitionTemplate(model);
         }
 
         private string Clean(string value) {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return value;
 
             return value.Trim(',', ' ');
@@ -53,8 +57,7 @@ namespace Orchard.Indexing.Settings {
         /// </summary>
         private void CreateIndexingTasks() {
             if (!_tasksCreated) {
-                // Creating tasks in batches is needed because editing content type settings for a type with many items causes OutOfMemoryException, see issue: https://github.com/OrchardCMS/Orchard/issues/4729
-                _indexTaskBatchManagementService.RegisterContentType(_contentTypeName);
+                CreateTasksForType(_contentTypeName);
                 _tasksCreated = true;
             }
         }
@@ -79,6 +82,27 @@ namespace Orchard.Indexing.Settings {
             }
 
             yield return DefinitionTemplate(model);
+        }
+
+        private void CreateTasksForType(string type) {
+            var index = 0;
+            bool contentItemProcessed;
+
+            // todo: load ids only, or create a queued job
+            // we create a task even for draft items, and the executor will filter based on the settings
+
+            do {
+                contentItemProcessed = false;
+                var contentItemsToIndex = _contentManager.Query(VersionOptions.Latest, new [] { type }).Slice(index, PageSize);
+
+                foreach (var contentItem in contentItemsToIndex) {
+                    contentItemProcessed = true;
+                    _indexingTaskManager.CreateUpdateIndexTask(contentItem);
+                }
+
+                index += PageSize;
+
+            } while (contentItemProcessed);
         }
     }
 }

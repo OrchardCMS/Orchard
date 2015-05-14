@@ -78,9 +78,6 @@
     <Compile Include="Models\IndexSettings.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\IndexTaskBatchRecord.cs" />
-    <Compile Include="Services\IIndexTaskBatchManagementService.cs" />
-    <Compile Include="Services\IndexTaskBatchManagementService.cs" />
     <Compile Include="Services\UpdateIndexScheduler.cs" />
     <Compile Include="Services\IIndexingTaskExecutor.cs" />
     <Compile Include="Services\IUpdateIndexScheduler.cs" />
@@ -94,7 +91,6 @@
     <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="Settings\FieldIndexing.cs" />
-    <Compile Include="Services\CreateUpdateIndexTaskBackgroundTask.cs" />
     <Compile Include="Settings\TypeIndexing.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
   </ItemGroup>
