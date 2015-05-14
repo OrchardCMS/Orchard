@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
@@ -10,7 +9,6 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;
@@ -53,7 +51,7 @@ namespace Orchard.Widgets.Drivers {
             
             // if there is a name, ensure it's unique
             if(!string.IsNullOrWhiteSpace(widgetPart.Name)) {
-                widgetPart.Name = widgetPart.Name.ToSafeName();
+                widgetPart.Name = widgetPart.Name.ToHtmlName();
 
                 var widgets = _contentManager.Query<WidgetPart, WidgetPartRecord>().Where(x => x.Name == widgetPart.Name && x.Id != widgetPart.Id).Count();
                 if(widgets > 0) {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Web.Mvc;
-using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.Core.Shapes;
 using Orchard.DisplayManagement;
@@ -9,8 +8,6 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Helpers;
-using Orchard.Layouts.Settings;
 using Orchard.Tokens;
 
 namespace Orchard.Layouts.Shapes {
@@ -35,35 +32,16 @@ namespace Orchard.Layouts.Shapes {
 
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Element").OnDisplaying(context => {
-                var element = (IElement)context.Shape.Element;
-                if (context.ShapeMetadata.DisplayType == "Design") {
-                    var descriptor = element.Descriptor;
-
-                    if (!(element is IContainer)) {
-                        context.ShapeMetadata.Wrappers.Add("Element_DesignWrapper");
-                    }
-
-                    // Inject client side json.
-                    context.Shape.ElementJson = JsonConvert.SerializeObject(new {
-                        typeName = descriptor.TypeName,
-                        displayText = descriptor.DisplayText.Text,
-                        state = element.State.Serialize(),
-                        index = element.Index,
-                        isTemplated = element.IsTemplated
-                    });
-                }
-
-                // Tokenize common settings
+                var element = (Element)context.Shape.Element;
                 var content = (ContentItem)context.Shape.ContentItem;
-                var settings = element.State ?? new StateDictionary();
-                var commonSettings = settings.GetModel<CommonElementSettings>();
-                var id = commonSettings.Id;
-                var cssClass = commonSettings.CssClass;
-                var inlineStyle = commonSettings.InlineStyle;
+                var htmlId = element.HtmlId;
+                var htmlClass = element.HtmlClass;
+                var htmlStyle = element.HtmlStyle;
 
-                context.Shape.TokenizeId = (Func<string>)(() => _tokenizer.Value.Replace(id, new { Content = content }));
-                context.Shape.TokenizeInlineStyle = (Func<string>)(() => _tokenizer.Value.Replace(inlineStyle, new { Content = content }));
-                context.Shape.TokenizeCssClass = (Func<string>)(() => _tokenizer.Value.Replace(cssClass, new { Content = content }));
+                // Provide tokenizer functions.
+                context.Shape.TokenizeHtmlId = (Func<string>)(() => _tokenizer.Value.Replace(htmlId, new { Content = content }));
+                context.Shape.TokenizeHtmlClass = (Func<string>)(() => _tokenizer.Value.Replace(htmlClass, new { Content = content }));
+                context.Shape.TokenizeHtmlStyle = (Func<string>)(() => _tokenizer.Value.Replace(htmlStyle, new { Content = content }));
             });
         }
 
@@ -91,6 +69,7 @@ namespace Orchard.Layouts.Shapes {
         }
 
         private static void DisplayChildren(dynamic shape, dynamic display, TextWriter output) {
+            shape = CoreShapes.Order(shape);
             foreach (var child in shape) {
                 output.Write(display(child));
             }

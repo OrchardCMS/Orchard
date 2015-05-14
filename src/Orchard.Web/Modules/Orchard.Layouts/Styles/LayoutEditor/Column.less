@@ -1,0 +1,29 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    .layout-column {
+        > .layout-element-wrapper {
+            > .layout-column-resize-bar {
+                display: none;
+                position: absolute;
+                z-index: 30;
+                top: 0;
+                width: 16px;
+                height: 100%;
+                cursor: col-resize;
+            }
+
+            > .layout-column-resize-bar-left {
+                left: -6px;
+            }
+
+            > .layout-column-resize-bar-right {
+                right: -6px;
+            }
+        }
+
+        &.layout-element-focused > .layout-element-wrapper > .layout-column-resize-bar {
+            display: block;
+        }
+    }
+}

@@ -14,7 +14,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | LayoutPart.State | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+super."} ] } |
+            | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super", "hasEditor": true } |
         And I hit "Publish Now"
         And I go to "super-duper"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
@@ -25,7 +25,7 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | LayoutPart.State | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+super+number+two."} ] } |
+            | LayoutPart.LayoutEditor.Data | { "type": "Content", "data": "TypeName=Orchard.Layouts.Elements.Text&Content=This+is+super+number+two", "isTemplated": false, "contentType": "Orchard.Layouts.Elements.Text", "contentTypeLabel": "Text", "contentTypeClass": "text", "html": "This is super number two", "hasEditor": true } |
         And I hit "Publish Now"
         And I go to "super-duper-2"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
@@ -36,7 +36,6 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Another |
-            | LayoutPart.State | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+the+draft+of+a+new+homepage."} ] } |
             | Autoroute.PromoteToHomePage | true |
         And I hit "Publish Now"
         And I go to "/"
@@ -49,7 +48,6 @@ Scenario: In the admin (menu) there is a link to create a Page
         And I fill in
             | name | value |
             | Title.Title | Drafty |
-            | LayoutPart.State | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+the+draft+of+a+new+homepage."} ] } |
             | Autoroute.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "/"

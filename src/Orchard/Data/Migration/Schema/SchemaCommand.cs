@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Orchard.Data.Migration.Schema {
     public abstract class SchemaCommand : ISchemaBuilderCommand {
@@ -12,7 +11,7 @@ namespace Orchard.Data.Migration.Schema {
         public string Name { get; private set; }
         public List<TableCommand> TableCommands { get; private set; }
 
-        public SchemaCommandType Type { get; [UsedImplicitly]private set; }
+        public SchemaCommandType Type { get; private set; }
 
         public SchemaCommand WithName(string name) {
             Name = name;

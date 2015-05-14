@@ -1,0 +1,21 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Enumeration)Model.Element;
+    var attributes = (IDictionary<string, object>)TagBuilderExtensions.GetCommonElementAttributes(Model);
+    var name = String.IsNullOrWhiteSpace(element.Name) ? "SelectList1" : element.Name;
+    var options = (IEnumerable<SelectListItem>)Model.TokenizedOptions;
+    var clientValidationAttributes = (IDictionary<string, string>)Model.ClientValidationAttributes;
+    var htmlId = !String.IsNullOrWhiteSpace(element.HtmlId) ? element.HtmlId : name;
+
+    foreach (var attribute in clientValidationAttributes) {
+        attributes.Add(attribute.Key, attribute.Value);
+    }
+}
+@if (element.ShowLabel) {
+    <label for="@htmlId">@Html.Raw(element.Label)</label>
+}
+@Html.DropDownList(name, options, attributes)
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(element.Name)
+}

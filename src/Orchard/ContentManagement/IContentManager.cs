@@ -23,13 +23,13 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Creates (persists) a new content item
         /// </summary>
-        /// <param name="content">The content instance filled with all necessary data</param>
+        /// <param name="contentItem">The content instance filled with all necessary data</param>
         void Create(ContentItem contentItem);
 
         /// <summary>
         /// Creates (persists) a new content item with the specified version
         /// </summary>
-        /// <param name="content">The content instance filled with all necessary data</param>
+        /// <param name="contentItem">The content instance filled with all necessary data</param>
         /// <param name="options">The version to create the item with</param>
         void Create(ContentItem contentItem, VersionOptions options);
 

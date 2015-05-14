@@ -60,22 +60,26 @@ namespace Orchard.PublishLater.Drivers {
                 );
         }
 
-        protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
-            var model = new PublishLaterViewModel(part) {
-                 Editor = new DateTimeEditor() {
+        private PublishLaterViewModel BuildViewModelFromPart(PublishLaterPart part) {
+            return new PublishLaterViewModel(part) {
+                Editor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = true,
                     Date = !part.IsPublished() ? _dateLocalizationServices.ConvertToLocalizedDateString(part.ScheduledPublishUtc.Value) : "",
                     Time = !part.IsPublished() ? _dateLocalizationServices.ConvertToLocalizedTimeString(part.ScheduledPublishUtc.Value) : "",
                 }
-           };
+            };
+        }
+
+        protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
+            var model = BuildViewModelFromPart(part);
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(PublishLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new PublishLaterViewModel(part);
+            var model = BuildViewModelFromPart(part);
 
             updater.TryUpdateModel(model, Prefix, null, null);
             var httpContext = _httpContextAccessor.Current();
@@ -96,7 +100,7 @@ namespace Orchard.PublishLater.Drivers {
                         updater.AddModelError(Prefix, T("'{0} {1}' could not be parsed as a valid date and time.", model.Editor.Date, model.Editor.Time));                                             
                     }
                 }
-                else if (!String.IsNullOrWhiteSpace(model.Editor.Date) || !String.IsNullOrWhiteSpace(model.Editor.Time)) {
+                else {
                     updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
             }

@@ -16,7 +16,7 @@ namespace Contrib.Cache.Database {
                 .Column<int>("GraceTime", c => c.Nullable())
                 .Column<DateTime>("ValidUntilUtc")
                 .Column<DateTime>("StoredUntilUtc")
-                .Column<string>("Output", column => column.Unlimited())
+                .Column<byte[]>("Output", column => column.Unlimited().WithType(DbType.Binary))
                 .Column<string>("ContentType")
                 .Column<string>("QueryString", column => column.WithLength(2048))
                 .Column<string>("CacheKey", column => column.WithLength(2048))
@@ -31,7 +31,7 @@ namespace Contrib.Cache.Database {
                 .CreateIndex("IDX_CacheItemRecord_CacheKey", "CacheKey")
             );
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -44,6 +44,15 @@ namespace Contrib.Cache.Database {
                     });
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("CacheItemRecord",
+                    table => {
+                        table.AlterColumn("Output", c => c.Unlimited().WithType(DbType.Binary));
+                    });
+
+            return 3;
         }
     }
 }

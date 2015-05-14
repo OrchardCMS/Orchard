@@ -16,19 +16,19 @@ namespace Orchard.Localization.RuleEngine {
         }
 
         public void Process(dynamic ruleContext) {
-            if (String.Equals(ruleContext.FunctionName, "culture-code", StringComparison.OrdinalIgnoreCase)) {
+            if (String.Equals(ruleContext.FunctionName, "culturecode", StringComparison.OrdinalIgnoreCase)) {
                 ProcessCultureCode(ruleContext);
             }
 
-            if (String.Equals(ruleContext.FunctionName, "culture-lcid", StringComparison.OrdinalIgnoreCase)) {
+            if (String.Equals(ruleContext.FunctionName, "culturelcid", StringComparison.OrdinalIgnoreCase)) {
                 ProcessCultureId(ruleContext);
             }
 
-            if (String.Equals(ruleContext.FunctionName, "culture-isrtl", StringComparison.OrdinalIgnoreCase)) {
+            if (String.Equals(ruleContext.FunctionName, "cultureisrtl", StringComparison.OrdinalIgnoreCase)) {
                 ProcessCurrentCultureIsRtl(ruleContext);
             }
 
-            if (String.Equals(ruleContext.FunctionName, "culture-lang", StringComparison.OrdinalIgnoreCase)) {
+            if (String.Equals(ruleContext.FunctionName, "culturelang", StringComparison.OrdinalIgnoreCase)) {
                 ProcessLanguageCode(ruleContext);
             }
         }

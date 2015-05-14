@@ -1,20 +1,17 @@
-﻿using System.Linq;
+﻿using System;
 using System.Net;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
+using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Logging;
-using Orchard.Settings;
-using System;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.UI.Notify;
-using Orchard.Localization;
 
 namespace Orchard.Core.Settings.Drivers {
-    [UsedImplicitly]
     public class SiteSettingsPartDriver : ContentPartDriver<SiteSettingsPart> {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
@@ -112,6 +109,19 @@ namespace Orchard.Core.Settings.Drivers {
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(SiteSettingsPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SupportedCultures", string.Join(";", _cultureManager.ListCultures()));
+        }
+
+        protected override void Importing(SiteSettingsPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var supportedCultures = context.Attribute(part.PartDefinition.Name, "SupportedCultures");
+            if (supportedCultures != null) {
+                foreach (var culture in supportedCultures.Split(';')) {
+                    _cultureManager.AddCulture(culture);
+                }
+            }
         }
     }
 }

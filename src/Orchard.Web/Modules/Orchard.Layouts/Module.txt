@@ -3,14 +3,14 @@ AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.8
+OrchardVersion: 1.9
 # Category: Layout
 # Description: Provides tools to create layouts.
 Features:
     Orchard.Layouts:
         Name: Layouts
         Description: Provides tools to create layouts.
-        Dependencies: Common, Orchard.jQuery, Orchard.Forms, Orchard.Tokens
+        Dependencies: Common, Orchard.jQuery, Orchard.Forms, Orchard.Tokens, Orchard.MediaLibrary, TinyMCE, Orchard.Widgets
         Category: Layout
     Orchard.Layouts.Snippets:
         Name: Layout Snippets
@@ -29,6 +29,11 @@ Features:
         Dependencies: Orchard.Layouts, Orchard.Projections
     Orchard.Layouts.Tokens:
         Name: Element Tokens
-        Description: Provides an element token provider, enabling elements to be rendered using a token.
+        Description: Provides an element token provider that enables elements to be rendered using a token and enables tokens to be used inside of various elements such as Html, Text and Paragraph.
         Category: Layout
         Dependencies: Orchard.Layouts, Orchard.Tokens
+    Orchard.Layouts.UI:
+        Name: UI Elements
+        Description: Adds UI elements to the system, such as Notifications and Menu.
+        Category: Layout
+        Dependencies: Orchard.Layouts

@@ -23,10 +23,9 @@ module Orchard.Azure.MediaServices.VideoPlayer.Injectors {
 
         public isSupported(): boolean {
             var videoElement: HTMLVideoElement = document.createElement("video");
-            var mse: MediaSource = window["MediaSource"] || window["WebKitMediaSource"];
 
             var hasH264 = videoElement && videoElement.canPlayType && !!videoElement.canPlayType("video/mp4; codecs=\"avc1.42001E, mp4a.40.2\"");
-            var hasMse = mse && mse.isTypeSupported && mse.isTypeSupported("video/mp4; codecs=\"avc1.4d404f\"");
+            var hasMse = MediaSource && MediaSource.isTypeSupported && MediaSource.isTypeSupported("video/mp4; codecs=\"avc1.4d404f\"");
             var hasDynamicAssets = _(this.filteredAssets().DynamicVideoAssets).any();
 
             this.debug("Browser supports HTML5 video and the H264 and AAC codecs: {0}", hasH264);

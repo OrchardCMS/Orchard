@@ -41,7 +41,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(FormElement element, ElementDisplayContext context) {
+        protected override void OnDisplaying(FormElement element, ElementDisplayingContext context) {
             context.ElementShape.Metadata.Wrappers.Add("FormElement_Wrapper");
             context.ElementShape.Child.Add(New.PlaceChildContent(Source: context.ElementShape));
 

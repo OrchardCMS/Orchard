@@ -13,14 +13,14 @@ namespace Orchard.Layouts.Services {
     // Consider combining this class with DefaultContentDisplay to reuse shared code, for example by inheriting from a common base class.
     public abstract class ContentDisplayBase : Component {
         private readonly IShapeFactory _shapeFactory;
-        private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         protected ContentDisplayBase(
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
@@ -95,7 +95,7 @@ namespace Orchard.Layouts.Services {
             // Adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit.
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
             BindPlacement(context, null, stereotype);
 
             return context;
@@ -109,9 +109,9 @@ namespace Orchard.Layouts.Services {
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
                 var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
-                var theme = workContext.CurrentTheme;
-                var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
-                var request = _requestContext.HttpContext.Request;
+                var shapeTable = workContext.HttpContext != null
+                    ? _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id)
+                    : _shapeTableLocator.Value.Lookup(null);
 
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
@@ -121,7 +121,7 @@ namespace Orchard.Layouts.Services {
                         Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
+                        Path = GetPath()
                     };
 
                     // define which location should be used if none placement is hit
@@ -139,6 +139,13 @@ namespace Orchard.Layouts.Services {
                     Source = String.Empty
                 };
             };
+        }
+
+        /// <summary>
+        /// Gets the current app-relative path, i.e. ~/my-blog/foo.
+        /// </summary>
+        private string GetPath() {
+            return VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path));
         }
     }
 }

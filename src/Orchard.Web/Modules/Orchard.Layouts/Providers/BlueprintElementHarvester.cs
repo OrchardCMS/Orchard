@@ -10,7 +10,7 @@ using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class BlueprintElementHarvester : Component, IElementHarvester {
+    public class BlueprintElementHarvester : Component, ElementHarvester {
         private readonly Work<IElementBlueprintService> _elementBlueprintService;
         private readonly Work<IElementManager> _elementManager;
         private bool _isHarvesting;
@@ -36,11 +36,12 @@ namespace Orchard.Layouts.Providers {
                     baseElement.Descriptor.ElementType,
                     blueprint.ElementTypeName,
                     T(blueprint.ElementDisplayName),
+                    T(!String.IsNullOrWhiteSpace(blueprint.ElementDescription) ? blueprint.ElementDescription : blueprint.ElementDisplayName),
                     GetCategory(blueprint)) {
                         EnableEditorDialog = false,
                         IsSystemElement = false,
                         CreatingDisplay = creatingDisplayContext => CreatingDisplay(creatingDisplayContext, blueprint),
-                        Display = displayContext => Displaying(displayContext, baseElement),
+                        Displaying = displayContext => Displaying(displayContext, baseElement),
                         StateBag = new Dictionary<string, object> {
                             {"Blueprint", true},
                             {"ElementTypeName", baseElement.Descriptor.TypeName}
@@ -57,11 +58,11 @@ namespace Orchard.Layouts.Providers {
         }
 
         private void CreatingDisplay(ElementCreatingDisplayShapeContext context, ElementBlueprint blueprint) {
-            var bluePrintState = ElementStateHelper.Deserialize(blueprint.BaseElementState);
-            context.Element.State = bluePrintState;
+            var bluePrintState = ElementDataHelper.Deserialize(blueprint.BaseElementState);
+            context.Element.Data = bluePrintState;
         }
 
-        private void Displaying(ElementDisplayContext context, IElement element) {
+        private void Displaying(ElementDisplayingContext context, Element element) {
             var drivers = _elementManager.Value.GetDrivers(element);
 
             foreach (var driver in drivers) {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Orchard.ContentManagement;
 
 namespace Orchard.DynamicForms.Services.Models {
     public abstract class BindingContext {
@@ -20,7 +21,7 @@ namespace Orchard.DynamicForms.Services.Models {
         public BindingContext() : base(typeof(T).Name) {
         }
 
-        public BindingContext<T> Binding(string name, Action<T, string> setter) {
+        public BindingContext<T> Binding(string name, Action<ContentItem, T, string> setter) {
 
             _bindings.Add(new BindingDescriptor<T> {
                 Name = name,

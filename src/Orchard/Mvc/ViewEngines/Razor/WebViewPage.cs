@@ -127,24 +127,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
-            var metaEntry = new MetaEntry();
-            
-            if (!String.IsNullOrEmpty(name)) {
-                metaEntry.Name = name;
-            }
-
-            if (!String.IsNullOrEmpty(content)) {
-                metaEntry.Content = content;
-            }
-
-            if (!String.IsNullOrEmpty(httpEquiv)) {
-                metaEntry.HttpEquiv = httpEquiv;
-            }
-
-            if (!String.IsNullOrEmpty(charset)) {
-                metaEntry.Charset = charset;
-            }
-
+            var metaEntry = new MetaEntry(name, content, httpEquiv, charset);
             SetMeta(metaEntry);
         }
 
@@ -206,10 +189,9 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                     && !path.StartsWith("~/Themes", StringComparison.OrdinalIgnoreCase)
                     && !path.StartsWith("~/Media", StringComparison.OrdinalIgnoreCase)
                     && !path.StartsWith("~/Core", StringComparison.OrdinalIgnoreCase)) {
-                    
-                    return base.Href("~/" + _tenantPrefix + path.Substring(2), pathParts);
-                }
 
+                    return base.Href("~/" + _tenantPrefix + path.Substring(String.IsNullOrWhiteSpace(_tenantPrefix) ? 2 : 1), pathParts);
+                }
             }
 
             return base.Href(path, pathParts);

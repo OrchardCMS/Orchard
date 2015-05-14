@@ -29,7 +29,7 @@ namespace Orchard.Layouts.Handlers {
 
                 foreach (var editor in editorResult.Editors) {
                     editor.ElementDescriptor = descriptor;
-                    editor.ElementState = context.Element.State;
+                    editor.ElementData = context.Element.Data;
                     editor.Content = context.Content;
 
                     context.EditorResult.Add(editor);

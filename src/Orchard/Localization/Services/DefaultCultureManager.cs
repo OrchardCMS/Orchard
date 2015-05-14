@@ -9,18 +9,17 @@ using Orchard.Localization.Records;
 namespace Orchard.Localization.Services {
     public class DefaultCultureManager : ICultureManager {
         private readonly IRepository<CultureRecord> _cultureRepository;
-        private readonly IEnumerable<ICultureSelector> _cultureSelectors;
         private readonly ISignals _signals;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICacheManager _cacheManager;
 
-        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, 
-                                     IEnumerable<ICultureSelector> cultureSelectors, 
-                                     ISignals signals, 
-                                     IWorkContextAccessor workContextAccessor,
-                                     ICacheManager cacheManager) {
+        public DefaultCultureManager(
+            IRepository<CultureRecord> cultureRepository,
+            ISignals signals,
+            IWorkContextAccessor workContextAccessor,
+            ICacheManager cacheManager) {
+
             _cultureRepository = cultureRepository;
-            _cultureSelectors = cultureSelectors;
             _signals = signals;
             _workContextAccessor = workContextAccessor;
             _cacheManager = cacheManager;
@@ -38,12 +37,12 @@ namespace Orchard.Localization.Services {
             if (!IsValidCulture(cultureName)) {
                 throw new ArgumentException("cultureName");
             }
-            
+
             if (ListCultures().Any(culture => culture == cultureName)) {
                 return;
             }
 
-            _cultureRepository.Create(new CultureRecord {Culture = cultureName});
+            _cultureRepository.Create(new CultureRecord { Culture = cultureName });
             _signals.Trigger("culturesChanged");
         }
 
@@ -60,21 +59,7 @@ namespace Orchard.Localization.Services {
         }
 
         public string GetCurrentCulture(HttpContextBase requestContext) {
-            var requestCulture = _cultureSelectors
-                .Select(x => x.GetCulture(requestContext))
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Priority);
-
-            if ( !requestCulture.Any() )
-                return String.Empty;
-
-            foreach (var culture in requestCulture) {
-                if (!String.IsNullOrEmpty(culture.CultureName)) {
-                    return culture.CultureName;
-                }
-            }
-
-            return String.Empty;
+            return _workContextAccessor.GetContext().CurrentCulture;
         }
 
         public CultureRecord GetCultureById(int id) {
@@ -95,7 +80,7 @@ namespace Orchard.Localization.Services {
         public bool IsValidCulture(string cultureName) {
             var segments = cultureName.Split('-');
 
-            if(segments.Length == 0) {
+            if (segments.Length == 0) {
                 return false;
             }
 
@@ -106,7 +91,7 @@ namespace Orchard.Localization.Services {
             if (segments.Any(s => s.Length < 2)) {
                 return false;
             }
-            
+
             return true;
         }
     }

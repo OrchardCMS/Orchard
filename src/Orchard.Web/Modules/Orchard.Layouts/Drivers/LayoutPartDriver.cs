@@ -7,9 +7,10 @@ using Orchard.DisplayManagement;
 using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Drivers;
 using Orchard.Layouts.Framework.Elements;
-using Orchard.Layouts.Framework.Serialization;
+using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Models;
 using Orchard.Layouts.Services;
+using Orchard.Layouts.Settings;
 using Orchard.Layouts.ViewModels;
 
 namespace Orchard.Layouts.Drivers {
@@ -20,14 +21,18 @@ namespace Orchard.Layouts.Drivers {
         private readonly ILayoutManager _layoutManager;
         private readonly Lazy<IContentPartDisplay> _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
+        private readonly ILayoutModelMapper _mapper;
+        private readonly ILayoutEditorFactory _layoutEditorFactory;
 
         public LayoutPartDriver(
-            ILayoutSerializer serializer, 
-            IElementDisplay elementDisplay, 
-            IElementManager elementManager, 
+            ILayoutSerializer serializer,
+            IElementDisplay elementDisplay,
+            IElementManager elementManager,
             ILayoutManager layoutManager,
-            Lazy<IContentPartDisplay> contentPartDisplay, 
-            IShapeDisplay shapeDisplay) {
+            Lazy<IContentPartDisplay> contentPartDisplay,
+            IShapeDisplay shapeDisplay,
+            ILayoutModelMapper mapper, 
+            ILayoutEditorFactory layoutEditorFactory) {
 
             _serializer = serializer;
             _elementDisplay = elementDisplay;
@@ -35,6 +40,8 @@ namespace Orchard.Layouts.Drivers {
             _layoutManager = layoutManager;
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
+            _mapper = mapper;
+            _layoutEditorFactory = layoutEditorFactory;
         }
 
         protected override DriverResult Display(LayoutPart part, string displayType, dynamic shapeHelper) {
@@ -57,31 +64,34 @@ namespace Orchard.Layouts.Drivers {
 
         protected override DriverResult Editor(LayoutPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_Layout_Edit", () => {
+
+                if (part.Id == 0 && String.IsNullOrWhiteSpace(part.LayoutData)) {
+                    part.LayoutData = part.TypePartDefinition.Settings.GetModel<LayoutTypePartSettings>().DefaultLayoutData;
+                }
+
                 var viewModel = new LayoutPartViewModel {
-                    State = part.LayoutState,
-                    TemplateId = part.TemplateId,
-                    Content = part,
-                    SessionKey = part.SessionKey
+                    LayoutEditor = _layoutEditorFactory.Create(part)
                 };
 
                 if (updater != null) {
                     updater.TryUpdateModel(viewModel, Prefix, null, new[] { "Part", "Templates" });
                     var describeContext = new DescribeElementsContext { Content = part };
-                    var elementInstances = _serializer.Deserialize(viewModel.State, describeContext).ToArray();
-                    var removedElementInstances = _serializer.Deserialize(viewModel.Trash, describeContext).ToArray();
+                    var elementInstances = _mapper.ToLayoutModel(viewModel.LayoutEditor.Data, describeContext).ToArray();
+                    var removedElementInstances = _serializer.Deserialize(viewModel.LayoutEditor.Trash, describeContext).ToArray();
                     var context = new LayoutSavingContext {
                         Content = part,
                         Updater = updater,
                         Elements = elementInstances,
                         RemovedElements = removedElementInstances
                     };
-                    
+
                     _elementManager.Saving(context);
                     _elementManager.Removing(context);
 
-                    part.LayoutState = _serializer.Serialize(elementInstances);
-                    part.TemplateId = viewModel.TemplateId;
-                    part.SessionKey = viewModel.SessionKey;
+                    part.LayoutData = _serializer.Serialize(elementInstances);
+                    part.TemplateId = viewModel.LayoutEditor.TemplateId;
+                    part.SessionKey = viewModel.LayoutEditor.SessionKey;
+                    viewModel.LayoutEditor.Data = _mapper.ToEditorModel(part.LayoutData, new DescribeElementsContext {Content = part}).ToJson();
                 }
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Layout", Model: viewModel, Prefix: Prefix);
@@ -91,7 +101,7 @@ namespace Orchard.Layouts.Drivers {
         protected override void Exporting(LayoutPart part, ExportContentContext context) {
             _layoutManager.Exporting(new ExportLayoutContext { Layout = part });
 
-            context.Element(part.PartDefinition.Name).SetElementValue("LayoutState", part.LayoutState);
+            context.Element(part.PartDefinition.Name).SetElementValue("LayoutData", part.LayoutData);
 
             if (part.TemplateId != null) {
                 var template = part.ContentItem.ContentManager.Get(part.TemplateId.Value);
@@ -104,11 +114,14 @@ namespace Orchard.Layouts.Drivers {
         }
 
         protected override void Importing(LayoutPart part, ImportContentContext context) {
-            part.LayoutState = context.Data.Element(part.PartDefinition.Name).El("LayoutState");
-            _layoutManager.Importing(new ImportLayoutContext {
-                Layout = part,
-                Session = new ImportContentContextWrapper(context)
+            context.ImportChildEl(part.PartDefinition.Name, "LayoutData", s => {
+                part.LayoutData = s;
+                _layoutManager.Importing(new ImportLayoutContext {
+                    Layout = part,
+                    Session = new ImportContentContextWrapper(context)
+                });
             });
+
             context.ImportAttribute(part.PartDefinition.Name, "TemplateId", s => part.TemplateId = GetTemplateId(context, s));
         }
 

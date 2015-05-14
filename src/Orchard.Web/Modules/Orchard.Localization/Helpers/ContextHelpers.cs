@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using System.Web.Routing;
 using Orchard.UI.Admin;
 
 namespace Orchard.Localization {
@@ -9,7 +8,7 @@ namespace Orchard.Localization {
         }
 
         internal static bool IsRequestAdmin(HttpContextBase context) {
-            if (AdminFilter.IsApplied(new RequestContext(context, new RouteData())))
+            if (AdminFilter.IsApplied(context.Request.RequestContext))
                 return true;
 
             return false;

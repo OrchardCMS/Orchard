@@ -13,5 +13,6 @@ namespace Orchard.ContentManagement.Aspects {
         DateTime? VersionCreatedUtc { get; set; }
         DateTime? VersionPublishedUtc { get; set; }
         DateTime? VersionModifiedUtc { get; set; }
+        string VersionModifiedBy { get; set; }
     }
 }

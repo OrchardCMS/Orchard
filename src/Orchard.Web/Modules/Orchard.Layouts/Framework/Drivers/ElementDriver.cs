@@ -4,7 +4,7 @@ using Orchard.Layouts.Framework.Display;
 using Orchard.Layouts.Framework.Elements;
 
 namespace Orchard.Layouts.Framework.Drivers {
-    public abstract class ElementDriver<TElement> : Component, IElementDriver where TElement: IElement {
+    public abstract class ElementDriver<TElement> : Component, IElementDriver where TElement: Element {
         public virtual int Priority {
             get { return 0; }
         }
@@ -17,8 +17,16 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnUpdateEditor((TElement)context.Element, context);
         }
 
-        public void Displaying(ElementDisplayContext context) {
+        public void CreatingDisplay(ElementCreatingDisplayShapeContext context) {
+            OnCreatingDisplay((TElement)context.Element, context);
+        }
+
+        public void Displaying(ElementDisplayingContext context) {
             OnDisplaying((TElement) context.Element, context);
+        }
+
+        public void Displayed(ElementDisplayedContext context) {
+            OnDisplayed((TElement)context.Element, context);
         }
 
         public void LayoutSaving(ElementSavingContext context) {
@@ -45,7 +53,13 @@ namespace Orchard.Layouts.Framework.Drivers {
             return OnBuildEditor(element, context);
         }
 
-        protected virtual void OnDisplaying(TElement element, ElementDisplayContext context) {
+        protected virtual void OnCreatingDisplay(TElement element, ElementCreatingDisplayShapeContext context) {
+        }
+
+        protected virtual void OnDisplaying(TElement element, ElementDisplayingContext context) {
+        }
+
+        protected virtual void OnDisplayed(TElement element, ElementDisplayedContext context) {
         }
 
         protected virtual void OnLayoutSaving(TElement element, ElementSavingContext context) {

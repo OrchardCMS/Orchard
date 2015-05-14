@@ -28,6 +28,7 @@ tinyMCE.init({
     //statusbar: false,
     skin: "orchardlightgray",
     language: language,
+    auto_focus: autofocus,
     directionality: directionality,
     setup: function (editor) {
         $(document).bind("localization.ui.directionalitychanged", function(event, directionality) {

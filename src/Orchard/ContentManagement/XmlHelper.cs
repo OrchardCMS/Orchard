@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml;
 using System.Xml.Linq;
-using NHibernate.Util;
 using Orchard.Utility;
 
 namespace Orchard.ContentManagement {

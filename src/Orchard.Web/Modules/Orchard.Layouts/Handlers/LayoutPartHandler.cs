@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -11,18 +12,25 @@ namespace Orchard.Layouts.Handlers {
         private readonly IContentManager _contentManager;
         private readonly IContentPartDisplay _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
+        private readonly ILayoutSerializer _serializer;
+        private readonly ISignals _signals;
 
         public LayoutPartHandler(
             IRepository<LayoutPartRecord> repository, 
             ILayoutManager layoutManager, 
             IContentManager contentManager, 
             IContentPartDisplay contentPartDisplay, 
-            IShapeDisplay shapeDisplay) {
+            IShapeDisplay shapeDisplay, 
+            ILayoutSerializer serializer,
+            ISignals signals) {
 
             _layoutManager = layoutManager;
             _contentManager = contentManager;
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
+            _serializer = serializer;
+            _signals = signals;
+
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
             OnIndexing<LayoutPart>(IndexLayout);
@@ -56,8 +64,9 @@ namespace Orchard.Layouts.Handlers {
             foreach (var layout in templateClients) {
                 var isPublished = layout.ContentItem.VersionRecord.Published;
                 var draft = isPublished ? _contentManager.Get<LayoutPart>(layout.Id, VersionOptions.DraftRequired) : layout;
-                
-                draft.LayoutState = _layoutManager.ApplyTemplate(layout, part);
+                var updatedLayout = _layoutManager.ApplyTemplate(layout, part);
+
+                draft.LayoutData = _serializer.Serialize(updatedLayout);
 
                 if (isPublished) {
                     // We don't have to recurse here, since invoking Publish on a Layout will cause this handler to execute again.

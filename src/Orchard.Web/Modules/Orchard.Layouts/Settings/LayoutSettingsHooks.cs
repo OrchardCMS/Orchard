@@ -5,7 +5,6 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.Layouts.Framework.Serialization;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Settings {
@@ -24,14 +23,9 @@ namespace Orchard.Layouts.Settings {
 
             var model = definition.Settings.GetModel<LayoutTypePartSettings>();
 
-            if (String.IsNullOrWhiteSpace(model.Flavor)) {
-                var partModel = definition.PartDefinition.Settings.GetModel<LayoutPartSettings>();
-                model.Flavor = partModel.FlavorDefault;
-            }
-
-            if (String.IsNullOrWhiteSpace(model.DefaultLayoutState)) {
-                var defaultState = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
-                model.DefaultLayoutState = defaultState;
+            if (String.IsNullOrWhiteSpace(model.DefaultLayoutData)) {
+                var defaultData = _serializer.Serialize(_layoutManager.CreateDefaultLayout());
+                model.DefaultLayoutData = defaultData;
             }
 
             yield return DefinitionTemplate(model);
@@ -43,27 +37,8 @@ namespace Orchard.Layouts.Settings {
 
             var model = new LayoutTypePartSettings();
             updateModel.TryUpdateModel(model, "LayoutTypePartSettings", null, null);
-            builder.WithSetting("LayoutTypePartSettings.Flavor", !String.IsNullOrWhiteSpace(model.Flavor) ? model.Flavor : null);
             builder.WithSetting("LayoutTypePartSettings.IsTemplate", model.IsTemplate.ToString());
-            builder.WithSetting("LayoutTypePartSettings.DefaultLayoutState", model.DefaultLayoutState);
-            yield return DefinitionTemplate(model);
-        }
-
-        public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition) {
-            if (definition.Name != "LayoutPart")
-                yield break;
-
-            var model = definition.Settings.GetModel<LayoutPartSettings>();
-            yield return DefinitionTemplate(model);
-        }
-
-        public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.Name != "LayoutPart")
-                yield break;
-
-            var model = new LayoutPartSettings();
-            updateModel.TryUpdateModel(model, "LayoutPartSettings", null, null);
-            builder.WithSetting("LayoutPartSettings.FlavorDefault", !String.IsNullOrWhiteSpace(model.FlavorDefault) ? model.FlavorDefault : null);
+            builder.WithSetting("LayoutTypePartSettings.DefaultLayoutData", model.DefaultLayoutData);
             yield return DefinitionTemplate(model);
         }
     }

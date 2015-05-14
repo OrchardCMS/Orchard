@@ -1,0 +1,29 @@
+﻿@model Orchard.Layouts.ViewModels.BreadcrumbsEditorViewModel
+@{
+    var menuOptions = Model.Menus.Select(x => new SelectListItem { Text = Html.ItemDisplayText(x).ToString(), Value = x.Id.ToString(), Selected = x.Id == Model.CurrentMenuId });
+}
+<fieldset>
+    @Html.LabelFor(m => m.CurrentMenuId, T("For Menu"))
+    @Html.DropDownListFor(m => m.CurrentMenuId, menuOptions)
+    @Html.Hint(T("Select which menu you want to display"))
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.StartLevel, T("Start Level"))
+    @Html.TextBoxFor(m => m.StartLevel, new { @class = "text small" })
+    @Html.Hint(T("The level the menu should start at."))
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.StopLevel, T("Levels to display"))
+    @Html.TextBoxFor(m => m.StopLevel, new { @class = "text small" })
+    @Html.Hint(T("The number of levels to display, \"0\" meaning all levels."))
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.AddHomePage)
+    @Html.LabelFor(m => m.AddHomePage, T("Add the home page as the first element").Text, new { @class = "forcheckbox" })
+    @Html.Hint(T("Check to render the home page as the first element of the breadcrumb."))
+</fieldset>
+<fieldset>
+    @Html.CheckBoxFor(m => m.AddCurrentPage)
+    @Html.LabelFor(m => m.AddCurrentPage, T("Add the current content item as the last element").Text, new { @class = "forcheckbox" })
+    @Html.Hint(T("Check to render the current content item as the last element."))
+</fieldset>

@@ -78,13 +78,12 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="xmldiffpatch, Version=1.0.8.28, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\XmlDiffPatch\xmldiffpatch.dll</HintPath>
+      <HintPath>..\..\..\..\lib\xmldiffpatch\xmldiffpatch.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info" />
-    <Content Include="Lib\XmlDiffPatch\xmldiffpatch.dll" />
     <Content Include="Recipes\audit-trail.recipe.xml" />
     <Content Include="Scripts\audittrail-recyclebin.js" />
     <Content Include="Scripts\audittrail-expando.js" />
@@ -161,10 +160,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
       <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
@@ -201,10 +202,8 @@
     <Compile Include="Services\IRecycleBin.cs" />
     <Compile Include="Services\RecycleBin.cs" />
     <Compile Include="ViewModels\RecycleBinViewModel.cs" />
-    <Compile Include="Drivers\ClientIpAddressSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailTrimmingSettingsPartDriver.cs" />
     <Compile Include="Drivers\AuditTrailSettingsPartDriver.cs" />
-    <Compile Include="Handlers\ClientIpAddressSettingsPartHandler.cs" />
     <Compile Include="Handlers\AuditTrailTrimmingSettingsPartHandler.cs" />
     <Compile Include="Helpers\FiltersExtensions.cs" />
     <Compile Include="Helpers\DateTimeExtensions.cs" />
@@ -216,14 +215,11 @@
     <Compile Include="ImportExport\AuditTrailExportHandler.cs" />
     <Compile Include="ImportExport\AuditTrailImportHandler.cs" />
     <Compile Include="Models\AuditTrailEventRecordResult.cs" />
-    <Compile Include="Models\ClientIpAddressSettingsPart.cs" />
     <Compile Include="Models\AuditTrailTrimmingSettingsPart.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailTrimmingSettingsEventProvider.cs" />
     <Compile Include="Providers\AuditTrail\AuditTrailSettingsEventProvider.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentPartImportedEventShape.cs" />
     <Compile Include="Providers\ContentDefinition\Shapes\ContentTypeImportedEventShape.cs" />
-    <Compile Include="Services\DefaultClientIpAddressProvider.cs" />
-    <Compile Include="Services\IClientIpAddressProvider.cs" />
     <Compile Include="Services\Models\AuditTrailSettingsContext.cs" />
     <Compile Include="Services\CommonAuditTrailEventHandler.cs" />
     <Compile Include="Services\AuditTrailEventHandlerBase.cs" />
@@ -316,9 +312,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.AuditTrail.Comment.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts.ClientIpAddressSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AuditTrailEventActions.cshtml" />

@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -112,6 +113,8 @@
     <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
     <Compile Include="Containers\Handlers\ContainerWidgetPartHandler.cs" />
+    <Compile Include="Containers\ListViews\CondensedListView.cs" />
+    <Compile Include="Containers\ListViews\DefaultListView.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\OrderByDirection.cs" />
@@ -289,7 +292,7 @@
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
     <Content Include="Common\Views\Parts.Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
-    <Content Include="Common\Views\CommonMetadataOwner.cshtml" />
+    <Content Include="Common\Views\CommonMetadataLastModified.cshtml" />
     <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
@@ -351,7 +354,7 @@
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -445,7 +448,7 @@
     <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />

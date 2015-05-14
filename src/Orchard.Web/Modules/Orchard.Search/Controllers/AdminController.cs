@@ -7,10 +7,10 @@ using Orchard.Environment.Extensions;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Search.Helpers;
 using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
@@ -37,16 +37,18 @@ namespace Orchard.Search.Controllers {
 
         public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
+            var adminSearchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
             
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
-                searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>().FilterCulture,
-                                                  searchSettingsPart.SearchIndex,
-                                                  searchSettingsPart.SearchedFields,
-                                                  searchHit => searchHit);
+                searchHits = _searchService.Query(
+                    searchText, pager.Page, pager.PageSize,
+                    searchSettingsPart.FilterCulture,
+                    adminSearchSettingsPart.SearchIndex,
+                    searchSettingsPart.GetSearchFields(adminSearchSettingsPart.SearchIndex),
+                    searchHit => searchHit);
             }
             catch (Exception exception) {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);

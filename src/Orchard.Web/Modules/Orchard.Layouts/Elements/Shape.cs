@@ -1,5 +1,6 @@
 ﻿using Orchard.Layouts.Framework.Elements;
 using Orchard.Layouts.Helpers;
+using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
     public class Shape : Element {
@@ -7,13 +8,17 @@ namespace Orchard.Layouts.Elements {
             get { return "Snippets"; }
         }
 
-        public string ShapeType {
-            get { return State.Get("ShapeType"); }
-            set { State["ShapeType"] = value; }
+        public override LocalizedString Description {
+            get { return T("Add a shape to your layout."); }
         }
 
-        public override bool HasEditor {
-            get { return true; }
+        public override string ToolboxIcon {
+            get { return "\uf10c"; }
+        }
+
+        public string ShapeType {
+            get { return this.Retrieve(x => x.ShapeType); }
+            set { this.Store(x => x.ShapeType, value); }
         }
     }
 }

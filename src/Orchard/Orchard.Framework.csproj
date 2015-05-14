@@ -43,6 +43,9 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -347,7 +350,9 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Services\Clock.cs" />
+    <Compile Include="Services\ClientHostAddressAccessor.cs" />
     <Compile Include="Services\DefaultJsonConverter.cs" />
+    <Compile Include="Services\IClientHostAddressAccessor.cs" />
     <Compile Include="Services\IJsonConverter.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
@@ -929,7 +934,6 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
@@ -985,7 +989,6 @@
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
-    <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
   </ItemGroup>
   <ItemGroup>

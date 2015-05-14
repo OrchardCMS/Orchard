@@ -13,7 +13,7 @@ namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
-        private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
 
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -22,7 +22,7 @@ namespace Orchard.ContentManagement {
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
@@ -74,13 +74,13 @@ namespace Orchard.ContentManagement {
 
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
-            
+
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
 
-            
+
             return context.Shape;
         }
 
@@ -103,11 +103,11 @@ namespace Orchard.ContentManagement {
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
-            
+
             return context.Shape;
         }
 
@@ -123,8 +123,6 @@ namespace Orchard.ContentManagement {
                 var theme = workContext.CurrentTheme;
                 var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
 
-                var request = _requestContext.HttpContext.Request;
-
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {
@@ -133,7 +131,7 @@ namespace Orchard.ContentManagement {
                         Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
+                        Path = GetPath()
                     };
 
                     // define which location should be used if none placement is hit
@@ -151,6 +149,13 @@ namespace Orchard.ContentManagement {
                     Source = String.Empty
                 };
             };
+        }
+
+        /// <summary>
+        /// Gets the current app-relative path, i.e. ~/my-blog/foo.
+        /// </summary>
+        private string GetPath() {
+            return VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path));
         }
     }
 }

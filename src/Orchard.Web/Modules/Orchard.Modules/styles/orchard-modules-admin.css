@@ -21,6 +21,11 @@ html.dyn #main ul.features button { display:none; }
     width:32.2%;
 }
 
+.features.summary-view .missingDependencies{
+    line-height:1em;
+}
+
+
 .features.detail-view .feature {
     padding:.25em 0;
     border-bottom:1px solid #CCC;

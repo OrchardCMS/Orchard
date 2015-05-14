@@ -2,13 +2,13 @@
 
 namespace Orchard.DynamicForms.Elements {
     public class Button : FormElement {
-        public override bool HasEditor {
-            get { return true; }
+        public override string ToolboxIcon {
+            get { return "\uf096"; }
         }
 
         public string Text {
-            get { return State.Get("ButtonText", "Submit"); }
-            set { State["ButtonText"] = value; }
+            get { return this.Retrieve(x => x.Text, () => "Submit"); }
+            set { this.Store(x => x.Text, value); }
         }
     }
 }

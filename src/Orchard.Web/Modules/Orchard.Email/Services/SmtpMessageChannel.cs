@@ -22,6 +22,7 @@ namespace Orchard.Email.Services {
             IOrchardServices orchardServices,
             IShapeFactory shapeFactory,
             IShapeDisplay shapeDisplay) {
+
             _shapeFactory = shapeFactory;
             _shapeDisplay = shapeDisplay;
 
@@ -39,16 +40,18 @@ namespace Orchard.Email.Services {
 
         public void Process(IDictionary<string, object> parameters) {
 
-
             if (!_smtpSettings.IsValid()) {
                 return;
             }
 
             var emailMessage = new EmailMessage {
-                Body = parameters["Body"] as string,
-                Subject = parameters["Subject"] as string,
-                Recipients = parameters["Recipients"] as string,
-                ReplyTo = parameters.ContainsKey("ReplyTo") ? parameters["ReplyTo"] as string : null
+                Body = Read(parameters, "Body"),
+                Subject = Read(parameters, "Subject"),
+                Recipients = Read(parameters, "Recipients"),
+                ReplyTo = Read(parameters, "ReplyTo"),
+                From = Read(parameters, "From"),
+                Bcc = Read(parameters, "Bcc"),
+                Cc = Read(parameters, "CC")
             };
 
             if (emailMessage.Recipients.Length == 0) {
@@ -56,7 +59,7 @@ namespace Orchard.Email.Services {
                 return;
             }
 
-            // Applying default Body alteration for SmtpChannel
+            // Apply default Body alteration for SmtpChannel.
             var template = _shapeFactory.Create("Template_Smtp_Wrapper", Arguments.From(new {
                 Content = new MvcHtmlString(emailMessage.Body)
             }));
@@ -67,18 +70,51 @@ namespace Orchard.Email.Services {
                 IsBodyHtml = true
             };
 
-            var section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
-            mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address) 
-                ? new MailAddress(_smtpSettings.Address) 
-                : new MailAddress(section.From);
+            if (parameters.ContainsKey("Message")) {
+                // A full message object is provided by the sender.
+
+                var oldMessage = mailMessage;
+                mailMessage = (MailMessage)parameters["Message"];
+
+                if (String.IsNullOrWhiteSpace(mailMessage.Subject))
+                    mailMessage.Subject = oldMessage.Subject;
+
+                if (String.IsNullOrWhiteSpace(mailMessage.Body)) {
+                    mailMessage.Body = oldMessage.Body;
+                    mailMessage.IsBodyHtml = oldMessage.IsBodyHtml;
+                }
+            }
 
             try {
-                foreach (var recipient in emailMessage.Recipients.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+
+                foreach (var recipient in ParseRecipients(emailMessage.Recipients)) {
                     mailMessage.To.Add(new MailAddress(recipient));
                 }
 
+                if (!String.IsNullOrWhiteSpace(emailMessage.Cc)) {
+                    foreach (var recipient in ParseRecipients(emailMessage.Cc)) {
+                        mailMessage.CC.Add(new MailAddress(recipient));
+                    }
+                }
+
+                if (!String.IsNullOrWhiteSpace(emailMessage.Bcc)) {
+                    foreach (var recipient in ParseRecipients(emailMessage.Bcc)) {
+                        mailMessage.Bcc.Add(new MailAddress(recipient));
+                    }
+                }
+
+                if (!String.IsNullOrWhiteSpace(emailMessage.From)) {
+                    mailMessage.From = new MailAddress(emailMessage.From);
+                }
+                else {
+                    // Take 'From' address from site settings or web.config.
+                    mailMessage.From = !String.IsNullOrWhiteSpace(_smtpSettings.Address)
+                        ? new MailAddress(_smtpSettings.Address)
+                        : new MailAddress(((SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
+                }
+
                 if (!String.IsNullOrWhiteSpace(emailMessage.ReplyTo)) {
-                    foreach (var recipient in emailMessage.ReplyTo.Split(new [] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                    foreach (var recipient in ParseRecipients(emailMessage.ReplyTo)) {
                         mailMessage.ReplyToList.Add(new MailAddress(recipient));
                     }
                 }
@@ -91,7 +127,7 @@ namespace Orchard.Email.Services {
         }
 
         private SmtpClient CreateSmtpClient() {
-            // if no properties are set in the dashboard, use the web.config value
+            // If no properties are set in the dashboard, use the web.config value.
             if (String.IsNullOrWhiteSpace(_smtpSettings.Host)) {
                 return new SmtpClient(); 
             }
@@ -112,6 +148,14 @@ namespace Orchard.Email.Services {
             smtpClient.EnableSsl = _smtpSettings.EnableSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             return smtpClient;
+        }
+
+        private string Read(IDictionary<string, object> dictionary, string key) {
+            return dictionary.ContainsKey(key) ? dictionary[key] as string : null;
+        }
+
+        private IEnumerable<string> ParseRecipients(string recipients) {
+            return recipients.Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

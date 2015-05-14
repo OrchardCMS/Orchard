@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.PublishLater.Services {
-    [UsedImplicitly]
     public class PublishingTaskManager : IPublishingTaskManager {
         private const string PublishTaskType = "Publish";
 

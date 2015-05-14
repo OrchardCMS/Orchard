@@ -1,6 +1,6 @@
 ﻿@model Orchard.Layouts.ViewModels.ElementBlueprintPropertiesViewModel
 @{
-    Layout.Title = T("Edit Blueprint Properties based on {0}", Model.BaseElement.DisplayText);
+    Layout.Title = T("Edit Element Properties based on {0}", Model.BaseElement.DisplayText);
 }
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
@@ -14,6 +14,11 @@
             @Html.LabelFor(m => m.ElementTypeName, T("Element Type Name"))
             @Html.TextBoxFor(m => m.ElementTypeName, new { @class = "text large disabled", disabled = "disabled" })
             @Html.Hint(T("The technical type name of the specialized element. Example: Acme.Elements.Special{0}", Model.BaseElement.Descriptor.DisplayText))
+        </div>
+        <div>
+            @Html.LabelFor(m => m.ElementDescription, T("Element Description"))
+            @Html.TextBoxFor(m => m.ElementDescription, new { @class = "text large" })
+            @Html.Hint(T("Optionally enter a description for this element."))
         </div>
         <div>
             @Html.LabelFor(m => m.ElementCategory, T("Element Category"))

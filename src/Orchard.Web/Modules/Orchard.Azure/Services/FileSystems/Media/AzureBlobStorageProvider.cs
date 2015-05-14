@@ -13,8 +13,11 @@ namespace Orchard.Azure.Services.FileSystems.Media {
 
         public AzureBlobStorageProvider(ShellSettings shellSettings, IMimeTypeProvider mimeTypeProvider, IPlatformConfigurationAccessor pca)
             : this(pca.GetSetting(Constants.MediaStorageStorageConnectionStringSettingName, shellSettings.Name, null),
-                   Constants.MediaStorageContainerName, shellSettings.Name, mimeTypeProvider,
-                   pca.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null)) {
+                   Constants.MediaStorageContainerName,
+                   pca.GetSetting(Constants.MediaStorageRootFolderPathSettingName, shellSettings.Name, null) ?? shellSettings.Name,
+                   mimeTypeProvider,
+                   pca.GetSetting(Constants.MediaStoragePublicHostName, shellSettings.Name, null))
+        {
         }
 
         public AzureBlobStorageProvider(string storageConnectionString, string containerName, string rootFolderPath, IMimeTypeProvider mimeTypeProvider, string publicHostName)
@@ -57,6 +60,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <param name="url">The public URL of the media.</param>
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
+            EnsureInitialized();
             if (url.StartsWith(_absoluteRoot)) {
                 return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
             }

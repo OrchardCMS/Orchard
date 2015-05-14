@@ -109,7 +109,6 @@
     <Content Include="TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="TheAdmin\Styles\site.css" />
     <Content Include="TheAdmin\Theme.txt" />
-    <Content Include="SafeMode\Views\Document.cshtml" />
     <Content Include="TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +158,7 @@
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

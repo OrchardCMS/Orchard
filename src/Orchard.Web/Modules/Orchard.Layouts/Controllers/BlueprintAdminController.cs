@@ -94,6 +94,7 @@ namespace Orchard.Layouts.Controllers {
                 baseElement, 
                 model.ElementTypeName.TrimSafe(),
                 model.ElementDisplayName.TrimSafe(),
+                model.ElementDescription.TrimSafe(),
                 model.ElementCategory.TrimSafe());
 
             return RedirectToAction("Edit", new { id = blueprint.Id });
@@ -103,16 +104,17 @@ namespace Orchard.Layouts.Controllers {
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
-            var state = ElementStateHelper.Deserialize(blueprint.BaseElementState);
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
-            var context = CreateEditorContext(element, state);
+            var data = ElementDataHelper.Deserialize(blueprint.BaseElementState);
+            var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
+            var context = CreateEditorContext(element, data);
             var editorResult = _elementManager.BuildEditor(context);
 
             var viewModel = new EditElementBlueprintViewModel {
                 EditorResult = editorResult,
                 TypeName = blueprint.BaseElementTypeName,
                 DisplayText = descriptor.DisplayText,
-                ElementState = element.State.Serialize(),
+                Description = descriptor.Description,
+                ElementData = element.Data.Serialize(),
                 Tabs = editorResult.CollectTabs().ToArray(),
                 BaseElement = element
             };
@@ -122,19 +124,20 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(int id, ElementStateViewModel model) {
+        public ActionResult Edit(int id, ElementDataViewModel model) {
             var blueprint = _elementBlueprintService.GetBlueprint(id);
             var describeContext = DescribeElementsContext.Empty;
             var descriptor = _elementManager.GetElementDescriptorByTypeName(describeContext, blueprint.BaseElementTypeName);
-            var state = ElementStateHelper.Deserialize(model.ElementState).Combine(Request.Form.ToDictionary());
-            var element = _elementManager.ActivateElement(descriptor, new ActivateElementArgs { State = state });
-            var context = CreateEditorContext(element, elementState: state);
+            var data = ElementDataHelper.Deserialize(model.ElementData).Combine(Request.Form.ToDictionary());
+            var element = _elementManager.ActivateElement(descriptor, e => e.Data = data);
+            var context = CreateEditorContext(element, elementData: data);
             var editorResult = _elementManager.UpdateEditor(context);
             var viewModel = new EditElementBlueprintViewModel {
                 EditorResult = editorResult,
                 TypeName = model.TypeName,
                 DisplayText = descriptor.DisplayText,
-                ElementState = element.State.Serialize(),
+                Description = descriptor.Description,
+                ElementData = element.Data.Serialize(),
                 Tabs = editorResult.CollectTabs().ToArray(),
                 BaseElement = element
             };
@@ -144,7 +147,7 @@ namespace Orchard.Layouts.Controllers {
                 return View(viewModel);
             }
 
-            blueprint.BaseElementState = state.Serialize();
+            blueprint.BaseElementState = data.Serialize();
             _signals.Trigger(Signals.ElementDescriptors);
             _notifier.Information(T("That blueprint has been saved."));
             return RedirectToAction("Index");
@@ -158,6 +161,7 @@ namespace Orchard.Layouts.Controllers {
             var viewModel = new ElementBlueprintPropertiesViewModel {
                 BaseElement = baseElement,
                 ElementDisplayName = blueprint.ElementDisplayName,
+                ElementDescription = blueprint.ElementDescription,
                 ElementTypeName = blueprint.ElementTypeName,
                 ElementCategory = blueprint.ElementCategory
             };
@@ -180,6 +184,7 @@ namespace Orchard.Layouts.Controllers {
             }
 
             blueprint.ElementDisplayName = model.ElementDisplayName.TrimSafe();
+            blueprint.ElementDescription = model.ElementDescription.TrimSafe();
             blueprint.ElementCategory = model.ElementCategory.TrimSafe();
 
             _notifier.Information(T("That blueprint's properties have been saved."));
@@ -211,12 +216,12 @@ namespace Orchard.Layouts.Controllers {
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        private ElementEditorContext CreateEditorContext(IElement element, StateDictionary elementState = null) {
-            elementState = elementState ?? new StateDictionary();
+        private ElementEditorContext CreateEditorContext(Element element, ElementDataDictionary elementData = null) {
+            elementData = elementData ?? new ElementDataDictionary();
             var context = new ElementEditorContext {
                 Element = element,
                 Updater = this,
-                ValueProvider = elementState.ToValueProvider(_cultureAccessor.CurrentCulture),
+                ValueProvider = elementData.ToValueProvider(_cultureAccessor.CurrentCulture),
                 ShapeFactory = _shapeFactory
             };
             ValueProvider = context.ValueProvider;

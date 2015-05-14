@@ -16,7 +16,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Layouts.Providers {
     [OrchardFeature("Orchard.Layouts.Snippets")]
-    public class SnippetElementHarvester : Component, IElementHarvester {
+    public class SnippetElementHarvester : Component, ElementHarvester {
         private const string SnippetShapeSuffix = "Snippet";
         private readonly Work<IShapeFactory> _shapeFactory;
         private readonly Work<ISiteThemeService> _siteThemeService;
@@ -40,7 +40,7 @@ namespace Orchard.Layouts.Providers {
         public IEnumerable<ElementDescriptor> HarvestElements(HarvestElementsContext context) {
             var currentThemeName = _siteThemeService.Value.GetCurrentThemeName();
             var shapeTable = _shapeTableLocator.Value.Lookup(currentThemeName);
-            var shapeDescriptors = shapeTable.Descriptors.Where(x => x.Key.EndsWith(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase)).ToDictionary(x => x.Key, x => x.Value);
+            var shapeDescriptors = shapeTable.Bindings.Where(x => !String.Equals(x.Key, "Elements_Snippet", StringComparison.OrdinalIgnoreCase) && x.Key.EndsWith(SnippetShapeSuffix, StringComparison.OrdinalIgnoreCase)).ToDictionary(x => x.Key, x => x.Value.ShapeDescriptor);
             var elementType = typeof (Snippet);
             var snippetElement = _elementFactory.Value.Activate(elementType);
 
@@ -48,13 +48,14 @@ namespace Orchard.Layouts.Providers {
                 var shapeType = shapeDescriptor.Value.ShapeType;
                 var elementName = GetDisplayName(shapeDescriptor.Value.BindingSource);
                 var closureDescriptor = shapeDescriptor;
-                yield return new ElementDescriptor(elementType, shapeType, T(elementName), snippetElement.Category) {
-                    Display = displayContext => Displaying(displayContext, closureDescriptor.Value)
+                yield return new ElementDescriptor(elementType, shapeType, T(elementName), T("An element that renders the {0} shape.", shapeType), snippetElement.Category) {
+                    Displaying = displayContext => Displaying(displayContext, closureDescriptor.Value),
+                    ToolboxIcon = "\uf10c"
                 };
             }
         }
 
-        private void Displaying(ElementDisplayContext context, ShapeDescriptor shapeDescriptor) {
+        private void Displaying(ElementDisplayingContext context, ShapeDescriptor shapeDescriptor) {
             var shapeType = shapeDescriptor.ShapeType;
             var shape = _shapeFactory.Value.Create(shapeType);
             context.ElementShape.Snippet = shape;

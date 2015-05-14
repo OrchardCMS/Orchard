@@ -44,7 +44,7 @@
 
             titleElement.text(this._title);
             centerPosition();
-            initButtons();
+            handleCommands();
             makeDraggable();
             window.currentDialog = this;
 
@@ -76,6 +76,8 @@
 
             $(document).off("keyup", onKeyUp);
             closedDialogs.push(self);
+
+
         };
 
         this.load = function (url, data, method) {
@@ -141,7 +143,9 @@
         var onKeyUp = function (e) {
             var esc = 27;
             if (e.keyCode == esc) {
-                self.close();
+                self.trigger("command", {
+                    command: "cancel"
+                });
             }
         };
 
@@ -156,17 +160,21 @@
             });
         };
 
-        var initButtons = function () {
-            self.element.on("click", "a.close, a.cancel", function (e) {
-                e.preventDefault();
-                self.close();
-            });
-
-            self.element.on("click", "a.save", function (e) {
-                e.preventDefault();
-                var frameDoc = self.frame.getDocument();
-                var form = frameDoc.find("form:first");
-                form.submit();
+        var handleCommands = function () {
+            self.element.on("command", function (e, args) {
+                switch (args.command) {
+                    case "close":
+                    case "cancel":
+                        self.close();
+                        break;
+                    case "save":
+                        {
+                            var frameDoc = self.frame.getDocument();
+                            var form = frameDoc.find("form:first");
+                            form.submit();
+                        }
+                        break;
+                }
             });
         };
 

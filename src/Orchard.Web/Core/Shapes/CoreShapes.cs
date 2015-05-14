@@ -230,7 +230,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Style__" + fileName);
                     }
@@ -240,7 +240,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Script__" + fileName);
                     }
@@ -250,7 +250,7 @@ namespace Orchard.Core.Shapes {
                 .OnDisplaying(displaying => {
                     var resource = displaying.Shape;
                     string url = resource.Url;
-                    string fileName = StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url);
+                    var fileName = url != null ? StaticFileBindingStrategy.GetAlternateShapeNameFromFileName(url) : default(string);
                     if (!string.IsNullOrEmpty(fileName)) {
                         resource.Metadata.Alternates.Add("Resource__" + fileName);
                     }
@@ -449,14 +449,12 @@ namespace Orchard.Core.Shapes {
                 currentPage = 1;
 
             var pageSize = PageSize;
-            if (pageSize < 1)
-                pageSize = _workContext.Value.CurrentSite.PageSize;
-
+            
             var numberOfPagesToShow = Quantity ?? 0;
             if (Quantity == null || Quantity < 0)
                 numberOfPagesToShow = 7;
     
-            var totalPageCount = (int)Math.Ceiling(TotalItemCount / pageSize);
+            var totalPageCount = pageSize > 0 ? (int)Math.Ceiling(TotalItemCount / pageSize) : 1;
 
             var firstText = FirstText ?? T("<<");
             var previousText = PreviousText ?? T("<");
@@ -529,7 +527,7 @@ namespace Orchard.Core.Shapes {
             }
 
             // page numbers
-            if (numberOfPagesToShow > 0) {
+            if (numberOfPagesToShow > 0 && lastPage > 1) {
                 for (var p = firstPage; p <= lastPage; p++) {
                     if (p == currentPage) {
                         Shape.Add(New.Pager_CurrentPage(Value: p, RouteValues: new RouteValueDictionary(routeData), Pager: Shape));

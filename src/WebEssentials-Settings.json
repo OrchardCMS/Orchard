@@ -107,7 +107,7 @@
     "CompileOnSave": true,
     "EnableChainCompilation": true,
     "GenerateSourceMaps": false,
-    "MinifyInPlace": true,
+    "MinifyInPlace": false,
     "OutputDirectory": null,
     "ProcessSourceMapsForEditorEnhancements": true,
     "ShowPreviewPane": true,

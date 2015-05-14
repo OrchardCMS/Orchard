@@ -29,15 +29,13 @@ namespace Orchard.Localization.Services {
             if (localized == null)
                 return null;
 
-            var query = versionOptions == null
-                ? _contentManager.Query<LocalizationPart>(content.ContentItem.ContentType)
-                : _contentManager.Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType);
-
             // Warning: Returns only the first of same culture localizations.
-            return query.Where<LocalizationPartRecord>(l =>
+            return _contentManager
+                .Query<LocalizationPart>(versionOptions, content.ContentItem.ContentType)
+                .Where<LocalizationPartRecord>(l =>
                 (l.Id == content.ContentItem.Id || l.MasterContentItemId == content.ContentItem.Id)
                 && l.CultureId == cultureRecord.Id)
-                .List()
+                .Slice(1)
                 .FirstOrDefault();
         }
 

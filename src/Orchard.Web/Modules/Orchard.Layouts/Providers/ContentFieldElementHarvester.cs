@@ -13,7 +13,7 @@ using Orchard.Layouts.Helpers;
 using Orchard.Layouts.Services;
 
 namespace Orchard.Layouts.Providers {
-    public class ContentFieldElementHarvester : Component, IElementHarvester {
+    public class ContentFieldElementHarvester : Component, ElementHarvester {
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
         private readonly Work<ITransactionManager> _transactionManager;
         private readonly Work<ICultureAccessor> _cultureAccessor;
@@ -44,8 +44,9 @@ namespace Orchard.Layouts.Providers {
                 var field = tuple.Item2;
                 var name = String.Format("{0}.{1}", part.Name, field.Name);
                 var displayName = field.DisplayName;
-                yield return new ElementDescriptor(elementType, name, T(displayName), contentFieldElement.Category) {
-                    Display = displayContext => Displaying(displayContext),
+                yield return new ElementDescriptor(elementType, name, T(displayName), T(field.DisplayName), contentFieldElement.Category) {
+                    Displaying = displayContext => Displaying(displayContext),
+                    ToolboxIcon = "\uf1b2"
                 };
             }
         }
@@ -61,23 +62,23 @@ namespace Orchard.Layouts.Providers {
 
             var fields = parts.SelectMany(part => part.Fields.Select(field => Tuple.Create(part, field)));
     
-            // TODO: maybe each module should be able to tell which fields are supported as droppable elements?
+            // TODO: Each module should be able to tell which fields are supported as droppable elements.
             var blackList = new string[0];
 
             return fields.Where(t => blackList.All(x => t.Item2.FieldDefinition.Name != x));
         }
 
-        private void Displaying(ElementDisplayContext context) {
+        private void Displaying(ElementDisplayingContext context) {
             var contentItem = context.Content.ContentItem;
             var typeName = context.Element.Descriptor.TypeName;
             var contentField = contentItem.GetContentField(typeName);
 
             if ((contentItem.Id == 0 || context.DisplayType == "Design") && context.Updater != null) {
-                // The content item hasn't been stored yet, so bind form values with the content field to represent actual state.
+                // The content item hasn't been stored yet, so bind form values with the content field to represent actual Data.
                 var controller = (Controller)context.Updater;
                 var oldValueProvider = controller.ValueProvider;
 
-                controller.ValueProvider = context.Element.State.ToValueProvider(_cultureAccessor.Value.CurrentCulture);
+                controller.ValueProvider = context.Element.Data.ToValueProvider(_cultureAccessor.Value.CurrentCulture);
                 _contentFieldDisplay.Value.UpdateEditor(contentItem, contentField, context.Updater);
                 _transactionManager.Value.Cancel();
                 controller.ValueProvider = oldValueProvider;

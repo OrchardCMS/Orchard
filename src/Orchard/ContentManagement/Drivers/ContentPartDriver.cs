@@ -69,7 +69,7 @@ namespace Orchard.ContentManagement.Drivers {
                         ContentType = part.ContentItem.ContentType,
                         Differentiator = editor.GetDifferentiator(),
                         DisplayType = null,
-                        Path = String.Empty
+                        Path = context.Path
                     };
 
                     var location = descriptor.Placement(placementContext).Location;

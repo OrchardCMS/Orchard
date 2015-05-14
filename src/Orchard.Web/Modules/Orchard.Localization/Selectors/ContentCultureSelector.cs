@@ -28,13 +28,19 @@ namespace Orchard.Localization.Selectors {
             // Attempt to determine culture by previous route if by POST
             string path;
             if (context.Request.HttpMethod.Equals(HttpVerbs.Post.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                path = context.Request.UrlReferrer.AbsolutePath;
+                if (context.Request.UrlReferrer != null)
+                    path = context.Request.UrlReferrer.AbsolutePath;
+                else
+                    return null;
             }
             else {
                 path = context.Request.Path;
             }
 
-            var content = GetByPath(path.TrimStart('/'));
+            var appPath = context.Request.ApplicationPath ?? "/";
+            var requestUrl = (path.StartsWith(appPath) ? path.Substring(appPath.Length) : path).TrimStart('/');
+
+            var content = GetByPath(requestUrl);
             if (content != null) {
                 return new CultureSelectorResult { Priority = -2, CultureName = _localizationService.Value.GetContentCulture(content) };
             }

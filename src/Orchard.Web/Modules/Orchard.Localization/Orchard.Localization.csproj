@@ -69,6 +69,7 @@
     <Compile Include="Controllers\AdminCultureSelectorController.cs" />
     <Compile Include="Helpers\ContextHelpers.cs" />
     <Compile Include="Models\TransliterationSpecificationRecord.cs" />
+    <Compile Include="Providers\ContentLocalizationTokens.cs" />
     <Compile Include="Selectors\ContentCultureSelector.cs" />
     <Compile Include="Selectors\RouteCultureSelector.cs" />
     <Compile Include="Selectors\BrowserCultureSelector.cs" />
@@ -129,10 +130,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Alias\Orchard.Alias.csproj">
       <Project>{475B6C45-B27C-438B-8966-908B9D6D1077}</Project>
@@ -142,9 +145,13 @@
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\AdminCultureSelector.cshtml" />

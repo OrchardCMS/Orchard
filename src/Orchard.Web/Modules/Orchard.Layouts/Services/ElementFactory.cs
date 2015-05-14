@@ -13,28 +13,43 @@ namespace Orchard.Layouts.Services {
 
         public Localizer T { get; set; }
 
-        public IElement Activate(Type elementType) {
-            return (IElement)Activator.CreateInstance(elementType);
+        public Element Activate(Type elementType, Action<Element> initialize = null) {
+            var element = (Element)Activator.CreateInstance(elementType);
+
+            if (initialize != null)
+                initialize(element);
+
+            return element;
         }
 
-        public T Activate<T>() where T : IElement {
-            return (T)Activate(typeof (T));
+        public T Activate<T>(Action<T> initialize = null) where T : Element {
+            var element = (T)Activator.CreateInstance(typeof(T));
+
+            if (initialize != null)
+                initialize(element);
+
+            return element;
         }
 
-        public IElement Activate(ElementDescriptor descriptor, ActivateElementArgs args) {
+        public T Activate<T>(ElementDescriptor descriptor, Action<T> initialize = null) where T : Element {
+            var initializeWrapper = initialize != null ? e => initialize((T)e) : default(Action<Element>);
+            return (T)Activate(descriptor, initializeWrapper);
+        }
+
+        public Element Activate(ElementDescriptor descriptor, Action<Element> initialize = null) {
             _elementEventHandler.Creating(new ElementCreatingContext {
                 ElementDescriptor = descriptor
             });
 
             var element = Activate(descriptor.ElementType);
 
-            args = args ?? ActivateElementArgs.Empty;
-            element.Container = args.Container;
             element.Descriptor = descriptor;
             element.T = T;
-            element.Index = args.Index;
-            element.State = args.State ?? new StateDictionary();
-            element.ExportableState = args.ExportableState ?? new StateDictionary();
+            element.Data = new ElementDataDictionary();
+            element.ExportableData = new ElementDataDictionary();
+
+            if (initialize != null)
+                initialize(element);
 
             _elementEventHandler.Created(new ElementCreatedContext {
                 Element = element,

@@ -1,5 +1,9 @@
 ﻿@model Orchard.Layouts.ViewModels.TextEditorViewModel
-<fieldset>
-    @Html.LabelFor(m => m.Text, T("Body"))
-    @Display.Body_Editor(EditorFlavor: Model.Flavor, Text: Model.Text)
+@{
+    Script.Include("AutoFocus.js");
+}
+<fieldset class="autofocus">
+    @Html.LabelFor(m => m.Content, T("Body"))
+    @Html.TextAreaFor(m => m.Content, 25, 80, new { @class = "text large tokenized", autofocus = "autofocus" })
+    @Html.Hint(T("Note: HTML markup will be rendered encoded."))
 </fieldset>

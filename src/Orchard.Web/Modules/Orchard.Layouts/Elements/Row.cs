@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Layouts.Framework.Elements;
 using Orchard.Localization;
 
 namespace Orchard.Layouts.Elements {
-    public class Row : Container, IRow {
+    public class Row : Container {
         
         public override string Category {
             get { return "Layout"; }
@@ -18,12 +17,16 @@ namespace Orchard.Layouts.Elements {
             get { return true; }
         }
 
+        public override bool HasEditor {
+            get { return false; }
+        }
+
         public IEnumerable<Column> Columns {
             get { return Elements.Cast<Column>(); }
         }
 
-        public int CurrentSpanSize {
-            get { return Columns.Sum(x => x.CurrentSpanSize); }
+        public int Size {
+            get { return Columns.Sum(x => x.Size); }
         }
     }
 }

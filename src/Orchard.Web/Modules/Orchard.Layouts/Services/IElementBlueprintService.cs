@@ -8,6 +8,6 @@ namespace Orchard.Layouts.Services {
         IEnumerable<ElementBlueprint> GetBlueprints();
         void DeleteBlueprint(ElementBlueprint blueprint);
         int DeleteBlueprints(IEnumerable<int> ids);
-        ElementBlueprint CreateBlueprint(IElement baseElement, string elementTypeName, string elementDisplayName, string elementCategory);
+        ElementBlueprint CreateBlueprint(Element baseElement, string elementTypeName, string elementDisplayName, string elementDescription, string elementCategory);
     }
 }

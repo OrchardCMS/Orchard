@@ -1,0 +1,64 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    .layout-popup {
+        display: none; // Shown only in active or focused states.
+        position: absolute;
+        margin: 0;
+        -moz-box-shadow: 3px 3px 11px 0 rgba(50, 50, 50, 0.5);
+        -webkit-box-shadow: 3px 3px 11px 0 rgba(50, 50, 50, 0.5);
+        box-shadow: 3px 3px 11px 0 rgba(50, 50, 50, 0.5);
+        border: 1px solid @gray-border;
+        padding: 2px 0;
+        background-color: #f7f7f7;
+        list-style: none;
+        z-index: 20;
+        color: @gray-text;
+        text-align: left;
+        cursor: default;
+        white-space: nowrap;
+        line-height: normal;
+        min-width: 300px;
+
+        &.wide {
+            width: 600px;
+        }
+
+        .layout-popup-flex {
+            display: flex;
+            padding: 2px 5px;
+
+            .layout-popup-column + .layout-popup-column {
+                margin-left: 4px;
+                border-left: 1px solid fade(gray, 15%);
+                padding-left: 4px;
+            }
+        }
+
+        .layout-popup-item {
+            padding: 4px 6px;
+        }
+
+        .layout-popup-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: @gray-text;
+        }
+
+        .layout-popup-action:hover {
+            background-color: @gray-bg;
+            cursor: pointer;
+        }
+
+        .layout-popup-input {
+            input[type='text'], textarea {
+                width: 100%;
+            }
+
+            > label {
+                display: block;
+                font-size: 0.9em;
+            }
+        }
+    }
+}

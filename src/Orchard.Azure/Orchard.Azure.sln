@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{8E3DE014-9B28-4B32-8AC1-B2BE404E9B2D}"
-	ProjectSection(SolutionItems) = preProject
-		..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj = ..\Orchard.Web\Modules\Orchard.AuditTrail\Orchard.AuditTrail.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{75E7476C-C05B-4C41-8E38-081D3EB55659}"
 EndProject

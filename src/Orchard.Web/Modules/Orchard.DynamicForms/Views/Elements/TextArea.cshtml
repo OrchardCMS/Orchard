@@ -1,0 +1,33 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (TextArea)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "textarea");
+
+    tagBuilder.AddCssClass("text");
+    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+
+    if (element.Rows != null) {
+        tagBuilder.Attributes["rows"] = element.Rows.ToString();
+    }
+
+    if (element.Columns != null) {
+        tagBuilder.Attributes["cols"] = element.Columns.ToString();
+    }
+
+    if (!ViewData.ModelState.IsValidField(element.Name)) {
+        tagBuilder.AddCssClass("input-validation-error");
+    }
+
+    tagBuilder.SetInnerText(Model.TokenizedValue);
+}
+@if (element.ShowLabel) {
+    <label for="@element.HtmlId">@element.Label</label>
+}
+
+@tagBuilder.ToHtmlString(TagRenderMode.Normal)
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(element.Name)
+}

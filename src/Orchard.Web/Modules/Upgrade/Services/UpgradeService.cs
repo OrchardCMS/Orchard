@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using NHibernate.Dialect;
-using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;

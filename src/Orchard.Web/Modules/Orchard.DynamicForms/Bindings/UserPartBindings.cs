@@ -12,12 +12,12 @@ namespace Orchard.DynamicForms.Bindings {
 
         public void Describe(BindingDescribeContext context) {
             context.For<UserPart>()
-                .Binding("UserName", (part, s) => {
+                .Binding("UserName", (contentItem, part, s) => {
                     part.UserName = s;
                     part.NormalizedUserName = s.ToLowerInvariant();
                 })
-                .Binding("Email", (part, s) => part.Email = s)
-                .Binding("Password", (part, s) => {
+                .Binding("Email", (contentItem, part, s) => part.Email = s)
+                .Binding("Password", (contentItem, part, s) => {
                     part.HashAlgorithm = "SHA1";
                     _membershipService.SetPassword(part, s);
                 });
