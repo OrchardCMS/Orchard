@@ -322,8 +322,6 @@ namespace Orchard.Environment {
                     // dispose previous context
                     shellContext.Shell.Terminate();
 
-                    System.Threading.Thread.Sleep(30000);
-
                     var context = _shellContextFactory.CreateShellContext(settings);
 
                     // Activate and register modified context.
