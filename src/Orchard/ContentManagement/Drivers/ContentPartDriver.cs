@@ -72,13 +72,18 @@ namespace Orchard.ContentManagement.Drivers {
                         Path = context.Path
                     };
 
-                    var location = descriptor.Placement(placementContext).Location;
+                    var placementInfo = descriptor.Placement(placementContext);
+
+                    var location = placementInfo.Location;
 
                     if (String.IsNullOrEmpty(location) || location == "-") {
                         return editor;
                     }
 
-                    var editorGroup = editor.GetGroup() ?? "";
+                    var editorGroup = editor.GetGroup();
+                    if (string.IsNullOrEmpty(editorGroup)) {
+                        editorGroup = placementInfo.GetGroup() ?? "";
+                    }
                     var contextGroup = context.GroupId ?? "";
 
                     if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
