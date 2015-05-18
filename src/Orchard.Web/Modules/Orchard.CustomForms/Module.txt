@@ -7,7 +7,7 @@ OrchardVersion: 1.9
 Description: Create custom forms like contact forms or content contributions.
 Features:
     Orchard.CustomForms:
-		Name: Custom Forms
+        Name: Custom Forms
         Description: Create custom forms like contact forms or content contributions.
-        Category: Forms
+        Category: Deprecated
         Dependencies: Contents, Orchard.Tokens, Orchard.Workflows

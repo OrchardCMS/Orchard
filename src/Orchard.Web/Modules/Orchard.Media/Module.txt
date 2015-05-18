@@ -6,4 +6,4 @@ Version: 1.8
 OrchardVersion: 1.9
 Description: The media module offer basic media management features. It currently only supports image files. Storage goes into the current Orchard file system, which can be the server's physical file system or Azure blob storage.
 FeatureDescription: File system based media upload, storage and management.
-Category: Media
+Category: Deprecated
