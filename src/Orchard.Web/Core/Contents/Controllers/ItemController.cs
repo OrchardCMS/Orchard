@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc;
 using Orchard.Themes;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -28,7 +27,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return HttpNotFound();
 
             if (version.HasValue)
-                return Preview(id, version);
+                return await Preview(id, version);
 
             var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 

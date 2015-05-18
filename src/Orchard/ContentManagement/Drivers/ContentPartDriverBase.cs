@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
@@ -23,7 +26,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         public abstract Task<DriverResult> UpdateEditorAsync(UpdateEditorContext context);
 
-        private static IEnumerable<ContentShapeResult> GetShapeResults(DriverResult driverResult) {
+        protected static IEnumerable<ContentShapeResult> GetShapeResults(DriverResult driverResult) {
             if (driverResult is CombinedResult) {
                 return ((CombinedResult)driverResult).GetResults().Select(result => result as ContentShapeResult);
             }

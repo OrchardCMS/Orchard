@@ -190,7 +190,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("AddWidget")]
         [FormValueRequired("submit.Save")]
-        public async Task<ActionResult> AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+        public Task<ActionResult> AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
             return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
@@ -199,11 +199,11 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("AddWidget")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult AddWidgetPublishPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
+        public Task<ActionResult> AddWidgetPublishPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl) {
             return AddWidgetPOST(layerId, widgetType, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        private ActionResult AddWidgetSavePOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private async Task<ActionResult> AddWidgetPOST([Bind(Prefix = "WidgetPart.LayerId")] int layerId, string widgetType, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
@@ -351,7 +351,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public async Task<ActionResult> EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+        public Task<ActionResult> EditWidgetSavePOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
             return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
@@ -360,13 +360,13 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult EditWidgetPublishPOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
+        public Task<ActionResult> EditWidgetPublishPOST(int id, [Bind(Prefix = "WidgetPart.LayerId")] int layerId, string returnUrl) {
             return EditWidgetPOST(id, layerId, returnUrl, contentItem => {
                 Services.ContentManager.Publish(contentItem);
             });
         }
 
-        private ActionResult EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        private async Task<ActionResult> EditWidgetPOST(int id, int layerId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
 
