@@ -4,8 +4,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class AsyncContentPartDriver<TContent> : ContentPartDriverBase<TContent>
-        where TContent : ContentPart, new() {
+    public abstract class AsyncContentPartDriver<TContent> : ContentPartDriverBase<TContent> where TContent : ContentPart, new() {
         public override async Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
 
@@ -46,34 +45,53 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             // checking if the editor needs to be updated (e.g. if it was not hidden)
-            var editor = await EditorAsync(part, context.New) as ContentShapeResult;
+            var editor = await EditorAsync(part, context.New);
+            IEnumerable<ContentShapeResult> contentShapeResults = GetShapeResults(editor);
 
-            if (editor != null) {
+            if (contentShapeResults.Any(contentShapeResult => {
+                if (contentShapeResult == null) return true;
+
                 ShapeDescriptor descriptor;
-                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                if (context.ShapeTable.Descriptors.TryGetValue(contentShapeResult.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         Content = part.ContentItem,
                         ContentType = part.ContentItem.ContentType,
-                        Differentiator = editor.GetDifferentiator(),
+                        Differentiator = contentShapeResult.GetDifferentiator(),
                         DisplayType = null,
-                        Path = String.Empty
+                        Path = context.Path
                     };
 
-                    var location = descriptor.Placement(placementContext).Location;
+                    var placementInfo = descriptor.Placement(placementContext);
+
+                    var location = placementInfo.Location;
 
                     if (String.IsNullOrEmpty(location) || location == "-") {
-                        return editor;
+                        return false;
+                    }
+
+                    var editorGroup = contentShapeResult.GetGroup();
+                    if (string.IsNullOrEmpty(editorGroup)) {
+                        editorGroup = placementInfo.GetGroup() ?? "";
+                    }
+                    var contextGroup = context.GroupId ?? "";
+
+                    if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
+                        return false;
                     }
                 }
-            }
 
+                return true;
+            })) {
             var result = await EditorAsync(part, context.Updater, context.New);
 
             if (result != null) {
                 result.ContentPart = part;
             }
 
-            return result;
+                return result;
+            }
+
+            return editor;
         }
 
         protected virtual Task<DriverResult> DisplayAsync(TContent part, string displayType, dynamic shapeHelper) {

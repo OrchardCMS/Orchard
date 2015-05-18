@@ -44,42 +44,54 @@ namespace Orchard.ContentManagement.Drivers {
                 return Task.FromResult<DriverResult>(null);
             }
 
-            // checking if the editor needs to be updated (e.g. if it was not hidden)
-            var editor = Editor(part, context.New) as ContentShapeResult;
+            // checking if the editor needs to be updated (e.g. if any of the shapes were not hidden)
+            DriverResult editor = Editor(part, context.New);
+            IEnumerable<ContentShapeResult> contentShapeResults = GetShapeResults(editor);
 
-            if (editor != null) {
+            if (contentShapeResults.Any(contentShapeResult => {
+                if (contentShapeResult == null) return true;
+
                 ShapeDescriptor descriptor;
-                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                if (context.ShapeTable.Descriptors.TryGetValue(contentShapeResult.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         Content = part.ContentItem,
                         ContentType = part.ContentItem.ContentType,
-                        Differentiator = editor.GetDifferentiator(),
+                        Differentiator = contentShapeResult.GetDifferentiator(),
                         DisplayType = null,
                         Path = context.Path
                     };
 
-                    var location = descriptor.Placement(placementContext).Location;
+                    var placementInfo = descriptor.Placement(placementContext);
+
+                    var location = placementInfo.Location;
 
                     if (String.IsNullOrEmpty(location) || location == "-") {
-                        return Task.FromResult<DriverResult>(editor);
+                        return false;
                     }
 
-                    var editorGroup = editor.GetGroup() ?? "";
+                    var editorGroup = contentShapeResult.GetGroup();
+                    if (string.IsNullOrEmpty(editorGroup)) {
+                        editorGroup = placementInfo.GetGroup() ?? "";
+                    }
                     var contextGroup = context.GroupId ?? "";
 
                     if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
-                        return Task.FromResult<DriverResult>(editor);
+                        return false;
                     }
                 }
+
+                return true;
+            })) {
+                DriverResult result = Editor(part, context.Updater, context.New);
+
+                if (result != null) {
+                    result.ContentPart = part;
+                }
+				
+				return Task.FromResult<DriverResult>(result);
             }
 
-            var result = Editor(part, context.Updater, context.New);
-
-            if (result != null) {
-                result.ContentPart = part;
-            }
-
-            return Task.FromResult<DriverResult>(result);
+            return Task.FromResult<DriverResult>(editor);
         }
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) {
