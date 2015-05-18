@@ -9,7 +9,7 @@ using System.Security;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("Orchard")]
-[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
+[assembly: AssemblyCopyright("Copyright © .NET Foundation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

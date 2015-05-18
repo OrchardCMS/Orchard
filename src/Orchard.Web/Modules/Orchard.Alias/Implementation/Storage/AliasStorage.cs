@@ -6,11 +6,13 @@ using System.Xml.Linq;
 using Orchard.Alias.Records;
 using Orchard.Data;
 using Orchard.Alias.Implementation.Holder;
+using Orchard.Validation;
 
 namespace Orchard.Alias.Implementation.Storage {
     public interface IAliasStorage : IDependency {
         void Set(string path, IDictionary<string, string> routeValues, string source);
         IDictionary<string, string> Get(string aliasPath);
+        void Remove(Expression<Func<AliasRecord, bool>> filter);
         void Remove(string path);
         void Remove(string path, string aliasSource);
         void RemoveBySource(string aliasSource);
@@ -88,36 +90,21 @@ namespace Orchard.Alias.Implementation.Storage {
         }
 
         public void Remove(string path) {
-
-            if (path == null) {
-                throw new ArgumentNullException("path");
-            }
-
-            foreach (var aliasRecord in _aliasRepository.Fetch(r => r.Path == path)) {
-                _aliasRepository.Delete(aliasRecord);
-                // Bulk updates might go wrong if we don't flush
-                _aliasRepository.Flush();
-                var dict = ToDictionary(aliasRecord);
-                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3 });
-            }
+            Remove(x => x.Path == path && x.Source == path);
         }
+
         public void Remove(string path, string aliasSource) {
-
-            if (path == null) {
-                throw new ArgumentNullException("path");
-            }
-
-            foreach (var aliasRecord in _aliasRepository.Fetch(r => r.Path == path && r.Source == aliasSource)) {
-                _aliasRepository.Delete(aliasRecord);
-                // Bulk updates might go wrong if we don't flush
-                _aliasRepository.Flush();
-                var dict = ToDictionary(aliasRecord);
-                _aliasHolder.RemoveAlias(new AliasInfo() { Path = dict.Item1, Area = dict.Item2, RouteValues = dict.Item3 });
-            }
+            Remove(x => x.Path == path && x.Source == aliasSource);
         }
 
         public void RemoveBySource(string aliasSource) {
-            foreach (var aliasRecord in _aliasRepository.Fetch(r => r.Source == aliasSource)) {
+            Remove(x => x.Source == aliasSource);
+        }
+
+        public void Remove(Expression<Func<AliasRecord, bool>> filter) {
+            Argument.ThrowIfNull(filter, "filter");
+
+            foreach (var aliasRecord in _aliasRepository.Fetch(filter)) {
                 _aliasRepository.Delete(aliasRecord);
                 // Bulk updates might go wrong if we don't flush
                 _aliasRepository.Flush();

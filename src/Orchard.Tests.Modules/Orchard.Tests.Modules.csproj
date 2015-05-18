@@ -98,6 +98,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
@@ -142,6 +146,7 @@
     <Compile Include="Autoroute\DefaultSlugServiceTests.cs" />
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
+    <Compile Include="DesignerTools\Services\ObjectDumperTests.cs" />
     <Compile Include="Email\EmailChannelTests.cs" />
     <Compile Include="ImageProcessing\ImageProcessingTests.cs" />
     <Compile Include="ImportExport\Services\ImportExportServiceTests.cs" />
@@ -216,6 +221,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DesignerTools\Orchard.DesignerTools.csproj">
+      <Project>{4A4595EF-6C37-4F99-96ED-4AE0B9E438D3}</Project>
+      <Name>Orchard.DesignerTools</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
       <Project>{05660f47-d649-48bd-9ded-df4e01e7cff9}</Project>

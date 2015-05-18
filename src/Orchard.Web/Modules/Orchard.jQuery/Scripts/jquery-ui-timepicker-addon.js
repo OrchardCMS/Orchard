@@ -1474,7 +1474,7 @@
 	};
 
 	/*
-	* override parseDate() because UI 1.8.14 throws an error about "Extra characters"
+	* override parseDate() because UI 1.8.24 throws an error about "Extra characters"
 	* An option in datapicker to ignore extra format characters would be nicer.
 	*/
 	$.datepicker._base_parseDate = $.datepicker.parseDate;

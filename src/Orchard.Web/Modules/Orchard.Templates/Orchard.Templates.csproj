@@ -177,7 +177,7 @@
     <Compile Include="Services\TemplateProcessorImpl.cs" />
     <Compile Include="Services\RazorTemplateProcessor.cs" />
     <Compile Include="Services\DefaultTemplateService.cs" />
-    <Compile Include="Services\TemplateShapeDisplayEvent.cs" />
+    <Compile Include="Services\TemplateShapeBindingResolver.cs" />
     <Compile Include="Settings\ShapePartSettings.cs" />
     <Compile Include="Settings\ShapePartSettingsEvents.cs" />
     <Compile Include="ViewModels\ShapePartSettingsViewModel.cs" />

@@ -102,7 +102,7 @@ namespace Upgrade.Controllers {
 
             if (hasMore) {
                 _orchardServices.Notifier.Warning(T("Some media files need to be migrated."));
-                _orchardServices.Notifier.Information(T("{0} media files have been found, {1} media are in the library.", MediaList.Count, _orchardServices.ContentManager.Query<MediaPart>().Count()));
+                _orchardServices.Notifier.Information(T("{0} media files have been found, {1} media are in the library.", MediaList.Count, _orchardServices.ContentManager.Query<MediaPart, MediaPartRecord>().Count()));
             }
             else {
                 _orchardServices.Notifier.Warning(T("All media files have been migrated."));

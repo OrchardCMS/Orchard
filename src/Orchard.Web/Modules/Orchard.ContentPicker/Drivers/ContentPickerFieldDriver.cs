@@ -30,8 +30,12 @@ namespace Orchard.ContentPicker.Drivers {
         protected override DriverResult Display(ContentPart part, Fields.ContentPickerField field, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Fields_ContentPicker", GetDifferentiator(field, part), () => shapeHelper.Fields_ContentPicker()),
-                ContentShape("Fields_ContentPicker_SummaryAdmin", GetDifferentiator(field, part), () => shapeHelper.Fields_ContentPicker_SummaryAdmin())
-            );
+                ContentShape("Fields_ContentPicker_SummaryAdmin", GetDifferentiator(field, part), () => {
+                    var unpublishedIds = field.Ids.Except(field.ContentItems.Select(x => x.Id));
+                    var unpublishedContentItems = _contentManager.GetMany<ContentItem>(unpublishedIds, VersionOptions.Latest, QueryHints.Empty).ToList();
+
+                    return shapeHelper.Fields_ContentPicker_SummaryAdmin(UnpublishedContentItems: unpublishedContentItems);
+                }));
         }
 
         protected override DriverResult Editor(ContentPart part, Fields.ContentPickerField field, dynamic shapeHelper) {
@@ -40,17 +44,17 @@ namespace Orchard.ContentPicker.Drivers {
                     var model = new ContentPickerFieldViewModel {
                         Field = field,
                         Part = part,
-                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Published, QueryHints.Empty).ToList(),
+                        ContentItems = _contentManager.GetMany<ContentItem>(field.Ids, VersionOptions.Latest, QueryHints.Empty).ToList()
                     };
 
-                    model.SelectedIds = string.Concat(",", field.Ids);
+                    model.SelectedIds = string.Join(",", field.Ids);
 
                     return shapeHelper.EditorTemplate(TemplateName: "Fields/ContentPicker.Edit", Model: model, Prefix: GetPrefix(field, part));
                 });
         }
 
         protected override DriverResult Editor(ContentPart part, Fields.ContentPickerField field, IUpdateModel updater, dynamic shapeHelper) {
-            var model = new ContentPickerFieldViewModel();
+            var model = new ContentPickerFieldViewModel { SelectedIds = string.Join(",", field.Ids) };
 
             updater.TryUpdateModel(model, GetPrefix(field, part), null, null);
 

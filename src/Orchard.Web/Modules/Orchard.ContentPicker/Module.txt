@@ -2,7 +2,7 @@ Name: Orchard.ContentPicker
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardcontentpicker.codeplex.com
-Version: 1.8.1
+Version: 1.8.2
 OrchardVersion: 1.8
 Description: UI for selecting Content Items.
 Features:

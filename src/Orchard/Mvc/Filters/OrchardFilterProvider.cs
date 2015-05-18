@@ -7,8 +7,16 @@ namespace Orchard.Mvc.Filters {
 
         public IEnumerable<Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor) {
             var workContext = controllerContext.GetWorkContext();
-            var filterProviders = workContext.Resolve<IEnumerable<IFilterProvider>>();
-            return filterProviders.Select(x => new Filter(x, FilterScope.Action, null));
+
+            // Map IFilterProvider implementations to MVC Filter objects
+            // Need to provide order values since Filter objects of identical
+            // scope and order would run in undefined order.
+            // We create negative order values to avoid conflicts with other
+            // potential user-provided MVC Filter objects, which hopefully use
+            // positive order values. We do this by reversing the list and
+            // negating the index.
+            var filters = workContext.Resolve<IEnumerable<IFilterProvider>>();
+            return filters.Reverse().Select((filter, index) => new Filter(filter, FilterScope.Action, -(index + 1)));
         }
     }
 }

@@ -254,11 +254,9 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
 
-            Array.Sort(chars);
-
             for (var i = 0; i < subject.Length; i++) {
                 char current = subject[i];
-                if (Array.BinarySearch(chars, current) >= 0) {
+                if (Array.IndexOf(chars, current) >= 0) {
                     return true;
                 }
             }
@@ -275,11 +273,9 @@ namespace Orchard.Utility.Extensions {
                 return false;
             }
 
-            Array.Sort(chars);
-
             for (var i = 0; i < subject.Length; i++) {
                 char current = subject[i];
-                if (Array.BinarySearch(chars, current) < 0) {
+                if (Array.IndexOf(chars, current) < 0) {
                     return false;
                 }
             }

@@ -74,6 +74,22 @@
     $(".check-all").change(function () {
         $(this).parents("table.items").find(":checkbox:not(:disabled)").prop('checked', $(this).prop("checked"));
     }); 
+    // Handle keypress events in bulk action fieldsets that are part of a single form.
+    // This will make sure the expected action executes when pressing "enter" on a text field.
+    $("form .bulk-actions").on("keypress", "input[type='text']", function (e) {
+        if (e.which != 13)
+            return;
+
+        var sender = $(this);
+        var fieldset = sender.closest("fieldset.bulk-actions");
+        var submitButton = fieldset.find("button[type='submit']");
+
+        if (submitButton.length == 0)
+            return;
+
+        e.preventDefault();
+        submitButton.click();
+    });
 })(jQuery);
 
 

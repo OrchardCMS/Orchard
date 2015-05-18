@@ -30,6 +30,7 @@
                 @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.None, T("Choose action...").ToString())
                 @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Enable, T("Enable").ToString())
                 @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Disable, T("Disable").ToString())
+                @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Update, T("Update").ToString())
                 @Html.SelectOption(Model.BulkAction, FeaturesBulkAction.Toggle, T("Toggle").ToString())
             </select>
             <button type="submit" name="submit.BulkExecute" value="yes">@T("Execute")</button>
@@ -83,6 +84,10 @@
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
                 var showDisable = categoryName.ToString() != "Core";
                 var showEnable = Model.IsAllowed(feature.Descriptor.Extension) && !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
+
+                if (missingDependencies.Any()) {
+                    featureClassName += " missingDependencies";
+                }
 
                 <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                     <div class="summary">

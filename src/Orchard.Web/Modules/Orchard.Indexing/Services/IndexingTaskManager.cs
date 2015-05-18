@@ -26,8 +26,14 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         private void CreateTask(ContentItem contentItem, int action) {
-            if ( contentItem == null ) {
+            if (contentItem == null) {
                 throw new ArgumentNullException("contentItem");
+            }
+
+            if (contentItem.Record == null) {
+                // ignore that case, when Update is called on a content item which has not be "created" yet
+
+                return;
             }
 
             foreach (var task in _repository.Table.Where(task => task.ContentItemRecord == contentItem.Record)) {

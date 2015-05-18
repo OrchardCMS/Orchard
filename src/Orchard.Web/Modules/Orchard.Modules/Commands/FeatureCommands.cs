@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Environment.Descriptor.Models;
@@ -24,13 +25,15 @@ namespace Orchard.Modules.Commands {
         [OrchardSwitch]
         public bool Summary { get; set; }
 
-        [CommandHelp("feature list [/Summary:true|false]\r\n\t" + "Display list of available features")]
+        [CommandHelp("feature list [/Summary:true|false] [partial_feature_name]" + "\r\n\tDisplay list of available features" + "\r\n\tFilter the list by partial_feature_name, if given ")]
         [CommandName("feature list")]
         [OrchardSwitches("Summary")]
-        public void List() {
+        public void List(params string[] featureNames)
+        {
             var enabled = _shellDescriptor.Features.Select(x => x.Name);
+            Func<string, bool> filter = featureNames.Any() ? new Func<string, bool>(f => f.IndexOf(featureNames[0], 0, StringComparison.InvariantCultureIgnoreCase)>=0) : new Func<string, bool>(f => true);
             if (Summary) {
-                foreach (var feature in _featureManager.GetAvailableFeatures().OrderBy(f => f.Id)) {
+                foreach (var feature in _featureManager.GetAvailableFeatures().Where(f => filter(f.Name)).OrderBy(f => f.Id)) {
                     Context.Output.WriteLine(T("{0}, {1}", feature.Id, enabled.Contains(feature.Id) ? T("Enabled") : T("Disabled")));
                 }
             }
@@ -38,7 +41,7 @@ namespace Orchard.Modules.Commands {
                 Context.Output.WriteLine(T("List of available features"));
                 Context.Output.WriteLine(T("--------------------------"));
 
-                var categories = _featureManager.GetAvailableFeatures().ToList().GroupBy(f => f.Category);
+                var categories = _featureManager.GetAvailableFeatures().Where(f=>filter(f.Name)).ToList().GroupBy(f => f.Category);
                 foreach (var category in categories) {
                     Context.Output.WriteLine(T("Category: {0}", category.Key.OrDefault(T("General"))));
                     foreach (var feature in category.OrderBy(f => f.Id)) {
@@ -57,11 +60,11 @@ namespace Orchard.Modules.Commands {
         [CommandName("feature enable")]
         public void Enable(params string[] featureNames) {
             Context.Output.WriteLine(T("Enabling features {0}", string.Join(",", featureNames)));
-            bool listAvailableFeatures = false;
-            List<string> featuresToEnable = new List<string>();
-            string[] availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Id).ToArray();
+            var listAvailableFeatures = false;
+            var featuresToEnable = new List<string>();
+            var availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Id).OrderBy(x => x).ToArray();
             foreach (var featureName in featureNames) {
-                if (availableFeatures.Contains(featureName)) {
+                if (availableFeatures.Contains(featureName, StringComparer.OrdinalIgnoreCase)) {
                     featuresToEnable.Add(featureName);
                 }
                 else {

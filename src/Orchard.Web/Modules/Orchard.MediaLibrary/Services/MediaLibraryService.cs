@@ -20,6 +20,8 @@ namespace Orchard.MediaLibrary.Services {
         private readonly IStorageProvider _storageProvider;
         private readonly IEnumerable<IMediaFactorySelector> _mediaFactorySelectors;
 
+        private static char[] HttpUnallowed = new char[] { '<', '>', '*', '%', '&', ':', '\\', '?' };
+
         public MediaLibraryService(
             IOrchardServices orchardServices, 
             IMimeTypeProvider mimeTypeProvider,
@@ -50,6 +52,8 @@ namespace Orchard.MediaLibrary.Services {
 
         public IEnumerable<MediaPart> GetMediaContentItems(string folderPath, int skip, int count, string order, string mediaType, VersionOptions versionOptions = null) {
             var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
+
+            query = query.Join<MediaPartRecord>();
 
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
@@ -93,6 +97,8 @@ namespace Orchard.MediaLibrary.Services {
         public int GetMediaContentItemsCount(string folderPath, string mediaType, VersionOptions versionOptions = null) {
             var query = _orchardServices.ContentManager.Query<MediaPart>(versionOptions);
 
+            query = query.Join<MediaPartRecord>();
+
             if (!String.IsNullOrEmpty(mediaType)) {
                 query = query.ForType(new[] { mediaType });
             }
@@ -120,6 +126,12 @@ namespace Orchard.MediaLibrary.Services {
         }
 
         public string GetUniqueFilename(string folderPath, string filename) {
+
+            // remove any char which is unallowed in an HTTP request
+            foreach (var unallowedChar in HttpUnallowed) {
+                filename = filename.Replace(unallowedChar.ToString(), "");
+            }
+
             // compute a unique filename
             var uniqueFilename = filename;
             var index = 1;

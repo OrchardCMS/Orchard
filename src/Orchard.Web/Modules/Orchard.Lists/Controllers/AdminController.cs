@@ -136,7 +136,7 @@ namespace Orchard.Lists.Controllers {
                         break;
                     case ContentsBulkAction.PublishNow:
                         foreach (var item in checkedContentItems) {
-                            if (!_services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected lists."))) {
+                            if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't publish selected lists."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -146,7 +146,7 @@ namespace Orchard.Lists.Controllers {
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in checkedContentItems) {
-                            if (!_services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected lists."))) {
+                            if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't unpublish selected lists."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -156,7 +156,7 @@ namespace Orchard.Lists.Controllers {
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in checkedContentItems) {
-                            if (!_services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected lists."))) {
+                            if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, item, T("Couldn't remove selected lists."))) {
                                 _transactionManager.Cancel();
                                 return new HttpUnauthorizedResult();
                             }
@@ -247,10 +247,7 @@ namespace Orchard.Lists.Controllers {
                 .ContainerDisplayName(model.ContainerDisplayName)
                 .ContainerContentType(container.ContentType)
                 .ItemContentTypes(container.As<ContainerPart>().ItemContentTypes.ToList())
-                .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
-                    .Select(part => part.ContentItem)
-                    .Where(item => item != container)
-                    .OrderBy(item => item.As<CommonPart>().VersionPublishedUtc));
+                ;
 
             if (containerPart.Is<ContainablePart>()) {
                 viewModel.ListNavigation(_services.New.ListNavigation(ContainablePart: containerPart.As<ContainablePart>()));
@@ -442,7 +439,7 @@ namespace Orchard.Lists.Controllers {
             var selectedItems = _contentManager.GetMany<ContainablePart>(selectedIds, VersionOptions.Latest, QueryHints.Empty);
 
             foreach (var item in selectedItems) {
-                if (!_services.Authorizer.Authorize(Permissions.EditContent, item, T("Couldn't move selected content."))) {
+                if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, item, T("Couldn't move selected content."))) {
                     return false;
                 }
                 
@@ -462,7 +459,7 @@ namespace Orchard.Lists.Controllers {
         private bool BulkRemoveFromList(IEnumerable<int> itemIds) {
             var selectedItems = _contentManager.GetMany<ContainablePart>(itemIds, VersionOptions.Latest, QueryHints.Empty);
             foreach (var item in selectedItems) {
-                if (!_services.Authorizer.Authorize(Permissions.EditContent, item, T("Couldn't remove selected content from the list."))) {
+                if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, item, T("Couldn't remove selected content from the list."))) {
                     _services.TransactionManager.Cancel();
                     return false;
                 }
@@ -475,7 +472,7 @@ namespace Orchard.Lists.Controllers {
 
         private bool BulkRemove(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                if (!_services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
+                if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
                     _services.TransactionManager.Cancel();
                     return false;
                 }
@@ -488,7 +485,7 @@ namespace Orchard.Lists.Controllers {
 
         private bool BulkUnpublish(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                if (!_services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
+                if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
                     _services.TransactionManager.Cancel();
                     return false;
                 }
@@ -501,7 +498,7 @@ namespace Orchard.Lists.Controllers {
 
         private bool BulkPublishNow(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                if (!_services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
+                if (!_services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
                     _services.TransactionManager.Cancel();
                     return false;
                 }

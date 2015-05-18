@@ -1,9 +1,4 @@
-Orchard Project
-ASP.NET Open Source Gallery at Outercurve Foundation
-Copyright 2009-2011 Outercurve Foundation
-
-This product includes software developed at
-The Outercurve Foundation (http://www.outercurve.org/).
+Orchard Project - Copyright .NET Foundation
 
 Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
@@ -213,7 +208,7 @@ MySQL Connectors
 Copyright:    Copyright (c) 2004, 2011, Oracle and/or its affiliates
 License:      GNU GENERAL PUBLIC LICENSE Version 2; Oracle’s Free and Open Source Software ("FOSS") License Exception
 
-In order to comply with Section 2(a) of the FOSS License Exception, Outercurve Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
+In order to comply with Section 2(a) of the FOSS License Exception, .NET Foundation hereby offers any recipient of this package a machine-readable copy of the corresponding source code for Oracle's MySQL Client Libraries upon written demand.  This offer is good for three years.
 
 NHibernate, NHibernate Linq
 -----
