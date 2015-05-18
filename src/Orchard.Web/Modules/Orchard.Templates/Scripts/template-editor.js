@@ -1,7 +1,7 @@
 ﻿(function ($) {
     var initializeEditor = function () {
         var textArea = $(".code-editor")[0];
-        var editor = CodeMirror.fromTextArea(textArea, {
+        CodeMirror.fromTextArea(textArea, {
             lineNumbers: true,
             mode: "application/x-ejs",
             indentUnit: 4,
@@ -9,7 +9,8 @@
             enterMode: "keep",
             tabMode: "shift",
             theme: "default",
-            autoCloseTags: true
+            autoCloseTags: true,
+            rtlMoveVisually: window.isRtl
         });
     };
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.ApplicationServices;
 using Orchard.Services;
 
 namespace Markdown.Services {
@@ -12,6 +13,7 @@ namespace Markdown.Services {
                 return string.Empty;
 
             var markdown = new MarkdownSharp.Markdown();
+
             return markdown.Transform(text);
         }
     }

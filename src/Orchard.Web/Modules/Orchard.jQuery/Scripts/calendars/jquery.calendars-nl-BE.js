@@ -2,7 +2,7 @@
    Dutch/Belgian localisation for Gregorian/Julian calendars for jQuery.
    Written by Mathias Bynens <http://mathiasbynens.be/>. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['nl-BE'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['nl-BE'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['nl-BE'] =
-			$.calendars.calendars.gregorian.prototype.regional['nl-BE'];
+		$.calendars.calendars.julian.prototype.regionalOptions['nl-BE'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['nl-BE'];
 	}
 })(jQuery);

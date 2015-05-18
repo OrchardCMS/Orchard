@@ -8,10 +8,10 @@ using Orchard.Environment.Extensions;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Search.Helpers;
 using Orchard.Search.Models;
 using Orchard.Search.Services;
 using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
@@ -38,15 +38,15 @@ namespace Orchard.Search.Controllers {
 
         public async Task<ActionResult> Index(PagerParameters pagerParameters, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
             
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
                 searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().FilterCulture,
+                                                  Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>().FilterCulture,
                                                   searchSettingsPart.SearchIndex,
-                                                  searchSettingsPart.SearchedFields,
+                                                  searchSettingsPart.GetSearchFields(),
                                                   searchHit => searchHit);
             }
             catch (Exception exception) {
@@ -55,8 +55,8 @@ namespace Orchard.Search.Controllers {
             }
 
             var list = Services.New.List();
-            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Published, QueryHints.Empty)) {
-                // ignore search results which content item has been removed or unpublished
+            foreach (var contentItem in Services.ContentManager.GetMany<IContent>(searchHits.Select(x => x.ContentItemId), VersionOptions.Latest, QueryHints.Empty)) {
+                // ignore search results which content item has been removed
                 if (contentItem == null) {
                     searchHits.TotalItemCount--;
                     continue;

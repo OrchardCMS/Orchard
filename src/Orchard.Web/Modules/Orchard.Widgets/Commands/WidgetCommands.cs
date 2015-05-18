@@ -17,17 +17,21 @@ namespace Orchard.Widgets.Commands {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IMenuService _menuService;
+        private readonly IContentManager _contentManager;
+
         private const string LoremIpsum = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
 
         public WidgetCommands(
             IWidgetsService widgetsService, 
             ISiteService siteService, 
             IMembershipService membershipService,
-            IMenuService menuService) {
+            IMenuService menuService,
+            IContentManager contentManager) {
             _widgetsService = widgetsService;
             _siteService = siteService;
             _membershipService = membershipService;
             _menuService = menuService;
+            _contentManager = contentManager;
 
             RenderTitle = true;
         }
@@ -72,11 +76,11 @@ namespace Orchard.Widgets.Commands {
         [CommandHelp("widget create <type> /Title:<title> /Name:<name> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/RenderTitle:true|false] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false] [/MenuName:<name>]\r\n\t" + "Creates a new widget")]
         [OrchardSwitches("Title,Name,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText,MenuName,RenderTitle")]
         public void Create(string type) {
-            var widgetTypeNames = _widgetsService.GetWidgetTypeNames();
+            var widgetTypeNames = _widgetsService.GetWidgetTypeNames().ToList();
             if (!widgetTypeNames.Contains(type)) {
                 Context.Output.WriteLine(T("Creating widget failed : type {0} was not found. Supported widget types are: {1}.", 
                     type,
-                    widgetTypeNames.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
+                    string.Join(" ", widgetTypeNames)));
                 return;
             }
 
@@ -126,6 +130,7 @@ namespace Orchard.Widgets.Commands {
                 widget.As<IdentityPart>().Identifier = Identity;
             }
 
+            _contentManager.Publish(widget.ContentItem);
             Context.Output.WriteLine(T("Widget created successfully.").Text);
         }
 

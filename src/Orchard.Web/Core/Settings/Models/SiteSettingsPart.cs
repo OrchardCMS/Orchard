@@ -44,6 +44,11 @@ namespace Orchard.Core.Settings.Models {
             get { return this.Retrieve(x => x.ResourceDebugMode); }
             set { this.Store(x => x.ResourceDebugMode, value); }
         }
+        
+        public bool UseCdn {
+            get { return this.Retrieve(x => x.UseCdn); }
+            set { this.Store(x=> x.UseCdn, value); }
+        }
 
         public int PageSize {
             get { return this.Retrieve(x => x.PageSize, DefaultPageSize); }
@@ -53,6 +58,11 @@ namespace Orchard.Core.Settings.Models {
         public int MaxPageSize {
             get { return this.Retrieve(x => x.MaxPageSize); }
             set { this.Store(x => x.MaxPageSize, value); }
+        }
+
+        public int MaxPagedCount {
+            get { return this.Retrieve(x => x.MaxPagedCount); }
+            set { this.Store(x => x.MaxPagedCount, value); }
         }
 
         public string SiteTimeZone {

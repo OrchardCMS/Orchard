@@ -115,6 +115,13 @@ namespace Orchard.Comments.Controllers {
                 else {
                     Services.Notifier.Information(T("Your comment has been posted."));
                 }
+
+                // send email notification
+                var siteSettings = Services.WorkContext.CurrentSite.As<CommentSettingsPart>();
+                if (siteSettings.NotificationEmail) {
+                    _commentService.SendNotificationEmail(commentPart);
+                }
+
             }
             else {
                 Services.TransactionManager.Cancel();

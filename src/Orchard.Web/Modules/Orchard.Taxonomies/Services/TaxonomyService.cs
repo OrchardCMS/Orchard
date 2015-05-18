@@ -9,6 +9,9 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
@@ -23,6 +26,10 @@ namespace Orchard.Taxonomies.Services {
         private readonly IAuthorizationService _authorizationService;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _services;
+        private readonly IProcessingEngine _processingEngine;
+        private readonly ShellSettings _shellSettings;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
+
 
         public TaxonomyService(
             IRepository<TermContentItem> termContentItemRepository,
@@ -30,13 +37,20 @@ namespace Orchard.Taxonomies.Services {
             INotifier notifier,
             IContentDefinitionManager contentDefinitionManager,
             IAuthorizationService authorizationService,
-            IOrchardServices services) {
+            IOrchardServices services, 
+            IProcessingEngine processingEngine, 
+            ShellSettings shellSettings, 
+            IShellDescriptorManager shellDescriptorManager)
+        {
             _termContentItemRepository = termContentItemRepository;
             _contentManager = contentManager;
             _notifier = notifier;
             _authorizationService = authorizationService;
             _contentDefinitionManager = contentDefinitionManager;
             _services = services;
+            _processingEngine = processingEngine;
+            _shellSettings = shellSettings;
+            _shellDescriptorManager = shellDescriptorManager;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -50,7 +64,7 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TaxonomyPart GetTaxonomy(int id) {
-            return _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandParts<TaxonomyPart>()).As<TaxonomyPart>();
+            return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
         public TaxonomyPart GetTaxonomyByName(string name) {
@@ -58,8 +72,8 @@ namespace Orchard.Taxonomies.Services {
                 throw new ArgumentNullException("name");
             }
 
-            return _contentManager
-                .Query<TaxonomyPart, TaxonomyPartRecord>()
+            // include the record in the query to optimize the query plan
+            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>()
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
                 .List()
@@ -122,8 +136,30 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart NewTerm(TaxonomyPart taxonomy) {
+            return NewTerm(taxonomy, null);
+        }
+
+        public TermPart NewTerm(TaxonomyPart taxonomy, IContent parent) {
+            if (taxonomy == null) {
+                throw new ArgumentNullException("taxonomy");
+            }
+
+            if (parent != null) {
+                var parentAsTaxonomy = parent.As<TaxonomyPart>();
+                if (parentAsTaxonomy != null && parentAsTaxonomy != taxonomy) {
+                    throw new ArgumentException("The parent of a term can't be a different taxonomy", "parent");
+                }
+
+                var parentAsTerm = parent.As<TermPart>();
+                if (parentAsTerm != null && parentAsTerm.TaxonomyId != taxonomy.Id) {
+                    throw new ArgumentException("The parent of a term can't be a from a different taxonomy", "parent");
+                }
+            }
+
             var term = _contentManager.New<TermPart>(taxonomy.TermTypeName);
+            term.Container = parent ?? taxonomy;
             term.TaxonomyId = taxonomy.Id;
+            ProcessPath(term);
 
             return term;
         }
@@ -208,24 +244,31 @@ namespace Orchard.Taxonomies.Services {
             var termsPart = contentItem.As<TermsPart>();
 
             // removing current terms for specific field
-            var fieldIndexes = termsPart.Terms.Select((t, i) => new {Term = t, Index = i})
+            var termList = termsPart.Terms.Select((t, i) => new {Term = t, Index = i})
                 .Where(x => x.Term.Field == field)
-                .Select(x => x.Index)
-                .OrderByDescending(i => i)
+                .Select(x => x)
+                .OrderByDescending(i => i.Index)
                 .ToList();
-            
-            foreach(var x in fieldIndexes) {
-                termsPart.Terms.RemoveAt(x);
+
+            foreach (var x in termList) {
+                termsPart.Terms.RemoveAt(x.Index);
             }
             
             // adding new terms list
             foreach(var term in terms) {
+                // Remove the newly added terms because they will get processed by the Published-Event
+                termList.RemoveAll(t => t.Term.Id == term.Id);
                 termsPart.Terms.Add( 
                     new TermContentItem {
                         TermsPartRecord = termsPart.Record, 
                         TermRecord = term.Record, Field = field
                     });
             }
+
+            var termPartRecordIds = termList.Select(t => t.Term.TermRecord.Id).ToArray();
+            _processingEngine.AddTask(_shellSettings, _shellDescriptorManager.GetShellDescriptor(), "ITermCountProcessor.Process", new Dictionary<string, object> { { "termPartRecordIds", termPartRecordIds } });
+
+
         }
 
         public IContentQuery<TermsPart, TermsPartRecord> GetContentItemsQuery(TermPart term, string fieldName = null) {

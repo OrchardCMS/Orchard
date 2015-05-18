@@ -1,0 +1,63 @@
+﻿@using Orchard.AuditTrail.Models
+@using Orchard.AuditTrail.ViewModels
+@using StringExtensions = Orchard.AuditTrail.Helpers.StringExtensions
+@{
+    Style.Include("audittrail-display.css");
+    Style.Include("audittrail-part.css");
+    Script.Require("ShapesBase");
+    Script.Include("~/Themes/TheAdmin/scripts/admin.js").AtFoot();
+    Script.Include("audittrail-expando.js").AtFoot();
+}
+@{
+    var records = (IEnumerable<AuditTrailEventSummaryViewModel>)Model.Records;
+    var auditTrailPart = (AuditTrailPart)Model.ContentPart;
+}
+@if (auditTrailPart.Id > 0) {
+    <fieldset class="audittrail-list-wrapper expando-wrapper">
+        <legend>@T("Audit Trail")</legend>
+        <section class="audittrail-list-section expando">
+            @if (!records.Any()) {
+                <p class="info">@T("There are no audit trail events to display.")</p>
+            }
+            else {
+                <table class="audittrail-list items">
+                    <thead>
+                        <tr>
+                            <th class="category-column">@T("Category")</th>
+                            <th class="event-column">@T("Event")</th>
+                            <th class="user-column">@T("User")</th>
+                            <th class="client-ip-address-column">@T("Client IP")</th>
+                            <th class="timestamp-column">@T("Timestamp")</th>
+                            <th class="summary-column">@T("Summary")</th>
+                            <th class="comment-column">@T("Comment")</th>
+                            <th class="actions-column"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.Records) {
+                            <tr>
+                                <td class="category-column">@record.CategoryDescriptor.Name</td>
+                                <td class="event-column">@record.EventDescriptor.Name</td>
+                                <td class="user-column">@record.Record.UserName</td>
+                                <td class="client-ip-address-column">@record.Record.ClientIpAddress</td>
+                                <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
+                                <td class="summary-column">@Display(record.SummaryShape)</td>
+                                <td class="comment-column">@Html.Raw(StringExtensions.NewlinesToHtml(record.Record.Comment))</td>
+                                <td class="actions-column">@Display(record.ActionsShape)</td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.Pager.TotalItemCount > Model.Pager.PageSize) {
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    @Html.ActionLink(T("Show more events").Text, "Index", "Admin", new { content = auditTrailPart.Id, page = 2, area = "Orchard.AuditTrail" }, null)
+                                </td>
+                            </tr>
+                        </tfoot>
+                    }
+                </table>
+            }
+        </section>
+    </fieldset>
+}

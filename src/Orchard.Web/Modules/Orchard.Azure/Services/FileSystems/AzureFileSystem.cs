@@ -33,6 +33,13 @@ namespace Orchard.Azure.Services.FileSystems {
             protected set;
         }
 
+        public CloudStorageAccount StorageAccount {
+            get {
+                EnsureInitialized();
+                return _storageAccount;
+            }
+        }
+
         public CloudBlobClient BlobClient {
             get {
                 EnsureInitialized();
@@ -259,6 +266,18 @@ namespace Orchard.Azure.Services.FileSystems {
             var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
             newBlob.StartCopyFromBlob(blob);
             blob.Delete();
+        }
+
+        public void CopyFile(string path, string newPath) {
+            path = ConvertToRelativeUriPath(path);
+            newPath = ConvertToRelativeUriPath(newPath);
+
+            Container.EnsureBlobExists(String.Concat(_root, path));
+            Container.EnsureBlobDoesNotExist(String.Concat(_root, newPath));
+
+            var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
+            var newBlob = Container.GetBlockBlobReference(String.Concat(_root, newPath));
+            newBlob.StartCopyFromBlob(blob);
         }
 
         public IStorageFile CreateFile(string path) {

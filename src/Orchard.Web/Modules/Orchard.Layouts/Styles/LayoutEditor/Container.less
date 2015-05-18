@@ -1,0 +1,72 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    .layout-container {
+
+        > .layout-element-wrapper {
+
+            > .layout-container-children-placeholder {
+                display: none;
+                flex-direction: column;
+                margin: @container-padding - 1px;
+                min-height: @element-min-height;
+                border: 1px dashed fade(@gray-text, 40%);
+                border-radius: 4px;
+                padding: @container-padding;
+                justify-content: center;
+                font-size: @font-size - 1;
+                font-style: italic;
+                opacity: 0.6;
+                text-align: center;
+            }
+
+            > .layout-children {
+                padding: @container-padding;
+
+                // All adjacent non-container children need some space between...
+                > .layout-element:not(.layout-container) + .layout-element:not(.layout-container) {
+                    margin-top: @content-spacing;
+                }
+
+                // ... except when jQuery UI sortable helper is the first element (because that one is absolutely positioned and "floating").
+                > .ui-sortable-helper:first-child + .layout-element:not(.layout-container) {
+                    margin-top: 0;
+                }
+            }
+
+            &.layout-container-empty {
+                > .layout-container-children-placeholder {
+                    display: flex; // To reveal.
+                }
+
+                > .layout-children {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+            }
+        }
+    }
+
+    &:not(.layout-editor-dragging) {
+        .layout-container.layout-element-focused > .layout-element-wrapper > .layout-children {
+            > .layout-element:not(.layout-element-active) {
+                border: 1px dashed fade(@gray-text, 60%);
+
+                > .layout-element-wrapper {
+                    margin: -1px;
+                }
+            }
+
+            > .layout-container + .layout-container:not(.layout-element-active) {
+                border-top: 0;
+
+                > .layout-element-wrapper {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}

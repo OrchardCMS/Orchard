@@ -4,7 +4,7 @@
 /* NOTE: monthNames are the original months names and they are the Arabic names,
    not the new months name فبراير - يناير and there isn't any Arabic roots for these months */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'آذار', 'حزيران',
@@ -18,7 +18,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar'];
 	}
 })(jQuery);

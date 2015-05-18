@@ -1,0 +1,150 @@
+﻿@import "Variables.less";
+
+.layout-editor {
+    .layout-element {
+        position: relative;
+        margin-top: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        padding: 0;
+
+        // We don't fuck with the left margin of columns, because Bootstrap uses these to render column offsets.
+        &:not(.layout-column) {
+            margin-left: 0;
+        }
+
+        > .layout-element-wrapper {
+            > .layout-panel {
+                display: none; // Shown only in active or focused states.
+                position: absolute;
+                margin: 0;
+                z-index: 20;
+                height: 25px;
+                padding: 0 6px;
+                list-style: none;
+                white-space: nowrap;
+                line-height: 25px;
+                vertical-align: middle;
+
+                > .layout-panel-item {
+                    display: inline-block;
+                    height: 25px;
+                    padding: 1px 6px 0;
+                }
+
+                > .layout-panel-label {
+                    font-size: @font-size - 1;
+                }
+
+                > .layout-panel-action {
+                    display: none; // Shown only in focused state.
+                    width: 28px;
+                    cursor: pointer;
+                    text-align: center;
+                }
+            }
+
+            > .layout-panel-main {
+                top: -27px;
+                left: -2px;
+            }
+        }
+    }
+
+    // When dragging from toolbox, elements will be li rather than div.
+    li.layout-element {
+        list-style: none;
+    }
+
+    &:not(.layout-editor-dragging) {
+
+        .layout-element-active, .layout-element-focused {
+            border-width: 2px;
+            border-style: solid;
+
+            > .layout-element-wrapper {
+                margin: -2px;
+            }
+        }
+
+        .layout-element-active {
+            @active-highlight: fade(#686868, 10%);
+
+            border-color: @active-highlight;
+
+            > .layout-element-wrapper > .layout-panel-main {
+                display: block; // To reveal.
+                z-index: 30;
+                background-color: @active-highlight;
+            }
+        }
+
+        .layout-element-focused {
+            @focused-highlight: #648721;
+            @focused-text: #fefefe;
+
+            border-color: @focused-highlight;
+
+            > .layout-element-wrapper > .layout-panel {
+                display: block; // To reveal.
+                background-color: @focused-highlight;
+                color: @focused-text;
+
+                > .layout-panel-action {
+                    display: inline-block; // To reveal.
+                    &:hover {
+                        background-color: lighten(@focused-highlight, 10%);
+                    }
+
+                    &.disabled {
+                        cursor: default;
+                        color: fade(@focused-text, 40%);
+
+                        &:hover {
+                            background-color: @focused-highlight;
+                        }
+                    }
+
+                    &.active {
+                        color: lighten(saturate(spin(@focused-highlight, -10), 100%), 30%);
+                        background-color: lighten(@focused-highlight, 5%);
+
+                        &:hover {
+                            background-color: lighten(@focused-highlight, 10%);
+                        }
+                    }
+                }
+            }
+        }
+
+        .layout-element-selected {
+            @selected-highlight: #648721;
+            background-color: fade(@selected-highlight, 8%);
+        }
+    }
+
+    .ui-sortable-placeholder {
+        display: none;
+    }
+
+    .layout-element-droptarget {
+        @droptarget-highlight: #648721;
+        box-shadow: inset 0 0 12px 6px fade(@droptarget-highlight, 50%);
+
+        .ui-sortable-placeholder {
+            display: block; // To reveal.
+            visibility: visible !important;
+            min-height: @element-min-height - 2px;
+            border: 2px dashed @droptarget-highlight !important;
+            background-color: fade(@droptarget-highlight, 16%);
+        }
+    }
+
+    // A CSS fix for media item elements.
+    .media-thumbnail {
+        img {
+            max-width:100%;
+            max-height: 100%;
+        }
+    }
+}

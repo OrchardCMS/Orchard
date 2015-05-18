@@ -18,18 +18,18 @@ namespace Orchard.PublishLater.Drivers {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private readonly IClock _clock;
-        private readonly IDateServices _dateServices;
+        private readonly IDateLocalizationServices _dateLocalizationServices;
 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService,
             IClock clock,
-            IDateServices dateServices) {
+            IDateLocalizationServices dateLocalizationServices) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             _clock = clock;
-            _dateServices = dateServices;
+            _dateLocalizationServices = dateLocalizationServices;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -65,8 +65,8 @@ namespace Orchard.PublishLater.Drivers {
                 Editor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = true,
-                    Date = !part.IsPublished() ? _dateServices.ConvertToLocalDateString(part.ScheduledPublishUtc.Value, "") : "",
-                    Time = !part.IsPublished() ? _dateServices.ConvertToLocalTimeString(part.ScheduledPublishUtc.Value, "") : "",
+                    Date = !part.IsPublished() ? _dateLocalizationServices.ConvertToLocalizedDateString(part.ScheduledPublishUtc.Value) : "",
+                    Time = !part.IsPublished() ? _dateLocalizationServices.ConvertToLocalizedTimeString(part.ScheduledPublishUtc.Value) : "",
                 }
             };
         }
@@ -86,7 +86,7 @@ namespace Orchard.PublishLater.Drivers {
             if (httpContext.Request.Form["submit.Save"] == "submit.PublishLater") {
                 if (!String.IsNullOrWhiteSpace(model.Editor.Date) && !String.IsNullOrWhiteSpace(model.Editor.Time)) {
                     try {
-                        var utcDateTime = _dateServices.ConvertFromLocalString(model.Editor.Date, model.Editor.Time);
+                        var utcDateTime = _dateLocalizationServices.ConvertFromLocalizedString(model.Editor.Date, model.Editor.Time);
                         if (utcDateTime.HasValue) {
                             if (utcDateTime.Value < _clock.UtcNow) {
                                 updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past."));

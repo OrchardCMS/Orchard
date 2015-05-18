@@ -2,7 +2,7 @@
    Swiss-German localisation for Gregorian/Julian calendars for jQuery.
    Written by Douglas Jose & Juerg Meier. */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['de-CH'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['de-CH'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['Januar','Februar','März','April','Mai','Juni',
@@ -17,7 +17,7 @@
 		isRTL: false
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['de-CH'] =
-			$.calendars.calendars.gregorian.prototype.regional['de-CH'];
+		$.calendars.calendars.julian.prototype.regionalOptions['de-CH'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['de-CH'];
 	}
 })(jQuery);

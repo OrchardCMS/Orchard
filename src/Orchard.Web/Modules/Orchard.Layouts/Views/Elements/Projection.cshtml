@@ -1,0 +1,12 @@
+﻿@{
+    var list = Model.List;
+    var pager = Model.Pager;
+
+    if (list != null) {
+        @Display(list)
+    }
+
+    if (pager != null) {
+        @Display(pager)
+    }
+}

@@ -1,0 +1,42 @@
+﻿Name: Audit Trail
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.9.0
+OrchardVersion: 1.9
+Description: Provides a log for recording and viewing back-end changes.
+Features:
+    Orchard.AuditTrail:
+        Name: Audit Trail
+        Description: Provides a log for recording and viewing back-end changes.
+        Category: Security
+    Orchard.AuditTrail.ImportExport:
+        Name: Audit Trail Import Export
+        Description: Provides import/export functionality for the Audit Trail feature.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.ImportExport
+    Orchard.AuditTrail.Trimming:
+        Name: Audit Trail Trimming
+        Description: Provides a background task that regularly deletes old audit trail records.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.TaskLease
+    Orchard.AuditTrail.Users:
+        Name: Audit Trail User Events
+        Description: Provides audit trail support for user related events.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.Users
+    Orchard.AuditTrail.Roles:
+        Name: Audit Trail Role Events
+        Description: Provides audit trail support for role related events.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.Roles
+    Orchard.AuditTrail.ContentDefinition:
+        Name: Audit Trail Content Definition Events
+        Description: Provides audit trail support for content definition related events.
+        Category: Security
+        Dependencies: Orchard.AuditTrail, Orchard.ContentTypes
+    Orchard.AuditTrail.RecycleBin:
+        Name: Recycle Bin
+        Description: Adds a Recycle Bin menu item to the Audit Trail menu, enabling you to recycle removed content items.
+        Category: Content
+        Dependencies: Orchard.AuditTrail

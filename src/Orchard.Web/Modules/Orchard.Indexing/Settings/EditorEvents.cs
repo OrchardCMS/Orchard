@@ -29,20 +29,33 @@ namespace Orchard.Indexing.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel) {
+            var previous = builder.Current.Settings.GetModel<TypeIndexing>();
+
             var model = new TypeIndexing();
             updateModel.TryUpdateModel(model, "TypeIndexing", null, null);
             builder.WithSetting("TypeIndexing.Indexes", model.Indexes);
 
-            CreateIndexingTasks();
+            // create indexing tasks only if settings have changed
+            if (Clean(model.Indexes) != Clean(previous.Indexes)) {
+                
+                // if a an index is added, all existing content items need to be re-indexed
+                CreateIndexingTasks();
+            }
             
             yield return DefinitionTemplate(model);
+        }
+
+        private string Clean(string value) {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return value.Trim(',', ' ');
         }
 
         /// <summary>
         /// Creates new indexing tasks to update the index document for these content items
         /// </summary>
-        private void CreateIndexingTasks()
-        {
+        private void CreateIndexingTasks() {
             if (!_tasksCreated) {
                 CreateTasksForType(_contentTypeName);
                 _tasksCreated = true;
@@ -55,11 +68,18 @@ namespace Orchard.Indexing.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
+            var previous = builder.Current.Settings.GetModel<FieldIndexing>(); 
+            
             var model = new FieldIndexing();
             updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
             builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);
 
-            CreateIndexingTasks();
+            // create indexing tasks only if settings have changed
+            if (model.Included != previous.Included) {
+
+                // if a field setting has changed, all existing content items need to be re-indexed
+                CreateIndexingTasks();
+            }
 
             yield return DefinitionTemplate(model);
         }
@@ -69,10 +89,11 @@ namespace Orchard.Indexing.Settings {
             bool contentItemProcessed;
 
             // todo: load ids only, or create a queued job
+            // we create a task even for draft items, and the executor will filter based on the settings
 
             do {
                 contentItemProcessed = false;
-                var contentItemsToIndex = _contentManager.Query(VersionOptions.Published, new [] { type }).Slice(index, PageSize);
+                var contentItemsToIndex = _contentManager.Query(VersionOptions.Latest, new [] { type }).Slice(index, PageSize);
 
                 foreach (var contentItem in contentItemsToIndex) {
                     contentItemProcessed = true;

@@ -9,7 +9,7 @@ Scenario: I can add a tag to a new Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | Body.Text | This is super. |
+            | LayoutPart.LayoutEditor.Data | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+super."} ] } |
             | Tags.Tags | Foo, Bar |
         And I hit "Publish Now"
         And I go to "super-duper"
@@ -23,10 +23,8 @@ Scenario: I can't add a tag with disallowed chars to a new Page
         And I fill in
             | name | value |
             | Title.Title | Super Duper |
-            | Body.Text | This is super. |
+            | LayoutPart.LayoutEditor.Data | { "elements": [ { "typeName": "Orchard.Layouts.Elements.Text", "state": "Content=This+is+super."} ] } |
             | Tags.Tags | Foo, I <3 Orchard |
         And I hit "Publish Now"
-        And I go to "super-duper"
-    Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
-        And I should see "<a[^>]*>Foo</a>"
-        And I should not see "<a[^>]*>I &lt;3 Orchard</a>"
+		And I am redirected
+    Then I should see "forbidden chars"

@@ -63,6 +63,7 @@ namespace Orchard.CustomForms.Drivers {
             IfNotNull(context.Attribute(part.PartDefinition.Name, "Message"), x => part.Record.Message = x);
             IfNotNull(context.Attribute(part.PartDefinition.Name, "Redirect"), x => part.Record.Redirect = Boolean.Parse(x));
             IfNotNull(context.Attribute(part.PartDefinition.Name, "RedirectUrl"), x => part.Record.RedirectUrl = x);
+            IfNotNull(context.Attribute(part.PartDefinition.Name, "SubmitButtonText"), x => part.Record.SubmitButtonText = x);
         }
 
         private static void IfNotNull<T>(T value, Action<T> then) {
@@ -78,6 +79,7 @@ namespace Orchard.CustomForms.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Record.Message);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Redirect", part.Record.Redirect);
             context.Element(part.PartDefinition.Name).SetAttributeValue("RedirectUrl", part.Record.RedirectUrl);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SubmitButtonText", part.Record.SubmitButtonText);
         }
     }
 }

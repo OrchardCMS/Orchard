@@ -1,0 +1,41 @@
+﻿
+.audittrail-filter-section {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    align-content: flex-end;
+    margin-bottom: 1em;
+    padding: 4px 10px 3px;
+}
+
+.filter-control-group {
+    margin-right: 10px;
+    margin-bottom: 6px;
+}
+
+.filter-control-group label {
+    padding-bottom: 0;
+}
+
+.filter-control-group select {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+.audittrail-event-metadata-section {
+    margin-bottom: 1em;
+}
+
+    .audittrail-event-metadata-section strong {
+        /*font-weight: bold;*/
+    }
+
+.audittrail-list-section table .category-column,
+.audittrail-list-section table .event-column,
+.audittrail-list-section table .user-column,
+.audittrail-list-section table .client-ip-address-column,
+.audittrail-list-section table .timestamp-column {
+    white-space: nowrap;
+}

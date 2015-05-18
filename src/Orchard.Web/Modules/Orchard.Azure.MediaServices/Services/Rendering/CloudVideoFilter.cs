@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Orchard.Azure.MediaServices.Models;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.MediaLibrary.Models;
 using Orchard.Services;
 
 namespace Orchard.Azure.MediaServices.Services.Rendering {
@@ -73,7 +74,9 @@ namespace Orchard.Azure.MediaServices.Services.Rendering {
             var autoPlay = GetBoolean(node, "data-player-auto-play");
 
             var playerShape = _shapeFactory.Create("CloudVideoPlayer", Arguments.From(new {
-                CloudVideoPart = part,
+                ContentPart = part,
+                ContentItem = part.ContentItem,
+                AlternateText = part.As<MediaPart>().AlternateText,
                 AssetId = default(int?),
                 IgnoreIncludeInPlayer = false,
                 AllowPrivateUrls = false,

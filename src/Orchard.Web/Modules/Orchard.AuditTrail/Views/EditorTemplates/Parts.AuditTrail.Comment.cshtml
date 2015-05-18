@@ -1,0 +1,6 @@
+﻿@model Orchard.AuditTrail.ViewModels.AuditTrailCommentViewModel
+<fieldset>
+	@Html.LabelFor(m => m.Comment, T("Comment"))
+	@Html.TextAreaFor(m => m.Comment)
+	<span class="hint">@T("Optionally provide a comment about this change for the audit trail.")</span>
+</fieldset>

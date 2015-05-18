@@ -1,0 +1,67 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@model Orchard.AuditTrail.ViewModels.AuditTrailViewModel
+@{
+    Style.Include("audittrail-display.css");
+
+    var orderBy = Model.OrderBy;
+    var orderByItems = new List<SelectListItem> {
+        new SelectListItem {Text = T("Date (newest first)").Text, Value = AuditTrailOrderBy.DateDescending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.DateDescending},
+        new SelectListItem {Text = T("Category (alphabetical)").Text, Value = AuditTrailOrderBy.CategoryAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.CategoryAscending},
+        new SelectListItem {Text = T("Event name (alphabetical)").Text, Value = AuditTrailOrderBy.EventAscending.ToString(), Selected = Model.OrderBy == AuditTrailOrderBy.EventAscending},
+    };
+
+    Layout.Title = T("Audit Trail");
+}
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin", new { area = "Orchard.AuditTrail" }), FormMethod.Get)) {
+    <section class="audittrail-filter-section">
+        @Display(Model.FilterDisplay)
+        <div class="filter-control-group">
+            @Html.LabelFor(m => orderBy, T("Sort by:"))
+            @Html.DropDownListFor(m => orderBy, orderByItems)
+        </div>
+        <div class="filter-control-group">
+            <button type="submit" class="filter-apply-button" value="yes">@T("Apply")</button>
+        </div>
+    </section>
+    <input type="hidden" name="pageSize" value="@Model.Pager.PageSize" />
+}
+<section class="audittrail-list-section">
+    @if (!Model.Records.Any()) {
+        <p class="info">@T("There are no records to display.")</p>
+    }
+    else {
+        <table class="items">
+            <thead>
+                <tr>
+                    <th class="category-column">@T("Category")</th>
+                    <th class="event-column">@T("Event")</th>
+                    <th class="user-column">@T("User")</th>
+                    <th class="client-ip-address-column">@T("Client IP")</th>
+                    <th class="timestamp-column">@T("Timestamp")</th>
+                    <th class="summary-column">@T("Summary")</th>
+                    <th class="comment-column">@T("Comment")</th>
+                    <th class="actions-column"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.Records) {
+                    <tr>
+                        <td class="category-column">@record.CategoryDescriptor.Name</td>
+                        <td class="event-column">@record.EventDescriptor.Name</td>
+                        <td class="user-column">@record.Record.UserName</td>
+                        <td class="client-ip-address-column">@record.Record.ClientIpAddress</td>
+                        <td class="timestamp-column">@Display.DateTime(DateTimeUtc: record.Record.CreatedUtc)</td>
+                        <td class="summary-column">@Display(record.SummaryShape)</td>
+                        <td class="comment-column">@Html.Raw(record.Record.Comment.NewlinesToHtml())</td>
+                        <td class="actions-column">@Display(record.ActionsShape)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>
+<section class="pager">
+    @Display(Model.Pager)
+</section>

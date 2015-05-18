@@ -1,0 +1,15 @@
+﻿.audittrail-settings-section table.audittrail-events-table {
+    width: auto;
+    min-width: 600px;
+    margin-top: 1em;
+}
+
+.audittrail-settings-section tbody.audittrail-category-body tr th {
+    background-color: #ebebeb;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.audittrail-settings-section .audittrail-events-table .audittrail-event-enabled-cell {
+    text-align: right;
+}

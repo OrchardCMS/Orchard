@@ -1,0 +1,25 @@
+﻿@using Orchard.DisplayManagement.Shapes
+@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (TextField)Model.Element;
+    var tagBuilder = (OrchardTagBuilder)TagBuilderExtensions.CreateElementTagBuilder(Model, "input");
+
+    tagBuilder.AddCssClass("text");
+    tagBuilder.Attributes["type"] = "text";
+    tagBuilder.Attributes["value"] = Model.TokenizedValue;
+    tagBuilder.Attributes["name"] = element.Name;
+    tagBuilder.AddClientValidationAttributes((IDictionary<string, string>)Model.ClientValidationAttributes);
+
+    if (!ViewData.ModelState.IsValidField(element.Name)) {
+        tagBuilder.AddCssClass("input-validation-error");
+    }
+}
+
+@if (element.ShowLabel) {
+    <label for="@element.HtmlId">@element.Label</label>
+}
+@tagBuilder.ToHtmlString(TagRenderMode.SelfClosing)
+@if (element.ValidationSettings.ShowValidationMessage == true) {
+    @Html.ValidationMessage(element.Name)
+}

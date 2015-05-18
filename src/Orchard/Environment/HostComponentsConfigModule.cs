@@ -31,7 +31,10 @@ namespace Orchard.Environment {
             public string Value { get; set; }
         }
 
-        public readonly IDictionary<string, IEnumerable<PropertyEntry>> _config = new Dictionary<string, IEnumerable<PropertyEntry>>();
+        // Needs to be static so when the class is first instantiated from OrchardStarter with the config file it is filled and then it's also available
+        // when later used from shells. Since it's only written once and then not modified it can be a normal Dictionary even if reads are then concurrent
+        // (also see "Thread Safety": http://msdn.microsoft.com/en-us/library/xfhwa508.aspx)
+        public static readonly IDictionary<string, IEnumerable<PropertyEntry>> _config = new Dictionary<string, IEnumerable<PropertyEntry>>();
 
         public HostComponentsConfigModule() {
             // Called by the framework, as this class is a "Module"
@@ -54,7 +57,7 @@ namespace Orchard.Environment {
                 if (!properties.Any())
                     continue;
 
-                _config.Add(componentType, properties);
+                _config[componentType] = properties;
             }
         }
 
@@ -72,14 +75,15 @@ namespace Orchard.Environment {
             if (!_config.TryGetValue(implementationType.FullName, out properties))
                 return;
 
-            // build an array of actions on this type to assign loggers to member properties
+            
+            // build an array of actions on this type to assign configurations to member properties
             var injectors = BuildPropertiesInjectors(implementationType, properties).ToArray();
 
-            // if there are no logger properties, there's no reason to hook the activated event
+            // if there are no configurable properties, there's no reason to hook into the activated event
             if (!injectors.Any())
                 return;
 
-            // otherwise, whan an instance of this component is activated, inject the loggers on the instance
+            // otherwise, when an instance of this component is activated, inject the loggers on the instance
             registration.Activated += (s, e) => {
                 foreach (var injector in injectors)
                     injector(e.Context, e.Instance);

@@ -48,7 +48,9 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
         private static void ComparareJsonObject(JObject expectedResult, string json) {
             var objectDumperJson = JToken.Parse("{" + json + "}");
 
-            Assert.IsTrue(JToken.DeepEquals(expectedResult, objectDumperJson));
+            string message = String.Format("expected: {0} \r\nresult:{1}", expectedResult.ToString(Formatting.Indented), objectDumperJson.ToString(Formatting.Indented));
+
+            Assert.IsTrue(JToken.DeepEquals(expectedResult, objectDumperJson), message);
         }
 
         [Test]
@@ -273,7 +275,11 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                                 new JProperty("value", "null")),
                             new JObject(
                                 new JProperty("name", "TypePartDefinition"),
-                                new JProperty("value", "ContentTypePartDefinition")),
+                                new JProperty("value", "ContentTypePartDefinition"),
+                                new JProperty("children", new JArray(
+                                    new JObject(
+                                        new JProperty("name", "ContentTypeDefinition"),
+                                        new JProperty("value", "null"))))),
                             new JObject(
                                 new JProperty("name", "PartDefinition"),
                                 new JProperty("value", "ContentPartDefinition"),
@@ -349,7 +355,10 @@ namespace Orchard.Tests.Modules.DesignerTools.Services
                                                     new JProperty("value", "SettingsDictionary"))))),
                                     new JObject(
                                         new JProperty("name", "Settings"),
-                                        new JProperty("value", "SettingsDictionary"))))),
+                                        new JProperty("value", "SettingsDictionary")),
+                                    new JObject(
+                                        new JProperty("name", "ContentTypeDefinition"),
+                                        new JProperty("value", "null"))))),
                             new JObject(
                                 new JProperty("name", "PartDefinition"),
                                 new JProperty("value", "ContentPartDefinition"),

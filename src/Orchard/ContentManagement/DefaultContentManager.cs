@@ -149,6 +149,14 @@ namespace Orchard.ContentManagement {
 
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
             }
+            else if (options.VersionNumber != 0) {
+                // short-circuit if item held in session
+                if (session.RecallVersionNumber(id, options.VersionNumber, out contentItem)) {
+                    return contentItem;
+                }
+
+                versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
+            }
             else if (session.RecallContentRecordId(id, out contentItem)) {
                 // try to reload a previously loaded published content item
 
@@ -191,7 +199,7 @@ namespace Orchard.ContentManagement {
                                x => x.ContentItemRecord.Id == id && x.Number == options.VersionNumber);
                 }
                 else {
-                    versionRecord = contentItemVersionRecords.FirstOrDefault();
+                    versionRecord = contentItemVersionRecords.LastOrDefault();
                 }
             }
 
@@ -437,6 +445,28 @@ namespace Orchard.ContentManagement {
             Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
+        public virtual void Destroy(ContentItem contentItem) {
+            var session = _sessionLocator.Value.For(typeof(ContentItemVersionRecord));
+            var context = new DestroyContentContext(contentItem);
+
+            // Give storage filters a chance to delete content part records.
+            Handlers.Invoke(handler => handler.Destroying(context), Logger);
+
+            // Delete content item version and content item records.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemVersionRecord civ where civ.ContentItemRecord.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            // Delete the content item record itself.
+            session
+                .CreateQuery("delete from Orchard.ContentManagement.Records.ContentItemRecord ci where ci.Id = (:id)")
+                .SetParameter("id", contentItem.Id)
+                .ExecuteUpdate();
+
+            Handlers.Invoke(handler => handler.Destroyed(context), Logger);
+        }
+
         protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
             var contentItemRecord = existingContentItem.Record;
 
@@ -489,9 +519,7 @@ namespace Orchard.ContentManagement {
             if (contentItem.VersionRecord == null) {
                 // produce root record to determine the model id
                 contentItem.VersionRecord = new ContentItemVersionRecord {
-                    ContentItemRecord = new ContentItemRecord {
-                        
-                    },
+                    ContentItemRecord = new ContentItemRecord(),
                     Number = 1,
                     Latest = true,
                     Published = true
@@ -560,6 +588,40 @@ namespace Orchard.ContentManagement {
             Import(element, importContentSession);
 
             return importContentSession.Get(copyId, element.Name.LocalName);
+        }
+
+        public virtual ContentItem Restore(ContentItem contentItem, VersionOptions options) {
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.Restoring(new RestoreContentContext(contentItem, options)), Logger);
+
+            // Get the latest version.
+            var versions = contentItem.Record.Versions.OrderBy(x => x.Number).ToArray();
+            var latestVersionRecord = versions.SingleOrDefault(x => x.Latest) ?? versions.Last();
+
+            // Get the specified version.
+            var specifiedVersionContentItem =
+                contentItem.VersionRecord.Number == options.VersionNumber || contentItem.VersionRecord.Id == options.VersionRecordId 
+                ? contentItem 
+                : Get(contentItem.Id, options);
+
+            // Create a new version record based on the specified version record.
+            var rolledBackContentItem = BuildNewVersion(specifiedVersionContentItem);
+            rolledBackContentItem.VersionRecord.Published = options.IsPublished;
+
+            // Invoke handlers.
+            Handlers.Invoke(handler => handler.Restored(new RestoreContentContext(rolledBackContentItem, options)), Logger);
+
+            if (options.IsPublished) {
+                // Unpublish the latest version.
+                latestVersionRecord.Published = false;
+
+                var publishContext = new PublishContentContext(rolledBackContentItem, previousItemVersionRecord: latestVersionRecord);
+
+                Handlers.Invoke(handler => handler.Publishing(publishContext), Logger);
+                Handlers.Invoke(handler => handler.Published(publishContext), Logger);
+            }
+
+            return rolledBackContentItem;
         }
 
         /// <summary>

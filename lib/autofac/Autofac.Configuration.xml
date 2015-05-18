@@ -4,6 +4,33 @@
         <name>Autofac.Configuration</name>
     </assembly>
     <members>
+        <member name="T:Autofac.Configuration.AppSettingsModule">
+            <summary>
+            Configures properties on other modules using settings from the appSettings section of 
+            the configuration file. These can then be provided to component constructors as parameters
+            during registrations within the module.
+            </summary>
+            <remarks>
+            The convention for the appSettings key is "Module.PropertyName" (e.g. Email.Pop3Host).
+            Modules should be named with a "Module" suffix (e.g. EmailModule).
+            </remarks>
+        </member>
+        <member name="M:Autofac.Configuration.AppSettingsModule.#ctor(System.Collections.Generic.IEnumerable{Autofac.Module})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Configuration.AppSettingsModule"/> class.
+            </summary>
+            <param name="modules">The modules whose properties should be configured 
+            using settings from the appSettings section of the configuration file.</param>
+        </member>
+        <member name="M:Autofac.Configuration.AppSettingsModule.Load(Autofac.ContainerBuilder)">
+            <summary>
+            Override to add registrations to the container.
+            </summary>
+            <param name="builder">The builder through which components can be registered.</param>
+            <remarks>
+            Note that the ContainerBuilder parameter is unique to this module.
+            </remarks>
+        </member>
         <member name="T:Autofac.Configuration.AssemblyNameConverter">
             <summary>
             Type converter used for converting assembly name strings to assembly and back.
@@ -106,6 +133,12 @@
             OnActivated event so that circular dependencies can be handled.
             </summary>
             <value>never (default,) all, unset.</value>
+        </member>
+        <member name="P:Autofac.Configuration.Elements.ComponentElement.AutoActivate">
+            <summary>
+            Sets up auto activation for the component instances.
+            </summary>
+            <value>no(default,) yes.</value>
         </member>
         <member name="P:Autofac.Configuration.Elements.ComponentElement.Services">
             <summary>
@@ -429,6 +462,37 @@
             recognized grammar.
             </exception>
         </member>
+        <member name="M:Autofac.Configuration.ConfigurationRegistrar.SetAutoActivate``2(Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1},System.String)">
+            <summary>
+            Sets the auto activation mode for the component.
+            </summary>
+            <param name="registrar">
+            The component registration on which auto activation mode is being set.
+            </param>
+            <param name="autoActivate">
+            The <see cref="T:System.String"/> configuration value associated with auto
+            activate for this component registration.
+            </param>
+            <remarks>
+            <para>
+            By default, this implementation understands <see langword="null"/>, empty,
+            or <see langword="false"/> values (<c>false</c>, <c>0</c>, <c>no</c>)
+            to mean "no property injection should occur" and <see langword="true"/>
+            values (<c>true</c>, <c>1</c>, <c>yes</c>) to mean "auto activation
+            should occur."
+            </para>
+            <para>
+            You may override this method to extend the available grammar for auto activation settings.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.Configuration.ConfigurationErrorsException">
+            Thrown if the value for <paramref name="autoActivate"/> is not part of the
+            recognized grammar.
+            </exception>
+        </member>
         <member name="M:Autofac.Configuration.ConfigurationRegistrar.SetComponentOwnership``2(Autofac.Builder.IRegistrationBuilder{System.Object,``0,``1},System.String)">
             <summary>
             Sets the ownership model for the component.
@@ -616,9 +680,19 @@
               Looks up a localized string similar to Unable to convert object of type &apos;{0}&apos; to type &apos;{1}&apos;..
             </summary>
         </member>
+        <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.TypeConverterAttributeTypeNotConverter">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; specified in the TypeConverterAttribute is not a TypeConverter..
+            </summary>
+        </member>
         <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.TypeNotFound">
             <summary>
               Looks up a localized string similar to The type &apos;{0}&apos; could not be found. It may require assembly qualification, e.g. &quot;MyType, MyAssembly&quot;..
+            </summary>
+        </member>
+        <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.UnrecognisedAutoActivate">
+            <summary>
+              Looks up a localized string similar to The value &apos;{0}&apos; is not valid for the auto-activate attribute. Valid values are &apos;yes&apos; and &apos;no&apos;..
             </summary>
         </member>
         <member name="P:Autofac.Configuration.ConfigurationSettingsReaderResources.UnrecognisedInjectProperties">
@@ -663,7 +737,7 @@
         </member>
         <member name="T:Autofac.Configuration.Elements.ListElementCollection.ListElementTypeConverter">
             <summary>
-            Helps convert the configuration element into an actuall generic list
+            Helps convert the configuration element into an actual generic list
             </summary>
         </member>
         <member name="T:Autofac.Configuration.Util.Enforce">
@@ -1114,7 +1188,7 @@
             Some handy type conversion routines.
             </summary>
         </member>
-        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type)">
+        <member name="M:Autofac.Configuration.Util.TypeManipulation.ChangeToCompatibleType(System.Object,System.Type,System.Reflection.ICustomAttributeProvider)">
             <summary>
             Does its best to convert whatever the value is into the destination
             type. Null in yields null out for value types and the default(T)
@@ -1122,6 +1196,7 @@
             </summary>
             <param name="value">The value.</param>
             <param name="destinationType">Type of the destination.</param>
+            <param name="memberInfo">Reflected property or member info for the destination, if available, for retrieving custom type converter information.</param>
             <returns>An object of the destination type.</returns>
         </member>
         <member name="T:Autofac.Configuration.Elements.ListItemElement">

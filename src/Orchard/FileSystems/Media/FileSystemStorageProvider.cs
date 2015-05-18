@@ -268,6 +268,20 @@ namespace Orchard.FileSystems.Media {
             File.Move(sourceFileInfo.FullName, targetFileInfo.FullName);
         }
 
+        public void CopyFile(string originalPath, string duplicatePath) {
+            FileInfo sourceFileInfo = new FileInfo(MapStorage(originalPath));
+            if (!sourceFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} does not exist", originalPath).ToString());
+            }
+
+            FileInfo targetFileInfo = new FileInfo(MapStorage(duplicatePath));
+            if (targetFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} already exists", duplicatePath).ToString());
+            }
+
+            File.Copy(sourceFileInfo.FullName, targetFileInfo.FullName);
+        }
+
         /// <summary>
         /// Creates a file in the storage provider.
         /// </summary>

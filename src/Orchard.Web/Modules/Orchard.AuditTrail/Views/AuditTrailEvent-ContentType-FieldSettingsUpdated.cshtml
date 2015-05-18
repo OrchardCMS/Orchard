@@ -1,0 +1,35 @@
+﻿@using Orchard.AuditTrail.Helpers
+@using Orchard.AuditTrail.Services.Models
+@{
+    Style.Include("audittrail-contentdefinition-event.css");
+}
+@{
+    var eventData = (IDictionary<string, object>) Model.EventData;
+    var contentTypeName = eventData.Get<string>("ContentTypeName");
+    var contentPartName = eventData.Get<string>("ContentPartName");
+    var contentFieldName = eventData.Get<string>("ContentFieldName");
+    var diff = (DiffDictionary<string, string>)Model.Diff;
+    var isImplicitPart = contentTypeName == contentPartName;
+    var captionTemplate = isImplicitPart ? "Settings for the field <strong>{0}</strong> attached to the content type {1} were updated:" : "Settings for the field <strong>{0}</strong> attached to content part {1} of the content type {2} were updated:";
+}
+<section class="audittrail-contenttype-eventsummary">
+    @T(captionTemplate, contentFieldName, Html.ContentPartEditLink(contentPartName), Html.ContentTypeEditLink(contentTypeName))
+    <table class="items">
+        <thead>
+            <tr>
+                <th>@T("Setting")</th>
+                <th>@T("From")</th>
+                <th>@T("To")</th>
+            </tr>
+        </thead>
+        <tbody class="audittrail-category">
+            @foreach (var setting in diff) {
+                <tr>
+                    <td>@setting.Key</td>
+                    <td>@setting.Value.OldValue.OrIfEmpty(T("[Empty]"))</td>
+                    <td>@setting.Value.NewValue.OrIfEmpty(T("[Empty]"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

@@ -26,7 +26,7 @@ namespace Orchard.Users.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
+        private readonly IUserEventHandler _userEventHandlers;
         private readonly ISiteService _siteService;
 
         public AdminController(
@@ -34,7 +34,7 @@ namespace Orchard.Users.Controllers {
             IMembershipService membershipService,
             IUserService userService,
             IShapeFactory shapeFactory,
-            IEnumerable<IUserEventHandler> userEventHandlers,
+            IUserEventHandler userEventHandlers,
             ISiteService siteService) {
             Services = services;
             _membershipService = membershipService;
@@ -321,9 +321,7 @@ namespace Orchard.Users.Controllers {
             if ( user != null ) {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
                 Services.Notifier.Information(T("User {0} approved", user.UserName));
-                foreach (var userEventHandler in _userEventHandlers) {
-                    userEventHandler.Approved(user);
-                }
+                _userEventHandlers.Approved(user);
             }
 
             return RedirectToAction("Index");

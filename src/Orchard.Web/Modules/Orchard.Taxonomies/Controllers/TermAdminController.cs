@@ -149,11 +149,8 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(parentTermId);
-            var term = _taxonomyService.NewTerm(taxonomy);
-
-            // assign a container to show the full route while editing
-            term.Container = parentTerm == null ? taxonomy : (IContent)parentTerm;
-
+            var term = _taxonomyService.NewTerm(taxonomy, parentTerm);
+                        
             var model = await Services.ContentManager.BuildEditorAsync(term);
             return View(model);
         }
@@ -165,8 +162,7 @@ namespace Orchard.Taxonomies.Controllers {
 
             var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
             var parentTerm = _taxonomyService.GetTerm(parentTermId);
-            var term = _taxonomyService.NewTerm(taxonomy);
-            term.Container = parentTerm == null ? taxonomy.ContentItem : parentTerm.ContentItem;
+            var term = _taxonomyService.NewTerm(taxonomy, parentTerm);
 
             // Create content item before updating so attached fields save correctly
             Services.ContentManager.Create(term, VersionOptions.Draft);
@@ -178,7 +174,6 @@ namespace Orchard.Taxonomies.Controllers {
                 return View(model);
             }
 
-            _taxonomyService.ProcessPath(term);
             Services.ContentManager.Publish(term.ContentItem);
             Services.Notifier.Information(T("The {0} term has been created.", term.Name));
 

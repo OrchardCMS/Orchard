@@ -14,7 +14,7 @@ namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
-        private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
 
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -23,7 +23,7 @@ namespace Orchard.ContentManagement {
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
-            Lazy<IShapeTableLocator> shapeTableLocator, 
+            Lazy<IShapeTableLocator> shapeTableLocator,
             RequestContext requestContext,
             IVirtualPathProvider virtualPathProvider,
             IWorkContextAccessor workContextAccessor) {
@@ -39,7 +39,7 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public async Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "") {
+        public async Task<dynamic> BuildDisplayAsync(IContent content, string displayType, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -63,7 +63,7 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public async Task<dynamic> BuildEditorAsync(IContent content, string groupId = "") {
+        public async Task<dynamic> BuildEditorAsync(IContent content, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -82,10 +82,11 @@ namespace Orchard.ContentManagement {
 
             await _handlers.Value.InvokeAsync(handler => handler.BuildEditorAsync(context), Logger);
 
+            
             return context.Shape;
         }
 
-        public async Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupId = "") {
+        public async Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupInfoId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -104,7 +105,7 @@ namespace Orchard.ContentManagement {
             // adding an alternate for [Stereotype]_Edit__[ContentType] e.g. Content-Menu.Edit
             ((IShape)itemShape).Metadata.Alternates.Add(actualShapeType + "__" + content.ContentItem.ContentType);
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupId, _shapeFactory, shapeTable);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
             BindPlacement(context, null, stereotype);
 
             // call the async version, the implementation may be synchronous for backwards compatibility
@@ -125,8 +126,6 @@ namespace Orchard.ContentManagement {
                 var theme = workContext.CurrentTheme;
                 var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
 
-                var request = _requestContext.HttpContext.Request;
-
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {
@@ -135,7 +134,7 @@ namespace Orchard.ContentManagement {
                         Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
+                        Path = GetPath()
                     };
 
                     // define which location should be used if none placement is hit
@@ -153,6 +152,13 @@ namespace Orchard.ContentManagement {
                     Source = String.Empty
                 };
             };
+        }
+
+        /// <summary>
+        /// Gets the current app-relative path, i.e. ~/my-blog/foo.
+        /// </summary>
+        private string GetPath() {
+            return VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(_requestContext.HttpContext.Request.Path));
         }
     }
 }

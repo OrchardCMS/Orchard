@@ -4,8 +4,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentPartDriver<TContent> : ContentPartDriverBase<TContent>
-        where TContent : ContentPart, new() {
+    public abstract class ContentPartDriver<TContent> : ContentPartDriverBase<TContent> where TContent : ContentPart, new() {
         public override Task<DriverResult> BuildDisplayAsync(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
 
@@ -56,12 +55,19 @@ namespace Orchard.ContentManagement.Drivers {
                         ContentType = part.ContentItem.ContentType,
                         Differentiator = editor.GetDifferentiator(),
                         DisplayType = null,
-                        Path = String.Empty
+                        Path = context.Path
                     };
 
                     var location = descriptor.Placement(placementContext).Location;
 
                     if (String.IsNullOrEmpty(location) || location == "-") {
+                        return Task.FromResult<DriverResult>(editor);
+                    }
+
+                    var editorGroup = editor.GetGroup() ?? "";
+                    var contextGroup = context.GroupId ?? "";
+
+                    if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
                         return Task.FromResult<DriverResult>(editor);
                     }
                 }

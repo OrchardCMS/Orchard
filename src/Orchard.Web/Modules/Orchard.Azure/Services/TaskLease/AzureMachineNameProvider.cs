@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Orchard.TaskLease.Services;
+using Orchard.Environment;
 
-namespace Orchard.Azure.Services.TaskLease
-{
-	public class AzureMachineNameProvider : IMachineNameProvider
-	{
-		public string GetMachineName()
-		{
-			return RoleEnvironment.CurrentRoleInstance.Id;
-		}
-	}
+namespace Orchard.Azure.Services.TaskLease {
+    public class AzureMachineNameProvider : IMachineNameProvider {
+        public string GetMachineName() {
+            return RoleEnvironment.CurrentRoleInstance.Id;
+        }
+    }
 }

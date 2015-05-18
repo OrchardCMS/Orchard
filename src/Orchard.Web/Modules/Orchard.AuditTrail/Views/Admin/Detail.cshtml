@@ -1,0 +1,21 @@
+﻿@using Orchard.AuditTrail.Models
+@using Orchard.ContentManagement
+@model Orchard.AuditTrail.ViewModels.AuditTrailDetailsViewModel
+@{
+    Style.Include("audittrail-display.css");
+
+    var record = Model.Record;
+    var descriptor = Model.Descriptor;
+
+    Layout.Title = T("Audit Trail Event");
+}
+<section class="audittrail-event-metadata-section">
+    @T("Event:") <strong>@descriptor.Name</strong><br />
+    @T("Category:") <strong>@descriptor.CategoryDescriptor.Name</strong><br />
+    @T("Timestamp:") <strong>@Display.DateTime(DateTimeUtc: record.CreatedUtc)</strong><br />
+    @T("Username:") <strong>@record.UserName</strong><br />
+    @T("Client IP address:") <strong>@record.ClientIpAddress</strong>
+</section>
+<section class="audittrail-event-details-section">
+    @Display(Model.DetailsShape)
+</section>

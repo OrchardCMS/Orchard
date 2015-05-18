@@ -23,9 +23,12 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public async Task<ActionResult> Display(int? id) {
+        public async Task<ActionResult> Display(int? id, int? version) {
             if (id == null)
                 return HttpNotFound();
+
+            if (version.HasValue)
+                return Preview(id, version);
 
             var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 
@@ -55,11 +58,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.ViewContent, contentItem, T("Cannot preview content"))) {
-                return new HttpUnauthorizedResult();
-            }
-
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot preview content"))) {
+            if (!Services.Authorizer.Authorize(Permissions.PreviewContent, contentItem, T("Cannot preview content"))) {
                 return new HttpUnauthorizedResult();
             }
 

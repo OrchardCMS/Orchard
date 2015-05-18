@@ -46,6 +46,9 @@ namespace Orchard.Recipes.Services {
                                 case "Version":
                                     recipe.Version = metadataElement.Value;
                                     break;
+                                case "IsSetupRecipe":
+                                    recipe.IsSetupRecipe = !string.IsNullOrEmpty(metadataElement.Value) ? bool.Parse(metadataElement.Value) : false;
+                                    break;
                                 case "ExportUtc":
                                     recipe.ExportUtc = !string.IsNullOrEmpty(metadataElement.Value) ? (DateTime?)XmlConvert.ToDateTime(metadataElement.Value, XmlDateTimeSerializationMode.Utc) : null;
                                     break;

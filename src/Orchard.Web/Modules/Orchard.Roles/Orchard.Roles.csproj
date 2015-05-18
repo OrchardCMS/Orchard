@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Roles</RootNamespace>
     <AssemblyName>Orchard.Roles</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -72,6 +72,17 @@
     <Compile Include="Commands\RoleCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\UserTaskDriver.cs" />
+    <Compile Include="Events\IRoleEventHandler.cs" />
+    <Compile Include="Events\PermissionAddedContext.cs" />
+    <Compile Include="Events\PermissionRemovedContext.cs" />
+    <Compile Include="Events\PermissionRoleContext.cs" />
+    <Compile Include="Events\RoleContext.cs" />
+    <Compile Include="Events\RoleCreatedContext.cs" />
+    <Compile Include="Events\RoleRemovedContext.cs" />
+    <Compile Include="Events\RoleRenamedContext.cs" />
+    <Compile Include="Events\UserAddedContext.cs" />
+    <Compile Include="Events\UserRemovedContext.cs" />
+    <Compile Include="Events\UserRoleContext.cs" />
     <Compile Include="Forms\SelectRolesForms.cs" />
     <Compile Include="Forms\UserTaskForms.cs" />
     <Compile Include="ImportExport\RolesCustomExportStep.cs" />
@@ -137,7 +148,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-IsInRole.cshtml" />
@@ -150,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\UserTask.ActionButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity-AssignRole.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

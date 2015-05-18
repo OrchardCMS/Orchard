@@ -1,8 +1,8 @@
 ﻿/* http://keith-wood.name/calendars.html
-   Thai localisation for Thai calendars for jQuery.
+   Thai localisation for Thai calendars for jQuery v2.0.0.
    Written by pipo (pipo@sixhead.com). */
 (function($) {
-	$.calendars.calendars.thai.prototype.regional['th'] = {
+	$.calendars.calendars.thai.prototype.regionalOptions['th'] = {
 		name: 'Thai',
 		epochs: ['BBE', 'BE'],
 		monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',

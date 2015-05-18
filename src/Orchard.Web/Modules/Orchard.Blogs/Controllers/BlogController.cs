@@ -73,6 +73,8 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
+            pager.PageSize = blogPart.PostsPerPage;
+
             _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
             var blogPostTasks = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
                 .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Email.Services;
+using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Messaging.Services;
@@ -11,6 +12,7 @@ namespace Orchard.Email.Activities {
         void Enqueue(string message, object parameters, int priority);
     }
 
+    [OrchardSuppressDependency("Orchard.Email.Workflows")]
     public class EmailActivity : Task {
         private readonly IMessageService _messageService;
         private readonly IJobsQueueService _jobsQueueService;
@@ -52,11 +54,17 @@ namespace Orchard.Email.Activities {
             var body = activityContext.GetState<string>("Body");
             var subject = activityContext.GetState<string>("Subject");
             var recipients = activityContext.GetState<string>("Recipients");
+            var replyTo = activityContext.GetState<string>("ReplyTo");
+            var bcc = activityContext.GetState<string>("Bcc");
+            var cc = activityContext.GetState<string>("CC");
 
             var parameters = new Dictionary<string, object> {
                 {"Subject", subject},
                 {"Body", body},
-                {"Recipients", recipients}
+                {"Recipients", recipients},
+                {"ReplyTo", replyTo},
+                {"Bcc", bcc},
+                {"CC", cc}
             };
 
             var queued = activityContext.GetState<bool>("Queued");

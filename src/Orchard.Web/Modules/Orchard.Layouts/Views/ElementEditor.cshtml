@@ -1,0 +1,60 @@
+﻿@using Orchard.Layouts.Helpers
+@using Orchard.Layouts.Models
+@using Orchard.Utility.Extensions
+@model Orchard.Layouts.ViewModels.EditElementViewModel
+@{
+    Style.Include("element-editor.css");
+    Script.Require("jQuery");
+    Script.Include("jquery.deserialize.js");
+    Script.Include("LayoutDecoder.js");
+    Script.Include("element-editor.js");
+    Layout.LocalNavigation.Add(New.ElementEditor_LocalNav(Tabs: Model.Tabs));
+
+    var command = (string)ViewBag.Command;
+    var titleFormat = (string)ViewBag.TitleFormat;
+}
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Update", "Element", new { session = Model.SessionKey, area = "Orchard.Layouts" }))) {
+    @Html.HiddenFor(m => m.TypeName)
+    @Html.HiddenFor(m => m.ElementData)
+    foreach (var tab in Model.Tabs) {
+        var id = String.Format("element-{0}", tab.ToLowerInvariant());
+        <div id="@id" class="tab-view">
+            @foreach (var editor in Model.EditorResult.Editors) {
+                var position = ShapePosition.Parse((String)editor.Metadata.Position);
+                if (position.Name == tab) {
+                    @Display(editor)
+                }
+            }
+        </div>
+    }
+}
+@if (Model.Submitted) {
+    using (Script.Foot()) {
+        <script type="text/javascript">
+            jQuery(function () {
+                var payload = {
+                    command: "@command",
+                    element: {
+                        typeName: "@Model.TypeName",
+                        typeLabel: "@Model.DisplayText.Text",
+                        typeClass: "@Model.DisplayText.Text.HtmlClassify()",
+                        data: LayoutEditor.decode("@Url.Encode(Model.ElementData)"),
+                        html: LayoutEditor.decode("@Url.Encode(Model.ElementHtml)"),
+                        isTemplated: false
+                    },
+                    elementEditorModel: JSON.parse(LayoutEditor.decode("@Html.Raw(Url.Encode(Model.ElementEditorModel.ToJson()))"))
+                };
+
+                window.parent.currentDialog.trigger("command", payload);
+            });
+        </script>
+    }
+}
+<div class="dialog-settings">
+    <div class="title">@T(titleFormat, Model.DisplayText)</div>
+    <div class="buttons">
+        <a href="#" class="button save" data-command="save">@T("Save")</a>
+        <a href="#" class="button cancel" data-command="cancel">@T("Cancel")</a>
+    </div>
+</div>

@@ -2,8 +2,8 @@
    Latvian localisation for calendars datepicker for jQuery.
    Arturas Paleicikas <arturas.paleicikas@metasite.net>. */
 (function($) {
-	$.calendars.picker.regional['lv'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['lv'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: 'Iepr',  prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Nāka', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['lv']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['lv']);
 })(jQuery);

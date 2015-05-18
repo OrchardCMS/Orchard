@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Settings;
+using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.DisplayManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.State;
+using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
+using Orchard.Messaging.Services;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Services;
 
@@ -25,6 +30,9 @@ namespace Orchard.Comments.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly HashSet<int> _processedCommentsParts = new HashSet<int>();
+        private readonly IShapeFactory _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
+        private readonly IMessageService _messageService;
 
         public CommentService(
             IOrchardServices orchardServices, 
@@ -32,16 +40,26 @@ namespace Orchard.Comments.Services {
             IEncryptionService encryptionService,
             IProcessingEngine processingEngine,
             ShellSettings shellSettings,
-            IShellDescriptorManager shellDescriptorManager) {
+            IShellDescriptorManager shellDescriptorManager,
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay,
+            IMessageService messageService
+            ) {
             _orchardServices = orchardServices;
             _clock = clock;
             _encryptionService = encryptionService;
             _processingEngine = processingEngine;
             _shellSettings = shellSettings;
             _shellDescriptorManager = shellDescriptorManager;
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
+            _messageService = messageService;
+
+            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; } 
         public ILogger Logger { get; set; }
 
         public CommentPart GetComment(int id) {
@@ -194,6 +212,48 @@ namespace Orchard.Comments.Services {
             }
 
             return true;
+        }
+
+        public void SendNotificationEmail(CommentPart commentPart) {
+            try {
+                var commentedOn = _orchardServices.ContentManager.Get(commentPart.CommentedOn);
+                if (commentedOn == null) {
+                    return;
+                }
+
+                var owner = commentedOn.As<CommonPart>().Owner;
+                if (owner == null) {
+                    return;
+                }
+
+                var template = _shapeFactory.Create("Template_Comment_Notification", Arguments.From(new {
+                    CommentPart = commentPart,
+                    CommentApproveUrl = CreateProtectedUrl("Approve", commentPart),
+                    CommentModerateUrl = CreateProtectedUrl("Moderate", commentPart),
+                    CommentDeleteUrl = CreateProtectedUrl("Delete", commentPart)
+                }));
+
+                var parameters = new Dictionary<string, object> {
+                        {"Subject", T("Comment notification").Text},
+                        {"Body", _shapeDisplay.Display(template)},
+                        {"Recipients", owner.Email}
+                    };
+
+                _messageService.Send("Email", parameters);
+            }
+            catch(Exception e) {
+                Logger.Error(e, "An unexpected error occured while sending a notification email");
+            }
+        }
+
+        public string CreateProtectedUrl(string action, CommentPart part) {
+            var workContext = _orchardServices.WorkContext;
+            if (workContext.HttpContext != null) {
+                var url = new UrlHelper(workContext.HttpContext.Request.RequestContext);
+                return url.AbsoluteAction(action, "Comment", new { area = "Orchard.Comments", nonce = CreateNonce(part, TimeSpan.FromDays(7)) });
+            }
+
+            return null;
         }
 
         private CommentPart GetCommentWithQueryHints(int id) {

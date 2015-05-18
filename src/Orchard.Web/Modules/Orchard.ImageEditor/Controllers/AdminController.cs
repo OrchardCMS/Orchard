@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
@@ -99,13 +100,20 @@ namespace Orchard.ImageEditor.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent))
                 return HttpNotFound();
 
+            var sslFailureCallback = new RemoteCertificateValidationCallback((o, cert, chain, errors) => true);
+
             using (var wc = new WebClient()) {
                 try {
+                    ServicePointManager.ServerCertificateValidationCallback += sslFailureCallback;
+
                     var data = wc.DownloadData(url);
                     return new FileContentResult(data, "image");
                 }
                 catch {
                     return HttpNotFound();
+                }
+                finally {
+                    ServicePointManager.ServerCertificateValidationCallback -= sslFailureCallback;
                 }
             }
         }

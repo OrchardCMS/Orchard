@@ -2,8 +2,8 @@ Name: Alias
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.8.2
-OrchardVersion: 1.8
+Version: 1.9.0
+OrchardVersion: 1.9
 Description: Maps friendly urls to specific module actions.
 FeatureDescription: Maps friendly urls to specific module actions.
 Category: Content
@@ -11,5 +11,10 @@ Features:
     Orchard.Alias.UI:
 		Name: Alias UI
         Description: Admin user interface for Orchard.Alias.
+		Dependencies: Orchard.Alias
+		Category: Content
+    Orchard.Alias.Updater:
+		Name: Alias Updater
+        Description: Synchronizes aliases when created from different servers.
 		Dependencies: Orchard.Alias
 		Category: Content

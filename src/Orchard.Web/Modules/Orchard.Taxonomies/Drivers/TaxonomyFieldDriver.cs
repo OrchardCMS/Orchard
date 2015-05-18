@@ -147,11 +147,9 @@ namespace Orchard.Taxonomies.Drivers {
 
                 var taxonomy = _taxonomyService.GetTaxonomy(taxonomyId);
                 term = _taxonomyService.NewTerm(taxonomy);
-                term.Container = taxonomy.ContentItem;
                 term.Name = entry.Name.Trim();
                 term.Selectable = true;
 
-                _taxonomyService.ProcessPath(term);
                 Services.ContentManager.Create(term, VersionOptions.Published);
                 Services.Notifier.Information(T("The {0} term has been created.", term.Name));
             }

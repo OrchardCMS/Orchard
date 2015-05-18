@@ -3,7 +3,7 @@
    Mahmoud Khaled -- mahmoud.khaled@badrit.com
    NOTE: monthNames are the new months names */
 (function($) {
-	$.calendars.calendars.gregorian.prototype.regional['ar-EG'] = {
+	$.calendars.calendars.gregorian.prototype.regionalOptions['ar-EG'] = {
 		name: 'Gregorian',
 		epochs: ['BCE', 'CE'],
 		monthNames: ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونية',
@@ -17,7 +17,7 @@
 		isRTL: true
 	};
 	if ($.calendars.calendars.julian) {
-		$.calendars.calendars.julian.prototype.regional['ar-EG'] =
-			$.calendars.calendars.gregorian.prototype.regional['ar-EG'];
+		$.calendars.calendars.julian.prototype.regionalOptions['ar-EG'] =
+			$.calendars.calendars.gregorian.prototype.regionalOptions['ar-EG'];
 	}
 })(jQuery);

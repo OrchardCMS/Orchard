@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Users.Models;

@@ -49,7 +49,7 @@ namespace Orchard.Tests {
 
         public static ISessionFactory CreateSessionFactory(params Type[] types) {
             return CreateSessionFactory(
-                types.Aggregate("db", (n, t) => t.FullName + "." + n),
+                string.Join(".", types.Reverse().Select(type => type.FullName)),
                 types);
         }
 

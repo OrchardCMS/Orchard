@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.OutputCache</RootNamespace>
     <AssemblyName>Orchard.OutputCache</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -95,14 +95,19 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
+    <Compile Include="Filters\CaptureStream.cs" />
     <Compile Include="Filters\OutputCacheFilter.cs" />
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
+    <Compile Include="DatabaseOutputCacheMigrations.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CacheItem.cs" />
+    <Compile Include="Models\CacheItemRecord.cs" />
     <Compile Include="Models\CacheSettingsPart.cs" />
     <Compile Include="Models\CacheParameterRecord.cs" />
     <Compile Include="Services\CacheService.cs" />
+    <Compile Include="Services\DatabaseOutputCacheBackgroundTask.cs" />
+    <Compile Include="Services\DatabaseOutputCacheProvider.cs" />
     <Compile Include="Services\DefaultCacheControlStrategy.cs" />
     <Compile Include="Services\DefaultTagCache.cs" />
     <Compile Include="Services\ICacheControlStrategy.cs" />
@@ -111,9 +116,10 @@
     <Compile Include="Services\DefaultCacheStorageProvider.cs" />
     <Compile Include="Services\ICacheService.cs" />
     <Compile Include="Services\IOutputCacheStorageProvider.cs" />
+    <Compile Include="Models\CacheSettings.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
-    <Compile Include="ViewModels\RouteConfiguration.cs" />
+    <Compile Include="Models\CacheRouteConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Statistics\Index.cshtml" />

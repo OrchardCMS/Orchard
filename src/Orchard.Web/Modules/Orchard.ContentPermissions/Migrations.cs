@@ -18,5 +18,11 @@ namespace Orchard.ContentPermissions {
 
             return 2;
         }
+
+        public int UpdateFrom2() {
+            
+            // auto-upgrade to 3 as UpdateFrom1 is incorrectly returning 2
+            return 3;
+        }
     }
 }

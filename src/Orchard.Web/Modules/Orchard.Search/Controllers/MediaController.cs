@@ -64,7 +64,8 @@ namespace Orchard.Search.Controllers {
 
             var viewModel = new MediaManagerMediaItemsViewModel {
                 MediaItems = mediaItems,
-                MediaItemsCount = mediaPartsCount
+                MediaItemsCount = mediaPartsCount,
+                FolderPath = folderPath
             };
 
             return View(viewModel);

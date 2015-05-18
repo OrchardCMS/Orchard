@@ -30,7 +30,7 @@
                 @Display(Model.CustomNavigationShapes)
 
                 <li id="media-library-main-navigation-tree">
-                    <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders }">
+                    <ul data-bind="template: { name: 'media-folder-template', foreach: mediaFolders, afterRender: afterRenderMediaFolderTemplate}">
                     </ul>
                 </li>
             </ul>
@@ -68,6 +68,7 @@
                         </ul>
                         <div id="media-library-main-selection-actions">
                             <button id="delete-selection-button">@T("Delete")</button>
+                            <button id="clone-selection-button" data-bind="visible: selection().length == 1">@T("Clone")</button>
                         </div>
                     </div>
                 </header>
@@ -94,9 +95,11 @@ var mediaLibrarySettings = {
     importActionUrl: '@HttpUtility.JavaScriptStringEncode(Url.Action("Import", "Admin"))',
     moveActionUrl: '@Url.Action("Move", "Folder", new {area = "Orchard.MediaLibrary"})',
     deleteActionUrl: '@Url.Action("Delete", "Admin", new {area = "Orchard.MediaLibrary"})',
+    cloneActionUrl: '@Url.Action("Clone", "Admin", new {area = "Orchard.MediaLibrary"})',
     hasFolderPath: @(viewModel.FolderPath != null ? "true" : "false"),
     folderPath: '@HttpUtility.JavaScriptStringEncode(viewModel.FolderPath)',
     deleteConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to delete these media items ?").Text)',
+    cloneConfirmationMessage: '@HttpUtility.JavaScriptStringEncode(T("Are you sure you want to clone this media item ?").Text)',
     errorMessage: '@HttpUtility.JavaScriptStringEncode(T("An unexpected error occured, please refresh the page and try again.").Text)',
     antiForgeryToken: '@Html.AntiForgeryTokenValueOrchard()',
     childFolders: (@Display.Partial(TemplateName: "ChildFolders", Model: viewModel.ChildFoldersViewModel))['childFolders']
@@ -104,12 +107,12 @@ var mediaLibrarySettings = {
 //]]>
 </script>
 <script type="text/html" id="media-folder-template">
-    <li data-bind="visible: isVisible()">
+    <li>
         <div class="media-library-folder" data-bind="css: { 'in-progress': $root.pendingRequest() }">
-            <div class="media-library-folder-title" data-bind="click: folderClicked, css: { selected: isSelected() }">
+            <div class="media-library-folder-title" data-bind="click: folderClicked, attr: { 'data-media-path': folderPath() }, css: {selected: isSelected()}">
                 <a href="#" class="media-library-navigation-folder-link"><i data-bind="    css: {'icon-folder-open-alt': isExpanded(), 'icon-folder-close-alt': !isExpanded()}"></i><span data-bind="    text: name"></span></a>
             </div>
-            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders}, visible: childFolders().length > 0">
+            <ul data-bind="template: { name: 'media-folder-template', foreach: childFolders, afterRender: afterRenderMediaFolderTemplate}, visible: isExpanded()">
             </ul>
         </div>
     </li>

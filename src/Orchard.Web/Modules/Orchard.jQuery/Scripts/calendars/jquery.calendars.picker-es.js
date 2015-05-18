@@ -2,8 +2,8 @@
    Spanish localisation for calendars datepicker for jQuery.
    Traducido por Vester (xvester@gmail.com). */
 (function($) {
-	$.calendars.picker.regional['es'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['es'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;Ant', prevStatus: '',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
 		nextText: 'Sig&#x3e;', nextStatus: '',
@@ -17,5 +17,5 @@
 		dayStatus: 'DD, M d', defaultStatus: '',
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['es']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['es']);
 })(jQuery);

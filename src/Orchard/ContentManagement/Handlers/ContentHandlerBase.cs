@@ -26,6 +26,10 @@ namespace Orchard.ContentManagement.Handlers {
         public virtual void Imported(ImportContentContext context) { }
         public virtual void Exporting(ExportContentContext context) { }
         public virtual void Exported(ExportContentContext context) { }
+        public virtual void Restoring(RestoreContentContext context) { }
+        public virtual void Restored(RestoreContentContext context) { }
+        public virtual void Destroying(DestroyContentContext context) {}
+        public virtual void Destroyed(DestroyContentContext context) {}
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) { }
 

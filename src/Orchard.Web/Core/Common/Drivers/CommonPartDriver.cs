@@ -10,19 +10,13 @@ using Orchard.Security;
 namespace Orchard.Core.Common.Drivers {
     public class CommonPartDriver : ContentPartDriver<CommonPart> {
         private readonly IContentManager _contentManager;
-        private readonly IAuthenticationService _authenticationService;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
 
         public CommonPartDriver(
             IOrchardServices services,
             IContentManager contentManager,
-            IAuthenticationService authenticationService,
-            IAuthorizationService authorizationService,
             IMembershipService membershipService) {
             _contentManager = contentManager;
-            _authenticationService = authenticationService;
-            _authorizationService = authorizationService;
             _membershipService = membershipService;
             T = NullLocalizer.Instance;
             Services = services;

@@ -2,8 +2,8 @@
    Gujarati (ગુજરાતી) localisation for calendars datepicker for jQuery.
    Naymesh Mistry (naymesh@yahoo.com). */
 (function($) {
-	$.calendars.picker.regional['gu'] = {
-		renderer: $.calendars.picker.defaultRenderer,
+	$.calendarsPicker.regionalOptions['gu'] = {
+		renderer: $.calendarsPicker.defaultRenderer,
 		prevText: '&#x3c;પાછળ', prevStatus: 'પાછલો મહિનો બતાવો',
 		prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: 'પાછળ',
 		nextText: 'આગળ&#x3e;', nextStatus: 'આગલો મહિનો બતાવો',
@@ -17,5 +17,5 @@
 		dayStatus: 'અઠવાડિયાનો પહેલો દિવસ પસંદ કરો', defaultStatus: 'તારીખ પસંદ કરો',		
 		isRTL: false
 	};
-	$.calendars.picker.setDefaults($.calendars.picker.regional['gu']);
+	$.calendarsPicker.setDefaults($.calendarsPicker.regionalOptions['gu']);
 })(jQuery);
