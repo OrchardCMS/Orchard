@@ -84,7 +84,7 @@ namespace Orchard.ContentManagement.Drivers {
                         return false;
                     }
 
-                    var editorGroup = editor.GetGroup();
+                    var editorGroup = contentShapeResult.GetGroup();
                     if (string.IsNullOrEmpty(editorGroup)) {
                         editorGroup = placementInfo.GetGroup() ?? "";
                     }
