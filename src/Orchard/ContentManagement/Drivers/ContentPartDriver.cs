@@ -8,6 +8,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
+using System.Linq;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
@@ -58,16 +59,19 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            // checking if the editor needs to be updated (e.g. if it was not hidden)
-            var editor = Editor(part, context.New) as ContentShapeResult;
+            // checking if the editor needs to be updated (e.g. if any of the shapes were not hidden)
+            DriverResult editor = Editor(part, context.New);
+            IEnumerable<ContentShapeResult> contentShapeResults = GetShapeResults(editor);
 
-            if (editor != null) {
+            if (contentShapeResults.Any(contentShapeResult => {
+                if (contentShapeResult == null) return true;
+
                 ShapeDescriptor descriptor;
-                if (context.ShapeTable.Descriptors.TryGetValue(editor.GetShapeType(), out descriptor)) {
+                if (context.ShapeTable.Descriptors.TryGetValue(contentShapeResult.GetShapeType(), out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         Content = part.ContentItem,
                         ContentType = part.ContentItem.ContentType,
-                        Differentiator = editor.GetDifferentiator(),
+                        Differentiator = contentShapeResult.GetDifferentiator(),
                         DisplayType = null,
                         Path = context.Path
                     };
@@ -77,7 +81,7 @@ namespace Orchard.ContentManagement.Drivers {
                     var location = placementInfo.Location;
 
                     if (String.IsNullOrEmpty(location) || location == "-") {
-                        return editor;
+                        return false;
                     }
 
                     var editorGroup = editor.GetGroup();
@@ -87,18 +91,30 @@ namespace Orchard.ContentManagement.Drivers {
                     var contextGroup = context.GroupId ?? "";
 
                     if (!String.Equals(editorGroup, contextGroup, StringComparison.OrdinalIgnoreCase)) {
-                        return editor;
+                        return false;
                     }
                 }
+
+                return true;
+            })) {
+                DriverResult result = Editor(part, context.Updater, context.New);
+
+                if (result != null) {
+                    result.ContentPart = part;
+                }
+
+                return result;
             }
 
-            DriverResult result = Editor(part, context.Updater, context.New);
+            return editor;
+        }
 
-            if (result != null) {
-                result.ContentPart = part;
+        private static IEnumerable<ContentShapeResult> GetShapeResults(DriverResult driverResult) {
+            if (driverResult is CombinedResult) {
+                return ((CombinedResult)driverResult).GetResults().Select(result => result as ContentShapeResult);
             }
 
-            return result;
+            return new[] { driverResult as ContentShapeResult };
         }
 
         void IContentPartDriver.Importing(ImportContentContext context) {
