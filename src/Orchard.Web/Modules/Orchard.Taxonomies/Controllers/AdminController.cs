@@ -9,31 +9,49 @@ using Orchard.Settings;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.ViewModels;
 using Orchard.Taxonomies.Services;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.DisplayManagement;
 
 namespace Orchard.Taxonomies.Controllers {
 
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices services,
-            ITaxonomyService taxonomyService) {
+            ITaxonomyService taxonomyService,
+            ISiteService siteService,
+            IShapeFactory shapeFactory) {
             Services = services;
+            _siteService = siteService;
             _taxonomyService = taxonomyService;
+
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; set; }
         protected virtual ISite CurrentSite { get; private set; }
 
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
-            var taxonomies = _taxonomyService.GetTaxonomies();
-            var entries = taxonomies.Select(CreateTaxonomyEntry).ToList();
-            var model = new TaxonomyAdminIndexViewModel { Taxonomies = entries };
+        public ActionResult Index(PagerParameters pagerParameters) {
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
+            var taxonomies = _taxonomyService.GetTaxonomiesQuery().Slice(pager.GetStartIndex(), pager.PageSize);
+
+            var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTaxonomiesQuery().Count());
+
+            var entries = taxonomies
+                    .Select(CreateTaxonomyEntry)
+                    .ToList();
+
+            var model = new TaxonomyAdminIndexViewModel { Taxonomies = entries, Pager = pagerShape };
+
             return View(model);
         }
 
