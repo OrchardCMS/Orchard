@@ -33,7 +33,7 @@ namespace Orchard.Localization.Controllers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Translate(int id, string to) {
+        public async Task<ActionResult> Translate(int id, string to) {
             var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (masterContentItem == null)
                 return HttpNotFound();
@@ -74,7 +74,7 @@ namespace Orchard.Localization.Controllers {
             return TranslatePOST(id, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
+        public async Task<ActionResult> TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
             var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (masterContentItem == null)
                 return HttpNotFound();
