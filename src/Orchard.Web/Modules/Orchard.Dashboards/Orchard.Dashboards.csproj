@@ -81,11 +81,11 @@
     <Content Include="Views\Elements\Grid.Dashboard.cshtml" />
     <Content Include="Views\Elements\Column.Dashboard.cshtml" />
     <Content Include="Views\Parts\Layout.Dashboard.cshtml" />
-    <Content Include="Views\Settings\Index.cshtml" />
     <Content Include="Views\Dashboard\List.cshtml">
       <SubType>
       </SubType>
     </Content>
+    <Content Include="Views\Dashboard\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -107,23 +107,20 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
-    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Drivers\DashboardSiteSettingsPartDriver.cs" />
     <Compile Include="Handlers\DashboardSiteSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Shapes\LayoutPartShape.cs" />
-    <Compile Include="ViewModels\DashboardSiteSettingsViewModel.cs" />
     <Compile Include="Models\DashboardSiteSettingsPart.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\DashboardDescriptor.cs" />
     <Compile Include="Services\DefaultDashboardSelector.cs" />
     <Compile Include="Services\IDashboardSelector.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Elements\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

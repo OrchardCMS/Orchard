@@ -10,4 +10,4 @@ Features:
         Name: Dashboards
         Description: The Dashboards module enables administrators to customize the dashboard screen of the administration UI of the application.
         Category: Admin
-        Dependencies: Orchard.Layouts, Orchard.ContentPicker
+        Dependencies: Orchard.Layouts
