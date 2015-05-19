@@ -96,7 +96,7 @@ namespace Orchard.Lists.Controllers {
             
             var listsShape = Shape.List();
 
-            var tasks = pageOfLists.Select(item => _contentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+            var tasks = pageOfLists.Select(item => _contentManager.BuildDisplayAsync(item, "SummaryAdmin")).ToList();
 
             await Task.WhenAll(tasks);
 
