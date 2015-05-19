@@ -37,11 +37,10 @@ namespace Orchard.Taxonomies.Services {
             INotifier notifier,
             IContentDefinitionManager contentDefinitionManager,
             IAuthorizationService authorizationService,
-            IOrchardServices services, 
-            IProcessingEngine processingEngine, 
-            ShellSettings shellSettings, 
-            IShellDescriptorManager shellDescriptorManager)
-        {
+            IOrchardServices services,
+            IProcessingEngine processingEngine,
+            ShellSettings shellSettings,
+            IShellDescriptorManager shellDescriptorManager) {
             _termContentItemRepository = termContentItemRepository;
             _contentManager = contentManager;
             _notifier = notifier;
@@ -98,7 +97,7 @@ namespace Orchard.Taxonomies.Services {
             // create the associated term's content type
             taxonomy.TermTypeName = GenerateTermTypeName(taxonomy.Name);
 
-            _contentDefinitionManager.AlterTypeDefinition(taxonomy.TermTypeName, 
+            _contentDefinitionManager.AlterTypeDefinition(taxonomy.TermTypeName,
                 cfg => cfg
                     .WithSetting("Taxonomy", taxonomy.Name)
                     .WithPart("TermPart")
@@ -226,7 +225,7 @@ namespace Orchard.Taxonomies.Services {
         public void DeleteTerm(TermPart termPart) {
             _contentManager.Remove(termPart.ContentItem);
 
-            foreach(var childTerm in GetChildren(termPart)) {
+            foreach (var childTerm in GetChildren(termPart)) {
                 _contentManager.Remove(childTerm.ContentItem);
             }
 
@@ -244,7 +243,7 @@ namespace Orchard.Taxonomies.Services {
             var termsPart = contentItem.As<TermsPart>();
 
             // removing current terms for specific field
-            var termList = termsPart.Terms.Select((t, i) => new {Term = t, Index = i})
+            var termList = termsPart.Terms.Select((t, i) => new { Term = t, Index = i })
                 .Where(x => x.Term.Field == field)
                 .Select(x => x)
                 .OrderByDescending(i => i.Index)
@@ -253,15 +252,16 @@ namespace Orchard.Taxonomies.Services {
             foreach (var x in termList) {
                 termsPart.Terms.RemoveAt(x.Index);
             }
-            
+
             // adding new terms list
-            foreach(var term in terms) {
+            foreach (var term in terms) {
                 // Remove the newly added terms because they will get processed by the Published-Event
                 termList.RemoveAll(t => t.Term.Id == term.Id);
-                termsPart.Terms.Add( 
+                termsPart.Terms.Add(
                     new TermContentItem {
-                        TermsPartRecord = termsPart.Record, 
-                        TermRecord = term.Record, Field = field
+                        TermsPartRecord = termsPart.Record,
+                        TermRecord = term.Record,
+                        Field = field
                     });
             }
 
@@ -282,7 +282,8 @@ namespace Orchard.Taxonomies.Services {
                     tpr => tpr.Terms.Any(tr =>
                         tr.TermRecord.Id == term.Id
                         || tr.TermRecord.Path.StartsWith(rootPath)));
-            } else {
+            }
+            else {
                 query = query.Where(
                     tpr => tpr.Terms.Any(tr =>
                         tr.Field == fieldName
@@ -291,7 +292,7 @@ namespace Orchard.Taxonomies.Services {
 
             return query;
         }
-        
+
         public long GetContentItemsCount(TermPart term, string fieldName = null) {
             return GetContentItemsQuery(term, fieldName).Count();
         }
@@ -315,14 +316,14 @@ namespace Orchard.Taxonomies.Services {
                 .List();
 
             if (includeParent) {
-                result = result.Concat(new [] {term});
+                result = result.Concat(new[] { term });
             }
 
             return TermPart.Sort(result);
         }
 
         public IEnumerable<TermPart> GetParents(TermPart term) {
-            return term.Path.Split(new [] {'/'}, StringSplitOptions.RemoveEmptyEntries).Select(id => GetTerm(int.Parse(id)));
+            return term.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Select(id => GetTerm(int.Parse(id)));
         }
 
         public IEnumerable<string> GetSlugs() {
@@ -357,12 +358,12 @@ namespace Orchard.Taxonomies.Services {
 
         public void ProcessPath(TermPart term) {
             var parentTerm = term.Container.As<TermPart>();
-            term.Path = parentTerm != null ? parentTerm.FullPath + "/": "/";
+            term.Path = parentTerm != null ? parentTerm.FullPath + "/" : "/";
         }
 
         public void CreateHierarchy(IEnumerable<TermPart> terms, Action<TermPartNode, TermPartNode> append) {
             var root = new TermPartNode();
-            var stack = new Stack<TermPartNode>(new [] { root } );
+            var stack = new Stack<TermPartNode>(new[] { root });
 
             foreach (var term in terms) {
                 var current = CreateNode(term);

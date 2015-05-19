@@ -88,7 +88,7 @@ namespace Orchard.Taxonomies.Handlers {
             });
         }
 
-        
+
         // Fires off a processing engine task to run the count processing after the request so it's non-blocking.
         private void RecalculateCount(IProcessingEngine processingEngine, ShellSettings shellSettings, IShellDescriptorManager shellDescriptorManager, TermsPart part) {
             var termPartRecordIds = part.Terms.Select(t => t.TermRecord.Id).ToArray();

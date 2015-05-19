@@ -1,4 +1,4 @@
-﻿@* 
+﻿@*
     This shape is displayed for a TermPart when in a Taxonomy details page
     Its children are the element shapes in the list.
     Alternates:
@@ -16,21 +16,21 @@
     var tag = Tag(Model, "li");
     @tag.StartElement
 
-    @* 
-    - morphing the shape to keep Model untouched and 
-    - provide a simple way to customize the shape 
-    *@
-    
-    Model.Metadata.Alternates.Clear();
-    Model.Metadata.Type = "TaxonomyItemLink";
-    @Display(Model)
+        @*
+            - morphing the shape to keep Model untouched and
+            - provide a simple way to customize the shape
+        *@
 
-    @* render child elements *@
-    
-    if (items.Any()) {
-        <ul>
-            @DisplayChildren(Model)
-        </ul>
-    }
+        Model.Metadata.Alternates.Clear();
+        Model.Metadata.Type = "TaxonomyItemLink";
+        @Display(Model)
+
+        @* render child elements *@
+
+        if (items.Any()) {
+            <ul>
+                @DisplayChildren(Model)
+            </ul>
+        }
     @tag.EndElement
 }
