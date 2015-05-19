@@ -27,7 +27,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(Text element, ElementDisplayContext context) {
+        protected override void OnDisplaying(Text element, ElementDisplayingContext context) {
             var text = element.Content;
             var flavor = "textarea";
             var processedText = ApplyHtmlFilters(text, flavor);

@@ -1,11 +1,20 @@
-﻿@using Orchard.Search.ViewModels;
-
+﻿@using Orchard.ContentManagement
+@using Orchard.Search.Models
+@using Orchard.Search.ViewModels;
 @{
     Style.Require("Search");
 }
+@{
+    var settings = WorkContext.CurrentSite.As<SearchSettingsPart>();
+    var part = (SearchFormPart)Model.ContentPart;
+    var index = part.OverrideIndex && part.SelectedIndex != settings.SearchIndex ? part.SelectedIndex : default(string);
+    var routeValues = new RouteValueDictionary { { "area", "Orchard.Search" } };
 
-
-@using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search-form" })) { 
+    if (!String.IsNullOrEmpty(index)) {
+        routeValues.Add("searchIndex", index);
+    }
+}
+@using (Html.BeginForm("Index", "Search", routeValues, FormMethod.Get, new RouteValueDictionary { { "class", "search-form" } })) {
     <fieldset>
         @Html.TextBox("q", (SearchViewModel)Model.ViewModel.Query)
         @Html.Hidden("culture", WorkContext.CurrentCulture)

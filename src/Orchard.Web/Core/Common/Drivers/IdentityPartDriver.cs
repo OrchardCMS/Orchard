@@ -1,10 +1,8 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement.Drivers;
+﻿using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Localization;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class IdentityPartDriver : ContentPartDriver<IdentityPart> {
         public IdentityPartDriver() {
             T = NullLocalizer.Instance;

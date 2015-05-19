@@ -37,6 +37,8 @@ namespace Orchard.Taxonomies.Services {
         /// <param name="taxonomy">The taxonomy to delete.</param>
         /// <remarks>It will also remove all its terms and delete their content type.</remarks>
         void DeleteTaxonomy(TaxonomyPart taxonomy);
+        IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery();
+        
 
         IEnumerable<TermPart> GetTerms(int taxonomyId);
         TermPart GetTerm(int id);
@@ -44,6 +46,7 @@ namespace Orchard.Taxonomies.Services {
         void DeleteTerm(TermPart termPart);
         void MoveTerm(TaxonomyPart taxonomy, TermPart term, TermPart parentTerm);
         void ProcessPath(TermPart term);
+        IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId);
 
         string GenerateTermTypeName(string taxonomyName);
 

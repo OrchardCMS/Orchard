@@ -42,7 +42,7 @@ namespace Orchard.DynamicForms.Drivers {
             });
         }
 
-        protected override void OnDisplaying(ReCaptcha element, ElementDisplayContext context) {
+        protected override void OnDisplaying(ReCaptcha element, ElementDisplayingContext context) {
             var workContext = _services.WorkContext;
             var currentSite = workContext.CurrentSite;
             var settings = currentSite.As<ReCaptchaSettingsPart>();

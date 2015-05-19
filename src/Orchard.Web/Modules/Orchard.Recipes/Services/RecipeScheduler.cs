@@ -51,7 +51,7 @@ namespace Orchard.Recipes.Services {
             else {
                 // Delete any files directory remaining, as well as its contents
                 _appDataFolder.DeleteFile(Path.Combine(_recipeQueueFolder, executionId + ".Files"));
-                // https://orchard.codeplex.com/workitem/19844
+                // https://github.com/OrchardCMS/Orchard/issues/3672
                 // Because recipes execute in their own workcontext, we need to restart the shell, as signaling a cache won't work across workcontexts.
                 _events.Changed(_shellDescriptorManager.GetShellDescriptor(), _shellSettings.Name);
             }

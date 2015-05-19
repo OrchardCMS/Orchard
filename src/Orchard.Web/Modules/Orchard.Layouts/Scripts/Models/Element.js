@@ -1,7 +1,7 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
 
-    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated) {
+    LayoutEditor.Element = function (type, data, htmlId, htmlClass, htmlStyle, isTemplated, rule) {
         if (!type)
             throw new Error("Parameter 'type' is required.");
 
@@ -11,6 +11,7 @@
         this.htmlClass = htmlClass;
         this.htmlStyle = htmlStyle;
         this.isTemplated = isTemplated;
+        this.rule = rule;
 
         this.editor = null;
         this.parent = null;
@@ -65,11 +66,15 @@
             return this.editor.focusedElement === this;
         };
 
+        this.allowSealedFocus = function() {
+            return false;
+        };
+
         this.setIsFocused = function () {
             if (!this.editor)
-            	return;
-            if (this.isTemplated)
-            	return;
+                return;
+            if (this.isTemplated && !this.allowSealedFocus())
+                return;
             if (this.editor.isDragging || this.editor.inlineEditingIsActive || this.editor.isResizing)
                 return;
 
@@ -112,6 +117,10 @@
                 this.editor.dropTargetElement = null;
         };
 
+        this.canDelete = function () {
+            return !!this.parent;
+        };
+
         this.delete = function () {
             if (!!this.parent)
                 this.parent.deleteChild(this);
@@ -146,7 +155,8 @@
                 htmlId: this.htmlId,
                 htmlClass: this.htmlClass,
                 htmlStyle: this.htmlStyle,
-                isTemplated: this.isTemplated
+                isTemplated: this.isTemplated,
+                rule: this.rule
             };
         };
 

@@ -1,20 +1,23 @@
 ﻿var LayoutEditor;
 (function (LayoutEditor) {
-
-    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, children) {
-        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Column = function (data, htmlId, htmlClass, htmlStyle, isTemplated, width, offset, collapsible, rule, children) {
+        LayoutEditor.Element.call(this, "Column", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
-
         this.width = width;
         this.offset = offset;
+        this.collapsible = collapsible;
 
         var _hasPendingChange = false;
         var _origWidth = 0;
         var _origOffset = 0;
 
+        this.allowSealedFocus = function () {
+            return this.children.length === 0;
+        };
+
         this.beginChange = function () {
             if (!!_hasPendingChange)
-                throw new Error("Column already has a pending change.")
+                throw new Error("Column already has a pending change.");
             _hasPendingChange = true;
             _origWidth = this.width;
             _origOffset = this.offset;
@@ -22,7 +25,7 @@
 
         this.commitChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             _origWidth = 0;
             _origOffset = 0;
             _hasPendingChange = false;
@@ -30,7 +33,7 @@
 
         this.rollbackChange = function () {
             if (!_hasPendingChange)
-                throw new Error("Column has no pending change.")
+                throw new Error("Column has no pending change.");
             this.width = _origWidth;
             this.offset = _origOffset;
             _origWidth = 0;
@@ -56,7 +59,7 @@
                 offset: 0,
                 children: []
             });
-            
+
             this.width = this.width - newColumnWidth;
             this.parent.insertChild(newColumn, this);
             newColumn.setIsFocused();
@@ -98,6 +101,7 @@
             var result = this.elementToObject();
             result.width = this.width;
             result.offset = this.offset;
+            result.collapsible = this.collapsible;
             result.children = this.childrenToObject();
             return result;
         };
@@ -112,6 +116,8 @@
             value.isTemplated,
             value.width,
             value.offset,
+            value.collapsible,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
         result.toolboxIcon = value.toolboxIcon;
         result.toolboxLabel = value.toolboxLabel;
@@ -128,9 +134,9 @@
                 isTemplated: false,
                 width: 12 / value,
                 offset: 0,
+                collapsible: null,
                 children: []
             });
         });
     };
-
 })(LayoutEditor || (LayoutEditor = {}));

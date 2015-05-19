@@ -7,7 +7,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using NuGet;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -25,7 +24,6 @@ using NullLogger = Orchard.Logging.NullLogger;
 using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
-    [UsedImplicitly]
     public class ImportExportService : IImportExportService {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionManager _contentDefinitionManager;

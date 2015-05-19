@@ -390,5 +390,13 @@ namespace Orchard.Taxonomies.Services {
                 Level = part.Path.Count(x => x == '/')
             };
         }
+
+        public IContentQuery<TaxonomyPart, TaxonomyPartRecord> GetTaxonomiesQuery() {
+            return _contentManager.Query<TaxonomyPart, TaxonomyPartRecord>();
+        }
+
+        public IContentQuery<TermPart, TermPartRecord> GetTermsQuery(int taxonomyId) {
+            return _contentManager.Query<TermPart, TermPartRecord>().Where(x => x.TaxonomyId == taxonomyId);
+        }
     }
 }

@@ -15,6 +15,10 @@
   cursor: default;
   white-space: nowrap;
   line-height: normal;
+  min-width: 300px;
+}
+.layout-editor .layout-popup.wide {
+  width: 600px;
 }
 .layout-editor .layout-popup .layout-popup-flex {
   display: flex;
@@ -36,6 +40,10 @@
 .layout-editor .layout-popup .layout-popup-action:hover {
   background-color: #f3f4f5;
   cursor: pointer;
+}
+.layout-editor .layout-popup .layout-popup-input input[type='text'],
+.layout-editor .layout-popup .layout-popup-input textarea {
+  width: 100%;
 }
 .layout-editor .layout-popup .layout-popup-input > label {
   display: block;

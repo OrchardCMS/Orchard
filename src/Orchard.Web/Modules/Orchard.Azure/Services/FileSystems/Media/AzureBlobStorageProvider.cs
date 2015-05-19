@@ -60,6 +60,7 @@ namespace Orchard.Azure.Services.FileSystems.Media {
         /// <param name="url">The public URL of the media.</param>
         /// <returns>The corresponding local path.</returns>
         public string GetStoragePath(string url) {
+            EnsureInitialized();
             if (url.StartsWith(_absoluteRoot)) {
                 return HttpUtility.UrlDecode(url.Substring(Combine(_absoluteRoot, "/").Length));
             }
