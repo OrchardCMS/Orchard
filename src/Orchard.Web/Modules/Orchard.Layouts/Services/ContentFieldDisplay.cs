@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
+using AsyncBridge;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
@@ -32,11 +33,14 @@ namespace Orchard.Layouts.Services {
             var context = BuildDisplayContext(content, displayType, groupId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            using (var helper = AsyncHelper.Wait) {
+                helper.Run(drivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildDisplayShapeAsync(context);
+                    if (result != null)
+                        await result.ApplyAsync(context);
+                }, Logger));
+            }
 
             return context.Shape;
         }
@@ -45,11 +49,14 @@ namespace Orchard.Layouts.Services {
             var context = BuildEditorContext(content, groupId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            using (var helper = AsyncHelper.Wait) {
+                helper.Run(drivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildEditorShapeAsync(context);
+                    if (result != null)
+                        await result.ApplyAsync(context);
+                }, Logger));
+            }
 
             return context.Shape;
         }
@@ -58,12 +65,15 @@ namespace Orchard.Layouts.Services {
             var context = UpdateEditorContext(content, updater, groupInfoId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.UpdateEditorShape(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
-            
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            using (var helper = AsyncHelper.Wait) {
+                helper.Run(drivers.InvokeAsync(async driver => {
+                    var result = await driver.UpdateEditorShapeAsync(context);
+                    if (result != null)
+                        await result.ApplyAsync(context);
+                }, Logger));
+            }
+
             return context.Shape;
         }
 
