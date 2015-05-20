@@ -2,8 +2,8 @@ Name: AntiSpam
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.8.1
-OrchardVersion: 1.8
+Version: 1.9.0
+OrchardVersion: 1.9
 Description: Provides anti-spam services to protect your content from malicious submissions.
 Features:
     Orchard.AntiSpam:

@@ -166,6 +166,7 @@
     <Compile Include="Bindings\EnumerationFieldBindings.cs" />
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
+    <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />

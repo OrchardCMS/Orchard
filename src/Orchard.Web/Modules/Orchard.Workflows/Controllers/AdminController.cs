@@ -175,19 +175,29 @@ namespace Orchard.Workflows.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to create workflows")))
+        public ActionResult EditProperties(int id = 0)
+        {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows.")))
                 return new HttpUnauthorizedResult();
 
-            return View();
+            if (id == 0) {
+                return View();
+            }
+            else {
+                var workflowDefinition = _workflowDefinitionRecords.Get(id);
+
+                return View(new AdminEditViewModel { WorkflowDefinition = new WorkflowDefinitionViewModel { Name = workflowDefinition.Name, Id = workflowDefinition.Id } });
+            }
         }
 
-        [HttpPost, ActionName("Create")]
-        public ActionResult CreatePost(string name) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to create workflows")))
+
+        [HttpPost, ActionName("EditProperties")]
+        public ActionResult EditPropertiesPost(AdminEditViewModel adminEditViewModel, int id = 0) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows.")))
                 return new HttpUnauthorizedResult();
 
-            if (String.IsNullOrWhiteSpace(name)) {
+
+            if (String.IsNullOrWhiteSpace(adminEditViewModel.WorkflowDefinition.Name)) {
                 ModelState.AddModelError("Name", T("The Name can't be empty.").Text);
             }
 
@@ -195,21 +205,22 @@ namespace Orchard.Workflows.Controllers {
                 return View();
             }
 
-            var workflowDefinitionRecord = new WorkflowDefinitionRecord {
-                Name = name
-            };
+            if (id == 0) {
+                var workflowDefinitionRecord = new WorkflowDefinitionRecord {
+                    Name = adminEditViewModel.WorkflowDefinition.Name
+                };
 
-            if (ModelState.IsValid) {
                 _workflowDefinitionRecords.Create(workflowDefinitionRecord);
-            }
 
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
+                return RedirectToAction("Edit", new { workflowDefinitionRecord.Id });
+            }
+            else {
+                var workflowDefinition = _workflowDefinitionRecords.Get(id);
+
+                workflowDefinition.Name = adminEditViewModel.WorkflowDefinition.Name;
 
                 return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Edit", new { workflowDefinitionRecord.Id });
         }
 
         public ActionResult Edit(int id, string localId, int? workflowId) {

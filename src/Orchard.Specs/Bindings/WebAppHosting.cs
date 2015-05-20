@@ -306,10 +306,26 @@ namespace Orchard.Specs.Bindings {
             var submit = _doc.DocumentNode
                 .SelectSingleNode(string.Format("(//input[@type='submit'][@value='{0}']|//button[@type='submit'][text()='{0}'])", submitText));
 
+            string urlPath = null;
+
+            if (submit == null) {
+                // could be a simple link using "unsafeurl" property
+
+                submit = _doc.DocumentNode
+                            .SelectNodes("//a")
+                            .SingleOrDefault(elt => elt.InnerHtml == submitText)
+                       ?? _doc.DocumentNode
+                            .SelectSingleNode(string.Format("//a[@title='{0}']", submitText));
+
+                urlPath = HttpUtility.HtmlDecode(submit.Attributes["href"].Value);
+            }
+
             var form = Form.LocateAround(submit);
-            var urlPath = HttpUtility.HtmlDecode(form.Start.GetAttributeValue("action", Details.UrlPath));
-
-
+            
+            if (urlPath == null) {
+                urlPath = HttpUtility.HtmlDecode(form.Start.GetAttributeValue("action", Details.UrlPath));
+            }
+            
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))

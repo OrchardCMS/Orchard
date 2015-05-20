@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Services;
 
@@ -171,6 +172,36 @@ namespace Orchard.Localization.Providers {
 
                 return new string[] { "AM", "PM" };
             }
+        }
+
+        public string GetEraName(int era) {
+            var t = T("A.D.;A.D.").Text;
+            var parts = t.Split(';');
+            if (parts.Length >= era + 1) {
+                return parts[era];
+            }
+
+            return null;
+        }
+
+        public string GetShortEraName(int era) {
+            var t = T("AD;AD").Text;
+            var parts = t.Split(';');
+            if (parts.Length >= era + 1) {
+                return parts[era];
+            }
+
+            return null;
+        }
+
+        public int GetEra(string eraName) {
+            var t = T("AD;AD").Text;
+            var parts = t.ToLowerInvariant().Split(';');
+            if (parts.Contains(eraName.ToLowerInvariant())) {
+                return parts.ToList().IndexOf(eraName.ToLowerInvariant());
+            }
+
+            throw new ArgumentOutOfRangeException("eraName");
         }
     }
 }

@@ -12,7 +12,7 @@ Scenario: Installed modules are listed
         | Options.SearchText | Themes |
     And I hit "Search"
     Then I should see "<h1 id="page-title">Modules</h1>"
-        And I should see "<h2[^>]*>Themes"
+        And I should see "<h2[^>]*>\s*Themes"
         And the status should be 200 "OK"
 
 Scenario: Features of installed modules are listed
