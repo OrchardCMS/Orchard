@@ -132,7 +132,7 @@ namespace Orchard.ContentPicker.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
             var list = Services.New.List();
 
-            var tasks = pageOfContentItems.Select(ci =>  Services.ContentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToArray();
+            var tasks = pageOfContentItems.Select(ci =>  Services.ContentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToList();
 
             await Task.WhenAll(tasks);
 

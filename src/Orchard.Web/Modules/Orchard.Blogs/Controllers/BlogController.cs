@@ -48,7 +48,7 @@ namespace Orchard.Blogs.Controllers {
         public async Task<ActionResult> List() {
             var blogTasks = _blogService.Get()
                 .Where(b => _services.Authorizer.Authorize(Orchard.Core.Contents.Permissions.ViewContent,b))
-                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
+                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToList();
 
             var list = Shape.List();
 
@@ -77,10 +77,10 @@ namespace Orchard.Blogs.Controllers {
 
             _feedManager.Register(blogPart, _services.ContentManager.GetItemMetadata(blogPart).DisplayText);
             var blogPostTasks = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
-                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
+                .Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToList();
             var blogTask = _services.ContentManager.BuildDisplayAsync(blogPart);
 
-            await Task.WhenAll(blogPostTasks.Cast<Task>().Concat(new Task[] { blogTask }));
+            await Task.WhenAll(blogPostTasks.Concat(new Task[] { blogTask }));
 
             var list = Shape.List();
             list.AddRange(blogPostTasks.Select(task => task.Result));

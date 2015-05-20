@@ -132,11 +132,11 @@ namespace Orchard.Projections.Drivers {
                     if (layoutDescriptor == null) {
 
                         var list = Services.New.List();
-                        var shapeTasks = contentItems.Select(item => Services.ContentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+                        var shapeTasks = contentItems.Select(item => Services.ContentManager.BuildDisplayAsync(item, "Summary")).ToList();
+
                         await Task.WhenAll(shapeTasks);
 
-                        var contentShapes = shapeTasks.Select(task => task.Result);
-                        list.AddRange(contentShapes);
+                        list.AddRange(shapeTasks.Select(task => task.Result));
 
                         return list;
                     }

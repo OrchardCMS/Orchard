@@ -75,7 +75,7 @@ namespace Orchard.Taxonomies.Drivers {
                             var shape = await _contentManager.BuildDisplayAsync(c, childDisplayType);
 
                             return shape.Taxonomy(taxonomy).Term(part);
-                        }).ToArray();
+                        }).ToList();
 
                     await Task.WhenAll(termContentItemTasks);
 

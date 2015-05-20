@@ -53,7 +53,7 @@ namespace Orchard.Search.Controllers {
             var contentItemIds = builder.Slice(skip, count).Search().Select(x => x.ContentItemId).ToArray();
             var mediaParts = _contentManager.GetMany<MediaPart>(contentItemIds, VersionOptions.Published, QueryHints.Empty);
 
-            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, _contentManager.BuildDisplayAsync(p, "Thumbnail"))).ToArray();
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, _contentManager.BuildDisplayAsync(p, "Thumbnail"))).ToList();
 
             await Task.WhenAll(shapeTasks.Select(t => t.Item2));
 

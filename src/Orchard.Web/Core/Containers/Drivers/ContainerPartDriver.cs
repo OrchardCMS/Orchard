@@ -19,10 +19,8 @@ using Orchard.Settings;
 using Orchard.Core.Feeds;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Core.Containers.Drivers
-{
-    public class ContainerPartDriver : ContentPartDriver<ContainerPart>
-    {
+namespace Orchard.Core.Containers.Drivers {
+    public class ContainerPartDriver : ContentPartDriver<ContainerPart> {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
@@ -34,8 +32,7 @@ namespace Orchard.Core.Containers.Drivers
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
             ISiteService siteService,
-            IFeedManager feedManager, IContainerService containerService)
-        {
+            IFeedManager feedManager, IContainerService containerService) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _contentManager = orchardServices.ContentManager;
@@ -48,27 +45,27 @@ namespace Orchard.Core.Containers.Drivers
 
         public Localizer T { get; set; }
 
-        protected override DriverResult Display(ContainerPart part, string displayType, dynamic shapeHelper)
-        {
-            if (!part.ItemsShown)
+        protected override DriverResult Display(ContainerPart part, string displayType, dynamic shapeHelper) {
+            if (!part.ItemsShown) {
                 return null;
+            }
 
-            return ContentShapeAsync("Parts_Container_Contained", async () =>
-            {
+            return ContentShapeAsync("Parts_Container_Contained", async () => {
                 var container = part.ContentItem;
                 var query = _contentManager
-                .Query(VersionOptions.Published)
-                .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
-                .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
+                    .Query(VersionOptions.Published)
+                    .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
+                    .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
 
                 var metadata = container.ContentManager.GetItemMetadata(container);
-                if (metadata != null)
-                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+                if (metadata != null) {
+                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary {{"containerid", container.Id}});
+                }
 
                 var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
                 pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
-                                ? pager.PageSize
-                                : part.PageSize;
+                    ? pager.PageSize
+                    : part.PageSize;
 
                 var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
@@ -87,26 +84,21 @@ namespace Orchard.Core.Containers.Drivers
                 return shapeHelper.Parts_Container_Contained(
                     List: listShape,
                     Pager: part.Paginated ? pagerShape : null
-                );
+                    );
             });
         }
 
-        protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper)
-        {
-            if (!_contentDefinitionManager.ListTypeDefinitions().Any(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart")))
-            {
+        protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper) {
+            if (!_contentDefinitionManager.ListTypeDefinitions().Any(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart"))) {
                 _orchardServices.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
             }
-            return Editor(part, (IUpdateModel)null, shapeHelper);
+            return Editor(part, (IUpdateModel) null, shapeHelper);
         }
 
-        protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper)
-        {
-            return ContentShape("Parts_Container_Edit", () =>
-            {
+        protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
+            return ContentShape("Parts_Container_Edit", () => {
                 var containables = !part.ContainerSettings.RestrictItemContentTypes ? _containerService.GetContainableTypes().ToList() : new List<ContentTypeDefinition>(0);
-                var model = new ContainerViewModel
-                {
+                var model = new ContainerViewModel {
                     AdminMenuPosition = part.AdminMenuPosition,
                     AdminMenuText = part.AdminMenuText,
                     AdminMenuImageSet = part.AdminMenuImageSet,
@@ -121,10 +113,8 @@ namespace Orchard.Core.Containers.Drivers
                     OverrideEnablePositioning = part.ContainerSettings.EnablePositioning == null
                 };
 
-                if (updater != null)
-                {
-                    if (updater.TryUpdateModel(model, "Container", null, new[] { "OverrideEnablePositioning" }))
-                    {
+                if (updater != null) {
+                    if (updater.TryUpdateModel(model, "Container", null, new[] {"OverrideEnablePositioning"})) {
                         part.AdminMenuPosition = model.AdminMenuPosition;
                         part.AdminMenuText = model.AdminMenuText;
                         part.AdminMenuImageSet = model.AdminMenuImageSet;
@@ -133,13 +123,11 @@ namespace Orchard.Core.Containers.Drivers
                         part.Paginated = model.Paginated;
                         part.ShowOnAdminMenu = model.ShowOnAdminMenu;
 
-                        if (!part.ContainerSettings.RestrictItemContentTypes)
-                        {
+                        if (!part.ContainerSettings.RestrictItemContentTypes) {
                             part.ItemContentTypes = _contentDefinitionManager.ListTypeDefinitions().Where(x => model.SelectedItemContentTypes.Contains(x.Name));
                         }
 
-                        if (model.OverrideEnablePositioning)
-                        {
+                        if (model.OverrideEnablePositioning) {
                             part.Record.EnablePositioning = model.EnablePositioning;
                         }
                     }
@@ -149,13 +137,10 @@ namespace Orchard.Core.Containers.Drivers
             });
         }
 
-        protected override void Importing(ContainerPart part, ImportContentContext context)
-        {
+        protected override void Importing(ContainerPart part, ImportContentContext context) {
             var itemContentType = context.Attribute(part.PartDefinition.Name, "ItemContentTypes");
-            if (itemContentType != null)
-            {
-                if (_contentDefinitionManager.GetTypeDefinition(itemContentType) != null)
-                {
+            if (itemContentType != null) {
+                if (_contentDefinitionManager.GetTypeDefinition(itemContentType) != null) {
                     part.Record.ItemContentTypes = itemContentType;
                 }
             }
@@ -170,8 +155,7 @@ namespace Orchard.Core.Containers.Drivers
             context.ImportAttribute(part.PartDefinition.Name, "ItemCount", s => part.ItemCount = XmlConvert.ToInt32(s));
         }
 
-        protected override void Exporting(ContainerPart part, ExportContentContext context)
-        {
+        protected override void Exporting(ContainerPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemContentTypes", part.Record.ItemContentTypes);
             context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsShown", part.ItemsShown);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Paginated", part.Paginated);

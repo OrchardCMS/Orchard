@@ -18,13 +18,16 @@ namespace Orchard.Core.Containers.ListViews {
             var pagerShape = context.New.Pager(context.Pager).TotalItemCount(context.ContentQuery.Count());
             var pageOfContentItems = context.ContentQuery.Slice(context.Pager.GetStartIndex(), context.Pager.PageSize);
             
-            var shapeTasks = pageOfContentItems.Select(x => _contentManager.BuildDisplayAsync(x, "SummaryAdmin")).ToList();
+            var itemTasks = pageOfContentItems.Select(x => _contentManager.BuildDisplayAsync(x, "SummaryAdmin")).ToList();
 
-            await Task.WhenAll(shapeTasks);
+            await Task.WhenAll(itemTasks);
+
+            var items = itemTasks.Select(task => task.Result).ToList();
+
             return context.New.ListView_Condensed()
                 .Container(context.Container)
                 .ContainerDisplayName(context.ContainerDisplayName)
-                .ContentItems(shapeTasks.Select(task => task.Result))
+                .ContentItems(items)
                 .Pager(pagerShape);
         }
     }

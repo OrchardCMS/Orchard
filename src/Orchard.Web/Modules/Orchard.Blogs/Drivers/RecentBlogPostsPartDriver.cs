@@ -37,7 +37,7 @@ namespace Orchard.Blogs.Drivers {
 
                 var list = shapeHelper.List();
 
-                var shapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "Summary")).ToArray();
+                var shapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "Summary")).ToList();
 
                 await Task.WhenAll(shapeTasks);
 

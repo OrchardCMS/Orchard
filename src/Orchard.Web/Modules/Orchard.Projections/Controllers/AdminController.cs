@@ -244,7 +244,7 @@ namespace Orchard.Projections.Controllers {
                 return new HttpUnauthorizedResult();
 
             var contentItems = _projectionManager.GetContentItems(id, 0, 20);
-            var shapeTasks = contentItems.Select(item => _services.ContentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+            var shapeTasks = contentItems.Select(item => _services.ContentManager.BuildDisplayAsync(item, "Summary")).ToList();
 
             await Task.WhenAll(shapeTasks);
 

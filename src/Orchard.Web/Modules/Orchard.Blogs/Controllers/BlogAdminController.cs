@@ -156,7 +156,7 @@ namespace Orchard.Blogs.Controllers {
                 var blog = await Services.ContentManager.BuildDisplayAsync(b, "SummaryAdmin");
                 blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
                 return blog;
-            }).ToArray();
+            }).ToList();
 
             await Task.WhenAll(shapeTasks);
 
@@ -175,11 +175,11 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
-            var blogPostsShapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "SummaryAdmin")).ToArray();
+            var blogPostsShapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "SummaryAdmin")).ToList();
             var list = Shape.List();
-            var blogTask = Services.ContentManager.BuildDisplayAsync(blogPart, "DetailAdmin");
+            var blogTask =  Services.ContentManager.BuildDisplayAsync(blogPart, "DetailAdmin");
 
-            await Task.WhenAll(blogPostsShapeTasks.Cast<Task>().Concat(new Task[] { blogTask }));
+            await Task.WhenAll(blogPostsShapeTasks.Concat(new Task[] { blogTask }));
 
             list.AddRange(blogPostsShapeTasks.Select(task => task.Result));
             var blog = blogTask.Result;

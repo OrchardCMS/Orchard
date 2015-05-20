@@ -24,11 +24,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Orchard.Tests.Modules.Widgets
-{
+namespace Orchard.Tests.Modules.Widgets {
     [TestFixture]
-    public class WidgetFilterTests
-    {
+    public class WidgetFilterTests {
         #region Declarations and Setup
 
         private IContainer _container;
@@ -37,8 +35,7 @@ namespace Orchard.Tests.Modules.Widgets
         private static ConcurrentBag<string> _renderedShapes;
 
         [SetUp]
-        public void Init()
-        {
+        public void Init() {
             _parts = new Dictionary<WidgetPart, Func<Task<dynamic>>>(new WidgetComparer());
             _renderedShapes = new ConcurrentBag<string>();
 
@@ -73,7 +70,7 @@ namespace Orchard.Tests.Modules.Widgets
             typedQuery.Setup(q => q.ForType("Layer")).Returns(typedQuery.Object);
             typedQuery.Setup(q => q.List()).Returns(CreateLayerParts());
             contentDisplay.Setup(c => c.BuildDisplayAsync(It.IsAny<IContent>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((IContent content, string d, string g) => _parts[(WidgetPart)content]());
+                .Returns((IContent content, string d, string g) => _parts[(WidgetPart) content]());
             orchardService.Setup(o => o.Authorizer).Returns(authorizer.Object);
             authorizer.Setup(a => a.Authorize(Core.Contents.Permissions.ViewContent, It.IsAny<IContent>())).Returns(true);
             ruleManager.Setup(r => r.Matches(It.IsAny<string>())).Returns(true);
@@ -93,16 +90,13 @@ namespace Orchard.Tests.Modules.Widgets
         [TestCase(3)]
         [TestCase(10)]
         [TestCase(100)]
-        public void WidgetFilter_WhenAsyncShapes_RendersAllWidgets(int count)
-        {
+        public void WidgetFilter_WhenAsyncShapes_RendersAllWidgets(int count) {
             var context = CreateContext();
             var random = new Random(count);
 
-            for (var i = 1; i <= count; i++)
-            {
+            for (var i = 1; i <= count; i++) {
                 var delay = random.Next(1, 5);
-                AddWidgetPartAndShapeResult(i.ToString(), async () =>
-                {
+                AddWidgetPartAndShapeResult(i.ToString(), async () => {
                     await Task.Delay(delay);
                     return new Shape();
                 });
@@ -111,8 +105,9 @@ namespace Orchard.Tests.Modules.Widgets
             _filter.OnResultExecuting(context);
 
             Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
-            for (var i = 1; i <= count; i++)
+            for (var i = 1; i <= count; i++) {
                 Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'", i);
+            }
         }
 
         [Test]
@@ -120,52 +115,43 @@ namespace Orchard.Tests.Modules.Widgets
         [TestCase(10)]
         [TestCase(50)]
         [TestCase(100)]
-        public void WidgetFilter_WhenAsyncAndSync_RendersAllWidgets(int count)
-        {
+        public void WidgetFilter_WhenAsyncAndSync_RendersAllWidgets(int count) {
             var context = CreateContext();
             var random = new Random(count);
 
-            for (var i = 1; i <= count; i++)
-            {
-                if (i % 2 == 0)
-                {
+            for (var i = 1; i <= count; i++) {
+                if (i%2 == 0) {
                     var delay = random.Next(1, 5);
-                    AddWidgetPartAndShapeResult(i.ToString(), async () =>
-                    {
+                    AddWidgetPartAndShapeResult(i.ToString(), async () => {
                         await Task.Delay(delay);
                         return new Shape();
                     });
                 }
-                else
-                {
+                else {
                     AddWidgetPartAndShapeResult(i.ToString(), () => Task.FromResult<dynamic>(new Shape()));
                 }
-
             }
 
             _filter.OnResultExecuting(context);
 
             Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
-            for (var i = 1; i <= count; i++)
-                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'. Async shape: {1}?", i, i % 2 == 0);
+            for (var i = 1; i <= count; i++) {
+                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'. Async shape: {1}?", i, i%2 == 0);
+            }
         }
 
         [Test]
-        public void WidgetFilter_WhenShapeIsNull_RendersNotNullShapesWithNoException()
-        {
+        public void WidgetFilter_WhenShapeIsNull_RendersNotNullShapesWithNoException() {
             var context = CreateContext();
-            AddWidgetPartAndShapeResult("1", async () =>
-            {
+            AddWidgetPartAndShapeResult("1", async () => {
                 await Task.Delay(2);
                 return new Shape();
             });
-            AddWidgetPartAndShapeResult("2", async () =>
-            {
+            AddWidgetPartAndShapeResult("2", async () => {
                 await Task.Delay(2);
                 return null;
             });
-            AddWidgetPartAndShapeResult("3", async () =>
-            {
+            AddWidgetPartAndShapeResult("3", async () => {
                 await Task.Delay(2);
                 return new Shape();
             });
@@ -208,46 +194,40 @@ namespace Orchard.Tests.Modules.Widgets
         [TestCase(3)]
         [TestCase(10)]
         [TestCase(100)]
-        public void WidgetFilter_WithSyncShape_RendersAllWidgets(int count)
-        {
+        public void WidgetFilter_WithSyncShape_RendersAllWidgets(int count) {
             var context = CreateContext();
 
-            for (var i = 1; i <= count; i++)
-            {
+            for (var i = 1; i <= count; i++) {
                 AddWidgetPartAndShapeResult(i.ToString(), () => Task.FromResult<dynamic>(new Shape()));
             }
 
             _filter.OnResultExecuting(context);
 
             Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
-            for (var i = 1; i <= count; i++)
+            for (var i = 1; i <= count; i++) {
                 Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{}'", i);
+            }
         }
-
 
         #region Private Methods
 
-        private void AddWidgetPartAndShapeResult(string position, Func<Task<dynamic>> widgetPartResult)
-        {
+        private void AddWidgetPartAndShapeResult(string position, Func<Task<dynamic>> widgetPartResult) {
             var contentItem = new ContentItem();
             var commonPart = new StubCommonPart();
             var infoSetPart = new InfosetPart();
-            var part = new WidgetPart { Record = new WidgetPartRecord { Position = position } };
+            var part = new WidgetPart {Record = new WidgetPartRecord {Position = position}};
             contentItem.Weld(commonPart);
             contentItem.Weld(part);
             contentItem.Weld(infoSetPart);
             _parts.Add(part, widgetPartResult);
         }
 
-        private IEnumerable<LayerPart> CreateLayerParts()
-        {
+        private IEnumerable<LayerPart> CreateLayerParts() {
             var contentItem = new ContentItem();
             var commonPart = new StubCommonPart();
             var infoSetPart = new InfosetPart();
-            var part = new LayerPart
-            {
-                Record = new LayerPartRecord
-                {
+            var part = new LayerPart {
+                Record = new LayerPartRecord {
                     LayerRule = "true",
                     Name = "Layer"
                 }
@@ -256,11 +236,10 @@ namespace Orchard.Tests.Modules.Widgets
             contentItem.Weld(commonPart);
             contentItem.Weld(part);
             contentItem.Weld(infoSetPart);
-            return new[] { part };
+            return new[] {part};
         }
 
-        private SiteSettingsPart CreateSiteSettings()
-        {
+        private SiteSettingsPart CreateSiteSettings() {
             var contentItem = new ContentItem();
             var infoSetPart = new InfosetPart();
             var part = new SiteSettingsPart();
@@ -270,19 +249,16 @@ namespace Orchard.Tests.Modules.Widgets
             return part;
         }
 
-        private static ResultExecutingContext CreateContext()
-        {
+        private static ResultExecutingContext CreateContext() {
             var httpContext = new Mock<HttpContextBase>();
             httpContext.Setup(c => c.Items).Returns(new HybridDictionary {
                 {typeof (ThemeFilter), null}
             });
 
 
-            return new ResultExecutingContext
-            {
+            return new ResultExecutingContext {
                 Result = new ViewResult(),
-                RequestContext = new RequestContext
-                {
+                RequestContext = new RequestContext {
                     HttpContext = httpContext.Object
                 }
             };
@@ -292,43 +268,34 @@ namespace Orchard.Tests.Modules.Widgets
 
         #region Private Classes
 
-        public class CustomShape
-        {
-
-            public void Add(dynamic shape, string position)
-            {
+        public class CustomShape {
+            public void Add(dynamic shape, string position) {
                 _renderedShapes.Add(position);
             }
         }
 
-        public class CustomZones
-        {
+        public class CustomZones {
             public dynamic this[string zone]
             {
                 get { return new CustomShape(); }
             }
         }
 
-        public class CustomLayout
-        {
+        public class CustomLayout {
             public dynamic Zones = new CustomZones();
         }
 
-        private class WidgetComparer : IEqualityComparer<WidgetPart>
-        {
-            public bool Equals(WidgetPart x, WidgetPart y)
-            {
+        private class WidgetComparer : IEqualityComparer<WidgetPart> {
+            public bool Equals(WidgetPart x, WidgetPart y) {
                 return x.Position.Equals(y.Position);
             }
 
-            public int GetHashCode(WidgetPart obj)
-            {
+            public int GetHashCode(WidgetPart obj) {
                 return obj.Position.GetHashCode();
             }
         }
 
-        private class StubCommonPart : ContentPart, ICommonPart
-        {
+        private class StubCommonPart : ContentPart, ICommonPart {
             public IUser Owner
             {
                 get { throw new NotImplementedException(); }

@@ -74,7 +74,7 @@ namespace Orchard.Search.Controllers {
             // ignore search results which content item has been removed or unpublished
             var foundItems = _contentManager.GetMany<IContent>(foundIds, VersionOptions.Published, new QueryHints()).ToList();
 
-            var shapeTasks = foundItems.Select(contentItem => _contentManager.BuildDisplayAsync(contentItem, "Summary")).ToArray();
+            var shapeTasks = foundItems.Select(contentItem => _contentManager.BuildDisplayAsync(contentItem, "Summary")).ToList();
 
             await Task.WhenAll(shapeTasks);
 

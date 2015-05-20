@@ -63,7 +63,7 @@ namespace Orchard.Blogs.Controllers {
 
             var list = Shape.List();
 
-            var blogPostTasks = _blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToArray();
+            var blogPostTasks = _blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplayAsync(b, "Summary")).ToList();
 
             await Task.WhenAll(blogPostTasks);
 

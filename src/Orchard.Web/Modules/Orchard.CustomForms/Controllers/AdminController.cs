@@ -127,7 +127,7 @@ namespace Orchard.CustomForms.Controllers {
                     .Where(x => x.Container.Id == id)
                     .OrderByDescending(x => x.CreatedUtc)
                     .Slice(pager.GetStartIndex(), pager.PageSize)
-                .Select(b => Services.ContentManager.BuildDisplayAsync(b, "SummaryAdmin")).ToArray();
+                .Select(b => Services.ContentManager.BuildDisplayAsync(b, "SummaryAdmin")).ToList();
 
             var shape = Services.New.CustomFormList();
             

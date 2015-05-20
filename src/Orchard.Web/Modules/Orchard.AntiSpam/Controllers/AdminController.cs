@@ -75,7 +75,7 @@ namespace Orchard.AntiSpam.Controllers {
             var results = query
                 .Slice(pager.GetStartIndex(), pager.PageSize);
 
-            var shapeTasks = results.Select(x => new Tuple<SpamFilterPart, Task<dynamic>>(x, Services.ContentManager.BuildDisplayAsync(x, "SummaryAdmin"))).ToArray();
+            var shapeTasks = results.Select(x => new Tuple<SpamFilterPart, Task<dynamic>>(x, Services.ContentManager.BuildDisplayAsync(x, "SummaryAdmin"))).ToList();
 
             await Task.WhenAll(shapeTasks.Select(t => t.Item2));
 

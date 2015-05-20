@@ -98,7 +98,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var mediaParts = _mediaLibraryService.GetMediaContentItems(folderPath, skip, count, order, mediaType, VersionOptions.Latest);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(folderPath, mediaType, VersionOptions.Latest);
 
-            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToArray();
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToList();
 
             await Task.WhenAll(shapeTasks.Select(x => x.Item2));
 
@@ -138,7 +138,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var mediaParts = _mediaLibraryService.GetMediaContentItems(skip, count, order, mediaType);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(mediaType);
 
-            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToArray();
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToList();
 
             await Task.WhenAll(shapeTasks.Select(x => x.Item2));
             
