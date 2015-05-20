@@ -15,15 +15,26 @@ namespace Orchard.Dashboards.Services {
         public DashboardDescriptor GetDashboardDescriptor() {
             var settings = _services.WorkContext.CurrentSite.As<DashboardSiteSettingsPart>();
             var dashboardId = settings.DefaultDashboardId;
-            var dashboard = dashboardId != null ? _services.ContentManager.Get(dashboardId.Value) : default(ContentItem);
+            var dashboard = dashboardId != null ? _services.ContentManager.Get(dashboardId.Value, VersionOptions.Latest) : default(ContentItem);
             var descriptor = new DashboardDescriptor { Priority = -10 };
 
             if (dashboard == null)
                 dashboard = CreateDefaultDashboard();
 
-            descriptor.Display = shapeFactory => _services.ContentManager.BuildDisplay(dashboard, displayType: "Dashboard");
-            descriptor.Editor = shapeFactory => _services.ContentManager.BuildEditor(dashboard);
-            descriptor.UpdateEditor = (shapeFactory, updater) => _services.ContentManager.UpdateEditor(dashboard, updater);
+            descriptor.Display = shapeFactory => {
+                var published = _services.ContentManager.Get(dashboard.Id, VersionOptions.Published);
+                return _services.ContentManager.BuildDisplay(published, displayType: "Dashboard");
+            };
+
+            descriptor.Editor = shapeFactory => {
+                var latest = _services.ContentManager.Get(dashboard.Id, VersionOptions.Latest);
+                return _services.ContentManager.BuildEditor(latest);
+            };
+
+            descriptor.UpdateEditor = (shapeFactory, updater) => {
+                var draft = _services.ContentManager.Get(dashboard.Id, VersionOptions.DraftRequired);
+                return _services.ContentManager.UpdateEditor(draft, updater);
+            };
 
             return descriptor;
         }
