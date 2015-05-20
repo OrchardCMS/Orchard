@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Orchard.Environment.Extensions;
 using Orchard.Services;
 using Orchard.Tokens;
@@ -27,9 +26,7 @@ namespace Orchard.Layouts.Filters {
                 return text;
             }
 
-            var data = new Dictionary<string, object>();
-
-            text = _tokenizer.Replace(text, data, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
+            text = _tokenizer.Replace(text, null, new ReplaceOptions {Encoding = ReplaceOptions.NoEncode});
 
             return text;
         }
