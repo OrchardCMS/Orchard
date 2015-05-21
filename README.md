@@ -1,7 +1,8 @@
 # Orchard
 
-[![Join the chat at https://gitter.im/OrchardCMS/Orchard](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OrchardCMS/Orchard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Orchard is a free, open source, community-focused Content Management System built on the ASP.NET MVC platform.
+
+[![Join the chat at https://gitter.im/OrchardCMS/Orchard](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OrchardCMS/Orchard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## About The Orchard Project
 
