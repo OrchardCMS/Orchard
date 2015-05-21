@@ -447,6 +447,9 @@ namespace Orchard.OutputCache.Filters {
         private void ServeCachedItem(ActionExecutingContext filterContext, CacheItem cacheItem) {
             var response = filterContext.HttpContext.Response;
 
+            // Fix for missing charset in response headers
+            response.Charset = response.Charset; 
+
             // Adds some caching information to the output if requested.
             if (CacheSettings.DebugMode) {
                 response.AddHeader("X-Cached-On", cacheItem.CachedOnUtc.ToString("r"));
