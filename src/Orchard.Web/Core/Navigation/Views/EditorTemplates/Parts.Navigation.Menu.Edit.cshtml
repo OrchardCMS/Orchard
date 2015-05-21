@@ -5,13 +5,13 @@
 @if (!Model.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || Model.ContentItem.TypeDefinition.Settings["Stereotype"] != "MenuItem") {
 
     <fieldset>
-        
+
         @Html.EditorFor(m => m.OnMenu)
         <label for="@Html.FieldIdFor(m => m.OnMenu)" class="forcheckbox">@T("Show on a menu")</label>
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
             <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
                 @foreach (ContentItem menu in Model.Menus) {
-                    @Html.SelectOption(Model.CurrentMenuId, menu.Id, HttpUtility.HtmlDecode(Html.ItemDisplayText(menu).ToString()))
+                    @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString(), false)
                 }
             </select>
             <span class="hint">@T("Select which menu you want the content item to be displayed on.")</span>
@@ -22,9 +22,8 @@
         </div>
     </fieldset>
 
-}
-else {
-    
+} else {
+
     <fieldset>
         <label for="MenuText">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.MenuText, new { @class = "text medium", autofocus = "autofocus" })

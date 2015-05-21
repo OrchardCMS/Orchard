@@ -7,11 +7,15 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
-        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content) {
+        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content, bool encode = true) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayText == null)
                 return null;
-            return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
+            if (encode) {
+                return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
+            } else {
+                return MvcHtmlString.Create(metadata.DisplayText);
+            }
         }
 
         public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
@@ -118,7 +122,7 @@ namespace Orchard.Mvc.Html {
 
             return urlHelper.Action(
                 Convert.ToString(metadata.EditorRouteValues["action"]),
-                metadata.EditorRouteValues.Merge(additionalRouteValues ?? new {}));
+                metadata.EditorRouteValues.Merge(additionalRouteValues ?? new { }));
         }
 
         public static string ItemAdminUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues = null) {
