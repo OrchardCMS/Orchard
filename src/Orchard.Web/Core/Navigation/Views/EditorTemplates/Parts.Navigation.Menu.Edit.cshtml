@@ -11,7 +11,7 @@
         <div data-controllerid="@Html.FieldIdFor(m => m.OnMenu)" class="">
             <select id="@Html.FieldIdFor(m => m.CurrentMenuId)" name="@Html.FieldNameFor(m => m.CurrentMenuId)">
                 @foreach (ContentItem menu in Model.Menus) {
-                    @Html.SelectOption(Model.CurrentMenuId, menu.Id, Html.ItemDisplayText(menu).ToString())
+                    @Html.SelectOption(Model.CurrentMenuId, menu.Id, HttpUtility.HtmlDecode(Html.ItemDisplayText(menu).ToString()))
                 }
             </select>
             <span class="hint">@T("Select which menu you want the content item to be displayed on.")</span>
