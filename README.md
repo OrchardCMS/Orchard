@@ -8,23 +8,19 @@ Orchard is a free, open source, community-focused Content Management System buil
 
 #### Please visit our website at http://orchardproject.net for the most current information about this project.
 
-Orchard is a free, open source, community-focused project aimed at delivering applications and reusable components 
-on the ASP.NET platform. It will create shared components for building ASP.NET applications and extensions, and
-specific applications that leverage these components to meet the needs of end-users, scripters, and developers. 
-Additionally, we seek to create partnerships with existing application authors to help them achieve their goals. 
-Orchard is delivered under the [.NET Foundation](http://www.dotnetfoundation.org/). It is licensed under a 
-[New BSD license](http://www.opensource.org/licenses/bsd-license.php), which is approved by the OSI. The intended 
-output of the Orchard project is three-fold:
+Orchard is a free, open source, community-focused Content Management System built on the ASP.NET MVC platform.
 
-* Individual .NET-based applications that appeal to end-users, scripters, and developers 
-* A set of re-usable components that makes it easy to build such applications 
-* A vibrant community to help define these applications and extensions
-In the near term, the Orchard project is focused on delivering a .NET-based CMS application that will allow users 
-to rapidly create content-driven Websites, and an extensibility framework that will allow developers and customizers to provide additional functionality through modules and themes.  You can learn more about the project on the [Orchard Project Website](http://www.orchardproject.net).
+Orchard is built on a modern architecture that puts extensibility up-front, as its number one concern. All components in Orchard can be replaced or extended. Content is built from easily composable building blocks. Modules extend the system in a very decoupled fashion, where a commenting module for example can as easily apply to pages, blog posts, photos or products. A rich UI composition system completes the picture and ensures that you can get the exact presentation that you need for your content.
+
+Orchard is delivered under the .NET Foundation. It is licensed under a New BSD license, which is approved by the OSI.
+
+Our mission is to empower our users and foster a dedicated and diverse community that builds the CMS that we all want to use.
+
+There are many ways you can contribute to Orchard: you can fix bugs, contribute modules and themes to our gallery, write documentation, translate Orchard, or answer questions on our forums and on Stack Overflow.
 
 ## Project Status
-Orchard is currently in version 1.8.1. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
-Our 1.8.1 release is available from our Downloads page, and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
+Orchard is currently in version 1.9. We invite participation by the developer community in shaping the project’s direction, so that we can publicly validate our designs and development approach. 
+Our 1.9 release is available from [our Downloads page](https://github.com/OrchardCMS/Orchard/releases), and is easy to [Install Orchard using the Web Platform Installer](http://www.orchardproject.net/docs/Installing-Orchard.ashx). We encourage interested developers to check out the source code on the Orchard Github site and get involved with the project.
 
 * [Download the latest release](https://github.com/OrchardCMS/Orchard/releases)
 * [Feature roadmap](http://www.orchardproject.net/docs/feature-roadmap.ashx)
