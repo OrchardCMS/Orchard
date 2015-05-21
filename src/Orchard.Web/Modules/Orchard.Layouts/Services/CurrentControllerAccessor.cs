@@ -4,11 +4,9 @@ using Orchard.Layouts.Filters;
 
 namespace Orchard.Layouts.Services {
     public class CurrentControllerAccessor : ICurrentControllerAccessor {
-        private readonly IWorkContextAccessor _wca;
         private readonly HttpContextBase _httpContext;
 
-        public CurrentControllerAccessor(IWorkContextAccessor wca, HttpContextBase httpContext) {
-            _wca = wca;
+        public CurrentControllerAccessor(HttpContextBase httpContext) {
             _httpContext = httpContext;
         }
 
