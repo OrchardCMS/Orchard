@@ -7,8 +7,8 @@ namespace Orchard.OutputCache.Helpers {
         /// <summary>
         /// Returns true if the Location of the specified output cache attribute matches any of the specified list of locations.
         /// </summary>
-        public static bool IsLocationAnyOf(this OutputCacheAttribute attribute, params OutputCacheLocation[] locations) {
-            return locations.Any(x => attribute.Location == x);
+        public static bool LocationIsIn(this OutputCacheAttribute attribute, params OutputCacheLocation[] locations) {
+            return locations.Contains(attribute.Location);
         }
     }
 }

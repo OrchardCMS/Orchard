@@ -265,7 +265,7 @@ namespace Orchard.OutputCache.Filters {
             var controllerAttributes = filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(OutputCacheAttribute), true);
             var outputCacheAttribute = actionAttributes.Concat(controllerAttributes).Cast<OutputCacheAttribute>().FirstOrDefault();
             if (outputCacheAttribute != null) {
-                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.IsLocationAnyOf(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
+                if (outputCacheAttribute.Duration <= 0 || outputCacheAttribute.NoStore || outputCacheAttribute.LocationIsIn(OutputCacheLocation.Downstream, OutputCacheLocation.Client, OutputCacheLocation.None)) {
                     Logger.Debug("Request for item '{0}' ignored based on OutputCache attribute.", _cacheKey);
                     return false;
                 }
