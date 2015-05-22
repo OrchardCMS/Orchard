@@ -317,6 +317,7 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
+    <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
@@ -644,6 +645,7 @@
     <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
+    <Compile Include="BackgroundHttpContext.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />

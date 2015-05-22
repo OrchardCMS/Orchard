@@ -28,7 +28,7 @@ namespace Orchard.Mvc {
                 return false;
 
             try {
-                // The "Request" property throws at application startup on IIS integrated pipeline mode
+                // The "Request" property throws at application startup on IIS integrated pipeline mode.
                 var req = HttpContext.Current.Request;
             }
             catch (Exception) {
