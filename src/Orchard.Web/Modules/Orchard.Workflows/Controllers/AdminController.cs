@@ -159,6 +159,12 @@ namespace Orchard.Workflows.Controllers {
             return RedirectToAction("Edit", new { workflowDefinitionRecord.Id });
         }
 
+        public JsonResult State(int? id) {
+            var workflowDefinitionRecord = id.HasValue ? _workflowDefinitionRecords.Get(id.Value) : null;
+            var isRunning = workflowDefinitionRecord != null ? workflowDefinitionRecord.WorkflowRecords.Any() : false;
+            return Json(new { isRunning = isRunning }, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Edit(int id, string localId, int? workflowId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to edit workflows")))
                 return new HttpUnauthorizedResult();
