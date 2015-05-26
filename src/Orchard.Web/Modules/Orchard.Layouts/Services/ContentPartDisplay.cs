@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using AsyncBridge;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
@@ -36,13 +35,11 @@ namespace Orchard.Layouts.Services {
             // TODO: Make async all the way up. 
             // without making layouts module full async up and down (a large task)
             // present the synchronous interface at a low level to minimize impact.
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
-                    var result = await driver.BuildDisplayAsync(context);
-                    if (result != null)
-                        await result.ApplyAsync(context);
-                }, Logger));
-            }
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildDisplayAsync(context);
+                if (result != null)
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
             
 
             return context.Shape;
@@ -53,13 +50,11 @@ namespace Orchard.Layouts.Services {
             var drivers = GetPartDrivers(part.PartDefinition.Name);
 
             // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
-                        var result = await driver.BuildEditorAsync(context);
-                        if (result != null)
-                            await result.ApplyAsync(context);
-                    }, Logger));
-            }
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildEditorAsync(context);
+                if (result != null)
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
 
             return context.Shape;
         }
@@ -69,13 +64,11 @@ namespace Orchard.Layouts.Services {
             var drivers = GetPartDrivers(part.PartDefinition.Name);
 
             // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
+            drivers.InvokeAsync(async driver => {
                     var result = await driver.UpdateEditorAsync(context);
                     if (result != null)
                         await result.ApplyAsync(context);
-                }, Logger));
-            }
+                }, Logger).Wait();
 
             return context.Shape;
         }

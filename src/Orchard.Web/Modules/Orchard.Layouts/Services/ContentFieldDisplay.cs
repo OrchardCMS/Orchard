@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using AsyncBridge;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.DisplayManagement;
@@ -34,13 +33,11 @@ namespace Orchard.Layouts.Services {
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
             // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
-                    var result = await driver.BuildDisplayShapeAsync(context);
-                    if (result != null)
-                        await result.ApplyAsync(context);
-                }, Logger));
-            }
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildDisplayShapeAsync(context);
+                if (result != null)
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
 
             return context.Shape;
         }
@@ -50,13 +47,12 @@ namespace Orchard.Layouts.Services {
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
             // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
-                    var result = await driver.BuildEditorShapeAsync(context);
-                    if (result != null)
-                        await result.ApplyAsync(context);
-                }, Logger));
-            }
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildEditorShapeAsync(context);
+                if (result != null)
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
+            
 
             return context.Shape;
         }
@@ -66,13 +62,11 @@ namespace Orchard.Layouts.Services {
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
             // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
-            using (var helper = AsyncHelper.Wait) {
-                helper.Run(drivers.InvokeAsync(async driver => {
-                    var result = await driver.UpdateEditorShapeAsync(context);
-                    if (result != null)
-                        await result.ApplyAsync(context);
-                }, Logger));
-            }
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.UpdateEditorShapeAsync(context);
+                if (result != null)
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
 
             return context.Shape;
         }

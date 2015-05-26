@@ -70,7 +70,7 @@ namespace Orchard.Tests.Modules.Widgets {
             typedQuery.Setup(q => q.ForType("Layer")).Returns(typedQuery.Object);
             typedQuery.Setup(q => q.List()).Returns(CreateLayerParts());
             contentDisplay.Setup(c => c.BuildDisplayAsync(It.IsAny<IContent>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((IContent content, string d, string g) => _parts[(WidgetPart) content]());
+                .Returns((IContent content, string d, string g) => _parts[(WidgetPart)content]());
             orchardService.Setup(o => o.Authorizer).Returns(authorizer.Object);
             authorizer.Setup(a => a.Authorize(Core.Contents.Permissions.ViewContent, It.IsAny<IContent>())).Returns(true);
             ruleManager.Setup(r => r.Matches(It.IsAny<string>())).Returns(true);
@@ -120,7 +120,7 @@ namespace Orchard.Tests.Modules.Widgets {
             var random = new Random(count);
 
             for (var i = 1; i <= count; i++) {
-                if (i%2 == 0) {
+                if (i % 2 == 0) {
                     var delay = random.Next(1, 5);
                     AddWidgetPartAndShapeResult(i.ToString(), async () => {
                         await Task.Delay(delay);
@@ -136,7 +136,7 @@ namespace Orchard.Tests.Modules.Widgets {
 
             Assert.AreEqual(count, _renderedShapes.Count, "Expected {0} shapes rendered", count);
             for (var i = 1; i <= count; i++) {
-                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'. Async shape: {1}?", i, i%2 == 0);
+                Assert.Contains(i.ToString(), _renderedShapes, "Expected rendered shapes list to contain shape with position '{0}'. Async shape: {1}?", i, i % 2 == 0);
             }
         }
 
@@ -215,7 +215,7 @@ namespace Orchard.Tests.Modules.Widgets {
             var contentItem = new ContentItem();
             var commonPart = new StubCommonPart();
             var infoSetPart = new InfosetPart();
-            var part = new WidgetPart {Record = new WidgetPartRecord {Position = position}};
+            var part = new WidgetPart { Record = new WidgetPartRecord { Position = position } };
             contentItem.Weld(commonPart);
             contentItem.Weld(part);
             contentItem.Weld(infoSetPart);
@@ -236,7 +236,7 @@ namespace Orchard.Tests.Modules.Widgets {
             contentItem.Weld(commonPart);
             contentItem.Weld(part);
             contentItem.Weld(infoSetPart);
-            return new[] {part};
+            return new[] { part };
         }
 
         private SiteSettingsPart CreateSiteSettings() {
@@ -275,8 +275,7 @@ namespace Orchard.Tests.Modules.Widgets {
         }
 
         public class CustomZones {
-            public dynamic this[string zone]
-            {
+            public dynamic this[string zone] {
                 get { return new CustomShape(); }
             }
         }
@@ -296,50 +295,47 @@ namespace Orchard.Tests.Modules.Widgets {
         }
 
         private class StubCommonPart : ContentPart, ICommonPart {
-            public IUser Owner
-            {
+            public IUser Owner {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public IContent Container
-            {
+            public IContent Container {
                 get { return new ContentItem(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? CreatedUtc
-            {
+            public DateTime? CreatedUtc {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? PublishedUtc
-            {
+            public DateTime? PublishedUtc {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? ModifiedUtc
-            {
+            public DateTime? ModifiedUtc {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? VersionCreatedUtc
-            {
+            public DateTime? VersionCreatedUtc {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? VersionPublishedUtc
-            {
+            public DateTime? VersionPublishedUtc {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }
 
-            public DateTime? VersionModifiedUtc
-            {
+            public DateTime? VersionModifiedUtc {
+                get { throw new NotImplementedException(); }
+                set { throw new NotImplementedException(); }
+            }
+
+            public string VersionModifiedBy {
                 get { throw new NotImplementedException(); }
                 set { throw new NotImplementedException(); }
             }

@@ -24,7 +24,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Indexing;
 using Orchard.Logging;
 using Orchard.UI;
-using AsyncBridge;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
@@ -694,26 +693,17 @@ namespace Orchard.ContentManagement {
         }
 
         public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
-            dynamic result = null;
-            using (var helper = AsyncHelper.Wait)
-                helper.Run(BuildDisplayAsync(content, displayType, groupId), (dynamic s) => result = s);
-            return result;
+            return BuildDisplayAsync(content, displayType, groupId).Result;
         }
 
         public dynamic BuildEditor(IContent content, string groupId = "")
         {
-            dynamic result = null;
-            using (var helper = AsyncHelper.Wait)
-                helper.Run(BuildEditorAsync(content, groupId), (dynamic s) => result = s);
-            return result;
+            return BuildEditorAsync(content, groupId).Result;
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "")
         {
-            dynamic result = null;
-            using (var helper = AsyncHelper.Wait)
-                helper.Run(UpdateEditorAsync(content, updater, groupId), (dynamic s) => result = s);
-            return result;
+            return UpdateEditorAsync(content, updater, groupId).Result;
         }
 
         public Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "")
