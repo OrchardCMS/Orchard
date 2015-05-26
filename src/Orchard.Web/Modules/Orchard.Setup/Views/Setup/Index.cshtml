@@ -48,7 +48,7 @@ if (!Model.DatabaseIsPreconfigured) {
         @Html.EditorFor(svm => svm.DatabaseConnectionString)
             
         <span data-controllerid="sqlserver" class="hint databaseTypeHint">
-            @T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")
+            @T("Data Source=sqlServerName;Initial Catalog=dbName;User ID=userName;Password=password")
         </span>
 
         <span data-controllerid="mysql" class="hint databaseTypeHint">

@@ -4,13 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.Security;
 
 namespace Orchard.Mvc.AntiForgery {
-    [UsedImplicitly]
     public class AntiForgeryAuthorizationFilter : FilterProvider, IAuthorizationFilter {
         private readonly IAuthenticationService _authenticationService;
         private readonly IExtensionManager _extensionManager;

@@ -1,0 +1,18 @@
+﻿@*
+    Model:
+      ContentPart
+*@
+
+@{
+    string displayUser = null;
+    if (Model.ContentPart != null) {
+        if (!string.IsNullOrWhiteSpace(Model.ContentPart.VersionModifiedBy)) {
+            displayUser = Model.ContentPart.VersionModifiedBy;
+        }
+        else if (Model.ContentPart.Owner != null) {
+            displayUser = Model.ContentPart.Owner.UserName;
+        }
+    }
+}
+
+@T("By {0}", displayUser ?? T("unknown").ToString())

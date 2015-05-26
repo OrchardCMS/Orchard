@@ -91,7 +91,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            // See http://orchard.codeplex.com/workitem/17116
+            // See https://github.com/OrchardCMS/Orchard/issues/948
             if (menuItemEntries != null) {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);

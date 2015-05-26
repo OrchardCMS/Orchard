@@ -22,7 +22,7 @@ namespace Orchard.Layouts.Drivers {
             return Editor(context, editor);
         }
 
-        protected override void OnDisplaying(MarkdownElement element, ElementDisplayContext context) {
+        protected override void OnDisplaying(MarkdownElement element, ElementDisplayingContext context) {
             context.ElementShape.ProcessedContent = ToHtml(element.Content);
         }
 

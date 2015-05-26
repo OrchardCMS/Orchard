@@ -49,7 +49,7 @@ namespace Orchard.Search.Controllers {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
             var searchIndex = searchSettingsPart.SearchIndex;
-            var searchFields = searchSettingsPart.GetSearchFields();
+            var searchFields = searchSettingsPart.GetSearchFields(searchSettingsPart.SearchIndex);
             var totalCount = 0;
             var foundIds = new int[0];
 

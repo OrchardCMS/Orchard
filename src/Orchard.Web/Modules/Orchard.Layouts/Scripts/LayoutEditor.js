@@ -864,6 +864,15 @@ angular
                                 })
                             ];
 
+                            $scope.canvasElements = [
+                                LayoutEditor.Canvas.from({
+                                    toolboxIcon: "\uf044",
+                                    toolboxLabel: "Canvas",
+                                    toolboxDescription: "Empty canvas.",
+                                    children: []
+                                })
+                            ];
+
                             $scope.contentElementCategories = _($scope.element.config.categories).map(function (category) {
                                 return {
                                     name: category.name,
@@ -915,6 +924,10 @@ angular
                                 case "Content":
                                     parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
                                     placeholderClasses = "layout-element layout-content ui-sortable-placeholder";
+                                    break;
+                                case "Canvas":
+                                    parentClasses = [".layout-canvas", ".layout-column", ".layout-common-holder"];
+                                    placeholderClasses = "layout-element layout-container layout-grid ui-sortable-placeholder";
                                     break;
                             }
 

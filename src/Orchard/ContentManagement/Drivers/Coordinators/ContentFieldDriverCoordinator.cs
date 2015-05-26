@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
-    [UsedImplicitly]
     public class ContentFieldDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentFieldDriver> _drivers;
         private readonly IFieldStorageProviderSelector _fieldStorageProviderSelector;

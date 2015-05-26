@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Navigation.Handlers {
-    [UsedImplicitly]
     public class MenuHandler : ContentHandler {
         private readonly IMenuService _menuService;
         private readonly IContentManager _contentManager;

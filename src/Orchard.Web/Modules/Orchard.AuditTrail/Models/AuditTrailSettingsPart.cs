@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Utilities;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.AuditTrail.Models {
     public class AuditTrailSettingsPart : ContentPart {

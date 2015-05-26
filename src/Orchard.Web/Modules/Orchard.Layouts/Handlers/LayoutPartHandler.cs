@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -12,6 +13,7 @@ namespace Orchard.Layouts.Handlers {
         private readonly IContentPartDisplay _contentPartDisplay;
         private readonly IShapeDisplay _shapeDisplay;
         private readonly ILayoutSerializer _serializer;
+        private readonly ISignals _signals;
 
         public LayoutPartHandler(
             IRepository<LayoutPartRecord> repository, 
@@ -19,13 +21,15 @@ namespace Orchard.Layouts.Handlers {
             IContentManager contentManager, 
             IContentPartDisplay contentPartDisplay, 
             IShapeDisplay shapeDisplay, 
-            ILayoutSerializer serializer) {
+            ILayoutSerializer serializer,
+            ISignals signals) {
 
             _layoutManager = layoutManager;
             _contentManager = contentManager;
             _contentPartDisplay = contentPartDisplay;
             _shapeDisplay = shapeDisplay;
             _serializer = serializer;
+            _signals = signals;
 
             Filters.Add(StorageFilter.For(repository));
             OnPublished<LayoutPart>(UpdateTemplateClients);
