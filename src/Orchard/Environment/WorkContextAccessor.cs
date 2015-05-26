@@ -5,6 +5,7 @@ using System.Web;
 using Autofac;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Environment {
     public class WorkContextAccessor : IWorkContextAccessor {
@@ -31,7 +32,7 @@ namespace Orchard.Environment {
 
         public WorkContext GetContext() {
             var httpContext = _httpContextAccessor.Current();
-            if (httpContext != null)
+            if (!httpContext.IsBackgroundContext())
                 return GetContext(httpContext);
 
             WorkContext workContext;
@@ -55,7 +56,7 @@ namespace Orchard.Environment {
 
         public IWorkContextScope CreateWorkContextScope() {
             var httpContext = _httpContextAccessor.Current();
-            if (httpContext != null)
+            if (!httpContext.IsBackgroundContext())
                 return CreateWorkContextScope(httpContext);
 
             var workLifetime = _lifetimeScope.BeginLifetimeScope("work");
