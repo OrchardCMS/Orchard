@@ -85,7 +85,7 @@ namespace Orchard.Mvc {
         /// <summary>
         /// Standin context for background tasks.
         /// </summary>
-        class HttpContextPlaceholder : HttpContextBase {
+        public class HttpContextPlaceholder : HttpContextBase {
             private readonly Lazy<string> _baseUrl;
             private readonly IDictionary _items = new Dictionary<object, object>();
 
@@ -120,7 +120,7 @@ namespace Orchard.Mvc {
             }
         }
 
-        private class HttpResponsePlaceholder : HttpResponseBase {
+        public class HttpResponsePlaceholder : HttpResponseBase {
             public override string ApplyAppPathModifier(string virtualPath) {
                 return virtualPath;
             }
@@ -135,7 +135,7 @@ namespace Orchard.Mvc {
         /// <summary>
         /// standin context for background tasks. 
         /// </summary>
-        class HttpRequestPlaceholder : HttpRequestBase {
+        public class HttpRequestPlaceholder : HttpRequestBase {
             private readonly Uri _uri;
 
             public HttpRequestPlaceholder(Uri uri) {
@@ -217,7 +217,7 @@ namespace Orchard.Mvc {
             }
         }
 
-        class HttpBrowserCapabilitiesPlaceholder : HttpBrowserCapabilitiesBase {
+        public class HttpBrowserCapabilitiesPlaceholder : HttpBrowserCapabilitiesBase {
             public override string this[string key] {
                 get {
                     return "";

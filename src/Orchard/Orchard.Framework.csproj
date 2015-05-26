@@ -317,6 +317,7 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
+    <Compile Include="Mvc\Extensions\HttpContextBaseExtensions.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
     <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
