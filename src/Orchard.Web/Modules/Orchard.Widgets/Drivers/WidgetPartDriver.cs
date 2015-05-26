@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
@@ -10,7 +9,6 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
         private readonly IContentManager _contentManager;

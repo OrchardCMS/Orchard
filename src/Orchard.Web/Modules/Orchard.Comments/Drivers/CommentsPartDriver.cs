@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.Settings;
@@ -9,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         private readonly ICommentService _commentService;
         private readonly IContentManager _contentManager;
@@ -60,14 +58,14 @@ namespace Orchard.Comments.Drivers {
                             List: list,
                             CommentCount: part.CommentsCount);
                     }),
-                ContentShape("Parts_CommentForm",
-                    () => {
+                ContentShapeAsync("Parts_CommentForm",
+                    async () => {
                         if (part.CommentsShown == false)
                             return null;
 
                         var newComment = _contentManager.New("Comment");
                         if (newComment.Has<CommentPart>()) newComment.As<CommentPart>().CommentedOn = part.Id;
-                        var editorShape = _contentManager.BuildEditor(newComment);
+                        var editorShape = await _contentManager.BuildEditorAsync(newComment);
 
                         return shapeHelper.Parts_CommentForm(EditorShape: editorShape, CanStillComment: _commentService.CanStillCommentOn(part));
                     }),

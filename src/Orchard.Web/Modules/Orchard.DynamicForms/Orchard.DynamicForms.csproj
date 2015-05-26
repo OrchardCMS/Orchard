@@ -109,10 +109,12 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.AntiSpam\Orchard.AntiSpam.csproj">
       <Project>{91bc2e7f-da04-421c-98ef-76d37cec130c}</Project>
@@ -164,6 +166,7 @@
     <Compile Include="Bindings\EnumerationFieldBindings.cs" />
     <Compile Include="Bindings\InputFieldBindings.cs" />
     <Compile Include="Bindings\TaxonomyFieldBindings.cs" />
+    <Compile Include="Bindings\NumericFieldBindings.cs" />
     <Compile Include="Forms\AddModelErrorForm.cs" />
     <Compile Include="Forms\SelectDynamicForms.cs" />
     <Compile Include="Bindings\TextFieldBindings.cs" />

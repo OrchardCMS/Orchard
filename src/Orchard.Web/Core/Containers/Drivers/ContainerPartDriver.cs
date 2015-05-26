@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -27,8 +29,8 @@ namespace Orchard.Core.Containers.Drivers {
         private readonly IContainerService _containerService;
 
         public ContainerPartDriver(
-            IContentDefinitionManager contentDefinitionManager, 
-            IOrchardServices orchardServices, 
+            IContentDefinitionManager contentDefinitionManager,
+            IOrchardServices orchardServices,
             ISiteService siteService,
             IFeedManager feedManager, IContainerService containerService) {
             _contentDefinitionManager = contentDefinitionManager;
@@ -44,38 +46,45 @@ namespace Orchard.Core.Containers.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Display(ContainerPart part, string displayType, dynamic shapeHelper) {
-            if (!part.ItemsShown)
+            if (!part.ItemsShown) {
                 return null;
+            }
 
-        return ContentShape("Parts_Container_Contained", () => {
+            return ContentShapeAsync("Parts_Container_Contained", async () => {
                 var container = part.ContentItem;
                 var query = _contentManager
-                .Query(VersionOptions.Published)
-                .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
-                .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
+                    .Query(VersionOptions.Published)
+                    .Join<CommonPartRecord>().Where(x => x.Container.Id == container.Id)
+                    .Join<ContainablePartRecord>().OrderByDescending(x => x.Position);
 
                 var metadata = container.ContentManager.GetItemMetadata(container);
-                if (metadata!=null)
-                _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+                if (metadata != null) {
+                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary {{"containerid", container.Id}});
+                }
 
                 var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
                 pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
-                                ? pager.PageSize
-                                : part.PageSize;
+                    ? pager.PageSize
+                    : part.PageSize;
 
                 var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
                 var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
                 var listShape = shapeHelper.List();
-                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+
+                var tasks = pageOfItems.Select(item => _contentManager.BuildDisplayAsync(item, "Summary")).ToList();
+
+                await Task.WhenAll(tasks);
+
+                listShape.AddRange(tasks.Select(t => t.Result));
                 listShape.Classes.Add("content-items");
                 listShape.Classes.Add("list-items");
 
                 return shapeHelper.Parts_Container_Contained(
                     List: listShape,
                     Pager: part.Paginated ? pagerShape : null
-                );
+                    );
             });
         }
 
@@ -83,7 +92,7 @@ namespace Orchard.Core.Containers.Drivers {
             if (!_contentDefinitionManager.ListTypeDefinitions().Any(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart"))) {
                 _orchardServices.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
             }
-            return Editor(part, (IUpdateModel)null, shapeHelper);
+            return Editor(part, (IUpdateModel) null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -103,9 +112,9 @@ namespace Orchard.Core.Containers.Drivers {
                     EnablePositioning = part.Record.EnablePositioning,
                     OverrideEnablePositioning = part.ContainerSettings.EnablePositioning == null
                 };
-                
+
                 if (updater != null) {
-                    if (updater.TryUpdateModel(model, "Container", null, new[] { "OverrideEnablePositioning" })) {
+                    if (updater.TryUpdateModel(model, "Container", null, new[] {"OverrideEnablePositioning"})) {
                         part.AdminMenuPosition = model.AdminMenuPosition;
                         part.AdminMenuText = model.AdminMenuText;
                         part.AdminMenuImageSet = model.AdminMenuImageSet;
@@ -123,7 +132,7 @@ namespace Orchard.Core.Containers.Drivers {
                         }
                     }
                 }
-                   
+
                 return shapeHelper.EditorTemplate(TemplateName: "Container", Model: model, Prefix: "Container");
             });
         }

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using Orchard.AntiSpam.Models;
 using Orchard.Logging;
@@ -25,9 +26,9 @@ namespace Orchard.AntiSpam.Services {
 
         public ILogger Logger { get; set; }
 
-        public SpamStatus CheckForSpam(CommentCheckContext context) {
+        public async Task<SpamStatus> CheckForSpam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(context, "comment-check");
+                var result = await ExecuteValidateRequest(context, "comment-check");
 
                 if (HandleValidateResponse(_context, result)) {
                     return SpamStatus.Spam;
@@ -41,25 +42,25 @@ namespace Orchard.AntiSpam.Services {
             }
         }
 
-        public void ReportSpam(CommentCheckContext context) {
+        public async Task ReportSpam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(context, "submit-spam");
+                var result = await ExecuteValidateRequest(context, "submit-spam");
             }
             catch (Exception e) {
                 Logger.Error(e, "An error occured while reporting spam");
             }
         }
 
-        public void ReportHam(CommentCheckContext context) {
+        public async Task ReportHam(CommentCheckContext context) {
             try {
-                var result = ExecuteValidateRequest(context, "submit-ham");
+                var result = await ExecuteValidateRequest(context, "submit-ham");
             }
             catch (Exception e) {
                 Logger.Error(e, "An error occured while reporting ham");
             }
         }
 
-        private string ExecuteValidateRequest(CommentCheckContext context, string action) {
+        private async Task<string> ExecuteValidateRequest(CommentCheckContext context, string action) {
             var uri = String.Format(AkismetApiPattern, _apiKey, _endpoint, action);
 
             WebRequest request = WebRequest.Create(uri);
@@ -82,9 +83,9 @@ namespace Orchard.AntiSpam.Services {
             using (Stream stream = request.GetRequestStream()) {
                 stream.Write(content, 0, content.Length);
             }
-            using (WebResponse webResponse = request.GetResponse()) {
+            using (WebResponse webResponse = await request.GetResponseAsync()) {
                 using (var reader = new StreamReader(webResponse.GetResponseStream())) {
-                    return reader.ReadToEnd();
+                    return await reader.ReadToEndAsync();
                 }
             }
         }

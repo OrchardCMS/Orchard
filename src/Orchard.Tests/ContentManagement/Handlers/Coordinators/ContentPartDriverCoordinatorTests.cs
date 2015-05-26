@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -27,13 +30,13 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
         }
 
         [Test]
-        public void DriverHandlerShouldNotThrowException() {
+        public async Task  DriverHandlerAsyncShouldNotThrowException() {
             var contentHandler = _container.Resolve<IContentHandler>();
-            contentHandler.BuildDisplay(null);
+            await contentHandler.BuildDisplayAsync(null);
         }
 
         [Test]
-        public void AllDriversShouldBeCalled() {
+        public async Task AllAsyncDriversShouldBeCalled() {
             var driver1 = new Mock<IContentPartDriver>();
             var driver2 = new Mock<IContentPartDriver>();
             var builder = new ContainerBuilder();
@@ -45,15 +48,77 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentItem = new ContentItem();
             var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
 
-            driver1.Verify(x => x.BuildDisplay(context), Times.Never());
-            driver2.Verify(x => x.BuildDisplay(context), Times.Never());
-            contentHandler.BuildDisplay(context);
-            driver1.Verify(x => x.BuildDisplay(context));
-            driver2.Verify(x => x.BuildDisplay(context));
+            driver1.Verify(x => x.BuildDisplayAsync(context), Times.Never());
+            driver2.Verify(x => x.BuildDisplayAsync(context), Times.Never());
+            await contentHandler.BuildDisplayAsync(context);
+            driver1.Verify(x => x.BuildDisplayAsync(context));
+            driver2.Verify(x => x.BuildDisplayAsync(context));
+        }
+
+        [Test]
+        public async Task AsyncDriversAreAppliedInOrderOfExecution() {
+            var driver1 = new Mock<IContentPartDriver>();
+            var driver2 = new Mock<IContentPartDriver>();
+            var result1 = new Mock<DriverResult>();
+            var result2 = new Mock<DriverResult>();
+            long executed1 = 0;
+            long executed2 = 0;
+            driver1.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(50);
+                return result1.Object;
+            });
+            driver2.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(1);
+                return result2.Object;
+            });
+            result1.Setup(r => r.ApplyAsync(It.IsAny<BuildDisplayContext>())).Returns(Task.Delay(0)).Callback(() => executed1 = DateTime.Now.Ticks);
+            result2.Setup(r => r.ApplyAsync(It.IsAny<BuildDisplayContext>())).Returns(Task.Delay(0)).Callback(() => executed2 = DateTime.Now.Ticks);
+
+            var builder = new ContainerBuilder();
+            builder.RegisterInstance(driver1.Object);
+            builder.RegisterInstance(driver2.Object);
+            builder.Update(_container);
+            var contentHandler = _container.Resolve<IContentHandler>();
+
+            var contentItem = new ContentItem();
+            var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
+
+            await contentHandler.BuildDisplayAsync(context);
+
+            Assert.LessOrEqual(executed2, executed1);
+        }
+
+        [Test]
+        public async Task AsyncDriversAreAsync() {
+            var driver1 = new Mock<IContentPartDriver>();
+            var driver2 = new Mock<IContentPartDriver>();
+            driver1.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(30);
+                return null;
+            });
+            driver2.Setup(d => d.BuildDisplayAsync(It.IsAny<BuildDisplayContext>())).Returns(async () => {
+                await Task.Delay(30);
+                return null;
+            });
+            var builder = new ContainerBuilder();
+            builder.RegisterInstance(driver1.Object);
+            builder.RegisterInstance(driver2.Object);
+            builder.Update(_container);
+            var contentHandler = _container.Resolve<IContentHandler>();
+
+            var contentItem = new ContentItem();
+            var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
+
+            var watch = new Stopwatch();
+            watch.Start();
+            await contentHandler.BuildDisplayAsync(context);
+            watch.Stop();
+            Assert.GreaterOrEqual(watch.ElapsedMilliseconds, 30);
+            Assert.LessOrEqual(watch.ElapsedMilliseconds, 60);
         }
 
         [Test, Ignore("no implementation for IZoneCollection")]
-        public void TestDriverCanAddDisplay() {
+        public async Task TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
             var builder = new ContainerBuilder();
             builder.RegisterInstance(driver).As<IContentPartDriver>();
@@ -67,7 +132,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var ctx = new BuildDisplayContext(null, null, "", "", null);
             var context = shapeFactory.Context(ctx);
             Assert.That(context.TopMeta, Is.Null);
-            contentHandler.BuildDisplay(ctx);
+            await contentHandler.BuildDisplayAsync(ctx);
             Assert.That(context.TopMeta, Is.Not.Null);
             Assert.That(context.TopMeta.Count == 1);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -22,9 +23,9 @@ namespace Orchard.Core.Containers.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Display(ContainerWidgetPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape(
+            return ContentShapeAsync(
                 "Parts_ContainerWidget",
-                () => {
+                async () => {
                     var container = part.Record.ContainerId != 0 ? _contentManager.Get(part.Record.ContainerId) : default(ContentItem);
 
                     if (container == null)
@@ -40,7 +41,12 @@ namespace Orchard.Core.Containers.Drivers {
                     var pageOfItems = query.Slice(0, part.Record.PageSize).ToList();
 
                     var list = shapeHelper.List();
-                    list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+
+                    var tasks = pageOfItems.Select( item => _contentManager.BuildDisplayAsync(item, "Summary")).ToList();
+
+                    await Task.WhenAll(tasks);
+
+                    list.AddRange(tasks.Select(t => t.Result));
 
                     return shapeHelper.Parts_ContainerWidget(ContentItems: list);
                 });

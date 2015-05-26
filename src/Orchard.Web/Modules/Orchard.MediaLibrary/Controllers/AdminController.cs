@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
@@ -40,7 +41,7 @@ namespace Orchard.MediaLibrary.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult Index(string folderPath = "", bool dialog = false) {
+        public async Task<ActionResult> Index(string folderPath = "", bool dialog = false) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
@@ -48,7 +49,7 @@ namespace Orchard.MediaLibrary.Controllers {
             var explorer = Services.ContentManager.New("MediaLibraryExplorer");
             explorer.Weld(new MediaLibraryExplorerPart());
 
-            var explorerShape = Services.ContentManager.BuildDisplay(explorer);
+            var explorerShape = await Services.ContentManager.BuildDisplayAsync(explorer);
 
             var rootMediaFolder = _mediaLibraryService.GetRootMediaFolder();
 
@@ -90,16 +91,20 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [Themed(false)]
-        public ActionResult MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+        public async Task<ActionResult> MediaItems(string folderPath, int skip = 0, int count = 0, string order = "created", string mediaType = "") {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
             var mediaParts = _mediaLibraryService.GetMediaContentItems(folderPath, skip, count, order, mediaType, VersionOptions.Latest);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(folderPath, mediaType, VersionOptions.Latest);
 
-            var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
-                MediaPart = x,
-                Shape = Services.ContentManager.BuildDisplay(x.ContentItem, "Thumbnail")
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToList();
+
+            await Task.WhenAll(shapeTasks.Select(x => x.Item2));
+
+            var mediaItems = shapeTasks.Select(x => new MediaManagerMediaItemViewModel {
+                MediaPart = x.Item1,
+                Shape = x.Item2
             }).ToList();
 
             var viewModel = new MediaManagerMediaItemsViewModel {
@@ -126,17 +131,20 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [Themed(false)]
-        public ActionResult RecentMediaItems(int skip = 0, int count = 0, string order = "created", string mediaType = "") {
+        public async Task<ActionResult> RecentMediaItems(int skip = 0, int count = 0, string order = "created", string mediaType = "") {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
             var mediaParts = _mediaLibraryService.GetMediaContentItems(skip, count, order, mediaType);
             var mediaPartsCount = _mediaLibraryService.GetMediaContentItemsCount(mediaType);
 
+            var shapeTasks = mediaParts.Select(p => new Tuple<MediaPart, Task<dynamic>>(p, Services.ContentManager.BuildDisplayAsync(p, "Thumbnail"))).ToList();
 
-            var mediaItems = mediaParts.Select(x => new MediaManagerMediaItemViewModel {
-                MediaPart = x,
-                Shape = Services.ContentManager.BuildDisplay(x, "Thumbnail")
+            await Task.WhenAll(shapeTasks.Select(x => x.Item2));
+            
+            var mediaItems = shapeTasks.Select(x => new MediaManagerMediaItemViewModel {
+                MediaPart = x.Item1,
+                Shape = x.Item2
             }).ToList();
 
             var viewModel = new MediaManagerMediaItemsViewModel {
@@ -148,7 +156,7 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [Themed(false)]
-        public ActionResult MediaItem(int id, string displayType = "SummaryAdmin") {
+        public async Task<ActionResult> MediaItem(int id, string displayType = "SummaryAdmin") {
             var contentItem = Services.ContentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
@@ -157,7 +165,7 @@ namespace Orchard.MediaLibrary.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMediaContent, contentItem, T("Cannot view media")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = Services.ContentManager.BuildDisplay(contentItem, displayType);
+            dynamic model = await Services.ContentManager.BuildDisplayAsync(contentItem, displayType);
 
             return new ShapeResult(this, model);
         }

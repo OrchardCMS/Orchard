@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.AntiSpam.Models;
@@ -38,7 +39,7 @@ namespace Orchard.AntiSpam.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(SpamIndexOptions options, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Index(SpamIndexOptions options, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
                 return new HttpUnauthorizedResult();
 
@@ -74,10 +75,14 @@ namespace Orchard.AntiSpam.Controllers {
             var results = query
                 .Slice(pager.GetStartIndex(), pager.PageSize);
 
+            var shapeTasks = results.Select(x => new Tuple<SpamFilterPart, Task<dynamic>>(x, Services.ContentManager.BuildDisplayAsync(x, "SummaryAdmin"))).ToList();
+
+            await Task.WhenAll(shapeTasks.Select(t => t.Item2));
+
             var model = new SpamIndexViewModel {
-                Spams = results.Select(x => new SpamEntry {
-                    Spam = x.As<SpamFilterPart>(),
-                    Shape = Services.ContentManager.BuildDisplay(x, "SummaryAdmin")
+                Spams = shapeTasks.Select(x => new SpamEntry {
+                    Spam = x.Item1,
+                    Shape = x.Item2.Result 
                 }).ToList(),
                 
                 Options = options,
@@ -97,7 +102,7 @@ namespace Orchard.AntiSpam.Controllers {
 
         [HttpPost]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(SpamIndexOptions options, IEnumerable<int> itemIds) {
+        public async Task<ActionResult> Index(SpamIndexOptions options, IEnumerable<int> itemIds) {
             if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
                 return new HttpUnauthorizedResult();
 
@@ -109,7 +114,7 @@ namespace Orchard.AntiSpam.Controllers {
                         var spam = Services.ContentManager.Get(checkedId, VersionOptions.Latest);
                         if(spam != null) {
                             spam.As<SpamFilterPart>().Status = SpamStatus.Spam;
-                            _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                            await _spamService.ReportSpam(spam.As<SpamFilterPart>());
                             Services.ContentManager.Publish(spam);
                         }
                     }
@@ -119,7 +124,7 @@ namespace Orchard.AntiSpam.Controllers {
                         var ham = Services.ContentManager.Get(checkedId, VersionOptions.Latest);
                         if (ham != null) {
                             ham.As<SpamFilterPart>().Status = SpamStatus.Ham;
-                            _spamService.ReportHam(ham.As<SpamFilterPart>());
+                            await _spamService.ReportHam(ham.As<SpamFilterPart>());
                             Services.ContentManager.Publish(ham);
                         }
                     }
@@ -132,18 +137,18 @@ namespace Orchard.AntiSpam.Controllers {
             }
 
 
-            return Index(options, new PagerParameters());
+            return await Index(options, new PagerParameters());
         }
 
         [HttpPost]
-        public ActionResult ReportSpam(int id, string returnUrl) {
+        public async Task<ActionResult> ReportSpam(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
                 return new HttpUnauthorizedResult();
 
             var spam = Services.ContentManager.Get(id, VersionOptions.Latest);
             if (spam != null) {
                 spam.As<SpamFilterPart>().Status = SpamStatus.Spam;
-                _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                await _spamService.ReportSpam(spam.As<SpamFilterPart>());
                 Services.ContentManager.Publish(spam);
             }
 
@@ -151,14 +156,14 @@ namespace Orchard.AntiSpam.Controllers {
         }
 
         [HttpPost]
-        public ActionResult ReportHam(int id, string returnUrl) {
+        public async Task<ActionResult> ReportHam(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageAntiSpam, T("Not authorized to manage spam")))
                 return new HttpUnauthorizedResult();
 
             var spam = Services.ContentManager.Get(id, VersionOptions.Latest);
             if (spam != null) {
                 spam.As<SpamFilterPart>().Status = SpamStatus.Ham;
-                _spamService.ReportSpam(spam.As<SpamFilterPart>());
+                await _spamService.ReportSpam(spam.As<SpamFilterPart>());
                 Services.ContentManager.Publish(spam);
             }
 

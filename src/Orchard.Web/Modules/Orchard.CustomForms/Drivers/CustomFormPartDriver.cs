@@ -30,11 +30,9 @@ namespace Orchard.CustomForms.Drivers {
                 return null;
             }
 
-            return ContentShape("Parts_CustomForm_Wrapper", () => {
-                return shapeHelper.Parts_CustomForm_Wrapper()
-                    .Editor(_orchardServices.ContentManager.BuildEditor(contentItem))
-                    .ContentPart(part);
-            });
+            return ContentShapeAsync("Parts_CustomForm_Wrapper", async () => shapeHelper.Parts_CustomForm_Wrapper()
+                .Editor(await _orchardServices.ContentManager.BuildEditorAsync(contentItem))
+                .ContentPart(part));
         }
 
         protected override DriverResult Editor(CustomFormPart part, dynamic shapeHelper) {

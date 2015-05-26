@@ -32,11 +32,12 @@ namespace Orchard.Layouts.Services {
             var context = BuildDisplayContext(content, displayType, groupId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildDisplayShapeAsync(context);
                 if (result != null)
-                    result.Apply(context);
-            }, Logger);
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
 
             return context.Shape;
         }
@@ -45,11 +46,13 @@ namespace Orchard.Layouts.Services {
             var context = BuildEditorContext(content, groupId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.BuildEditorShapeAsync(context);
                 if (result != null)
-                    result.Apply(context);
-            }, Logger);
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
+            
 
             return context.Shape;
         }
@@ -58,12 +61,13 @@ namespace Orchard.Layouts.Services {
             var context = UpdateEditorContext(content, updater, groupInfoId);
             var drivers = GetFieldDrivers(field.FieldDefinition.Name);
 
-            drivers.Invoke(driver => {
-                var result = driver.UpdateEditorShape(context);
+            // TODO: Make async all the way up. (see note on ContentPartDisplay.BuildDisplay)
+            drivers.InvokeAsync(async driver => {
+                var result = await driver.UpdateEditorShapeAsync(context);
                 if (result != null)
-                    result.Apply(context);
-            }, Logger);
-            
+                    await result.ApplyAsync(context);
+            }, Logger).Wait();
+
             return context.Shape;
         }
 

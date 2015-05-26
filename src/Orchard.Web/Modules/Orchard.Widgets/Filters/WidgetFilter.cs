@@ -20,8 +20,8 @@ namespace Orchard.Widgets.Filters {
         private readonly IOrchardServices _orchardServices;
 
         public WidgetFilter(
-            IWorkContextAccessor workContextAccessor, 
-            IRuleManager ruleManager, 
+            IWorkContextAccessor workContextAccessor,
+            IRuleManager ruleManager,
             IWidgetsService widgetsService,
             IOrchardServices orchardServices) {
             _workContextAccessor = workContextAccessor;
@@ -33,13 +33,15 @@ namespace Orchard.Widgets.Filters {
         }
 
         public ILogger Logger { get; set; }
+
         public Localizer T { get; private set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             // layers and widgets should only run on a full view rendering result
             var viewResult = filterContext.Result as ViewResult;
-            if (viewResult == null)
+            if (viewResult == null) {
                 return;
+            }
 
             var workContext = _workContextAccessor.GetContext(filterContext);
 
@@ -64,7 +66,7 @@ namespace Orchard.Widgets.Filters {
                         activeLayerIds.Add(activeLayer.ContentItem.Id);
                     }
                 }
-                catch(Exception e) {
+                catch (Exception e) {
                     Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
@@ -76,7 +78,8 @@ namespace Orchard.Widgets.Filters {
             var defaultCulture = workContext.CurrentSite.As<SiteSettingsPart>().SiteCulture;
             var currentCulture = workContext.CurrentCulture;
 
-            foreach (var widgetPart in widgetParts) {
+            foreach (var p in widgetParts) {
+                var widgetPart = p;
                 var commonPart = widgetPart.As<ICommonPart>();
                 if (commonPart == null || commonPart.Container == null) {
                     Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
@@ -104,11 +107,13 @@ namespace Orchard.Widgets.Filters {
                 }
 
                 var widgetShape = _orchardServices.ContentManager.BuildDisplay(widgetPart);
-                zones[widgetPart.Zone].Add(widgetShape, widgetPart.Position);
+
+                if (widgetShape != null) {
+                    zones[widgetPart.Zone].Add(widgetShape, widgetPart.Position);
+                }
             }
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-        }
+        public void OnResultExecuted(ResultExecutedContext filterContext) {}
     }
 }

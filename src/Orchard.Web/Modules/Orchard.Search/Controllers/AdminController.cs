@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Collections;
 using Orchard.ContentManagement;
@@ -35,18 +36,20 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index(PagerParameters pagerParameters, string searchText = "") {
+        public async Task<ActionResult> Index(PagerParameters pagerParameters, string searchText = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var searchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
+            var adminSearchSettingsPart = Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>();
+            var searchSettingsPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
             
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
             try {
 
-                searchHits = _searchService.Query(searchText, pager.Page, pager.PageSize,
-                                                  Services.WorkContext.CurrentSite.As<AdminSearchSettingsPart>().FilterCulture,
-                                                  searchSettingsPart.SearchIndex,
-                                                  searchSettingsPart.GetSearchFields(),
-                                                  searchHit => searchHit);
+                searchHits = _searchService.Query(
+                    searchText, pager.Page, pager.PageSize,
+                    searchSettingsPart.FilterCulture,
+                    adminSearchSettingsPart.SearchIndex,
+                    searchSettingsPart.GetSearchFields(adminSearchSettingsPart.SearchIndex),
+                    searchHit => searchHit);
             }
             catch (Exception exception) {
                 Logger.Error(T("Invalid search query: {0}", exception.Message).Text);
@@ -60,8 +63,8 @@ namespace Orchard.Search.Controllers {
                     searchHits.TotalItemCount--;
                     continue;
                 }
-
-                list.Add(Services.ContentManager.BuildDisplay(contentItem, "SummaryAdmin"));
+                var shape = await Services.ContentManager.BuildDisplayAsync(contentItem, "SummaryAdmin");
+                list.Add(shape);
             }
 
             var pagerShape = Services.New.Pager(pager).TotalItemCount(searchHits.TotalItemCount);

@@ -1,10 +1,8 @@
 ﻿using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Drivers {
-    [UsedImplicitly]
     public class DisableThemePartDriver : ContentPartDriver<DisableThemePart> {
         private readonly HttpContextBase _httpContext;
 

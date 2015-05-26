@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization;
@@ -27,14 +28,14 @@ namespace Orchard.Core.Settings.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index(string groupInfoId) {
+        public async Task<ActionResult> Index(string groupInfoId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
             dynamic model;
             var site = _siteService.GetSiteSettings();
             if (!string.IsNullOrWhiteSpace(groupInfoId)) {
-                model = Services.ContentManager.BuildEditor(site, groupInfoId);
+                model = await Services.ContentManager.BuildEditorAsync(site, groupInfoId);
 
                 if (model == null)
                     return HttpNotFound();
@@ -46,19 +47,19 @@ namespace Orchard.Core.Settings.Controllers {
                 model.GroupInfo = groupInfo;
             }
             else {
-                model = Services.ContentManager.BuildEditor(site);
+                model = await Services.ContentManager.BuildEditorAsync(site);
             }
 
             return View(model);
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(string groupInfoId) {
+        public async Task<ActionResult> IndexPOST(string groupInfoId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            var model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
+            var model = await Services.ContentManager.UpdateEditorAsync(site, this, groupInfoId);
 
             GroupInfo groupInfo = null;
 

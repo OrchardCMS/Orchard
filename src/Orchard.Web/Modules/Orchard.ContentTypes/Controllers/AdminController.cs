@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -10,6 +11,7 @@ using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.Settings;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Settings;
+using Orchard.Core.Scheduling.Models;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -139,7 +141,7 @@ namespace Orchard.ContentTypes.Controllers {
             return View(typeViewModel);
         }
 
-        public ActionResult EditPlacement(string id) {
+        public async Task<ActionResult> EditPlacement(string id) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
@@ -148,9 +150,11 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
+            var placements = await _placementService.GetEditorPlacement(id);
+
             var placementModel = new EditPlacementViewModel {
                 PlacementSettings = contentTypeDefinition.GetPlacement(PlacementType.Editor),
-                AllPlacements = _placementService.GetEditorPlacement(id).OrderBy(x => x.PlacementSettings.Position, new FlatPositionComparer()).ThenBy(x => x.PlacementSettings.ShapeType).ToList(), 
+                AllPlacements = placements.OrderBy(x => x.PlacementSettings.Position, new FlatPositionComparer()).ThenBy(x => x.PlacementSettings.ShapeType).ToList(), 
                 ContentTypeDefinition = contentTypeDefinition,
             };
 
@@ -159,7 +163,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("EditPlacement")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPlacementPost(string id, EditPlacementViewModel viewModel) {
+        public async Task<ActionResult> EditPlacementPost(string id, EditPlacementViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
@@ -168,7 +172,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return HttpNotFound();
 
-            var allPlacements = _placementService.GetEditorPlacement(id).ToList();
+            var allPlacements = await _placementService.GetEditorPlacement(id);
             var result = new List<PlacementSettings>(contentTypeDefinition.GetPlacement(PlacementType.Editor));
 
             contentTypeDefinition.ResetPlacement(PlacementType.Editor);

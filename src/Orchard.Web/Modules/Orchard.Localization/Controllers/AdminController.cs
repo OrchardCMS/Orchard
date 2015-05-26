@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -32,7 +33,7 @@ namespace Orchard.Localization.Controllers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Translate(int id, string to) {
+        public async Task<ActionResult> Translate(int id, string to) {
             var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (masterContentItem == null)
                 return HttpNotFound();
@@ -53,14 +54,14 @@ namespace Orchard.Localization.Controllers {
             var contentItemTranslation = _contentManager.New<LocalizationPart>(masterContentItem.ContentType);
             contentItemTranslation.MasterContentItem = masterContentItem;
 
-            var content = _contentManager.BuildEditor(contentItemTranslation);
+            var content = await _contentManager.BuildEditorAsync(contentItemTranslation);
             
             return View(content);
         }
 
         [HttpPost, ActionName("Translate")]
         [FormValueRequired("submit.Save")]
-        public ActionResult TranslatePOST(int id) {
+        public Task<ActionResult> TranslatePOST(int id) {
             return TranslatePOST(id, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
@@ -69,11 +70,11 @@ namespace Orchard.Localization.Controllers {
 
         [HttpPost, ActionName("Translate")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult TranslateAndPublishPOST(int id) {
+        public Task<ActionResult> TranslateAndPublishPOST(int id) {
             return TranslatePOST(id, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        public ActionResult TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
+        public async Task<ActionResult> TranslatePOST(int id, Action<ContentItem> conditionallyPublish) {
             var masterContentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (masterContentItem == null)
                 return HttpNotFound();
@@ -98,7 +99,7 @@ namespace Orchard.Localization.Controllers {
                     part.MasterContentItem = masterContentItem;
             });
 
-            var content = _contentManager.UpdateEditor(contentItemTranslation, this);
+            var content = await _contentManager.UpdateEditorAsync(contentItemTranslation, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

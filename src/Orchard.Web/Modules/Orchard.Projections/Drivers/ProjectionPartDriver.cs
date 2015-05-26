@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -103,7 +104,7 @@ namespace Orchard.Projections.Drivers {
 
                     return pagerShape;
                 }),
-                ContentShape("Parts_ProjectionPart_List", shape => {
+                ContentShapeAsync("Parts_ProjectionPart_List", async shape => {
 
                     // generates a link to the RSS feed for this term
                     var metaData = Services.ContentManager.GetItemMetadata(part.ContentItem);
@@ -129,9 +130,13 @@ namespace Orchard.Projections.Drivers {
 
                     // renders in a standard List shape if no specific layout could be found
                     if (layoutDescriptor == null) {
+
                         var list = Services.New.List();
-                        var contentShapes = contentItems.Select(item => Services.ContentManager.BuildDisplay(item, "Summary"));
-                        list.AddRange(contentShapes);
+                        var shapeTasks = contentItems.Select(item => Services.ContentManager.BuildDisplayAsync(item, "Summary")).ToList();
+
+                        await Task.WhenAll(shapeTasks);
+
+                        list.AddRange(shapeTasks.Select(task => task.Result));
 
                         return list;
                     }

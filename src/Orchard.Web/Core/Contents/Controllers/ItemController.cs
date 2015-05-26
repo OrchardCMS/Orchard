@@ -1,8 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc;
 using Orchard.Themes;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -22,12 +22,12 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
 
         // /Contents/Item/Display/72
-        public ActionResult Display(int? id, int? version) {
+        public async Task<ActionResult> Display(int? id, int? version) {
             if (id == null)
                 return HttpNotFound();
 
             if (version.HasValue)
-                return Preview(id, version);
+                return await Preview(id, version);
 
             var contentItem = _contentManager.Get(id.Value, VersionOptions.Published);
 
@@ -38,13 +38,13 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            var model = _contentManager.BuildDisplay(contentItem);
+            var model = await _contentManager.BuildDisplayAsync(contentItem);
             return View(model);
         }
 
         // /Contents/Item/Preview/72
         // /Contents/Item/Preview/72?version=5
-        public ActionResult Preview(int? id, int? version) {
+        public async Task<ActionResult> Preview(int? id, int? version) {
             if (id == null)
                 return HttpNotFound();
 
@@ -61,7 +61,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
             }
 
-            var model = _contentManager.BuildDisplay(contentItem);
+            var model = await _contentManager.BuildDisplayAsync(contentItem);
             return View(model);
         }
     }

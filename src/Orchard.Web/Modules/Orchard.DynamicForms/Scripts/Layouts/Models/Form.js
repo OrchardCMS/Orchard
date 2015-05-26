@@ -1,8 +1,8 @@
 ﻿var LayoutEditor;
 (function ($, LayoutEditor) {
 
-    LayoutEditor.Form = function (data, htmlId, htmlClass, htmlStyle, isTemplated, name, formBindingContentType, contentType, contentTypeLabel, contentTypeClass, hasEditor, children) {
-        LayoutEditor.Element.call(this, "Form", data, htmlId, htmlClass, htmlStyle, isTemplated);
+    LayoutEditor.Form = function (data, htmlId, htmlClass, htmlStyle, isTemplated, name, formBindingContentType, contentType, contentTypeLabel, contentTypeClass, hasEditor, rule, children) {
+        LayoutEditor.Element.call(this, "Form", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
         LayoutEditor.Container.call(this, ["Grid", "Content"], children);
 
         var self = this;
@@ -32,6 +32,10 @@
                 FormBindingContentType: this.formBindingContentType
             });
         }
+
+        this.allowSealedFocus = function () {
+            return this.children.length === 0;
+        };
 
         this.setChildren = function (children) {
             this.children = children;
@@ -67,6 +71,7 @@
             value.contentTypeLabel,
             value.contentTypeClass,
             value.hasEditor,
+            value.rule,
             LayoutEditor.childrenFrom(value.children));
     };
 

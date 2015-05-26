@@ -53,6 +53,7 @@ namespace Orchard.Projections.Providers.Layouts {
 
             IEnumerable<dynamic> shapes;
             if(context.LayoutRecord.Display == (int) LayoutRecord.Displays.Content) {
+                // TODO: call BuildDisplayAsync - would require change to LayoutDescriptor and usage
                 shapes = layoutComponentResults.Select(x => _contentManager.BuildDisplay(x.ContentItem, context.LayoutRecord.DisplayType));
             }
             else {

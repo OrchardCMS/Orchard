@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -43,7 +44,7 @@ namespace Orchard.Templates.Controllers {
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
-        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+        public async Task<ActionResult> List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var query = _contentManager.Query(VersionOptions.Latest, GetShapeTypes().Select(ctd => ctd.Name).ToArray());
 
@@ -79,7 +80,11 @@ namespace Orchard.Templates.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
             var list = Shape.List();
 
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            var shapeTasks = pageOfContentItems.Select(ci => _contentManager.BuildDisplayAsync(ci, "SummaryAdmin")).ToList();
+
+            await Task.WhenAll(shapeTasks);
+
+            list.AddRange(shapeTasks.Select(task => task.Result));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -110,7 +111,7 @@ namespace Orchard.CustomForms.Controllers {
             return Index(viewModel.Options, new PagerParameters());
         }
 
-        public ActionResult Item(int id, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Item(int id, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(Permissions.ManageForms, T("Not authorized to manage customForm")))
                 return new HttpUnauthorizedResult();
 
@@ -120,18 +121,21 @@ namespace Orchard.CustomForms.Controllers {
             if (formPart == null)
                 return HttpNotFound();
 
-            var submissions = Services.ContentManager
+            var submissionTasks = Services.ContentManager
                     .Query<CommonPart, CommonPartRecord>()
                     .ForVersion(VersionOptions.Latest)
                     .Where(x => x.Container.Id == id)
                     .OrderByDescending(x => x.CreatedUtc)
                     .Slice(pager.GetStartIndex(), pager.PageSize)
-                .Select(b => Services.ContentManager.BuildDisplay(b, "SummaryAdmin"));
+                .Select(b => Services.ContentManager.BuildDisplayAsync(b, "SummaryAdmin")).ToList();
 
             var shape = Services.New.CustomFormList();
             
             var list = Shape.List();
-            list.AddRange(submissions);
+
+            await Task.WhenAll(submissionTasks);
+
+            list.AddRange(submissionTasks.Select(task => task.Result));
             
             var totalItemCount = Services.ContentManager
                     .Query<CommonPart, CommonPartRecord>()

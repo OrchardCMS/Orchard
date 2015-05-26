@@ -55,6 +55,7 @@ namespace Orchard.Projections.Providers.Layouts {
 
             string emptyCell = Convert.ToString(context.State.EmptyCell);
 
+            // TODO: call BuildDisplayAsync - would require change to LayoutDescriptor and usage
             IEnumerable<dynamic> shapes =
                context.LayoutRecord.Display == (int)LayoutRecord.Displays.Content
                    ? layoutComponentResults.Select(x => _contentManager.BuildDisplay(x.ContentItem, context.LayoutRecord.DisplayType))

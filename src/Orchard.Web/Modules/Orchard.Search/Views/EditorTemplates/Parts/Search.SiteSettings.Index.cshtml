@@ -1,0 +1,19 @@
+﻿@using Orchard.Search.ViewModels
+@model SearchSettingsIndexViewModel
+@{
+    var indexOptions = Model.AvailableIndexes.Select(x => new SelectListItem { Text = x, Value = x, Selected = x == Model.SelectedIndex });
+}
+<fieldset>
+    <legend>@T("Search")</legend>
+    <div class="form-group">
+        <label>@T("Default Index")</label>
+        @if (Model.AvailableIndexes.Any()) {
+            @Html.LabelFor(m => m.SelectedIndex, T("Index"))
+            @Html.DropDownListFor(m => m.SelectedIndex, indexOptions, "")
+            @Html.Hint(T("Select which index to use by default in search queries."))
+        }
+        else {
+            <span class="hint">@T("There is currently no index to search from. Please update your index, and check if some indexable content exists.")</span>
+        }
+    </div>
+</fieldset>

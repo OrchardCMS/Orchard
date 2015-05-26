@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -90,7 +91,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            // See http://orchard.codeplex.com/workitem/17116
+            // See https://github.com/OrchardCMS/Orchard/issues/948
             if (menuItemEntries != null) {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
@@ -154,7 +155,7 @@ namespace Orchard.Core.Navigation.Controllers {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
 
-        public ActionResult CreateMenuItem(string id, int menuId, string returnUrl) {
+        public async Task<ActionResult> CreateMenuItem(string id, int menuId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -174,7 +175,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 // filter the content items for this specific menu
                 menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
                 
-                var model = Services.ContentManager.BuildEditor(menuPart);
+                var model = await Services.ContentManager.BuildEditorAsync(menuPart);
                 
                 return View(model);
             }
@@ -186,7 +187,7 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost, ActionName("CreateMenuItem")]
-        public ActionResult CreateMenuItemPost(string id, int menuId, string returnUrl) {
+        public async Task<ActionResult> CreateMenuItemPost(string id, int menuId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMenus, _menuService.GetMenu(menuId), T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
@@ -201,7 +202,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (menu == null)
                 return HttpNotFound();
             
-            var model = Services.ContentManager.UpdateEditor(menuPart, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(menuPart, this);
 
             menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu(menu));
             menuPart.Menu = menu;

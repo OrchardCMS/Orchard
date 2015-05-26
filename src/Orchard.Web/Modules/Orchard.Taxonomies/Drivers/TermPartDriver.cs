@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -47,7 +48,7 @@ namespace Orchard.Taxonomies.Drivers {
                     _feedManager.Register(part.Name, "rss", new RouteValueDictionary { { "term", part.Id } });
                     return null;
                 }),
-                ContentShape("Parts_TermPart", () => {
+                ContentShapeAsync("Parts_TermPart", async () => {
                     var pagerParameters = new PagerParameters();
                     var httpContext = _httpContextAccessor.Current();
                     if (httpContext != null) {
@@ -69,12 +70,18 @@ namespace Orchard.Taxonomies.Drivers {
                         : "Summary";
                     // asign Taxonomy and Term to the content item shape (Content) in order to provide 
                     // alternates when those content items are displayed when they are listed on a term
-                    var termContentItems = _taxonomyService.GetContentItems(part, pager.GetStartIndex(), pager.PageSize)
-                        .Select(c => _contentManager.BuildDisplay(c, childDisplayType).Taxonomy(taxonomy).Term(part));
+                    var termContentItemTasks = _taxonomyService.GetContentItems(part, pager.GetStartIndex(), pager.PageSize)
+                        .Select(async c => {
+                            var shape = await _contentManager.BuildDisplayAsync(c, childDisplayType);
+
+                            return shape.Taxonomy(taxonomy).Term(part);
+                        }).ToList();
+
+                    await Task.WhenAll(termContentItemTasks);
 
                     var list = shapeHelper.List();
 
-                    list.AddRange(termContentItems);
+                    list.AddRange(termContentItemTasks.Select(task => task.Result));
 
                     var pagerShape = pager.PageSize == 0
                         ? null

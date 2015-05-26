@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.ContentManagement;
@@ -8,7 +7,6 @@ using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Handlers {
-    [UsedImplicitly]
     public class CommentsPartHandler : ContentHandler {
         public CommentsPartHandler(
             IContentManager contentManager,
@@ -24,13 +22,13 @@ namespace Orchard.Comments.Handlers {
             });
 
             OnLoading<CommentsPart>((context, comments) => {
-                comments.CommentsField.Loader(list =>
+                comments.CommentsField.Loader(() =>
                     commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
                     .Where(x => x.Status == CommentStatus.Approved)
                     .OrderBy(x => x.Position)
                     .List().ToList());
 
-                comments.PendingCommentsField.Loader(list => 
+                comments.PendingCommentsField.Loader(() => 
                     commentService.GetCommentsForCommentedContent(context.ContentItem.Id)
                     .Where(x => x.Status == CommentStatus.Pending)
                     .List().ToList());

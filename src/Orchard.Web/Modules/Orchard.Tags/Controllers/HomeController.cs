@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
@@ -40,7 +41,7 @@ namespace Orchard.Tags.Controllers {
             return View(model);
         }
 
-        public ActionResult Search(string tagName, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Search(string tagName, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var tag = _tagService.GetTagByName(tagName);
@@ -50,10 +51,12 @@ namespace Orchard.Tags.Controllers {
             }
 
             var taggedItems = _tagService.GetTaggedContentItems(tag.Id, pager.GetStartIndex(), pager.PageSize).ToList();
-            var tagShapes = taggedItems.Select(item => _contentManager.BuildDisplay(item, "Summary"));
+            var tagShapeTasks = taggedItems.Select(item => _contentManager.BuildDisplayAsync(item, "Summary")).ToArray();
+
+            await Task.WhenAll(tagShapeTasks);
 
             var list = Shape.List();
-            list.AddRange(tagShapes);
+            list.AddRange(tagShapeTasks.Select(task => task.Result));
 
             var totalItemCount = _tagService.GetTaggedContentItemCount(tag.Id);
             var viewModel = new TagsSearchViewModel {

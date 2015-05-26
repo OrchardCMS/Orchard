@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Autofac;
@@ -33,7 +35,7 @@ namespace Orchard.ContentManagement {
         private readonly ICacheManager _cacheManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
-        private readonly Lazy<ISessionLocator> _sessionLocator; 
+        private readonly Lazy<ISessionLocator> _sessionLocator;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly Lazy<IEnumerable<IIdentityResolverSelector>> _identityResolverSelectors;
         private readonly Lazy<IEnumerable<ISqlStatementProvider>> _sqlStatementProviders;
@@ -691,19 +693,36 @@ namespace Orchard.ContentManagement {
         }
 
         public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
-            return _contentDisplay.Value.BuildDisplay(content, displayType, groupId);
+            return BuildDisplayAsync(content, displayType, groupId).Result;
         }
 
-        public dynamic BuildEditor(IContent content, string groupId = "") {
-            return _contentDisplay.Value.BuildEditor(content, groupId);
+        public dynamic BuildEditor(IContent content, string groupId = "")
+        {
+            return BuildEditorAsync(content, groupId).Result;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "")
+        {
+            return UpdateEditorAsync(content, updater, groupId).Result;
+        }
+
+        public Task<dynamic> BuildDisplayAsync(IContent content, string displayType = "", string groupId = "")
+        {
+            return _contentDisplay.Value.BuildDisplayAsync(content, displayType, groupId);
+        }
+
+        public Task<dynamic> BuildEditorAsync(IContent content, string groupId = "")
+        {
+            return _contentDisplay.Value.BuildEditorAsync(content, groupId);
+        }
+
+        public async Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupId = "")
+        {
             var context = new UpdateContentContext(content.ContentItem);
 
             Handlers.Invoke(handler => handler.Updating(context), Logger);
 
-            var result = _contentDisplay.Value.UpdateEditor(content, updater, groupId);
+            var result = await _contentDisplay.Value.UpdateEditorAsync(content, updater, groupId);
 
             Handlers.Invoke(handler => handler.Updated(context), Logger);
 

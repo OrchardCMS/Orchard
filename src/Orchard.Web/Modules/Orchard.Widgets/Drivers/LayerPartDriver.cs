@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,7 +10,6 @@ using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
 
-    [UsedImplicitly]
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
         private readonly IRuleManager _ruleManager;
         private readonly IWidgetsService _widgetsService;

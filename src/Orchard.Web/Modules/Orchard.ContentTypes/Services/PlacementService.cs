@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -64,7 +65,7 @@ namespace Orchard.ContentTypes.Services {
 
         public ILogger Logger { get; set; }
 
-        public IEnumerable<DriverResultPlacement> GetDisplayPlacement(string contentType) {
+        public async Task<IList<DriverResultPlacement>> GetDisplayPlacement(string contentType) {
             var content = _contentManager.New(contentType);
             const string actualDisplayType = "Detail";
 
@@ -80,26 +81,28 @@ namespace Orchard.ContentTypes.Services {
 
             var placementSettings = new List<DriverResultPlacement>();
 
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildDisplay(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
+            await Task.WhenAll(
+                _contentPartDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildDisplayAsync(context);
+                    if (result != null) {
+                        var placementTasks = ExtractPlacement(result, context).ToList();
+                        await Task.WhenAll(placementTasks);
+                        placementSettings.AddRange(placementTasks.Select(t => t.Result));
+                    }
+                }, Logger),
+                _contentFieldDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildDisplayShapeAsync(context);
+                    if (result != null) {
+                        var placementTasks = ExtractPlacement(result, context).ToList();
+                        await Task.WhenAll(placementTasks);
+                        placementSettings.AddRange(placementTasks.Select(t => t.Result));
+                    }
+                }, Logger));
 
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            foreach (var placementSetting in placementSettings) {
-                yield return placementSetting;    
-            }
+            return placementSettings;
         }
 
-        public IEnumerable<DriverResultPlacement> GetEditorPlacement(string contentType) {
+        public async Task<IList<DriverResultPlacement>> GetEditorPlacement(string contentType) {
             var content = _contentManager.New(contentType);
 
             dynamic itemShape = CreateItemShape("Content_Edit");
@@ -110,23 +113,25 @@ namespace Orchard.ContentTypes.Services {
 
             var placementSettings = new List<DriverResultPlacement>();
 
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
+            await Task.WhenAll(
+                _contentPartDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildEditorAsync(context);
+                    if (result != null) {
+                        var placementTasks = ExtractPlacement(result, context).ToList();
+                        await Task.WhenAll(placementTasks);
+                        placementSettings.AddRange(placementTasks.Select(t => t.Result));
+                    }
+                }, Logger),
+                _contentFieldDrivers.InvokeAsync(async driver => {
+                    var result = await driver.BuildEditorShapeAsync(context);
+                    if (result != null) {
+                        var placementTasks = ExtractPlacement(result, context).ToList();
+                        await Task.WhenAll(placementTasks);
+                        placementSettings.AddRange(placementTasks.Select(t => t.Result));
+                    }
+                }, Logger));
 
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ExtractPlacement(result, context));
-                }
-            }, Logger);
-
-            foreach (var placementSetting in placementSettings) {
-                yield return placementSetting;
-            }
+            return placementSettings;
         }
 
         public IEnumerable<string> GetZones() {
@@ -154,7 +159,8 @@ namespace Orchard.ContentTypes.Services {
             return zones;
         }
 
-        private IEnumerable<DriverResultPlacement> ExtractPlacement(DriverResult result, BuildShapeContext context) {
+        private IEnumerable<Task<DriverResultPlacement>> ExtractPlacement(DriverResult result, BuildShapeContext context)
+        {
             if (result is CombinedResult) {
                 foreach (var subResult in ((CombinedResult) result).GetResults()) {
                     foreach (var placement in ExtractPlacement(subResult, context)) {
@@ -163,54 +169,56 @@ namespace Orchard.ContentTypes.Services {
                 }
             }
             else if (result is ContentShapeResult) {
-                var contentShapeResult = (ContentShapeResult) result;
-
-                var placement = context.FindPlacement(
-                    contentShapeResult.GetShapeType(),
-                    contentShapeResult.GetDifferentiator(),
-                    contentShapeResult.GetLocation()
-                    );
-
-                string zone = placement.Location;
-                string position = String.Empty;
-
-                // if no placement is found, it's hidden, e.g., no placement was found for the specific ContentType/DisplayType
-                if (placement.Location != null) {
-                    var delimiterIndex = placement.Location.IndexOf(':');
-                    if (delimiterIndex >= 0) {
-                        zone = placement.Location.Substring(0, delimiterIndex);
-                        position = placement.Location.Substring(delimiterIndex + 1);
-                    }
-                }
-
-                var content = _contentManager.New(context.ContentItem.ContentType);
-
-                dynamic itemShape = CreateItemShape("Content_Edit");
-                itemShape.ContentItem = content;
-
-                if(context is BuildDisplayContext) {
-                    var newContext = new BuildDisplayContext(itemShape, content, "Detail", "", context.New);
-                    BindPlacement(newContext, "Detail", "Content");
-                    contentShapeResult.Apply(newContext);
-                }
-                else {
-                    var newContext = new BuildEditorContext(itemShape, content, "", context.New);
-                    BindPlacement(newContext, null, "Content");
-                    contentShapeResult.Apply(newContext);
-                }
-
-
-                yield return new DriverResultPlacement {
-                    Shape = itemShape.Content,
-                    ShapeResult = contentShapeResult,
-                    PlacementSettings = new PlacementSettings {
-                        ShapeType = contentShapeResult.GetShapeType(),
-                        Zone = zone,
-                        Position = position,
-                        Differentiator = contentShapeResult.GetDifferentiator() ?? String.Empty
-                    }
-                };
+                yield return GetDriverResultPlacement(context, (ContentShapeResult) result);
             }
+        }
+
+        private async Task<DriverResultPlacement> GetDriverResultPlacement(BuildShapeContext context, ContentShapeResult contentShapeResult) {
+            var placement = context.FindPlacement(
+                contentShapeResult.GetShapeType(),
+                contentShapeResult.GetDifferentiator(),
+                contentShapeResult.GetLocation()
+                );
+
+            string zone = placement.Location;
+            string position = String.Empty;
+
+            // if no placement is found, it's hidden, e.g., no placement was found for the specific ContentType/DisplayType
+            if (placement.Location != null) {
+                var delimiterIndex = placement.Location.IndexOf(':');
+                if (delimiterIndex >= 0) {
+                    zone = placement.Location.Substring(0, delimiterIndex);
+                    position = placement.Location.Substring(delimiterIndex + 1);
+                }
+            }
+
+            var content = _contentManager.New(context.ContentItem.ContentType);
+
+            dynamic itemShape = CreateItemShape("Content_Edit");
+            itemShape.ContentItem = content;
+
+            if (context is BuildDisplayContext) {
+                var newContext = new BuildDisplayContext(itemShape, content, "Detail", "", context.New);
+                BindPlacement(newContext, "Detail", "Content");
+                await contentShapeResult.ApplyAsync(newContext);
+            }
+            else {
+                var newContext = new BuildEditorContext(itemShape, content, "", context.New);
+                BindPlacement(newContext, null, "Content");
+                await contentShapeResult.ApplyAsync(newContext);
+            }
+
+
+            return new DriverResultPlacement {
+                Shape = itemShape.Content,
+                ShapeResult = contentShapeResult,
+                PlacementSettings = new PlacementSettings {
+                    ShapeType = contentShapeResult.GetShapeType(),
+                    Zone = zone,
+                    Position = position,
+                    Differentiator = contentShapeResult.GetDifferentiator() ?? String.Empty
+                }
+            };
         }
 
         private dynamic CreateItemShape(string actualShapeType) {

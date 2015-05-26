@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Orchard.AntiSpam.Models;
 using Orchard.AntiSpam.Services;
 using Orchard.AntiSpam.Settings;
@@ -7,7 +8,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Orchard.AntiSpam.Drivers {
-    public class SpamFilterPartDriver : ContentPartDriver<SpamFilterPart> {
+    public class SpamFilterPartDriver : AsyncContentPartDriver<SpamFilterPart> {
         private readonly ISpamService _spamService;
         private const string TemplateName = "Parts/SpamFilter";
 
@@ -24,21 +25,21 @@ namespace Orchard.AntiSpam.Drivers {
             get { return "SpamFilter"; }
         }
 
-        protected override DriverResult Editor(SpamFilterPart part, ContentManagement.IUpdateModel updater, dynamic shapeHelper) {
-            part.Status = _spamService.CheckForSpam(part);
+        protected override async Task<DriverResult> EditorAsync(SpamFilterPart part, ContentManagement.IUpdateModel updater, dynamic shapeHelper) {
+            part.Status = await _spamService.CheckForSpam(part);
 
             if (part.Settings.GetModel<SpamFilterPartSettings>().DeleteSpam) {
                 updater.AddModelError("Spam", T("Spam detected."));
             }
 
-            return Editor(part, shapeHelper);
+            return EditorAsync(part, shapeHelper);
         }
 
-        protected override DriverResult Display(SpamFilterPart part, string displayType, dynamic shapeHelper) {
-            return Combined(
+        protected override Task<DriverResult> DisplayAsync(SpamFilterPart part, string displayType, dynamic shapeHelper)
+        {
+            return Task.FromResult<DriverResult>(Combined(
                 ContentShape("Parts_SpamFilter_Metadata_SummaryAdmin", () => shapeHelper.Parts_SpamFilter_Metadata_SummaryAdmin()),
-                ContentShape("Parts_SpamFilter_Metadata_Actions", () => shapeHelper.Parts_SpamFilter_Metadata_Actions())
-                );
+                ContentShape("Parts_SpamFilter_Metadata_Actions", () => shapeHelper.Parts_SpamFilter_Metadata_Actions())));
         }
 
         protected override void Importing(SpamFilterPart part, ImportContentContext context) {

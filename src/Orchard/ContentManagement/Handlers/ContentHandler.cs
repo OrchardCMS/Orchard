@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -188,11 +189,11 @@ namespace Orchard.ContentManagement.Handlers {
                 if (OnRemoved != null) OnRemoved(context, instance);
             }
             protected override void Indexing(IndexContentContext context, TPart instance) {
-                if ( OnIndexing != null )
+                if (OnIndexing != null)
                     OnIndexing(context, instance);
             }
             protected override void Indexed(IndexContentContext context, TPart instance) {
-                if ( OnIndexed != null )
+                if (OnIndexed != null)
                     OnIndexed(context, instance);
             }
             protected override void Restoring(RestoreContentContext context, TPart instance) {
@@ -255,7 +256,7 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.Initialized(context);
             Initialized(context);
         }
-        
+
         void IContentHandler.Creating(CreateContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Creating(context);
@@ -341,13 +342,13 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         void IContentHandler.Indexing(IndexContentContext context) {
-            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Indexing(context);
             Indexing(context);
         }
 
         void IContentHandler.Indexed(IndexContentContext context) {
-            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Indexed(context);
             Indexed(context);
         }
@@ -397,20 +398,23 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.GetContentItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentHandler.BuildDisplay(BuildDisplayContext context) {
+
+        Task IContentHandler.BuildDisplayAsync(BuildDisplayContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildDisplayShape(context);
-            BuildDisplayShape(context);
+            return BuildDisplayShapeAsync(context);
         }
-        void IContentHandler.BuildEditor(BuildEditorContext context) {
+
+        Task IContentHandler.BuildEditorAsync(BuildEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.BuildEditorShape(context);
-            BuildEditorShape(context);
+            return BuildEditorShapeAsync(context);
         }
-        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
+
+        Task IContentHandler.UpdateEditorAsync(UpdateEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.UpdateEditorShape(context);
-            UpdateEditorShape(context);
+            return UpdateEditorShapeAsync(context);
         }
 
         protected virtual void Activating(ActivatingContentContext context) { }
@@ -453,8 +457,27 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Destroyed(DestroyContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
+
         protected virtual void BuildDisplayShape(BuildDisplayContext context) { }
         protected virtual void BuildEditorShape(BuildEditorContext context) { }
         protected virtual void UpdateEditorShape(UpdateEditorContext context) { }
+
+        protected virtual Task BuildDisplayShapeAsync(BuildDisplayContext context) {
+            // do this synchronously for backwards compatibility
+            BuildDisplayShape(context);
+            return Task.Delay(0);
+        }
+
+        protected virtual Task BuildEditorShapeAsync(BuildEditorContext context) {
+            // do this synchronously for backwards compatibility
+            BuildEditorShape(context);
+            return Task.Delay(0);
+        }
+
+        protected virtual Task UpdateEditorShapeAsync(UpdateEditorContext context) {
+            // do this synchronously for backwards compatibility
+            UpdateEditorShape(context); 
+            return Task.Delay(0);
+        }
     }
 }

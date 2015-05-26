@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -22,12 +23,12 @@ namespace Orchard.Comments.Controllers {
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult Create(string returnUrl) {
+        public async Task<ActionResult> Create(string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                 return this.RedirectLocal(returnUrl, "~/");
 
             var comment = Services.ContentManager.New<CommentPart>("Comment");
-            var editorShape = Services.ContentManager.UpdateEditor(comment, this);
+            var editorShape = await Services.ContentManager.UpdateEditorAsync(comment, this);
 
             if (!ModelState.IsValidField("Comments.Author")) {
                 Services.Notifier.Error(T("Name is mandatory and must have less than 255 chars"));

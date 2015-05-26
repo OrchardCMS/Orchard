@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -58,6 +59,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public dynamic Display { get { return _display; } }
+
         // review: (heskew) is it going to be a problem?
         public new dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get; set; }
@@ -127,24 +129,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void SetMeta(string name = null, string content = null, string httpEquiv = null, string charset = null) {
-            var metaEntry = new MetaEntry();
-            
-            if (!String.IsNullOrEmpty(name)) {
-                metaEntry.Name = name;
-            }
-
-            if (!String.IsNullOrEmpty(content)) {
-                metaEntry.Content = content;
-            }
-
-            if (!String.IsNullOrEmpty(httpEquiv)) {
-                metaEntry.HttpEquiv = httpEquiv;
-            }
-
-            if (!String.IsNullOrEmpty(charset)) {
-                metaEntry.Charset = charset;
-            }
-
+            var metaEntry = new MetaEntry(name, content, httpEquiv, charset);
             SetMeta(metaEntry);
         }
 

@@ -44,7 +44,8 @@
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <NoWarn>0436</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -159,6 +160,9 @@
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
     <Compile Include="ContentManagement\Handlers\DestroyContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\RestoreContentContext.cs" />
+    <Compile Include="ContentManagement\Drivers\AsyncContentPartDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\AsyncContentShapeResult.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentPartDriverBase.cs" />
     <Compile Include="ContentManagement\InfosetHelper.cs" />
     <Compile Include="ContentManagement\XmlHelper.cs" />
     <Compile Include="ContentManagement\Handlers\TemplateFilterForPart.cs" />
@@ -932,7 +936,6 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
@@ -988,7 +991,6 @@
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
-    <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
   </ItemGroup>
   <ItemGroup>

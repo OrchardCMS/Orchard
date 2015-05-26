@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using Orchard.ContentManagement.Handlers;
@@ -38,7 +39,7 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
+        public async Task<dynamic> BuildDisplayAsync(IContent content, string displayType, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -57,11 +58,12 @@ namespace Orchard.ContentManagement {
 
             BindPlacement(context, actualDisplayType, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
+            await _handlers.Value.InvokeAsync(handler => handler.BuildDisplayAsync(context), Logger);
+
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content, string groupId) {
+        public async Task<dynamic> BuildEditorAsync(IContent content, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -78,13 +80,13 @@ namespace Orchard.ContentManagement {
             var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
+            await _handlers.Value.InvokeAsync(handler => handler.BuildEditorAsync(context), Logger);
 
-
+            
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
+        public async Task<dynamic> UpdateEditorAsync(IContent content, IUpdateModel updater, string groupInfoId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -106,7 +108,8 @@ namespace Orchard.ContentManagement {
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory, shapeTable, GetPath());
             BindPlacement(context, null, stereotype);
 
-            _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
+            // call the async version, the implementation may be synchronous for backwards compatibility
+            await _handlers.Value.InvokeAsync(handler => handler.UpdateEditorAsync(context), Logger);
 
             return context.Shape;
         }

@@ -1,8 +1,8 @@
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.Data;
@@ -46,7 +46,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Create() {
+        public async Task<ActionResult> Create() {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
@@ -54,19 +54,19 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
+            var model = await Services.ContentManager.BuildEditorAsync(blog);
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST() {
+        public async Task<ActionResult> CreatePOST() {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
             var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditor(blog, this);
+            var model = await _contentManager.UpdateEditorAsync(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -77,7 +77,7 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogForAdmin(blog));
         }
 
-        public ActionResult Edit(int blogId) {
+        public async Task<ActionResult> Edit(int blogId) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
 
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Not allowed to edit blog")))
@@ -86,7 +86,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
+            var model = await Services.ContentManager.BuildEditorAsync(blog);
             return View(model);
         }
 
@@ -109,7 +109,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(int blogId) {
+        public async Task<ActionResult> EditPOST(int blogId) {
             var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
 
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Couldn't edit blog")))
@@ -118,7 +118,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(blog, this);
+            var model = await Services.ContentManager.UpdateEditorAsync(blog, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
@@ -146,22 +146,28 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogsForAdmin());
         }
 
-        public ActionResult List() {
+        public async Task<ActionResult> List() {
             var list = Services.New.List();
-            list.AddRange(_blogService.Get(VersionOptions.Latest)
-                .Where(x => Services.Authorizer.Authorize(Permissions.MetaListOwnBlogs, x))
-                .Select(b => {
-                            var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
-                            blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
-                            return blog;
-                        }));
+
+            var blogs = _blogService.Get(VersionOptions.Latest)
+                .Where(x => Services.Authorizer.Authorize(Permissions.MetaListOwnBlogs, x));
+
+            var shapeTasks = blogs.Select(async b => {
+                var blog = await Services.ContentManager.BuildDisplayAsync(b, "SummaryAdmin");
+                blog.TotalPostCount = _blogPostService.PostCount(b, VersionOptions.Latest);
+                return blog;
+            }).ToList();
+
+            await Task.WhenAll(shapeTasks);
+
+            list.AddRange(shapeTasks.Select(task => task.Result));
 
             var viewModel = Services.New.ViewModel()
                 .ContentItems(list);
             return View(viewModel);
         }
 
-        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Item(int blogId, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             BlogPart blogPart = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
@@ -169,12 +175,14 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
-            var blogPostsShapes = blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")).ToArray();
-
-            var blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
-
+            var blogPostsShapeTasks = blogPosts.Select(bp => _contentManager.BuildDisplayAsync(bp, "SummaryAdmin")).ToList();
             var list = Shape.List();
-            list.AddRange(blogPostsShapes);
+            var blogTask =  Services.ContentManager.BuildDisplayAsync(blogPart, "DetailAdmin");
+
+            await Task.WhenAll(blogPostsShapeTasks.Concat(new Task[] { blogTask }));
+
+            list.AddRange(blogPostsShapeTasks.Select(task => task.Result));
+            var blog = blogTask.Result;
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list), "5");
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);

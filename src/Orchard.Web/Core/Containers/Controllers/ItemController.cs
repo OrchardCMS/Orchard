@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -42,7 +43,7 @@ namespace Orchard.Core.Containers.Controllers {
 
         public Localizer T { get; set; }
         [Themed]
-        public ActionResult Display(int id, PagerParameters pagerParameters) {
+        public async Task<ActionResult> Display(int id, PagerParameters pagerParameters) {
             var container = _contentManager
                 .Get(id, VersionOptions.Published)
                 .As<ContainerPart>();
@@ -57,7 +58,7 @@ namespace Orchard.Core.Containers.Controllers {
 
             // TODO: (PH) Find a way to apply PagerParameters via a driver so we can lose this controller
             container.PagerParameters = pagerParameters;
-            var model = _contentManager.BuildDisplay(container);
+            var model = await _contentManager.BuildDisplayAsync(container);
 
             return new ShapeResult(this, model);
         }
