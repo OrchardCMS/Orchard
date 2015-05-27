@@ -35,12 +35,13 @@ namespace Orchard.JobsQueue.Services {
             // prevent two threads on the same machine to process the message queue
             if (_rwl.TryEnterWriteLock(0)) {
                 try {
-                    _taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5));
-                    IEnumerable<QueuedJobRecord> messages;
+                    if (_taskLeaseService.Value.Acquire("JobsQueueProcessor", _clock.Value.UtcNow.AddMinutes(5)) != null) {
+                        IEnumerable<QueuedJobRecord> messages;
 
-                    while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
-                        foreach (var message in messages) {
-                            ProcessMessage(message);
+                        while ((messages = _jobsQueueManager.Value.GetJobs(0, 10).ToArray()).Any()) {
+                            foreach (var message in messages) {
+                                ProcessMessage(message);
+                            }
                         }
                     }
                 }
