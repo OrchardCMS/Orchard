@@ -22,18 +22,12 @@ namespace Orchard.Mvc {
             var httpContext = HttpContext.Current;
             if (httpContext == null) {
                 return null;
-            }
+        }
 
-            try {
-                // The "Request" property throws at application startup on IIS integrated pipeline mode.
-                if (httpContext.Request == null) {
-                    return null;
-                }
-            }
-            catch (Exception) {
-                return null;
-            }
-            return httpContext;
+        public HttpContextBase Current() {
+            // TODO: HttpContextBase is not registred in the "shell" lifetime scope, so resolving it will cause an exception.
+            
+            return HttpContext.Current != null ? new HttpContextWrapper(HttpContext.Current) : null;
         }
     }
 }
