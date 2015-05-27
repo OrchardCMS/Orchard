@@ -30,9 +30,4 @@ namespace Orchard {
             HttpContext.Current = CreateHttpContext();
         }
     }
-
-    public interface IBackgroundHttpContextFactory : IDependency {
-        HttpContext CreateHttpContext();
-        void InitializeHttpContext();
-    }
 }

@@ -148,6 +148,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundHttpContextFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
@@ -645,7 +646,7 @@
     <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
-    <Compile Include="BackgroundHttpContext.cs" />
+    <Compile Include="IBackgroundHttpContextFactory.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
