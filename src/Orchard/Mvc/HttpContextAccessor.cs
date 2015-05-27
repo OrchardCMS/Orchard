@@ -10,9 +10,9 @@ namespace Orchard.Mvc {
         }
 
         public HttpContextBase Current() {
-            HttpContextBase httpContextBase;
-            _context.TryResolve(out httpContextBase);
-            return httpContextBase;
+            // TODO: HttpContextBase is not registred in the "shell" lifetime scope, so resolving it will cause an exception.
+            
+            return HttpContext.Current != null ? new HttpContextWrapper(HttpContext.Current) : null;
         }
     }
 }
