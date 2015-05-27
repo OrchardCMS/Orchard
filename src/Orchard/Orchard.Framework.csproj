@@ -149,6 +149,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StaticHttpContextScope.cs" />
+    <Compile Include="StaticHttpContextScopeFactory.cs" />
     <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
@@ -317,7 +319,7 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
-    <Compile Include="Mvc\Extensions\HttpContextBaseExtensions.cs" />
+    <Compile Include="Mvc\Extensions\HttpContextExtensions.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
     <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
@@ -647,6 +649,7 @@
     <Compile Include="WebApi\Filters\OrchardApiActionFilterDispatcher.cs" />
     <Compile Include="WebApi\Routes\IHttpRouteProvider.cs" />
     <Compile Include="WebApi\Routes\StandardExtensionHttpRouteProvider.cs" />
+    <Compile Include="IStaticHttpContextScopeFactory.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />

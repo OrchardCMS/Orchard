@@ -1,18 +1,39 @@
-﻿using System.Web;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Web;
 using Autofac;
+using Orchard.Mvc.Extensions;
+using Orchard.Settings;
 
 namespace Orchard.Mvc {
     public class HttpContextAccessor : IHttpContextAccessor {
-        private readonly IComponentContext _context;
+        readonly object _contextKey = new object();
 
-        public HttpContextAccessor(IComponentContext context) {
-            _context = context;
-        }
+        [ThreadStatic]
+        static ConcurrentDictionary<object, HttpContextBase> _threadStaticContexts;
 
         public HttpContextBase Current() {
-            // TODO: HttpContextBase is not registred in the "shell" lifetime scope, so resolving it will cause an exception.
-            
-            return HttpContext.Current != null ? new HttpContextWrapper(HttpContext.Current) : null;
+            if (!HttpContext.Current.IsBackgroundContext())
+                return new HttpContextWrapper(HttpContext.Current);
+
+            return GetContext();
+        }
+
+        public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
+            return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
+                return lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
+            });
+        }
+
+        private HttpContextBase GetContext() {
+            HttpContextBase context;
+            return ThreadStaticContexts.TryGetValue(_contextKey, out context) ? context : null;
+        }
+
+        static ConcurrentDictionary<object, HttpContextBase> ThreadStaticContexts {
+            get {
+                return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, HttpContextBase>());
+            }
         }
     }
 }
