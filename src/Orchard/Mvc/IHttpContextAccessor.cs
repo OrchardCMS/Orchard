@@ -1,8 +1,10 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
+using Autofac;
 
 namespace Orchard.Mvc {
     public interface IHttpContextAccessor {
         HttpContextBase Current();
-        void Set(HttpContextBase httpContext);
+        HttpContextBase CreateContext(ILifetimeScope lifetimeScope);
     }
 }

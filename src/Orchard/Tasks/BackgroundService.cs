@@ -22,9 +22,7 @@ namespace Orchard.Tasks {
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
             ITransactionManager transactionManager, 
-            ShellSettings shellSettings,
-            IContentManager contentManager,
-            IBackgroundHttpContextFactory backgroundHttpContextFactory) {
+            ShellSettings shellSettings) {
 
             _tasks = tasks;
             _transactionManager = transactionManager;

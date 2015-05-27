@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Autofac;
 using Orchard.Mvc;
 
 namespace Orchard.Tests.Stubs {
@@ -13,6 +14,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public HttpContextBase Current() {
+            return _httpContext;
+        }
+
+        public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
             return _httpContext;
         }
 

@@ -18,16 +18,31 @@ namespace Orchard.Mvc {
             return httpContext == null || httpContext.Items.Contains(BackgroundHttpContextFactory.IsBackgroundHttpContextKey);
         }
 
-        private static HttpContext GetStaticProperty() {
-            var httpContext = HttpContext.Current;
-            if (httpContext == null) {
-                return null;
-        }
+        [ThreadStatic]
+        static ConcurrentDictionary<object, HttpContextBase> _threadStaticContexts;
 
         public HttpContextBase Current() {
-            // TODO: HttpContextBase is not registred in the "shell" lifetime scope, so resolving it will cause an exception.
+            if (!HttpContext.Current.IsBackgroundContext())
+                return new HttpContextWrapper(HttpContext.Current);
+
+            return GetContext();
+        }
+
+        public HttpContextBase CreateContext(ILifetimeScope lifetimeScope) {
+            return new MvcModule.HttpContextPlaceholder(_threadStaticContexts, _contextKey, () => {
+                return lifetimeScope.Resolve<ISiteService>().GetSiteSettings().BaseUrl;
+            });
+        }
+
+        private HttpContextBase GetContext() {
+            HttpContextBase context;
+            return ThreadStaticContexts.TryGetValue(_contextKey, out context) ? context : null;
+        }
             
-            return HttpContext.Current != null ? new HttpContextWrapper(HttpContext.Current) : null;
+        static ConcurrentDictionary<object, HttpContextBase> ThreadStaticContexts {
+            get {
+                return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, HttpContextBase>());
+            }
         }
     }
 }
