@@ -41,7 +41,7 @@ namespace Orchard.Taxonomies.StandardQueries {
             var containerId = (int)termParthId.ConvertTo(typeof(int));
             var container = _contentManager.Get<TermPart>(containerId);
 
-            if(container == null){
+            if (container == null) {
                 return;
             }
 

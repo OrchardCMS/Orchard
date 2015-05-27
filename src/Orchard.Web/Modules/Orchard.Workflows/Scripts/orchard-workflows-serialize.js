@@ -26,7 +26,7 @@ var saveLocal = function (localId) {
         workflow.Connections.push({
             SourceId: connection.sourceId,
             TargetId: connection.targetId,
-            SourceEndpoint: connection.endpoints[0].outcome,
+            SourceEndpoint: connection.endpoints[0].outcome.Id,
             //targetEndpoint: connection.targetEndpoint
         });
     }

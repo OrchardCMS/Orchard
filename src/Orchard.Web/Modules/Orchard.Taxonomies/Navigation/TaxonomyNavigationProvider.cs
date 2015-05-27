@@ -46,7 +46,7 @@ namespace Orchard.Taxonomies.Navigation {
                     var rootLevel = rootTerm != null
                         ? rootTerm.GetLevels()
                         : 0;
-                    
+
                     var menuPosition = item.Position;
                     var rootPath = rootTerm == null || taxonomyNavigationPart.DisplayRootTerm ? "" : rootTerm.FullPath;
 

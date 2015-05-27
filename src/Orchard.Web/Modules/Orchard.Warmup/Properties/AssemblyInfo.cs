@@ -10,7 +10,7 @@ using System.Security;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("Orchard")]
-[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
+[assembly: AssemblyCopyright("Copyright © .NET Foundation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,6 +34,6 @@ using System.Security;
 
 
 // CHANGE ON THIS VERSION NEEDS TO BE APPLIED ON WEB.CONFIG TOO 
-[assembly: AssemblyVersion("1.8.1")]
-[assembly: AssemblyFileVersion("1.8.1")]
+[assembly: AssemblyVersion("1.9.0")]
+[assembly: AssemblyFileVersion("1.9.0")]
 

@@ -14,7 +14,7 @@
 <h1>@Html.TitleForPage(T("Manage Workflow Definitions").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Create new Workflow Definition").ToString(), "Create", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Html.ActionLink(T("Create new Workflow Definition").Text, "EditProperties", new { Area = "Orchard.Workflows", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -65,9 +65,9 @@
                         &nbsp;
                     </td>
                     <td>
-                        @* TODO: As WD is not a Content Item, an EditProperties action is necessary @Html.ActionLink(T("Properties").ToString(), "Edit", new { Area = "Contents", id = entry.WokflowDefinitionId, returnurl = HttpContext.Current.Request.RawUrl }) |*@
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { id = entry.WokflowDefinitionId }) |
-                        @Html.ActionLink(T("Delete").ToString(), "Delete", new { id = entry.WokflowDefinitionId }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        @Html.ActionLink(T("Properties").Text, "EditProperties", new { Id = entry.WokflowDefinitionId, ReturnUrl = HttpContext.Current.Request.RawUrl }) |
+                        @Html.ActionLink(T("Edit").Text, "Edit", new { Id = entry.WokflowDefinitionId }) |
+                        @Html.ActionLink(T("Delete").Text, "Delete", new { Id = entry.WokflowDefinitionId }, new { ItemProp = "RemoveUrl UnsafeUrl" })
                     </td>
                 </tr>
                 index++;

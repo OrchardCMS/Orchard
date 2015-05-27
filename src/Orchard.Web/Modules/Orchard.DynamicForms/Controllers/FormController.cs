@@ -7,6 +7,7 @@ using Orchard.Layouts.Services;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 using IController = Orchard.DynamicForms.Services.IController;
 
 namespace Orchard.DynamicForms.Controllers {
@@ -34,7 +35,7 @@ namespace Orchard.DynamicForms.Controllers {
         public ActionResult Submit(int contentId, string formName) {
             var layoutPart = _layoutManager.GetLayout(contentId);
             var form = _formService.FindForm(layoutPart, formName);
-            var urlReferrer = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "~/";
+            var urlReferrer = Request.UrlReferrer != null && Request.IsLocalUrl(Request.UrlReferrer.ToString()) ? Request.UrlReferrer.ToString() : "~/";
 
             if (form == null) {
                 Logger.Warning("The specified form \"{0}\" could not be found.", formName);

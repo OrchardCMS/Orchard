@@ -47,7 +47,7 @@ namespace Orchard.Email.Handlers {
                 part.Store(x => x.Password, encryptedPassword);
             });
 
-            part.AddressPlaceholderField.Loader(value => (string)((dynamic)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
+            part.AddressPlaceholderField.Loader(() => (string)((dynamic)ConfigurationManager.GetSection("system.net/mailSettings/smtp")).From);
         }
 
         public Localizer T { get; set; }

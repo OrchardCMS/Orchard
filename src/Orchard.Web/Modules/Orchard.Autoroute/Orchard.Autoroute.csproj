@@ -124,9 +124,7 @@
     <Compile Include="Settings\AutorouteSettings.cs" />
     <Compile Include="ViewModels\AutoroutePartEditViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Placement.info">
       <SubType>Designer</SubType>

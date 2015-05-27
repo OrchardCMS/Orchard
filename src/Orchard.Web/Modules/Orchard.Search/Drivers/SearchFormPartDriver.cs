@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Indexing;
 using Orchard.Search.Models;
 using Orchard.Search.ViewModels;
@@ -44,6 +45,16 @@ namespace Orchard.Search.Drivers {
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SearchForm", Model: viewModel, Prefix: Prefix);
             });
+        }
+
+        protected override void Exporting(SearchFormPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OverrideIndex", part.OverrideIndex);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SelectedIndex", part.SelectedIndex);
+        }
+
+        protected override void Importing(SearchFormPart part, ImportContentContext context) {
+            context.ImportAttribute(part.PartDefinition.Name, "OverrideIndex", x => part.OverrideIndex = XmlHelper.Parse<bool>(x));
+            context.ImportAttribute(part.PartDefinition.Name, "SelectedIndex", x => part.SelectedIndex = x);
         }
     }
 }

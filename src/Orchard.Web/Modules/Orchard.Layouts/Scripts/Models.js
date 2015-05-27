@@ -193,6 +193,10 @@ var LayoutEditor;
                 this.editor.dropTargetElement = null;
         };
 
+        this.canDelete = function () {
+            return !!this.parent;
+        };
+
         this.delete = function () {
             if (!!this.parent)
                 this.parent.deleteChild(this);
@@ -396,7 +400,9 @@ var LayoutEditor;
 
     LayoutEditor.Canvas = function (data, htmlId, htmlClass, htmlStyle, isTemplated, rule, children) {
         LayoutEditor.Element.call(this, "Canvas", data, htmlId, htmlClass, htmlStyle, isTemplated, rule);
-        LayoutEditor.Container.call(this, ["Grid", "Content"], children);
+        LayoutEditor.Container.call(this, ["Canvas", "Grid", "Content"], children);
+
+        this.isContainable = true;
 
         this.toObject = function () {
             var result = this.elementToObject();

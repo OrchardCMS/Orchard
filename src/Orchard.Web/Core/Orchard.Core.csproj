@@ -117,7 +117,6 @@
     <Compile Include="Containers\ListViews\DefaultListView.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
-    <Compile Include="Containers\Models\OrderByDirection.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
@@ -354,7 +353,7 @@
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

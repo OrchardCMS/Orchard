@@ -8,8 +8,19 @@ namespace Orchard.DynamicForms.Bindings {
         public void Describe(BindingDescribeContext context) {
             context.For<EnumerationField>()
                 .Binding("SelectedValues", (contentItem, field, s) => {
-                    var items = (s ?? "").Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries);
-                    field.SelectedValues = items;
+                    if (String.IsNullOrWhiteSpace(s)) {
+                        field.Value = "";
+                        return;
+                    }
+
+                    var separators = new[] {',', ';'};
+                    var hasMultipleValues = s.IndexOfAny(separators) >= 0;
+
+                    if (hasMultipleValues)
+                        field.SelectedValues = s.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                    else {
+                        field.Value = s;
+                    }
                 });
         }
     }

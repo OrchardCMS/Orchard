@@ -317,7 +317,9 @@
     <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
     <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
+    <Compile Include="Mvc\Extensions\HttpContextBaseExtensions.cs" />
     <Compile Include="Mvc\FormValueRequiredAttribute.cs" />
+    <Compile Include="Mvc\HttpContextAccessor.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
@@ -933,7 +935,6 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
