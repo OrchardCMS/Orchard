@@ -102,6 +102,7 @@
     <Compile Include="Handlers\CacheSettingsPartHandler.cs" />
     <Compile Include="Handlers\DisplayedContentItemHandler.cs" />
     <Compile Include="DatabaseOutputCacheMigrations.cs" />
+    <Compile Include="Helpers\OutputCacheAttributeExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\CacheItem.cs" />
     <Compile Include="Models\CacheItemRecord.cs" />
