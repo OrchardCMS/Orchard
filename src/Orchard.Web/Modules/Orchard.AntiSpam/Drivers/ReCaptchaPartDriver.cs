@@ -17,9 +17,8 @@ namespace Orchard.AntiSpam.Drivers {
     public class ReCaptchaPartDriver : ContentPartDriver<ReCaptchaPart> {
         private readonly INotifier _notifier;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private const string ReCaptchaUrl = "http://www.google.com/recaptcha/api";
-        private const string ReCaptchaSecureUrl = "https://www.google.com/recaptcha/api";
-        
+        private const string ReCaptchaSecureUrl = "https://www.google.com/recaptcha/api/siteverify";
+
         public ReCaptchaPartDriver(
             INotifier notifier,
             IWorkContextAccessor workContextAccessor) {
@@ -67,67 +66,55 @@ namespace Orchard.AntiSpam.Drivers {
                 return null;
             }
 
-            var submitViewModel = new ReCaptchaPartSubmitViewModel();
+            var context = workContext.HttpContext;
 
-            if(updater.TryUpdateModel(submitViewModel, String.Empty, null, null)) {
-                var context = workContext.HttpContext;
+            try {
+                var result = ExecuteValidateRequest(
+                    settings.PrivateKey,
+                    context.Request.ServerVariables["REMOTE_ADDR"],
+                    context.Request.Form["g-recaptcha-response"]
+                    );
 
-                try {
-                    var result = ExecuteValidateRequest(
-                        settings.PrivateKey,
-                        context.Request.ServerVariables["REMOTE_ADDR"],
-                        submitViewModel.recaptcha_challenge_field,
-                        submitViewModel.recaptcha_response_field
-                        );
+                ReCaptchaPartResponseModel responseModel = Newtonsoft.Json.JsonConvert.DeserializeObject<ReCaptchaPartResponseModel>(result);
 
-                    if (!HandleValidateResponse(context, result)) {
-	                _notifier.Error(T("The text you entered in the Captcha field does not match the image"));
-                    	updater.AddModelError("", T("The text you entered in the Captcha field does not match the image"));
+                if (!responseModel.success) {
+                    for (int i = 0; i < responseModel.errorMessage.Length; i++) {
+                        if (responseModel.errorMessage[i] == "missing-input-response") {
+                            _notifier.Error(T("The Captcha field is required"));
+                        }
+                        else {
+                            _notifier.Error(T("There was an error with the Captcha please try again"));
+                            Logger.Error("Error occured while submitting a reCaptcha: " + responseModel.errorMessage[i]);
+                        }
                     }
                 }
-                catch(Exception e) {
-                    Logger.Error(e, "An unexcepted error occured while submitting a reCaptcha");
-                    updater.AddModelError("Parts_ReCaptcha_Fields", T("There was an error while validating the Captcha image"));
-                }
+            }
+            catch (Exception e) {
+                Logger.Error(e, "An unexcepted error occured while submitting a reCaptcha");
+                updater.AddModelError("Parts_ReCaptcha_Fields", T("There was an error while validating the Captcha image"));
             }
 
             return Editor(part, shapeHelper);
         }
 
-        private static string ExecuteValidateRequest(string privateKey, string remoteip, string challenge, string response) {
-            WebRequest request = WebRequest.Create(ReCaptchaUrl + "/verify");
-            request.Method = "POST";
+        private static string ExecuteValidateRequest(string privateKey, string remoteip, string response) {
+            var postData = String.Format(CultureInfo.InvariantCulture,
+                "secret={0}&response={1}&remoteip={2}",
+                privateKey,
+                response,
+                remoteip
+            );
+
+            WebRequest request = WebRequest.Create(ReCaptchaSecureUrl + "?" + postData);
+            request.Method = "GET";
             request.Timeout = 5000; //milliseconds
             request.ContentType = "application/x-www-form-urlencoded";
 
-            var postData = String.Format(CultureInfo.InvariantCulture,
-                "privatekey={0}&remoteip={1}&challenge={2}&response={3}",
-                privateKey,
-                remoteip,
-                challenge,
-                response
-            );
-
-            byte[] content = Encoding.UTF8.GetBytes(postData);
-            using (Stream stream = request.GetRequestStream()) {
-                stream.Write(content, 0, content.Length);
-            }
             using (WebResponse webResponse = request.GetResponse()) {
                 using (var reader = new StreamReader(webResponse.GetResponseStream())) {
                     return reader.ReadToEnd();
                 }
             }
-        }
-
-        internal static bool HandleValidateResponse(HttpContextBase context, string response) {
-            if (!String.IsNullOrEmpty(response)) {
-                string[] results = response.Split('\n');
-                if (results.Length > 0) {
-                    bool rval = Convert.ToBoolean(results[0], CultureInfo.InvariantCulture);
-                    return rval;
-                }
-            }
-            return false;
         }
     }
 }
