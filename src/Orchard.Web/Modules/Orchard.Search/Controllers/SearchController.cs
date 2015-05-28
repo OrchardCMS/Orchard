@@ -47,7 +47,7 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public async Task<ActionResult> Index(PagerParameters pagerParameters, string searchIndex = null, string q = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string q = "") {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchSettingPart = Services.WorkContext.CurrentSite.As<SearchSettingsPart>();
             var index = !String.IsNullOrWhiteSpace(searchIndex) ? searchIndex.Trim() : searchSettingPart.SearchIndex;
