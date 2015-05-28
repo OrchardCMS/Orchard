@@ -49,6 +49,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -123,6 +127,7 @@
     <Compile Include="Services\AkismetSpamFilterProvider.cs" />
     <Compile Include="Services\ISpamEventHandler.cs" />
     <Compile Include="Services\MissingFilterBanner.cs" />
+    <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\TypePadSpamFilterProvider.cs" />
     <Compile Include="Services\DefaultSpamFilterProvider.cs" />
     <Compile Include="Services\NullSpamFilterProvider.cs" />

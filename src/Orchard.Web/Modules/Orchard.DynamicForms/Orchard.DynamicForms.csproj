@@ -282,6 +282,7 @@
     <Compile Include="ViewModels\FieldBindingSettings.cs" />
     <Compile Include="ViewModels\PartBindingSettings.cs" />
     <Compile Include="ViewModels\BlueprintsIndexViewModel.cs" />
+    <Compile Include="ViewModels\ReCaptchaElementViewModel.cs" />
     <Compile Include="ViewModels\SubmissionViewModel.cs" />
     <Compile Include="ViewModels\SubmissionsIndexViewModel.cs" />
     <Compile Include="Helpers\SubmissionExtensions.cs" />
