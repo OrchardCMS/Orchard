@@ -42,7 +42,7 @@
 
             // display a message on leave if changes have been made
             window.onbeforeunload = function (e) {
-                return leaveConfirmation;
+                return $("<div/>").html(leaveConfirmation).text();
             };
 
             // cancel leaving message on save
