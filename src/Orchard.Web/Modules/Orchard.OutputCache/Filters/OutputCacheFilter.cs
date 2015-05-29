@@ -213,30 +213,39 @@ namespace Orchard.OutputCache.Filters {
                 response.Filter = captureStream;
                 captureStream.Captured += (output) => {
                     try {
-                        var cacheItem = new CacheItem() {
-                            CachedOnUtc = _now,
-                            Duration = cacheDuration,
-                            GraceTime = cacheGraceTime,
-                            Output = output,
-                            ContentType = response.ContentType,
-                            QueryString = filterContext.HttpContext.Request.Url.Query,
-                            CacheKey = _cacheKey,
-                            InvariantCacheKey = _invariantCacheKey,
-                            Url = filterContext.HttpContext.Request.Url.AbsolutePath,
-                            Tenant = _shellSettings.Name,
-                            StatusCode = response.StatusCode,
-                            Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
-                        };
+                        // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
+                        // cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed."
+                        // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
+                        // should be resolved from it.
 
-                        // Write the rendered item to the cache.
-                        _cacheStorageProvider.Remove(_cacheKey);
-                        _cacheStorageProvider.Set(_cacheKey, cacheItem);
+                        using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                            var cacheItem = new CacheItem() {
+                                CachedOnUtc = _now,
+                                Duration = cacheDuration,
+                                GraceTime = cacheGraceTime,
+                                Output = output,
+                                ContentType = response.ContentType,
+                                QueryString = filterContext.HttpContext.Request.Url.Query,
+                                CacheKey = _cacheKey,
+                                InvariantCacheKey = _invariantCacheKey,
+                                Url = filterContext.HttpContext.Request.Url.AbsolutePath,
+                                Tenant = scope.Resolve<ShellSettings>().Name,
+                                StatusCode = response.StatusCode,
+                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                            };
 
-                        Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
+                            // Write the rendered item to the cache.
+                            var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
+                            cacheStorageProvider.Remove(_cacheKey);
+                            cacheStorageProvider.Set(_cacheKey, cacheItem);
 
-                        // Also add the item tags to the tag cache.
-                        foreach (var tag in cacheItem.Tags) {
-                            _tagCache.Tag(tag, _cacheKey);
+                            Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
+
+                            // Also add the item tags to the tag cache.
+                            var tagCache = scope.Resolve<ITagCache>();
+                            foreach (var tag in cacheItem.Tags) {
+                                tagCache.Tag(tag, _cacheKey);
+                            }
                         }
                     }
                     finally {
