@@ -17,6 +17,7 @@ namespace Orchard.Autoroute.Settings {
         public AutorouteSettings() {
             PerItemConfiguration = false;
             AllowCustomPattern = true;
+            UseCulturePattern = false;
             AutomaticAdjustmentOnEdit = false;
             PatternDefinitions = "[]";
             DefaultPatternDefinitions = "[]";
@@ -24,6 +25,7 @@ namespace Orchard.Autoroute.Settings {
 
         public bool PerItemConfiguration { get; set; }
         public bool AllowCustomPattern { get; set; }
+        public bool UseCulturePattern { get; set; }
         public bool AutomaticAdjustmentOnEdit { get; set; }
         public bool? IsDefault { get; set; }
         public List<string> SiteCultures { get; set; }
@@ -91,6 +93,7 @@ namespace Orchard.Autoroute.Settings {
         public void Build(ContentTypePartDefinitionBuilder builder) {
             builder.WithSetting("AutorouteSettings.PerItemConfiguration", PerItemConfiguration.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.AllowCustomPattern", AllowCustomPattern.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("AutorouteSettings.UseCulturePattern", UseCulturePattern.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", AutomaticAdjustmentOnEdit.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("AutorouteSettings.PatternDefinitions", PatternDefinitions);
             builder.WithSetting("AutorouteSettings.DefaultPatternDefinitions", DefaultPatternDefinitions);

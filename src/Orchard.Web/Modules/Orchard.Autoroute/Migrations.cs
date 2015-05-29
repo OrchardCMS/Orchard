@@ -37,5 +37,14 @@ namespace Orchard.Autoroute {
 
             return 3;
         }
+
+        public int UpdateFrom3() {
+
+            SchemaBuilder.AlterTable("AutoroutePartRecord", table => table
+                .AddColumn<bool>("UseCulturePattern", c => c.WithDefault(false))
+            );
+
+            return 4;
+        }
     }
 }
