@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
+using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Commands;
 using Orchard.Commands.Builtin;
@@ -66,6 +67,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<SweepGenerator>().As<ISweepGenerator>().SingleInstance();
+            builder.RegisterType<SetupBackgroundService>().As<IBackgroundService>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
@@ -100,6 +102,13 @@ namespace Orchard.Setup {
         }
 
 
+        internal class SetupBackgroundService : IBackgroundService {
+            public void Sweep() {
+                // Don't run any background service in setup mode.
+            }
+        }
+
+        [UsedImplicitly]
         class SafeModeText : IText {
             public LocalizedString Get(string textHint, params object[] args) {
                 if (args == null || args.Length == 0) {
@@ -109,6 +118,7 @@ namespace Orchard.Setup {
             }
         }
 
+        [UsedImplicitly]
         class SafeModeThemeService : IThemeManager {
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
                 Id = "SafeMode",
@@ -119,6 +129,7 @@ namespace Orchard.Setup {
             public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
         }
 
+        [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
             public Func<WorkContext, T> Get<T>(string name) {
                 if (name == "CurrentSite") {
@@ -129,6 +140,7 @@ namespace Orchard.Setup {
             }
         }
 
+        [UsedImplicitly]
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
                 var siteType = new ContentTypeDefinitionBuilder().Named("Site").Build();

@@ -14,24 +14,28 @@ namespace Orchard.Tasks {
     public class BackgroundService : IBackgroundService {
         private readonly IEnumerable<IBackgroundTask> _tasks;
         private readonly ITransactionManager _transactionManager;
+        private readonly IBackgroundHttpContextFactory _backgroundHttpContextFactory;
         private readonly string _shellName;
-        private readonly IContentManager _contentManager;
 
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
             ITransactionManager transactionManager, 
             ShellSettings shellSettings,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IBackgroundHttpContextFactory backgroundHttpContextFactory) {
+
             _tasks = tasks;
             _transactionManager = transactionManager;
+            _backgroundHttpContextFactory = backgroundHttpContextFactory;
             _shellName = shellSettings.Name;
-            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void Sweep() {
+            _backgroundHttpContextFactory.InitializeHttpContext();
+
             foreach(var task in _tasks) {
                 var taskName = task.GetType().FullName;
 
