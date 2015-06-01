@@ -30,7 +30,7 @@ namespace Orchard.Core.Common.Services {
             }
 
             return _contentManager
-                .Query<IdentityPart, IdentityPartRecord>()
+                .Query<IdentityPart, IdentityPartRecord>(VersionOptions.Latest)
                 .Where(p => p.Identifier == identifier)
                 .List<ContentItem>()
                 .Where(c => ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(

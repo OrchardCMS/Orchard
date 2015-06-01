@@ -30,7 +30,7 @@ namespace Orchard.Widgets.Services {
             }
 
             return _contentManager
-                .Query<LayerPart, LayerPartRecord>()
+                .Query<LayerPart, LayerPartRecord>(VersionOptions.Latest)
                 .Where(p => p.Name == identifier)
                 .List<ContentItem>()
                 .Where(c => ContentIdentity.ContentIdentityEqualityComparer.AreEquivalent(
