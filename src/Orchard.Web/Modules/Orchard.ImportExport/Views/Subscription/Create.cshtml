@@ -2,17 +2,17 @@
 @using Orchard.ImportExport.ViewModels
 @model CreateSubscriptionViewModel
 @{
-    Layout.Title = "Create Subscription";
+    Layout.Title = "Create deployment";
 }
 @using (Html.BeginFormAntiForgeryPost())
 {
   Html.ValidationSummary();
 <fieldset>
-    <legend>@T("Choose a title for this subscription")</legend>
-    @Html.EditorFor(m => m.Title)
+    <legend>@T("Choose a title for this deployment")</legend>
+    @Html.TextBoxFor(m => m.Title, new {@class = "text large"})
 </fieldset>
     <fieldset>
-        <legend>@T("Choose the type of subscription:")</legend>
+        <legend>@T("Choose the type of deployment:")</legend>
         <div>
             @Html.RadioButtonFor(m => m.SelectedDeploymentType, "Export", new { id = "DeploymentTypeExport", Checked = "Checked" })
             <label for="DeploymentTypeExport" class="forcheckbox">@T("Export content out to a deployment target")</label>
