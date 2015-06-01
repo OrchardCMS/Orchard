@@ -285,8 +285,6 @@ namespace Orchard.Data.Migration.Interpreters {
         }
 
         private void Visit(StringBuilder builder, CreateColumnCommand command) {
-            bool emitNull = true;
-
             if (ExecuteCustomInterpreter(command)) {
                 return;
             }
@@ -299,14 +297,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // append identity if handled
-<<<<<<< HEAD
             if (command.IsIdentity && _dialectLazy.Value.SupportsIdentityColumns) {
                 builder.Append(Space).Append(_dialectLazy.Value.IdentityColumnString);
-=======
-            if (command.IsIdentity && _dialect.SupportsIdentityColumns) {
-                builder.Append(Space).Append(_dialect.IdentityColumnString);
-                emitNull = !_dialect.IdentityColumnString.ToLower().Contains("null"); // already defined by identity string
->>>>>>> orchard4ibn/IBN-Labs/SchemaBuilder.TableDbName
             }
 
             // [default value]
@@ -315,21 +307,11 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // nullable
-<<<<<<< HEAD
             builder.Append(command.IsNotNull
                                ? " not null"
                                : !command.IsPrimaryKey && !command.IsUnique
                                      ? _dialectLazy.Value.NullColumnString
                                      : string.Empty);
-=======
-            if (emitNull) {
-                builder.Append(command.IsNotNull
-                                   ? " not null"
-                                   : !command.IsPrimaryKey && !command.IsUnique
-                                         ? _dialect.NullColumnString
-                                         : string.Empty);
-            }
->>>>>>> orchard4ibn/IBN-Labs/SchemaBuilder.TableDbName
 
             // append unique if handled, otherwise at the end of the satement
             if (command.IsUnique && _dialectLazy.Value.SupportsUnique) {
