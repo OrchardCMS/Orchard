@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
@@ -11,7 +10,6 @@ using Orchard.Logging;
 using Orchard.Security;
 
 namespace Orchard.ImportExport.Handlers {
-    [UsedImplicitly]
     [OrchardFeature("Orchard.Deployment")]
     public class DeploymentUserPartHandler : ContentHandler {
         private readonly IEncryptionService _encryptionService;
