@@ -23,11 +23,12 @@ namespace Orchard.ContentPermissions.Security {
 
         public void Complete(CheckAccessContext context) {
 
-            if (!String.IsNullOrEmpty(_workContextAccessor.GetContext().CurrentSite.SuperUser) 
-                && context.User != null
-                && String.Equals(context.User.UserName, _workContextAccessor.GetContext().CurrentSite.SuperUser, StringComparison.Ordinal)) {
-                context.Granted = true;
-                return;
+            if (context.User != null) {
+                var superuser = _workContextAccessor.GetContext().CurrentSite.SuperUser;
+                if (!string.IsNullOrEmpty(superuser) && string.Equals(context.User.UserName, superuser, StringComparison.Ordinal)) {
+                    context.Granted = true;
+                    return;
+                }
             }
 
             if (context.Content == null) {
@@ -42,10 +43,10 @@ namespace Orchard.ContentPermissions.Security {
                 if(commonPart != null && commonPart.Container != null) {
                     part = commonPart.Container.As<ContentPermissionsPart>();
                 }
-            }
 
-            if (part == null || !part.Enabled) {
-                return;
+                if (part == null || !part.Enabled) {
+                    return;
+                }
             }
 
             var hasOwnership = HasOwnership(context.User, context.Content);
