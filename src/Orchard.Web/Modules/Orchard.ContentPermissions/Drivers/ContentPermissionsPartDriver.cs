@@ -41,14 +41,14 @@ namespace Orchard.ContentPermissions.Drivers {
         protected override DriverResult Editor(ContentPermissionsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_ContentPermissions_Edit", () => {
 
-                var settings = part.Settings.TryGetModel<ContentPermissionsPartSettings>();
-
-                var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
-
                 // ensure the current user is allowed to define permissions
                 if (!_authorizer.Authorize(Permissions.GrantPermission)) {
                     return null;
                 }
+
+                var settings = part.Settings.TryGetModel<ContentPermissionsPartSettings>();
+
+                var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 
                 if(settings == null) {
                     settings = new ContentPermissionsPartSettings {
