@@ -119,9 +119,6 @@ namespace Orchard.ContentPermissions.Drivers {
         }
 
         protected override DriverResult Editor(ContentPermissionsPart part, IUpdateModel updater, dynamic shapeHelper) {
-
-            var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
-
             var model = new ContentPermissionsPartViewModel();
 
             if (!updater.TryUpdateModel(model, Prefix, null, null)) {
@@ -141,6 +138,8 @@ namespace Orchard.ContentPermissions.Drivers {
                 part.PreviewOwnContent = ContentPermissionsPartViewModel.SerializePermissions(model.PreviewOwnRoles);
 
                 var settings = part.Settings.TryGetModel<ContentPermissionsPartSettings>();
+
+                var allRoles = _roleService.GetRoles().Select(x => x.Name).OrderBy(x => x).ToList();
 
                 OverrideDefaultPermissions(part, allRoles, settings);
             }
