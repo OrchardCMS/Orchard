@@ -136,8 +136,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         [Test]
-        public void ParseRecipeThrowsOnInvalidXml() {
-            Assert.Throws(typeof(XmlException), () => _recipeParser.ParseRecipe("<reipe></recipe>"));
+        public void ParseRecipeReturnsNullOnInvalidXml() {
+            Assert.That(_recipeParser.ParseRecipe("<reipe></recipe>") == null);
         }
 
         [Test]

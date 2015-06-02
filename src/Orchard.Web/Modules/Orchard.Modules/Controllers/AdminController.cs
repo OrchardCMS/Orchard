@@ -133,6 +133,7 @@ namespace Orchard.Modules.Controllers {
                     Module = x,
                     Recipes = _recipeHarvester.HarvestRecipes(x.Descriptor.Id).Where(recipe => !recipe.IsSetupRecipe).ToList()
                 })
+                .ToList()
                 .Where(x => x.Recipes.Any());
             }
 
