@@ -54,13 +54,13 @@ namespace Orchard.DynamicForms.Validators {
                                 var validationSettings = element.ValidationSettings;
                                 var validationMessage = validationSettings.CustomValidationMessage.WithDefault("There was an error with the Captcha please try again");
                                 context.ModelState.AddModelError("g-recaptcha-response", T(validationMessage).Text);
-                                Logger.Error("Error occured while submitting a reCaptcha: " + responseModel.errorMessage[i]);
+                                Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.errorMessage[i]);
                             }
                         }
                     }
                 }
                 catch (Exception e) {
-                    Logger.Error(e, "An unexcepted error occured while submitting a reCaptcha");
+                    Logger.Error(e, "An unexcepted error occurred while submitting a reCaptcha");
                     context.ModelState.AddModelError("recaptcha_response_field", T("There was an error while validating the Captcha image.").Text);
                 }
             }

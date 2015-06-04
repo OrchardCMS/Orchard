@@ -84,13 +84,13 @@ namespace Orchard.AntiSpam.Drivers {
                         }
                         else {
                             _notifier.Error(T("There was an error with the Captcha please try again"));
-                            Logger.Error("Error occured while submitting a reCaptcha: " + responseModel.errorMessage[i]);
+                            Logger.Information("Error occurred while submitting a reCaptcha: " + responseModel.errorMessage[i]);
                         }
                     }
                 }
             }
             catch (Exception e) {
-                Logger.Error(e, "An unexcepted error occured while submitting a reCaptcha");
+                Logger.Error(e, "An unexcepted error occurred while submitting a reCaptcha");
                 updater.AddModelError("Parts_ReCaptcha_Fields", T("There was an error while validating the Captcha image"));
             }
 
