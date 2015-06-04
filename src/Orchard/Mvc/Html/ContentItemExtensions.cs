@@ -7,7 +7,12 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
-        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content, bool encode = true) {
+
+        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content) {
+            return ItemDisplayText(content, true);
+        }
+        
+        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content, bool encode) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayText == null)
                 return null;
