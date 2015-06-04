@@ -20,21 +20,12 @@ namespace Orchard.Recipes.Services {
             var recipe = new Recipe();
             
             try {
-                if (string.IsNullOrEmpty(recipeText))
-                {
-                    return null;
+
+                if (string.IsNullOrEmpty(recipeText)) {
+                    throw new Exception("Recipe is empty");
                 }
 
-                XElement recipeTree;
-
-                try
-                {
-                    recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
-                }
-                catch
-                {
-                    return null;
-                }
+                XElement recipeTree = XElement.Parse(recipeText, LoadOptions.PreserveWhitespace);
 
                 var recipeSteps = new List<RecipeStep>();
 

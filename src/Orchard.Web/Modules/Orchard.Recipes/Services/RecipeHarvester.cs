@@ -36,18 +36,15 @@ namespace Orchard.Recipes.Services {
                 var recipeLocation = Path.Combine(extension.Location, extensionId, "Recipes");
                 var recipeFiles = _webSiteFolder.ListFiles(recipeLocation, true);
 
-                recipeFiles.Where(r => r.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)).ToList().ForEach(r =>
-                {
-                    var recipe = _recipeParser.ParseRecipe(_webSiteFolder.ReadFile(r));
+                recipeFiles.Where(r => r.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)).ToList().ForEach(r => {
 
-                    if (recipe == null)
-                    {
-                        Logger.Error(new Exception(string.Format("Invalid recipe file: {0}", r)), "Invalid recipe file: {0}", r);
+                    try {
+                        recipes.Add(_recipeParser.ParseRecipe(_webSiteFolder.ReadFile(r)));
                     }
-                    else
-                    {
-                        recipes.Add(recipe);
+                    catch (Exception ex) {
+                        Logger.Error(new Exception(string.Format("Invalid recipe file: {0}\nError: {1}", r, ex.Message)), "Invalid recipe file: {0}\nError: {1}", r, ex.Message);
                     }
+
                 });
             }
             else {
