@@ -35,10 +35,17 @@ namespace Orchard.Recipes.Services {
             if (extension != null) {
                 var recipeLocation = Path.Combine(extension.Location, extensionId, "Recipes");
                 var recipeFiles = _webSiteFolder.ListFiles(recipeLocation, true);
-                recipes.AddRange(
-                    from recipeFile in recipeFiles
-                    where recipeFile.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)
-                    select _recipeParser.ParseRecipe(_webSiteFolder.ReadFile(recipeFile)));
+
+                recipeFiles.Where(r => r.EndsWith(".recipe.xml", StringComparison.OrdinalIgnoreCase)).ToList().ForEach(r => {
+
+                    try {
+                        recipes.Add(_recipeParser.ParseRecipe(_webSiteFolder.ReadFile(r)));
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(new Exception(string.Format("Invalid recipe file: {0}\nError: {1}", r, ex.Message)), "Invalid recipe file: {0}\nError: {1}", r, ex.Message);
+                    }
+
+                });
             }
             else {
                 Logger.Error("Could not discover recipes because module '{0}' was not found.", extensionId);
