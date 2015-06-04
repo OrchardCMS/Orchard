@@ -67,10 +67,12 @@ namespace Orchard.Autoroute.Drivers {
                 }
             }
 
-            //if we are creating from a form post we use the form value for culture
-            HttpContextBase context = _httpContextAccessor.Current();
-            if (context.Request.Form["Localization.SelectedCulture"] != null) {
-                itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+            if (settings.UseCulturePattern) {
+                //if we are creating from a form post we use the form value for culture
+                HttpContextBase context = _httpContextAccessor.Current();
+                if (context.Request.Form["Localization.SelectedCulture"] != null) {
+                    itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+                }
             }
 
             // if the content type has no pattern for autoroute, then use a default one
@@ -155,12 +157,18 @@ namespace Orchard.Autoroute.Drivers {
             if (useCustomPattern != null) {
                 part.UseCustomPattern = bool.Parse(useCustomPattern);
             }
+
+            var useCulturePattern = context.Attribute(part.PartDefinition.Name, "UseCulturePattern");
+            if (useCulturePattern != null) {
+                part.UseCulturePattern = bool.Parse(useCulturePattern);
+            }
         }
 
         protected override void Exporting(AutoroutePart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", String.IsNullOrEmpty(part.Record.DisplayAlias) ? "/" : part.Record.DisplayAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("CustomPattern", part.Record.CustomPattern);
             context.Element(part.PartDefinition.Name).SetAttributeValue("UseCustomPattern", part.Record.UseCustomPattern);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UseCulturePattern", part.Record.UseCulturePattern);
         }
     }
 }

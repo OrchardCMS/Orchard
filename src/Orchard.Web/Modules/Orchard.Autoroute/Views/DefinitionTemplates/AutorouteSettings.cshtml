@@ -38,29 +38,22 @@
     <div id="local-navigation">
         <ul class="autoroute-cultures localmenu group">
             @{
-                int i = 0;
+                int i = 1;
                 string cssClass = "";
             }
+            <li class="first selected"><a class="culture" href="#cat-@Model.DefaultSiteCulture">@Model.DefaultSiteCulture</a></li>
             @foreach (var culture in Model.SiteCultures) {
-                cssClass = "";
-                if (Model.UseCulturePattern) {
-                    cssClass = i == 0 ? "first selected" : i == Model.SiteCultures.Count - 1 ? "last" : "middle";
-                    <li class="@cssClass"><a class="culture" href="#cat-@culture">@culture</a></li>
-                } else {
-                    cssClass = i == 0 ? "first" : i == Model.SiteCultures.Count - 1 ? "last" : "middle";
-                    if (culture == Model.DefaultSiteCulture) {
-                        <li class="@cssClass"><a class="culture" href="#cat-@culture">@culture</a></li>
-                    } else {
-                        <li class="@cssClass" style="display:none;"><a class="culture" href="#cat-@culture">@culture</a></li>
-                    }
+                if (culture != Model.DefaultSiteCulture) {
+                    cssClass = i == Model.SiteCultures.Count - 1 ? "last" : "middle";
+                    <li class="@cssClass" style="@(Model.UseCulturePattern == false ? "display:none;" : "")"><a class="culture" href="#cat-@culture">@culture</a></li>
+                    i++;
                 }
-                i++;
             }
         </ul>
     </div>
     <div id="content">
         @foreach (var culture in Model.SiteCultures) {
-            <fieldset id="cat-@culture" class="items" style="@(cultureCount == 0 ? "display:block;" : "display:none;")">
+            <fieldset id="cat-@culture" class="items @(culture == Model.DefaultSiteCulture ? "default" : "")" style="@(culture == Model.DefaultSiteCulture ? "display:block;" : "display:none;")">
                 <table class="autoroute-settings-patterns">
                     <tr>
                         <th class="autoroute-settings-default">@T("Default")</th>
@@ -87,5 +80,16 @@
         }
     </div>
 </fieldset>
+
+
+
+
+
+
+
+
+
+
+
 
 @Display.TokenHint()

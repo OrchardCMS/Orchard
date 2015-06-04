@@ -53,7 +53,7 @@ namespace Orchard.Autoroute.Services {
             if (part == null) {
                 throw new ArgumentNullException("part");
             }
-
+            var settings = part.TypePartDefinition.Settings.GetModel<AutorouteSettings>();
             var itemCulture = _cultureManager.GetSiteCulture();
 
             //if we are editing an existing content item
@@ -66,10 +66,12 @@ namespace Orchard.Autoroute.Services {
                 }
             }
 
-            //if we are creating from a form post we use the form value for culture
-            HttpContextBase context = _httpContextAccessor.Current();
-            if (context.Request.Form["Localization.SelectedCulture"] != null) {
-                itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+            if (settings.UseCulturePattern) {
+                //if we are creating from a form post we use the form value for culture
+                HttpContextBase context = _httpContextAccessor.Current();
+                if (context.Request.Form["Localization.SelectedCulture"] != null) {
+                    itemCulture = context.Request.Form["Localization.SelectedCulture"].ToString();
+                }
             }
 
             string pattern = GetDefaultPattern(part.ContentItem.ContentType, itemCulture).Pattern;

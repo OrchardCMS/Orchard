@@ -19,8 +19,24 @@
         }
     };
 
+    $("#Parts_3__AutorouteSettings_UseCulturePattern[type=checkbox]").click(function () {
+        if ($(this).attr("checked") == "checked") {
+            $(".autoroute-cultures li:not(:first)").hide();
+            $(".autoroute-cultures li").removeClass("selected");
+            $(".autoroute-cultures li:first").addClass("selected");
+            $("#content .items").hide();
+            $("#content .items.default").show();
+            $(this).removeAttr('checked');
+        } else {
+            $(".autoroute-cultures li:not(:first)").show();
+            $("#content .items.default").show();
+            $(this).attr('checked', 'checked');
+        }
+    });
+
     $(function () {
         var browser = new AutorouteCultureBrowser($("#main"));
         browser.initialize();
+
     });
 })(jQuery);
