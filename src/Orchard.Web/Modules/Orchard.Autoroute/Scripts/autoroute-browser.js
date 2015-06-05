@@ -19,7 +19,7 @@
         }
     };
 
-    $("#Parts_3__AutorouteSettings_UseCulturePattern[type=checkbox]").click(function () {
+    $(".use-culture-pattern[type=checkbox]").click(function () {
         if ($(this).attr("checked") == "checked") {
             $(".autoroute-cultures li:not(:first)").hide();
             $(".autoroute-cultures li").removeClass("selected");
