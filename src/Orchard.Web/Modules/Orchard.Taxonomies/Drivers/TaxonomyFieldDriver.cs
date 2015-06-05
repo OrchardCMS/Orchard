@@ -83,9 +83,11 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
-            var viewModel = new TaxonomyFieldViewModel { Terms =  new List<TermEntry>() };
+            // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
+            var viewModel = new TaxonomyFieldViewModel { Terms = field.Terms.Select(t => t.CreateTermEntry()).ToList() };
+            foreach (var item in viewModel.Terms) item.IsChecked = true;
             
-            if(updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
+            if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
                 var checkedTerms = viewModel.Terms
                     .Where(t => (t.IsChecked || t.Id == viewModel.SingleTermId))
                     .Select(t => GetOrCreateTerm(t, viewModel.TaxonomyId, field))
