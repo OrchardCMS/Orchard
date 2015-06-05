@@ -9,7 +9,7 @@ namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
 
         public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content) {
-            return ItemDisplayText(content, true);
+            return ItemDisplayText(html, content, true);
         }
         
         public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content, bool encode) {
