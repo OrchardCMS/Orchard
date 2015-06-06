@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 
 namespace Orchard.Tasks {
 
@@ -18,7 +17,7 @@ namespace Orchard.Tasks {
 
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
-            ITransactionManager transactionManager, 
+            ITransactionManager transactionManager,
             ShellSettings shellSettings) {
 
             _tasks = tasks;

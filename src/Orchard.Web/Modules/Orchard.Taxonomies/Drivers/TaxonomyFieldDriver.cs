@@ -22,7 +22,7 @@ namespace Orchard.Taxonomies.Drivers {
         public IOrchardServices Services { get; set; }
 
         public TaxonomyFieldDriver(
-            IOrchardServices services,
+            IOrchardServices services, 
             ITaxonomyService taxonomyService,
             IRepository<TermContentItem> repository) {
             _taxonomyService = taxonomyService;
@@ -81,8 +81,10 @@ namespace Orchard.Taxonomies.Drivers {
         }
 
         protected override DriverResult Editor(ContentPart part, TaxonomyField field, IUpdateModel updater, dynamic shapeHelper) {
-            var viewModel = new TaxonomyFieldViewModel { Terms = new List<TermEntry>() };
-
+            // Initializing viewmodel using the terms that are already selected to prevent loosing them when updating an editor group this field isn't displayed in.
+            var viewModel = new TaxonomyFieldViewModel { Terms = field.Terms.Select(t => t.CreateTermEntry()).ToList() };
+            foreach (var item in viewModel.Terms) item.IsChecked = true;
+            
             if (updater.TryUpdateModel(viewModel, GetPrefix(field, part), null, null)) {
                 var checkedTerms = viewModel.Terms
                     .Where(t => (t.IsChecked || t.Id == viewModel.SingleTermId))
@@ -128,9 +130,9 @@ namespace Orchard.Taxonomies.Drivers {
         private TermPart GetOrCreateTerm(TermEntry entry, int taxonomyId, TaxonomyField field) {
             var term = default(TermPart);
 
-            if (entry.Id > 0)
-                term = _taxonomyService.GetTerm(entry.Id);
-
+            if (entry.Id > 0)            
+                term = _taxonomyService.GetTerm(entry.Id);            
+                 
             //Prevents creation of existing term
             if (term == null && !string.IsNullOrEmpty(entry.Name))
                 term = _taxonomyService.GetTermByName(taxonomyId, entry.Name.Trim());

@@ -42,6 +42,7 @@
     //<![CDATA[
     var renderActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("RenderActivity", "Admin", new { area = "Orchard.Workflows" }))';
     var editActivityUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("EditActivity", "Admin", new { area = "Orchard.Workflows" }))';
+    var stateUrl = '@HttpUtility.JavaScriptStringEncode(Url.Action("State", "Admin", new { area = "Orchard.Workflows" }))';
     var requestAntiForgeryToken = '@HttpUtility.JavaScriptStringEncode(Html.AntiForgeryTokenValueOrchard().ToString())';
     var localId = '@HttpUtility.JavaScriptStringEncode(Model.LocalId)';
     var updatedActivityClientId = null;
@@ -73,6 +74,7 @@
 @Html.Hidden("data", String.Empty)
 
 @Html.Hidden("confirm-delete-activity", T("Are you sure you want to remove this activity?"))
+@Html.Hidden("confirm-delete-instances", T("Are you sure you want to remove running instances of this workflow?"))
 
     using (Script.Foot()) {
 <script type="text/javascript">
@@ -82,6 +84,16 @@
         var workflow = loadWorkflow(localId);
         var data = JSON.stringify(workflow);
         $("[name='data']").val(data);
+
+        $.ajax({
+            url: stateUrl + "/" + $("#id").val(),
+            async: false,
+            success: function(state) {
+                if(state.isRunning && !confirm($("#confirm-delete-instances").val())) {
+                    e.preventDefault();
+                }
+            }
+        });
     });
     //]]>
 </script>
