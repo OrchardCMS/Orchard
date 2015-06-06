@@ -103,6 +103,9 @@ namespace Orchard.Layouts.Drivers {
             // Execute the query.
             var contentItems = _projectionManager.GetContentItems(query.Id, pager.GetStartIndex() + element.Skip, pager.PageSize).ToList();
 
+            context.ElementShape.ContentItems = contentItems;
+            context.ElementShape.BuildShapes = (Func<string, IEnumerable<dynamic>>) (displayType => contentItems.Select(x => _contentManager.BuildDisplay(x, displayType)));
+
             // TODO: Figure out if we need this for a Projection Element, and if so, how.
             //// Sanity check so that content items with ProjectionPart can't be added here, or it will result in an infinite loop.
             //contentItems = contentItems.Where(x => !x.Has<ProjectionPart>()).ToList();
