@@ -70,7 +70,7 @@
                             <td>@Html.TextBoxFor(m => m.Patterns[patternCount].Description, new { @class = "text" })</td>
                             <td>@Html.HiddenFor(m => m.Patterns[patternCount].Culture)&nbsp;</td>
                         </tr>
-                        if (Model.Patterns[patternCount].Name != null) { patternCultureCount++; } else { patternCultureCount = 0; }
+                        if (Model.Patterns[patternCount].Pattern != null) { patternCultureCount++; } else { patternCultureCount = 0; }
                         patternCount++;
                     }
                     <tr></tr>

@@ -105,8 +105,8 @@ namespace Orchard.Taxonomies.Services {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term', \"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                     .WithPart("CommonPart")
                     .DisplayedAs(taxonomy.Name + " Term")
                 );

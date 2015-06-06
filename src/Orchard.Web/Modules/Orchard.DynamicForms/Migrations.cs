@@ -70,8 +70,8 @@ namespace Orchard.DynamicForms {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Form", type => type
                  .WithPart("AutoroutePart", builder => builder
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"en-US\"}]")
-                    .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"\"}]")
+                    .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                  );
 
             return 2;

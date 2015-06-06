@@ -39,8 +39,8 @@ namespace Orchard.Blogs {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-blog\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-blog\",\"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                     .WithPart("MenuPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                 );
@@ -58,8 +58,8 @@ namespace Orchard.Blogs {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Blog and Title\",\"Pattern\":\"{Content.Container.Path}/{Content.Slug}\",\"Description\":\"my-blog/my-post\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Blog and Title\",\"Pattern\":\"{Content.Container.Path}/{Content.Slug}\",\"Description\":\"my-blog/my-post\",\"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                     .WithPart("BodyPart")
                     .Draftable()
                 );
@@ -132,24 +132,6 @@ namespace Orchard.Blogs {
                 .WithDescription("Renders an archive of posts for a blog."));
 
             return 6;
-        }
-
-        public int UpdateFrom6() {
-            ContentDefinitionManager.AlterTypeDefinition("Blog",
-                cfg => cfg
-                    .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-blog\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
-                cfg => cfg
-                    .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Blog and Title\",\"Pattern\":\"{Content.Container.Path}/{Content.Slug}\",\"Description\":\"my-blog/my-post\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
-                );
-
-            return 7;
         }
     }
 }

@@ -190,8 +190,8 @@ namespace Orchard.Projections {
                      .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-projections\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-projections\",\"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                     .WithPart("MenuPart")
                     .WithPart("ProjectionPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "5"))
@@ -273,17 +273,6 @@ namespace Orchard.Projections {
                             );
 
             return 3;
-        }
-
-        public int UpdateFrom3() {
-            ContentDefinitionManager.AlterTypeDefinition("ProjectionPage",
-                cfg => cfg
-                    .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-projections\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
-                );
-
-            return 4;
         }
     }
 }

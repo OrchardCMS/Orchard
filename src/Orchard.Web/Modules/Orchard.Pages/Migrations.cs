@@ -14,8 +14,8 @@ namespace Orchard.Pages {
                 .WithPart("AutoroutePart", builder => builder
                     .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                     .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-page\"}]")
-                    .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                    .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-page\",\"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                 .WithPart("LayoutPart")
                 .Creatable()
                 .Listable()
@@ -27,17 +27,6 @@ namespace Orchard.Pages {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "True")));
             return 2;
-        }
-
-        public int UpdateFrom2() {
-            ContentDefinitionManager.AlterTypeDefinition("Page",
-                cfg => cfg
-                    .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-page\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
-                );
-
-            return 3;
         }
     }
 }

@@ -12,8 +12,8 @@ namespace Orchard.CustomForms {
                     .WithPart("AutoroutePart", builder => builder
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "True")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"\"}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"\"}]"))
                     .WithPart("MenuPart")
                     .WithPart("CustomFormPart")
                     .DisplayedAs("Custom Form")
@@ -57,17 +57,6 @@ namespace Orchard.CustomForms {
             SchemaBuilder.AlterTable("CustomFormPartRecord", table => table.AddColumn<string>("SubmitButtonText"));
 
             return 4;
-        }
-
-        public int UpdateFrom4() {
-            ContentDefinitionManager.AlterTypeDefinition("CustomForm",
-                cfg => cfg
-                    .WithPart("AutoroutePart", builder => builder
-                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{\"Name\":\"Title\",\"Pattern\":\"{Content.Slug}\",\"Description\":\"my-form\",\"Culture\":\"en-US\"}]")
-                        .WithSetting("AutorouteSettings.DefaultPatternDefinitions", "[{\"PatternIndex\":\"0\",\"Culture\":\"en-US\"}]"))
-                );
-
-            return 5;
         }
 
         public void Uninstall() {
