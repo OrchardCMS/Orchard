@@ -140,8 +140,10 @@ namespace Orchard.Autoroute.Services {
             var settings = GetTypePartSettings(contentType).GetModel<AutorouteSettings>();
 
             // return a default pattern if set
-            if (settings.Patterns.Any(x => x.Culture == culture)) {
-                return settings.Patterns.Where(x => x.Culture == culture).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == culture).FirstOrDefault().PatternIndex));
+            var patternCultureSearch = settings.Patterns.Any(x => x.Culture == culture) ? culture : null;
+            var defaultPatternCultureSearch = settings.DefaultPatterns.Any(x => x.Culture == culture) ? culture : "";
+            if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex)) != null) {
+                return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex));
             }
 
             // return a default pattern if none is defined
