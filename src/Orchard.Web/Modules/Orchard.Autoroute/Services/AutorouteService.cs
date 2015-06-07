@@ -142,8 +142,10 @@ namespace Orchard.Autoroute.Services {
             // return a default pattern if set
             var patternCultureSearch = settings.Patterns.Any(x => x.Culture == culture) ? culture : null;
             var defaultPatternCultureSearch = settings.DefaultPatterns.Any(x => x.Culture == culture) ? culture : "";
-            if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex)) != null) {
-                return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex));
+            if (settings.Patterns.Any()) {
+                if (settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex)) != null) {
+                    return settings.Patterns.Where(x => x.Culture == patternCultureSearch).ElementAt(Convert.ToInt32(settings.DefaultPatterns.Where(x => x.Culture == defaultPatternCultureSearch).FirstOrDefault().PatternIndex));
+                }
             }
 
             // return a default pattern if none is defined
