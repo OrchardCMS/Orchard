@@ -21,7 +21,7 @@ namespace Orchard.Widgets.Services{
         public ILogger Logger { get; set; }
         public Localizer T { get; private set; }
 
-        public IEnumerable<int> GetActiveLayerIds()        {
+        public IEnumerable<int> GetActiveLayerIds(){
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
