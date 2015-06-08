@@ -95,6 +95,10 @@
       <Project>{475B6C45-B27C-438B-8966-908B9D6D1077}</Project>
       <Name>Orchard.Alias</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
+      <Project>{0e7646e8-fe8f-43c1-8799-d97860925ec4}</Project>
+      <Name>Orchard.ContentTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
       <Name>Orchard.Tokens</Name>
@@ -102,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AutorouteCommands.cs" />
+    <Compile Include="Providers\ContentDefinition\ContentDefinitionEventHandler.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AliasResolverSelector.cs" />
     <Compile Include="Services\PathResolutionService.cs" />
