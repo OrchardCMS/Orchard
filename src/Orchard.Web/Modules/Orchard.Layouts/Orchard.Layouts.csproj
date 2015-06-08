@@ -642,9 +642,6 @@
     <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\LayoutEditor\Menu.less" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <PropertyGroup>
