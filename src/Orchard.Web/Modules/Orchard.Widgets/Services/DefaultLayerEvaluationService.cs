@@ -21,27 +21,22 @@ namespace Orchard.Widgets.Services{
         public ILogger Logger { get; set; }
         public Localizer T { get; private set; }
 
-        public IEnumerable<int> GetActiveLayerIds()
-        {
+        public IEnumerable<int> GetActiveLayerIds()        {
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
             // NOTE: .ForType("Layer") is faster than .Query<LayerPart, LayerPartRecord>()
             var activeLayers = _orchardServices.ContentManager.Query<LayerPart>().ForType("Layer").List();
 
             var activeLayerIds = new List<int>();
-            foreach (var activeLayer in activeLayers)
-            {
+            foreach (var activeLayer in activeLayers){
                 // ignore the rule if it fails to execute
-                try
-                {
-                    if (_ruleManager.Matches(activeLayer.LayerRule))
-                    {
+                try{
+                    if (_ruleManager.Matches(activeLayer.LayerRule)){
                         activeLayerIds.Add(activeLayer.ContentItem.Id);
                     }
                 }
-                catch (Exception e)
-                {
-                    Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
+                catch (Exception e){
+                    Logger.Warning(e, T("An error occurred during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
 
