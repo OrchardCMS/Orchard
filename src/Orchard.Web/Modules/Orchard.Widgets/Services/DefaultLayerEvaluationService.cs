@@ -21,6 +21,12 @@ namespace Orchard.Widgets.Services{
         public ILogger Logger { get; set; }
         public Localizer T { get; private set; }
 
+        /// <summary>
+        /// Retrieves every Layer from the Content Manager and evaluates each one.
+        /// </summary>
+        /// <returns>
+        /// A collection of integers that represents the Ids of each active Layer
+        /// </returns>
         public IEnumerable<int> GetActiveLayerIds(){
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
