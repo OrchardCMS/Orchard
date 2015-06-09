@@ -113,7 +113,6 @@
     <Content Include="Scripts\LayoutEditor\Services\ScopeConfigurator.js" />
     <Content Include="Scripts\Lib.js" />
     <Content Include="Scripts\Lib.min.js" />
-    <Content Include="Scripts\Lib\affix.js" />
     <Content Include="Scripts\Lib\angular-resource.js" />
     <Content Include="Scripts\Lib\angular-sanitize.js" />
     <Content Include="Scripts\Lib\angular.js" />

@@ -96,8 +96,7 @@ var srcJsLib = [
 	"Scripts/Lib/angular.js",
 	"Scripts/Lib/angular-sanitize.js",
 	"Scripts/Lib/angular-resource.js",
-	"Scripts/Lib/sortable.js",
-	"Scripts/Lib/affix.js"
+	"Scripts/Lib/sortable.js"
 ];
 
 var srcJsLayoutEditor = [
