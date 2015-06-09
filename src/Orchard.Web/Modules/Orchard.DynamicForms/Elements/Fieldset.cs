@@ -7,6 +7,10 @@ namespace Orchard.DynamicForms.Elements {
             get { return "Forms"; }
         }
 
+        public override bool HasEditor {
+            get { return false; }
+        }
+
         public string Legend {
             get { return this.Retrieve(f => f.Legend); }
             set { this.Store(f => f.Legend, value); }
