@@ -5,6 +5,7 @@
     <!-- Raw Media -->
     <Match DisplayType="Raw">
         <Place Parts_Image="Content"
+               Parts_VectorImage="Content"
                Parts_Video="Content"
                Parts_Audio="Content"
                Parts_Document="Content"
