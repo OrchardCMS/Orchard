@@ -12,5 +12,7 @@
   <files>
     <file>/Scripts/Layouts/Directives/Form.js</file>
     <file>/Scripts/Layouts/Models/Form.js</file>
+    <file>/Scripts/Layouts/Directives/Fieldset.js</file>
+    <file>/Scripts/Layouts/Models/Fieldset.js</file>
   </files>
 </bundle>

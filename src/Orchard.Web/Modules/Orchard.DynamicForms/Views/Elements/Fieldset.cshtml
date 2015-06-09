@@ -1,0 +1,11 @@
+﻿@using Orchard.DynamicForms.Elements
+@using Orchard.Layouts.Helpers
+@{
+    var element = (Fieldset) Model.Element;
+    var tagBuilder = TagBuilderExtensions.CreateElementTagBuilder(Model, "fieldset");
+    var legend = element.Legend;
+}
+@tagBuilder.StartElement
+<legend>@legend</legend>
+    @DisplayChildren(Model)
+@tagBuilder.EndElement

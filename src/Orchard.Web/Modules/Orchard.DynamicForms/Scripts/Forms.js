@@ -102,3 +102,93 @@ var LayoutEditor;
     LayoutEditor.registerFactory("Form", function(value) { return LayoutEditor.Form.from(value); });
 
 })(jQuery, LayoutEditor || (LayoutEditor = {}));
+angular
+    .module("LayoutEditor")
+    .directive("orcLayoutFieldset", ["$compile", "scopeConfigurator", "environment",
+        function ($compile, scopeConfigurator, environment) {
+            return {
+                restrict: "E",
+                scope: { element: "=" },
+                controller: ["$scope", "$element",
+                    function ($scope, $element) {
+                        scopeConfigurator.configureForElement($scope, $element);
+                        scopeConfigurator.configureForContainer($scope, $element);
+                        $scope.sortableOptions["axis"] = "y";
+                        $scope.edit = function () {
+                            $scope.$root.editElement($scope.element).then(function (args) {
+                                if (args.cancel)
+                                    return;
+                                $scope.element.data = decodeURIComponent(args.element.data);
+                                $scope.element.legend = args.elementEditorModel.legend;
+                                $scope.$apply();
+                            });
+                        };
+                    }
+                ],
+                templateUrl: environment.templateUrl("Fieldset"),
+                replace: true
+            };
+        }
+    ]);
+var LayoutEditor;
+(function ($, LayoutEditor) {
+
+    LayoutEditor.Fieldset = function (data, htmlId, htmlClass, htmlStyle, isTemplated, legend, contentType, contentTypeLabel, contentTypeClass, hasEditor, children) {
+        LayoutEditor.Element.call(this, "Fieldset", data, htmlId, htmlClass, htmlStyle, isTemplated);
+        LayoutEditor.Container.call(this, ["Grid", "Content"], children);
+
+        var self = this;
+        this.isContainable = true;
+        this.dropTargetClass = "layout-common-holder";
+        this.contentType = contentType;
+        this.contentTypeLabel = contentTypeLabel;
+        this.contentTypeClass = contentTypeClass;
+        this.legend = legend || "";
+        this.hasEditor = true;
+
+        this.toObject = function () {
+            var result = this.elementToObject();
+            result.legend = this.legend;
+            result.children = this.childrenToObject();
+
+            return result;
+        };
+
+        var getEditorObject = this.getEditorObject;
+        this.getEditorObject = function() {
+            var dto = getEditorObject();
+            return $.extend(dto, {
+                Legend: this.legend
+            });
+        }
+
+        this.setChildren = function (children) {
+            this.children = children;
+            _(this.children).each(function (child) {
+                child.parent = self;
+            });
+        };
+
+        this.setChildren(children);
+    };
+
+    LayoutEditor.Fieldset.from = function (value) {
+        return new LayoutEditor.Fieldset(
+            value.data,
+            value.htmlId,
+            value.htmlClass,
+            value.htmlStyle,
+            value.isTemplated,
+            value.legend,
+            value.contentType,
+            value.contentTypeLabel,
+            value.contentTypeClass,
+            value.hasEditor,
+            LayoutEditor.childrenFrom(value.children));
+    };
+
+    LayoutEditor.registerFactory("Fieldset", function(value) {
+        return LayoutEditor.Fieldset.from(value);
+    });
+
+})(jQuery, LayoutEditor || (LayoutEditor = {}));
