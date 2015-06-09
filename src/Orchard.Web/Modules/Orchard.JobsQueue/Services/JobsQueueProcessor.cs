@@ -15,14 +15,14 @@ namespace Orchard.JobsQueue.Services {
         private readonly Work<IJobsQueueManager> _jobsQueueManager;
         private readonly Work<IClock> _clock;
         private readonly Work<ITaskLeaseService> _taskLeaseService;
-        private readonly IEventBus _eventBus;
+        private readonly Work<IEventBus> _eventBus;
         private readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
 
         public JobsQueueProcessor(
             Work<IClock> clock,
             Work<IJobsQueueManager> jobsQueueManager,
             Work<ITaskLeaseService> taskLeaseService,
-            IEventBus eventBus) {
+            Work<IEventBus> eventBus) {
             _clock = clock;
             _jobsQueueManager = jobsQueueManager;
             _taskLeaseService = taskLeaseService;
@@ -59,7 +59,7 @@ namespace Orchard.JobsQueue.Services {
                 var payload = JObject.Parse(job.Parameters);
                 var parameters = payload.ToDictionary();
 
-                _eventBus.Notify(job.Message, parameters);
+                _eventBus.Value.Notify(job.Message, parameters);
 
                 Logger.Debug("Processed job Id {0}.", job.Id);
             }
