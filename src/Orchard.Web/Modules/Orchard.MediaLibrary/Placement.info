@@ -34,6 +34,21 @@
     <Place Parts_Image="Content:5" />
   </Match>
 
+    <!-- VectorImagePart -->
+    <Match DisplayType="Summary">
+        <Place Parts_VectorImage_Summary="Content:5" />
+    </Match>
+
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_VectorImage_Metadata="Meta:6"
+               Parts_VectorImage_SummaryAdmin="Header"
+           />
+    </Match>
+
+    <Match DisplayType="Detail">
+        <Place Parts_VectorImage="Content:5" />
+    </Match>
+
   <!-- VideoPart -->
   <Match DisplayType="Summary">
     <Place Parts_Video_Summary="Content:5" />
@@ -79,7 +94,6 @@
     <Place Parts_Audio="Content:5" />
   </Match>
 
-
   <!-- Media Library Picker Field -->
   <Place Fields_MediaLibraryPicker_Edit="Content:2.3"/>
 
@@ -94,7 +108,6 @@
   <Match DisplayType="SummaryAdmin">
     <Place Fields_MediaLibraryPicker_SummaryAdmin="Content:after"/>
   </Match>
-
 
   <!-- OEmbedPart -->
   <Match DisplayType="Summary">
