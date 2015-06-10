@@ -144,7 +144,7 @@ var LayoutEditor;
         this.contentTypeLabel = contentTypeLabel;
         this.contentTypeClass = contentTypeClass;
         this.legend = legend || "";
-        this.hasEditor = true;
+        this.hasEditor = hasEditor;
 
         this.toObject = function () {
             var result = this.elementToObject();
