@@ -513,12 +513,6 @@
     <Content Include="Views\Elements\Notifications.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.Menu.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Elements.Breadcrumbs.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Elements\Projection.Design.cshtml" />
   </ItemGroup>
   <ItemGroup>
