@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,16 +79,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Forms.js">
-      <DependentUpon>Forms.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Forms.min.js">
-      <DependentUpon>Forms.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\Layouts\Directives\Fieldset.js" />
-    <Content Include="Scripts\Layouts\Directives\Form.js" />
-    <Content Include="Scripts\Layouts\Models\Fieldset.js" />
-    <Content Include="Scripts\Layouts\Models\Form.js" />
+    <Content Include="gulpfile.js" />
+    <Content Include="Scripts\LayoutEditor.js" />
+    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\LayoutEditor\Directives\Fieldset.js" />
+    <Content Include="Scripts\LayoutEditor\Directives\Form.js" />
+    <Content Include="Scripts\LayoutEditor\Models\Fieldset.js" />
+    <Content Include="Scripts\LayoutEditor\Models\Form.js" />
+    <Content Include="Scripts\Lib.js" />
+    <Content Include="Scripts\Lib.min.js" />
     <Content Include="Scripts\Lib\jquery.validate.js" />
     <Content Include="Scripts\Lib\jquery.validate.min.js">
       <DependentUpon>jquery.validate.js</DependentUpon>
@@ -97,9 +97,12 @@
     <Content Include="Scripts\Lib\jquery.validate.unobtrusive.min.js">
       <DependentUpon>jquery.validate.unobtrusive.js</DependentUpon>
     </Content>
+    <Content Include="Styles\forms-admin.min.css" />
     <Content Include="Styles\forms.css" />
     <Content Include="Styles\forms-admin.css" />
+    <Content Include="Styles\forms.min.css" />
     <Content Include="Styles\menu.dynamicforms-admin.css" />
+    <Content Include="Styles\menu.dynamicforms-admin.min.css" />
     <Content Include="Styles\menu.dynamicforms.png" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
@@ -463,15 +466,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Forms.js.bundle" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Form.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Forms.min.js.map">
-      <DependentUpon>Forms.min.js</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Elements\Enumeration-RadioList.Design.cshtml" />
@@ -514,6 +509,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LayoutEditor.Template.Fieldset.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
