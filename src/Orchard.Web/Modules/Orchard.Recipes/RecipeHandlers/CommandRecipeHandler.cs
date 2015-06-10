@@ -47,7 +47,7 @@ namespace Orchard.Recipes.RecipeHandlers  {
             foreach (var command in commands) {
                 if (!String.IsNullOrEmpty(command)) {
                     if (!String.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, string.Format("Commands: Executing item {0}.", command));
+                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Commands: Executing item {0}.", command).Text);
                     }
                     var commandParameters = _commandParser.ParseCommandParameters(command);
                     var input = new StringReader("");

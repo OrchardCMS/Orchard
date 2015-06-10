@@ -42,7 +42,7 @@ namespace Orchard.Roles.ImportExport {
                 var roleName = roleElement.Attribute("Name").Value;
 
                 if (string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, string.Format("Roles: Executing item {0}.", roleName));
+                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Roles: Executing item {0}.", roleName).Text);
                 }
 
                 var role = _roleService.GetRoleByName(roleName);

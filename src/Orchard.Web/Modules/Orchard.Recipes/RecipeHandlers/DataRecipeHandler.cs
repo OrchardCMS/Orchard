@@ -57,7 +57,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                     while (nextIdentity != null) {
                         if (!string.IsNullOrEmpty(recipeContext.ExecutionId) && elementDictionary[nextIdentity.ToString()].HasAttributes) {
                             var itemId = elementDictionary[nextIdentity.ToString()].FirstAttribute.Value;
-                            _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, string.Format("Data: Importing {0}.", itemId));
+                            _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Data: Importing {0}.", itemId).Text);
                         }
                         _orchardServices.ContentManager.Import(
                             elementDictionary[nextIdentity.ToString()],
