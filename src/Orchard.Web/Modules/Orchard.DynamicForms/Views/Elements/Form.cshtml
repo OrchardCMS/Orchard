@@ -2,7 +2,7 @@
 @using Orchard.DynamicForms.Elements
 @using Orchard.Layouts.Helpers
 @{
-    Style.Include("forms.css");
+    Style.Include("forms.css", "forms.min.css");
 }
 @{
     var contentItem = (ContentItem) Model.ContentItem;
@@ -16,14 +16,11 @@
 
     if (element.EnableClientValidation == true) {
         Script.Require("jQuery").AtFoot();
-        Script.Include("lib/jquery.validate.js", "lib/jquery.validate.min.js").AtFoot();
-        Script.Include("lib/jquery.validate.unobtrusive.js", "lib/jquery.validate.unobtrusive.min.js").AtFoot();
-        Script.Include("lib/jquery.validate.unobtrusive.additional.js").AtFoot();
+        Script.Include("Lib.js", "Lib.min.js").AtFoot();
 
         Html.EnableUnobtrusiveJavaScript();
         Html.EnableClientValidation();
     }
-
 }
 @tagBuilder.StartElement
 <form action="@formAction" method="@formMethod" enctype="multipart/form-data">

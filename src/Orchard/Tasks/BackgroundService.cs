@@ -17,7 +17,7 @@ namespace Orchard.Tasks {
 
         public BackgroundService(
             IEnumerable<IBackgroundTask> tasks, 
-            ITransactionManager transactionManager,
+            ITransactionManager transactionManager, 
             ShellSettings shellSettings) {
 
             _tasks = tasks;
@@ -29,7 +29,7 @@ namespace Orchard.Tasks {
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            foreach(var task in _tasks) {
+            foreach (var task in _tasks) {
                 var taskName = task.GetType().FullName;
 
                 try {

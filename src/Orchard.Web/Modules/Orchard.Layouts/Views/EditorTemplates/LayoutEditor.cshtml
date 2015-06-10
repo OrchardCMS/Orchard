@@ -3,8 +3,7 @@
 @{
     // Library dependencies.
     Style.Require("jQueryUI_Orchard");
-    Style.Include("Lib/font-awesome.css", "Lib/font-awesome.min.css");
-    Style.Include("Lib/Bootstrap/bootstrap.css", "Lib/Bootstrap/bootstrap.min.css");
+    Style.Include("Lib.css", "Lib.min.css");
 
     // We need these styles to properly render selected media items.
     // Ideally the MediaLibrary is refactored such that each media item type provides its own set of styles, enabling extensibility of the set of media item types.
@@ -19,8 +18,6 @@
     Script.Require("jQueryUI_Position");
     Script.Require("TinyMce");
     Script.Require("Layouts.LayoutEditor");
-    Script.Include("Lib/sortable.js");
-    Script.Include("Lib/affix.js");
     Script.Include("jquery.deserialize.js");
 
     // Utilities.
