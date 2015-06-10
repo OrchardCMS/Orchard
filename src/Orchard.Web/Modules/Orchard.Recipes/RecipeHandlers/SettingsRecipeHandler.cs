@@ -59,7 +59,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
 
                 if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, string.Format("Setting: {0}.", contentPart.PartDefinition.Name));
+                    _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Setting: {0}.", contentPart.PartDefinition.Name).Text);
                 }
 
                 ImportSettingPart(contentPart, partElement);

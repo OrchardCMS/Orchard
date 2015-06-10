@@ -91,7 +91,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             if (packagingEntry != null) {
                 if (!ModuleAlreadyInstalled(packagingEntry.PackageId)) {
                     if (!string.IsNullOrEmpty(recipeContext.ExecutionId)) {
-                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, string.Format("Installing module: {0}.", packagingEntry.Title));
+                        _recipeJournal.WriteJournalEntry(recipeContext.ExecutionId, T("Installing module: {0}.", packagingEntry.Title).Text);
                     }
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
                 }
