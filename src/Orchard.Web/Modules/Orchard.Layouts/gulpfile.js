@@ -1,7 +1,7 @@
 /// <binding BeforeBuild='build' ProjectOpened='watch' />
 
 /*
- * This gulpfile enables building of front-end assets in this project.
+ * This gulpfile provides an automated build pipeline for client-side assets in this project.
  * 
  * To use this file you will need to:
  * - Install Node.js on your machine
@@ -13,9 +13,7 @@
  */
 
 var gulp = require("gulp"),
-	watch = require("gulp-watch"),
-	watchLess = require("gulp-watch-less"),
-	batch = require("gulp-batch"),
+    newer = require("gulp-newer"),
 	plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
@@ -65,14 +63,15 @@ gulp.task("buildLess", function () {
 });
 
 gulp.task("watchLess", function () {
-    return merge([
-        lessPipelineFrom(watchLess(srcLessLib, { maxListeners: 64 }), "Styles", "Lib.css"),
-        lessPipelineFrom(watchLess(srcLessLayoutEditor, { maxListeners: 64 }), "Styles", "LayoutEditor.css")
-    ]);
+    var watcher = gulp.watch([srcLessLib, srcLessLayoutEditor], ["buildLess"]);
+    watcher.on("change", function (event) {
+        console.log("LESS file " + event.path + " was " + event.type + ", running the 'buildLess' task...");
+    });
 });
 
 function lessPipelineFrom(inputStream, outputFolder, outputFile) {
     return inputStream
+        .pipe(newer(outputFolder + "/" + outputFile))
 		.pipe(plumber())
         .pipe(sourcemaps.init())
 		.pipe(less())
@@ -138,15 +137,15 @@ gulp.task("buildJs", function () {
 });
 
 gulp.task("watchJs", function () {
-    return merge([
-        jsPipelineFrom(watch(srcJsLib)),
-        jsPipelineFrom(watch(srcJsLayoutEditor)),
-        jsPipelineFrom(watch(srcJsModels))
-    ]);
+    var watcher = gulp.watch([srcJsLib, srcJsLayoutEditor, srcJsModels], ["buildJs"]);
+    watcher.on("change", function (event) {
+        console.log("JavaScript file " + event.path + " was " + event.type + ", running the 'buildJs' task...");
+    });
 });
 
 function jsPipelineFrom(inputStream, outputFolder, outputFile) {
     return inputStream
+        .pipe(newer(outputFolder + "/" + outputFile))
 		.pipe(plumber())
         .pipe(sourcemaps.init())
 		.pipe(concat(outputFile))
