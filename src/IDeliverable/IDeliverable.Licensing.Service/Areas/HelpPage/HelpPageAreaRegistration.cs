@@ -1,5 +1,6 @@
 using System.Web.Http;
 using System.Web.Mvc;
+using IDeliverable.Licensing.Service.Areas.HelpPage.App_Start;
 
 namespace IDeliverable.Licensing.Service.Areas.HelpPage
 {
